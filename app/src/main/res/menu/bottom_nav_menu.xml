@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_library"
+        android:icon="@drawable/ic_library_music_black_24dp"
+        android:title="@string/title_my_music" />
+
+    <item
+        android:id="@+id/navigation_explorarion"
+        android:icon="@drawable/ic_explore_black_24dp"
+        android:title="@string/title_explore" />
+
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/title_notifications" />
+
+</menu>

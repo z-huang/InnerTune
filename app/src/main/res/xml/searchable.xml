@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:hint="Click here to search"
+    android:label="@string/app_name"
+    android:searchSuggestAuthority="com.zionhuang.music.SuggestionProvider"
+    android:searchSuggestSelection=" ?" />

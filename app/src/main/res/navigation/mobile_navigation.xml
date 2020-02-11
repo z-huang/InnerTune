@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_library">
+
+    <fragment
+        android:id="@+id/navigation_library"
+        android:name="com.zionhuang.music.ui.library.LibraryFragment"
+        android:label="@string/title_my_music"
+        tools:layout="@layout/fragment_library" >
+        <action
+            android:id="@+id/action_navigation_library_to_searchSuggestion"
+            app:destination="@id/navigation_searchSuggestion" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_explorarion"
+        android:name="com.zionhuang.music.ui.exploration.ExplorationFragment"
+        android:background="#FFFFFFFF"
+        android:label="@string/title_explore"
+        tools:layout="@layout/fragment_exploration" >
+        <action
+            android:id="@+id/action_navigation_explorarion_to_searchSuggestion"
+            app:destination="@id/navigation_searchSuggestion" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.zionhuang.music.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/navigation_searchSuggestion"
+        android:name="com.zionhuang.music.SearchSuggestion"
+        android:label="fragment_search_suggestion"
+        tools:layout="@layout/fragment_search_suggestion" >
+        <action
+            android:id="@+id/action_searchSuggestion_to_searchResult"
+            app:destination="@id/navigation_searchResult" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_searchResult"
+        android:name="com.zionhuang.music.SearchResult"
+        android:label="fragment_search_result"
+        tools:layout="@layout/fragment_search_result" />
+</navigation>

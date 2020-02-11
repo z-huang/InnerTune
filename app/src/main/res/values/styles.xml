@@ -1,0 +1,25 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.DayNight.ActionBar" />
+
+    <style name="AppTheme.Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="titleTextColor">@color/textColor</item>
+        <item name="colorControlNormal">@color/textColor</item>
+    </style>
+
+    <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="queryHint">@string/abc_search_hint</item>
+        <item name="searchHintIcon">@null</item>
+    </style>
+</resources>
