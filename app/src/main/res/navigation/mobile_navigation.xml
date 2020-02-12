@@ -33,7 +33,7 @@
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/navigation_searchSuggestion"
-        android:name="com.zionhuang.music.SearchSuggestion"
+        android:name="com.zionhuang.music.SearchSuggestionFragment"
         android:label="fragment_search_suggestion"
         tools:layout="@layout/fragment_search_suggestion" >
         <action

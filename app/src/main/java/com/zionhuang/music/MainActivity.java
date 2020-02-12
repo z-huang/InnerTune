@@ -2,7 +2,6 @@ package com.zionhuang.music;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private LibraryFragment libraryFragment;
     private ExplorationFragment explorationFragment;
-
+    public Fragment currentFragment;
     private void setupNavigation(Bundle savedInstanceState) {
         fragmentManager = getSupportFragmentManager();
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -92,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         setupNavigation(savedInstanceState);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -127,10 +125,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 Log.d("main", "on query text change:" + newText);
-                SearchSuggestion searchSuggestion = (SearchSuggestion) fragmentManager.findFragmentById(R.id.navigation_searchSuggestion);
-                if (searchSuggestion != null) {
-                    Log.d("main", "start request");
-                    searchSuggestion.onQueryTextChange(newText);
+                if (currentFragment instanceof SearchSuggestionFragment) {
+                    ((SearchSuggestionFragment) currentFragment).onQueryTextChange(newText);
                 }
                 return false;
             }
@@ -146,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public void fillSearchBarQuery(String text) {
+        searchView.setQuery(text, false);
+    }
     @Override
     protected void onApplyThemeResource(Resources.Theme theme, int resid, boolean first) {
         super.onApplyThemeResource(theme, resid, first);
