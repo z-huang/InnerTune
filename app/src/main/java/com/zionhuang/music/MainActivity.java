@@ -6,14 +6,11 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,16 +25,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 
 public class MainActivity extends AppCompatActivity {
-    View view;
+    Youtube youtube;
     Toolbar toolbar = null;
     private SearchView searchView = null;
     private MenuItem searchItem = null;
@@ -88,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupWithNavController(navView, navController);
+        NetworkManager.init(this);
+        youtube = Youtube.getInstance(this);
         setupNavigation(savedInstanceState);
     }
 
@@ -144,6 +140,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void fillSearchBarQuery(String text) {
         searchView.setQuery(text, false);
+    }
+
+    public void search(String text) {
+        searchView.setQuery(text, true);
+        Bundle bundle = new Bundle();
+        bundle.putString("query", text);
+        navController.navigate(R.id.navigation_searchResult, bundle);
+
     }
     @Override
     protected void onApplyThemeResource(Resources.Theme theme, int resid, boolean first) {

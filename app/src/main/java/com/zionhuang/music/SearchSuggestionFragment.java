@@ -25,6 +25,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,6 +64,12 @@ public class SearchSuggestionFragment extends Fragment {
                         activity.fillSearchBarQuery(textView.getText().toString());
                     }
                 });
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.search(textView.getText().toString());
+                    }
+                });
             }
         }
 
@@ -81,6 +88,7 @@ public class SearchSuggestionFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.textView.setText(mDataset.get(position));
+
         }
 
         @Override
@@ -99,12 +107,12 @@ public class SearchSuggestionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_search_suggestion, container, false);
+
         activity = (MainActivity) getActivity();
         activity.currentFragment = this;
-        Cache cache = new DiskBasedCache(getContext().getCacheDir(), 1024 * 1024); // 1MB cap
-        Network network = new BasicNetwork(new HurlStack());
-        requestQueue = new RequestQueue(cache, network);
-        requestQueue.start();
+
+        requestQueue = NetworkManager.getInstance().getRequestQueue();
+
         recyclerView = root.findViewById(R.id.suggestion_recycler_view);
         recyclerView.setHasFixedSize(true);
 

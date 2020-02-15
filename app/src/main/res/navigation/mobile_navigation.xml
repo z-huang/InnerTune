@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_searchResult"
-        android:name="com.zionhuang.music.SearchResult"
+        android:name="com.zionhuang.music.SearchResultFragment"
         android:label="fragment_search_result"
         tools:layout="@layout/fragment_search_result" />
 </navigation>
