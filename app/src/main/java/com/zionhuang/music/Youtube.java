@@ -140,7 +140,7 @@ public class Youtube {
         }
 
         public static void Search(RequestQueue requestQueue, Parameter parameter, final Listener<JSONObject> listener) {
-            String url = ROOT_URL + "search?" + parameter.setKey(API_KEY).setPart("snippet").setSafeSearch("moderate").setMaxResults(10).toString();
+            String url = ROOT_URL + "search?" + parameter.setKey(API_KEY).setPart("snippet").setSafeSearch("moderate").setMaxResults(20).toString();
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(com.android.volley.Request.Method.GET, url, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
