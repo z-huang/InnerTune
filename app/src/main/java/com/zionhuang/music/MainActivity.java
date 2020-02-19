@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,36 +13,40 @@ import android.view.View;
 import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.zionhuang.music.ui.exploration.ExplorationFragment;
-import com.zionhuang.music.ui.library.LibraryFragment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-
 
 public class MainActivity extends AppCompatActivity {
-    Youtube youtube;
-    Toolbar toolbar = null;
-    private SearchView searchView = null;
-    private MenuItem searchItem = null;
+    private boolean isSearching;
+    private String query;
+
+    private Youtube youtube;
+
+    private Toolbar toolbar;
+    private BottomNavigationView bottomNav;
+    private SearchView searchView;
+    private MenuItem searchItem;
+
     private NavController navController;
-    private FragmentManager fragmentManager;
-    private LibraryFragment libraryFragment;
-    private ExplorationFragment explorationFragment;
     public Fragment currentFragment;
+    private NavOptions animSwitch, animStack;
+
     private void setupNavigation(Bundle savedInstanceState) {
-        fragmentManager = getSupportFragmentManager();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        final NavOptions navOptions = new NavOptions.Builder()
+        animStack = new NavOptions.Builder()
+                .setEnterAnim(R.anim.fragment_open_enter)
+                .setExitAnim(R.anim.fragment_close_exit)
+                .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
+                .setPopExitAnim(R.anim.nav_default_pop_exit_anim).build();
+        animSwitch = new NavOptions.Builder()
                 .setEnterAnim(R.anim.nav_default_enter_anim)
                 .setExitAnim(R.anim.nav_default_exit_anim)
                 .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
@@ -51,18 +54,13 @@ public class MainActivity extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment = null;
-                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-                final FragmentTransaction transaction = fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                 int id = menuItem.getItemId();
                 switch (id) {
                     case R.id.navigation_library:
-                        Log.d("navigator", "select library");
-                        navController.navigate(R.id.navigation_library, null, navOptions);
+                        navController.navigate(R.id.navigation_library, null, animSwitch);
                         break;
                     case R.id.navigation_explorarion:
-                        Log.d("navigator", "select explore");
-                        navController.navigate(R.id.navigation_explorarion, null, navOptions);
+                        navController.navigate(R.id.navigation_explorarion, null, animSwitch);
                         break;
                 }
                 return true;
@@ -76,22 +74,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_library, R.id.navigation_explorarion, R.id.navigation_notifications)
-                .build();
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        //NavigationUI.setupWithNavController(navView, navController);
+        bottomNav = findViewById(R.id.nav_view);
+
         NetworkManager.init(this);
         youtube = Youtube.getInstance(this);
         setupNavigation(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getBoolean("searching")) {
+                isSearching = true;
+                query = savedInstanceState.getString("query");
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("searching", !searchView.isIconified());
+        if (!searchView.isIconified()) {
+            outState.putString("query", searchView.getQuery().toString());
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        final MainActivity self = this;
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchItem = menu.findItem(R.id.action_search);
         searchView = new SearchView(this);
@@ -99,12 +107,6 @@ public class MainActivity extends AppCompatActivity {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setSubmitButtonEnabled(false);
         searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setOnSearchClickListener(new SearchView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigate(R.id.navigation_searchSuggestion);
-            }
-        });
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                navController.navigate(R.id.navigation_library);
+                navController.navigate(R.id.navigation_library, null, animStack);
                 return true;
             }
         });
@@ -121,9 +123,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("query", searchView.getQuery().toString());
-                    navController.navigate(R.id.navigation_searchSuggestion, bundle);
+                    bottomNav.setVisibility(View.GONE);
+                    if (!(currentFragment instanceof SearchSuggestionFragment)) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("query", searchView.getQuery().toString());
+                        navController.navigate(R.id.navigation_searchSuggestion, bundle, animStack);
+                    }
+                } else {
+                    bottomNav.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -141,11 +148,16 @@ public class MainActivity extends AppCompatActivity {
                 searchView.clearFocus();
                 Bundle bundle = new Bundle();
                 bundle.putString("query", query);
-                navController.navigate(R.id.navigation_searchResult, bundle);
+                navController.navigate(R.id.action_searchSuggestion_to_searchResult, bundle);
                 return false;
             }
         });
         searchItem.setActionView(searchView);
+
+        if (isSearching) {
+            searchItem.expandActionView();
+            searchView.setQuery(query, false);
+        }
         return true;
     }
 
@@ -156,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
     public void search(String text) {
         searchView.setQuery(text, true);
     }
+
     @Override
     protected void onApplyThemeResource(Resources.Theme theme, int resid, boolean first) {
         super.onApplyThemeResource(theme, resid, first);
@@ -168,15 +181,5 @@ public class MainActivity extends AppCompatActivity {
                 getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-//        if (searchView != null && !searchView.isIconified()) {
-//            searchView.onActionViewCollapsed();
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-//            return;
-//        }
-        super.onBackPressed();
     }
 }

@@ -9,10 +9,12 @@
         android:id="@+id/navigation_library"
         android:name="com.zionhuang.music.ui.library.LibraryFragment"
         android:label="@string/title_my_music"
-        tools:layout="@layout/fragment_library" >
+        tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_navigation_library_to_searchSuggestion"
-            app:destination="@id/navigation_searchSuggestion" />
+            app:destination="@id/navigation_searchSuggestion"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_close_exit" />
     </fragment>
 
     <fragment
@@ -20,10 +22,12 @@
         android:name="com.zionhuang.music.ui.exploration.ExplorationFragment"
         android:background="#FFFFFFFF"
         android:label="@string/title_explore"
-        tools:layout="@layout/fragment_exploration" >
+        tools:layout="@layout/fragment_exploration">
         <action
             android:id="@+id/action_navigation_explorarion_to_searchSuggestion"
-            app:destination="@id/navigation_searchSuggestion" />
+            app:destination="@id/navigation_searchSuggestion"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_close_exit" />
     </fragment>
 
     <fragment
@@ -35,10 +39,12 @@
         android:id="@+id/navigation_searchSuggestion"
         android:name="com.zionhuang.music.SearchSuggestionFragment"
         android:label="fragment_search_suggestion"
-        tools:layout="@layout/fragment_search_suggestion" >
+        tools:layout="@layout/fragment_search_suggestion">
         <action
             android:id="@+id/action_searchSuggestion_to_searchResult"
-            app:destination="@id/navigation_searchResult" />
+            app:destination="@id/navigation_searchResult"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_fade_exit" />
     </fragment>
     <fragment
         android:id="@+id/navigation_searchResult"
