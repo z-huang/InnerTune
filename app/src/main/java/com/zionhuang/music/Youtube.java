@@ -1,20 +1,35 @@
 package com.zionhuang.music;
 
+import androidx.annotation.NonNull;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.Image;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class Youtube {
     private static Youtube instance;
+    private static final String ROOT_URL = "https://www.googleapis.com/youtube/v3/";
+    private static final String API_KEY = "API_KEY";
     private Context ctx;
     private static DateFormat df;
 
@@ -32,100 +47,215 @@ public class Youtube {
         return instance;
     }
 
-    public static abstract class Item {
-        protected String id;
-        protected String title;
-        protected String channelTitle;
-        protected Date publishDate;
-        protected String thumbnailURL;
+    public static class Request {
+        public interface Listener<T> {
+            void onResponse(T response);
 
-        public String getTitle() {
-            return title;
+            void onError(Exception e);
         }
 
-        public abstract String getDescription();
+        public static class Parameter {
+            private HashMap<String, Object> map;
 
-        public abstract String getThumbnailURL();
-    }
+            Parameter() {
+                map = new HashMap<>();
+            }
 
-    public static class Video extends Item {
-        Video(JSONObject jsonObject) {
-            try {
-                id = jsonObject.getJSONObject("id").getString("videoId");
-                JSONObject snippet = jsonObject.getJSONObject("snippet");
-                title = snippet.getString("title");
-                channelTitle = snippet.getString("channelTitle");
-                publishDate = df.parse(snippet.getString("publishedAt"));
-                thumbnailURL = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.getErrorOffset();
+            private void set(String key, Object value) {
+                // don't replace value
+                if (!map.containsKey(key)) {
+                    map.put(key, value);
+                }
+            }
+
+            public Parameter setKey(String key) {
+                set("key", key);
+                return this;
+            }
+
+            public Parameter setPart(String part) {
+                set("part", part);
+                return this;
+            }
+
+            public Parameter setSafeSearch(String type) {
+                set("safeSearch", type);
+                return this;
+            }
+
+            public Parameter setMaxResults(int maxResults) {
+                set("maxResults", maxResults);
+                return this;
+            }
+
+            public Parameter setQuery(String query) {
+                try {
+                    set("q", URLEncoder.encode(query, "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    // Theoretically, exception only happens when the encode type given is wrong.
+                }
+                return this;
+            }
+
+            public Parameter setPageToken(String token) {
+                set("pageToken", token);
+                return this;
+            }
+
+            @NonNull
+            public String toString() {
+                if (map.size() == 0) {
+                    return "";
+                }
+                StringBuilder result = new StringBuilder();
+                Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator();
+                Map.Entry<String, Object> entry;
+                while (iterator.hasNext()) {
+                    entry = iterator.next();
+                    result.append(entry.getKey()).append("=").append(entry.getValue().toString()).append("&");
+                }
+                result.setLength(result.length() - 1);
+                return result.toString();
             }
         }
 
-        @Override
-        public String getDescription() {
-            return channelTitle;
-        }
-
-        @Override
-        public String getThumbnailURL() {
-            return thumbnailURL;
-        }
-    }
-
-    public static class Channel extends Item {
-        Channel(JSONObject jsonObject) {
+        public static void Suggest(RequestQueue requestQueue, String query, final Listener<JSONArray> listener) {
             try {
-                id = jsonObject.getJSONObject("id").getString("channelId");
-                JSONObject snippet = jsonObject.getJSONObject("snippet");
-                title = snippet.getString("title");
-                channelTitle = snippet.getString("channelTitle");
-                publishDate = df.parse(snippet.getString("publishedAt"));
-                thumbnailURL = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.getErrorOffset();
+                String url = "https://clients1.google.com/complete/search?client=firefox&ds=yt&q=" + URLEncoder.encode(query, "UTF-8");
+                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(com.android.volley.Request.Method.GET, url, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        listener.onResponse(response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.onError(error);
+                    }
+                });
+                requestQueue.add(jsonArrayRequest);
+            } catch (UnsupportedEncodingException ignored) {
+
             }
         }
 
-        @Override
-        public String getDescription() {
-            return channelTitle;
-        }
-
-        @Override
-        public String getThumbnailURL() {
-            return thumbnailURL;
+        public static void Search(RequestQueue requestQueue, Parameter parameter, final Listener<JSONObject> listener) {
+            String url = ROOT_URL + "search?" + parameter.setKey(API_KEY).setPart("snippet").setSafeSearch("moderate").setMaxResults(10).toString();
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(com.android.volley.Request.Method.GET, url, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    listener.onResponse(response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    listener.onError(error);
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
         }
     }
 
-    public static class Playlist extends Item {
-        Playlist(JSONObject jsonObject) {
-            try {
-                id = jsonObject.getJSONObject("id").getString("playlistId");
-                JSONObject snippet = jsonObject.getJSONObject("snippet");
-                title = snippet.getString("title");
-                channelTitle = snippet.getString("channelTitle");
-                publishDate = df.parse(snippet.getString("publishedAt"));
-                thumbnailURL = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.getErrorOffset();
+    public static class Item {
+        public static abstract class Base {}
+        public static abstract class ItemBase extends Base {
+            protected String id;
+            protected String title;
+            protected String channelTitle;
+            protected Date publishDate;
+            protected String thumbnailURL;
+
+            public String getTitle() {
+                return title;
+            }
+
+            public abstract String getDescription();
+
+            public abstract String getThumbnailURL();
+        }
+
+        public static class Loader extends Base {
+
+        }
+        public static class Video extends ItemBase {
+            Video(JSONObject jsonObject) {
+                try {
+                    id = jsonObject.getJSONObject("id").getString("videoId");
+                    JSONObject snippet = jsonObject.getJSONObject("snippet");
+                    title = snippet.getString("title");
+                    channelTitle = snippet.getString("channelTitle");
+                    publishDate = df.parse(snippet.getString("publishedAt"));
+                    thumbnailURL = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.getErrorOffset();
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return channelTitle;
+            }
+
+            @Override
+            public String getThumbnailURL() {
+                return thumbnailURL;
             }
         }
 
-        @Override
-        public String getDescription() {
-            return channelTitle;
+        public static class Channel extends ItemBase {
+            Channel(JSONObject jsonObject) {
+                try {
+                    id = jsonObject.getJSONObject("id").getString("channelId");
+                    JSONObject snippet = jsonObject.getJSONObject("snippet");
+                    title = snippet.getString("title");
+                    channelTitle = snippet.getString("channelTitle");
+                    publishDate = df.parse(snippet.getString("publishedAt"));
+                    thumbnailURL = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.getErrorOffset();
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return channelTitle;
+            }
+
+            @Override
+            public String getThumbnailURL() {
+                return thumbnailURL;
+            }
         }
 
-        @Override
-        public String getThumbnailURL() {
-            return thumbnailURL;
+        public static class Playlist extends ItemBase {
+            Playlist(JSONObject jsonObject) {
+                try {
+                    id = jsonObject.getJSONObject("id").getString("playlistId");
+                    JSONObject snippet = jsonObject.getJSONObject("snippet");
+                    title = snippet.getString("title");
+                    channelTitle = snippet.getString("channelTitle");
+                    publishDate = df.parse(snippet.getString("publishedAt"));
+                    thumbnailURL = snippet.getJSONObject("thumbnails").getJSONObject("medium").getString("url");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.getErrorOffset();
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return channelTitle;
+            }
+
+            @Override
+            public String getThumbnailURL() {
+                return thumbnailURL;
+            }
         }
     }
 }

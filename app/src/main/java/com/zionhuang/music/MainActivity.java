@@ -117,10 +117,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("query", searchView.getQuery().toString());
+                    navController.navigate(R.id.navigation_searchSuggestion, bundle);
+                }
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d("main", "on query text change:" + newText);
                 if (currentFragment instanceof SearchSuggestionFragment) {
                     ((SearchSuggestionFragment) currentFragment).onQueryTextChange(newText);
                 }
@@ -129,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("main", "on query text submit: " + query);
-                navController.navigate(R.id.navigation_searchResult);
+                searchView.clearFocus();
+                Bundle bundle = new Bundle();
+                bundle.putString("query", query);
+                navController.navigate(R.id.navigation_searchResult, bundle);
                 return false;
             }
         });
@@ -144,10 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void search(String text) {
         searchView.setQuery(text, true);
-        Bundle bundle = new Bundle();
-        bundle.putString("query", text);
-        navController.navigate(R.id.navigation_searchResult, bundle);
-
     }
     @Override
     protected void onApplyThemeResource(Resources.Theme theme, int resid, boolean first) {

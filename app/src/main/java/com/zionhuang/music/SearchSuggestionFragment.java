@@ -1,6 +1,5 @@
 package com.zionhuang.music;
 
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,24 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
-import com.android.volley.Network;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class SearchSuggestionFragment extends Fragment {
@@ -40,6 +26,7 @@ public class SearchSuggestionFragment extends Fragment {
     private View root;
     private RecyclerView recyclerView;
     private Adapter mAdapter;
+    private ArrayList<String> dataSet;
     private RecyclerView.LayoutManager layoutManager;
     RequestQueue requestQueue;
 
@@ -56,18 +43,13 @@ public class SearchSuggestionFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Log.d("SuggestFragment", "Element " + getAdapterPosition() + " clicked.");
+                        activity.search(textView.getText().toString());
                     }
                 });
                 v.findViewById(R.id.fill_text_button).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         activity.fillSearchBarQuery(textView.getText().toString());
-                    }
-                });
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.search(textView.getText().toString());
                     }
                 });
             }
@@ -118,43 +100,47 @@ public class SearchSuggestionFragment extends Fragment {
 
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-
+        dataSet = new ArrayList<>();
+        mAdapter = new Adapter(dataSet);
+        recyclerView.setAdapter(mAdapter);
         return root;
     }
 
-    public void onQueryTextChange(final String text) {
-        Log.d("SearchSuggestion", "start request");
-        if (text.isEmpty()) {
-            mAdapter.clear();
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String query = bundle.getString("query");
+            onQueryTextChange(query);
         }
-        try {
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, "https://clients1.google.com/complete/search?client=firefox&ds=yt&q=" + URLEncoder.encode(text, "UTF-8"), new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    try {
-                        if (response.length() == 2 && text.equals(response.get(0))) {
-                            JSONArray suggestions = response.getJSONArray(1);
-                            ArrayList<String> data = new ArrayList<>();
-                            for (int i=0; i<suggestions.length(); i++) {
-                                data.add(suggestions.getString(i));
-                            }
-                            mAdapter = new Adapter(data);
-                            recyclerView.setAdapter(mAdapter);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("Response", "error: " + error.toString());
-                }
-            });
-            requestQueue.add(jsonArrayRequest);
-        } catch (UnsupportedEncodingException e) {
-            Log.e("SuggestionFragment", "Encoding error: "+e.toString());
-        }
+    }
 
+    public void onQueryTextChange(final String query) {
+        if (query == null || query.isEmpty()) {
+            mAdapter.clear();
+            return;
+        }
+        Youtube.Request.Suggest(requestQueue, query, new Youtube.Request.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    if (response.length() == 2 && query.equals(response.get(0))) {
+                        JSONArray suggestions = response.getJSONArray(1);
+                        dataSet.clear();
+                        for (int i = 0; i < suggestions.length(); i++) {
+                            dataSet.add(suggestions.getString(i));
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.d("Response", "error: " + e.toString());
+            }
+        });
     }
 }
