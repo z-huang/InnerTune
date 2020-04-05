@@ -1,4 +1,4 @@
-package com.zionhuang.music;
+package com.zionhuang.music.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

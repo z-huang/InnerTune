@@ -1,9 +1,9 @@
-package com.zionhuang.music;
-
-import androidx.annotation.NonNull;
+package com.zionhuang.music.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,12 +30,10 @@ public class Youtube {
     private static Youtube instance;
     private static final String ROOT_URL = "https://www.googleapis.com/youtube/v3/";
     private static final String API_KEY = "API_KEY";
-    private Context ctx;
     private static DateFormat df;
 
     @SuppressLint("SimpleDateFormat")
     private Youtube(Context context) {
-        ctx = context;
         df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
@@ -57,7 +55,7 @@ public class Youtube {
         public static class Parameter {
             private HashMap<String, Object> map;
 
-            Parameter() {
+            public Parameter() {
                 map = new HashMap<>();
             }
 
@@ -157,7 +155,9 @@ public class Youtube {
     }
 
     public static class Item {
-        public static abstract class Base {}
+        public static abstract class Base {
+        }
+
         public static abstract class ItemBase extends Base {
             protected String id;
             protected String title;
@@ -165,8 +165,16 @@ public class Youtube {
             protected Date publishDate;
             protected String thumbnailURL;
 
+            public String getId() {
+                return id;
+            }
+
             public String getTitle() {
                 return title;
+            }
+
+            public String getChannelTitle() {
+                return channelTitle;
             }
 
             public abstract String getDescription();
@@ -177,8 +185,9 @@ public class Youtube {
         public static class Loader extends Base {
 
         }
+
         public static class Video extends ItemBase {
-            Video(JSONObject jsonObject) {
+            public Video(JSONObject jsonObject) {
                 try {
                     id = jsonObject.getJSONObject("id").getString("videoId");
                     JSONObject snippet = jsonObject.getJSONObject("snippet");
@@ -205,7 +214,7 @@ public class Youtube {
         }
 
         public static class Channel extends ItemBase {
-            Channel(JSONObject jsonObject) {
+            public Channel(JSONObject jsonObject) {
                 try {
                     id = jsonObject.getJSONObject("id").getString("channelId");
                     JSONObject snippet = jsonObject.getJSONObject("snippet");
@@ -232,7 +241,7 @@ public class Youtube {
         }
 
         public static class Playlist extends ItemBase {
-            Playlist(JSONObject jsonObject) {
+            public Playlist(JSONObject jsonObject) {
                 try {
                     id = jsonObject.getJSONObject("id").getString("playlistId");
                     JSONObject snippet = jsonObject.getJSONObject("snippet");

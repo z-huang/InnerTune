@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.zionhuang.music.Util;
+import com.zionhuang.music.utils.Utils;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -167,7 +167,7 @@ public class YoutubeIE {
 
     private JsonObject getYtplayerConfig(String video_webpage) {
         final String[] patterns = {";ytplayer\\.config\\s*=\\s*(\\{.+?\\});ytplayer", ";ytplayer\\.config\\s*=\\s*(\\{.+?\\});"};
-        String config = Util.search_regex(patterns, video_webpage);
+        String config = Utils.searchRegex(patterns, video_webpage);
         if (config.length() == 0) {
             return null;
         }
@@ -177,7 +177,7 @@ public class YoutubeIE {
             pl_response = unescapeJava(m.group(1));
             config = config.replaceAll(",\"player_response\":\"(\\{.+\\})\"", "");
         }
-        JsonObject ytplayer_config = Util.parseJsonString(config).getAsJsonObject();
+        JsonObject ytplayer_config = Utils.parseJsonString(config).getAsJsonObject();
         player_response = extractPlayerResponse(pl_response);
         return ytplayer_config;
     }
@@ -186,7 +186,7 @@ public class YoutubeIE {
         if (player_response == null) {
             return null;
         }
-        return Util.parseJsonString(player_response).getAsJsonObject();
+        return Utils.parseJsonString(player_response).getAsJsonObject();
     }
 
     private String signatureCacheId(String example_sig) {
@@ -206,7 +206,7 @@ public class YoutubeIE {
                 "\\bc\\s*&&\\s*a\\.set\\([^,]+\\s*,\\s*\\([^)]*\\)\\s*\\(\\s*(?<sig>[a-zA-Z0-9$]+)\\(",
                 "\\bc\\s*&&\\s*[a-zA-Z0-9]+\\.set\\([^,]+\\s*,\\s*\\([^)]*\\)\\s*\\(\\s*(?<sig>[a-zA-Z0-9$]+)\\(",
                 "\\bc\\s*&&\\s*[a-zA-Z0-9]+\\.set\\([^,]+\\s*,\\s*\\([^)]*\\)\\s*\\(\\s*(?<sig>[a-zA-Z0-9$]+)\\("};
-        final String funcname = Util.search_regex(JS_FN_RE, jscode, "sig");
+        final String funcname = Utils.searchRegex(JS_FN_RE, jscode, "sig");
         JSInterpreter jsi = new JSInterpreter(jscode);
         final JsonFunction initialFn = jsi.extractFunction(funcname);
         return new SignatureFunction() {
@@ -234,7 +234,7 @@ public class YoutubeIE {
 
         SignatureFunction res = null;
         if (player_type != null && player_type.equals("js")) {
-            String code = Util.downloadPlainText(player_url);
+            String code = Utils.downloadPlainText(player_url);
             try {
                 res = parseSigJs(code);
             } catch (JSInterpreter.InterpretException e) {
@@ -277,7 +277,7 @@ public class YoutubeIE {
     }
 
     private int extractFilesize(String media_url) {
-        return NumberUtils.toInt(Util.search_regex("\\bclen[=/](\\d+)", media_url), 0);
+        return NumberUtils.toInt(Utils.searchRegex("\\bclen[=/](\\d+)", media_url), 0);
     }
 
     private JsonObject video_info = null;
@@ -285,7 +285,7 @@ public class YoutubeIE {
     private ArrayList<String> dash_mpds;
 
     private ArrayList<YtStream> realExtract(String videoId) throws ExtractException {
-        String video_webpage = Util.downloadWebpage("https://www.youtube.com/watch?v=" + videoId + "&gl=US&hl=en&has_verified=1&bpctr=9999999999");
+        String video_webpage = Utils.downloadWebPage("https://www.youtube.com/watch?v=" + videoId + "&gl=US&hl=en&has_verified=1&bpctr=9999999999");
         String embed_webpage = null;
         String player_url = null;
         boolean is_live = false;
@@ -297,10 +297,10 @@ public class YoutubeIE {
 
         if (Pattern.compile("player-age-gate-content>").matcher(video_webpage).find()) {
             age_gate = true;
-            embed_webpage = Util.downloadWebpage("https://www.youtube.com/embed/" + videoId);
-            String data = "video_id=" + videoId + "&eurl=https%3A%2F%2Fyoutube.googleapis.com%2Fv%2F" + videoId + "&sts=" + Util.search_regex("\"sts\"\\s*:\\s*(\\d+)", embed_webpage);
-            String video_info_webpage = Util.downloadWebpage("https://www.youtube.com/get_video_info?" + data);
-            video_info = Util.parseQueryString(video_info_webpage);
+            embed_webpage = Utils.downloadWebPage("https://www.youtube.com/embed/" + videoId);
+            String data = "video_id=" + videoId + "&eurl=https%3A%2F%2Fyoutube.googleapis.com%2Fv%2F" + videoId + "&sts=" + Utils.searchRegex("\"sts\"\\s*:\\s*(\\d+)", embed_webpage);
+            String video_info_webpage = Utils.downloadWebPage("https://www.youtube.com/get_video_info?" + data);
+            video_info = Utils.parseQueryString(video_info_webpage);
             if (video_info != null && video_info.has("player_response")) {
                 player_response = extractPlayerResponse(video_info.get("player_response").getAsString());
                 addDashMpd();
@@ -426,7 +426,7 @@ public class YoutubeIE {
                         continue;
                     }
                     cipher = fmt.get("cipher").getAsString();
-                    url_data = Util.parseQueryString(cipher);
+                    url_data = Utils.parseQueryString(cipher);
                     if (!url_data.has("url")) {
                         continue;
                     }
@@ -434,7 +434,7 @@ public class YoutubeIE {
                 } else {
                     url = fmt.get("url").getAsString();
                     try {
-                        url_data = Util.parseQueryString(new URL(fmt.get("url").getAsString()).getQuery());
+                        url_data = Utils.parseQueryString(new URL(fmt.get("url").getAsString()).getQuery());
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                         url_data = new JsonObject();
@@ -451,17 +451,17 @@ public class YoutubeIE {
                 if (cipher != null) {
                     if (url_data.has("s")) {
                         final String ASSETS_RE = "\"assets\":.+?\"js\":\\s*(\"[^\"]+\")";
-                        String jsplayer_url_json = Util.search_regex(ASSETS_RE, age_gate ? embed_webpage : video_webpage);
+                        String jsplayer_url_json = Utils.searchRegex(ASSETS_RE, age_gate ? embed_webpage : video_webpage);
                         if (jsplayer_url_json.length() == 0 && !age_gate) {
                             if (embed_webpage == null) {
-                                embed_webpage = Util.downloadWebpage("https://www.youtube.com/embed/" + videoId);
+                                embed_webpage = Utils.downloadWebPage("https://www.youtube.com/embed/" + videoId);
                             }
-                            jsplayer_url_json = Util.search_regex(ASSETS_RE, embed_webpage);
+                            jsplayer_url_json = Utils.searchRegex(ASSETS_RE, embed_webpage);
                         }
 
-                        player_url = unescapeJava(Util.parseJsonString(jsplayer_url_json).getAsString());
+                        player_url = unescapeJava(Utils.parseJsonString(jsplayer_url_json).getAsString());
                         if (player_url == null) {
-                            String player_url_json = Util.search_regex("ytplayer\\.config.*?\"url\"\\s*:\\s*(\"[^\"]+\")", video_webpage);
+                            String player_url_json = Utils.searchRegex("ytplayer\\.config.*?\"url\"\\s*:\\s*(\"[^\"]+\")", video_webpage);
                             player_url = new JsonPrimitive(player_url_json).getAsString();
                         }
                     }

@@ -1,4 +1,4 @@
-package com.zionhuang.music;
+package com.zionhuang.music.utils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

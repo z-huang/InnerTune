@@ -1,22 +1,27 @@
-package com.zionhuang.music;
+package com.zionhuang.music.ui.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.NetworkImageView;
+import com.zionhuang.music.utils.EndlessScrollListener;
+import com.zionhuang.music.utils.NetworkManager;
+import com.zionhuang.music.R;
+import com.zionhuang.music.utils.Youtube;
+import com.zionhuang.music.adapters.SearchResultsAdapter;
+import com.zionhuang.music.ui.activities.MainActivity;
+import com.zionhuang.music.viewmodels.MainViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,81 +35,11 @@ public class SearchResultFragment extends Fragment {
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
     private RecyclerView recyclerView;
-    private Adapter mAdapter;
+    private SearchResultsAdapter mAdapter;
     private ArrayList<Youtube.Item.Base> dataSet;
     private RequestQueue requestQueue;
     private String nextPageToken;
     private String query;
-
-    private class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        private ArrayList<Youtube.Item.Base> mDataset;
-
-        class ItemViewHolder extends RecyclerView.ViewHolder {
-            TextView title_tv;
-            TextView description_tv;
-            NetworkImageView thumbnail;
-
-            ItemViewHolder(View v) {
-                super(v);
-                title_tv = v.findViewById(R.id.title_text_view);
-                description_tv = v.findViewById(R.id.description_text_view);
-                thumbnail = v.findViewById(R.id.thumbnail_view);
-
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("SuggestFragment", "Element " + getAdapterPosition() + " clicked.");
-                    }
-                });
-
-            }
-        }
-
-        class LoadingViewHolder extends RecyclerView.ViewHolder {
-            LoadingViewHolder(View v) {
-                super(v);
-            }
-        }
-
-        Adapter(ArrayList<Youtube.Item.Base> myDataset) {
-            mDataset = myDataset;
-        }
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == 0) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_list_item, parent, false);
-                return new ItemViewHolder(v);
-            } else {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.loading_list_item, parent, false);
-                return new LoadingViewHolder(v);
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            Youtube.Item.Base item = mDataset.get(position);
-            if (holder instanceof ItemViewHolder) {
-                ((ItemViewHolder) holder).title_tv.setText(((Youtube.Item.ItemBase) item).getTitle());
-                ((ItemViewHolder) holder).description_tv.setText(((Youtube.Item.ItemBase) item).getDescription());
-                ((ItemViewHolder) holder).thumbnail.setImageUrl(((Youtube.Item.ItemBase) item).getThumbnailURL(), NetworkManager.getInstance().getImageLoader());
-            }
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (mDataset.get(position) instanceof Youtube.Item.ItemBase) {
-                return 0;
-            }
-            return 1;
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDataset.size();
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,7 +47,6 @@ public class SearchResultFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_search_result, container, false);
 
         activity = (MainActivity) getActivity();
-        activity.currentFragment = this;
 
         progressBar = root.findViewById(R.id.progressBar);
 
@@ -175,7 +109,7 @@ public class SearchResultFragment extends Fragment {
             }
         });
         dataSet = new ArrayList<>();
-        mAdapter = new Adapter(dataSet);
+        mAdapter = new SearchResultsAdapter(dataSet, getContext(), new ViewModelProvider(activity).get(MainViewModel.class));
         recyclerView.setAdapter(mAdapter);
 
         return root;

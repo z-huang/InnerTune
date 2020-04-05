@@ -37,7 +37,7 @@
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/navigation_searchSuggestion"
-        android:name="com.zionhuang.music.SearchSuggestionFragment"
+        android:name="com.zionhuang.music.ui.fragments.SearchSuggestionFragment"
         android:label="fragment_search_suggestion"
         tools:layout="@layout/fragment_search_suggestion">
         <action
@@ -48,7 +48,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_searchResult"
-        android:name="com.zionhuang.music.SearchResultFragment"
+        android:name="com.zionhuang.music.ui.fragments.SearchResultFragment"
         android:label="fragment_search_result"
         tools:layout="@layout/fragment_search_result" />
 </navigation>

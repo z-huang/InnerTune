@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.zionhuang.music.MainActivity"
+            android:name="com.zionhuang.music.ui.activities.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <provider
-            android:name=".SuggestionProvider"
-            android:authorities="com.zionhuang.music.SuggestionProvider" />
+            android:name=".utils.SuggestionProvider"
+            android:authorities="com.zionhuang.music.utils.SuggestionProvider" />
     </application>
 </manifest>

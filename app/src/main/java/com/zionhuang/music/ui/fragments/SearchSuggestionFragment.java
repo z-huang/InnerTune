@@ -1,6 +1,11 @@
-package com.zionhuang.music;
+package com.zionhuang.music.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,13 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.android.volley.RequestQueue;
+import com.zionhuang.music.utils.NetworkManager;
+import com.zionhuang.music.R;
+import com.zionhuang.music.utils.Youtube;
+import com.zionhuang.music.ui.activities.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +65,7 @@ public class SearchSuggestionFragment extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.suggestion_list_item, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggestion, parent, false);
 
             return new ViewHolder(v);
         }
@@ -91,7 +94,6 @@ public class SearchSuggestionFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_search_suggestion, container, false);
 
         activity = (MainActivity) getActivity();
-        activity.currentFragment = this;
 
         requestQueue = NetworkManager.getInstance().getRequestQueue();
 

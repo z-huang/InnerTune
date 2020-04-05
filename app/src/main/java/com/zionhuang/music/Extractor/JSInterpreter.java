@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import com.zionhuang.music.Util;
+import com.zionhuang.music.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -285,7 +285,7 @@ class JSInterpreter {
         m = Pattern.compile("(?<var>[a-zA-Z_$][a-zA-Z_$0-9]*)(?:\\.(?<member>[^(]+)|\\[(?<member2>[^]]+)\\])\\s*(?:\\(+(?<args>[^()]*)\\))?$").matcher(expr);
         if (m.matches()) {
             String variable = m.group("var");
-            String member = Util.removeQuotes(m.group("member") != null ? m.group("member") : m.group("member2"));
+            String member = Utils.removeQuotes(m.group("member") != null ? m.group("member") : m.group("member2"));
             String arg_str = m.group("args");
 
             Objects.requireNonNull(variable);
@@ -357,7 +357,7 @@ class JSInterpreter {
                 }
                 StringJoiner joiner = new StringJoiner(argvals.get(0).getAsString());
                 for (JsonElement ele : obj.getAsJsonArray()) {
-                    joiner.add(Util.removeQuotes(ele.toString()));
+                    joiner.add(Utils.removeQuotes(ele.toString()));
                 }
                 return new JsonPrimitive(joiner.toString());
             }
@@ -456,7 +456,7 @@ class JSInterpreter {
         Matcher fields_m = Pattern.compile("(?x)(?<key>(?:[a-zA-Z$0-9]+|\"[a-zA-Z$0-9]+\"|'[a-zA-Z$0-9]+'))\\s*:\\s*function\\s*\\((?<args>[a-z,]+)\\)\\{(?<code>[^}]+)\\}").matcher(fields);
         while (fields_m.find()) {
             String[] argnames = Objects.requireNonNull(fields_m.group("args")).split(",");
-            obj.add(Objects.requireNonNull(Util.removeQuotes(fields_m.group("key"))), buildFunction(argnames, fields_m.group("code")));
+            obj.add(Objects.requireNonNull(Utils.removeQuotes(fields_m.group("key"))), buildFunction(argnames, fields_m.group("code")));
         }
         return obj;
     }

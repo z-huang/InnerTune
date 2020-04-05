@@ -3,7 +3,7 @@ package com.zionhuang.music.Extractor;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
-import com.zionhuang.music.Util;
+import com.zionhuang.music.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class ExtractorUtils {
             return new JsonObject();
         }
         ArrayList<String> splited_codecs = new ArrayList<>();
-        for (String s : Util.strip(codecs_str.trim(), ",").split(",")) {
+        for (String s : Utils.strip(codecs_str.trim(), ",").split(",")) {
             if (s != null && s.length() > 0) {
                 splited_codecs.add(s);
             }
@@ -125,11 +125,11 @@ public class ExtractorUtils {
         if (url == null || !url.contains(".")) {
             return "unknown_video";
         }
-        String guess = Util.rpartition(url.split("\\?", 2)[0], '.')[2];
+        String guess = Utils.rPartition(url.split("\\?", 2)[0], '.')[2];
         if (Pattern.compile("^[A-Za-z0-9]+$").matcher(guess).matches()) {
             return guess;
-        } else if (KNOWN_EXTENSIONS.contains(Util.rstrip(guess, "/"))) {
-            return Util.rstrip(guess, "/");
+        } else if (KNOWN_EXTENSIONS.contains(Utils.rStrip(guess, "/"))) {
+            return Utils.rStrip(guess, "/");
         } else {
             return "unknown_video";
         }
