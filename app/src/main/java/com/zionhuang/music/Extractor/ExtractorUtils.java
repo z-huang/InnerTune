@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public class ExtractorUtils {
+class ExtractorUtils {
+    private static final String TAG = "ExtractorUtils";
     private static final ArrayList<String> VCODECS = new ArrayList<>(Arrays.asList("avc1", "avc2", "avc3", "avc4", "vp9", "vp8", "hev1", "hev2", "h263", "h264", "mp4v", "hvc1", "av01", "theora"));
     private static final ArrayList<String> ACODECS = new ArrayList<>(Arrays.asList("mp4a", "opus", "vorbis", "mp3", "aac", "ac-3", "ec-3", "eac3", "dtsc", "dtse", "dtsh", "dtsl"));
     private static final ArrayList<String> KNOWN_EXTENSIONS = new ArrayList<>(Arrays.asList("mp4", "m4a", "m4p", "m4b", "m4r", "m4v", "aac",
@@ -26,7 +27,7 @@ public class ExtractorUtils {
             "wav",
             "f4f", "f4m", "m3u8", "smil"));
 
-    public static JsonObject parseCodecs(String codecs_str) {
+    static JsonObject parseCodecs(String codecs_str) {
         if (codecs_str == null) {
             return new JsonObject();
         }
@@ -49,7 +50,7 @@ public class ExtractorUtils {
                     acodec = full_codec;
                 }
             } else {
-                Log.w("Extractor", "Unknown codec " + full_codec);
+                Log.w(TAG, "Unknown codec " + full_codec);
             }
         }
         JsonObject res = new JsonObject();
@@ -68,7 +69,7 @@ public class ExtractorUtils {
         return res;
     }
 
-    public static String mimetype2ext(String mt) {
+    static String mimetype2ext(String mt) {
         if (mt == null) {
             return null;
         }
@@ -121,7 +122,7 @@ public class ExtractorUtils {
         }
     }
 
-    public static String determineExt(String url) {
+    static String determineExt(String url) {
         if (url == null || !url.contains(".")) {
             return "unknown_video";
         }

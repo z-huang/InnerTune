@@ -2,7 +2,9 @@
     <string name="app_name">Music</string>
     <string name="title_my_music">My Music</string>
     <string name="title_explore">Explore</string>
-    <string name="title_notifications">Notifications</string>
     <string name="search">Search</string>
     <string name="history">History</string>
+    <string name="search_item_menu_add">Add to list</string>
+    <string name="search_item_menu_download">Download</string>
+    <string name="title_settings">Settings</string>
 </resources>

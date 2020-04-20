@@ -67,19 +67,20 @@ public class FragmentNavigator {
         switchTo(tag, null);
     }
 
-    public <T extends Fragment> T getCurrentFragment() {
-        return (T) mCurrentFragment;
+    public Fragment getCurrentFragment() {
+        return mCurrentFragment;
     }
-    public <T extends Fragment> T findFragmentByTag(String tag) {
+
+    public Fragment findFragmentByTag(String tag) {
         ensureStateWasRestored();
-        return (T) mFragmentManager.findFragmentByTag(tag);
+        return mFragmentManager.findFragmentByTag(tag);
     }
 
     public void writeStateToBundle(@NonNull Bundle bundle) {
         bundle.putString("fragmentNavigatorCurrentFragment", mCurrentFragment != null ? mCurrentFragment.getTag() : null);
     }
 
-    public void restoreState(@Nullable Bundle bundle) {
+    private void restoreState(@Nullable Bundle bundle) {
         mWasRestoreStateCalled = true;
         if (bundle == null) {
             return;

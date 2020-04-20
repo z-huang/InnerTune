@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_library"
-        android:name="com.zionhuang.music.ui.library.LibraryFragment"
+        android:name="com.zionhuang.music.ui.fragments.LibraryFragment"
         android:label="@string/title_my_music"
         tools:layout="@layout/fragment_library">
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_explorarion"
-        android:name="com.zionhuang.music.ui.exploration.ExplorationFragment"
+        android:name="com.zionhuang.music.ui.fragments.ExplorationFragment"
         android:background="#FFFFFFFF"
         android:label="@string/title_explore"
         tools:layout="@layout/fragment_exploration">
@@ -31,10 +31,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.zionhuang.music.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_settings"
+        android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/navigation_searchSuggestion"
         android:name="com.zionhuang.music.ui.fragments.SearchSuggestionFragment"

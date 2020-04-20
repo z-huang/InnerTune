@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.zionhuang.music.Extractor.YoutubeIE;
 import com.zionhuang.music.Extractor.YtStream;
+import com.zionhuang.music.Youtube.YtItem;
 import com.zionhuang.music.ui.activities.MainActivity;
 
 import java.util.EventListener;
@@ -23,16 +24,16 @@ import java.util.EventListener;
  * Player Singleton
  */
 public class Player implements EventListener, com.google.android.exoplayer2.Player.EventListener {
+    private static final String TAG = "Player";
     private static volatile Player mInstance;
     private DataSource.Factory dataSourceFactory;
     private ExoPlayer mPlayer;
-    public MediaSource mediaSource;
-    private boolean playWhenReady = true;
-    private int currentWindow = 0;
-    private long playbackPosition = 0;
+    private final boolean playWhenReady = true;
+    private final int currentWindow = 0;
+    private final long playbackPosition = 0;
 
     private Player(Context context, PlayerView playerView) {
-        mPlayer = ExoPlayerFactory.newSimpleInstance(context);
+        mPlayer = new SimpleExoPlayer.Builder(context).build();
         playerView.setUseController(false);
         mPlayer.setPlayWhenReady(playWhenReady);
         mPlayer.seekTo(currentWindow, playbackPosition);
@@ -98,9 +99,9 @@ public class Player implements EventListener, com.google.android.exoplayer2.Play
                     url = result.getBestVideo().url;
                 }
                 mPlayer.load(mPlayer.buildMediaSource(Uri.parse(url)));
-                Log.d("Player", url);
+                Log.d(TAG, url);
             } else {
-                Log.e("Player", "Extract error, msg: " + result.errorMessage);
+                Log.e(TAG, "Extract error, msg: " + result.errorMessage);
             }
         }
     }
@@ -109,11 +110,11 @@ public class Player implements EventListener, com.google.android.exoplayer2.Play
         mPlayer.prepare(mediaSource);
     }
 
-    public void loadItem(Youtube.Item.Base item, Player player, Context context) {
-        if (item instanceof Youtube.Item.Video) {
-            Log.d("Player", "Video id: " + ((Youtube.Item.Video) item).getId());
+    public void loadItem(YtItem.Base item, Player player, Context context) {
+        if (item instanceof YtItem.Video) {
+            Log.d(TAG, "Video id: " + ((YtItem.Video) item).getId());
 
-            new ExtractAsyncTask(player).execute(((Youtube.Item.Video) item).getId());
+            new ExtractAsyncTask(player).execute(((YtItem.Video) item).getId());
         }
     }
 }

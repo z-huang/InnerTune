@@ -37,6 +37,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.2.1'
     implementation 'androidx.navigation:navigation-ui:2.2.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
     implementation 'com.google.apis:google-api-services-youtube:v3-rev99-1.17.0-rc'
     implementation 'com.google.api-client:google-api-client-android:1.30.8'
     implementation 'com.google.api-client:google-api-client-gson:1.30.8'

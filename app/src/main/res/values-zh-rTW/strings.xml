@@ -2,7 +2,9 @@
     <string name="app_name">Music</string>
     <string name="title_my_music">我的音樂</string>
     <string name="title_explore">探索</string>
-    <string name="title_notifications">Notifications</string>
     <string name="search">搜尋</string>
     <string name="history">歷史</string>
+    <string name="search_item_menu_add">加入</string>
+    <string name="search_item_menu_download">下載</string>
+    <string name="title_settings">設定</string>
 </resources>

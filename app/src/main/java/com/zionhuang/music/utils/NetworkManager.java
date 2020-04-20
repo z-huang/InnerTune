@@ -10,17 +10,15 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 public class NetworkManager {
-    private static volatile NetworkManager instance;
-    private static Context ctx;
-    private RequestQueue requestQueue;
-    private ImageLoader imageLoader;
+    private static volatile NetworkManager mInstance;
+    private RequestQueue mRequestQueue;
+    private ImageLoader mImageLoader;
 
 
     private NetworkManager(Context context) {
-        ctx = context;
-        requestQueue = getRequestQueue();
+        mRequestQueue = Volley.newRequestQueue(context, 1024 * 1024 * 10);
 
-        imageLoader = new ImageLoader(requestQueue,
+        mImageLoader = new ImageLoader(mRequestQueue,
                 new ImageLoader.ImageCache() {
                     private final LruCache<String, Bitmap> cache = new LruCache<>(20);
 
@@ -36,37 +34,26 @@ public class NetworkManager {
                 });
     }
 
-    public static void init(Context context) {
-        instance = new NetworkManager(context);
-    }
-
     public static NetworkManager getInstance(Context context) {
-        if (instance == null) {
+        if (mInstance == null) {
             synchronized (NetworkManager.class) {
-                if (instance == null) {
-                    instance = new NetworkManager(context);
+                if (mInstance == null) {
+                    mInstance = new NetworkManager(context);
                 }
             }
         }
-        return instance;
-    }
-
-    public static NetworkManager getInstance() {
-        return instance;
+        return mInstance;
     }
 
     public RequestQueue getRequestQueue() {
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext(), 1024 * 1024 * 10);
-        }
-        return requestQueue;
+        return mRequestQueue;
     }
 
     public <T> void addToRequestQueue(Request<T> req) {
-        getRequestQueue().add(req);
+        mRequestQueue.add(req);
     }
 
     public ImageLoader getImageLoader() {
-        return imageLoader;
+        return mImageLoader;
     }
 }

@@ -1,148 +1,61 @@
 package com.zionhuang.music.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.RequestQueue;
-import com.zionhuang.music.utils.NetworkManager;
 import com.zionhuang.music.R;
-import com.zionhuang.music.utils.Youtube;
-import com.zionhuang.music.ui.activities.MainActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.zionhuang.music.adapters.SearchSuggestionAdapter;
+import com.zionhuang.music.viewmodels.MainViewModel;
+import com.zionhuang.music.viewmodels.SearchViewModel;
 
 import java.util.ArrayList;
 
-public class SearchSuggestionFragment extends Fragment {
-    private MainActivity activity;
-    private View root;
-    private RecyclerView recyclerView;
-    private Adapter mAdapter;
-    private ArrayList<String> dataSet;
-    private RecyclerView.LayoutManager layoutManager;
-    RequestQueue requestQueue;
-
-    private class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
-        private ArrayList<String> mDataset;
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            TextView textView;
-
-            ViewHolder(View v) {
-                super(v);
-                textView = v.findViewById(R.id.textView);
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("SuggestFragment", "Element " + getAdapterPosition() + " clicked.");
-                        activity.search(textView.getText().toString());
-                    }
-                });
-                v.findViewById(R.id.fill_text_button).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.fillSearchBarQuery(textView.getText().toString());
-                    }
-                });
-            }
-        }
-
-        Adapter(ArrayList<String> myDataset) {
-            mDataset = myDataset;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggestion, parent, false);
-
-            return new ViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            holder.textView.setText(mDataset.get(position));
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDataset.size();
-        }
-
-        public void clear() {
-            int size = getItemCount();
-            mDataset.clear();
-            notifyItemRangeRemoved(0, size);
-        }
-    }
+public class SearchSuggestionFragment extends BaseFragment {
+    private static final String TAG = "SearchSuggestionFragment";
+    private MainViewModel mMainViewModel;
+    private SearchViewModel mViewModel;
+    private SearchSuggestionAdapter mAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_search_suggestion, container, false);
-
-        activity = (MainActivity) getActivity();
-
-        requestQueue = NetworkManager.getInstance().getRequestQueue();
-
-        recyclerView = root.findViewById(R.id.suggestion_recycler_view);
-        recyclerView.setHasFixedSize(true);
-
-        layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        dataSet = new ArrayList<>();
-        mAdapter = new Adapter(dataSet);
-        recyclerView.setAdapter(mAdapter);
-        return root;
+    protected int layoutId() {
+        return R.layout.fragment_search_suggestion;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mMainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+
+        RecyclerView recyclerView = findViewById(R.id.suggestion_recycler_view);
+        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ArrayList<String> dataSet = new ArrayList<>();
+        mAdapter = new SearchSuggestionAdapter(dataSet, new ViewModelProvider(requireActivity()).get(MainViewModel.class));
+        recyclerView.setAdapter(mAdapter);
+
+        mMainViewModel.getSearchQuery().observe(getViewLifecycleOwner(), this::fetchSuggestion);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             String query = bundle.getString("query");
-            onQueryTextChange(query);
+            fetchSuggestion(query);
         }
     }
 
-    public void onQueryTextChange(final String query) {
+    private void fetchSuggestion(final String query) {
         if (query == null || query.isEmpty()) {
             mAdapter.clear();
             return;
         }
-        Youtube.Request.Suggest(requestQueue, query, new Youtube.Request.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    if (response.length() == 2 && query.equals(response.get(0))) {
-                        JSONArray suggestions = response.getJSONArray(1);
-                        dataSet.clear();
-                        for (int i = 0; i < suggestions.length(); i++) {
-                            dataSet.add(suggestions.getString(i));
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.d("Response", "error: " + e.toString());
-            }
-        });
+        mViewModel.fetchSuggestions(query).observe(getViewLifecycleOwner(), result -> mAdapter.setData(result));
     }
 }

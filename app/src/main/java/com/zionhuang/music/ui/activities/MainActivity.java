@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,15 +25,14 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.zionhuang.music.utils.NetworkManager;
-import com.zionhuang.music.utils.Player;
 import com.zionhuang.music.R;
-import com.zionhuang.music.utils.Youtube;
-import com.zionhuang.music.ui.exploration.ExplorationFragment;
+import com.zionhuang.music.ui.fragments.ExplorationFragment;
+import com.zionhuang.music.ui.fragments.LibraryFragment;
 import com.zionhuang.music.ui.fragments.SearchResultFragment;
 import com.zionhuang.music.ui.fragments.SearchSuggestionFragment;
-import com.zionhuang.music.ui.library.LibraryFragment;
+import com.zionhuang.music.ui.fragments.SettingsFragment;
 import com.zionhuang.music.utils.FragmentNavigator;
+import com.zionhuang.music.utils.Player;
 import com.zionhuang.music.viewmodels.MainViewModel;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, FragmentNavigator.FragmentFactory {
@@ -45,14 +43,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private String query;
 
-    private Youtube youtube;
-    public Player player;
-
-    private Toolbar toolbar;
     private BottomNavigationView mBottomNavigator;
     private FragmentNavigator mFragmentNavigator;
     private SearchView searchView;
-    private MenuItem searchItem;
 
 
     private TextView miniSongTitle;
@@ -63,16 +56,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        
         final Guideline glVideo = findViewById(R.id.guideline_video);
         final ImageView miniPlayPauseBtn = findViewById(R.id.mini_play_pause_btn);
 
         final PlayerView playerView = findViewById(R.id.player);
         final AspectRatioFrameLayout playerFrame = findViewById(R.id.player_frame);
-        Log.d("main", "player width: " + playerFrame.getLayoutParams().width + ", height: " + playerFrame.getLayoutParams().height);
 
-        player = Player.getInstance(this, playerView);
+        Player.getInstance(this, playerView);
+
         miniSongTitle = findViewById(R.id.mini_song_title);
         miniSongArtist = findViewById(R.id.mini_song_artist);
         miniProgressBar = findViewById(R.id.player_mini_progress_bar);
@@ -94,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         miniProgressBar.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                    case BottomSheetBehavior.STATE_SETTLING:
                         break;
                 }
             }
@@ -122,9 +120,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
         });
 
-        NetworkManager.init(this);
-        youtube = Youtube.getInstance(this);
-
         mBottomNavigator = findViewById(R.id.nav_view);
         mBottomNavigator.setOnNavigationItemSelectedListener(this);
         mBottomNavigator.bringToFront();
@@ -139,11 +134,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             miniSongTitle.setText(currentSong.first);
             miniSongArtist.setText(currentSong.second);
         });
+        mainViewModel.getSearchQuery().observe(this, query -> searchView.setQuery(query, false));
+        mainViewModel.getQuerySubmitListener().observe(this, ignored -> searchView.setQuery(searchView.getQuery(), true));
 
         if (savedInstanceState != null) {
-            if (savedInstanceState.getBoolean("searchbar_isSearching")) {
+            if (savedInstanceState.getBoolean("searchBar_isSearching")) {
                 isSearching = true;
-                isFocus = savedInstanceState.getBoolean("searchbar_isFocus");
+                isFocus = savedInstanceState.getBoolean("searchBar_isFocus");
                 query = savedInstanceState.getString("query");
             }
         }
@@ -153,10 +150,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchItem = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = new SearchView(this);
         searchView.setIconifiedByDefault(true);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        if (searchManager != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
         searchView.setSubmitButtonEnabled(false);
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                mBottomNavigator.setVisibility(View.GONE);
+                mBottomNavigator.setVisibility(View.INVISIBLE);
                 if (!(mFragmentNavigator.getCurrentFragment() instanceof SearchSuggestionFragment)) {
                     Bundle bundle = new Bundle();
                     bundle.putString("query", searchView.getQuery().toString());
@@ -187,9 +186,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (mFragmentNavigator.getCurrentFragment() instanceof SearchSuggestionFragment) {
-                    ((SearchSuggestionFragment) mFragmentNavigator.getCurrentFragment()).onQueryTextChange(newText);
-                }
+                mainViewModel.setSearchQuery(newText, false);
+//                if (mFragmentNavigator.getCurrentFragment() instanceof SearchSuggestionFragment) {
+//                    ((SearchSuggestionFragment) mFragmentNavigator.getCurrentFragment()).fetchSuggestion(newText);
+//                }
                 return false;
             }
 
@@ -219,14 +219,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return findViewById(R.id.player);
     }
 
-    public void fillSearchBarQuery(String text) {
-        searchView.setQuery(text, false);
-    }
-
-    public void search(String text) {
-        searchView.setQuery(text, true);
-    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         int id = menuItem.getItemId();
@@ -237,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.navigation_explorarion:
                 mFragmentNavigator.switchTo("explore");
                 break;
+            case R.id.navigation_settings:
+                mFragmentNavigator.switchTo("settings");
         }
         return true;
     }
@@ -248,6 +242,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return new LibraryFragment();
             case "explore":
                 return new ExplorationFragment();
+            case "settings":
+                return new SettingsFragment();
             case "suggestion":
                 return new SearchSuggestionFragment();
             case "search_result":
@@ -271,8 +267,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("searchbar_isSearching", searchView == null || !searchView.isIconified());
-        outState.putBoolean("searchbar_isFocus", searchView != null && searchView.hasFocus());
+        outState.putBoolean("searchBar_isSearching", searchView == null || !searchView.isIconified());
+        outState.putBoolean("searchBar_isFocus", searchView != null && searchView.hasFocus());
         if (!searchView.isIconified()) {
             outState.putString("query", searchView.getQuery().toString());
         }
