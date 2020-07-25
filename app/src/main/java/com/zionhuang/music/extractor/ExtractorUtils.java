@@ -1,4 +1,4 @@
-package com.zionhuang.music.Extractor;
+package com.zionhuang.music.extractor;
 
 import android.util.Log;
 

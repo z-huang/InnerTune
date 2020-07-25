@@ -8,141 +8,94 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.Guideline;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.zionhuang.music.R;
+import com.zionhuang.music.ui.fragments.BottomControlsFragment;
 import com.zionhuang.music.ui.fragments.ExplorationFragment;
 import com.zionhuang.music.ui.fragments.LibraryFragment;
 import com.zionhuang.music.ui.fragments.SearchResultFragment;
 import com.zionhuang.music.ui.fragments.SearchSuggestionFragment;
 import com.zionhuang.music.ui.fragments.SettingsFragment;
+import com.zionhuang.music.ui.widgets.BottomSheetListener;
 import com.zionhuang.music.utils.FragmentNavigator;
-import com.zionhuang.music.utils.Player;
 import com.zionhuang.music.viewmodels.MainViewModel;
 
+import java.util.ArrayList;
+
+import static com.zionhuang.music.utils.Utils.getDensity;
+import static com.zionhuang.music.utils.Utils.replaceFragment;
+
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, FragmentNavigator.FragmentFactory {
+    private static final String TAG = "MainActivity";
     private MainViewModel mainViewModel;
 
+    private ArrayList<BottomSheetListener> mBottomSheetCallbacks = new ArrayList<>();
     private boolean isSearching = false;
     private boolean isFocus = false;
 
     private String query;
 
+    private BottomSheetBehavior<CoordinatorLayout> mBottomSheetBehavior;
     private BottomNavigationView mBottomNavigator;
     private FragmentNavigator mFragmentNavigator;
     private SearchView searchView;
-
-
-    private TextView miniSongTitle;
-    private TextView miniSongArtist;
-    private ProgressBar miniProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        
-        final Guideline glVideo = findViewById(R.id.guideline_video);
-        final ImageView miniPlayPauseBtn = findViewById(R.id.mini_play_pause_btn);
-
-        final PlayerView playerView = findViewById(R.id.player);
-        final AspectRatioFrameLayout playerFrame = findViewById(R.id.player_frame);
-
-        Player.getInstance(this, playerView);
-
-        miniSongTitle = findViewById(R.id.mini_song_title);
-        miniSongArtist = findViewById(R.id.mini_song_artist);
-        miniProgressBar = findViewById(R.id.player_mini_progress_bar);
-
-        View bottomSheet = findViewById(R.id.bottom_sheet);
-        BottomSheetBehavior.from(bottomSheet).addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        int height = ((View) playerFrame.getParent()).getWidth() * 9 / 16;
-                        glVideo.setGuidelineBegin(height + 1);
-                        miniSongTitle.setTextColor(miniSongTitle.getTextColors().withAlpha(0));
-                        miniSongArtist.setTextColor(miniSongArtist.getTextColors().withAlpha(0));
-                        miniPlayPauseBtn.setAlpha(0f);
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        miniProgressBar.setVisibility(View.GONE);
-                        break;
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        miniProgressBar.setVisibility(View.VISIBLE);
-                        break;
-                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        break;
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (slideOffset < 0.5 && slideOffset >= 0) {
-                    int fullWidth = ((View) playerFrame.getParent()).getWidth();
-                    float fullHeight = ((float) fullWidth) * 9 / 16;
-                    float height = 132 + (fullHeight - 132) * slideOffset * 2;
-                    glVideo.setGuidelineBegin((int) height);
-                    float alpha = 1 - slideOffset * 3;
-                    if (alpha < 0) {
-                        alpha = 0f;
-                    }
-                    miniSongTitle.setTextColor(miniSongTitle.getTextColors().withAlpha((int) (255 * alpha)));
-                    miniSongArtist.setTextColor(miniSongArtist.getTextColors().withAlpha((int) (255 * alpha)));
-                    miniPlayPauseBtn.setAlpha(alpha);
-                } else if (slideOffset >= 0.5) {
-                    int height = ((View) playerFrame.getParent()).getWidth() * 9 / 16;
-                    glVideo.setGuidelineBegin(height + 1);
-                    miniSongTitle.setTextColor(miniSongTitle.getTextColors().withAlpha(0));
-                    miniSongArtist.setTextColor(miniSongArtist.getTextColors().withAlpha(0));
-                    miniPlayPauseBtn.setAlpha(0f);
-                }
-            }
-        });
-
-        mBottomNavigator = findViewById(R.id.nav_view);
-        mBottomNavigator.setOnNavigationItemSelectedListener(this);
-        mBottomNavigator.bringToFront();
 
         mFragmentNavigator = new FragmentNavigator(savedInstanceState, getSupportFragmentManager(), R.id.nav_host_fragment, this);
-        if (savedInstanceState == null) {
-            mFragmentNavigator.switchTo("library");
-        }
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.getCurrentSong().observe(this, currentSong -> {
-            miniSongTitle.setText(currentSong.first);
-            miniSongArtist.setText(currentSong.second);
-        });
         mainViewModel.getSearchQuery().observe(this, query -> searchView.setQuery(query, false));
         mainViewModel.getQuerySubmitListener().observe(this, ignored -> searchView.setQuery(searchView.getQuery(), true));
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            mFragmentNavigator.switchTo("library");
+        } else {
             if (savedInstanceState.getBoolean("searchBar_isSearching")) {
                 isSearching = true;
                 isFocus = savedInstanceState.getBoolean("searchBar_isFocus");
                 query = savedInstanceState.getString("query");
             }
+        }
+
+        setupUI();
+    }
+
+    private void setupUI() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        replaceFragment(getSupportFragmentManager(), R.id.bottom_controls_container, new BottomControlsFragment());
+
+        CoordinatorLayout bottomControlsSheet = findViewById(R.id.bottom_controls_sheet);
+        mBottomNavigator = findViewById(R.id.bottom_nav);
+        mBottomNavigator.setOnNavigationItemSelectedListener(this);
+
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomControlsSheet);
+        mBottomSheetBehavior.setHideable(true);
+        mBottomSheetBehavior.addBottomSheetCallback(new BottomSheetCallback());
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (mBottomSheetBehavior != null) {
+            mBottomSheetBehavior.setPeekHeight((int) (108 * getDensity(this)), true);
         }
     }
 
@@ -216,7 +169,34 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public PlayerView getPlayerView() {
-        return findViewById(R.id.player);
+        return findViewById(R.id.player_view);
+    }
+
+    public void addBottomSheetListener(BottomSheetListener bottomSheetListener) {
+        mBottomSheetCallbacks.add(bottomSheetListener);
+    }
+
+    public void removeBottomSheetListener(BottomSheetListener bottomSheetListener) {
+        mBottomSheetCallbacks.remove(bottomSheetListener);
+    }
+
+    private class BottomSheetCallback extends BottomSheetBehavior.BottomSheetCallback {
+        @Override
+        public void onStateChanged(@NonNull View bottomSheet, @BottomSheetBehavior.State int newState) {
+            for (BottomSheetListener bottomSheetListener : mBottomSheetCallbacks) {
+                bottomSheetListener.onStateChanged(bottomSheet, newState);
+            }
+        }
+
+        @Override
+        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            if (slideOffset >= 0) {
+                mBottomNavigator.setTranslationY(getResources().getDimensionPixelOffset(R.dimen.bottom_navigation_height) * slideOffset);
+            }
+            for (BottomSheetListener bottomSheetListener : mBottomSheetCallbacks) {
+                bottomSheetListener.onSlide(bottomSheet, slideOffset);
+            }
+        }
     }
 
     @Override
@@ -269,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onSaveInstanceState(outState);
         outState.putBoolean("searchBar_isSearching", searchView == null || !searchView.isIconified());
         outState.putBoolean("searchBar_isFocus", searchView != null && searchView.hasFocus());
-        if (!searchView.isIconified()) {
+        if (searchView != null && !searchView.isIconified()) {
             outState.putString("query", searchView.getQuery().toString());
         }
         mFragmentNavigator.writeStateToBundle(outState);

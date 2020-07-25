@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.zionhuang.music.R;
-import com.zionhuang.music.Youtube.YtItem;
+import com.zionhuang.music.youtube.YtItem;
 import com.zionhuang.music.adapters.selection.SelectableAdapter;
 import com.zionhuang.music.adapters.selection.Selection;
 import com.zionhuang.music.utils.NetworkManager;
@@ -29,7 +29,7 @@ public class SearchResultAdapter extends SelectableAdapter<String, SearchResultA
     private LayoutInflater mInflater;
     private ArrayList<YtItem.Base> mDataSet;
     private ImageLoader mImageLoader;
-    private InterationListener mListener;
+    private InteractionListener mListener;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
@@ -108,7 +108,7 @@ public class SearchResultAdapter extends SelectableAdapter<String, SearchResultA
         setHasStableIds(true);
     }
 
-    public void setInteractionListener(InterationListener listener) {
+    public void setInteractionListener(InteractionListener listener) {
         mListener = listener;
     }
 
@@ -160,7 +160,7 @@ public class SearchResultAdapter extends SelectableAdapter<String, SearchResultA
         return mDataSet.get(position).hashCode();
     }
 
-    public interface InterationListener {
+    public interface InteractionListener {
         void onItemClicked(YtItem.BaseItem item);
     }
 }

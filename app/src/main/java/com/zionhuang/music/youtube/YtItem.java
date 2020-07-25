@@ -1,4 +1,4 @@
-package com.zionhuang.music.Youtube;
+package com.zionhuang.music.youtube;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -13,7 +13,6 @@ public class YtItem {
     }
 
     public static abstract class BaseItem extends Base {
-        private String idTag;
         protected String id;
         protected String title;
         protected String channelTitle;

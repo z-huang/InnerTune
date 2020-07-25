@@ -1,6 +1,12 @@
 package com.zionhuang.music.utils;
 
+import android.content.Context;
+
+import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -132,7 +138,7 @@ public class Utils {
     }
 
     public static String rStrip(String s, String chars) {
-        return s.replaceAll("["+chars+"]+$", "");
+        return s.replaceAll("[" + chars + "]+$", "");
     }
 
     public static String[] rPartition(String s, char sep) {
@@ -143,5 +149,38 @@ public class Utils {
             }
         }
         return new String[]{s, "", ""};
+    }
+
+    public static float getDensity(Context context) {
+        return context.getResources().getDisplayMetrics().density;
+    }
+
+    public static void replaceFragment(FragmentManager fragmentManager, @IdRes int id, Fragment fragment) {
+        replaceFragment(fragmentManager, id, fragment, null, false);
+    }
+
+    public static void replaceFragment(FragmentManager fragmentManager, @IdRes int id, Fragment fragment, String tag) {
+        replaceFragment(fragmentManager, id, fragment, tag, false);
+    }
+
+    public static void replaceFragment(FragmentManager fragmentManager, @IdRes int id, Fragment fragment, String tag, Boolean addToBackStack) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(id, fragment, tag);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
+    }
+
+    public static String makeTimeString(long duration) {
+        int secs, minutes;
+        long hours;
+        hours = duration / 3600;
+        duration %= 3600;
+        minutes = (int) (duration / 60);
+        duration %= 60;
+        secs = (int) duration;
+        String durationFormat = (hours == 0L) ? "%2$d:%3$02d" : "%1$d:%2$02d:%3$02d";
+        return String.format(durationFormat, hours, minutes, secs);
     }
 }

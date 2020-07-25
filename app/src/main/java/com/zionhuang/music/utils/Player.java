@@ -13,9 +13,9 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.zionhuang.music.Extractor.YoutubeIE;
-import com.zionhuang.music.Extractor.YtStream;
-import com.zionhuang.music.Youtube.YtItem;
+import com.zionhuang.music.extractor.YoutubeIE;
+import com.zionhuang.music.extractor.YtStream;
+import com.zionhuang.music.youtube.YtItem;
 import com.zionhuang.music.ui.activities.MainActivity;
 
 import java.util.EventListener;

@@ -8,8 +8,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.zionhuang.music.Youtube.YtItem;
-import com.zionhuang.music.Youtube.YtRequest;
+import com.zionhuang.music.youtube.YtItem;
+import com.zionhuang.music.youtube.YtRequest;
 
 import java.util.ArrayList;
 

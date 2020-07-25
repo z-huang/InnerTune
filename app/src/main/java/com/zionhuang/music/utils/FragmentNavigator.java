@@ -8,9 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavOptions;
-
-import com.zionhuang.music.R;
 
 public class FragmentNavigator {
     private FragmentManager mFragmentManager;
@@ -19,17 +16,6 @@ public class FragmentNavigator {
     private FragmentFactory mFragmentFactory;
     private Fragment mCurrentFragment;
     private boolean mWasRestoreStateCalled = false;
-
-    private NavOptions animStack = new NavOptions.Builder()
-            .setEnterAnim(R.anim.fragment_open_enter)
-            .setExitAnim(R.anim.fragment_close_exit)
-            .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
-            .setPopExitAnim(R.anim.nav_default_pop_exit_anim).build();
-    private NavOptions animSwitch = new NavOptions.Builder()
-            .setEnterAnim(R.anim.nav_default_enter_anim)
-            .setExitAnim(R.anim.nav_default_exit_anim)
-            .setPopEnterAnim(R.anim.nav_default_pop_enter_anim)
-            .setPopExitAnim(R.anim.nav_default_pop_exit_anim).build();
 
     public FragmentNavigator(FragmentManager fragmentManager, @IdRes int containerId, FragmentFactory fragmentFactory) {
         mFragmentManager = fragmentManager;
@@ -95,6 +81,19 @@ public class FragmentNavigator {
         if (!mWasRestoreStateCalled) {
             throw new IllegalStateException("Please call restoreState before using this FragmentNavigator");
         }
+    }
+
+    public void replaceFragment(@IdRes int id, Fragment fragment) {
+        replaceFragment(id, fragment, null, false);
+    }
+
+    public void replaceFragment(@IdRes int id, Fragment fragment, String tag, boolean addToBackStack) {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(id, fragment, tag);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
     }
 
     public interface FragmentFactory {

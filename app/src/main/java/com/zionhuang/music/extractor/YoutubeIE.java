@@ -1,4 +1,4 @@
-package com.zionhuang.music.Extractor;
+package com.zionhuang.music.extractor;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,7 +14,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -23,9 +22,15 @@ import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeJava;
 
+/*
+ * A Java version of youtube_dl (https://github.com/ytdl-org/youtube-dl)
+ * Version: 2020.03.24
+ * Author: Zion Huang
+ */
+
 public class YoutubeIE {
     public enum ErrorCode {
-        NODATA, RENTAL, RTMPE, DRM, JSINTERPRETERROR, UNKNOWN
+        NODATA, RENTAL, RTMPE, DRM, JSINTERPRETERROR, EXCEPTION
     }
 
     public static class ExtractException extends java.lang.Exception {
@@ -80,28 +85,13 @@ public class YoutubeIE {
                 }
             }
             if (normalStreams.size() > 0) {
-                normalStreams.sort(new Comparator<YtStream>() {
-                    @Override
-                    public int compare(YtStream o1, YtStream o2) {
-                        return o2.width - o1.width;
-                    }
-                });
+                normalStreams.sort((o1, o2) -> o2.width - o1.width);
             }
             if (audioStreams.size() > 0) {
-                audioStreams.sort(new Comparator<YtStream>() {
-                    @Override
-                    public int compare(YtStream o1, YtStream o2) {
-                        return 0;
-                    }
-                });
+                audioStreams.sort((o1, o2) -> 0);
             }
             if (videoStreams.size() > 0) {
-                videoStreams.sort(new Comparator<YtStream>() {
-                    @Override
-                    public int compare(YtStream o1, YtStream o2) {
-                        return o2.width - o1.width;
-                    }
-                });
+                videoStreams.sort((o1, o2) -> o2.width - o1.width);
             }
         }
 
@@ -232,7 +222,7 @@ public class YoutubeIE {
         String func_id = player_type + "_" + player_id + signatureCacheId(example_sig);
         // TODO: load function from cache
 
-        SignatureFunction res = null;
+        SignatureFunction res;
         if (player_type != null && player_type.equals("js")) {
             String code = Utils.downloadPlainText(player_url);
             try {
@@ -295,7 +285,7 @@ public class YoutubeIE {
         playerCache = new HashMap<>();
         Matcher m;
 
-        if (Pattern.compile("player-age-gate-content>").matcher(video_webpage).find()) {
+        if (Pattern.compile("player-age-gate-content>").matcher(Objects.requireNonNull(video_webpage)).find()) {
             age_gate = true;
             embed_webpage = Utils.downloadWebPage("https://www.youtube.com/embed/" + videoId);
             String data = "video_id=" + videoId + "&eurl=https%3A%2F%2Fyoutube.googleapis.com%2Fv%2F" + videoId + "&sts=" + Utils.searchRegex("\"sts\"\\s*:\\s*(\\d+)", embed_webpage);
@@ -449,7 +439,7 @@ public class YoutubeIE {
                     continue;
                 }
                 if (cipher != null) {
-                    if (url_data.has("s")) {
+                    if (Objects.requireNonNull(url_data).has("s")) {
                         final String ASSETS_RE = "\"assets\":.+?\"js\":\\s*(\"[^\"]+\")";
                         String jsplayer_url_json = Utils.searchRegex(ASSETS_RE, age_gate ? embed_webpage : video_webpage);
                         if (jsplayer_url_json.length() == 0 && !age_gate) {
@@ -469,7 +459,7 @@ public class YoutubeIE {
                         url += "&signature=" + url_data.get("sig").getAsString();
                     } else if (url_data.has("s")) {
                         String encrypted_sig = url_data.get("s").getAsString();
-                        String signature = null;
+                        String signature;
                         try {
                             signature = decryptSignature(encrypted_sig, player_url);
                         } catch (ExtractException e) {
@@ -495,7 +485,7 @@ public class YoutubeIE {
                         dct.add(entry.getKey(), entry.getValue());
                     }
                 }
-                m = Pattern.compile("^(?<width>\\d+)[xX](?<height>\\d+)$").matcher(url_data.has("size") ? url_data.get("size").getAsString() : "");
+                m = Pattern.compile("^(?<width>\\d+)[xX](?<height>\\d+)$").matcher(Objects.requireNonNull(url_data).has("size") ? url_data.get("size").getAsString() : "");
                 int width = 0;
                 int height = 0;
                 if (m.find()) {
@@ -601,12 +591,17 @@ public class YoutubeIE {
         return formats;
     }
 
+    public YoutubeIE() {
+    }
+
     public Result extract(String videoId) {
         try {
             ArrayList<YtStream> formats = realExtract(videoId);
             return new Result(formats);
         } catch (ExtractException e) {
             return new Result(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            return new Result(ErrorCode.EXCEPTION, e.getMessage());
         }
     }
 }

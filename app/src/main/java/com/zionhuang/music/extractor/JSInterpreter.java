@@ -1,4 +1,4 @@
-package com.zionhuang.music.Extractor;
+package com.zionhuang.music.extractor;
 
 import android.util.Pair;
 
@@ -37,109 +37,76 @@ class JSInterpreter {
     private static HashMap<String, OperatorFunction> ASSIGN_OPERATORS = new HashMap<>();
 
     static {
-        OPERATORS.put("-", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() - b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put("-", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() - b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put("+", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && b.isJsonPrimitive()) {
-                    JsonPrimitive ap = a.getAsJsonPrimitive();
-                    JsonPrimitive bp = b.getAsJsonPrimitive();
-                    if (ap.isNumber() && bp.isNumber()) {
-                        return new JsonPrimitive(a.getAsInt() + b.getAsInt());
-                    }
-                    if (ap.isString() && bp.isString()) {
-                        return new JsonPrimitive(a.getAsString() + b.getAsString());
-                    }
+        OPERATORS.put("+", (a, b) -> {
+            if (a.isJsonPrimitive() && b.isJsonPrimitive()) {
+                JsonPrimitive ap = a.getAsJsonPrimitive();
+                JsonPrimitive bp = b.getAsJsonPrimitive();
+                if (ap.isNumber() && bp.isNumber()) {
+                    return new JsonPrimitive(a.getAsInt() + b.getAsInt());
                 }
-                return JsonNull.INSTANCE;
-            }
-        });
-        OPERATORS.put("%", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() % b.getAsInt());
+                if (ap.isString() && bp.isString()) {
+                    return new JsonPrimitive(a.getAsString() + b.getAsString());
                 }
-                return JsonNull.INSTANCE;
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put("/", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() / b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put("%", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() % b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put("*", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() * b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put("/", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() / b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put("|", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() | b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put("*", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() * b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put("^", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() ^ b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put("|", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() | b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put("&", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() & b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put("^", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() ^ b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put(">>", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() >> b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put("&", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() & b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        OPERATORS.put("<<", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() << b.getAsInt());
-                }
-                return JsonNull.INSTANCE;
+        OPERATORS.put(">>", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() >> b.getAsInt());
             }
+            return JsonNull.INSTANCE;
         });
-        ASSIGN_OPERATORS.put("=", new OperatorFunction() {
-            @Override
-            public JsonElement apply(JsonElement a, JsonElement b) {
-                a = b;
-                return a;
+        OPERATORS.put("<<", (a, b) -> {
+            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
+                return new JsonPrimitive(a.getAsInt() << b.getAsInt());
             }
+            return JsonNull.INSTANCE;
+        });
+        ASSIGN_OPERATORS.put("=", (a, b) -> {
+            a = b;
+            return a;
         });
         for (Map.Entry<String, OperatorFunction> entry : OPERATORS.entrySet()) {
             ASSIGN_OPERATORS.put(entry.getKey() + "=", entry.getValue());
@@ -466,7 +433,7 @@ class JSInterpreter {
         if (!m.find()) {
             throw new InterpretException("Couldn't find JS function " + funcname);
         }
-        String[] argnames = m.group("args").split(",");
+        String[] argnames = Objects.requireNonNull(m.group("args")).split(",");
         return buildFunction(argnames, m.group("code"));
     }
 

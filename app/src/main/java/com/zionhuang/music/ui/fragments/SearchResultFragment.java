@@ -2,7 +2,6 @@ package com.zionhuang.music.ui.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -13,22 +12,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zionhuang.music.R;
-import com.zionhuang.music.Youtube.YtItem;
-import com.zionhuang.music.Youtube.YtResult;
 import com.zionhuang.music.adapters.SearchResultAdapter;
 import com.zionhuang.music.ui.recycler.RecyclerPaddingDecoration;
 import com.zionhuang.music.utils.EndlessScrollListener;
-import com.zionhuang.music.utils.Player;
-import com.zionhuang.music.viewmodels.MainViewModel;
+import com.zionhuang.music.viewmodels.PlaybackViewModel;
 import com.zionhuang.music.viewmodels.SearchViewModel;
+import com.zionhuang.music.youtube.YtItem;
+import com.zionhuang.music.youtube.YtResult;
 
 import java.util.ArrayList;
 
-public class SearchResultFragment extends BaseFragment implements SearchResultAdapter.InterationListener {
+public class SearchResultFragment extends BaseFragment implements SearchResultAdapter.InteractionListener {
     private static final String TAG = "SearchResultFragment";
-    private SearchViewModel mViewModel;
-    private MainViewModel mMainViewModel;
-    private Player mPlayer;
+    private SearchViewModel mSearchViewModel;
+    private PlaybackViewModel mPlaybackViewModel;
+
     private RecyclerView mRecyclerView;
     private SearchResultAdapter mAdapter;
     private ArrayList<YtItem.Base> mDataSet;
@@ -48,9 +46,8 @@ public class SearchResultFragment extends BaseFragment implements SearchResultAd
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-        mMainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mPlayer = Player.getInstance(requireContext());
+        mSearchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        mPlaybackViewModel = new ViewModelProvider(requireActivity()).get(PlaybackViewModel.class);
 
         mProgressBar = findViewById(R.id.progressBar);
 
@@ -70,18 +67,18 @@ public class SearchResultFragment extends BaseFragment implements SearchResultAd
 
             @Override
             public void loadMore() {
-                mViewModel.search(mQuery, mNextPageToken).observe(getViewLifecycleOwner(), SearchResultFragment.this::applyResults);
+                mSearchViewModel.search(mQuery, mNextPageToken).observe(getViewLifecycleOwner(), SearchResultFragment.this::applyResults);
             }
         });
 
-        mAdapter = new SearchResultAdapter(mDataSet, mViewModel.getSelection(), getViewLifecycleOwner(), getContext());
+        mAdapter = new SearchResultAdapter(mDataSet, mSearchViewModel.getSelection(), getViewLifecycleOwner(), getContext());
         mAdapter.setInteractionListener(this);
         mRecyclerView.setAdapter(mAdapter);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
             mQuery = bundle.getString("query");
-            mViewModel.search(mQuery, null).observe(getViewLifecycleOwner(), this::applyResults);
+            mSearchViewModel.search(mQuery, null).observe(getViewLifecycleOwner(), this::applyResults);
         } else {
             Log.d(TAG, "no query");
         }
@@ -95,7 +92,7 @@ public class SearchResultFragment extends BaseFragment implements SearchResultAd
             Bundle bundle = getArguments();
             if (bundle != null) {
                 mQuery = bundle.getString("query");
-                mViewModel.search(mQuery, null).observe(getViewLifecycleOwner(), this::applyResults);
+                mSearchViewModel.search(mQuery, null).observe(getViewLifecycleOwner(), this::applyResults);
             } else {
                 Log.d(TAG, "no query");
             }
@@ -138,8 +135,10 @@ public class SearchResultFragment extends BaseFragment implements SearchResultAd
 
     @Override
     public void onItemClicked(YtItem.BaseItem item) {
-        mMainViewModel.setCurrentSong(new Pair<>(item.getTitle(), item.getChannelTitle()));
-        mPlayer.loadItem(item, mPlayer, requireContext());
+        Bundle bundle = new Bundle();
+        bundle.putString("title", item.getTitle());
+        bundle.putString("artist", item.getDescription());
+        mPlaybackViewModel.playMedia(item.getId(), bundle);
     }
 
     @Override

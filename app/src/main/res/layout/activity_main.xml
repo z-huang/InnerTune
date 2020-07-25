@@ -8,7 +8,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/nav_view"
+        android:layout_above="@id/bottom_nav"
         android:orientation="vertical"
         tools:context=".ui.activities.MainActivity">
 
@@ -44,22 +44,35 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="54dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <include layout="@layout/bottom_sheet_player" />
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/bottom_controls_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="@dimen/bottom_controls_sheet_peek_height"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:layout_xml="@layout/bottom_controls_sheet">
+
+        <FrameLayout
+            android:id="@+id/bottom_controls_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/bottom_navigation_height"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimary"
         android:clickable="true"
-        android:elevation="3dp"
         android:focusable="true"
+        app:elevation="0dp"
         app:itemIconTint="@color/bottom_navigation_colors"
         app:itemTextColor="@color/bottom_navigation_colors"
         app:layout_constraintBottom_toBottomOf="parent"

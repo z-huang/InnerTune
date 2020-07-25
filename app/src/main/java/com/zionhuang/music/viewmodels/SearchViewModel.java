@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.zionhuang.music.Youtube.YoutubeRepository;
-import com.zionhuang.music.Youtube.YtResult;
+import com.zionhuang.music.youtube.YoutubeRepository;
+import com.zionhuang.music.youtube.YtResult;
 import com.zionhuang.music.adapters.selection.Selection;
 import com.zionhuang.music.adapters.selection.SimpleKeyStorage;
 

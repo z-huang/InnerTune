@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#FF121212</color>
     <color name="colorPrimaryDark">#FF121212</color>
-    <color name="colorOnSurface">#FFFFFFFF</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorInverted">#FFFFFFFF</color>
+    <color name="colorOnSurface">#FFFFFFFF</color>
     <color name="textColor">#FFFFFFFF</color>
 </resources>
