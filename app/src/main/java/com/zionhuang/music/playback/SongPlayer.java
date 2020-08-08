@@ -10,12 +10,18 @@ import android.util.Log;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.R;
 import com.zionhuang.music.extractor.YoutubeIE;
-import com.zionhuang.music.utils.AsyncTask;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SongPlayer implements MusicPlayer.EventListener {
     private static final String TAG = "SongPlayer";
     private MusicPlayer mMusicPlayer;
     private MediaSessionCompat mMediaSession;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     SongPlayer(Context context) {
         mMusicPlayer = new MusicPlayer(context);
@@ -37,9 +43,11 @@ public class SongPlayer implements MusicPlayer.EventListener {
 
     public void playSong(String songId, String title, String artist) {
         updateMetadata(title, artist, 0);
-        new AsyncTask<String, YoutubeIE.Result>()
-                .doInBackground((id) -> new YoutubeIE().extract(id))
-                .onDone((result) -> {
+        Disposable d = Observable.just(songId)
+                .map(id -> new YoutubeIE().extract(id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
                     if (result.success) {
                         String url;
                         if (result.hasNormalStream()) {
@@ -51,7 +59,8 @@ public class SongPlayer implements MusicPlayer.EventListener {
                     } else {
                         Log.d(TAG, "Extract failed, msg: " + result.errorMessage);
                     }
-                }).execute(songId);
+                });
+        compositeDisposable.add(d);
     }
 
     public void playSong(Uri uri) {
@@ -80,6 +89,7 @@ public class SongPlayer implements MusicPlayer.EventListener {
         mMediaSession.setActive(false);
         mMediaSession.release();
         mMusicPlayer.release();
+        compositeDisposable.dispose();
     }
 
     public void setPlayerView(PlayerView playerView) {
