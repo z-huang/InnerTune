@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
+    android:clickable="true"
+    android:focusable="true"
     app:currentState="@id/collapsed"
     app:layoutDescription="@xml/bottom_sheet_scene">
 
@@ -17,31 +19,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_btm_song_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_tv_group"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
         android:layout_marginStart="108dp"
-        android:layout_marginEnd="12dp"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        app:layout_constraintBottom_toTopOf="@id/tv_btm_song_artist"
-        app:layout_constraintEnd_toStartOf="@id/btn_btm_play_pause"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/player_container" />
+        android:layout_marginEnd="52dp">
 
-    <TextView
-        android:id="@+id/tv_btm_song_artist"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        app:layout_constraintBottom_toBottomOf="@id/progress_bar"
-        app:layout_constraintEnd_toEndOf="@id/tv_btm_song_title"
-        app:layout_constraintStart_toStartOf="@id/tv_btm_song_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_btm_song_title" />
+        <TextView
+            android:id="@+id/tv_btm_song_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            app:layout_constraintBottom_toTopOf="@id/tv_btm_song_artist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_btm_song_artist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_btm_song_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/btn_btm_play_pause"
@@ -73,7 +84,7 @@
             app:use_controller="false" />
     </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
 
-    <com.zionhuang.music.ui.widgets.MediaProgressBar
+    <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
@@ -97,11 +108,14 @@
 
         <TextView
             android:id="@+id/tv_song_title"
-            android:layout_width="0dp"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
+            android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@id/tv_song_artist"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -109,11 +123,14 @@
 
         <TextView
             android:id="@+id/tv_song_artist"
-            android:layout_width="0dp"
+            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
             android:singleLine="true"
+            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -129,7 +146,7 @@
         app:layout_constraintStart_toStartOf="@id/tvLayout"
         app:layout_constraintTop_toBottomOf="@id/tvLayout">
 
-        <com.zionhuang.music.ui.widgets.MediaSeekBar
+        <SeekBar
             android:id="@+id/seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -139,7 +156,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.zionhuang.music.ui.widgets.MediaProgressTextView
+        <TextView
             android:id="@+id/tv_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

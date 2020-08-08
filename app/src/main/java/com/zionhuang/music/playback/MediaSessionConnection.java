@@ -21,7 +21,6 @@ import java.util.List;
 
 public class MediaSessionConnection {
     private Context mContext;
-    private MusicService mService;
     private PlayerView mPlayerView;
     private MediaControllerCompat mMediaController;
     private MediaControllerCallback mMediaControllerCallback = new MediaControllerCallback();
@@ -95,7 +94,7 @@ public class MediaSessionConnection {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mService = ((MusicService.LocalBinder) service).getService();
+            MusicService mService = ((MusicService.LocalBinder) service).getService();
             mService.setPlayerView(mPlayerView);
             try {
                 mMediaController = new MediaControllerCompat(mContext, mService.getSessionToken());

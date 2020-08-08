@@ -27,7 +27,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
                 android:elevation="6dp"
-                app:theme="@style/AppTheme.Toolbar" />
+                android:theme="@style/AppTheme.Toolbar" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
@@ -54,9 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="@dimen/bottom_controls_sheet_peek_height"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        app:layout_xml="@layout/bottom_controls_sheet">
+        app:behavior_peekHeight="0dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
         <FrameLayout
             android:id="@+id/bottom_controls_container"

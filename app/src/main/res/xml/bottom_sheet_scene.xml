@@ -8,20 +8,6 @@
         motion:constraintSetStart="@id/collapsed"
         motion:duration="500"
         motion:motionInterpolator="easeOut">
-        <KeyFrameSet>
-            <KeyPosition
-                motion:alpha="0"
-                motion:framePosition="10"
-                motion:motionTarget="@id/tv_btm_song_title" />
-            <KeyPosition
-                motion:alpha="0"
-                motion:framePosition="10"
-                motion:motionTarget="@id/tv_btm_song_artist" />
-            <KeyPosition
-                motion:alpha="0"
-                motion:framePosition="10"
-                motion:motionTarget="@id/btn_btm_play_pause" />
-        </KeyFrameSet>
     </Transition>
     <ConstraintSet android:id="@+id/collapsed">
         <Constraint
@@ -69,33 +55,6 @@
             motion:layout_constraintEnd_toEndOf="@id/player_container"
             motion:layout_constraintStart_toStartOf="@id/player_container"
             motion:layout_constraintTop_toTopOf="@id/player_container" />
-
-        <Constraint
-            android:id="@id/tv_btm_song_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="108dp"
-            android:layout_marginEnd="12dp"
-            android:alpha="0"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            app:layout_constraintBottom_toTopOf="@id/tv_btm_song_artist"
-            app:layout_constraintEnd_toStartOf="@id/btn_btm_play_pause"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/player_container" />
-
-        <Constraint
-            android:id="@id/tv_btm_song_artist"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            app:layout_constraintBottom_toBottomOf="@id/progress_bar"
-            app:layout_constraintEnd_toEndOf="@id/tv_btm_song_title"
-            app:layout_constraintStart_toStartOf="@id/tv_btm_song_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_btm_song_title" />
 
         <Constraint
             android:id="@id/progress_bar"

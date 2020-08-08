@@ -1,5 +1,7 @@
 package com.zionhuang.music.extractor;
 
+import androidx.annotation.WorkerThread;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,10 +24,10 @@ import java.util.regex.Pattern;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeJava;
 
-/*
+/**
  * A Java version of youtube_dl (https://github.com/ytdl-org/youtube-dl)
- * Version: 2020.03.24
- * Author: Zion Huang
+ * @version 2020.03.24
+ * @author Zion Huang
  */
 
 public class YoutubeIE {
@@ -591,9 +593,7 @@ public class YoutubeIE {
         return formats;
     }
 
-    public YoutubeIE() {
-    }
-
+    @WorkerThread
     public Result extract(String videoId) {
         try {
             ArrayList<YtStream> formats = realExtract(videoId);

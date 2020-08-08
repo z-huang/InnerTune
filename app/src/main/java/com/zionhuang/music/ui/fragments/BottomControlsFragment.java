@@ -3,6 +3,8 @@ package com.zionhuang.music.ui.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,9 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.zionhuang.music.R;
 import com.zionhuang.music.ui.activities.MainActivity;
 import com.zionhuang.music.ui.widgets.BottomSheetListener;
-import com.zionhuang.music.ui.widgets.MediaProgressBar;
-import com.zionhuang.music.ui.widgets.MediaProgressTextView;
-import com.zionhuang.music.ui.widgets.MediaSeekBar;
+import com.zionhuang.music.ui.widgets.MediaWidgetsController;
 import com.zionhuang.music.viewmodels.PlaybackViewModel;
 
 import static com.zionhuang.music.utils.Utils.makeTimeString;
@@ -27,16 +27,18 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
     private PlaybackViewModel mPlaybackViewModel;
 
     private MotionLayout mMotionLayout;
-    private ImageView mBottomBarPlayPauseBtn;
 
     private TextView mBtmSongTitle;
     private TextView mBtmSongArtist;
     private TextView mSongTitle;
     private TextView mSongArtist;
-    private MediaProgressBar mProgressBar;
-    private MediaProgressTextView mProgressText;
+    private ProgressBar mProgressBar;
+    private SeekBar mSeekBar;
+    private TextView mProgressText;
     private TextView mDurationText;
-    private MediaSeekBar mSeekBar;
+    private MediaWidgetsController mMediaWidgetsController;
+    private ImageView mBottomBarPlayPauseBtn;
+    private ImageView mPlayPauseBtn;
 
     @Override
     protected int layoutId() {
@@ -49,11 +51,7 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
         mPlaybackViewModel = new ViewModelProvider(requireActivity()).get(PlaybackViewModel.class);
 
         mBottomBarPlayPauseBtn = findViewById(R.id.btn_btm_play_pause);
-        mBottomBarPlayPauseBtn.setOnClickListener(v -> {
-
-        });
-
-        PlayerView mPlayerView = findViewById(R.id.player_view);
+        mPlayPauseBtn = findViewById(R.id.btn_play_pause);
 
         mBtmSongTitle = findViewById(R.id.tv_btm_song_title);
         mBtmSongArtist = findViewById(R.id.tv_btm_song_artist);
@@ -88,6 +86,7 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
             }
         });
 
+        mMediaWidgetsController = new MediaWidgetsController(requireContext(), mProgressBar, mSeekBar, mProgressText, mPlayPauseBtn, mBottomBarPlayPauseBtn);
         ((MainActivity) requireActivity()).addBottomSheetListener(this);
 
         mPlaybackViewModel.getCurrentData().observe(getViewLifecycleOwner(), mediaData -> {
@@ -98,24 +97,19 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
             mDurationText.setText(makeTimeString(mediaData.getDuration() / 1000));
         });
 
-        mPlaybackViewModel.setPlayerView(mPlayerView);
+        PlayerView playerView = findViewById(R.id.player_view);
+        mPlaybackViewModel.setPlayerView(playerView);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPlaybackViewModel.getMediaController().observe(getViewLifecycleOwner(), mediaController -> {
-            mProgressBar.setMediaController(mediaController);
-            mProgressText.setMediaController(mediaController);
-            mSeekBar.setMediaController(mediaController);
-        });
+        mPlaybackViewModel.getMediaController().observe(getViewLifecycleOwner(), mediaController -> mMediaWidgetsController.setMediaController(mediaController));
     }
 
     @Override
     public void onStop() {
-        mProgressBar.disconnectController();
-        mProgressText.disconnectController();
-        mSeekBar.disconnectController();
+        mMediaWidgetsController.disconnectController();
         super.onStop();
     }
 

@@ -4,7 +4,6 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -22,7 +21,7 @@ public class PlaybackViewModel extends AndroidViewModel {
     private LiveData<MediaControllerCompat> mMediaController;
     private MutableLiveData<MediaData> currentData = new MutableLiveData<>();
 
-    private Observer<PlaybackStateCompat> playbackStateObserver = playbackState -> currentData.postValue(currentData.getValue() != null ? currentData.getValue().pullPlaybackState(playbackState) : new MediaData().pullPlaybackState(playbackState));
+    //private Observer<PlaybackStateCompat> playbackStateObserver = playbackState -> currentData.postValue(currentData.getValue() != null ? currentData.getValue().pullPlaybackState(playbackState) : new MediaData().pullPlaybackState(playbackState));
     private Observer<MediaMetadataCompat> mediaMetadataObserver = mediaMetadata -> {
         MediaData newValue = currentData.getValue() != null ? currentData.getValue().pullMediaMetadata(mediaMetadata) : new MediaData().pullMediaMetadata(mediaMetadata);
         currentData.postValue(newValue);
@@ -32,7 +31,7 @@ public class PlaybackViewModel extends AndroidViewModel {
         super(application);
         mMediaSessionConnection = new MediaSessionConnection(application);
         mMediaSessionConnection.connect();
-        mMediaSessionConnection.getPlaybackState().observeForever(playbackStateObserver);
+        //mMediaSessionConnection.getPlaybackState().observeForever(playbackStateObserver);
         mMediaSessionConnection.getNowPlaying().observeForever(mediaMetadataObserver);
         mMediaController = Transformations.map(mMediaSessionConnection.getIsConnected(), isConnected -> {
             if (isConnected) {
@@ -63,7 +62,7 @@ public class PlaybackViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         mMediaSessionConnection.disconnect();
-        mMediaSessionConnection.getPlaybackState().removeObserver(playbackStateObserver);
+        //mMediaSessionConnection.getPlaybackState().removeObserver(playbackStateObserver);
         mMediaSessionConnection.getNowPlaying().removeObserver(mediaMetadataObserver);
     }
 }
