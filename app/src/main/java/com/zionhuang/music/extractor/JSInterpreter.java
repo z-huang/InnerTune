@@ -1,19 +1,15 @@
 package com.zionhuang.music.extractor;
 
-import android.util.Pair;
+import androidx.core.util.Pair;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.zionhuang.music.utils.Utils;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -22,113 +18,104 @@ import java.util.regex.Pattern;
 
 import static java.lang.Math.min;
 
-class JSInterpreter {
-    static class InterpretException extends java.lang.Exception {
+public class JSInterpreter {
+    public static class InterpretException extends java.lang.Exception {
         InterpretException(String msg) {
             super(msg);
         }
     }
 
     private interface OperatorFunction {
-        JsonElement apply(JsonElement a, JsonElement b);
+        JSON apply(JSON a, JSON b);
     }
 
-    private static HashMap<String, OperatorFunction> OPERATORS = new HashMap<>();
-    private static HashMap<String, OperatorFunction> ASSIGN_OPERATORS = new HashMap<>();
+    private static LinkedHashMap<String, OperatorFunction> OPERATORS = new LinkedHashMap<>();
+    private static LinkedHashMap<String, OperatorFunction> ASSIGN_OPERATORS = new LinkedHashMap<>();
 
     static {
-        OPERATORS.put("-", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() - b.getAsInt());
-            }
-            return JsonNull.INSTANCE;
-        });
-        OPERATORS.put("+", (a, b) -> {
-            if (a.isJsonPrimitive() && b.isJsonPrimitive()) {
-                JsonPrimitive ap = a.getAsJsonPrimitive();
-                JsonPrimitive bp = b.getAsJsonPrimitive();
-                if (ap.isNumber() && bp.isNumber()) {
-                    return new JsonPrimitive(a.getAsInt() + b.getAsInt());
-                }
-                if (ap.isString() && bp.isString()) {
-                    return new JsonPrimitive(a.getAsString() + b.getAsString());
-                }
-            }
-            return JsonNull.INSTANCE;
-        });
-        OPERATORS.put("%", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() % b.getAsInt());
-            }
-            return JsonNull.INSTANCE;
-        });
-        OPERATORS.put("/", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() / b.getAsInt());
-            }
-            return JsonNull.INSTANCE;
-        });
-        OPERATORS.put("*", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() * b.getAsInt());
-            }
-            return JsonNull.INSTANCE;
-        });
         OPERATORS.put("|", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() | b.getAsInt());
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() | b.getAsInt());
             }
-            return JsonNull.INSTANCE;
+            return JSON.NULL;
         });
         OPERATORS.put("^", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() ^ b.getAsInt());
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() ^ b.getAsInt());
             }
-            return JsonNull.INSTANCE;
+            return JSON.NULL;
         });
         OPERATORS.put("&", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() & b.getAsInt());
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() & b.getAsInt());
             }
-            return JsonNull.INSTANCE;
+            return JSON.NULL;
         });
         OPERATORS.put(">>", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() >> b.getAsInt());
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() >> b.getAsInt());
             }
-            return JsonNull.INSTANCE;
+            return JSON.NULL;
         });
         OPERATORS.put("<<", (a, b) -> {
-            if (a.isJsonPrimitive() && a.getAsJsonPrimitive().isNumber() && b.isJsonPrimitive() && b.getAsJsonPrimitive().isNumber()) {
-                return new JsonPrimitive(a.getAsInt() << b.getAsInt());
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() << b.getAsInt());
             }
-            return JsonNull.INSTANCE;
+            return JSON.NULL;
         });
-        ASSIGN_OPERATORS.put("=", (a, b) -> {
-            a = b;
-            return a;
+        OPERATORS.put("-", (a, b) -> {
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() - b.getAsInt());
+            }
+            return JSON.NULL;
         });
-        for (Map.Entry<String, OperatorFunction> entry : OPERATORS.entrySet()) {
-            ASSIGN_OPERATORS.put(entry.getKey() + "=", entry.getValue());
-        }
+        OPERATORS.put("+", (a, b) -> {
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() + b.getAsInt());
+            }
+            if (a.isString() && b.isString()) {
+                return JSON.fromString(a.getAsString() + b.getAsString());
+            }
+            return JSON.NULL;
+        });
+        OPERATORS.put("%", (a, b) -> {
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() % b.getAsInt());
+            }
+            return JSON.NULL;
+        });
+        OPERATORS.put("/", (a, b) -> {
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() / b.getAsInt());
+            }
+            return JSON.NULL;
+        });
+        OPERATORS.put("*", (a, b) -> {
+            if (a.isNumber() && b.isNumber()) {
+                return JSON.fromNumber(a.getAsInt() * b.getAsInt());
+            }
+            return JSON.NULL;
+        });
+        OPERATORS.forEach((key, value) -> ASSIGN_OPERATORS.put(key + "=", value));
+        ASSIGN_OPERATORS.put("=", (a, b) -> b);
     }
 
     private String code;
-    private JsonObject objects;
-    private HashMap<String, JsonFunction> functions;
+    private JSON objects;
+    private HashMap<String, JSFunction> functions;
 
-    JSInterpreter(String code) {
+    public JSInterpreter(String code) {
         this.code = code;
-        this.objects = new JsonObject();
+        this.objects = JSON.createObject();
         this.functions = new HashMap<>();
     }
 
-    private Pair<JsonElement, Boolean> interpretStatement(String stmt, JsonObject local_vars) throws InterpretException {
-        return interpretStatement(stmt, local_vars, 100);
+    private Pair<JSON, Boolean> interpretStatement(String stmt, JSON localVars) throws InterpretException {
+        return interpretStatement(stmt, localVars, 100);
     }
 
-    private Pair<JsonElement, Boolean> interpretStatement(String stmt, JsonObject local_vars, int allow_recursion) throws InterpretException {
-        if (allow_recursion < 0) {
+    private Pair<JSON, Boolean> interpretStatement(String stmt, JSON localVars, int allowRecursion) throws InterpretException {
+        if (allowRecursion < 0) {
             throw new InterpretException("Recursion limit reached");
         }
         boolean abort = false;
@@ -147,41 +134,41 @@ class JSInterpreter {
                 expr = stmt;
             }
         }
-        return new Pair<>(interpretExpression(expr, local_vars, allow_recursion), abort);
+        return new Pair<>(interpretExpression(expr, localVars, allowRecursion), abort);
     }
 
-    private JsonElement interpretExpression(String expr, JsonObject local_vars, int allow_recursion) throws InterpretException {
+    private JSON interpretExpression(String expr, JSON localVars, int allowRecursion) throws InterpretException {
         expr = expr.trim();
-        if (expr.length() == 0) {
-            return JsonNull.INSTANCE;
+        if (expr.isEmpty()) {
+            return JSON.NULL;
         }
 
         Matcher m;
         if (expr.startsWith("(")) {
-            int parens_count = 0;
+            int parenCount = 0;
             boolean found = false;
             m = Pattern.compile("[()]").matcher(expr);
             while (m.find()) {
                 found = true;
                 if (m.group().equals("(")) {
-                    parens_count += 1;
+                    parenCount += 1;
                 } else {
-                    parens_count -= 1;
-                    if (parens_count == 0) {
-                        String sub_expr = expr.substring(1, m.start());
-                        JsonElement sub_result = interpretExpression(sub_expr, local_vars, allow_recursion);
-                        String remaining_expr = expr.substring(m.end()).trim();
-                        if (remaining_expr.length() == 0) {
-                            return sub_result;
+                    parenCount -= 1;
+                    if (parenCount == 0) {
+                        String subExpr = expr.substring(1, m.start());
+                        JSON subResult = interpretExpression(subExpr, localVars, allowRecursion);
+                        String remainingExpr = expr.substring(m.end()).trim();
+                        if (remainingExpr.isEmpty()) {
+                            return subResult;
                         } else {
-                            expr = sub_result.toString() + remaining_expr;
+                            expr = subResult.toString() + remainingExpr;
                         }
                         break;
                     }
                 }
             }
             if (!found) {
-                throw new InterpretException("Premature end of parens at " + expr);
+                throw new InterpretException("Premature end of parenthesis at " + expr);
             }
         }
 
@@ -190,33 +177,31 @@ class JSInterpreter {
             if (!m.matches()) {
                 continue;
             }
-            JsonElement right_val = interpretExpression(m.group("expr"), local_vars, allow_recursion - 1);
+            JSON rightVal = interpretExpression(m.group("expr"), localVars, allowRecursion - 1);
             if (m.group("index") != null) {
-                int idx = interpretExpression(m.group("index"), local_vars, allow_recursion).getAsInt();
-                JsonElement lvar = local_vars.get(m.group("out"));
-                if (!lvar.isJsonArray()) {
-                    throw new InterpretException("Unsupported operator [] in non-array object at "+expr);
+                int idx = interpretExpression(m.group("index"), localVars, allowRecursion).getAsInt();
+                JSON lVar = localVars.get(m.group("out"));
+                if (!lVar.isArray()) {
+                    throw new InterpretException("Unsupported operator [] in non-array object at " + expr);
                 }
-                JsonArray jsonArray = lvar.getAsJsonArray();
-                JsonElement cur = jsonArray.get(idx);
-                JsonElement val = entry.getValue().apply(cur, right_val);
-                jsonArray.set(idx, val);
+                JSON val = entry.getValue().apply(lVar.get(idx), rightVal);
+                lVar.set(idx, val);
                 return val;
             } else {
-                JsonElement cur = local_vars.get(m.group("out"));
-                JsonElement val = entry.getValue().apply(cur, right_val);
-                local_vars.add(Objects.requireNonNull(m.group("out")), val);
+                JSON cur = localVars.get(m.group("out"));
+                JSON val = entry.getValue().apply(cur, rightVal);
+                localVars.add(Objects.requireNonNull(m.group("out")), val);
                 return val;
             }
         }
 
         if (StringUtils.isNumeric(expr)) {
-            return new JsonPrimitive(Integer.parseInt(expr));
+            return JSON.fromNumber(Integer.parseInt(expr));
         }
 
         m = Pattern.compile("(?!if|return|true|false)(?<name>[a-zA-Z_$][a-zA-Z_$0-9]*)$").matcher(expr);
         if (m.matches()) {
-            return local_vars.get(m.group("name"));
+            return localVars.get(m.group("name"));
         }
 
         try {
@@ -224,11 +209,11 @@ class JSInterpreter {
             for (char quote : new char[]{'\"', '\''}) {
                 if (expr.charAt(0) == quote && expr.charAt(expr.length() - 1) == quote) {
                     expr = expr.substring(1, expr.length() - 1);
-                    return new JsonPrimitive(expr);
+                    return JSON.fromString(expr);
                 }
             }
-            JsonElement res = JsonParser.parseString(expr);
-            if (!res.isJsonPrimitive() || !res.getAsJsonPrimitive().isString()) {
+            JSON res = new JSON(JsonParser.parseString(expr));
+            if (!res.isString()) {
                 return res;
             }
         } catch (JsonSyntaxException ignored) {
@@ -236,14 +221,14 @@ class JSInterpreter {
 
         m = Pattern.compile("(?<in>[a-zA-Z_$][a-zA-Z_$0-9]*)\\[(?<idx>.+)\\]$").matcher(expr);
         if (m.matches()) {
-            JsonElement val = local_vars.get(m.group("in"));
-            JsonElement idx = interpretExpression(m.group("idx"), local_vars, allow_recursion - 1);
-            if (val.isJsonObject()) {
-                return val.getAsJsonObject().get(idx.getAsString());
-            } else if (val.isJsonArray()) {
-                return val.getAsJsonArray().get(idx.getAsInt());
-            } else if (val.isJsonPrimitive() && val.getAsJsonPrimitive().isString()) {
-                return new JsonPrimitive(val.getAsString().charAt(idx.getAsInt()));
+            JSON val = localVars.get(m.group("in"));
+            JSON idx = interpretExpression(m.group("idx"), localVars, allowRecursion - 1);
+            if (val.isObject()) {
+                return val.get(idx.getAsString());
+            } else if (val.isArray()) {
+                return val.get(idx.getAsInt());
+            } else if (val.isString()) {
+                return JSON.fromChar(val.getAsString().charAt(idx.getAsInt()));
             } else {
                 throw new InterpretException("Unsupported operation [] for expression " + expr);
             }
@@ -253,12 +238,12 @@ class JSInterpreter {
         if (m.matches()) {
             String variable = m.group("var");
             String member = Utils.removeQuotes(m.group("member") != null ? m.group("member") : m.group("member2"));
-            String arg_str = m.group("args");
+            String argStr = m.group("args");
 
             Objects.requireNonNull(variable);
-            JsonElement obj;
-            if (local_vars.has(variable)) {
-                obj = local_vars.get(variable);
+            JSON obj;
+            if (localVars.has(variable)) {
+                obj = localVars.get(variable);
             } else {
                 if (!objects.has(variable)) {
                     objects.add(variable, extractObject(variable));
@@ -266,24 +251,24 @@ class JSInterpreter {
                 obj = objects.get(variable);
             }
 
-            if (arg_str == null) {
+            if (argStr == null) {
                 if (Objects.equals(member, "length")) {
-                    if (obj.isJsonArray()) {
-                        return new JsonPrimitive(obj.getAsJsonArray().size());
-                    } else if (obj.isJsonPrimitive() && obj.getAsJsonPrimitive().isString()) {
-                        return new JsonPrimitive(obj.getAsString().length());
+                    if (obj.isArray()) {
+                        return JSON.fromNumber(obj.size());
+                    } else if (obj.isString()) {
+                        return JSON.fromNumber(obj.getAsString().length());
                     } else {
-                        return JsonNull.INSTANCE;
+                        return JSON.NULL;
                     }
                 }
-                if (obj.isJsonArray()) {
-                    return obj.getAsJsonArray().get(Integer.parseInt(Objects.requireNonNull(member)));
-                } else if (obj.isJsonObject()) {
-                    return obj.getAsJsonObject().get(member);
-                } else if (obj.isJsonPrimitive() && obj.getAsJsonPrimitive().isString()) {
-                    return new JsonPrimitive(obj.getAsString().charAt(Integer.parseInt(Objects.requireNonNull(member))));
+                if (obj.isArray()) {
+                    return obj.get(Integer.parseInt(Objects.requireNonNull(member)));
+                } else if (obj.isObject()) {
+                    return obj.get(member);
+                } else if (obj.isString()) {
+                    return JSON.fromChar(obj.getAsString().charAt(Integer.parseInt(Objects.requireNonNull(member))));
                 } else {
-                    return JsonNull.INSTANCE;
+                    return JSON.NULL;
                 }
             }
 
@@ -292,86 +277,82 @@ class JSInterpreter {
             }
 
             // Function call
-            JsonArray argvals = new JsonArray();
-            if (arg_str.length() > 0) {
-                for (String v : arg_str.split(",")) {
-                    argvals.add(interpretExpression(v, local_vars, allow_recursion));
+            JSON argValues = JSON.createArray();
+            if (argStr.length() > 0) {
+                for (String v : argStr.split(",")) {
+                    argValues.add(interpretExpression(v, localVars, allowRecursion));
                 }
             }
 
             if (Objects.equals(member, "split")) {
-                if (!obj.isJsonPrimitive() || !obj.getAsJsonPrimitive().isString()) {
-                    throw new InterpretException("Calling split function on non-string object");
+                if (!obj.isString()) {
+                    throw new InterpretException("Calling split function on a non-string object");
                 }
-                if (argvals.get(0).getAsString().length() != 0) {
+                if (argValues.getString(0).length() != 0) {
                     throw new InterpretException("Parameter error at " + expr);
                 }
-                JsonArray res = new JsonArray();
+                JSON res = JSON.createArray();
                 for (char c : obj.getAsString().toCharArray()) {
                     res.add(c);
                 }
                 return res;
             }
             if (Objects.equals(member, "join")) {
-                if (!obj.isJsonArray()) {
+                if (!obj.isArray()) {
                     throw new InterpretException("Calling join function on non-array type at " + expr);
                 }
-                if (argvals.size() != 1) {
+                if (argValues.size() != 1) {
                     throw new InterpretException("Parameter error at " + expr);
                 }
-                if (!argvals.get(0).isJsonPrimitive() || !argvals.get(0).getAsJsonPrimitive().isString()) {
+                if (!argValues.get(0).isString()) {
                     throw new InterpretException("Error argument type at " + expr);
                 }
-                StringJoiner joiner = new StringJoiner(argvals.get(0).getAsString());
-                for (JsonElement ele : obj.getAsJsonArray()) {
-                    joiner.add(Utils.removeQuotes(ele.toString()));
-                }
-                return new JsonPrimitive(joiner.toString());
+                StringJoiner joiner = new StringJoiner(argValues.get(0).getAsString());
+                obj.forEach(ele -> joiner.add(Utils.removeQuotes(ele.toString())));
+                return JSON.fromString(joiner.toString());
             }
             if (Objects.equals(member, "reverse")) {
-                if (!obj.isJsonArray()) {
+                if (!obj.isArray()) {
                     throw new InterpretException("Calling reverse function on non-array type at " + expr);
                 }
-                if (argvals.size() != 0) {
+                if (argValues.size() != 0) {
                     throw new InterpretException("Parameter error at " + expr);
                 }
-                JsonArray arr = obj.getAsJsonArray();
-                int size = arr.size();
+                int size = obj.size();
                 // swap
-                for (int i = 0; i < size >> 1; i++) {
-                    JsonElement temp = arr.get(i);
-                    arr.set(i, arr.get(size - i - 1));
-                    arr.set(size - i - 1, temp);
+                for (int i = 0; i < (size >> 1); i++) {
+                    JSON temp = obj.get(i);
+                    obj.set(i, obj.get(size - i - 1));
+                    obj.set(size - i - 1, temp);
                 }
-                return arr;
+                return obj;
             }
             if (Objects.equals(member, "slice")) {
-                if (argvals.size() != 1) {
+                if (argValues.size() != 1) {
                     throw new InterpretException("Parameter error at " + expr);
                 }
-                return new JsonPrimitive(obj.getAsString().substring(argvals.get(0).getAsInt()));
+                return JSON.fromString(obj.getAsString().substring(argValues.getInt(0)));
             }
             if (Objects.equals(member, "splice")) {
-                if (!obj.isJsonArray()) {
+                if (!obj.isArray()) {
                     throw new InterpretException("Can't call a function splice which is not a JsonArray type at " + expr);
                 }
-                int index = argvals.get(0).getAsInt();
-                int howMany = argvals.get(1).getAsInt();
-                JsonArray objArr = obj.getAsJsonArray();
-                JsonArray res = new JsonArray();
-                for (int i = index; i < min(index + howMany, objArr.size()); i++) {
-                    res.add(objArr.remove(index));
+                int index = argValues.get(0).getAsInt();
+                int howMany = argValues.get(1).getAsInt();
+                JSON res = JSON.createArray();
+                for (int i = index; i < min(index + howMany, obj.size()); i++) {
+                    res.add(obj.remove(index));
                 }
                 return res;
             }
 
             // custom function
-            if (obj.isJsonObject()) {
-                JsonElement fn = obj.getAsJsonObject().get(member);
-                if (!(fn instanceof JsonFunction)) {
+            if (obj.isObject()) {
+                JSON fn = obj.get(member);
+                if (!fn.isFunction()) {
                     throw new InterpretException("Calling function on a non-function object at " + expr);
                 }
-                return ((JsonFunction) fn).apply(argvals);
+                return fn.getAsFunction().apply(argValues);
             }
         }
 
@@ -380,81 +361,86 @@ class JSInterpreter {
             if (!m.matches()) {
                 continue;
             }
-            Pair<JsonElement, Boolean> pair_x = interpretStatement(m.group("x"), local_vars, allow_recursion - 1);
-            if (pair_x.second) {
+            Pair<JSON, Boolean> pairX = interpretStatement(m.group("x"), localVars, allowRecursion - 1);
+            if (Objects.requireNonNull(pairX.second)) {
                 throw new InterpretException("Premature left-side return of " + entry.getKey() + " at " + expr);
             }
-            Pair<JsonElement, Boolean> pair_y = interpretStatement(m.group("y"), local_vars, allow_recursion - 1);
-            if (pair_y.second) {
+            Pair<JSON, Boolean> pairY = interpretStatement(m.group("y"), localVars, allowRecursion - 1);
+            if (Objects.requireNonNull(pairY.second)) {
                 throw new InterpretException("Premature right-side return of " + entry.getKey() + " at " + expr);
             }
-            return entry.getValue().apply(pair_x.first, pair_y.first);
+            return entry.getValue().apply(pairX.first, pairY.first);
         }
 
         m = Pattern.compile("^(?<func>[a-zA-Z_$][a-zA-Z_$0-9]*)\\((?<args>[a-zA-Z0-9_$,]*)\\)$").matcher(expr);
         if (m.matches()) {
-            String fname = m.group("func");
+            String funcName = m.group("func");
             String args = m.group("args");
             Objects.requireNonNull(args);
 
-            JsonArray argvals = new JsonArray();
+            JSON argValues = JSON.createArray();
             if (args.length() > 0) {
                 for (String v : args.split(",")) {
-                    argvals.add(StringUtils.isNumeric(v) ? new JsonPrimitive(Integer.parseInt(v)) : local_vars.get(v));
+                    argValues.add(StringUtils.isNumeric(v) ? JSON.fromNumber(Integer.parseInt(v)) : localVars.get(v));
                 }
             }
-            if (!functions.containsKey(fname)) {
-                functions.put(fname, extractFunction(fname));
+            if (!functions.containsKey(funcName)) {
+                functions.put(funcName, extractFunction(funcName));
             }
-            return Objects.requireNonNull(functions.get(fname)).apply(argvals);
+            return Objects.requireNonNull(functions.get(funcName)).apply(argValues);
         }
         throw new InterpretException("Unsupported JS expression " + expr);
     }
 
-    private JsonObject extractObject(String objname) throws InterpretException {
-        JsonObject obj = new JsonObject();
-        Matcher obj_m = Pattern.compile("(?x)(?<!this\\.)" + objname + "\\s*=\\s*\\{\\s*(?<fields>((?:[a-zA-Z$0-9]+|\"[a-zA-Z$0-9]+\"|'[a-zA-Z$0-9]+')\\s*:\\s*function\\s*\\(.*?\\)\\s*\\{.*?\\}(?:,\\s*)?)*)\\}\\s*;").matcher(code);
-        if (!obj_m.find()) {
-            throw new InterpretException("Failed to extract object " + objname);
+    private JSON extractObject(String objName) throws InterpretException {
+        JSON obj = JSON.createObject();
+        Matcher objM = Pattern.compile("(?x)(?<!this\\.)" + objName + "\\s*=\\s*\\{\\s*(?<fields>((?:[a-zA-Z$0-9]+|\"[a-zA-Z$0-9]+\"|'[a-zA-Z$0-9]+')\\s*:\\s*function\\s*\\(.*?\\)\\s*\\{.*?\\}(?:,\\s*)?)*)\\}\\s*;").matcher(code);
+        if (!objM.find()) {
+            throw new InterpretException("Failed to extract object " + objName);
         }
-        String fields = obj_m.group("fields");
+        String fields = objM.group("fields");
         Objects.requireNonNull(fields);
 
-        Matcher fields_m = Pattern.compile("(?x)(?<key>(?:[a-zA-Z$0-9]+|\"[a-zA-Z$0-9]+\"|'[a-zA-Z$0-9]+'))\\s*:\\s*function\\s*\\((?<args>[a-z,]+)\\)\\{(?<code>[^}]+)\\}").matcher(fields);
-        while (fields_m.find()) {
-            String[] argnames = Objects.requireNonNull(fields_m.group("args")).split(",");
-            obj.add(Objects.requireNonNull(Utils.removeQuotes(fields_m.group("key"))), buildFunction(argnames, fields_m.group("code")));
+        Matcher fieldsM = Pattern.compile("(?x)(?<key>(?:[a-zA-Z$0-9]+|\"[a-zA-Z$0-9]+\"|'[a-zA-Z$0-9]+'))\\s*:\\s*function\\s*\\((?<args>[a-z,]+)\\)\\{(?<code>[^}]+)\\}").matcher(fields);
+        while (fieldsM.find()) {
+            String[] argNames = Objects.requireNonNull(fieldsM.group("args")).split(",");
+            obj.add(Objects.requireNonNull(Utils.removeQuotes(fieldsM.group("key"))), JSON.fromFunction(buildFunction(argNames, fieldsM.group("code"))));
         }
         return obj;
     }
 
-    public JsonFunction extractFunction(String funcname) throws InterpretException {
-        Matcher m = Pattern.compile("(?x)(?:function\\s+" + funcname + "|[{;,]\\s*" + funcname + "\\s*=\\s*function|var\\s+" + funcname + "\\s*=\\s*function)\\s*\\((?<args>[^)]*)\\)\\s*\\{(?<code>[^}]+)\\}").matcher(code);
+    public JSFunction extractFunction(String funcName) throws InterpretException {
+        String escapedFnName = Pattern.quote(funcName);
+        Matcher m = Pattern.compile("(?x)(?:function\\s+" + escapedFnName + "|[{;,]\\s*" + escapedFnName + "\\s*=\\s*function|var\\s+" + escapedFnName + "\\s*=\\s*function)\\s*\\((?<args>[^)]*)\\)\\s*\\{(?<code>[^}]+)\\}").matcher(code);
         if (!m.find()) {
-            throw new InterpretException("Couldn't find JS function " + funcname);
+            throw new InterpretException("Couldn't find JS function " + funcName);
         }
-        String[] argnames = Objects.requireNonNull(m.group("args")).split(",");
-        return buildFunction(argnames, m.group("code"));
+        String[] argNames = Objects.requireNonNull(m.group("args")).split(",");
+        return buildFunction(argNames, m.group("code"));
     }
 
-    public JsonElement callFunction(String funcname, JsonArray args) throws InterpretException {
-        return extractFunction(funcname).apply(args);
+    public JSON callFunction(String funcName, Object... args) throws InterpretException {
+        return callFunction(funcName, JSON.toArray(args));
     }
 
-    private JsonFunction buildFunction(final String[] argnames, final String code) {
-        return new JsonFunction() {
+    public JSON callFunction(String funcName, JSON args) throws InterpretException {
+        return extractFunction(funcName).apply(args);
+    }
+
+    private JSFunction buildFunction(final String[] argNames, final String code) {
+        return new JSFunction() {
             @Override
-            public JsonElement apply(JsonArray args) throws InterpretException {
-                JsonObject local_vars = new JsonObject();
-                for (int i = 0; i < args.size() && i < argnames.length; i++) {
-                    local_vars.add(argnames[i], args.get(i));
+            public JSON apply(JSON args) throws InterpretException {
+                JSON localVars = JSON.createObject();
+                for (int i = 0; i < args.size() && i < argNames.length; i++) {
+                    localVars.add(argNames[i], args.get(i));
                 }
-                Pair<JsonElement, Boolean> pair;
-                JsonElement res = JsonNull.INSTANCE;
+                Pair<JSON, Boolean> pair;
+                JSON res = JSON.NULL;
                 for (String stmt : code.split(";")) {
-                    pair = interpretStatement(stmt, local_vars);
+                    pair = interpretStatement(stmt, localVars);
                     res = pair.first;
-                    if (pair.second) {
+                    if (Objects.requireNonNull(pair.second)) {
                         break;
                     }
                 }

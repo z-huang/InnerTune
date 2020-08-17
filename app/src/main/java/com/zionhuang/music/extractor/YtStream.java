@@ -1,50 +1,50 @@
 package com.zionhuang.music.extractor;
 
-import com.google.gson.JsonObject;
-
 public class YtStream {
+    public static final int TYPE_NORMAL = 0;
+    public static final int TYPE_AUDIO = 1;
+    public static final int TYPE_VIDEO = 2;
+
     public String formatId;
     public String protocol;
     public String url;
-    public String mediaType;
+    public int mediaType;
     public String ext;
     public int width;
     public int height;
     public float stretchedRatio;
     public String formatNote;
     public int fps;
-    public String acodec;
-    public String vcodec;
-    public float abr;
-    public float vbr;
-    public float tbr;
-    public float asr;
-    public int filesize;
+    public String aCodec;
+    public String vCodec;
+    public float tbr; // bitrate of audio and video (KBit/s)
+    public float abr; // audio bitrate (KBit/s)
+    public float asr; // audio sampling rate (Hz)
+    public float vbr; // video bitrate (KBit/s)
+    public int fileSize;
 
-    YtStream(JsonObject stream) {
-        formatId = stream.has("format_id") ? stream.get("format_id").getAsString() : null;
-        protocol = stream.has("protocol") ? stream.get("protocol").getAsString() : null;
-        url = stream.has("url") ? stream.get("url").getAsString() : null;
-        mediaType = stream.has("mediatype") ? stream.get("mediatype").getAsString() : null;
-        ext = stream.has("ext") ? stream.get("ext").getAsString() : null;
-        width = stream.has("width") ? stream.get("width").getAsInt() : 0;
-        height = stream.has("height") ? stream.get("height").getAsInt() : 0;
-        formatNote = stream.has("format_note") ? stream.get("format_note").getAsString() : null;
-        fps = stream.has("fps") ? stream.get("fps").getAsInt() : 0;
-        acodec = stream.has("acodec") ? stream.get("acodec").getAsString() : null;
-        vcodec = stream.has("vcodec") ? stream.get("vcodec").getAsString() : null;
-        abr = stream.has("abr") ? stream.get("abr").getAsFloat() : 0;
-        vbr = stream.has("vbr") ? stream.get("vbr").getAsFloat() : 0;
-        tbr = stream.has("tbr") ? stream.get("tbr").getAsFloat() : 0;
-        asr = stream.has("asr") ? stream.get("asr").getAsFloat() : 0;
-        filesize = stream.has("filesize") ? stream.get("filesize").getAsInt() : 0;
+    YtStream(JSON stream) {
+        formatId = stream.getString("format_id");
+        protocol = stream.getString("protocol");
+        url = stream.getString("url");
+        mediaType = stream.getInt("mediaType");
+        ext = stream.getString("ext");
+        width = stream.getInt("width");
+        height = stream.getInt("height");
+        formatNote = stream.getString("format_note");
+        fps = stream.getInt("fps");
+        aCodec = stream.getString("acodec");
+        vCodec = stream.getString("vcodec");
+        abr = stream.getFloat("abr");
+        vbr = stream.getFloat("vbr");
+        tbr = stream.getFloat("tbr");
+        asr = stream.getFloat("asr");
+        fileSize = stream.getInt("filesize");
         if (tbr == 0f) {
             tbr = abr + vbr;
         }
-        if (ext == null) {
+        if (ext.isEmpty()) {
             ext = ExtractorUtils.determineExt(url);
         }
     }
-
-
 }

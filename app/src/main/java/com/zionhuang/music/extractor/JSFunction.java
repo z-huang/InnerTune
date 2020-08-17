@@ -2,20 +2,19 @@ package com.zionhuang.music.extractor;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-public abstract class JsonFunction extends JsonElement {
+public abstract class JSFunction extends JsonElement {
+    public abstract JSON apply(JSON args) throws JSInterpreter.InterpretException;
+
     @Override
     public JsonElement deepCopy() {
         return null;
     }
 
-    public abstract JsonElement apply(JsonArray args) throws JSInterpreter.InterpretException;
-
     @NonNull
     @Override
     public String toString() {
-        return "Json Function";
+        return "[Json Function]";
     }
 }

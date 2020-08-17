@@ -2,7 +2,8 @@ package com.zionhuang.music.extractor;
 
 import android.util.Log;
 
-import com.google.gson.JsonObject;
+import androidx.core.util.Pair;
+
 import com.zionhuang.music.utils.Utils;
 
 import java.util.ArrayList;
@@ -27,49 +28,49 @@ class ExtractorUtils {
             "wav",
             "f4f", "f4m", "m3u8", "smil"));
 
-    static JsonObject parseCodecs(String codecs_str) {
-        if (codecs_str == null) {
-            return new JsonObject();
+    /**
+     * Parse video codec and audio codec from a given string.
+     *
+     * @param codecsStr the string to parse codecs
+     * @return a pair of {video codec} and {audio codec}
+     */
+    static Pair<String, String> parseCodecs(String codecsStr) {
+        if (codecsStr == null) {
+            return new Pair<>("", "");
         }
-        ArrayList<String> splited_codecs = new ArrayList<>();
-        for (String s : Utils.strip(codecs_str.trim(), ",").split(",")) {
+        ArrayList<String> splitCodecs = new ArrayList<>();
+        for (String s : Utils.strip(codecsStr.trim(), ",").split(",")) {
             if (s != null && s.length() > 0) {
-                splited_codecs.add(s);
+                splitCodecs.add(s);
             }
         }
-        String vcodec = null;
-        String acodec = null;
-        for (String full_codec : splited_codecs) {
+        String vCodec = null;
+        String aCodec = null;
+        for (String full_codec : splitCodecs) {
             String codec = full_codec.split(".")[0];
             if (VCODECS.contains(codec)) {
-                if (vcodec == null) {
-                    vcodec = full_codec;
+                if (vCodec == null) {
+                    vCodec = full_codec;
                 }
             } else if (ACODECS.contains(codec)) {
-                if (acodec == null) {
-                    acodec = full_codec;
+                if (aCodec == null) {
+                    aCodec = full_codec;
                 }
             } else {
                 Log.w(TAG, "Unknown codec " + full_codec);
             }
         }
-        JsonObject res = new JsonObject();
-        if (vcodec == null && acodec == null) {
-            if (splited_codecs.size() == 2) {
-                res.addProperty("vcodec", splited_codecs.get(0));
-                res.addProperty("acodec", splited_codecs.get(1));
-                return res;
+        if (vCodec == null && aCodec == null) {
+            if (splitCodecs.size() == 2) {
+                return new Pair<>(splitCodecs.get(0), splitCodecs.get(1));
             }
         } else {
-            res.addProperty("vcodec", vcodec != null ? vcodec : "none");
-            res.addProperty("acodec", acodec != null ? acodec : "none");
-            return res;
-
+            return new Pair<>(vCodec != null ? vCodec : "", aCodec != null ? aCodec : "");
         }
-        return res;
+        return new Pair<>("", "");
     }
 
-    static String mimetype2ext(String mt) {
+    static String mimeType2ext(String mt) {
         if (mt == null) {
             return null;
         }

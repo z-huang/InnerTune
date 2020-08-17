@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.R;
-import com.zionhuang.music.extractor.YoutubeIE;
+import com.zionhuang.music.extractor.YoutubeInfoExtractor;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -44,22 +44,23 @@ public class SongPlayer implements MusicPlayer.EventListener {
     public void playSong(String songId, String title, String artist) {
         updateMetadata(title, artist, 0);
         Disposable d = Observable.just(songId)
-                .map(id -> new YoutubeIE().extract(id))
+                .map(id -> new YoutubeInfoExtractor().extract(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (result.success) {
+                        updateMetadata(result.getTitle(), result.getChannel(), result.getDuration());
                         String url;
                         if (result.hasNormalStream()) {
-                            url = result.getBestNormal().url;
+                            url = result.getNormalStream().url;
                         } else {
-                            url = result.getBestVideo().url;
+                            url = result.getVideoStream().url;
                         }
                         mMusicPlayer.setSource(Uri.parse(url));
                     } else {
-                        Log.d(TAG, "Extract failed, msg: " + result.errorMessage);
+                        Log.w(TAG, "Extraction failed.\nError code: " + result.getErrorCode().toString() + "\nMessage: " + result.getErrorMessage());
                     }
-                });
+                }, Throwable::printStackTrace);
         compositeDisposable.add(d);
     }
 
