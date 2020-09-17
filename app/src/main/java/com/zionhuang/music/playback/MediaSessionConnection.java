@@ -12,6 +12,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -64,6 +65,7 @@ public class MediaSessionConnection {
         return mMediaController;
     }
 
+    @Nullable
     public MediaControllerCompat.TransportControls getTransportControls() {
         return mMediaController != null ? mMediaController.getTransportControls() : null;
     }

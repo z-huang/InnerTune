@@ -1,4 +1,4 @@
-package com.zionhuang.music.adapters.selection;
+package com.zionhuang.music.ui.adapters.selection;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;

@@ -6,4 +6,5 @@
     <color name="colorInverted">#FFFFFFFF</color>
     <color name="colorOnSurface">#FFFFFFFF</color>
     <color name="textColor">#FFFFFFFF</color>
+    <color name="songCoverBackground">#000000</color>
 </resources>

@@ -1,5 +1,7 @@
 package com.zionhuang.music.extractor;
 
+import com.zionhuang.music.db.SongEntity;
+
 import java.util.ArrayList;
 
 import static com.zionhuang.music.extractor.YtStream.TYPE_AUDIO;
@@ -9,18 +11,17 @@ import static com.zionhuang.music.extractor.YtStream.TYPE_VIDEO;
 public class ExtractedInfo {
     private static final String TAG = "ExtractedInfo";
     public boolean success;
+    public SongEntity song;
     public ErrorCode errorCode;
     public String errorMessage;
     public String id;
-    public String title;
-    public String channel;
-    public int duration;
     public ArrayList<YtStream> formats;
     public ArrayList<YtStream> normalStreams;
     public ArrayList<YtStream> videoStreams;
     public ArrayList<YtStream> audioStreams;
 
-    ExtractedInfo() {
+    ExtractedInfo(String id) {
+        this.id = id;
         success = true;
     }
 
@@ -38,28 +39,12 @@ public class ExtractedInfo {
         return errorMessage;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSong(SongEntity song) {
+        this.song = song;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public int getDuration() {
-        return duration;
+    public SongEntity getSong() {
+        return song;
     }
 
     public void setFormats(ArrayList<YtStream> formats) {

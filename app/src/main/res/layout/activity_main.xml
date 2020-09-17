@@ -27,7 +27,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
                 android:elevation="6dp"
-                android:theme="@style/AppTheme.Toolbar" />
+                app:contentInsetStartWithNavigation="0dp"
+                app:theme="@style/AppTheme.Toolbar" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
@@ -39,13 +40,15 @@
                 app:layout_scrollFlags="scroll|enterAlways|snap" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <FrameLayout
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="54dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:defaultNavHost="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:navGraph="@navigation/navigation_graph" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -77,5 +80,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/menu_bottom_nav" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

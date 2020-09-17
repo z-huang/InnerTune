@@ -10,6 +10,7 @@ import android.util.Log;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.R;
 import com.zionhuang.music.extractor.YoutubeInfoExtractor;
+import com.zionhuang.music.repository.SongRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -19,11 +20,13 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SongPlayer implements MusicPlayer.EventListener {
     private static final String TAG = "SongPlayer";
+    private SongRepository mSongRepository;
     private MusicPlayer mMusicPlayer;
     private MediaSessionCompat mMediaSession;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     SongPlayer(Context context) {
+        mSongRepository = new SongRepository(context);
         mMusicPlayer = new MusicPlayer(context);
         mMusicPlayer.setListener(this);
         mMediaSession = new MediaSessionCompat(context, context.getString(R.string.app_name));
@@ -49,7 +52,8 @@ public class SongPlayer implements MusicPlayer.EventListener {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (result.success) {
-                        updateMetadata(result.getTitle(), result.getChannel(), result.getDuration());
+                        updateMetadata(result.getSong().title, result.getSong().artist, result.getSong().duration * 1000);
+                        mSongRepository.insert(result.getSong());
                         String url;
                         if (result.hasNormalStream()) {
                             url = result.getNormalStream().url;

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/libraryFragment">
+    <fragment
+        android:id="@+id/libraryFragment"
+        android:name="com.zionhuang.music.ui.fragments.LibraryFragment"
+        android:label="Library" />
+    <fragment
+        android:id="@+id/explorationFragment"
+        android:name="com.zionhuang.music.ui.fragments.ExplorationFragment"
+        android:label="Explore">
+        <action
+            android:id="@+id/action_explorationFragment_to_searchSuggestionFragment"
+            app:destination="@id/searchSuggestionFragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
+        android:label="Settings" />
+    <fragment
+        android:id="@+id/searchSuggestionFragment"
+        android:name="com.zionhuang.music.ui.fragments.SearchSuggestionFragment"
+        android:label="">
+        <action
+            android:id="@+id/action_searchSuggestionFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit"
+            app:popUpTo="@id/explorationFragment">
+            <argument
+                android:name="searchQuery"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="com.zionhuang.music.ui.fragments.SearchResultFragment"
+        android:label="Search Result">
+        <argument
+            android:name="searchQuery"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
+            app:destination="@id/searchSuggestionFragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit" />
+    </fragment>
+</navigation>

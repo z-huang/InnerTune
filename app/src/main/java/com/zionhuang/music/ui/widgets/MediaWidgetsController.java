@@ -6,14 +6,10 @@ import android.provider.Settings;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import com.zionhuang.music.R;
 
 import static com.zionhuang.music.utils.Utils.makeTimeString;
 
@@ -23,8 +19,6 @@ public class MediaWidgetsController {
     private SeekBar mSeekBar;
     private boolean mSeekBarIsTracking;
     private TextView mProgressTextView;
-    private ImageView mBottomBarPlayPauseBtn;
-    private ImageView mPlayPauseBtn;
 
     private MediaControllerCompat mMediaController;
     private ControllerCallback mControllerCallback;
@@ -32,12 +26,10 @@ public class MediaWidgetsController {
     private long mDuration;
     private float mDurationScale;
 
-    public MediaWidgetsController(Context context, ProgressBar progressBar, SeekBar seekBar, TextView progressTextView, ImageView playPauseBtn, ImageView bottomBarPlayPauseBtn) {
+    public MediaWidgetsController(Context context, ProgressBar progressBar, SeekBar seekBar, TextView progressTextView) {
         mProgressBar = progressBar;
         mSeekBar = seekBar;
         mProgressTextView = progressTextView;
-        mPlayPauseBtn = playPauseBtn;
-        mBottomBarPlayPauseBtn = bottomBarPlayPauseBtn;
         mDurationScale = Settings.Global.getFloat(context.getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1f);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -58,17 +50,6 @@ public class MediaWidgetsController {
                 mSeekBarIsTracking = false;
             }
         });
-        View.OnClickListener playPauseOnClickListener = v -> {
-            if (mMediaController != null) {
-                if (mMediaController.getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
-                    mMediaController.getTransportControls().pause();
-                } else {
-                    mMediaController.getTransportControls().play();
-                }
-            }
-        };
-        mPlayPauseBtn.setOnClickListener(playPauseOnClickListener);
-        mBottomBarPlayPauseBtn.setOnClickListener(playPauseOnClickListener);
     }
 
     public void setMediaController(MediaControllerCompat mediaController) {
@@ -116,13 +97,6 @@ public class MediaWidgetsController {
                     mProgressAnimator.addUpdateListener(this);
                     mProgressAnimator.start();
                 }
-            }
-            if (state.getState() == PlaybackStateCompat.STATE_PAUSED || state.getState() == PlaybackStateCompat.STATE_NONE) {
-                mBottomBarPlayPauseBtn.setImageDrawable(mBottomBarPlayPauseBtn.getContext().getDrawable(R.drawable.ic_play_arrow_black_24dp));
-                mPlayPauseBtn.setImageDrawable(mPlayPauseBtn.getContext().getDrawable(R.drawable.ic_baseline_play_arrow_48));
-            } else {
-                mBottomBarPlayPauseBtn.setImageDrawable(mBottomBarPlayPauseBtn.getContext().getDrawable(R.drawable.ic_baseline_pause_24));
-                mPlayPauseBtn.setImageDrawable(mPlayPauseBtn.getContext().getDrawable(R.drawable.ic_baseline_pause_48));
             }
         }
 

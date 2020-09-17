@@ -9,7 +9,7 @@ public class MediaData {
     private String artist = "";
     private String album = "";
     private Bitmap artwork = null;
-    private long duration = 0;
+    private int duration = 0; // in seconds
 
     public MediaData() {
     }
@@ -19,7 +19,7 @@ public class MediaData {
         title = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
         album = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
         artist = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
-        duration = mediaMetadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+        duration = (int) (mediaMetadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) / 1000);
         artwork = mediaMetadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART);
         return this;
     }
@@ -32,7 +32,7 @@ public class MediaData {
         return artist;
     }
 
-    public long getDuration() {
+    public int getDuration() {
         return duration;
     }
 }

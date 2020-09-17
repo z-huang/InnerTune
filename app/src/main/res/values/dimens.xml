@@ -3,7 +3,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="suggestion_item_height">56dp</dimen>
     <dimen name="video_item_height">96dp</dimen>
+    <dimen name="song_item_height">64dp</dimen>
     <dimen name="loading_item_height">56dp</dimen>
     <dimen name="bottom_navigation_height">54dp</dimen>
     <dimen name="bottom_controls_sheet_peek_height">108dp</dimen>
+    <dimen name="song_cover_radius">8dp</dimen>
 </resources>

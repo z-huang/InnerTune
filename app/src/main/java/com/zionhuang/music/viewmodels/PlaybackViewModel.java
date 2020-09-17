@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -16,22 +17,27 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.models.MediaData;
 import com.zionhuang.music.playback.MediaSessionConnection;
 
+import java.util.Objects;
+
+import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
+
 public class PlaybackViewModel extends AndroidViewModel {
     private MediaSessionConnection mMediaSessionConnection;
     private LiveData<MediaControllerCompat> mMediaController;
-    private MutableLiveData<MediaData> currentData = new MutableLiveData<>();
+    private MutableLiveData<MediaData> currentSong = new MutableLiveData<>();
+    private MutableLiveData<Integer> currentState = new MutableLiveData<>();
 
-    //private Observer<PlaybackStateCompat> playbackStateObserver = playbackState -> currentData.postValue(currentData.getValue() != null ? currentData.getValue().pullPlaybackState(playbackState) : new MediaData().pullPlaybackState(playbackState));
+    private Observer<PlaybackStateCompat> playbackStateObserver = playbackState -> currentState.postValue(playbackState.getState());
     private Observer<MediaMetadataCompat> mediaMetadataObserver = mediaMetadata -> {
-        MediaData newValue = currentData.getValue() != null ? currentData.getValue().pullMediaMetadata(mediaMetadata) : new MediaData().pullMediaMetadata(mediaMetadata);
-        currentData.postValue(newValue);
+        MediaData newValue = currentSong.getValue() != null ? currentSong.getValue().pullMediaMetadata(mediaMetadata) : new MediaData().pullMediaMetadata(mediaMetadata);
+        currentSong.postValue(newValue);
     };
 
     public PlaybackViewModel(@NonNull Application application) {
         super(application);
         mMediaSessionConnection = new MediaSessionConnection(application);
         mMediaSessionConnection.connect();
-        //mMediaSessionConnection.getPlaybackState().observeForever(playbackStateObserver);
+        mMediaSessionConnection.getPlaybackState().observeForever(playbackStateObserver);
         mMediaSessionConnection.getNowPlaying().observeForever(mediaMetadataObserver);
         mMediaController = Transformations.map(mMediaSessionConnection.getIsConnected(), isConnected -> {
             if (isConnected) {
@@ -50,19 +56,33 @@ public class PlaybackViewModel extends AndroidViewModel {
         return mMediaController;
     }
 
-    public LiveData<MediaData> getCurrentData() {
-        return currentData;
+    public LiveData<MediaData> getCurrentSong() {
+        return currentSong;
+    }
+
+    public LiveData<Integer> getCurrentState() {
+        return currentState;
+    }
+
+    public void togglePlayPause() {
+        if (Objects.equals(currentState.getValue(), STATE_PLAYING)) {
+            mMediaSessionConnection.getMediaController().getTransportControls().pause();
+        } else {
+            mMediaSessionConnection.getMediaController().getTransportControls().play();
+        }
     }
 
     public void playMedia(String videoId, Bundle extras) {
-        mMediaSessionConnection.getTransportControls().playFromMediaId(videoId, extras);
+        if (mMediaSessionConnection.getTransportControls() != null) {
+            mMediaSessionConnection.getTransportControls().playFromMediaId(videoId, extras);
+        }
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
         mMediaSessionConnection.disconnect();
-        //mMediaSessionConnection.getPlaybackState().removeObserver(playbackStateObserver);
+        mMediaSessionConnection.getPlaybackState().removeObserver(playbackStateObserver);
         mMediaSessionConnection.getNowPlaying().removeObserver(mediaMetadataObserver);
     }
 }

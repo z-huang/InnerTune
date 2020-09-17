@@ -1,65 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/video_item_height"
-    android:background="?android:selectableItemBackground"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/thumbnail_view"
-        android:layout_width="0dp"
-        android:layout_height="84dp"
-        android:layout_marginStart="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="16:9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_item_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="8dp"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/button_more_action"
-        app:layout_constraintStart_toEndOf="@+id/thumbnail_view"
-        app:layout_constraintTop_toTopOf="@+id/thumbnail_view" />
+        <variable
+            name="item"
+            type="com.google.api.services.youtube.model.SearchResult" />
+    </data>
 
-    <TextView
-        android:id="@+id/tv_item_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:maxLines="2"
-        android:textColor="?android:textColorSecondary"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/tv_item_title"
-        app:layout_constraintStart_toStartOf="@+id/tv_item_title"
-        app:layout_constraintTop_toBottomOf="@+id/tv_item_title" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/button_more_action"
-        android:layout_width="36dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:tint="?android:textColorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
-
-    <FrameLayout
-        android:id="@+id/overlay_selection"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.25"
-        android:background="?colorAccent"
-        android:visibility="gone" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="@dimen/song_item_height"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/thumbnail_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            android:padding="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_song_cover"
+                android:scaleType="center"
+                app:coverId="@{item.id.videoId}" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_more_action"
+            app:layout_constraintStart_toEndOf="@id/thumbnail_container"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{item.snippet.title}"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/item_details"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_item_title">
+
+                <TextView
+                    android:id="@+id/tv_item_channel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@{item.snippet.channelTitle}"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_bullet"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="5dp"
+                    android:singleLine="true"
+                    android:text="@string/bullet"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_publish_time"
+                    app:layout_constraintStart_toEndOf="@id/tv_item_channel"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_publish_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingTop="3dp"
+                    android:singleLine="true"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_bullet"
+                    app:publishDate="@{item.snippet.publishedAt}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_more_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="5dp"
+            android:scaleType="center"
+            android:tint="?android:textColorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+        <FrameLayout
+            android:id="@+id/overlay_selection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.25"
+            android:background="?colorAccent"
+            android:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
     <Transition
         android:id="@+id/expand_collapse_transition"
         motion:constraintSetEnd="@id/expanded"
         motion:constraintSetStart="@id/collapsed"
         motion:duration="500"
-        motion:motionInterpolator="easeOut">
-    </Transition>
+        motion:motionInterpolator="easeOut" />
     <ConstraintSet android:id="@+id/collapsed">
         <Constraint
             android:id="@id/player_container"
@@ -26,16 +24,6 @@
             motion:layout_constraintBottom_toBottomOf="@id/player_container"
             motion:layout_constraintStart_toStartOf="@id/player_container"
             motion:layout_constraintTop_toTopOf="@id/player_container" />
-
-        <Constraint
-            android:id="@id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="53dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
     <ConstraintSet android:id="@+id/expanded">
         <Constraint
@@ -55,16 +43,5 @@
             motion:layout_constraintEnd_toEndOf="@id/player_container"
             motion:layout_constraintStart_toStartOf="@id/player_container"
             motion:layout_constraintTop_toTopOf="@id/player_container" />
-
-        <Constraint
-            android:id="@id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="53dp"
-            android:alpha="0"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 </MotionScene>

@@ -195,7 +195,7 @@ public class JSON implements Iterable<JSON> {
     }
 
     public int getAsInt(int defaultValue) {
-        return isNumber() ? getAsNumber(defaultValue).intValue() : defaultValue;
+        return getAsNumber(defaultValue).intValue();
     }
 
     public float getAsFloat() {

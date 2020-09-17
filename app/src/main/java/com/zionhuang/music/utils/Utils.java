@@ -120,6 +120,12 @@ public class Utils {
         transaction.commit();
     }
 
+    /**
+     * Convert duration in seconds to formatted time string
+     *
+     * @param duration in seconds
+     * @return formatted string
+     */
     public static String makeTimeString(long duration) {
         int secs, minutes;
         long hours;
