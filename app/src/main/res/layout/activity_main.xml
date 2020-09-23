@@ -27,8 +27,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
                 android:elevation="6dp"
-                app:contentInsetStartWithNavigation="0dp"
-                app:theme="@style/AppTheme.Toolbar" />
+                android:theme="@style/AppTheme.Toolbar"
+                app:contentInsetStartWithNavigation="0dp" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"

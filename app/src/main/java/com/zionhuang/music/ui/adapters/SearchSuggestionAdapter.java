@@ -7,16 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zionhuang.music.databinding.ItemSuggestionBinding;
-import com.zionhuang.music.viewmodels.YouTubeSuggestionViewModel;
+import com.zionhuang.music.viewmodels.SuggestionViewModel;
 
 import java.util.Collections;
 import java.util.List;
 
 public class SearchSuggestionAdapter extends RecyclerView.Adapter<SearchSuggestionAdapter.ViewHolder> {
     private List<String> mDataSet = Collections.emptyList();
-    private YouTubeSuggestionViewModel mViewModel;
+    private SuggestionViewModel mViewModel;
 
-    public SearchSuggestionAdapter(YouTubeSuggestionViewModel viewModel) {
+    public SearchSuggestionAdapter(SuggestionViewModel viewModel) {
         mViewModel = viewModel;
     }
 
@@ -58,7 +58,7 @@ public class SearchSuggestionAdapter extends RecyclerView.Adapter<SearchSuggesti
         public void bind(String query) {
             binding.setQuery(query);
             binding.executePendingBindings();
-            binding.fillTextButton.setOnClickListener(v -> mViewModel.setQuery(binding.getQuery()));
+            binding.fillTextButton.setOnClickListener(v -> mViewModel.fillQuery(binding.getQuery()));
         }
     }
 }

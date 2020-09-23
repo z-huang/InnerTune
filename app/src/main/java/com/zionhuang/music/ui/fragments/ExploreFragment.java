@@ -8,61 +8,48 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.youtube.model.Video;
 import com.zionhuang.music.R;
 import com.zionhuang.music.models.SongParcel;
-import com.zionhuang.music.ui.adapters.SearchResultAdapter;
+import com.zionhuang.music.ui.adapters.ExploreAdapter;
 import com.zionhuang.music.ui.widgets.RecyclerViewClickManager;
+import com.zionhuang.music.viewmodels.ExploreViewModel;
 import com.zionhuang.music.viewmodels.PlaybackViewModel;
-import com.zionhuang.music.viewmodels.SearchViewModel;
-
-import java.util.Objects;
 
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 
 import static autodispose2.AutoDispose.autoDisposable;
 
-public class SearchResultFragment extends BaseFragment {
-    private static final String TAG = "SearchResultFragment";
-    private PlaybackViewModel mPlaybackViewModel;
+public class ExploreFragment extends BaseFragment {
+    private static final String TAG = "ExplorationFragment";
 
     @Override
     protected int layoutId() {
-        return R.layout.fragment_search_result;
+        return R.layout.fragment_exploration;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ExploreViewModel mViewModel = new ViewModelProvider(this).get(ExploreViewModel.class);
+        PlaybackViewModel playbackViewModel = new ViewModelProvider(requireActivity()).get(PlaybackViewModel.class);
 
-        SearchViewModel mSearchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-        mPlaybackViewModel = new ViewModelProvider(requireActivity()).get(PlaybackViewModel.class);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
-
-        RecyclerView recyclerView = findViewById(R.id.result_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.explore_recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(layoutManager);
-
-        SearchResultAdapter adapter = new SearchResultAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        ExploreAdapter adapter = new ExploreAdapter();
         recyclerView.setAdapter(adapter);
         RecyclerViewClickManager.setup(recyclerView, (i, v) -> {
-            SearchResult item = adapter.getItemByPosition(i);
-            if (!"youtube#video".equals(item.getId().getKind())) {
-                return;
-            }
-            mPlaybackViewModel.playMedia(SongParcel.fromSearchResult(item));
+            Video video = adapter.getItemByPosition(i);
+            playbackViewModel.playMedia(SongParcel.fromVideo(video));
         }, null);
 
-        String query = SearchResultFragmentArgs.fromBundle(requireArguments()).getSearchQuery();
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setTitle(query);
-        mSearchViewModel.search(query)
+        mViewModel.getFlowable()
                 .to(autoDisposable(AndroidLifecycleScopeProvider.from(this)))
                 .subscribe(pagingData -> adapter.submitData(getLifecycle(), pagingData));
     }
@@ -76,7 +63,7 @@ public class SearchResultFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_search) {
-            NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment);
+            NavHostFragment.findNavController(this).navigate(R.id.action_explorationFragment_to_searchSuggestionFragment);
         }
         return true;
     }

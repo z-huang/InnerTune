@@ -15,6 +15,7 @@ import androidx.lifecycle.Transformations;
 
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.models.MediaData;
+import com.zionhuang.music.models.SongParcel;
 import com.zionhuang.music.playback.MediaSessionConnection;
 
 import java.util.Objects;
@@ -72,9 +73,11 @@ public class PlaybackViewModel extends AndroidViewModel {
         }
     }
 
-    public void playMedia(String videoId, Bundle extras) {
+    public void playMedia(@NonNull SongParcel song) {
         if (mMediaSessionConnection.getTransportControls() != null) {
-            mMediaSessionConnection.getTransportControls().playFromMediaId(videoId, extras);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("song", song);
+            mMediaSessionConnection.getTransportControls().playFromMediaId(song.getId(), bundle);
         }
     }
 

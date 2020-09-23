@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="video"
-            type="com.google.api.services.youtube.model.Video" />
+            name="item"
+            type="com.google.api.services.youtube.model.SearchResult" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
-                app:coverId="@{video.id}" />
+                app:thumbnails="@{item}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{video.snippet.title}"
+                android:text="@{item.snippet.title}"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/item_details"
@@ -72,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:text="@{video.snippet.channelTitle}"
+                    android:text="@{item.snippet.channelTitle}"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -106,7 +106,7 @@
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_bullet"
-                    app:publishDate="@{video.snippet.publishedAt}" />
+                    app:publishDate="@{item.snippet.publishedAt}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

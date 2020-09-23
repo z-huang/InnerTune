@@ -9,11 +9,13 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.api.client.util.DateTime;
+import com.google.api.services.youtube.model.SearchResult;
 import com.zionhuang.music.R;
 import com.zionhuang.music.utils.GlideApp;
 
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
+import static com.zionhuang.music.utils.Utils.getMaxResThumbnailUrl;
 import static com.zionhuang.music.utils.Utils.makeTimeString;
 
 public class Binding {
@@ -36,7 +38,22 @@ public class Binding {
         GlideApp.with(v)
                 .load("https://i3.ytimg.com/vi/" + id + "/maxresdefault.jpg")
                 .placeholder(R.drawable.ic_round_music_note_24)
-                .transform(new MultiTransformation<>(new CenterCrop(), new RoundedCorners((int) (v.getContext().getResources().getDimensionPixelSize(R.dimen.song_cover_radius)))))
+                .transform(new MultiTransformation<>(new CenterCrop(), new RoundedCorners(v.getContext().getResources().getDimensionPixelSize(R.dimen.song_cover_radius))))
+                .into(v);
+    }
+
+    @BindingAdapter("thumbnails")
+    public static void setThumbnails(ImageView v, SearchResult item) {
+        String url;
+        if (item.getId().getKind().equals("youtube#video")) {
+            url = "https://i3.ytimg.com/vi/" + item.getId().getVideoId() + "/maxresdefault.jpg";
+        } else {
+            url = getMaxResThumbnailUrl(item.getSnippet().getThumbnails());
+        }
+        GlideApp.with(v)
+                .load(url)
+                .placeholder(R.drawable.ic_round_music_note_24)
+                .transform(new MultiTransformation<>(new CenterCrop(), new RoundedCorners(v.getContext().getResources().getDimensionPixelSize(R.dimen.song_cover_radius))))
                 .into(v);
     }
 

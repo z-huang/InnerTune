@@ -1,8 +1,9 @@
 package com.zionhuang.music.playback;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
+
+import com.zionhuang.music.models.SongParcel;
 
 public class MediaSessionCallback extends MediaSessionCompat.Callback {
     private MediaSessionCompat mMediaSession;
@@ -20,12 +21,11 @@ public class MediaSessionCallback extends MediaSessionCompat.Callback {
 
     @Override
     public void onPlayFromMediaId(String mediaId, Bundle extras) {
-        mSongPlayer.playSong(mediaId, extras.getString("title"), extras.getString("artist"));
-    }
-
-    @Override
-    public void onPlayFromUri(Uri uri, Bundle extras) {
-        mSongPlayer.playSong(uri);
+        SongParcel songParcel = extras.getParcelable("song");
+        if (songParcel == null) {
+            throw new IllegalArgumentException("Song Parcel can't be null.");
+        }
+        mSongPlayer.playSong(songParcel);
     }
 
     @Override

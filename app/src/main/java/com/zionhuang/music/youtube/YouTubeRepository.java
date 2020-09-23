@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.VideoListResponse;
 
 import java.util.List;
 
@@ -45,5 +46,9 @@ public class YouTubeRepository {
     public Single<SearchListResponse> search(String query, String pageToken) {
         Log.d(TAG, "search: " + query + ", pageToken: " + pageToken);
         return mYouTubeAPIService.search(query, pageToken);
+    }
+
+    public Single<VideoListResponse> getPopularMusic(String pageToken) {
+        return mYouTubeAPIService.popularMusic(pageToken);
     }
 }

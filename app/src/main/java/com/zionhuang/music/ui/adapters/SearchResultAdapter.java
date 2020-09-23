@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.api.services.youtube.model.SearchResult;
-import com.zionhuang.music.databinding.ItemVideoBinding;
+import com.zionhuang.music.databinding.ItemSearchResultBinding;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ public class SearchResultAdapter extends PagingDataAdapter<SearchResult, SearchR
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemVideoBinding videoBinding = ItemVideoBinding.inflate(inflater, parent, false);
+        ItemSearchResultBinding videoBinding = ItemSearchResultBinding.inflate(inflater, parent, false);
         return new ViewHolder(videoBinding);
     }
 
@@ -51,9 +51,9 @@ public class SearchResultAdapter extends PagingDataAdapter<SearchResult, SearchR
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ItemVideoBinding binding;
+        private ItemSearchResultBinding binding;
 
-        public ViewHolder(ItemVideoBinding binding) {
+        public ViewHolder(ItemSearchResultBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

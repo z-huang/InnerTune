@@ -16,15 +16,24 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class YouTubeSuggestionViewModel extends AndroidViewModel {
+public class SuggestionViewModel extends AndroidViewModel {
     private YouTubeRepository mYoutubeRepo;
-    private MutableLiveData<String> query = new MutableLiveData<>();
+    private MutableLiveData<String> fillQuery = new MutableLiveData<>();
+    private MutableLiveData<String> query = new MutableLiveData<>("");
     private MutableLiveData<List<String>> suggestions = new MutableLiveData<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public YouTubeSuggestionViewModel(@NonNull Application application) {
+    public SuggestionViewModel(@NonNull Application application) {
         super(application);
         mYoutubeRepo = YouTubeRepository.getInstance(application);
+    }
+
+    public LiveData<String> onFillQuery() {
+        return fillQuery;
+    }
+
+    public void fillQuery(String q) {
+        fillQuery.postValue(q);
     }
 
     public LiveData<String> getQuery() {

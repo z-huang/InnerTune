@@ -9,11 +9,11 @@
         android:label="Library" />
     <fragment
         android:id="@+id/explorationFragment"
-        android:name="com.zionhuang.music.ui.fragments.ExplorationFragment"
+        android:name="com.zionhuang.music.ui.fragments.ExploreFragment"
         android:label="Explore">
         <action
             android:id="@+id/action_explorationFragment_to_searchSuggestionFragment"
-            app:destination="@id/searchSuggestionFragment"
+            app:destination="@id/suggestionFragment"
             app:enterAnim="@anim/fragment_close_enter"
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_open_enter"
@@ -24,11 +24,11 @@
         android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
         android:label="Settings" />
     <fragment
-        android:id="@+id/searchSuggestionFragment"
-        android:name="com.zionhuang.music.ui.fragments.SearchSuggestionFragment"
+        android:id="@+id/suggestionFragment"
+        android:name="com.zionhuang.music.ui.fragments.SuggestionFragment"
         android:label="">
         <action
-            android:id="@+id/action_searchSuggestionFragment_to_searchResultFragment"
+            android:id="@+id/action_suggestionFragment_to_searchResultFragment"
             app:destination="@id/searchResultFragment"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
@@ -49,7 +49,7 @@
             app:argType="string" />
         <action
             android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
-            app:destination="@id/searchSuggestionFragment"
+            app:destination="@id/suggestionFragment"
             app:enterAnim="@anim/fragment_close_enter"
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_open_enter"

@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.api.services.youtube.model.Thumbnail;
+import com.google.api.services.youtube.model.ThumbnailDetails;
+
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -136,5 +139,30 @@ public class Utils {
         secs = (int) duration;
         String durationFormat = (hours == 0L) ? "%2$d:%3$02d" : "%1$d:%2$02d:%3$02d";
         return String.format(durationFormat, hours, minutes, secs);
+    }
+
+    public static String getMaxResThumbnailUrl(ThumbnailDetails thumbnails) {
+        Thumbnail timg;
+        timg = thumbnails.getMaxres();
+        if (timg != null) {
+            return timg.getUrl();
+        }
+        timg = thumbnails.getHigh();
+        if (timg != null) {
+            return timg.getUrl();
+        }
+        timg = thumbnails.getMedium();
+        if (timg != null) {
+            return timg.getUrl();
+        }
+        timg = thumbnails.getStandard();
+        if (timg != null) {
+            return timg.getUrl();
+        }
+        timg = thumbnails.getDefault();
+        if (timg != null) {
+            return timg.getUrl();
+        }
+        return null;
     }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.R;
 import com.zionhuang.music.extractor.YoutubeInfoExtractor;
+import com.zionhuang.music.models.SongParcel;
 import com.zionhuang.music.repository.SongRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -44,9 +45,9 @@ public class SongPlayer implements MusicPlayer.EventListener {
         mMusicPlayer.play();
     }
 
-    public void playSong(String songId, String title, String artist) {
-        updateMetadata(title, artist, 0);
-        Disposable d = Observable.just(songId)
+    public void playSong(SongParcel song) {
+        updateMetadata(song.getTitle(), song.getArtist(), 0);
+        Disposable d = Observable.just(song.getId())
                 .map(id -> new YoutubeInfoExtractor().extract(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -66,10 +67,6 @@ public class SongPlayer implements MusicPlayer.EventListener {
                     }
                 }, Throwable::printStackTrace);
         compositeDisposable.add(d);
-    }
-
-    public void playSong(Uri uri) {
-        mMusicPlayer.setSource(uri);
     }
 
     public void pause() {
