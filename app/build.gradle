@@ -63,7 +63,7 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.8.6'
     // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.11.3'
+    implementation 'com.google.android.exoplayer:exoplayer:2.12.0'
     // RxJava
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.5'

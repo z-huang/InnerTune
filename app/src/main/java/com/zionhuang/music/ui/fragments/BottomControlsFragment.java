@@ -19,7 +19,7 @@ import com.zionhuang.music.ui.widgets.BottomSheetListener;
 import com.zionhuang.music.ui.widgets.MediaWidgetsController;
 import com.zionhuang.music.viewmodels.PlaybackViewModel;
 
-public class BottomControlsFragment extends BaseFragment implements BottomSheetListener {
+public class BottomControlsFragment extends BaseFragment implements BottomSheetListener, MotionLayout.TransitionListener {
     private static final String TAG = "BottomControlsFragment";
     private BottomControlsSheetBinding binding;
     private PlaybackViewModel mPlaybackViewModel;
@@ -61,6 +61,7 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
         findViewById(R.id.tv_item_channel).setSelected(true);
 
         mMotionLayout = findViewById(R.id.bottom_controls_motion_layout);
+        mMotionLayout.addTransitionListener(this);
         mProgressBar = findViewById(R.id.progress_bar);
         ((MainActivity) requireActivity()).setBottomSheetListener(this);
 
@@ -91,5 +92,25 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
     @Override
     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         mMotionLayout.setProgress(slideOffset);
+    }
+
+    @Override
+    public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
+        mProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) {
+
+    }
+
+    @Override
+    public void onTransitionCompleted(MotionLayout motionLayout, int i) {
+
+    }
+
+    @Override
+    public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) {
+
     }
 }

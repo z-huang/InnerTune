@@ -81,16 +81,6 @@
             app:playState="@{viewModel.currentState}"
             app:tint="@color/colorInverted" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="53dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <com.google.android.exoplayer2.ui.AspectRatioFrameLayout
             android:id="@+id/player_frame"
             android:layout_width="96dp"
@@ -107,6 +97,16 @@
                 android:layout_height="match_parent"
                 app:use_controller="false" />
         </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="53dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/tvLayout"

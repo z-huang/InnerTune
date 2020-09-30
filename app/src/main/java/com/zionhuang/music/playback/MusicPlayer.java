@@ -2,8 +2,9 @@ package com.zionhuang.music.playback;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.media.session.PlaybackStateCompat;
 
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -23,6 +24,7 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
     private static final String TAG = "MusicPlayer";
     private SimpleExoPlayer mPlayer;
     private DataSource.Factory mDataSourceFactory;
+    private boolean mDurationSet = false;
     private EventListener mListener;
 
     MusicPlayer(Context context) {
@@ -53,11 +55,14 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
     }
 
     public void setSource(Uri uri) {
-        mPlayer.prepare(buildMediaSource(uri));
+        mPlayer.setMediaSource(buildMediaSource(uri));
+        mPlayer.prepare();
+        mDurationSet = false;
     }
 
     private MediaSource buildMediaSource(Uri uri) {
-        return new ProgressiveMediaSource.Factory(mDataSourceFactory).createMediaSource(uri);
+        MediaItem mediaItem = MediaItem.fromUri(uri);
+        return new ProgressiveMediaSource.Factory(mDataSourceFactory).createMediaSource(mediaItem);
     }
 
     public long getPosition() {
@@ -76,6 +81,10 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
         return mPlayer.getPlaybackParameters().speed;
     }
 
+    public ExoPlayer getExoPlayer() {
+        return mPlayer;
+    }
+
     public void release() {
         mPlayer.release();
         mPlayer = null;
@@ -88,32 +97,12 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
     }
 
     @Override
-    public void onIsPlayingChanged(boolean isPlaying) {
-        if (isPlaying) {
-            if (mListener != null) {
-                mListener.onPlaybackStateChanged(PlaybackStateCompat.STATE_PLAYING);
+    public void onPlaybackStateChanged(int state) {
+        if (state == Player.STATE_READY) {
+            if (!mDurationSet) {
+                mDurationSet = true;
+                mListener.onDurationSet(getDuration());
             }
-        }
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        @PlaybackStateCompat.State int state;
-        switch (playbackState) {
-            case Player.STATE_IDLE:
-                state = PlaybackStateCompat.STATE_NONE;
-                break;
-            case Player.STATE_BUFFERING:
-                state = PlaybackStateCompat.STATE_BUFFERING;
-                break;
-            case Player.STATE_READY:
-                state = isPlaying() ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
-                break;
-            case Player.STATE_ENDED:
-                state = PlaybackStateCompat.STATE_NONE;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + playbackState);
         }
         if (mListener != null) {
             mListener.onPlaybackStateChanged(state);
@@ -125,6 +114,8 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
     }
 
     interface EventListener {
-        void onPlaybackStateChanged(@PlaybackStateCompat.State int state);
+        void onPlaybackStateChanged(@Player.State int state);
+
+        void onDurationSet(long duration);
     }
 }
