@@ -8,13 +8,7 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-import com.zionhuang.music.R;
 
 /**
  * A wrapper around {@link SimpleExoPlayer}
@@ -23,7 +17,6 @@ import com.zionhuang.music.R;
 public class MusicPlayer implements SimpleExoPlayer.EventListener {
     private static final String TAG = "MusicPlayer";
     private SimpleExoPlayer mPlayer;
-    private DataSource.Factory mDataSourceFactory;
     private boolean mDurationSet = false;
     private EventListener mListener;
 
@@ -31,7 +24,6 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
         mPlayer = new SimpleExoPlayer.Builder(context).build();
         mPlayer.addListener(this);
         play();
-        mDataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, context.getString(R.string.app_name)));
     }
 
     public void play() {
@@ -55,14 +47,9 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
     }
 
     public void setSource(Uri uri) {
-        mPlayer.setMediaSource(buildMediaSource(uri));
+        mPlayer.setMediaItem(MediaItem.fromUri(uri));
         mPlayer.prepare();
         mDurationSet = false;
-    }
-
-    private MediaSource buildMediaSource(Uri uri) {
-        MediaItem mediaItem = MediaItem.fromUri(uri);
-        return new ProgressiveMediaSource.Factory(mDataSourceFactory).createMediaSource(mediaItem);
     }
 
     public long getPosition() {
