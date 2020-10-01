@@ -5,18 +5,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.paging.LoadState;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.api.services.youtube.model.SearchResult;
 import com.zionhuang.music.R;
 import com.zionhuang.music.models.SongParcel;
+import com.zionhuang.music.ui.adapters.LoadStateAdapter;
 import com.zionhuang.music.ui.adapters.SearchResultAdapter;
 import com.zionhuang.music.ui.widgets.RecyclerViewClickManager;
 import com.zionhuang.music.viewmodels.PlaybackViewModel;
@@ -51,7 +56,22 @@ public class SearchResultFragment extends BaseFragment {
         recyclerView.setLayoutManager(layoutManager);
 
         SearchResultAdapter adapter = new SearchResultAdapter();
-        recyclerView.setAdapter(adapter);
+
+        ProgressBar progressBar = findViewById(R.id.progress_bar);
+        Button retryBtn = findViewById(R.id.btn_retry);
+        TextView errorMsgTextView = findViewById(R.id.tv_error_msg);
+
+        adapter.addLoadStateListener(loadState -> {
+            progressBar.setVisibility(loadState.getSource().getRefresh() instanceof LoadState.Loading ? View.VISIBLE : View.GONE);
+            retryBtn.setVisibility(loadState.getSource().getRefresh() instanceof LoadState.Error ? View.VISIBLE : View.GONE);
+            loadState.getSource().getAppend();
+            String errorMsg = loadState.getSource().getRefresh() instanceof LoadState.Error ? ((LoadState.Error) loadState.getSource().getRefresh()).getError().getLocalizedMessage() : "";
+            errorMsgTextView.setText(errorMsg);
+            return null;
+        });
+        retryBtn.setOnClickListener(v -> adapter.retry());
+
+        recyclerView.setAdapter(adapter.withLoadStateFooter(new LoadStateAdapter(adapter::retry)));
         RecyclerViewClickManager.setup(recyclerView, (i, v) -> {
             SearchResult item = adapter.getItemByPosition(i);
             if (!"youtube#video".equals(item.getId().getKind())) {

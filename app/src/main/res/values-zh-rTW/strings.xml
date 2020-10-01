@@ -8,4 +8,5 @@
     <string name="search_item_menu_download">下載</string>
     <string name="title_settings">設定</string>
     <string name="playback_channel_name">音樂播放器</string>
+    <string name="item_load_state_retry">重試</string>
 </resources>

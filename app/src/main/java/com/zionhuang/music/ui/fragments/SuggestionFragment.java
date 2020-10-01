@@ -27,6 +27,7 @@ import com.zionhuang.music.viewmodels.SuggestionViewModel;
 import java.util.concurrent.TimeUnit;
 
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 
 import static autodispose2.AutoDispose.autoDisposable;
 import static com.zionhuang.music.ui.fragments.SuggestionFragmentDirections.actionSuggestionFragmentToSearchResultFragment;
@@ -51,11 +52,7 @@ public class SuggestionFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         SearchSuggestionAdapter adapter = new SearchSuggestionAdapter(mViewModel);
         recyclerView.setAdapter(adapter);
-        RecyclerViewClickManager.setup(recyclerView, (i, v) -> {
-            mSearchView.clearFocus();
-            ActionSuggestionFragmentToSearchResultFragment action = actionSuggestionFragmentToSearchResultFragment(adapter.getQueryByPosition(i));
-            NavHostFragment.findNavController(this).navigate(action);
-        }, null);
+        RecyclerViewClickManager.setup(recyclerView, (i, v) -> search(adapter.getQueryByPosition(i)), null);
 
         setupSearchView();
         mViewModel.onFillQuery().observe(getViewLifecycleOwner(), q -> mSearchView.setQuery(q, false));
@@ -74,6 +71,8 @@ public class SuggestionFragment extends BaseFragment {
     private void setupSearchView() {
         mSearchView = new SearchView(requireContext());
         mSearchView.setIconified(false);
+        EditText searchEditText = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchEditText.setPadding(0, 2, 0, 2);
         SearchManager searchManager = (SearchManager) requireContext().getSystemService(Context.SEARCH_SERVICE);
         if (searchManager != null) {
             mSearchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
@@ -81,12 +80,23 @@ public class SuggestionFragment extends BaseFragment {
         mSearchView.setSubmitButtonEnabled(false);
         mSearchView.setMaxWidth(Integer.MAX_VALUE);
         mSearchView.setOnCloseListener(() -> true);
-        EditText searchEditText = mSearchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        searchEditText.setPadding(0, 2, 0, 2);
-        RxSearchView.queryTextChanges(mSearchView)
+        RxSearchView.queryTextChangeEvents(mSearchView)
                 .debounce(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .to(autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-                .subscribe(q -> mViewModel.setQuery(q.toString()));
+                .subscribe(e -> {
+                    if (e.isSubmitted()) {
+                        search(e.getQueryText().toString());
+                    } else {
+                        mViewModel.setQuery(e.getQueryText().toString());
+                    }
+                });
         mSearchView.setQuery(mViewModel.getQuery().getValue(), false);
+    }
+
+    private void search(String query) {
+        mSearchView.clearFocus();
+        ActionSuggestionFragmentToSearchResultFragment action = actionSuggestionFragmentToSearchResultFragment(query);
+        NavHostFragment.findNavController(this).navigate(action);
     }
 }

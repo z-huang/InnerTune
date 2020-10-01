@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/result_recycler_view"
+        android:id="@+id/explore_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="visible"
@@ -48,5 +48,4 @@
             android:layout_gravity="center"
             android:text="@string/item_load_state_retry" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
