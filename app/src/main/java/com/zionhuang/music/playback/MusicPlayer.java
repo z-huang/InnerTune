@@ -96,6 +96,15 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
         }
     }
 
+    @Override
+    public void onIsPlayingChanged(boolean isPlaying) {
+        if (mPlayer.getPlaybackState() == Player.STATE_READY) {
+            if (mListener != null) {
+                mListener.onPlaybackStateChanged(Player.STATE_READY);
+            }
+        }
+    }
+
     public void setListener(EventListener listener) {
         mListener = listener;
     }
