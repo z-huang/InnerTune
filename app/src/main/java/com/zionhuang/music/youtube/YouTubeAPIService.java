@@ -1,6 +1,9 @@
 package com.zionhuang.music.youtube;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
 
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
@@ -11,9 +14,10 @@ import com.zionhuang.music.R;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class YouTubeAPIService {
+public class YouTubeAPIService implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "YoutubeAPIService";
-    private static final String API_KEY = "API_KEY";
+    private final String API_KEY_RID;
+    private static String API_KEY;
     private static final String REGION_CODE = "US";
     private static final String CATEGORY_MUSIC = "10";
     private YouTube mYouTube;
@@ -22,6 +26,10 @@ public class YouTubeAPIService {
         mYouTube = new YouTube.Builder(new NetHttpTransport.Builder().build(), new GsonFactory(), null)
                 .setApplicationName(context.getResources().getString(R.string.app_name))
                 .build();
+        API_KEY_RID = context.getString(R.string.api_key);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        API_KEY = sharedPreferences.getString(API_KEY_RID, "");
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     public Single<SearchListResponse> search(String query, String pageToken) {
@@ -44,5 +52,12 @@ public class YouTubeAPIService {
                         .setPageToken(pageToken)
                         .setMaxResults(20L)
                         .execute());
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(API_KEY_RID)) {
+            API_KEY = sharedPreferences.getString(key, "");
+        }
     }
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <EditTextPreference
+        app:icon="@drawable/ic_baseline_vpn_key_24"
+        app:key="@string/api_key"
+        app:title="@string/pref_api_key" />
+    <Preference
+        app:icon="@drawable/ic_outline_info_24"
+        app:title="@string/pref_about" />
+</PreferenceScreen>

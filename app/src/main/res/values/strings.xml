@@ -10,4 +10,6 @@
     <string name="playback_channel_name">Music Player</string>
     <string name="bullet" translatable="false">•</string>
     <string name="item_load_state_retry">Retry</string>
+    <string name="pref_api_key">API Key</string>
+    <string name="pref_about">About</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.zionhuang.music.youtube;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.VideoListResponse;
@@ -44,7 +43,6 @@ public class YouTubeRepository {
     }
 
     public Single<SearchListResponse> search(String query, String pageToken) {
-        Log.d(TAG, "search: " + query + ", pageToken: " + pageToken);
         return mYouTubeAPIService.search(query, pageToken);
     }
 
