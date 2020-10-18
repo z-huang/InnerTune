@@ -3,7 +3,7 @@
     <color name="colorPrimary">#FFFFFFFF</color>
     <color name="colorPrimaryDark">#FFCCCCCC</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorInverted">#FF000000</color>
+    <color name="colorInverted">#000000</color>
     <color name="colorOnSurface">#FF000000</color>
     <color name="textColor">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
