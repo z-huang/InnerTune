@@ -49,8 +49,8 @@ dependencies {
     implementation 'androidx.fragment:fragment:1.2.5'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.0'
-    implementation 'androidx.navigation:navigation-ui:2.3.0'
+    implementation 'androidx.navigation:navigation-fragment:2.3.1'
+    implementation 'androidx.navigation:navigation-ui:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
@@ -76,15 +76,15 @@ dependencies {
     testImplementation 'androidx.paging:paging-common:3.0.0-alpha07'
     implementation 'androidx.paging:paging-rxjava3:3.0.0-alpha07'
     // Room
-    implementation 'androidx.room:room-runtime:2.3.0-alpha02'
-    annotationProcessor 'androidx.room:room-compiler:2.3.0-alpha02'
-    implementation 'androidx.room:room-rxjava3:2.3.0-alpha02'
-    testImplementation 'androidx.room:room-testing:2.3.0-alpha02'
+    implementation 'androidx.room:room-runtime:2.3.0-alpha03'
+    annotationProcessor 'androidx.room:room-compiler:2.3.0-alpha03'
+    implementation 'androidx.room:room-rxjava3:2.3.0-alpha03'
+    testImplementation 'androidx.room:room-testing:2.3.0-alpha03'
     // Google API Client
     implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
-    implementation 'com.google.http-client:google-http-client-android:1.36.0'
-    implementation 'com.google.api-client:google-api-client-android:1.30.10'
-    implementation 'com.google.api-client:google-api-client-gson:1.30.10'
+    implementation 'com.google.http-client:google-http-client-android:1.37.0'
+    implementation 'com.google.api-client:google-api-client-android:1.30.11'
+    implementation 'com.google.api-client:google-api-client-gson:1.30.11'
     // Apache Utils
     implementation 'org.apache.commons:commons-lang3:3.11'
     implementation 'org.apache.commons:commons-text:1.9'
@@ -101,7 +101,7 @@ dependencies {
     // Jsoup
     implementation 'org.jsoup:jsoup:1.13.1'
     // Test
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'android.arch.core:core-testing:1.1.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
