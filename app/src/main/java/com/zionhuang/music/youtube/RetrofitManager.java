@@ -14,7 +14,9 @@ public class RetrofitManager {
     private RetrofitManager() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(GoogleSuggestionAPIBaseUrl)
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().registerTypeAdapter(SuggestionResult.class, SuggestionResult.deserializer).create()))
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .registerTypeAdapter(SuggestionResult.class, SuggestionResult.deserializer)
+                        .create()))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build();
         mSuggestionAPIService = retrofit.create(SuggestionAPIService.class);

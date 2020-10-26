@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.models.MediaData;
 import com.zionhuang.music.models.SongParcel;
 import com.zionhuang.music.playback.MediaSessionConnection;
+import com.zionhuang.music.playback.queue.Queue.Companion.QueueType;
 
 import java.util.Objects;
 
@@ -73,10 +74,11 @@ public class PlaybackViewModel extends AndroidViewModel {
         }
     }
 
-    public void playMedia(@NonNull SongParcel song) {
+    public void playMedia(@NonNull SongParcel song, @QueueType int queueType) {
         if (mMediaSessionConnection.getTransportControls() != null) {
             Bundle bundle = new Bundle();
             bundle.putParcelable("song", song);
+            bundle.putInt("queueType", queueType);
             mMediaSessionConnection.getTransportControls().playFromMediaId(song.getId(), bundle);
         }
     }

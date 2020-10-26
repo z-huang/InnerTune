@@ -43,12 +43,13 @@ public class MusicPlayer implements SimpleExoPlayer.EventListener {
     }
 
     public void stop() {
-        mPlayer.stop();
+        mPlayer.stop(true);
     }
 
     public void setSource(Uri uri) {
         mPlayer.setMediaItem(MediaItem.fromUri(uri));
         mPlayer.prepare();
+        mPlayer.seekTo(0);
         mDurationSet = false;
     }
 

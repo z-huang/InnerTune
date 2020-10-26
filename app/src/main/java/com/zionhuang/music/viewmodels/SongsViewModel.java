@@ -22,7 +22,7 @@ public class SongsViewModel extends AndroidViewModel {
     public SongsViewModel(@NonNull Application application) {
         super(application);
         songRepository = new SongRepository(application);
-        allSongs = songRepository.getAllSongs();
+        allSongs = songRepository.getAllSongsAsLiveData();
     }
 
     public LiveData<List<SongEntity>> getAllSongs() {

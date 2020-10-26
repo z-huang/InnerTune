@@ -1,47 +1,29 @@
-package com.zionhuang.music.db;
+package com.zionhuang.music.db
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
-import java.util.Date;
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.zionhuang.music.models.SongParcel
+import java.util.*
 
 @Entity(tableName = "song")
-public class SongEntity {
-    @NonNull
-    @PrimaryKey
-    public String id;
-    @ColumnInfo(name = "title")
-    public String title;
-    @ColumnInfo(name = "artist")
-    public String artist;
-    @ColumnInfo(name = "duration")
-    public int duration; // in seconds
-    @ColumnInfo(name = "liked")
-    public boolean liked;
-    @ColumnInfo(name = "create_date")
-    public Date createDate;
-    @ColumnInfo(name = "modify_date")
-    public Date modifyDate;
+data class SongEntity(
+        @PrimaryKey val id: String,
+        var title: String? = null,
+        var artist: String? = null,
+        var duration: Int = 0, // in seconds
+        var liked: Boolean = false,
+        @ColumnInfo(name = "create_date") var createDate: Date = Date(),
+        @ColumnInfo(name = "modify_date") var modifyDate: Date = Date()
+) {
+    constructor(videoId: String) : this(id = videoId)
 
-    public SongEntity(@NonNull String id) {
-        this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public void setLiked(boolean liked) {
-        this.liked = liked;
+    companion object {
+        @JvmStatic
+        fun fromSongParcel(song: SongParcel) = SongEntity(
+                id = song.id,
+                title = song.title,
+                artist = song.artist
+        )
     }
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -17,8 +16,14 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.zionhuang.music.R;
+import com.zionhuang.music.db.SongEntity;
 import com.zionhuang.music.extractor.YoutubeInfoExtractor;
 import com.zionhuang.music.models.SongParcel;
+import com.zionhuang.music.playback.queue.AllSongsQueue;
+import com.zionhuang.music.playback.queue.EmptyQueue;
+import com.zionhuang.music.playback.queue.Queue;
+import com.zionhuang.music.playback.queue.Queue.Companion.QueueType;
+import com.zionhuang.music.playback.queue.SingleSongQueue;
 import com.zionhuang.music.repository.SongRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -31,13 +36,13 @@ import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PAUSE;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY_PAUSE;
 import static android.support.v4.media.session.PlaybackStateCompat.ACTION_SEEK_TO;
-import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ALL;
-import static android.support.v4.media.session.PlaybackStateCompat.REPEAT_MODE_ONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_BUFFERING;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_NONE;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PAUSED;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 import static com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel;
+import static com.zionhuang.music.playback.queue.Queue.QUEUE_ALL_SONG;
+import static com.zionhuang.music.playback.queue.Queue.QUEUE_SINGLE;
 
 public class SongPlayer implements MusicPlayer.EventListener {
     private static final String TAG = "SongPlayer";
@@ -48,8 +53,8 @@ public class SongPlayer implements MusicPlayer.EventListener {
     private PlayerNotificationManager playerNotificationManager;
     private SongRepository mSongRepository;
     private MusicPlayer mMusicPlayer;
+    private Queue mQueue = EmptyQueue.EMPTY_QUEUE;
     private MediaSessionCompat mMediaSession;
-    private SongParcel currentSong;
 
     SongPlayer(Context context) {
         mSongRepository = new SongRepository(context);
@@ -67,13 +72,13 @@ public class SongPlayer implements MusicPlayer.EventListener {
             @Override
             @NonNull
             public CharSequence getCurrentContentTitle(@NonNull Player player) {
-                return currentSong == null ? "" : currentSong.getTitle();
+                return getCurrentSong() != null ? (getCurrentSong().getTitle() != null ? getCurrentSong().getTitle() : "") : "";
             }
 
             @Nullable
             @Override
             public CharSequence getCurrentContentText(@NonNull Player player) {
-                return currentSong.getArtist();
+                return getCurrentSong().getArtist();
             }
 
             @Nullable
@@ -101,16 +106,20 @@ public class SongPlayer implements MusicPlayer.EventListener {
         mMusicPlayer.play();
     }
 
-    public void playSong(@NonNull SongParcel song) {
-        currentSong = song;
-        updateMetadata(song.getTitle(), song.getArtist(), 0);
+    public void playSong() {
+        mMusicPlayer.stop();
+        SongEntity song = mQueue.getCurrentSong();
+        if (song == null) {
+            return;
+        }
+        updateMetadata(song.getTitle(), song.getArtist(), song.getDuration());
         Disposable d = Observable.just(song.getId())
                 .map(id -> new YoutubeInfoExtractor().extract(id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (result.success) {
-                        updateMetadata(result.getSong().title, result.getSong().artist, result.getSong().duration * 1000);
+                        updateMetadata(result.getSong().getTitle(), result.getSong().getArtist(), result.getSong().getDuration() * 1000);
                         mSongRepository.insert(result.getSong());
                         String url;
                         if (result.hasNormalStream()) {
@@ -137,6 +146,31 @@ public class SongPlayer implements MusicPlayer.EventListener {
     public void seekTo(long pos) {
         mMusicPlayer.seekTo(pos);
         updatePlaybackState(mMediaSession.getController().getPlaybackState().getState(), pos, mMusicPlayer.getPlaybackSpeed());
+    }
+
+    public void setQueue(@QueueType int queueType, String currentSongId) {
+        switch (queueType) {
+            case QUEUE_ALL_SONG:
+                mQueue = new AllSongsQueue(mSongRepository);
+                break;
+            case QUEUE_SINGLE:
+                mQueue = new SingleSongQueue(mSongRepository, currentSongId);
+        }
+        mQueue.setCurrentSongId(currentSongId);
+    }
+
+    public SongEntity getCurrentSong() {
+        return mQueue.getCurrentSong();
+    }
+
+    public void playNext() {
+        mQueue.playNext();
+        playSong();
+    }
+
+    public void playPrevious() {
+        mQueue.playPrevious();
+        playSong();
     }
 
     private void repeatSong() {
@@ -208,17 +242,13 @@ public class SongPlayer implements MusicPlayer.EventListener {
                 state = mMusicPlayer.isPlaying() ? STATE_PLAYING : STATE_PAUSED;
                 break;
             case Player.STATE_ENDED:
-                MediaControllerCompat controller = getMediaSession().getController();
-                switch (controller.getRepeatMode()) {
-                    case REPEAT_MODE_ONE:
-                        repeatSong();
-                        break;
-                    case REPEAT_MODE_ALL:
-                        repeatQueue();
-                        break;
-                }
+                playNext();
                 break;
         }
         updatePlaybackState(state, mMusicPlayer.getPosition(), mMusicPlayer.getPlaybackSpeed());
+    }
+
+    public void updateSongMeta(String songId, SongParcel songParcel) {
+        mQueue.updateSongMeta(songId, songParcel);
     }
 }

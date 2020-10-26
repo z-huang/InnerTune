@@ -11,6 +11,7 @@ import com.zionhuang.music.db.SongEntity;
 import java.util.List;
 
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import kotlinx.coroutines.flow.Flow;
 
 public class SongRepository {
     private static final String TAG = "SongRepository";
@@ -20,8 +21,16 @@ public class SongRepository {
         mSongDao = MusicDatabase.getInstance(context).getSongDao();
     }
 
-    public LiveData<List<SongEntity>> getAllSongs() {
-        return mSongDao.getAllSongs();
+    public LiveData<List<SongEntity>> getAllSongsAsLiveData() {
+        return mSongDao.getAllSongsAsLiveData();
+    }
+
+    public Flow<List<SongEntity>> getAllSongsAsFlow() {
+        return mSongDao.getAllSongsAsFlow();
+    }
+
+    public SongEntity getSongById(String id) {
+        return mSongDao.getSongById(id);
     }
 
     public void insert(SongEntity song) {

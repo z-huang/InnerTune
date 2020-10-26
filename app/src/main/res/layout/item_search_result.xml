@@ -50,7 +50,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_item_title"
+                android:id="@+id/song_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -69,7 +69,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_item_channel"
+                    android:id="@+id/song_artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"

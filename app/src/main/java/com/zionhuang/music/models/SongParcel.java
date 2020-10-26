@@ -19,7 +19,7 @@ public class SongParcel implements Parcelable {
     }
 
     public static SongParcel fromSongEntity(SongEntity song) {
-        return new SongParcel(song.id, song.title, song.artist);
+        return new SongParcel(song.getId(), song.getTitle(), song.getArtist());
     }
 
     public static SongParcel fromVideo(Video video) {

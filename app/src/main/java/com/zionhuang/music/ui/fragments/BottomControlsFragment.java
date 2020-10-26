@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,9 +22,6 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
     private static final String TAG = "BottomControlsFragment";
     private BottomControlsSheetBinding binding;
     private PlaybackViewModel mPlaybackViewModel;
-
-    private MotionLayout mMotionLayout;
-    private ProgressBar mProgressBar;
 
     private MediaWidgetsController mMediaWidgetsController;
 
@@ -55,17 +51,15 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
 
     private void setupUI() {
         // Marquee
-        findViewById(R.id.tv_btm_song_title).setSelected(true);
-        findViewById(R.id.tv_btm_song_artist).setSelected(true);
-        findViewById(R.id.tv_item_title).setSelected(true);
-        findViewById(R.id.tv_item_channel).setSelected(true);
+        binding.btmSongTitle.setSelected(true);
+        binding.btmSongArtist.setSelected(true);
+        binding.songTitle.setSelected(true);
+        binding.songArtist.setSelected(true);
 
-        mMotionLayout = findViewById(R.id.bottom_controls_motion_layout);
-        mMotionLayout.addTransitionListener(this);
-        mProgressBar = findViewById(R.id.progress_bar);
+        binding.motionLayout.addTransitionListener(this);
         ((MainActivity) requireActivity()).setBottomSheetListener(this);
 
-        mMediaWidgetsController = new MediaWidgetsController(requireContext(), mProgressBar, findViewById(R.id.seek_bar), findViewById(R.id.tv_position));
+        mMediaWidgetsController = new MediaWidgetsController(requireContext(), binding.progressBar, binding.seekBar, binding.positionText);
     }
 
     @Override
@@ -83,20 +77,22 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
     @Override
     public void onStateChanged(@NonNull View bottomSheet, int newState) {
         if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-            mProgressBar.setVisibility(View.VISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
         } else {
-            mProgressBar.setVisibility(View.INVISIBLE);
+            binding.progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-        mMotionLayout.setProgress(slideOffset);
+        if (slideOffset < 0) slideOffset = 0;
+        if (slideOffset > 1) slideOffset = 1;
+        binding.motionLayout.setProgress(slideOffset);
     }
 
     @Override
     public void onTransitionStarted(MotionLayout motionLayout, int i, int i1) {
-        mProgressBar.setVisibility(View.INVISIBLE);
+        binding.progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

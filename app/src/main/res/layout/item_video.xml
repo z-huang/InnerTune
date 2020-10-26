@@ -47,7 +47,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_item_title"
+                android:id="@+id/song_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -65,10 +65,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_item_title">
+                app:layout_constraintTop_toBottomOf="@+id/song_title">
 
                 <TextView
-                    android:id="@+id/tv_item_channel"
+                    android:id="@+id/song_artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
@@ -93,7 +93,7 @@
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/tv_publish_time"
-                    app:layout_constraintStart_toEndOf="@id/tv_item_channel"
+                    app:layout_constraintStart_toEndOf="@id/song_artist"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView

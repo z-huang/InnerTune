@@ -32,6 +32,7 @@ import java.util.Objects;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 
 import static autodispose2.AutoDispose.autoDisposable;
+import static com.zionhuang.music.playback.queue.Queue.QUEUE_SINGLE;
 
 public class SearchResultFragment extends BaseFragment {
     private static final String TAG = "SearchResultFragment";
@@ -77,7 +78,7 @@ public class SearchResultFragment extends BaseFragment {
             if (!"youtube#video".equals(item.getId().getKind())) {
                 return;
             }
-            mPlaybackViewModel.playMedia(SongParcel.fromSearchResult(item));
+            mPlaybackViewModel.playMedia(SongParcel.fromSearchResult(item), QUEUE_SINGLE);
         }, null);
 
         String query = SearchResultFragmentArgs.fromBundle(requireArguments()).getSearchQuery();

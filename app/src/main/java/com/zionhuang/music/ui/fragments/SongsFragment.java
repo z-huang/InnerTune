@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.zionhuang.music.R;
 import com.zionhuang.music.models.SongParcel;
+import com.zionhuang.music.ui.adapters.SongsAdapter;
 import com.zionhuang.music.ui.widgets.RecyclerViewClickManager;
 import com.zionhuang.music.viewmodels.PlaybackViewModel;
 import com.zionhuang.music.viewmodels.SongsViewModel;
-import com.zionhuang.music.ui.adapters.SongsAdapter;
+
+import static com.zionhuang.music.playback.queue.Queue.QUEUE_ALL_SONG;
 
 public class SongsFragment extends BaseFragment {
 
@@ -35,7 +37,7 @@ public class SongsFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(songsAdapter);
         RecyclerViewClickManager.setup(recyclerView,
-                (i, v) -> playbackViewModel.playMedia(SongParcel.fromSongEntity(songsAdapter.getSongFromPosition(i))),
+                (i, v) -> playbackViewModel.playMedia(SongParcel.fromSongEntity(songsAdapter.getSongFromPosition(i)), QUEUE_ALL_SONG),
                 null);
 
         songsViewModel.getAllSongs().observe(getViewLifecycleOwner(), songsAdapter::setDataSet);

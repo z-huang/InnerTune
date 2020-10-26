@@ -11,7 +11,7 @@
     </data>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
-        android:id="@+id/bottom_controls_motion_layout"
+        android:id="@+id/motion_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
@@ -47,7 +47,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_btm_song_title"
+                android:id="@+id/btm_song_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -60,7 +60,7 @@
                 tools:text="Song Title" />
 
             <TextView
-                android:id="@+id/tv_btm_song_artist"
+                android:id="@+id/btm_song_artist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
@@ -128,7 +128,7 @@
             app:layout_constraintTop_toBottomOf="@id/player_container">
 
             <TextView
-                android:id="@+id/tv_item_title"
+                android:id="@+id/song_title"
                 style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                 tools:text="Song Title" />
 
             <TextView
-                android:id="@+id/tv_item_channel"
+                android:id="@+id/song_artist"
                 style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -215,7 +215,7 @@
                 tools:progress="50" />
 
             <TextView
-                android:id="@+id/tv_position"
+                android:id="@+id/position_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -223,7 +223,7 @@
                 tools:text="0:00" />
 
             <TextView
-                android:id="@+id/tv_duration"
+                android:id="@+id/duration_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:duration="@{viewModel.currentSong.duration}"
@@ -262,6 +262,7 @@
                 android:layout_height="36dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:onClick="@{()->viewModel.mediaController.transportControls.skipToPrevious()}"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_baseline_skip_previous_48"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
@@ -290,6 +291,7 @@
                 android:layout_height="36dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:onClick="@{()->viewModel.mediaController.transportControls.skipToNext()}"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_baseline_skip_next_48"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"

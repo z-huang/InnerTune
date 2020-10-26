@@ -29,6 +29,7 @@ import com.zionhuang.music.viewmodels.PlaybackViewModel;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 
 import static autodispose2.AutoDispose.autoDisposable;
+import static com.zionhuang.music.playback.queue.Queue.QUEUE_SINGLE;
 
 public class ExploreFragment extends BaseFragment {
     private static final String TAG = "ExplorationFragment";
@@ -66,7 +67,7 @@ public class ExploreFragment extends BaseFragment {
         recyclerView.setAdapter(adapter.withLoadStateFooter(new LoadStateAdapter(adapter::retry)));
         RecyclerViewClickManager.setup(recyclerView, (i, v) -> {
             Video video = adapter.getItemByPosition(i);
-            playbackViewModel.playMedia(SongParcel.fromVideo(video));
+            playbackViewModel.playMedia(SongParcel.fromVideo(video), QUEUE_SINGLE);
         }, null);
 
         mViewModel.getFlowable()

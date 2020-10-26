@@ -17,10 +17,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.zionhuang.music.models.QueueData;
 
 import java.util.List;
 
 public class MediaSessionConnection {
+    private static final String TAG = "MediaSessionConnection";
     private Context mContext;
     private PlayerView mPlayerView;
     private MediaControllerCompat mMediaController;
@@ -29,6 +31,7 @@ public class MediaSessionConnection {
     private MutableLiveData<Boolean> isConnected = new MutableLiveData<>();
     private MutableLiveData<PlaybackStateCompat> playbackState = new MutableLiveData<>();
     private MutableLiveData<MediaMetadataCompat> nowPlaying = new MutableLiveData<>();
+    private MutableLiveData<QueueData> queueData = new MutableLiveData<>(new QueueData());
 
     public MediaSessionConnection(Context context) {
         mContext = context;
@@ -83,7 +86,7 @@ public class MediaSessionConnection {
 
         @Override
         public void onQueueChanged(List<MediaSessionCompat.QueueItem> queue) {
-            super.onQueueChanged(queue);
+            queueData.postValue(queueData.getValue().update(mMediaController, queue));
         }
 
         @Override
