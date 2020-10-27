@@ -71,10 +71,10 @@ public class YoutubeInfoExtractor {
         }
         String plResponse = null;
         // pull out player response lest the string be too long to parse
-        Matcher m = Pattern.compile(",\"player_response\":\"(\\{.+\\})\"").matcher(config);
+        Matcher m = Pattern.compile("\"player_response\":\"(\\{.+\\})\"").matcher(config);
         if (m.find()) {
             plResponse = unescapeJava(m.group(1));
-            config = config.replaceAll(",\"player_response\":\"(\\{.+\\})\"", "");
+            config = config.replaceAll("L\"player_response\":\"(\\{.+\\})\"", "");
         }
         JSON ytPlayerConfig = JSON.parseJsonString(config);
         return new Pair<>(ytPlayerConfig, plResponse);
