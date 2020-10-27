@@ -48,7 +48,8 @@ public class JSON implements Iterable<JSON> {
     }
 
     public static final JSON NULL = new JSON(JsonNull.INSTANCE);
-    private JsonElement mValue;
+
+    private final JsonElement mValue;
 
     public JSON(JsonElement element) {
         mValue = element;
