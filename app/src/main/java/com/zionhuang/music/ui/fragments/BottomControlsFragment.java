@@ -8,27 +8,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.zionhuang.music.R;
 import com.zionhuang.music.databinding.BottomControlsSheetBinding;
 import com.zionhuang.music.ui.activities.MainActivity;
 import com.zionhuang.music.ui.widgets.BottomSheetListener;
 import com.zionhuang.music.ui.widgets.MediaWidgetsController;
 import com.zionhuang.music.viewmodels.PlaybackViewModel;
 
-public class BottomControlsFragment extends BaseFragment implements BottomSheetListener, MotionLayout.TransitionListener {
+public class BottomControlsFragment extends Fragment implements BottomSheetListener, MotionLayout.TransitionListener {
     private static final String TAG = "BottomControlsFragment";
     private BottomControlsSheetBinding binding;
     private PlaybackViewModel mPlaybackViewModel;
 
     private MediaWidgetsController mMediaWidgetsController;
-
-    @Override
-    protected int layoutId() {
-        return R.layout.bottom_controls_sheet;
-    }
 
     @Nullable
     @Override
@@ -41,7 +36,7 @@ public class BottomControlsFragment extends BaseFragment implements BottomSheetL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPlaybackViewModel = new ViewModelProvider(requireActivity()).get(PlaybackViewModel.class);
-        mPlaybackViewModel.setPlayerView(findViewById(R.id.player_view));
+        mPlaybackViewModel.setPlayerView(binding.playerView);
 
         binding.setViewModel(mPlaybackViewModel);
         binding.setLifecycleOwner(this);
