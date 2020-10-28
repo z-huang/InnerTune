@@ -328,7 +328,10 @@ public class YoutubeInfoExtractor {
                 }
                 if (!cipher.isEmpty()) {
                     if (urlData.has("s")) {
-                        final String ASSETS_RE = "\"assets\":.+?\"js\":\\s*(\"[^\"]+\")";
+                        final String[] ASSETS_RE = {
+                                "\"assets\":.+?\"js\":\\s*(\"[^\"]+\")",
+                                "<script\\s+src=(\"[^\"]+\").*name=\"player_ias\\/base\"\\s*\\/?>" // get player url from script tag
+                        };
                         String jsPlayerUrlJson = RegexUtils.search(ASSETS_RE, ageGate ? embedWebPage : videoWebPage);
                         if (jsPlayerUrlJson.isEmpty() && !ageGate) {
                             if (embedWebPage.isEmpty()) {
