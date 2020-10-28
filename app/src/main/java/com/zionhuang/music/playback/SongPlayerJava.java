@@ -44,7 +44,7 @@ import static com.google.android.exoplayer2.ui.PlayerNotificationManager.createW
 import static com.zionhuang.music.playback.queue.Queue.QUEUE_ALL_SONG;
 import static com.zionhuang.music.playback.queue.Queue.QUEUE_SINGLE;
 
-public class SongPlayer implements MusicPlayer.EventListener {
+public class SongPlayerJava implements MusicPlayer.EventListener {
     private static final String TAG = "SongPlayer";
     private static final String CHANNEL_ID = "music_channel_01";
     private static final int NOTIFICATION_ID = 888;
@@ -56,13 +56,13 @@ public class SongPlayer implements MusicPlayer.EventListener {
     private Queue mQueue = EmptyQueue.EMPTY_QUEUE;
     private MediaSessionCompat mMediaSession;
 
-    SongPlayer(Context context) {
+    SongPlayerJava(Context context) {
         mSongRepository = new SongRepository(context);
         mMusicPlayer = new MusicPlayer(context);
         mMusicPlayer.setListener(this);
         mMediaSession = new MediaSessionCompat(context, context.getString(R.string.app_name));
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        mMediaSession.setCallback(new MediaSessionCallback(mMediaSession, this));
+        //mMediaSession.setCallback(new MediaSessionCallback(mMediaSession, this));
         mMediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
                 .setState(STATE_NONE, 0, 1F)
                 .setActions(ACTION_PLAY | ACTION_PAUSE | ACTION_PLAY_PAUSE | ACTION_SEEK_TO)
@@ -250,5 +250,9 @@ public class SongPlayer implements MusicPlayer.EventListener {
 
     public void updateSongMeta(String songId, SongParcel songParcel) {
         mQueue.updateSongMeta(songId, songParcel);
+    }
+
+    public void addToLibrary() {
+        String id = getCurrentSong().getId();
     }
 }

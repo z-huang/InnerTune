@@ -24,13 +24,13 @@ import java.util.Objects;
 import static android.support.v4.media.session.PlaybackStateCompat.STATE_PLAYING;
 
 public class PlaybackViewModel extends AndroidViewModel {
-    private MediaSessionConnection mMediaSessionConnection;
-    private LiveData<MediaControllerCompat> mMediaController;
-    private MutableLiveData<MediaData> currentSong = new MutableLiveData<>();
-    private MutableLiveData<Integer> currentState = new MutableLiveData<>();
+    private final MediaSessionConnection mMediaSessionConnection;
+    private final LiveData<MediaControllerCompat> mMediaController;
+    private final MutableLiveData<MediaData> currentSong = new MutableLiveData<>();
+    private final MutableLiveData<Integer> currentState = new MutableLiveData<>();
 
-    private Observer<PlaybackStateCompat> playbackStateObserver = playbackState -> currentState.postValue(playbackState.getState());
-    private Observer<MediaMetadataCompat> mediaMetadataObserver = mediaMetadata -> {
+    private final Observer<PlaybackStateCompat> playbackStateObserver = playbackState -> currentState.postValue(playbackState.getState());
+    private final Observer<MediaMetadataCompat> mediaMetadataObserver = mediaMetadata -> {
         MediaData newValue = currentSong.getValue() != null ? currentSong.getValue().pullMediaMetadata(mediaMetadata) : new MediaData().pullMediaMetadata(mediaMetadata);
         currentSong.postValue(newValue);
     };
@@ -56,6 +56,10 @@ public class PlaybackViewModel extends AndroidViewModel {
 
     public LiveData<MediaControllerCompat> getMediaController() {
         return mMediaController;
+    }
+
+    public MediaControllerCompat.TransportControls getTransportControls() {
+        return mMediaSessionConnection.getTransportControls();
     }
 
     public LiveData<MediaData> getCurrentSong() {
