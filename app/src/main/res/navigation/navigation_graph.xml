@@ -6,11 +6,11 @@
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.zionhuang.music.ui.fragments.LibraryFragment"
-        android:label="Library" />
+        android:label="@string/title_library" />
     <fragment
         android:id="@+id/explorationFragment"
         android:name="com.zionhuang.music.ui.fragments.ExploreFragment"
-        android:label="Explore">
+        android:label="@string/title_explore">
         <action
             android:id="@+id/action_explorationFragment_to_searchSuggestionFragment"
             app:destination="@id/suggestionFragment"
@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
-        android:label="Settings" />
+        android:label="@string/title_settings" />
     <fragment
         android:id="@+id/suggestionFragment"
         android:name="com.zionhuang.music.ui.fragments.SuggestionFragment"

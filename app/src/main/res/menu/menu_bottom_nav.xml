@@ -4,7 +4,7 @@
     <item
         android:id="@+id/libraryFragment"
         android:icon="@drawable/ic_library_music_black_24dp"
-        android:title="@string/title_my_music" />
+        android:title="@string/title_library" />
 
     <item
         android:id="@+id/explorationFragment"
