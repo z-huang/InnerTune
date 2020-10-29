@@ -19,7 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "https://oss.jfrog.org/libs-snapshot" }
+        mavenCentral()
     }
 }
 

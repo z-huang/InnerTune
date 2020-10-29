@@ -25,7 +25,7 @@ interface SongDao {
     fun getSongByTitle(title: String): Flowable<SongEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(vararg songs: SongEntity): Completable
+    fun insert(vararg songs: SongEntity)
 
     @Delete
     fun delete(vararg songs: SongEntity)

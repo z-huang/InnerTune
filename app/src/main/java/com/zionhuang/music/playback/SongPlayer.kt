@@ -32,6 +32,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SongPlayer(context: Context) : MusicPlayer.EventListener {
     companion object {
@@ -94,7 +97,6 @@ class SongPlayer(context: Context) : MusicPlayer.EventListener {
                             putString(METADATA_KEY_ARTIST, result.song.artist)
                             putLong(METADATA_KEY_DURATION, result.song.duration * 1000.toLong())
                         }.build())
-                        songRepository.insert(result.song)
                         val url: String = if (result.hasNormalStream()) {
                             result.normalStream.url
                         } else {
@@ -154,6 +156,11 @@ class SongPlayer(context: Context) : MusicPlayer.EventListener {
     fun updateSongMeta(id: String, song: SongParcel) = queue.updateSongMeta(id, song)
 
     fun addToLibrary() {
+        CoroutineScope(Dispatchers.IO).launch {
+            currentSong?.let {
+                songRepository.insert(it)
+            }
+        }
     }
 
     fun toggleLike() {
@@ -179,6 +186,7 @@ class SongPlayer(context: Context) : MusicPlayer.EventListener {
     fun setPlayerView(playerView: PlayerView?) = musicPlayer.setPlayerView(playerView)
 
     override fun onDurationSet(duration: Long) {
+        currentSong?.duration = (duration / 1000).toInt()
         mediaSession.setMetadata(metadataBuilder.apply {
             putString(METADATA_KEY_TITLE, currentSong?.title)
             putString(METADATA_KEY_ARTIST, currentSong?.artist)

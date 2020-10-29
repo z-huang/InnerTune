@@ -13,6 +13,7 @@ import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.junit.*
+import org.junit.Assert.assertNull
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import java.io.IOException
@@ -52,7 +53,7 @@ class DatabaseTest {
     @Test
     @Throws(Exception::class)
     fun insertionTest() {
-        songDao.insert(song).blockingAwait()
+        songDao.insert(song)
         songDao.getSongByIdAsSingle(song.id)
                 .test()
                 .assertValue {
@@ -62,7 +63,7 @@ class DatabaseTest {
 
     @Test
     fun updateTest() {
-        songDao.insert(song).blockingAwait()
+        songDao.insert(song)
         song.title = "test_title2"
         songDao.update(song)
         songDao.getSongByIdAsSingle(song.id)
@@ -72,11 +73,17 @@ class DatabaseTest {
 
     @Test
     fun deletionTest() {
-        songDao.insert(song).blockingAwait()
+        songDao.insert(song)
         songDao.getSongByIdAsSingle(song.id)
                 .test()
                 .assertValue { (_, _, _, duration) -> duration == song.duration }
         songDao.delete(song)
         Assert.assertTrue(songDao.getAllSongsAsLiveData().getValueBlocking()!!.isEmpty())
+    }
+
+    @Test
+    fun songNotFoundTest() {
+        val song = songDao.getSongById("_")
+        assertNull(song)
     }
 }
