@@ -37,7 +37,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SongPlayer(context: Context, val lifecycleOwner: LifecycleOwner) : MusicPlayer.EventListener {
+/**
+ * A wrapper around [MusicPlayer] to support actions from [MediaSessionCallback]
+ */
+
+class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) : MusicPlayer.EventListener {
     companion object {
         const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
