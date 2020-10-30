@@ -56,12 +56,14 @@ class SongPlayer(context: Context) : MusicPlayer.EventListener {
                     or ACTION_SEEK_TO)
             .setState(STATE_NONE, 0, 1f)
 
-    private val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
+    private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         setFlags(FLAG_HANDLES_MEDIA_BUTTONS or FLAG_HANDLES_TRANSPORT_CONTROLS)
         setCallback(MediaSessionCallback(this, this@SongPlayer))
         setPlaybackState(stateBuilder.build())
         isActive = true
     }
+    val mediaSession: MediaSessionCompat
+        get() = _mediaSession
 
     private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.playback_channel_name, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
         override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title ?: ""
@@ -79,8 +81,6 @@ class SongPlayer(context: Context) : MusicPlayer.EventListener {
         get() = queue.currentSong
 
     private var disposable: Disposable? = null
-
-    fun getMediaSession() = mediaSession
 
     fun playSong() {
         musicPlayer.stop()
