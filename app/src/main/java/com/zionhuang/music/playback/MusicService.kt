@@ -1,13 +1,13 @@
 package com.zionhuang.music.playback
 
-import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.lifecycle.LifecycleService
 import com.google.android.exoplayer2.ui.PlayerView
 
-class MusicService : Service() {
+class MusicService : LifecycleService() {
     companion object {
         private const val TAG = "MusicService"
     }
@@ -17,7 +17,7 @@ class MusicService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        songPlayer = SongPlayer(this)
+        songPlayer = SongPlayer(this, this)
     }
 
     override fun onDestroy() {
@@ -26,6 +26,7 @@ class MusicService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
+        super.onBind(intent)
         return binder
     }
 

@@ -8,10 +8,7 @@ class EmptyQueue private constructor() : Queue {
         val EMPTY_QUEUE = EmptyQueue()
     }
 
-    override var currentSongId: String?
-        get() = null
-        set(_) {}
-
+    override var currentSongId: String? = null
     override val currentSong: Nothing? = null
     override val previousSong: Nothing? = null
     override val nextSong: Nothing? = null

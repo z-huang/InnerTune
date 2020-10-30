@@ -12,6 +12,8 @@ import android.support.v4.media.session.MediaSessionCompat.FLAG_HANDLES_TRANSPOR
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Log
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel
@@ -32,11 +34,10 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SongPlayer(context: Context) : MusicPlayer.EventListener {
+class SongPlayer(context: Context, val lifecycleOwner: LifecycleOwner) : MusicPlayer.EventListener {
     companion object {
         const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
@@ -145,7 +146,7 @@ class SongPlayer(context: Context) : MusicPlayer.EventListener {
 
     fun setQueue(queueType: Int, currentSongId: String) {
         queue = when (queueType) {
-            QUEUE_ALL_SONG -> AllSongsQueue(songRepository)
+            QUEUE_ALL_SONG -> AllSongsQueue(songRepository, lifecycleOwner)
             QUEUE_SINGLE -> SingleSongQueue(songRepository, currentSongId)
             else -> EMPTY_QUEUE
         }.apply {
@@ -156,7 +157,7 @@ class SongPlayer(context: Context) : MusicPlayer.EventListener {
     fun updateSongMeta(id: String, song: SongParcel) = queue.updateSongMeta(id, song)
 
     fun addToLibrary() {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             currentSong?.let {
                 songRepository.insert(it)
             }
