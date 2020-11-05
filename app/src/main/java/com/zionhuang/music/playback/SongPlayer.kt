@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
  * A wrapper around [MusicPlayer] to support actions from [MediaSessionCallback]
  */
 
-class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) : MusicPlayer.EventListener {
+class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) {
     companion object {
         const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
@@ -49,7 +49,7 @@ class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) :
     }
 
     private val songRepository = SongRepository(context)
-    private val musicPlayer = MusicPlayer(context).apply { setListener(this@SongPlayer) }
+    private val musicPlayer = MusicPlayer(context)
 
     private var metadataBuilder = MediaMetadataCompat.Builder()
     private var stateBuilder = PlaybackStateCompat.Builder().setActions(
@@ -86,6 +86,33 @@ class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) :
         get() = queue.currentSong
 
     private var disposable: Disposable? = null
+
+    init {
+        musicPlayer.onDurationSet { duration ->
+            currentSong?.duration = (duration / 1000).toInt()
+            mediaSession.setMetadata(metadataBuilder.apply {
+                putString(METADATA_KEY_TITLE, currentSong?.title)
+                putString(METADATA_KEY_ARTIST, currentSong?.artist)
+                putLong(METADATA_KEY_DURATION, duration)
+            }.build())
+        }
+        musicPlayer.onPlaybackStateChanged { playbackState ->
+            val state = when (playbackState) {
+                Player.STATE_IDLE -> STATE_NONE
+                Player.STATE_BUFFERING -> STATE_BUFFERING
+                Player.STATE_READY -> if (musicPlayer.isPlaying) STATE_PLAYING else STATE_PAUSED
+                Player.STATE_ENDED -> {
+                    addToLibrary()
+                    playNext()
+                    STATE_BUFFERING
+                }
+                else -> STATE_NONE
+            }
+            updatePlaybackState {
+                setState(state, musicPlayer.position, musicPlayer.playbackSpeed)
+            }
+        }
+    }
 
     fun playSong() {
         musicPlayer.stop()
@@ -189,29 +216,4 @@ class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) :
     }
 
     fun setPlayerView(playerView: PlayerView?) = musicPlayer.setPlayerView(playerView)
-
-    override fun onDurationSet(duration: Long) {
-        currentSong?.duration = (duration / 1000).toInt()
-        mediaSession.setMetadata(metadataBuilder.apply {
-            putString(METADATA_KEY_TITLE, currentSong?.title)
-            putString(METADATA_KEY_ARTIST, currentSong?.artist)
-            putLong(METADATA_KEY_DURATION, duration)
-        }.build())
-    }
-
-    override fun onPlaybackStateChanged(playbackState: Int) {
-        val state = when (playbackState) {
-            Player.STATE_IDLE -> STATE_NONE
-            Player.STATE_BUFFERING -> STATE_BUFFERING
-            Player.STATE_READY -> if (musicPlayer.isPlaying) STATE_PLAYING else STATE_PAUSED
-            Player.STATE_ENDED -> {
-                playNext()
-                STATE_BUFFERING
-            }
-            else -> STATE_NONE
-        }
-        updatePlaybackState {
-            setState(state, musicPlayer.position, musicPlayer.playbackSpeed)
-        }
-    }
 }

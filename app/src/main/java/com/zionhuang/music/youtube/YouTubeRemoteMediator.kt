@@ -29,7 +29,7 @@ class YouTubeRemoteMediator(
             if (pageToken == null) {
                 return MediatorResult.Success(true)
             }
-            val searchResult = apiService.searchAsync(query, pageToken)
+            val searchResult = apiService.search(query, pageToken)
             remoteDao.insertSearchEntities(searchResult.items.map {
                 it.toSearchEntity(queryId)
             })

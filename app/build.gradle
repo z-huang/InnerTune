@@ -27,6 +27,7 @@ android {
         }
     }
     buildFeatures {
+        viewBinding = true
         dataBinding = true
     }
     ndkVersion "21.1.6352462"

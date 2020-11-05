@@ -10,9 +10,9 @@ import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.VideoListResponse
 import com.zionhuang.music.R
-import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.IOException
 
 class YouTubeAPIService(context: Context) : OnSharedPreferenceChangeListener {
     companion object {
@@ -23,7 +23,7 @@ class YouTubeAPIService(context: Context) : OnSharedPreferenceChangeListener {
     }
 
     private val API_KEY_RID: String = context.getString(R.string.api_key)
-    private val mYouTube: YouTube = YouTube.Builder(NetHttpTransport.Builder().build(), GsonFactory(), null)
+    private val youTube: YouTube = YouTube.Builder(NetHttpTransport.Builder().build(), GsonFactory(), null)
             .setApplicationName(context.resources.getString(R.string.app_name))
             .build()
 
@@ -33,19 +33,9 @@ class YouTubeAPIService(context: Context) : OnSharedPreferenceChangeListener {
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
-    fun search(query: String, pageToken: String?): Single<SearchListResponse> {
-        return Single.fromCallable {
-            mYouTube.search().list("snippet")
-                    .setKey(API_KEY)
-                    .setQ(query)
-                    .setPageToken(pageToken)
-                    .setMaxResults(20L)
-                    .execute()
-        }
-    }
-
-    suspend fun searchAsync(query: String, pageToken: String?): SearchListResponse = withContext(Dispatchers.IO) {
-        return@withContext mYouTube.search().list("snippet")
+    @Throws(IOException::class)
+    suspend fun search(query: String, pageToken: String?): SearchListResponse = withContext(Dispatchers.IO) {
+        return@withContext youTube.search().list("snippet")
                 .setKey(API_KEY)
                 .setQ(query)
                 .setPageToken(pageToken)
@@ -53,17 +43,16 @@ class YouTubeAPIService(context: Context) : OnSharedPreferenceChangeListener {
                 .execute()
     }
 
-    fun popularMusic(pageToken: String?): Single<VideoListResponse> {
-        return Single.fromCallable {
-            mYouTube.videos().list("snippet,contentDetails,statistics")
-                    .setKey(API_KEY)
-                    .setChart("mostPopular")
-                    .setVideoCategoryId(CATEGORY_MUSIC)
-                    .setRegionCode(REGION_CODE)
-                    .setPageToken(pageToken)
-                    .setMaxResults(20L)
-                    .execute()
-        }
+    @Throws(IOException::class)
+    suspend fun popularMusic(pageToken: String?): VideoListResponse = withContext(Dispatchers.IO) {
+        youTube.videos().list("snippet,contentDetails,statistics")
+                .setKey(API_KEY)
+                .setChart("mostPopular")
+                .setVideoCategoryId(CATEGORY_MUSIC)
+                .setRegionCode(REGION_CODE)
+                .setPageToken(pageToken)
+                .setMaxResults(20L)
+                .execute()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
