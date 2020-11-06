@@ -12,7 +12,6 @@ import com.google.api.services.youtube.model.VideoListResponse
 import com.zionhuang.music.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.IOException
 
 class YouTubeAPIService(context: Context) : OnSharedPreferenceChangeListener {
     companion object {
@@ -33,7 +32,7 @@ class YouTubeAPIService(context: Context) : OnSharedPreferenceChangeListener {
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
-    @Throws(IOException::class)
+    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun search(query: String, pageToken: String?): SearchListResponse = withContext(Dispatchers.IO) {
         return@withContext youTube.search().list("snippet")
                 .setKey(API_KEY)
@@ -43,7 +42,7 @@ class YouTubeAPIService(context: Context) : OnSharedPreferenceChangeListener {
                 .execute()
     }
 
-    @Throws(IOException::class)
+    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun popularMusic(pageToken: String?): VideoListResponse = withContext(Dispatchers.IO) {
         youTube.videos().list("snippet,contentDetails,statistics")
                 .setKey(API_KEY)
