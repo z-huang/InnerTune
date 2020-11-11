@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
-open class BindingFragment<T : ViewBinding> : Fragment() {
+abstract class BindingFragment<T : ViewBinding> : Fragment() {
     protected lateinit var binding: T
 
     @Suppress("UNCHECKED_CAST")

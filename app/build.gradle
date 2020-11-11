@@ -64,6 +64,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.2.5"
     implementation "androidx.preference:preference-ktx:1.1.1"
     implementation "androidx.vectordrawable:vectordrawable:1.1.0"
+    implementation "androidx.navigation:navigation-runtime-ktx:2.3.1"
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.1"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.1"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
@@ -112,6 +113,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation "com.squareup.retrofit2:adapter-rxjava3:2.9.0"
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
     // Glide
     implementation "com.github.bumptech.glide:glide:4.11.0"
     implementation "com.github.bumptech.glide:annotations:4.11.0"

@@ -25,7 +25,6 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
                 playbackViewModel.playMedia(SongParcel.fromSongEntity(songsAdapter.getSongFromPosition(pos)), Queue.QUEUE_ALL_SONG)
-
             }
         }
         songsViewModel.allSongs.observe(viewLifecycleOwner, { list: List<SongEntity?>? -> songsAdapter.setDataSet(list) })
