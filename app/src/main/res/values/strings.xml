@@ -7,7 +7,8 @@
     <string name="history">History</string>
     <string name="search_item_menu_add">Add to list</string>
     <string name="search_item_menu_download">Download</string>
-    <string name="playback_channel_name">Music Player</string>
+    <string name="channel_name_playback">Music Player</string>
+    <string name="channel_name_download">Download</string>
     <string name="bullet" translatable="false">•</string>
     <string name="item_load_state_retry">Retry</string>
     <string name="pref_api_key">API Key</string>

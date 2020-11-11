@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.playback.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
@@ -23,7 +23,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     }
 
     private lateinit var binding: BottomControlsSheetBinding
-    private val viewModel by viewModels<PlaybackViewModel>()
+    private val viewModel by activityViewModels<PlaybackViewModel>()
     private lateinit var mediaWidgetsController: MediaWidgetsController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

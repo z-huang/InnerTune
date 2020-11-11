@@ -7,8 +7,9 @@
     <string name="history">歷史</string>
     <string name="search_item_menu_add">加入</string>
     <string name="search_item_menu_download">下載</string>
-    <string name="playback_channel_name">音樂播放器</string>
+    <string name="channel_name_playback">音樂播放器</string>
     <string name="item_load_state_retry">重試</string>
     <string name="pref_api_key">API 金鑰</string>
     <string name="pref_about">關於</string>
+    <string name="channel_name_download">下載</string>
 </resources>

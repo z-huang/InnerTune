@@ -70,7 +70,7 @@ class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) {
     val mediaSession: MediaSessionCompat
         get() = _mediaSession
 
-    private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.playback_channel_name, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
+    private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.channel_name_playback, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
         override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title ?: ""
         override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artist
         override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null

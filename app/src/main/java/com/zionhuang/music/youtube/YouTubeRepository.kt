@@ -4,9 +4,6 @@ import android.content.Context
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.VideoListResponse
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import java.io.IOException
 
 class YouTubeRepository private constructor(context: Context) {
     companion object {
@@ -36,12 +33,7 @@ class YouTubeRepository private constructor(context: Context) {
                 .map { obj: SuggestionResult -> obj.suggestions }
     }
 
-    @Throws(IOException::class)
-    suspend fun search(query: String, pageToken: String? = null): SearchListResponse = withContext(Dispatchers.IO) {
-        return@withContext youTubeAPIService.search(query, pageToken)
-    }
+    suspend fun search(query: String, pageToken: String? = null): SearchListResponse = youTubeAPIService.search(query, pageToken)
 
-    @Throws(IOException::class)
-    suspend fun getPopularMusic(pageToken: String?): VideoListResponse =
-            youTubeAPIService.popularMusic(pageToken)
+    suspend fun getPopularMusic(pageToken: String?): VideoListResponse = youTubeAPIService.popularMusic(pageToken)
 }
