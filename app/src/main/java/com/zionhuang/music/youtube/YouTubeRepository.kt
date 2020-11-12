@@ -3,12 +3,26 @@ package com.zionhuang.music.youtube
 import android.content.Context
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.VideoListResponse
-import io.reactivex.rxjava3.core.Observable
 
 class YouTubeRepository private constructor(context: Context) {
-    companion object {
-        private const val TAG = "YoutubeRepository"
 
+    private val youTubeAPIService: YouTubeAPIService = YouTubeAPIService(context)
+    private val suggestionAPIService: SuggestionAPIService = RetrofitManager.suggestionAPIService
+
+    suspend fun getSuggestions(query: String): List<String> {
+        val response = suggestionAPIService.suggest(query)
+        return if (response.isSuccessful) {
+            response.body()?.suggestions ?: emptyList()
+        } else {
+            emptyList()
+        }
+    }
+
+    suspend fun search(query: String, pageToken: String? = null): SearchListResponse = youTubeAPIService.search(query, pageToken)
+
+    suspend fun getPopularMusic(pageToken: String?): VideoListResponse = youTubeAPIService.popularMusic(pageToken)
+
+    companion object {
         @Volatile
         private var INSTANCE: YouTubeRepository? = null
 
@@ -24,16 +38,4 @@ class YouTubeRepository private constructor(context: Context) {
             return INSTANCE!!
         }
     }
-
-    private val youTubeAPIService: YouTubeAPIService = YouTubeAPIService(context)
-    private val suggestionAPIService: SuggestionAPIService = RetrofitManager.getInstance().suggestionAPIService
-
-    fun getSuggestions(query: String?): Observable<List<String>> {
-        return suggestionAPIService.suggest(query)
-                .map { obj: SuggestionResult -> obj.suggestions }
-    }
-
-    suspend fun search(query: String, pageToken: String? = null): SearchListResponse = youTubeAPIService.search(query, pageToken)
-
-    suspend fun getPopularMusic(pageToken: String?): VideoListResponse = youTubeAPIService.popularMusic(pageToken)
 }
