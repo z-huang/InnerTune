@@ -1,17 +1,16 @@
 package com.zionhuang.music.playback.queue
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.zionhuang.music.db.SongEntity
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.repository.SongRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class AllSongsQueue(songsRepository: SongRepository, lifecycleOwner: LifecycleOwner) : Queue {
+class AllSongsQueue(songsRepository: SongRepository, scope: CoroutineScope) : Queue {
     companion object {
         const val TAG = "AllSongsQueue"
     }
@@ -22,7 +21,7 @@ class AllSongsQueue(songsRepository: SongRepository, lifecycleOwner: LifecycleOw
         runBlocking {
             list = songsFlow.first()
         }
-        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             songsRepository.getAllSongsAsFlow().collect { l ->
                 index = l.indexOfFirst { it.id == list[index].id }
                 list = l

@@ -9,7 +9,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         private const val TAG = "SettingsFragment"
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
     }
 }

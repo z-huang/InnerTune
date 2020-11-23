@@ -14,11 +14,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                cppFlags "-std=c++17"
-            }
-        }
     }
     buildTypes {
         release {
@@ -30,12 +25,6 @@ android {
         viewBinding = true
         dataBinding = true
     }
-    ndkVersion "21.1.6352462"
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"
-        }
-    }
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
         exclude 'META-INF/DEPENDENCIES'
@@ -45,10 +34,18 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "1.8"
         freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
-    testOptions.unitTests.includeAndroidResources = true
+    configurations.all {
+        resolutionStrategy {
+            exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+        }
+    }
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -57,6 +54,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.10"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.1'
     // AndroidX
     implementation "androidx.core:core-ktx:1.3.2"
     implementation "androidx.appcompat:appcompat:1.2.0"

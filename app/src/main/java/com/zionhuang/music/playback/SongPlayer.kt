@@ -12,16 +12,13 @@ import android.support.v4.media.session.MediaSessionCompat.FLAG_HANDLES_TRANSPOR
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Log
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.SongEntity
-import com.zionhuang.music.extractor.ExtractedInfo
-import com.zionhuang.music.extractor.YoutubeInfoExtractor
+import com.zionhuang.music.extractor.YouTubeExtractor
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.playback.queue.EmptyQueue.Companion.EMPTY_QUEUE
@@ -30,18 +27,17 @@ import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.playback.queue.SingleSongQueue
 import com.zionhuang.music.repository.SongRepository
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 /**
  * A wrapper around [MusicPlayer] to support actions from [MediaSessionCallback]
  */
 
-class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) {
+class SongPlayer(context: Context, private val scope: CoroutineScope) {
     companion object {
         const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
@@ -114,35 +110,55 @@ class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) {
         }
     }
 
+    var job: Job? = null
     fun playSong() {
         musicPlayer.stop()
         if (currentSong == null) return
-        disposable?.dispose()
-        disposable = Observable.just(currentSong!!.id)
-                .map { id: String -> YoutubeInfoExtractor().extract(id) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ result: ExtractedInfo ->
-                    if (result.success) {
-                        mediaSession.setMetadata(metadataBuilder.apply {
-                            putString(METADATA_KEY_TITLE, result.song.title)
-                            putString(METADATA_KEY_ARTIST, result.song.artist)
-                            putLong(METADATA_KEY_DURATION, result.song.duration * 1000.toLong())
-                        }.build())
-                        val url: String = if (result.hasNormalStream()) {
-                            result.normalStream.url
-                        } else {
-                            result.videoStream.url
-                        }
+        job?.cancel()
+        job = scope.launch {
+            when (val result = YouTubeExtractor.extract(currentSong!!.id)) {
+                is YouTubeExtractor.Result.Success -> {
+                    mediaSession.setMetadata(metadataBuilder.apply {
+                        putString(METADATA_KEY_TITLE, result.title)
+                        putString(METADATA_KEY_ARTIST, result.channelTitle)
+                        putLong(METADATA_KEY_DURATION, result.duration * 1000.toLong())
+                    }.build())
+                    result.formats.maxByOrNull { it.abr ?: 0 }?.url?.let { url ->
+                        Log.d(TAG, "Song url: $url")
                         musicPlayer.setSource(Uri.parse(url))
-                    } else {
-                        Log.w(TAG, """
-                                 Extraction failed.
-                                 Error code: ${result.getErrorCode()}
-                                 Message: ${result.getErrorMessage()}
-                                 """.trimIndent())
                     }
-                }) { obj: Throwable -> obj.printStackTrace() }
+                }
+                is YouTubeExtractor.Result.Error -> {
+                    Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")
+                }
+            }
+        }
+//        disposable?.dispose()
+//        disposable = Observable.just(currentSong!!.id)
+//                .map { id: String -> YoutubeInfoExtractor().extract(id) }
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({ result: ExtractedInfo ->
+//                    if (result.success) {
+//                        mediaSession.setMetadata(metadataBuilder.apply {
+//                            putString(METADATA_KEY_TITLE, result.song.title)
+//                            putString(METADATA_KEY_ARTIST, result.song.artist)
+//                            putLong(METADATA_KEY_DURATION, result.song.duration * 1000.toLong())
+//                        }.build())
+//                        val url: String = if (result.hasNormalStream()) {
+//                            result.normalStream.url
+//                        } else {
+//                            result.videoStream.url
+//                        }
+//                        musicPlayer.setSource(Uri.parse(url))
+//                    } else {
+//                        Log.w(TAG, """
+//                                 Extraction failed.
+//                                 Error code: ${result.getErrorCode()}
+//                                 Message: ${result.getErrorMessage()}
+//                                 """.trimIndent())
+//                    }
+//                }) { obj: Throwable -> obj.printStackTrace() }
     }
 
     fun play() = musicPlayer.play()
@@ -177,7 +193,7 @@ class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) {
 
     fun setQueue(queueType: Int, currentSongId: String) {
         queue = when (queueType) {
-            QUEUE_ALL_SONG -> AllSongsQueue(songRepository, lifecycleOwner)
+            QUEUE_ALL_SONG -> AllSongsQueue(songRepository, scope)
             QUEUE_SINGLE -> SingleSongQueue(songRepository, currentSongId)
             else -> EMPTY_QUEUE
         }.apply {
@@ -188,7 +204,7 @@ class SongPlayer(context: Context, private val lifecycleOwner: LifecycleOwner) {
     fun updateSongMeta(id: String, song: SongParcel) = queue.updateSongMeta(id, song)
 
     fun addToLibrary() {
-        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             currentSong?.let {
                 songRepository.insert(it)
             }

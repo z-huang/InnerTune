@@ -1,9 +1,15 @@
 package com.zionhuang.music.extensions
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonPrimitive
+import com.google.gson.*
+
+fun Any.toJsonElement(): JsonElement = when (this) {
+    is JsonElement -> this
+    is Boolean -> JsonPrimitive(this)
+    is Number -> JsonPrimitive(this)
+    is String -> JsonPrimitive(this)
+    is Char -> JsonPrimitive(this)
+    else -> throw IllegalArgumentException("${this.javaClass.name} cannot be converted to JSON")
+}
 
 /**
  * JsonObject
@@ -32,6 +38,11 @@ operator fun JsonObject?.set(key: String, value: JsonElement) = this?.add(key, v
 
 // "in" operator
 operator fun JsonObject?.contains(key: String) = this?.has(key) ?: false
+fun Iterable<Pair<String, Any>>.toJsonObject(): JsonObject = JsonObject().apply {
+    for (pair in this@toJsonObject) {
+        this[pair.first] = pair.second.toJsonElement()
+    }
+}
 
 /**
  * JsonArray
@@ -40,10 +51,44 @@ operator fun JsonObject?.contains(key: String) = this?.has(key) ?: false
 operator fun JsonElement?.get(index: Int): JsonElement? = if (this is JsonArray) this.get(index) else null
 operator fun JsonArray?.get(index: Int): JsonElement? = this?.get(index)
 fun JsonArray.isNotEmpty() = this.size() > 0
+fun JsonArray.selfReverse() = this.apply {
+    for (i in 0 until (size() shr 1)) {
+        val temp = this[i]
+        this[i] = this.get(size() - i - 1)
+        this[size() - i - 1] = temp
+    }
+}
+
+fun jsonArrayOf(vararg items: Any) = JsonArray().apply {
+    for (item in items) {
+        add(item.toJsonElement())
+    }
+}
+
+fun Array<out Any>.toJsonArray(): JsonArray = JsonArray().apply {
+    for (item in this@toJsonArray) {
+        add(item.toJsonElement())
+    }
+}
+
+fun Iterable<Any>.toJsonArray(): JsonArray = JsonArray().apply {
+    for (item in this@toJsonArray) {
+        add(item.toJsonElement())
+    }
+}
+
+fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement): JsonArray = JsonArray().apply {
+    for (item in this@mapToJsonArray) {
+        add(transform(item))
+    }
+}
 
 /**
  * JsonElement Type Converting Extensions
  */
+fun JsonElement.isString(): Boolean = this is JsonPrimitive && this.isString
+fun JsonElement.isNumber(): Boolean = this is JsonPrimitive && this.isNumber
+
 val JsonElement?.asJsonArrayOrNull: JsonArray?
     get() = if (this is JsonArray) this else null
 
@@ -77,6 +122,9 @@ val JsonElement?.asIntOrNull: Int?
 val JsonElement?.asFloatOrNull: Float?
     get() = this.asNumberOrNull?.toFloat()
 
+fun Int.toJsonPrimitive(): JsonPrimitive = JsonPrimitive(this)
+fun String.toJsonPrimitive(): JsonPrimitive = JsonPrimitive(this)
+
 /**
  * JsonElement Shortcuts for "equals" methods
  */
@@ -85,42 +133,63 @@ fun JsonElement?.equals(value: Number) = this?.equals(JsonPrimitive(value)) ?: f
 fun JsonElement?.equals(value: String) = this?.equals(JsonPrimitive(value)) ?: false
 fun JsonElement?.equals(value: Char) = this?.equals(JsonPrimitive(value)) ?: false
 
-infix fun JsonElement.or(rhs: JsonElement): JsonElement {
-    TODO()
-}
+infix fun JsonElement.or(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt or rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-infix fun JsonElement.xor(rhs: JsonElement): JsonElement {
-    TODO()
-}
+infix fun JsonElement.xor(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt xor rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-infix fun JsonElement.and(rhs: JsonElement): JsonElement {
-    TODO()
-}
+infix fun JsonElement.and(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt and rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-infix fun JsonElement.shr(rhs: JsonElement): JsonElement {
-    TODO()
-}
+infix fun JsonElement.shr(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt shr rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-infix fun JsonElement.shl(rhs: JsonElement): JsonElement {
-    TODO()
-}
+infix fun JsonElement.shl(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt shl rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-operator fun JsonElement.plus(rhs: JsonElement): JsonElement {
-    TODO()
-}
+operator fun JsonElement.minus(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt - rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-operator fun JsonElement.minus(rhs: JsonElement): JsonElement {
-    TODO()
-}
+operator fun JsonElement.plus(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt + rhs.asInt).toJsonPrimitive()
+            this.isString() && rhs.isString() -> (this.asString + rhs.asString).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-operator fun JsonElement.rem(rhs: JsonElement): JsonElement {
-    TODO()
-}
+operator fun JsonElement.rem(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt % rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-operator fun JsonElement.div(rhs: JsonElement): JsonElement {
-    TODO()
-}
+operator fun JsonElement.div(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt / rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
 
-operator fun JsonElement.times(rhs: JsonElement): JsonElement {
-    TODO()
-}
+operator fun JsonElement.times(rhs: JsonElement): JsonElement =
+        when {
+            this.isNumber() && rhs.isNumber() -> (this.asInt * rhs.asInt).toJsonPrimitive()
+            else -> JsonNull.INSTANCE
+        }
