@@ -14,8 +14,7 @@ fun Any.toJsonElement(): JsonElement = when (this) {
 /**
  * JsonObject
  */
-// convenient initialization method
-fun jsonObject(vararg pairs: Pair<String, *>): JsonObject {
+fun jsonObjectOf(vararg pairs: Pair<String, *>): JsonObject {
     val obj = JsonObject()
     for ((key, value) in pairs) {
         if (value == null) continue
@@ -31,12 +30,9 @@ fun jsonObject(vararg pairs: Pair<String, *>): JsonObject {
     return obj
 }
 
-// "get" & "set" operators
 operator fun JsonElement?.get(key: String): JsonElement? = if (this is JsonObject) this.get(key) else null
 operator fun JsonObject?.get(key: String): JsonElement? = this?.get(key)
 operator fun JsonObject?.set(key: String, value: JsonElement) = this?.add(key, value)
-
-// "in" operator
 operator fun JsonObject?.contains(key: String) = this?.has(key) ?: false
 fun Iterable<Pair<String, Any>>.toJsonObject(): JsonObject = JsonObject().apply {
     for (pair in this@toJsonObject) {
@@ -47,18 +43,6 @@ fun Iterable<Pair<String, Any>>.toJsonObject(): JsonObject = JsonObject().apply 
 /**
  * JsonArray
  */
-// "get" operator
-operator fun JsonElement?.get(index: Int): JsonElement? = if (this is JsonArray) this.get(index) else null
-operator fun JsonArray?.get(index: Int): JsonElement? = this?.get(index)
-fun JsonArray.isNotEmpty() = this.size() > 0
-fun JsonArray.selfReverse() = this.apply {
-    for (i in 0 until (size() shr 1)) {
-        val temp = this[i]
-        this[i] = this.get(size() - i - 1)
-        this[size() - i - 1] = temp
-    }
-}
-
 fun jsonArrayOf(vararg items: Any) = JsonArray().apply {
     for (item in items) {
         add(item.toJsonElement())
@@ -83,8 +67,19 @@ fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement): JsonArray = J
     }
 }
 
+operator fun JsonElement?.get(index: Int): JsonElement? = if (this is JsonArray) this.get(index) else null
+operator fun JsonArray?.get(index: Int): JsonElement? = this?.get(index)
+fun JsonArray.isNotEmpty() = this.size() > 0
+fun JsonArray.selfReverse() = this.apply {
+    for (i in 0 until (size() shr 1)) {
+        val temp = this[i]
+        this[i] = this.get(size() - i - 1)
+        this[size() - i - 1] = temp
+    }
+}
+
 /**
- * JsonElement Type Converting Extensions
+ * JsonElement Type Extensions
  */
 fun JsonElement.isString(): Boolean = this is JsonPrimitive && this.isString
 fun JsonElement.isNumber(): Boolean = this is JsonPrimitive && this.isNumber

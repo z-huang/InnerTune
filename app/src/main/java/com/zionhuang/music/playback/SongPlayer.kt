@@ -133,32 +133,6 @@ class SongPlayer(context: Context, private val scope: CoroutineScope) {
                 }
             }
         }
-//        disposable?.dispose()
-//        disposable = Observable.just(currentSong!!.id)
-//                .map { id: String -> YoutubeInfoExtractor().extract(id) }
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({ result: ExtractedInfo ->
-//                    if (result.success) {
-//                        mediaSession.setMetadata(metadataBuilder.apply {
-//                            putString(METADATA_KEY_TITLE, result.song.title)
-//                            putString(METADATA_KEY_ARTIST, result.song.artist)
-//                            putLong(METADATA_KEY_DURATION, result.song.duration * 1000.toLong())
-//                        }.build())
-//                        val url: String = if (result.hasNormalStream()) {
-//                            result.normalStream.url
-//                        } else {
-//                            result.videoStream.url
-//                        }
-//                        musicPlayer.setSource(Uri.parse(url))
-//                    } else {
-//                        Log.w(TAG, """
-//                                 Extraction failed.
-//                                 Error code: ${result.getErrorCode()}
-//                                 Message: ${result.getErrorMessage()}
-//                                 """.trimIndent())
-//                    }
-//                }) { obj: Throwable -> obj.printStackTrace() }
     }
 
     fun play() = musicPlayer.play()

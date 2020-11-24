@@ -5,7 +5,7 @@ import com.zionhuang.music.extensions.rStrip
 import com.zionhuang.music.extensions.strip
 import java.util.*
 
-object ExtractorUtilsKt {
+object ExtractorUtils {
     private val VCODECS = arrayOf("avc1", "avc2", "avc3", "avc4", "vp9", "vp8", "hev1", "hev2", "h263", "h264", "mp4v", "hvc1", "av01", "theora")
     private val ACODECS = arrayOf("mp4a", "opus", "vorbis", "mp3", "aac", "ac-3", "ec-3", "eac3", "dtsc", "dtse", "dtsh", "dtsl")
     private val KNOWN_EXTS = arrayOf(

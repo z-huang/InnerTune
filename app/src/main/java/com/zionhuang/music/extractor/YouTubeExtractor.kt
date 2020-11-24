@@ -5,15 +5,15 @@ import androidx.collection.arrayMapOf
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.extractor.ErrorCode.*
-import com.zionhuang.music.extractor.ExtractorUtilsKt.determineExt
-import com.zionhuang.music.extractor.ExtractorUtilsKt.mimeType2ext
-import com.zionhuang.music.extractor.ExtractorUtilsKt.parseCodecs
+import com.zionhuang.music.extractor.ExtractorUtils.determineExt
+import com.zionhuang.music.extractor.ExtractorUtils.mimeType2ext
+import com.zionhuang.music.extractor.ExtractorUtils.parseCodecs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
+import kotlin.jvm.Throws
 
 typealias SignatureFunctionKt = (String) -> String
 
@@ -83,7 +83,7 @@ object YouTubeExtractor {
             debug("Download web page")
             downloadWebPage("https://www.youtube.com/watch?v=$videoId&gl=US&hl=en&has_verified=1&bpctr=9999999999")
         } catch (e: IOException) {
-            return@withContext Result.Error(NETWORK, "Unable to download the web page of the video")
+            return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the web page of the video")
         }
 
         var playerUrl: String? = null
@@ -109,13 +109,13 @@ object YouTubeExtractor {
                 debug("Download embed web page")
                 downloadWebPage("https://www.youtube.com/embed/$videoId")
             } catch (e: IOException) {
-                return@withContext Result.Error(NETWORK, "Unable to download the embed web page of the video")
+                return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the embed web page of the video")
             }
             val videoInfoWebPage = try {
                 debug("Download video info")
-                downloadWebPage("""https://www.youtube.com/get_video_info?video_id=$videoId&eurl=https%3A%2F%2Fyoutube.googleapis.com%2Fv%2F$videoId&sts=${embedWebPage!!.find("\"sts\"\\s*:\\s*(\\d+)")}""")
+                downloadWebPage("""https://www.youtube.com/get_video_info?video_id=$videoId&eurl=https%3A%2F%2Fyoutube.googleapis.com%2Fv%2F$videoId&sts=${embedWebPage?.find("\"sts\"\\s*:\\s*(\\d+)") ?: ""}""")
             } catch (e: IOException) {
-                return@withContext Result.Error(NETWORK, "Unable to download the info of the video")
+                return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the info of the video")
             }
             videoInfo = videoInfoWebPage.parseQueryString()
             playerResponse = extractPlayerResponse(videoInfo["player_response"].asStringOrNull)
@@ -130,7 +130,7 @@ object YouTubeExtractor {
                 }
                 if (videoInfo == null && "ypc_vid" in args) {
                     debug("Rental video")
-                    return@withContext Result.Error(RENTAL, "Rental video not supported")
+                    return@withContext Result.Error(ErrorCode.RENTAL, "Rental video not supported")
                 }
                 if (args["livestream"].asStringOrNull == "1" || args["live_playback"].asNumberOrNull == 1) {
                     isLive = true
@@ -143,7 +143,7 @@ object YouTubeExtractor {
         }
 
         if (videoInfo == null && playerResponse == null) {
-            Result.Error(NO_INFO, "Unable to extract video data")
+            Result.Error(ErrorCode.NO_INFO, "Unable to extract video data")
         }
 
         val videoDetails = playerResponse["videoDetails"].asJsonObjectOrNull
@@ -153,7 +153,7 @@ object YouTubeExtractor {
         }
 
         if ("ypc_video_rental_bar_text" in videoInfo && "author" !in videoInfo) {
-            Result.Error(RENTAL, "Rental video not supported")
+            Result.Error(ErrorCode.RENTAL, "Rental video not supported")
         }
 
         val streamingFormats = JsonArray().apply {
@@ -172,7 +172,7 @@ object YouTubeExtractor {
                         videoInfo["url_encoded_fmt_stream_map"].asStringOrBlank.isNotEmpty() ||
                         videoInfo["adaptive_fmts"].asStringOrBlank.isNotEmpty())) {
             if ("rtmpe%3Dyes" in "${videoInfo["url_encoded_fmt_stream_map"][0].asStringOrBlank},${videoInfo["adaptive_fmts"][0].asStringOrBlank}") {
-                Result.Error(RTMPE, "rtmpe downloads are not supported")
+                Result.Error(ErrorCode.RTMPE, "rtmpe downloads are not supported")
             }
             val formatsSpec = HashMap<String, YtFormat>()
             if ("fmt_list" in videoInfo) {
@@ -238,13 +238,13 @@ object YouTubeExtractor {
                                     debug("Download embed web page")
                                     downloadWebPage("https://www.youtube.com/embed/$videoId")
                                 } catch (e: IOException) {
-                                    return@withContext Result.Error(NETWORK, "Unable to download the embed web page of the video")
+                                    return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the embed web page of the video")
                                 }
                             }
                             jsPlayerJson = embedWebPage?.search(ASSETS_RE)
                         }
-                        playerUrl = jsPlayerJson.unescape()
-                                ?: videoWebPage.search(AGE_GATE_ASSETS_RE).unescape()
+                        playerUrl = jsPlayerJson?.unescape()
+                                ?: videoWebPage.search(AGE_GATE_ASSETS_RE)?.unescape()
                     }
                     if ("sig" in urlData) {
                         url += "&signature=${urlData["sig"].asStringOrBlank}"
@@ -286,13 +286,13 @@ object YouTubeExtractor {
 
         val videoTitle = videoInfo["title"].asStringOrNull
                 ?: videoDetails["title"].asStringOrNull
-                ?: return@withContext Result.Error(NO_INFO, "Can't extract video title")
+                ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Can't extract video title")
         val channelTitle = videoInfo["author"].asStringOrNull
                 ?: videoDetails["author"].asStringOrNull
-                ?: return@withContext Result.Error(NO_INFO, "Can't extract channel title")
+                ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Can't extract channel title")
         val duration = videoInfo["length_seconds"].asIntOrNull
                 ?: videoDetails["lengthSeconds"].asIntOrNull
-                ?: return@withContext Result.Error(NO_INFO, "Can't extract video duration")
+                ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Can't extract video duration")
 
         // TODO: look for DASH manifest
 
@@ -310,7 +310,7 @@ object YouTubeExtractor {
         }
 
         if (formats.isEmpty() && "license_info" in videoInfo || "licenseInfos" in playerResponse["streamingData"].asJsonObjectOrNull) {
-            Result.Error(DRM, "The video is drm protected")
+            Result.Error(ErrorCode.DRM, "The video is drm protected")
         }
 
         Result.Success(
@@ -324,7 +324,7 @@ object YouTubeExtractor {
 
     private fun parseSigJs(jsCode: String): SignatureFunctionKt {
         val funcName = jsCode.find(JS_FN_RE, "sig")!!
-        val jsi = JsInterpreterKt(jsCode)
+        val jsi = JsInterpreter(jsCode)
         val initialFn = jsi.extractFunction(funcName)
         return { s -> initialFn(jsonArrayOf(s)).asString }
     }
@@ -388,8 +388,6 @@ object YouTubeExtractor {
         }
         return Triple(null, null, null)
     }
-
-    internal class ExtractException(val msg: String?) : Exception()
 
     private val FORMATS = arrayMapOf(
             "5" to YtFormat(ext = "flv", width = 400, height = 240, acodec = "mp3", abr = 64, vcodec = "h263"),
@@ -495,4 +493,16 @@ object YouTubeExtractor {
             "396" to YtFormat(vcodec = "av01.0.05M.08"),
             "397" to YtFormat(vcodec = "av01.0.05M.08")
     )
+
+    internal class ExtractException(val msg: String?) : Exception()
+
+    enum class ErrorCode {
+        NETWORK,
+        NO_INFO,
+        JSON,
+        RENTAL,
+        RTMPE,
+        DRM,
+        UNEXPECTED
+    }
 }

@@ -12,9 +12,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
+import com.zionhuang.music.extensions.getDensity
+import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
-import com.zionhuang.music.utils.Utils
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     private var bottomSheetCallback: BottomSheetListener? = null
@@ -32,7 +33,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         val appBarConfiguration = AppBarConfiguration(setOf(R.id.libraryFragment, R.id.explorationFragment, R.id.settingsFragment))
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
-        Utils.replaceFragment(supportFragmentManager, R.id.bottom_controls_container, BottomControlsFragment())
+        replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomControlsSheet).apply {
             isHideable = true
             addBottomSheetCallback(BottomSheetCallback())
@@ -41,7 +42,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight((108 * Utils.getDensity(this)).toInt(), true)
+        bottomSheetBehavior.setPeekHeight((108 * getDensity()).toInt(), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {

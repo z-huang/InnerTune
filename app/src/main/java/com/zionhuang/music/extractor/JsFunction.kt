@@ -3,7 +3,7 @@ package com.zionhuang.music.extractor
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 
-class JsFunctionKt(
+class JsFunction(
         val block: (args: JsonArray) -> JsonElement
 ) : JsonElement() {
     operator fun invoke(args: JsonArray): JsonElement = block(args)

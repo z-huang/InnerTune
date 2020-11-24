@@ -5,11 +5,11 @@ import com.zionhuang.music.extensions.*
 import okhttp3.internal.toImmutableMap
 import org.intellij.lang.annotations.Language
 
-typealias OperatorFunctionKt = (JsonElement, JsonElement) -> JsonElement
+typealias OperatorFunction = (JsonElement, JsonElement) -> JsonElement
 
-class JsInterpreterKt(private val code: String) {
+class JsInterpreter(private val code: String) {
     companion object {
-        private val OPERATORS = linkedMapOf<String, OperatorFunctionKt>(
+        private val OPERATORS = linkedMapOf<String, OperatorFunction>(
                 "|" to { l, r -> l or r },
                 "^" to { l, r -> l xor r },
                 "&" to { l, r -> l and r },
@@ -41,7 +41,7 @@ class JsInterpreterKt(private val code: String) {
     }
 
     private val objects = JsonObject()
-    private val functions = HashMap<String, JsFunctionKt>()
+    private val functions = HashMap<String, JsFunction>()
 
     private fun interpretStatement(stmt: String, localVars: JsonObject, allowRecursion: Int = 100): Pair<JsonElement, Boolean> {
         if (allowRecursion < 0) throw InterpretException("Recursion limit exceed")
@@ -186,7 +186,7 @@ class JsInterpreterKt(private val code: String) {
                     }
                 }
                 else -> {
-                    (obj[member]!! as JsFunctionKt)(argValues)
+                    (obj[member]!! as JsFunction)(argValues)
                 }
             }
         }
@@ -227,7 +227,7 @@ class JsInterpreterKt(private val code: String) {
         return obj
     }
 
-    fun extractFunction(fnName: String): JsFunctionKt {
+    fun extractFunction(fnName: String): JsFunction {
         val escapedFnName = fnName.escape()
         val match = code.find(FN_RE % escapedFnName % escapedFnName % escapedFnName)
                 ?: throw InterpretException("Couldn't find JS function $fnName")
@@ -239,11 +239,11 @@ class JsInterpreterKt(private val code: String) {
 
     private fun callFunction(fnName: String, args: JsonArray): JsonElement = extractFunction(fnName)(args)
 
-    private fun buildFunction(argNames: List<String>, code: String): JsFunctionKt = JsFunctionKt { args ->
+    private fun buildFunction(argNames: List<String>, code: String): JsFunction = JsFunction { args ->
         val localVars = argNames.zip(args).toJsonObject()
         for (stmt in code.split(";")) {
             val (res, abort) = interpretStatement(stmt, localVars)
-            if (abort) return@JsFunctionKt res
+            if (abort) return@JsFunction res
         }
         JsonNull.INSTANCE
     }
