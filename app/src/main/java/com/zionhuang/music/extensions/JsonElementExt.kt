@@ -61,6 +61,12 @@ fun Iterable<Any>.toJsonArray(): JsonArray = JsonArray().apply {
     }
 }
 
+fun CharSequence.splitToJsonArray() = JsonArray().apply {
+    for (c in this@splitToJsonArray) {
+        add(c)
+    }
+}
+
 fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement): JsonArray = JsonArray().apply {
     for (item in this@mapToJsonArray) {
         add(transform(item))

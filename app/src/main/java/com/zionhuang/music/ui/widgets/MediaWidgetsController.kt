@@ -12,7 +12,7 @@ import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import com.zionhuang.music.utils.Utils
+import com.zionhuang.music.utils.makeTimeString
 
 class MediaWidgetsController(
         context: Context,
@@ -31,7 +31,7 @@ class MediaWidgetsController(
     init {
         seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                progressTextView.text = Utils.makeTimeString(progress / 1000.toLong())
+                progressTextView.text = makeTimeString(progress / 1000.toLong())
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -80,7 +80,7 @@ class MediaWidgetsController(
             val progress = state.position.toInt()
             progressBar.progress = progress
             seekBar.progress = progress
-            progressTextView.text = Utils.makeTimeString(progress.toLong() / 1000)
+            progressTextView.text = makeTimeString(progress.toLong() / 1000)
             if (state.state == PlaybackStateCompat.STATE_PLAYING) {
                 val timeToEnd = ((duration - progress) / state.playbackSpeed).toInt()
                 if (timeToEnd > 0) {
@@ -113,7 +113,7 @@ class MediaWidgetsController(
             val animatedValue = animation.animatedValue as Int
             progressBar.progress = animatedValue
             seekBar.progress = animatedValue
-            progressTextView.text = Utils.makeTimeString(animatedValue / 1000.toLong())
+            progressTextView.text = makeTimeString(animatedValue / 1000.toLong())
         }
     }
 }

@@ -119,6 +119,8 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:4.11.0"
     // Jsoup
     implementation "org.jsoup:jsoup:1.13.1"
+    // PR Downloader
+    implementation "com.mindorks.android:prdownloader:0.6.0"
     // Test
     testImplementation "junit:junit:4.13.1"
     androidTestImplementation "android.arch.core:core-testing:1.1.1"

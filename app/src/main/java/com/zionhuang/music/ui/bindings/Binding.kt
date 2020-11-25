@@ -11,11 +11,12 @@ import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.model.SearchResult
 import com.zionhuang.music.R
 import com.zionhuang.music.utils.GlideApp
-import com.zionhuang.music.utils.Utils
+import com.zionhuang.music.utils.getMaxResThumbnailUrl
+import com.zionhuang.music.utils.makeTimeString
 
 @BindingAdapter("duration")
 fun setDuration(view: TextView, duration: Int) {
-    view.text = Utils.makeTimeString(duration.toLong())
+    view.text = makeTimeString(duration.toLong())
 }
 
 @BindingAdapter("playState")
@@ -41,7 +42,7 @@ fun setThumbnails(view: ImageView, item: SearchResult) {
     val url = if (item.id.kind == "youtube#video") {
         "https://i3.ytimg.com/vi/" + item.id.videoId + "/maxresdefault.jpg"
     } else {
-        Utils.getMaxResThumbnailUrl(item.snippet.thumbnails)
+        getMaxResThumbnailUrl(item.snippet.thumbnails)
     }
     GlideApp.with(view)
             .load(url)
