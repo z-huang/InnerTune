@@ -2,6 +2,7 @@ package com.zionhuang.music.playback
 
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.support.v4.media.MediaMetadataCompat
@@ -18,6 +19,8 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNoti
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.SongEntity
+import com.zionhuang.music.download.DOWNLOAD_MUSIC_INTENT
+import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.extractor.YouTubeExtractor
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.AllSongsQueue
@@ -37,7 +40,7 @@ import kotlinx.coroutines.launch
  * A wrapper around [MusicPlayer] to support actions from [MediaSessionCallback]
  */
 
-class SongPlayer(context: Context, private val scope: CoroutineScope) {
+class SongPlayer(private val context: Context, private val scope: CoroutineScope) {
     companion object {
         const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
@@ -123,9 +126,17 @@ class SongPlayer(context: Context, private val scope: CoroutineScope) {
                         putString(METADATA_KEY_ARTIST, result.channelTitle)
                         putLong(METADATA_KEY_DURATION, result.duration * 1000.toLong())
                     }.build())
-                    result.formats.maxByOrNull { it.abr ?: 0 }?.url?.let { url ->
-                        Log.d(TAG, "Song url: $url")
-                        musicPlayer.setSource(Uri.parse(url))
+                    result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
+                        Log.d(TAG, "Song url: ${format.url}")
+                        musicPlayer.setSource(Uri.parse(format.url))
+                        val intent = Intent(context, DownloadService::class.java).apply {
+                            action = DOWNLOAD_MUSIC_INTENT
+                            putExtra("id", result.id)
+                            putExtra("song_title", result.title)
+                            putExtra("download_url", format.url)
+                            putExtra("filename", "${result.id}.${format.ext}")
+                        }
+                        context.startService(intent)
                     }
                 }
                 is YouTubeExtractor.Result.Error -> {
