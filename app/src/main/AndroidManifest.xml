@@ -50,7 +50,7 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".playback.YtDownloadService"
+            android:name=".download.DownloadService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.exoplayer.downloadService.action.RESTART" />
