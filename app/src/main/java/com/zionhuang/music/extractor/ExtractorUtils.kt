@@ -1,8 +1,6 @@
 package com.zionhuang.music.extractor
 
-import com.zionhuang.music.extensions.rPartition
-import com.zionhuang.music.extensions.rStrip
-import com.zionhuang.music.extensions.strip
+import com.zionhuang.music.extensions.*
 import java.util.*
 
 object ExtractorUtils {
@@ -99,5 +97,28 @@ object ExtractorUtils {
             guess.rStrip("/") in KNOWN_EXTS -> guess.rStrip("/")
             else -> null
         }
+    }
+
+    fun ogSearchProperty(prop: String, html: String): String? {
+        val ogRegExes = ogRegExes(prop)
+        return html.search(ogRegExes)?.unescapeHTML()
+    }
+
+    // language=RegExp
+    private const val CONTENT_RE = """content=(?:\"([^\"]+?)\"|\'([^\']+?)\'|\s*([^\s\"\'=<>`]+?))"""
+
+    // language=RegExp
+    private const val PROPERTY_RE = """(?:name|property)=(?:\'og[:-]%ss\'|\"og[:-]%ss\"|\s*og[:-]%ss\b)"""
+
+    // language=RegExp
+    private const val TEMPLATE_RE = """<meta[^>]+?%s[^>]+?%s"""
+
+    fun ogRegExes(prop: String): Array<String> {
+        val escapedProp = prop.escape()
+        val propertyRe = PROPERTY_RE.replace("%s", escapedProp)
+        return arrayOf(
+                TEMPLATE_RE % propertyRe % CONTENT_RE,
+                TEMPLATE_RE % CONTENT_RE % propertyRe
+        )
     }
 }

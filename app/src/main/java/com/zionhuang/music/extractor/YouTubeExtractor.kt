@@ -7,6 +7,7 @@ import com.google.gson.JsonObject
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.extractor.ExtractorUtils.determineExt
 import com.zionhuang.music.extractor.ExtractorUtils.mimeType2ext
+import com.zionhuang.music.extractor.ExtractorUtils.ogSearchProperty
 import com.zionhuang.music.extractor.ExtractorUtils.parseCodecs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,24 +22,37 @@ typealias SignatureFunctionKt = (String) -> String
  * A Kotlin version of youtube_dl (https://github.com/ytdl-org/youtube-dl)
  *
  * @author Zion Huang
- * @version 2020.07.28
+ * @version 2020.11.29
  */
 
 object YouTubeExtractor {
     private const val TAG = "YouTubeExtractor"
+
+    // language=RegExp
     private val ASSETS_RE = arrayOf(
-            """"assets":.+?"js":\s*"([^"]+)"""",
-            """<script\s+src="([^"]+)".*name="player_ias\/base"\s*\/?>""" // get player url from script tag
+            """<script[^>]+\bsrc=\"([^\"]+)\"[^>]+\bname=[\"\']player_ias/base""",
+            """\"jsUrl\"\s*:\s*\"([^\"]+)\"""",
+            """\"assets\":.+?\"js\":\s*\"([^\"]+)\""""
     )
     private const val AGE_GATE_ASSETS_RE = """ytplayer\.config.*?"url"\s*:\s*("[^"]+")"""
+
+    // language=RegExp
     private val PlayerInfoRE = arrayOf(
             """/(?<id>[a-zA-Z0-9_-]{8,})/player_ias\.vflset(?:/[a-zA-Z]{2,3}_[a-zA-Z]{2,3})?/base\.(?<ext>[a-z]+)$""",
             """\b(?<id>vfl[a-zA-Z0-9_-]+)\b.*?\.(?<ext>[a-z]+)$"""
+    )
+
+    // language=RegExp
+    private val YT_INITIAL_PLAYER_RESPONSE_RE = arrayOf(
+            """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;""",
+            """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;\s*(?:var\s+meta|</script|\n)"""
     )
     private const val WH_RE = """^(?<width>\d+)[xX](?<height>\d+)$"""
     private const val FILE_SIZE_RE = """\bclen[=/](\d+)"""
     private const val CODECS_RE = """(?<key>[a-zA-Z_-]+)=(?<quote>[\"\']?)(?<val>.+?)(?=quote)(?:;|$)"""
     private const val RATIO_RE = """<meta\s+property=\"og:video:tag\".*?content=\"yt:stretch=(?<w>[0-9]+):(?<h>[0-9]+)\">"""
+
+    // language=RegExp
     private val JS_FN_RE = arrayOf(
             """\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
             """\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
@@ -62,7 +76,7 @@ object YouTubeExtractor {
                 val title: String,
                 val channelTitle: String,
                 val duration: Int,
-                val formats: List<YtFormat>
+                val formats: List<YtFormat>,
         ) : Result()
 
         class Error(val errorCode: ErrorCode, val errorMessage: String) : Result()
@@ -100,7 +114,7 @@ object YouTubeExtractor {
 
         var playerResponse: JsonObject? = null
 
-        val ageGate: Boolean = videoWebPage.find("player-age-gate-content>") != null
+        val ageGate: Boolean = ogSearchProperty("restrictions:age", videoWebPage) == "18+" || videoWebPage.find("player-age-gate-content>") != null
         debug("Age gate: ${if (ageGate) "true" else "false"}")
         var videoInfo: JsonObject? = null
         var embedWebPage: String? = null
@@ -143,7 +157,8 @@ object YouTubeExtractor {
         }
 
         if (videoInfo == null && playerResponse == null) {
-            Result.Error(ErrorCode.NO_INFO, "Unable to extract video data")
+            playerResponse = extractPlayerResponse(videoWebPage.search(YT_INITIAL_PLAYER_RESPONSE_RE))
+                    ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Unable to extract video data")
         }
 
         val videoDetails = playerResponse["videoDetails"].asJsonObjectOrNull
@@ -338,17 +353,22 @@ object YouTubeExtractor {
         val (playerType, playerId) = extractPlayerInfo(playerUrl)
         if (playerType != "js") throw ExtractException("Unsupported player type: $playerType")
 
-        val funcId = "$playerType$$playerId${signatureCacheId(exampleSig)}"
+        val funcId = "${playerId}_${signatureCacheId(exampleSig)}"
         // TODO: load function from cache
 
-        return try {
-            parseSigJs(downloadPlainText(playerUrl))
+        val code = try {
+            downloadPlainText(playerUrl)
         } catch (e: IOException) {
             throw ExtractException("Failed to download js player")
         }
+        val fn = parseSigJs(code)
+        val testString = (exampleSig.indices).map { it.toChar() }.joinToString("")
+        val cacheRes = fn(testString)
+        val cacheSpec = cacheRes.map { it.toInt() }
+        return { s -> cacheSpec.map { s[it] }.joinToString("") }
     }
 
-    private fun signatureCacheId(exampleSig: String) = exampleSig.split(".".toRegex()).joinToString(".")
+    private fun signatureCacheId(exampleSig: String) = exampleSig.split("""\.""".toRegex()).map { it.length.toString() }.joinToString(".")
 
     @Throws(ExtractException::class)
     private suspend fun decryptSignature(s: String, playerUrl: String?): String {

@@ -1,5 +1,7 @@
 package com.zionhuang.music.extensions
 
+import android.text.Html
+import android.text.Html.FROM_HTML_MODE_LEGACY
 import com.google.gson.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,6 +17,7 @@ operator fun String.rem(replacement: String) = this.replaceFirst("%s", replaceme
 
 fun String.escape(): String = Pattern.quote(this)
 fun String.unescape(): String = unescapeJava(this)
+fun String.unescapeHTML(): String = Html.fromHtml(this, FROM_HTML_MODE_LEGACY).toString()
 fun String.removeQuotes(): String = when {
     length < 2 -> this
     first() == '\"' && last() == '\"' -> this[1, length - 1]

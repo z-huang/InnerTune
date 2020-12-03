@@ -1,18 +1,19 @@
 package com.zionhuang.music.extensions
 
+import org.intellij.lang.annotations.Language
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-fun String.find(regex: String): RegexMatchResult? =
+fun String.find(@Language("RegExp") regex: String): RegexMatchResult? =
         regex.toMatcher(this).findNext(this)
 
-fun String.find(regex: String, group: String): String? = find(regex)?.groupValue(group)
+fun String.find(@Language("RegExp") regex: String, group: String): String? = find(regex)?.groupValue(group)
 
-fun String.find(regex: String, vararg groups: String): List<String?>? = find(regex)?.let { m ->
+fun String.find(@Language("RegExp") regex: String, vararg groups: String): List<String?>? = find(regex)?.let { m ->
     groups.map { m.groupValue(it) }
 }
 
-fun String.find(regExs: Array<String>): RegexMatchResult? {
+fun String.find(@Language("RegExp") regExs: Array<String>): RegexMatchResult? {
     for (regex in regExs) {
         val res = find(regex)
         if (res != null) return res
@@ -20,7 +21,7 @@ fun String.find(regExs: Array<String>): RegexMatchResult? {
     return null
 }
 
-fun String.find(regExs: Array<String>, group: String): String? {
+fun String.find(@Language("RegExp") regExs: Array<String>, group: String): String? {
     for (regex in regExs) {
         val res = find(regex)
         if (res != null) return res.groupValue(group)
@@ -28,7 +29,7 @@ fun String.find(regExs: Array<String>, group: String): String? {
     return null
 }
 
-fun String.find(regExs: Array<String>, vararg groups: String): List<String?>? {
+fun String.find(@Language("RegExp") regExs: Array<String>, vararg groups: String): List<String?>? {
     for (regex in regExs) {
         val res = find(regex)
         if (res != null) return groups.map { res.groupValue(it) }
@@ -36,19 +37,19 @@ fun String.find(regExs: Array<String>, vararg groups: String): List<String?>? {
     return null
 }
 
-fun String.findAll(regex: String): Sequence<RegexMatchResult> =
+fun String.findAll(@Language("RegExp") regex: String): Sequence<RegexMatchResult> =
         generateSequence({ find(regex) }, RegexMatchResult::next)
 
-fun String.matchEntire(regex: String): RegexMatchResult? =
+fun String.matchEntire(@Language("RegExp") regex: String): RegexMatchResult? =
         regex.toMatcher(this).matchEntire(this)
 
-fun String.matchEntire(regex: String, group: String): String? = matchEntire(regex)?.groupValue(group)
+fun String.matchEntire(@Language("RegExp") regex: String, group: String): String? = matchEntire(regex)?.groupValue(group)
 
-fun String.matchEntire(regex: String, vararg groups: String): List<String?>? = matchEntire(regex)?.let { m ->
+fun String.matchEntire(@Language("RegExp") regex: String, vararg groups: String): List<String?>? = matchEntire(regex)?.let { m ->
     groups.map { m.groupValue(it) }
 }
 
-fun String.matchEntire(regExs: Array<String>): RegexMatchResult? {
+fun String.matchEntire(@Language("RegExp") regExs: Array<String>): RegexMatchResult? {
     for (regex in regExs) {
         val res = matchEntire(regex)
         if (res != null) return res
@@ -56,7 +57,7 @@ fun String.matchEntire(regExs: Array<String>): RegexMatchResult? {
     return null
 }
 
-fun String.matchEntire(regExs: Array<String>, group: String): String? {
+fun String.matchEntire(@Language("RegExp") regExs: Array<String>, group: String): String? {
     for (regex in regExs) {
         val res = matchEntire(regex)
         if (res != null) return res.groupValue(group)
@@ -64,7 +65,7 @@ fun String.matchEntire(regExs: Array<String>, group: String): String? {
     return null
 }
 
-fun String.matchEntire(regExs: Array<String>, vararg groups: String): List<String?>? {
+fun String.matchEntire(@Language("RegExp") regExs: Array<String>, vararg groups: String): List<String?>? {
     for (regex in regExs) {
         val res = matchEntire(regex)
         if (res != null) return groups.map { res.groupValue(it) }
@@ -72,11 +73,11 @@ fun String.matchEntire(regExs: Array<String>, vararg groups: String): List<Strin
     return null
 }
 
-fun String.search(regex: String): String? = find(regex)?.let {
+fun String.search(@Language("RegExp") regex: String): String? = find(regex)?.let {
     if (it.groups.size > 1) it.groupValue(1) else it.groupValue(0)
 }
 
-fun String.search(regExs: Array<String>): String? {
+fun String.search(@Language("RegExp") regExs: Array<String>): String? {
     for (regex in regExs) {
         val res = search(regex)
         if (res != null) return res
