@@ -7,7 +7,6 @@ import com.google.gson.JsonObject
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.extractor.ExtractorUtils.determineExt
 import com.zionhuang.music.extractor.ExtractorUtils.mimeType2ext
-import com.zionhuang.music.extractor.ExtractorUtils.ogSearchProperty
 import com.zionhuang.music.extractor.ExtractorUtils.parseCodecs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,12 +21,13 @@ typealias SignatureFunctionKt = (String) -> String
  * A Kotlin version of youtube_dl (https://github.com/ytdl-org/youtube-dl)
  *
  * @author Zion Huang
- * @version 2020.11.29
+ * @version 2020.12.02
  */
 
 object YouTubeExtractor {
     private const val TAG = "YouTubeExtractor"
 
+    private const val AGE_GATE_RE = """[\"\']status[\"\']\s*:\s*[\"\']LOGIN_REQUIRED"""
     // language=RegExp
     private val ASSETS_RE = arrayOf(
             """<script[^>]+\bsrc=\"([^\"]+)\"[^>]+\bname=[\"\']player_ias/base""",
@@ -114,7 +114,7 @@ object YouTubeExtractor {
 
         var playerResponse: JsonObject? = null
 
-        val ageGate: Boolean = ogSearchProperty("restrictions:age", videoWebPage) == "18+" || videoWebPage.find("player-age-gate-content>") != null
+        val ageGate: Boolean = videoWebPage.find(AGE_GATE_RE) != null
         debug("Age gate: ${if (ageGate) "true" else "false"}")
         var videoInfo: JsonObject? = null
         var embedWebPage: String? = null

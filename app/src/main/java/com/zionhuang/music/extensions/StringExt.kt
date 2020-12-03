@@ -17,7 +17,6 @@ operator fun String.rem(replacement: String) = this.replaceFirst("%s", replaceme
 
 fun String.escape(): String = Pattern.quote(this)
 fun String.unescape(): String = unescapeJava(this)
-fun String.unescapeHTML(): String = Html.fromHtml(this, FROM_HTML_MODE_LEGACY).toString()
 fun String.removeQuotes(): String = when {
     length < 2 -> this
     first() == '\"' && last() == '\"' -> this[1, length - 1]
