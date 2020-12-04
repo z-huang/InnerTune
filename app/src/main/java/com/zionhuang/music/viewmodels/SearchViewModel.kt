@@ -18,5 +18,4 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     fun search(query: String): Flow<PagingData<SearchResult>> = Pager(
             PagingConfig(pageSize = 20)
     ) { YouTubeDataSource.Search(youtubeRepo, query) }.flow.cachedIn(viewModelScope)
-
 }

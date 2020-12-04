@@ -27,6 +27,6 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 playbackViewModel.playMedia(SongParcel.fromSongEntity(songsAdapter.getSongFromPosition(pos)), Queue.QUEUE_ALL_SONG)
             }
         }
-        songsViewModel.allSongs.observe(viewLifecycleOwner, { list: List<SongEntity?>? -> songsAdapter.setDataSet(list) })
+        songsViewModel.allSongs.observe(viewLifecycleOwner, { list: List<SongEntity> -> songsAdapter.setDataSet(list) })
     }
 }

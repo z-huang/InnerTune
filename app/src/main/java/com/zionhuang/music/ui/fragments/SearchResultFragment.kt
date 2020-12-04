@@ -54,7 +54,7 @@ class SearchResultFragment : BindingFragment<FragmentSearchResultBinding>() {
         binding.recyclerView.apply {
             adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, _ ->
-                val item = searchResultAdapter.getItemByPosition(pos)
+                val item = searchResultAdapter.getItemByPosition(pos)!!
                 if ("youtube#video" != item.id.kind) {
                     return@addOnClickListener
                 }
