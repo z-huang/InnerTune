@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.getDensity
@@ -47,6 +48,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {
         bottomSheetCallback = bottomSheetListener
+    }
+
+    fun expandBottomSheet() {
+        bottomSheetBehavior.state = STATE_EXPANDED
     }
 
     private inner class BottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {

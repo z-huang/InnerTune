@@ -48,6 +48,9 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
         binding.motionLayout.addTransitionListener(this)
         (requireActivity() as MainActivity).setBottomSheetListener(this)
+        binding.playerContainer.setOnClickListener {
+            (requireActivity() as MainActivity).expandBottomSheet()
+        }
 
         binding.btnAddToLibrary.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_ADD_TO_LIBRARY, null)
