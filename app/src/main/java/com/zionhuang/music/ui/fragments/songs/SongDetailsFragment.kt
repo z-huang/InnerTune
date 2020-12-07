@@ -5,11 +5,11 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.zionhuang.music.databinding.LayoutSongDetailsBinding
 import com.zionhuang.music.repository.SongRepository
-import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.ui.fragments.base.MainFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class SongDetailsFragment : BindingFragment<LayoutSongDetailsBinding>() {
+class SongDetailsFragment : MainFragment<LayoutSongDetailsBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val songId = SongDetailsFragmentArgs.fromBundle(requireArguments()).songId
         val songRepository = SongRepository(requireContext())

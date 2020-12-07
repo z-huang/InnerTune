@@ -1,16 +1,13 @@
 package com.zionhuang.music.ui.activities
 
-import android.content.res.Configuration
-import android.content.res.Resources.Theme
 import android.os.Bundle
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
+import androidx.cardview.widget.CardView
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.tabs.TabLayout
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
@@ -21,7 +18,7 @@ import com.zionhuang.music.ui.widgets.BottomSheetListener
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     private var bottomSheetCallback: BottomSheetListener? = null
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<CoordinatorLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<CardView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +33,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomControlsSheet).apply {
+        bottomSheetBehavior = from<CardView>(binding.bottomControlsSheet).apply {
             isHideable = true
             addBottomSheetCallback(BottomSheetCallback())
         }
@@ -44,7 +41,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight((108 * getDensity()).toInt(), true)
+        bottomSheetBehavior.setPeekHeight((54 * getDensity()).toInt(), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {
@@ -59,34 +56,31 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         get() = binding.tabLayout
 
     private inner class BottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, @BottomSheetBehavior.State newState: Int) {
+        override fun onStateChanged(bottomSheet: View, @State newState: Int) {
             bottomSheetCallback?.onStateChanged(bottomSheet, newState)
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            if (slideOffset >= 0) {
-                binding.bottomNav.translationY = resources.getDimensionPixelOffset(R.dimen.bottom_navigation_height) * slideOffset
-            }
             bottomSheetCallback?.onSlide(bottomSheet, slideOffset)
         }
     }
 
     override fun onBackPressed() {
-        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        if (bottomSheetBehavior.state == STATE_EXPANDED) {
+            bottomSheetBehavior.state = STATE_COLLAPSED
             return
         }
         super.onBackPressed()
     }
 
-    override fun onApplyThemeResource(theme: Theme, resId: Int, first: Boolean) {
-        super.onApplyThemeResource(theme, resId, first)
-        // TODO: make this a setting option
-        val config = resources.configuration
-        val currentNightMode = config.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
-            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
-        }
-    }
+//    override fun onApplyThemeResource(theme: Theme, resId: Int, first: Boolean) {
+//        super.onApplyThemeResource(theme, resId, first)
+//        // TODO: make this a setting option
+//        val config = resources.configuration
+//        val currentNightMode = config.uiMode and Configuration.UI_MODE_NIGHT_MASK
+//        if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
+//            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+//            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
+//        }
+//    }
 }

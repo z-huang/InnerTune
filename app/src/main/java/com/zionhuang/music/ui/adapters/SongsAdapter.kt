@@ -22,9 +22,9 @@ class SongsAdapter : PagingDataAdapter<SongEntity, SongsAdapter.ViewHolder>(Item
         when {
             payloads.isEmpty() -> getItem(position)?.let { holder.bind(it) }
             else -> {
-                val diff = payloads.last() as List<Any?>
-                diff[0]?.let { holder.binding.songTitle.text = it as String }
-                diff[1]?.let { holder.binding.songArtist.text = it as String }
+                val payload = payloads.last() as List<Any?>
+                payload[0]?.let { holder.binding.songTitle.text = it as String }
+                payload[1]?.let { holder.binding.songArtist.text = it as String }
             }
         }
     }

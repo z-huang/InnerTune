@@ -13,6 +13,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical">
 
         <ImageView
@@ -29,25 +31,32 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/song_title">
+            android:hint="@string/song_title"
+            app:startIconDrawable="@drawable/ic_round_music_note_24">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/song_title_text_view"
+                android:id="@+id/songTitle_textField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
+                android:text="@{song.title}"
                 tools:text="Song Title" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/song_artist_text_view"
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:autofillHints="@string/song_title"
-            android:inputType="text"
-            android:text="@{song.artist}"
-            tools:text="Song Artist" />
+            android:layout_height="wrap_content"
+            android:hint="@string/song_artist"
+            app:startIconDrawable="@drawable/ic_round_person_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/songArtist_textField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:text="@{song.artist}"
+                tools:text="Song Artist" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </layout>
