@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -21,12 +20,13 @@ import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.SearchResultAdapter
+import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class SearchResultFragment : BindingFragment<FragmentSearchResultBinding>() {
+class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
     companion object {
         private const val TAG = "SearchResultFragment"
     }
@@ -63,7 +63,7 @@ class SearchResultFragment : BindingFragment<FragmentSearchResultBinding>() {
         }
 
         val query = SearchResultFragmentArgs.fromBundle(requireArguments()).searchQuery
-        (requireActivity() as AppCompatActivity).supportActionBar?.setTitle(query)
+        activity.supportActionBar?.title = query
 
         lifecycleScope.launch {
             viewModel.search(query).collectLatest {

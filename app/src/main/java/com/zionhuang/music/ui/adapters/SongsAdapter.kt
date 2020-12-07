@@ -1,6 +1,8 @@
 package com.zionhuang.music.ui.adapters
 
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -8,6 +10,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSongBinding
 import com.zionhuang.music.db.SongEntity
 import com.zionhuang.music.extensions.inflateWithBinding
+import com.zionhuang.music.ui.fragments.LibraryFragmentDirections
 import com.zionhuang.music.utils.payloadOf
 
 class SongsAdapter : PagingDataAdapter<SongEntity, SongsAdapter.ViewHolder>(ItemComparator()) {
@@ -34,6 +37,20 @@ class SongsAdapter : PagingDataAdapter<SongEntity, SongsAdapter.ViewHolder>(Item
     inner class ViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(song: SongEntity) {
             binding.song = song
+            binding.btnMoreAction.setOnClickListener { view ->
+                PopupMenu(view.context, view).apply {
+                    setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.action_edit -> {
+                                view.findNavController().navigate(LibraryFragmentDirections.actionLibraryFragmentToSongDetailsFragment(song.id))
+                            }
+                        }
+                        true
+                    }
+                    inflate(R.menu.menu_song)
+                    show()
+                }
+            }
             binding.executePendingBindings()
         }
     }

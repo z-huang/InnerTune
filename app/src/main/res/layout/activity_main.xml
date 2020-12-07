@@ -16,7 +16,7 @@
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay"
+            android:animateLayoutChanges="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -26,8 +26,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
-                android:elevation="6dp"
-                android:theme="@style/AppTheme.Toolbar"
                 app:contentInsetStartWithNavigation="0dp" />
 
             <com.google.android.material.tabs.TabLayout
@@ -35,9 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:layout_anchor="@+id/appbar"
-                app:layout_anchorGravity="center"
-                app:layout_scrollFlags="scroll|enterAlways|snap" />
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:tabBackground="?android:windowBackground"
+                app:tabIndicatorColor="?colorAccent"
+                app:tabSelectedTextColor="?colorAccent" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView

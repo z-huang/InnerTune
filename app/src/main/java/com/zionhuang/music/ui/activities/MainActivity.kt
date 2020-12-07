@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.tabs.TabLayout
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.getDensity
@@ -53,6 +54,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     fun expandBottomSheet() {
         bottomSheetBehavior.state = STATE_EXPANDED
     }
+
+    val tabLayout: TabLayout
+        get() = binding.tabLayout
 
     private inner class BottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, @BottomSheetBehavior.State newState: Int) {

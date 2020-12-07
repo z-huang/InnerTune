@@ -6,7 +6,19 @@
     <fragment
         android:id="@+id/libraryFragment"
         android:name="com.zionhuang.music.ui.fragments.LibraryFragment"
-        android:label="@string/title_library" />
+        android:label="@string/title_library">
+        <action
+            android:id="@+id/action_libraryFragment_to_songDetailsFragment"
+            app:destination="@id/songDetailsFragment"
+            app:enterAnim="@anim/fragment_close_enter"
+            app:exitAnim="@anim/fragment_close_exit"
+            app:popEnterAnim="@anim/fragment_open_enter"
+            app:popExitAnim="@anim/fragment_open_exit">
+            <argument
+                android:name="songId"
+                app:argType="string" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/explorationFragment"
         android:name="com.zionhuang.music.ui.fragments.ExploreFragment"
@@ -54,5 +66,13 @@
             app:exitAnim="@anim/fragment_close_exit"
             app:popEnterAnim="@anim/fragment_open_enter"
             app:popExitAnim="@anim/fragment_open_exit" />
+    </fragment>
+    <fragment
+        android:id="@+id/songDetailsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.SongDetailsFragment"
+        android:label="SongDetailsFragment">
+        <argument
+            android:name="songId"
+            app:argType="string" />
     </fragment>
 </navigation>

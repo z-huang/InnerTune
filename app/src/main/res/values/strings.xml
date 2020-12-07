@@ -7,6 +7,9 @@
     <string name="history">History</string>
     <string name="search_item_menu_add">Add to list</string>
     <string name="search_item_menu_download">Download</string>
+    <string name="menu_song_edit">Edit</string>
+    <string name="song_title">Song Title</string>
+    <string name="song_artist">Song Artist</string>
     <string name="channel_name_playback">Music Player</string>
     <string name="channel_name_download">Download</string>
     <string name="bullet" translatable="false">•</string>

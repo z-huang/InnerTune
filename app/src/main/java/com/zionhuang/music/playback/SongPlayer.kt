@@ -19,8 +19,9 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNoti
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.SongEntity
-import com.zionhuang.music.download.DOWNLOAD_MUSIC_INTENT
 import com.zionhuang.music.download.DownloadService
+import com.zionhuang.music.download.DownloadService.Companion.DOWNLOAD_MUSIC_INTENT
+import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extractor.YouTubeExtractor
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.AllSongsQueue
@@ -129,12 +130,17 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                     result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
                         Log.d(TAG, "Song url: ${format.url}")
                         musicPlayer.setSource(Uri.parse(format.url))
+                    }
+                    result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
                         val intent = Intent(context, DownloadService::class.java).apply {
                             action = DOWNLOAD_MUSIC_INTENT
-                            putExtra("id", result.id)
-                            putExtra("song_title", result.title)
-                            putExtra("download_url", format.url)
-                            putExtra("filename", "${result.id}.${format.ext}")
+                            val task = DownloadTask(
+                                    id = result.id,
+                                    songTitle = result.title,
+                                    url = format.url!!,
+                                    fileName = "${result.id}.${format.ext}"
+                            )
+                            putExtra("task", task)
                         }
                         context.startService(intent)
                     }
@@ -192,6 +198,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         scope.launch(Dispatchers.IO) {
             currentSong?.let {
                 songRepository.insert(it)
+
             }
         }
     }

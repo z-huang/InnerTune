@@ -20,12 +20,13 @@ import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.ui.adapters.ExploreAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
+import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.ExploreViewModel
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ExploreFragment : BindingFragment<FragmentExploreBinding>() {
+class ExploreFragment : MainFragment<FragmentExploreBinding>() {
     companion object {
         private const val TAG = "ExplorationFragment"
     }

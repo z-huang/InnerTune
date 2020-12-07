@@ -17,6 +17,7 @@ import com.zionhuang.music.databinding.FragmentSearchSuggestionBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getQueryTextChangeFlow
 import com.zionhuang.music.ui.adapters.SearchSuggestionAdapter
+import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.SuggestionViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
-class SuggestionFragment : BindingFragment<FragmentSearchSuggestionBinding>() {
+class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
     companion object {
         private const val TAG = "SearchSuggestionFragment"
     }

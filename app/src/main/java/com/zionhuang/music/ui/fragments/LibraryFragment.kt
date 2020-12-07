@@ -10,9 +10,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentLibraryBinding
+import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.ui.fragments.songs.DownloadFragment
+import com.zionhuang.music.ui.fragments.songs.SongsFragment
 import java.util.*
 
-class LibraryFragment : BindingFragment<FragmentLibraryBinding>() {
+class LibraryFragment : MainFragment<FragmentLibraryBinding>(showTabs = true) {
     companion object {
         private const val TAG = "LibraryFragment"
     }
@@ -25,12 +28,14 @@ class LibraryFragment : BindingFragment<FragmentLibraryBinding>() {
     private fun setupViewPager() {
         val libraryAdapter = LibraryAdapter(childFragmentManager).apply {
             addFragment(SongsFragment(), "All Songs")
+            addFragment(DownloadFragment(), "Downloads")
         }
         binding.viewpager.apply {
             adapter = libraryAdapter
             offscreenPageLimit = 1
             currentItem = 0
         }
+        tabLayout.setupWithViewPager(binding.viewpager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
