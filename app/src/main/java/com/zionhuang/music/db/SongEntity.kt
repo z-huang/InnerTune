@@ -13,6 +13,7 @@ data class SongEntity(
         var artist: String? = null,
         var duration: Int = 0, // in seconds
         var liked: Boolean = false,
+        var downloaded: Boolean = false,
         @ColumnInfo(name = "create_date") var createDate: Date = Date(),
         @ColumnInfo(name = "modify_date") var modifyDate: Date = Date()
 ) {

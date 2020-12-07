@@ -2,6 +2,7 @@ package com.zionhuang.music.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.SongDao
 import com.zionhuang.music.db.SongEntity
@@ -19,7 +20,11 @@ class SongRepository(context: Context) {
 
     fun getAllSongsAsFlow(): Flow<List<SongEntity>> = songDao.getAllSongsAsFlow()
 
+    fun getAllSongsAsPagingSource(): PagingSource<Int, SongEntity> = songDao.getAllSongsAsPagingSource()
+
     fun getSongById(id: String): SongEntity? = songDao.getSongById(id)
+
+    fun getSongAsFlow(songId: String): Flow<SongEntity> = songDao.getSongByIdDistinctUntilChanged(songId)
 
     fun insert(song: SongEntity) = songDao.insert(song)
 
