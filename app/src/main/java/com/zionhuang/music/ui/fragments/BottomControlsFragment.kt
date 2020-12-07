@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -26,7 +27,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     private val viewModel by activityViewModels<PlaybackViewModel>()
     private lateinit var mediaWidgetsController: MediaWidgetsController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = BottomControlsSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -73,11 +74,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-        if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.INVISIBLE
-        }
+        binding.progressBar.isVisible = newState == BottomSheetBehavior.STATE_COLLAPSED
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
