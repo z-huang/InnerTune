@@ -13,6 +13,7 @@ import android.support.v4.media.session.MediaSessionCompat.FLAG_HANDLES_TRANSPOR
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Log
+import androidx.core.net.toUri
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel
@@ -31,11 +32,13 @@ import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.playback.queue.SingleSongQueue
 import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.File
 
 /**
  * A wrapper around [MusicPlayer] to support actions from [MediaSessionCallback]
@@ -117,44 +120,44 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     var job: Job? = null
     fun playSong() {
         musicPlayer.stop()
-        if (currentSong == null) return
-        job?.cancel()
-        job = scope.launch {
-            when (val result = YouTubeExtractor.extract(currentSong!!.id)) {
-                is YouTubeExtractor.Result.Success -> {
-                    mediaSession.setMetadata(metadataBuilder.apply {
-                        putString(METADATA_KEY_TITLE, result.title)
-                        putString(METADATA_KEY_ARTIST, result.channelTitle)
-                        putLong(METADATA_KEY_DURATION, result.duration * 1000.toLong())
-                    }.build())
-                    result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
-                        Log.d(TAG, "Song url: ${format.url}")
-                        musicPlayer.setSource(Uri.parse(format.url))
-                    }
-                    if (!songRepository.hasSong(result.id)) {
-                        songRepository.insert(SongEntity(
-                                id = result.id,
-                                title = result.title,
-                                artist = result.channelTitle,
-                                duration = result.duration
-                        ))
-                    }
-                    result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
-                        val intent = Intent(context, DownloadService::class.java).apply {
-                            action = DOWNLOAD_MUSIC_INTENT
-                            val task = DownloadTask(
-                                    id = result.id,
-                                    songTitle = result.title,
-                                    url = format.url!!,
-                                    fileName = "${result.id}.${format.ext}"
-                            )
-                            putExtra("task", task)
-                        }
-                        context.startService(intent)
-                    }
+        currentSong?.let { song ->
+            job?.cancel()
+            job = scope.launch extractScope@{
+                if (song.downloadState == STATE_DOWNLOADED) {
+                    musicPlayer.setSource(File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri())
+                    return@extractScope
                 }
-                is YouTubeExtractor.Result.Error -> {
-                    Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")
+                when (val result = YouTubeExtractor.extract(currentSong!!.id)) {
+                    is YouTubeExtractor.Result.Success -> {
+                        mediaSession.setMetadata(metadataBuilder.apply {
+                            putString(METADATA_KEY_TITLE, result.title)
+                            putString(METADATA_KEY_ARTIST, result.channelTitle)
+                            putLong(METADATA_KEY_DURATION, result.duration * 1000.toLong())
+                        }.build())
+                        result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
+                            Log.d(TAG, "Song url: ${format.url}")
+                            musicPlayer.setSource(Uri.parse(format.url))
+                            context.startService(Intent(context, DownloadService::class.java).apply {
+                                action = DOWNLOAD_MUSIC_INTENT
+                                putExtra("task", DownloadTask(
+                                        id = result.id,
+                                        songTitle = result.title,
+                                        url = format.url!!
+                                ))
+                            })
+                        }
+                        if (!songRepository.hasSong(result.id)) {
+                            songRepository.insert(SongEntity(
+                                    id = result.id,
+                                    title = result.title,
+                                    artist = result.channelTitle,
+                                    duration = result.duration
+                            ))
+                        }
+                    }
+                    is YouTubeExtractor.Result.Error -> {
+                        Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")
+                    }
                 }
             }
         }

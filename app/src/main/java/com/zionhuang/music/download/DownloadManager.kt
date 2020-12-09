@@ -82,7 +82,6 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
                                     downloadState = STATE_NOT_DOWNLOADED
                                 }
                         task.url = format.url
-                        task.fileName = "${task.id}.${format.ext}"
                     }
                     is YouTubeExtractor.Result.Error -> {
                         songRepository.updateById(task.id) {
@@ -94,7 +93,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             }
 
             onTaskStarted(task)
-            PRDownloader.download(task.url, context.getExternalFilesDir(null)?.absolutePath + "/audio", task.fileName)
+            PRDownloader.download(task.url, "${context.getExternalFilesDir(null)?.absolutePath}/audio", task.id)
                     .build()
                     .setOnProgressListener {
                         updateState(task, it.currentBytes, it.totalBytes)
