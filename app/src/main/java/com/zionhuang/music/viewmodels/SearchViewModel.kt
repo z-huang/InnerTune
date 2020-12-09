@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
     private val youtubeRepo: YouTubeRepository = getInstance(application)
-    fun search(query: String): Flow<PagingData<SearchResult>> = Pager(
-            PagingConfig(pageSize = 20)
-    ) { YouTubeDataSource.Search(youtubeRepo, query) }.flow.cachedIn(viewModelScope)
+    fun search(query: String): Flow<PagingData<SearchResult>> = Pager(PagingConfig(pageSize = 20)) {
+        YouTubeDataSource.Search(youtubeRepo, query)
+    }.flow.cachedIn(viewModelScope)
 }

@@ -12,7 +12,7 @@ import com.zionhuang.music.youtube.YouTubeRepository.Companion.getInstance
 
 class ExploreViewModel(application: Application) : AndroidViewModel(application) {
     private val youTubeRepo: YouTubeRepository = getInstance(application)
-    val flow = Pager(
-            PagingConfig(pageSize = 20)
-    ) { YouTubeDataSource.Popular(youTubeRepo) }.flow.cachedIn(viewModelScope)
+    val flow = Pager(PagingConfig(pageSize = 20)) {
+        YouTubeDataSource.Popular(youTubeRepo)
+    }.flow.cachedIn(viewModelScope)
 }

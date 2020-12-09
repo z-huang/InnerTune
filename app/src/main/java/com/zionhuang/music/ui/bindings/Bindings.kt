@@ -29,7 +29,7 @@ fun setPlayState(view: ImageView, state: Int) {
 }
 
 @BindingAdapter("coverId")
-fun setCoverId(view: ImageView, id: String) {
+fun setCoverId(view: ImageView, id: String?) {
     GlideApp.with(view)
             .load("https://i3.ytimg.com/vi/$id/maxresdefault.jpg")
             .placeholder(R.drawable.ic_round_music_note_24)

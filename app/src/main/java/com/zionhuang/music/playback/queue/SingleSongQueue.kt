@@ -18,8 +18,8 @@ class SingleSongQueue(
         set(_) {}
     override val currentSong: SongEntity
         get() = song
-    override val previousSong: SongEntity? = currentSong
-    override val nextSong: SongEntity? = currentSong
+    override val previousSong: SongEntity = currentSong
+    override val nextSong: SongEntity = currentSong
 
     override fun playNext() = Unit
 
