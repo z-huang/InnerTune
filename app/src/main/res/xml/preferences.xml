@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <EditTextPreference
         app:icon="@drawable/ic_baseline_vpn_key_24"
         app:key="@string/api_key"
         app:title="@string/pref_api_key" />
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        app:icon="@drawable/ic_round_save_alt_24"
+        app:key="@string/auto_download"
+        app:summary="@string/pref_auto_download_summary"
+        app:title="@string/pref_auto_download" />
     <Preference
         app:icon="@drawable/ic_outline_info_24"
         app:title="@string/pref_about" />

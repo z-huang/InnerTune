@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="api_key" translatable="false">API_KEY</string>
+    <string name="auto_download" translatable="false">AUTO_DOWNLOAD</string>
 </resources>

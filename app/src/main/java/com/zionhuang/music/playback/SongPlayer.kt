@@ -20,9 +20,11 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNoti
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.SongEntity
+import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.DOWNLOAD_MUSIC_INTENT
 import com.zionhuang.music.download.DownloadTask
+import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extractor.YouTubeExtractor
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.AllSongsQueue
@@ -31,11 +33,8 @@ import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.playback.queue.SingleSongQueue
-import com.zionhuang.music.db.SongRepository
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
-import io.reactivex.rxjava3.disposables.Disposable
+import com.zionhuang.music.utils.PreferenceHelper
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.File
@@ -88,7 +87,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     private val currentSong: SongEntity?
         get() = queue.currentSong
 
-    private var disposable: Disposable? = null
+    private val autoDownload = PreferenceHelper<Boolean>(context, R.string.auto_download)
 
     init {
         musicPlayer.onDurationSet { duration ->
@@ -137,14 +136,16 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                         result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
                             Log.d(TAG, "Song url: ${format.url}")
                             musicPlayer.setSource(Uri.parse(format.url))
-                            context.startService(Intent(context, DownloadService::class.java).apply {
-                                action = DOWNLOAD_MUSIC_INTENT
-                                putExtra("task", DownloadTask(
-                                        id = result.id,
-                                        songTitle = result.title,
-                                        url = format.url!!
-                                ))
-                            })
+                            if (autoDownload.value) {
+                                context.startService(Intent(context, DownloadService::class.java).apply {
+                                    action = DOWNLOAD_MUSIC_INTENT
+                                    putExtra("task", DownloadTask(
+                                            id = result.id,
+                                            songTitle = result.title,
+                                            url = format.url!!
+                                    ))
+                                })
+                            }
                         }
                         if (!songRepository.hasSong(result.id)) {
                             songRepository.insert(SongEntity(
@@ -224,7 +225,6 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     private fun setPlaybackState(state: PlaybackStateCompat) = mediaSession.setPlaybackState(state)
 
     fun release() {
-        disposable?.dispose()
         mediaSession.apply {
             isActive = false
             release()
