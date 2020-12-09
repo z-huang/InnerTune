@@ -30,7 +30,7 @@ import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.playback.queue.SingleSongQueue
-import com.zionhuang.music.repository.SongRepository
+import com.zionhuang.music.db.SongRepository
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -131,6 +131,14 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                         Log.d(TAG, "Song url: ${format.url}")
                         musicPlayer.setSource(Uri.parse(format.url))
                     }
+                    if (!songRepository.hasSong(result.id)) {
+                        songRepository.insert(SongEntity(
+                                id = result.id,
+                                title = result.title,
+                                artist = result.channelTitle,
+                                duration = result.duration
+                        ))
+                    }
                     result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
                         val intent = Intent(context, DownloadService::class.java).apply {
                             action = DOWNLOAD_MUSIC_INTENT
@@ -195,10 +203,9 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     fun updateSongMeta(id: String, song: SongParcel) = queue.updateSongMeta(id, song)
 
     fun addToLibrary() {
-        scope.launch(Dispatchers.IO) {
+        scope.launch {
             currentSong?.let {
                 songRepository.insert(it)
-
             }
         }
     }

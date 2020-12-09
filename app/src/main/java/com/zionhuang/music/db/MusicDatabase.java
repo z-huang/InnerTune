@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {SongEntity.class}, version = 1)
-@TypeConverters({Converters.class})
+@TypeConverters(Converters.class)
 public abstract class MusicDatabase extends RoomDatabase {
     private static final String DBNAME = "song.db";
     private static volatile MusicDatabase mInstance;

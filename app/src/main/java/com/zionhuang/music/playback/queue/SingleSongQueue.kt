@@ -2,7 +2,7 @@ package com.zionhuang.music.playback.queue
 
 import com.zionhuang.music.db.SongEntity
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.repository.SongRepository
+import com.zionhuang.music.db.SongRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -16,7 +16,7 @@ class SingleSongQueue(
     override var currentSongId: String?
         get() = songId
         set(_) {}
-    override val currentSong: SongEntity?
+    override val currentSong: SongEntity
         get() = song
     override val previousSong: SongEntity? = currentSong
     override val nextSong: SongEntity? = currentSong

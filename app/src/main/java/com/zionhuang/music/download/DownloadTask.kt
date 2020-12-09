@@ -3,20 +3,18 @@ package com.zionhuang.music.download
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
-enum class DownloadStatus {
-    PENDING,
-    RUNNING,
-    FINISHED,
-    ERROR
-}
-
 @Parcelize
 data class DownloadTask(
         val id: String,
-        val songTitle: String,
-        val url: String,
-        val fileName: String,
+        val songTitle: String? = null,
+        var url: String? = null,
+        var fileName: String? = null,
         var currentBytes: Long = 0,
         var totalBytes: Long = -1,
-        val status: DownloadStatus = DownloadStatus.PENDING,
-) : Parcelable
+) : Parcelable {
+    companion object {
+        const val STATE_NOT_DOWNLOADED = 0
+        const val STATE_DOWNLOADED = 1
+        const val STATE_DOWNLOADING = 2
+    }
+}

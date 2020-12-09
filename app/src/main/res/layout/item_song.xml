@@ -8,6 +8,10 @@
         <variable
             name="song"
             type="com.zionhuang.music.db.SongEntity" />
+
+        <import type="com.zionhuang.music.download.DownloadTask" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,7 +102,19 @@
                     android:singleLine="true"
                     android:textSize="12sp"
                     app:duration="@{song.duration}"
-                    tools:text="YYYY-MM-YY" />
+                    tools:text="YYYY-MM-DD" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{song.downloadState == DownloadTask.STATE_DOWNLOADING ? View.VISIBLE : View.GONE}">
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 

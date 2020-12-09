@@ -1,17 +1,14 @@
-package com.zionhuang.music.db;
+package com.zionhuang.music.db
 
-import androidx.room.TypeConverter;
+import androidx.room.TypeConverter
+import java.util.*
 
-import java.util.Date;
-
-public class Converters {
+class Converters {
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
-        return value == null ? null : new Date(value);
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(Date date) {
-        return date == null ? null : date.getTime();
-    }
+    fun dateToTimestamp(date: Date?): Long? = date?.time
 }

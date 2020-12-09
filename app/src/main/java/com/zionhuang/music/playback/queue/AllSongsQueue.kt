@@ -2,7 +2,7 @@ package com.zionhuang.music.playback.queue
 
 import com.zionhuang.music.db.SongEntity
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.repository.SongRepository
+import com.zionhuang.music.db.SongRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect

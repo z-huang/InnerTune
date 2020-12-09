@@ -6,17 +6,25 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import com.downloader.Error
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.zionhuang.music.db.SongEntity
+import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.download.DownloadListener
 import com.zionhuang.music.download.DownloadManager
 import com.zionhuang.music.download.DownloadService
-import com.zionhuang.music.download.DownloadTask
+import kotlinx.coroutines.flow.Flow
 
 class DownloadViewModel(application: Application) : AndroidViewModel(application) {
+    private val songRepository: SongRepository = SongRepository(application)
+    val downloadingSongsFlow: Flow<PagingData<SongEntity>> = Pager(PagingConfig(pageSize = 50)) {
+        songRepository.getDownloadingSongsAsPagingSource()
+    }.flow.cachedIn(viewModelScope)
+
     private val connection = DownloadServiceConnection()
     private var downloadManager: DownloadManager? = null
 
@@ -26,36 +34,27 @@ class DownloadViewModel(application: Application) : AndroidViewModel(application
         application.bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
-    private var _tasks = MutableLiveData<List<DownloadTask>>(emptyList())
-    val tasks: LiveData<List<DownloadTask>>
-        get() = _tasks
-
-    private var listener: DownloadManager.EventListener? = null
-
-    fun setDownloadListener(listener: DownloadManager.EventListener) {
-        this.listener = listener
-        downloadManager?.addEventListener(listener)
+    private var listeners = mutableListOf<DownloadListener>()
+    private val listener: DownloadListener = { task ->
+        listeners.forEach { it(task) }
     }
 
-    private val observer = Observer<List<DownloadTask>> {
-        _tasks.postValue(it)
+    fun addDownloadListener(listener: DownloadListener) {
+        listeners.add(listener)
+    }
+
+    fun removeDownloadListener(listener: DownloadListener) {
+        listeners.remove(listener)
     }
 
     inner class DownloadServiceConnection : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             downloadManager = (service as? DownloadService.DownloadServiceBinder)?.downloadManager
-            listener?.let {
-                downloadManager?.addEventListener(it)
-            }
-            downloadManager?.tasksLiveData?.observeForever(observer)
+            downloadManager?.addEventListener(listener)
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            listener?.let {
-                downloadManager?.removeListener(it)
-            }
-            downloadManager?.tasksLiveData?.removeObserver(observer)
+            downloadManager?.removeListener(listener)
         }
-
     }
 }

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import com.zionhuang.music.databinding.LayoutSongDetailsBinding
-import com.zionhuang.music.repository.SongRepository
+import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.ui.fragments.base.MainFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

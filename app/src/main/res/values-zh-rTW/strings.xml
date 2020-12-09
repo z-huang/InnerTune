@@ -15,4 +15,5 @@
     <string name="menu_song_edit">編輯</string>
     <string name="song_title">歌名</string>
     <string name="song_artist">作曲家</string>
+    <string name="menu_song_download">下載</string>
 </resources>
