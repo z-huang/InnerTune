@@ -147,14 +147,12 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                                 })
                             }
                         }
-                        if (!songRepository.hasSong(result.id)) {
-                            songRepository.insert(SongEntity(
-                                    id = result.id,
-                                    title = result.title,
-                                    artist = result.channelTitle,
-                                    duration = result.duration
-                            ))
-                        }
+                        songRepository.insert(SongEntity(
+                                id = result.id,
+                                title = result.title,
+                                artist = result.channelTitle,
+                                duration = result.duration
+                        ))
                     }
                     is YouTubeExtractor.Result.Error -> {
                         Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")

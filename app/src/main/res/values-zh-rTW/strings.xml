@@ -18,4 +18,5 @@
     <string name="menu_song_download">下載</string>
     <string name="pref_auto_download">自動下載</string>
     <string name="pref_auto_download_summary">在播放歌曲時自動下載</string>
+    <string name="menu_song_delete">移除</string>
 </resources>

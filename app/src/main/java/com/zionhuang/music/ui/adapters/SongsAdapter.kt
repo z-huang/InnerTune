@@ -1,9 +1,7 @@
 package com.zionhuang.music.ui.adapters
 
-import android.content.Intent
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.navigation.findNavController
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,13 +9,13 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSongBinding
 import com.zionhuang.music.db.SongEntity
 import com.zionhuang.music.download.DownloadHandler
-import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
+import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.extensions.inflateWithBinding
-import com.zionhuang.music.ui.fragments.LibraryFragmentDirections
+import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
-class SongsAdapter(val downloadHandler: DownloadHandler) : PagingDataAdapter<SongEntity, SongsAdapter.SongViewHolder>(ItemComparator()) {
+class SongsAdapter(val popupMenuListener: SongPopupMenuListener, val downloadHandler: DownloadHandler) : PagingDataAdapter<SongEntity, SongsAdapter.SongViewHolder>(ItemComparator()) {
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
     }
@@ -25,12 +23,7 @@ class SongsAdapter(val downloadHandler: DownloadHandler) : PagingDataAdapter<Son
     override fun onBindViewHolder(holder: SongViewHolder, position: Int, payloads: List<Any>) {
         when {
             payloads.isEmpty() -> getItem(position)?.let { holder.bind(it) }
-            else -> {
-                holder.bind(payloads.last() as SongEntity)
-//                val payload = payloads.last() as List<Any?>
-//                payload[0]?.let { holder.binding.songTitle.text = it as String }
-//                payload[1]?.let { holder.binding.songArtist.text = it as String }
-            }
+            else -> holder.bind(payloads.last() as SongEntity)
         }
     }
 
@@ -46,19 +39,14 @@ class SongsAdapter(val downloadHandler: DownloadHandler) : PagingDataAdapter<Son
                 PopupMenu(view.context, view).apply {
                     setOnMenuItemClickListener {
                         when (it.itemId) {
-                            R.id.action_edit -> {
-                                view.findNavController().navigate(LibraryFragmentDirections.actionLibraryFragmentToSongDetailsFragment(song.id))
-                            }
-                            R.id.action_download -> {
-                                view.context.startService(Intent(view.context, DownloadService::class.java).apply {
-                                    action = DownloadService.DOWNLOAD_MUSIC_INTENT
-                                    putExtra("task", DownloadTask(id = song.id))
-                                })
-                            }
+                            R.id.action_edit -> popupMenuListener.editSong(song.id, view)
+                            R.id.action_download -> popupMenuListener.downloadSong(song.id, view.context)
+                            R.id.action_delete -> popupMenuListener.deleteSong(song)
                         }
                         true
                     }
                     inflate(R.menu.menu_song)
+                    menu.findItem(R.id.action_download).isVisible = song.downloadState == STATE_NOT_DOWNLOADED
                     show()
                 }
             }

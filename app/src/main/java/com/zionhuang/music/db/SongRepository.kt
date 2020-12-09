@@ -1,9 +1,7 @@
 package com.zionhuang.music.db
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -15,8 +13,6 @@ class SongRepository(context: Context) {
 
     private val songDao: SongDao = MusicDatabase.getInstance(context).songDao
 
-    fun getAllSongsAsLiveData(): LiveData<List<SongEntity>> = songDao.getAllSongsAsLiveData()
-
     fun getAllSongsAsFlow(): Flow<List<SongEntity>> = songDao.getAllSongsAsFlow()
 
     fun getAllSongsAsPagingSource(): PagingSource<Int, SongEntity> = songDao.getAllSongsAsPagingSource()
@@ -27,23 +23,19 @@ class SongRepository(context: Context) {
         songDao.getSongById(id)
     }
 
-    fun getSongAsFlow(songId: String): Flow<SongEntity> = songDao.getSongByIdDistinctUntilChanged(songId)
+    fun getSongAsFlow(songId: String): Flow<SongEntity> = songDao.getSongByIdAsFlowDistinct(songId)
 
     suspend fun insert(song: SongEntity) = withContext(Dispatchers.IO) {
         songDao.insert(song)
     }
 
-    suspend fun deleteAll() = withContext(Dispatchers.IO) {
-        songDao.deleteAll()
-    }
-
     suspend fun updateById(songId: String, applier: SongEntity.() -> Unit) = withContext(Dispatchers.IO) {
-        insert(getSongById(songId)!!.apply {
+        songDao.update(getSongById(songId)!!.apply {
             applier(this)
         })
     }
 
-    suspend fun hasSong(songId: String) = withContext(Dispatchers.IO) {
-        songDao.contains(songId)
+    suspend fun deleteSong(song: SongEntity) = withContext(Dispatchers.IO) {
+        songDao.delete(song)
     }
 }
