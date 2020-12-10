@@ -28,15 +28,19 @@ import kotlinx.coroutines.launch
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
     private val songRepository: SongRepository = SongRepository(application)
 
-    val allSongsFlow: Flow<PagingData<SongEntity>> = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getAllSongsAsPagingSource()
-    }.flow.cachedIn(viewModelScope)
+    val allSongsFlow: Flow<PagingData<SongEntity>> by lazy {
+        Pager(PagingConfig(pageSize = 50)) {
+            songRepository.getAllSongsAsPagingSource()
+        }.flow.cachedIn(viewModelScope)
+    }
 
-    val downloadingSongsFlow: Flow<PagingData<SongEntity>> = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getDownloadingSongsAsPagingSource()
-    }.flow.cachedIn(viewModelScope)
+    val downloadingSongsFlow: Flow<PagingData<SongEntity>> by lazy {
+        Pager(PagingConfig(pageSize = 50)) {
+            songRepository.getDownloadingSongsAsPagingSource()
+        }.flow.cachedIn(viewModelScope)
+    }
 
-    val songPopupMenuListener = object:SongPopupMenuListener{
+    val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(songId: String, view: View) {
             view.findNavController().navigate(LibraryFragmentDirections.actionLibraryFragmentToSongDetailsFragment(songId))
         }
@@ -53,15 +57,13 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                 songRepository.deleteSong(song)
             }
         }
-
     }
+
     private val connection = DownloadServiceConnection()
     private var downloadManager: DownloadManager? = null
 
     private var listeners = mutableListOf<DownloadListener>()
-    private val listener: DownloadListener = { task ->
-        listeners.forEach { it(task) }
-    }
+    private val listener: DownloadListener = { task -> listeners.forEach { it(task) } }
 
     fun addDownloadListener(listener: DownloadListener) {
         listeners.add(listener)

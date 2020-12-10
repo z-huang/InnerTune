@@ -1,19 +1,25 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-<!--        <item name="android:navigationBarColor">@color/colorPrimary</item>-->
-<!--        <item name="android:textColor">@color/textColor</item>-->
-<!--        <item name="android:windowBackground">@color/colorPrimary</item>-->
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--        <item name="android:navigationBarColor">@color/colorPrimary</item>-->
+        <!--        <item name="android:textColor">@color/textColor</item>-->
+        <!--        <item name="android:windowBackground">@color/colorPrimary</item>-->
+        <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <item name="colorAccent">@color/colorAccent</item>
         <item name="invertedColor">@color/colorInverted</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
+        <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteTextView</item>
     </style>
 
     <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">
         <item name="android:layout_width">wrap_content</item>
         <item name="queryHint">@string/abc_search_hint</item>
         <item name="searchHintIcon">@null</item>
+    </style>
+
+    <style name="AppTheme.AutoCompleteTextView" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textColorHint">?attr/colorOnPrimary</item>
     </style>
 </resources>

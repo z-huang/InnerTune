@@ -1,6 +1,7 @@
 package com.zionhuang.music.youtube
 
 import androidx.paging.PagingSource
+import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 
@@ -15,6 +16,8 @@ class YouTubeDataSource {
                         prevKey = res.prevPageToken,
                         nextKey = res.nextPageToken
                 )
+            } catch (e: GoogleJsonResponseException) {
+                LoadResult.Error(Throwable(e.details.message))
             } catch (e: Exception) {
                 LoadResult.Error(e)
             }
@@ -31,10 +34,11 @@ class YouTubeDataSource {
                         prevKey = res.prevPageToken,
                         nextKey = res.nextPageToken
                 )
+            } catch (e: GoogleJsonResponseException) {
+                LoadResult.Error(Throwable(e.details.message))
             } catch (e: Exception) {
                 LoadResult.Error(e)
             }
         }
-
     }
 }

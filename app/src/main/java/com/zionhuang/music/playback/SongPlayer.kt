@@ -87,7 +87,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     private val currentSong: SongEntity?
         get() = queue.currentSong
 
-    private val autoDownload = PreferenceHelper<Boolean>(context, R.string.auto_download)
+    private val autoDownload = PreferenceHelper(context, R.string.auto_download, false)
 
     init {
         musicPlayer.onDurationSet { duration ->

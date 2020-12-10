@@ -35,8 +35,6 @@ class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
     private val viewModel by viewModels<SuggestionViewModel>()
     private lateinit var searchView: SearchView
 
-    @FlowPreview
-    @ExperimentalTime
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val suggestionAdapter = SearchSuggestionAdapter(viewModel)
@@ -48,7 +46,6 @@ class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
                 search(suggestionAdapter.getQueryByPosition(pos))
             }
         }
-        setupSearchView()
         viewModel.apply {
             onFillQuery.observe(viewLifecycleOwner, { query -> searchView.setQuery(query, false) })
             query.observe(viewLifecycleOwner, { query -> viewModel.fetchSuggestions(query) })
@@ -56,17 +53,21 @@ class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
         }
     }
 
+    @FlowPreview
+    @ExperimentalTime
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search_view, menu)
-        menu.findItem(R.id.search_view).actionView = searchView
+        searchView = menu.findItem(R.id.search_view).actionView as SearchView
+        setupSearchView()
     }
 
     @FlowPreview
     @ExperimentalTime
     private fun setupSearchView() {
         val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView = SearchView(requireContext()).apply {
+        searchView.apply {
+
             isIconified = false
             findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.setPadding(0, 2, 0, 2)
             setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))

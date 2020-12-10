@@ -1,10 +1,6 @@
 package com.zionhuang.music.youtube
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.util.Log
-import androidx.preference.PreferenceManager
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.youtube.YouTube
@@ -22,7 +18,7 @@ class YouTubeAPIService(context: Context) {
         private const val CATEGORY_MUSIC = "10"
     }
 
-    private val apiKey = PreferenceHelper<String>(context, R.string.api_key)
+    private val apiKey = PreferenceHelper(context, R.string.api_key, "")
     private val youTube: YouTube = YouTube.Builder(NetHttpTransport.Builder().build(), GsonFactory(), null)
             .setApplicationName(context.resources.getString(R.string.app_name))
             .build()

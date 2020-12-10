@@ -8,5 +8,6 @@
         android:icon="@drawable/ic_search_black_24dp"
         android:orderInCategory="300"
         android:title="@string/search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always" />
 </menu>
