@@ -20,6 +20,7 @@ import java.io.ObjectOutputStream
 import java.net.MalformedURLException
 import java.net.URL
 import kotlin.reflect.cast
+import kotlin.system.measureTimeMillis
 
 typealias SignatureFunctionKt = (String) -> String
 
@@ -34,7 +35,16 @@ class YouTubeExtractor private constructor(private val context: Context) {
     private var debug: (String) -> Unit = {}
     private val playerCache = mutableMapOf<String, SignatureFunctionKt>()
 
-    suspend fun extract(videoId: String): Result = withContext(Dispatchers.Default) {
+    suspend fun extract(videoId: String): Result {
+        val res: Result
+        val duration = measureTimeMillis {
+            res = realExtract(videoId)
+        }
+        debug("Extraction time: ${duration}ms")
+        return res
+    }
+
+    private suspend fun realExtract(videoId: String): Result = withContext(Dispatchers.Default) {
         debug = { msg ->
             Log.d(TAG, "[$videoId] $msg")
         }
