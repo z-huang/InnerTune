@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSongBinding
-import com.zionhuang.music.db.SongEntity
+import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING

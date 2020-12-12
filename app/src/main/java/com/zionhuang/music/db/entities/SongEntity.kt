@@ -1,17 +1,23 @@
-package com.zionhuang.music.db
+package com.zionhuang.music.db.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.models.SongParcel
 import java.util.*
 
-@Entity(tableName = "song")
+@Entity(tableName = "song",
+        foreignKeys = [ForeignKey(
+                entity = ArtistEntity::class,
+                parentColumns = ["id"],
+                childColumns = ["artistId"])])
 data class SongEntity(
         @PrimaryKey val id: String,
         var title: String? = null,
         var artist: String? = null,
+        var artistId: Int = 0,
         var duration: Int = 0, // in seconds
         var liked: Boolean = false,
         @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,

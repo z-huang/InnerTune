@@ -2,6 +2,8 @@ package com.zionhuang.music.db
 
 import android.content.Context
 import androidx.paging.PagingSource
+import com.zionhuang.music.db.daos.SongDao
+import com.zionhuang.music.db.entities.SongEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

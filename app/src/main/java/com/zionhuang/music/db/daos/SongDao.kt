@@ -1,7 +1,8 @@
-package com.zionhuang.music.db
+package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

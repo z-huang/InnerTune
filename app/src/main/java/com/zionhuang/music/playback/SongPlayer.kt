@@ -19,8 +19,8 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
-import com.zionhuang.music.db.SongEntity
 import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.DOWNLOAD_MUSIC_INTENT
 import com.zionhuang.music.download.DownloadTask

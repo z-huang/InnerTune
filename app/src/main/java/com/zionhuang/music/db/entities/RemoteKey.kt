@@ -1,4 +1,4 @@
-package com.zionhuang.music.db
+package com.zionhuang.music.db.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -14,7 +14,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.zionhuang.music.db.SongEntity
+import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.download.DownloadListener
 import com.zionhuang.music.download.DownloadManager

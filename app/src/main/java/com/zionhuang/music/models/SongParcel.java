@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
-import com.zionhuang.music.db.SongEntity;
+import com.zionhuang.music.db.entities.SongEntity;
 
 public class SongParcel implements Parcelable {
     private String id;

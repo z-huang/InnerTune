@@ -7,7 +7,7 @@
 
         <variable
             name="song"
-            type="com.zionhuang.music.db.SongEntity" />
+            type="com.zionhuang.music.db.entities.SongEntity" />
 
         <import type="com.zionhuang.music.download.DownloadTask" />
 

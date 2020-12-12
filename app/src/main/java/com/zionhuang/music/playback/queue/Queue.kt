@@ -1,7 +1,7 @@
 package com.zionhuang.music.playback.queue
 
 import androidx.annotation.IntDef
-import com.zionhuang.music.db.SongEntity
+import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.models.SongParcel
 
 interface Queue {

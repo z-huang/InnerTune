@@ -7,6 +7,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.zionhuang.music.db.daos.RemoteDao;
+import com.zionhuang.music.db.entities.RemoteKey;
+
 @Database(entities = {RemoteKey.class, SearchEntity.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class RemoteDatabase extends RoomDatabase {

@@ -1,9 +1,11 @@
-package com.zionhuang.music.db
+package com.zionhuang.music.db.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.zionhuang.music.db.entities.RemoteKey
+import com.zionhuang.music.db.entities.SearchEntity
 
 @Dao
 interface RemoteDao {
