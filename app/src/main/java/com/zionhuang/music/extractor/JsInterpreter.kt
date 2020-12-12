@@ -1,3 +1,5 @@
+@file:Suppress("RegExpRedundantEscape")
+
 package com.zionhuang.music.extractor
 
 import com.google.gson.*
@@ -8,41 +10,10 @@ import org.intellij.lang.annotations.Language
 typealias OperatorFunction = (JsonElement, JsonElement) -> JsonElement
 
 class JsInterpreter(private val code: String) {
-    companion object {
-        private val OPERATORS = linkedMapOf<String, OperatorFunction>(
-                "|" to { l, r -> l or r },
-                "^" to { l, r -> l xor r },
-                "&" to { l, r -> l and r },
-                ">>" to { l, r -> l shr r },
-                "<<" to { l, r -> l shl r },
-                "-" to { l, r -> l - r },
-                "+" to { l, r -> l + r },
-                "%" to { l, r -> l % r },
-                "/" to { l, r -> l / r },
-                "*" to { l, r -> l * r }
-        ).toImmutableMap()
-        private val ASSIGN_OPERATORS = OPERATORS.mapKeys { (key, _) -> "$key=" }.toMutableMap().apply {
-            this["="] = { _, r -> r }
-        }.toImmutableMap()
-
-        @Language("RegExp")
-        private const val NAME_RE = """[a-zA-Z_$][a-zA-Z_$0-9]*"""
-        private const val ASSIGN_OPERATOR_RE = """(?x)(?<out>$NAME_RE)(?:\[(?<index>[^\]]+?)\])?\s*%s(?<expr>.*)$"""
-        private const val VAR_RE = """^var\s"""
-        private const val RETURN_RE = """^return(?:\s+|$)"""
-        private const val VARIABLE_RE = """(?!if|return|true|false)(?<name>$NAME_RE)$"""
-        private const val VARIABLE_INDEX_RE = """(?<in>$NAME_RE)\[(?<idx>.+)\]$"""
-        private const val MEMBER_RE = """(?<var>$NAME_RE)(?:\.(?<member>[^(]+)|\[(?<member2>[^]]+)\])\s*(?:\(+(?<args>[^()]*)\))?$"""
-        private const val FUNC_NAME_RE = """(?:[a-zA-Z$0-9]+|"[a-zA-Z$0-9]+"|'[a-zA-Z$0-9]+')"""
-        private const val OBJECT_RE = """(?x)(?<!this\.)%s\s*=\s*\{\s*(?<fields>($FUNC_NAME_RE\s*:\s*function\s*\(.*?\)\s*\{.*?\}(?:,\s*)?)*)\}\s*;"""
-        private const val FIELDS_RE = """(?x)(?<key>$FUNC_NAME_RE)\s*:\s*function\s*\((?<args>[a-z,]+)\)\{(?<code>[^}]+)\}"""
-        private const val FNCALL_RE = """^(?<func>$NAME_RE)\((?<args>[a-zA-Z0-9_$,]*)\)$"""
-        private const val FN_RE = """(?x)(?:function\s+%s|[{;,]\s*%s\s*=\s*function|var\s+%s\s*=\s*function)\s*\((?<args>[^)]*)\)\s*\{(?<code>[^}]+)\}"""
-    }
-
     private val objects = JsonObject()
     private val functions = HashMap<String, JsFunction>()
 
+    @Throws(InterpretException::class)
     private fun interpretStatement(stmt: String, localVars: JsonObject, allowRecursion: Int = 100): Pair<JsonElement, Boolean> {
         if (allowRecursion < 0) throw InterpretException("Recursion limit exceed")
         var abort = false
@@ -54,6 +25,7 @@ class JsInterpreter(private val code: String) {
         return Pair(interpretExpression(expr, localVars, allowRecursion), abort)
     }
 
+    @Throws(InterpretException::class)
     private fun interpretExpression(originExpr: String, localVars: JsonObject, allowRecursion: Int): JsonElement {
         var expr = originExpr.trim()
         if (expr.isEmpty()) JsonNull.INSTANCE
@@ -200,7 +172,7 @@ class JsInterpreter(private val code: String) {
             return opFn(x, y)
         }
 
-        expr.matchEntire(FNCALL_RE)?.let { match ->
+        expr.matchEntire(FN_CALL_RE)?.let { match ->
             val fnName = match.groupValue("func")!!
             val argStr = match.groupValue("args")!!
             val argValues = argStr.split(",").mapToJsonArray {
@@ -215,6 +187,7 @@ class JsInterpreter(private val code: String) {
         throw InterpretException("Unsupported JS expression $expr")
     }
 
+    @Throws(InterpretException::class)
     private fun extractObject(objName: String): JsonElement {
         val fields = code.find(OBJECT_RE % objName.escape(), "fields")
                 ?: throw InterpretException("Failed to extract object $objName")
@@ -227,6 +200,7 @@ class JsInterpreter(private val code: String) {
         return obj
     }
 
+    @Throws(InterpretException::class)
     fun extractFunction(fnName: String): JsFunction {
         val escapedFnName = fnName.escape()
         val match = code.find(FN_RE % escapedFnName % escapedFnName % escapedFnName)
@@ -234,9 +208,10 @@ class JsInterpreter(private val code: String) {
         return buildFunction(match.groupValue("args")!!.split(","), match.groupValue("code")!!)
     }
 
-    fun callFunction(fnName: String, vararg args: Any): JsonElement =
-            callFunction(fnName, args.toJsonArray())
+    @Throws(InterpretException::class)
+    fun callFunction(fnName: String, vararg args: Any): JsonElement = callFunction(fnName, args.toJsonArray())
 
+    @Throws(InterpretException::class)
     private fun callFunction(fnName: String, args: JsonArray): JsonElement = extractFunction(fnName)(args)
 
     private fun buildFunction(argNames: List<String>, code: String): JsFunction = JsFunction { args ->
@@ -248,5 +223,37 @@ class JsInterpreter(private val code: String) {
         JsonNull.INSTANCE
     }
 
-    internal class InterpretException(msg: String) : Exception()
+    class InterpretException(override val message: String) : Exception(message)
+
+    companion object {
+        private val OPERATORS = linkedMapOf<String, OperatorFunction>(
+                "|" to { l, r -> l or r },
+                "^" to { l, r -> l xor r },
+                "&" to { l, r -> l and r },
+                ">>" to { l, r -> l shr r },
+                "<<" to { l, r -> l shl r },
+                "-" to { l, r -> l - r },
+                "+" to { l, r -> l + r },
+                "%" to { l, r -> l % r },
+                "/" to { l, r -> l / r },
+                "*" to { l, r -> l * r }
+        ).toImmutableMap()
+        private val ASSIGN_OPERATORS = OPERATORS.mapKeys { (key, _) -> "$key=" }.toMutableMap().apply {
+            this["="] = { _, r -> r }
+        }.toImmutableMap()
+
+        @Language("RegExp")
+        private const val NAME_RE = """[a-zA-Z_$][a-zA-Z_$0-9]*"""
+        private const val ASSIGN_OPERATOR_RE = """(?x)(?<out>$NAME_RE)(?:\[(?<index>[^\]]+?)\])?\s*%s(?<expr>.*)$"""
+        private const val VAR_RE = """^var\s"""
+        private const val RETURN_RE = """^return(?:\s+|$)"""
+        private const val VARIABLE_RE = """(?!if|return|true|false)(?<name>$NAME_RE)$"""
+        private const val VARIABLE_INDEX_RE = """(?<in>$NAME_RE)\[(?<idx>.+)\]$"""
+        private const val MEMBER_RE = """(?<var>$NAME_RE)(?:\.(?<member>[^(]+)|\[(?<member2>[^]]+)\])\s*(?:\(+(?<args>[^()]*)\))?$"""
+        private const val FUNC_NAME_RE = """(?:[a-zA-Z$0-9]+|"[a-zA-Z$0-9]+"|'[a-zA-Z$0-9]+')"""
+        private const val OBJECT_RE = """(?x)(?<!this\.)%s\s*=\s*\{\s*(?<fields>($FUNC_NAME_RE\s*:\s*function\s*\(.*?\)\s*\{.*?\}(?:,\s*)?)*)\}\s*;"""
+        private const val FIELDS_RE = """(?x)(?<key>$FUNC_NAME_RE)\s*:\s*function\s*\((?<args>[a-z,]+)\)\{(?<code>[^}]+)\}"""
+        private const val FN_CALL_RE = """^(?<func>$NAME_RE)\((?<args>[a-zA-Z0-9_$,]*)\)$"""
+        private const val FN_RE = """(?x)(?:function\s+%s|[{;,]\s*%s\s*=\s*function|var\s+%s\s*=\s*function)\s*\((?<args>[^)]*)\)\s*\{(?<code>[^}]+)\}"""
+    }
 }

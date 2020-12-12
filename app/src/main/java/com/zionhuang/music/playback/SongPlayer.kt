@@ -51,6 +51,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     }
 
     private val songRepository = SongRepository(context)
+    private val youTubeExtractor = YouTubeExtractor.getInstance(context)
     private val musicPlayer = MusicPlayer(context)
 
     private var metadataBuilder = MediaMetadataCompat.Builder()
@@ -116,7 +117,8 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         }
     }
 
-    var job: Job? = null
+    private var job: Job? = null
+
     fun playSong() {
         musicPlayer.stop()
         currentSong?.let { song ->
@@ -126,7 +128,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                     musicPlayer.setSource(File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri())
                     return@extractScope
                 }
-                when (val result = YouTubeExtractor.extract(currentSong!!.id)) {
+                when (val result = youTubeExtractor.extract(currentSong!!.id)) {
                     is YouTubeExtractor.Result.Success -> {
                         mediaSession.setMetadata(metadataBuilder.apply {
                             putString(METADATA_KEY_TITLE, result.title)

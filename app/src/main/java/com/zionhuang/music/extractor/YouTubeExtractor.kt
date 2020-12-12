@@ -1,5 +1,8 @@
+@file:Suppress("RegExpRedundantEscape", "SpellCheckingInspection")
+
 package com.zionhuang.music.extractor
 
+import android.content.Context
 import android.util.Log
 import androidx.collection.arrayMapOf
 import com.google.gson.JsonArray
@@ -10,10 +13,13 @@ import com.zionhuang.music.extractor.ExtractorUtils.mimeType2ext
 import com.zionhuang.music.extractor.ExtractorUtils.parseCodecs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.IOException
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.net.MalformedURLException
 import java.net.URL
-import kotlin.jvm.Throws
+import kotlin.reflect.cast
 
 typealias SignatureFunctionKt = (String) -> String
 
@@ -24,74 +30,14 @@ typealias SignatureFunctionKt = (String) -> String
  * @version 2020.12.02
  */
 
-object YouTubeExtractor {
-    private const val TAG = "YouTubeExtractor"
-
-    private const val AGE_GATE_RE = """[\"\']status[\"\']\s*:\s*[\"\']LOGIN_REQUIRED"""
-    // language=RegExp
-    private val ASSETS_RE = arrayOf(
-            """<script[^>]+\bsrc=\"([^\"]+)\"[^>]+\bname=[\"\']player_ias/base""",
-            """\"jsUrl\"\s*:\s*\"([^\"]+)\"""",
-            """\"assets\":.+?\"js\":\s*\"([^\"]+)\""""
-    )
-    private const val AGE_GATE_ASSETS_RE = """ytplayer\.config.*?"url"\s*:\s*("[^"]+")"""
-
-    // language=RegExp
-    private val PlayerInfoRE = arrayOf(
-            """/(?<id>[a-zA-Z0-9_-]{8,})/player_ias\.vflset(?:/[a-zA-Z]{2,3}_[a-zA-Z]{2,3})?/base\.(?<ext>[a-z]+)$""",
-            """\b(?<id>vfl[a-zA-Z0-9_-]+)\b.*?\.(?<ext>[a-z]+)$"""
-    )
-
-    // language=RegExp
-    private val YT_INITIAL_PLAYER_RESPONSE_RE = arrayOf(
-            """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;""",
-            """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;\s*(?:var\s+meta|</script|\n)"""
-    )
-    private const val WH_RE = """^(?<width>\d+)[xX](?<height>\d+)$"""
-    private const val FILE_SIZE_RE = """\bclen[=/](\d+)"""
-    private const val CODECS_RE = """(?<key>[a-zA-Z_-]+)=(?<quote>[\"\']?)(?<val>.+?)(?=quote)(?:;|$)"""
-    private const val RATIO_RE = """<meta\s+property=\"og:video:tag\".*?content=\"yt:stretch=(?<w>[0-9]+):(?<h>[0-9]+)\">"""
-
-    // language=RegExp
-    private val JS_FN_RE = arrayOf(
-            """\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """(?:\b|[^a-zA-Z0-9$])(?<sig>[a-zA-Z0-9$]{2})\s*=\s*function\(\s*a\s*\)\s*\{\s*a\s*=\s*a\.split\(\s*""\s*\)""",
-            """(?<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*\{\s*a\s*=\s*a\.split\(\s*\"\"\s*\)""",
-            """(["\'])signature\1\s*,\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """\.sig\|\|(?<sig>[a-zA-Z0-9$]+)\(""",
-            """yt\.akamaized\.net/\)\s*\|\|\s*.*?\s*[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*(?:encodeURIComponent\s*\()?\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """\bc\s*&&\s*a\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
-            """\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\("""
-    )
-
-    private val playerCache = HashMap<String, SignatureFunctionKt>()
-
-    sealed class Result {
-        class Success(
-                val id: String,
-                val title: String,
-                val channelTitle: String,
-                val duration: Int,
-                val formats: List<YtFormat>,
-        ) : Result()
-
-        class Error(val errorCode: ErrorCode, val errorMessage: String) : Result()
-    }
-
-    private fun getYtPlayerConfig(videoWebPage: String): JsonObject? {
-        val patterns = arrayOf(
-                """;ytplayer\.config\s*=\s*(\{.+?\});ytplayer""",
-                """;ytplayer\.config\s*=\s*(\{.+?\});"""
-        )
-        return videoWebPage.search(patterns)?.parseJsonString().asJsonObjectOrNull
-    }
+class YouTubeExtractor private constructor(private val context: Context) {
+    private var debug: (String) -> Unit = {}
+    private val playerCache = mutableMapOf<String, SignatureFunctionKt>()
 
     suspend fun extract(videoId: String): Result = withContext(Dispatchers.Default) {
-        fun debug(msg: String) = Log.d(TAG, "[$videoId] $msg")
+        debug = { msg ->
+            Log.d(TAG, "[$videoId] $msg")
+        }
 
         val videoWebPage = try {
             debug("Download web page")
@@ -268,7 +214,7 @@ object YouTubeExtractor {
                         val signature = try {
                             decryptSignature(encryptedSig, playerUrl)
                         } catch (e: ExtractException) {
-                            debug("Failed to decrypt signature: ${e.msg}")
+                            debug("Failed to decrypt signature: ${e.message}")
                             continue
                         }
                         debug("decrypted signature: $signature")
@@ -337,38 +283,80 @@ object YouTubeExtractor {
         )
     }
 
+    private fun getYtPlayerConfig(videoWebPage: String): JsonObject? {
+        val patterns = arrayOf(
+                """;ytplayer\.config\s*=\s*(\{.+?\});ytplayer""",
+                """;ytplayer\.config\s*=\s*(\{.+?\});"""
+        )
+        return videoWebPage.search(patterns)?.parseJsonString().asJsonObjectOrNull
+    }
+
     private fun parseSigJs(jsCode: String): SignatureFunctionKt {
-        val funcName = jsCode.find(JS_FN_RE, "sig")!!
+        val funcName = jsCode.find(JS_FN_RE, "sig")
+                ?: throw ExtractException("Cannot find signature function in js player")
         val jsi = JsInterpreter(jsCode)
         val initialFn = jsi.extractFunction(funcName)
-        return { s -> initialFn(jsonArrayOf(s)).asString }
+        return { s ->
+            try {
+                initialFn(jsonArrayOf(s)).asString
+            } catch (e: JsInterpreter.InterpretException) {
+                throw ExtractException(e.message)
+            }
+        }
     }
 
     @Throws(ExtractException::class)
     private fun extractPlayerInfo(playerUrl: String) = playerUrl.find(PlayerInfoRE, "ext", "id")
             ?: throw ExtractException("Cannot identify player $playerUrl")
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     @Throws(ExtractException::class)
     private suspend fun extractSignatureFunction(playerUrl: String, exampleSig: String): SignatureFunctionKt {
         val (playerType, playerId) = extractPlayerInfo(playerUrl)
         if (playerType != "js") throw ExtractException("Unsupported player type: $playerType")
 
         val funcId = "${playerId}_${signatureCacheId(exampleSig)}"
-        // TODO: load function from cache
-
-        val code = try {
-            downloadPlainText(playerUrl)
-        } catch (e: IOException) {
-            throw ExtractException("Failed to download js player")
+        val cacheDir = File(context.externalCacheDir, "extractor").also {
+            it.mkdirs()
         }
-        val fn = parseSigJs(code)
-        val testString = (exampleSig.indices).map { it.toChar() }.joinToString("")
-        val cacheRes = fn(testString)
-        val cacheSpec = cacheRes.map { it.toInt() }
+        val sigFile = File(cacheDir, funcId)
+        var cacheSpec: List<Int>? = null
+        if (sigFile.exists()) {
+            cacheSpec = sigFile.inputStream().use fis@{ fis ->
+                return@fis ObjectInputStream(fis).use ois@{ ois ->
+                    return@ois try {
+                        List::class.cast(ois.readObject()).castOrNull<Int>().also {
+                            debug("Load signature function from disk")
+                        }
+                    } catch (e: ClassCastException) {
+                        null
+                    }
+                }
+            }
+        }
+        if (cacheSpec == null) {
+            val code = try {
+                debug("Downloading $playerType player $playerId")
+                downloadPlainText(playerUrl)
+            } catch (e: IOException) {
+                throw ExtractException("Failed to download js player")
+            }
+            val fn = parseSigJs(code)
+            val testString = (exampleSig.indices).map { it.toChar() }.joinToString("")
+            val cacheRes = fn(testString)
+            cacheSpec = cacheRes.map { it.toInt() }
+            debug("Save signature function to disk")
+            sigFile.createNewFile()
+            sigFile.outputStream().use { fos ->
+                ObjectOutputStream(fos).use { oos ->
+                    oos.writeObject(cacheSpec)
+                }
+            }
+        }
         return { s -> cacheSpec.map { s[it] }.joinToString("") }
     }
 
-    private fun signatureCacheId(exampleSig: String) = exampleSig.split("""\.""".toRegex()).map { it.length.toString() }.joinToString(".")
+    private fun signatureCacheId(exampleSig: String) = exampleSig.split("""\.""".toRegex()).joinToString(".") { it.length.toString() }
 
     @Throws(ExtractException::class)
     private suspend fun decryptSignature(s: String, playerUrl: String?): String {
@@ -409,120 +397,191 @@ object YouTubeExtractor {
         return Triple(null, null, null)
     }
 
-    private val FORMATS = arrayMapOf(
-            "5" to YtFormat(ext = "flv", width = 400, height = 240, acodec = "mp3", abr = 64, vcodec = "h263"),
-            "6" to YtFormat(ext = "flv", width = 450, height = 270, acodec = "mp3", abr = 64, vcodec = "h263"),
-            "13" to YtFormat(ext = "3gp", acodec = "aac", abr = 64, vcodec = "mp4v"),
-            "17" to YtFormat(ext = "3gp", width = 176, height = 144, acodec = "aac", abr = 24, vcodec = "mp4v"),
-            "18" to YtFormat(ext = "mp4", width = 640, height = 360, acodec = "aac", abr = 96, vcodec = "h264"),
-            "22" to YtFormat(ext = "mp4", width = 1280, height = 720, acodec = "aac", abr = 192, vcodec = "h264"),
-            "34" to YtFormat(ext = "flv", width = 640, height = 360, acodec = "aac", abr = 128, vcodec = "h264"),
-            "35" to YtFormat(ext = "flv", width = 854, height = 480, acodec = "aac", abr = 128, vcodec = "h264"),
-            // itag 36 videos are either 320x180 (BaW_jenozKc) or 320x240 (__2ABJjxzNo), abr varies as well
-            "36" to YtFormat(ext = "3gp", width = 320, acodec = "aac", vcodec = "mp4v"),
-            "37" to YtFormat(ext = "mp4", width = 4096, height = 3072, acodec = "aac", abr = 192, vcodec = "h264"),
-            "38" to YtFormat(ext = "mp4", width = 1920, height = 1080, acodec = "aac", abr = 192, vcodec = "h264"),
-            "43" to YtFormat(ext = "webm", width = 640, height = 360, acodec = "vorbis", abr = 128, vcodec = "vp8"),
-            "44" to YtFormat(ext = "webm", width = 854, height = 480, acodec = "vorbis", abr = 128, vcodec = "vp8"),
-            "45" to YtFormat(ext = "webm", width = 1280, height = 720, acodec = "vorbis", abr = 192, vcodec = "vp8"),
-            "46" to YtFormat(ext = "webm", width = 1920, height = 1080, acodec = "vorbis", abr = 192, vcodec = "vp8"),
-            "59" to YtFormat(ext = "mp4", width = 854, height = 480, acodec = "aac", abr = 128, vcodec = "h264"),
-            "78" to YtFormat(ext = "mp4", width = 854, height = 480, acodec = "aac", abr = 128, vcodec = "h264"),
+    sealed class Result {
+        class Success(
+                val id: String,
+                val title: String,
+                val channelTitle: String,
+                val duration: Int,
+                val formats: List<YtFormat>,
+        ) : Result()
 
-            // 3D videos
-            "82" to YtFormat(ext = "mp4", width = 360, formatNote = "3D", acodec = "aac", abr = 128, vcodec = "h264"),
-            "83" to YtFormat(ext = "mp4", width = 480, formatNote = "3D", acodec = "aac", abr = 128, vcodec = "h264"),
-            "84" to YtFormat(ext = "mp4", width = 720, formatNote = "3D", acodec = "aac", abr = 192, vcodec = "h264"),
-            "85" to YtFormat(ext = "mp4", width = 1080, formatNote = "3D", acodec = "aac", abr = 192, vcodec = "h264"),
-            "100" to YtFormat(ext = "webm", width = 360, formatNote = "3D", acodec = "vorbis", abr = 128, vcodec = "vp8"),
-            "101" to YtFormat(ext = "webm", width = 480, formatNote = "3D", acodec = "vorbis", abr = 192, vcodec = "vp8"),
-            "102" to YtFormat(ext = "webm", width = 720, formatNote = "3D", acodec = "vorbis", abr = 192, vcodec = "vp8"),
+        class Error(val errorCode: ErrorCode, val errorMessage: String) : Result()
+    }
 
-            // Apple HTTP Live Streaming
-            "91" to YtFormat(ext = "mp4", height = 144, formatNote = "HLS", acodec = "aac", abr = 48, vcodec = "h264"),
-            "92" to YtFormat(ext = "mp4", height = 240, formatNote = "HLS", acodec = "aac", abr = 48, vcodec = "h264"),
-            "93" to YtFormat(ext = "mp4", height = 360, formatNote = "HLS", acodec = "aac", abr = 128, vcodec = "h264"),
-            "94" to YtFormat(ext = "mp4", height = 480, formatNote = "HLS", acodec = "aac", abr = 128, vcodec = "h264"),
-            "95" to YtFormat(ext = "mp4", height = 720, formatNote = "HLS", acodec = "aac", abr = 256, vcodec = "h264"),
-            "96" to YtFormat(ext = "mp4", height = 1080, formatNote = "HLS", acodec = "aac", abr = 256, vcodec = "h264"),
-            "132" to YtFormat(ext = "mp4", height = 240, formatNote = "HLS", acodec = "aac", abr = 48, vcodec = "h264"),
-            "151" to YtFormat(ext = "mp4", height = 72, formatNote = "HLS", acodec = "aac", abr = 24, vcodec = "h264"),
-
-            // DASH mp4 video
-            "133" to YtFormat(ext = "mp4", height = 240, formatNote = "DASH video", vcodec = "h264"),
-            "134" to YtFormat(ext = "mp4", height = 360, formatNote = "DASH video", vcodec = "h264"),
-            "135" to YtFormat(ext = "mp4", height = 480, formatNote = "DASH video", vcodec = "h264"),
-            "136" to YtFormat(ext = "mp4", height = 720, formatNote = "DASH video", vcodec = "h264"),
-            "137" to YtFormat(ext = "mp4", height = 1080, formatNote = "DASH video", vcodec = "h264"),
-            "138" to YtFormat(ext = "mp4", formatNote = "DASH video", vcodec = "h264"), // Height can vary (https://github.com/ytdl-org/youtube-dl/issues/4559)
-            "160" to YtFormat(ext = "mp4", height = 144, formatNote = "DASH video", vcodec = "h264"),
-            "212" to YtFormat(ext = "mp4", height = 480, formatNote = "DASH video", vcodec = "h264"),
-            "264" to YtFormat(ext = "mp4", height = 1440, formatNote = "DASH video", vcodec = "h264"),
-            "298" to YtFormat(ext = "mp4", height = 720, formatNote = "DASH video", vcodec = "h264", fps = 60),
-            "299" to YtFormat(ext = "mp4", height = 1080, formatNote = "DASH video", vcodec = "h264", fps = 60),
-            "266" to YtFormat(ext = "mp4", height = 2160, formatNote = "DASH video", vcodec = "h264"),
-
-            // DASH mp4 audio
-            "139" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac", abr = 48),
-            "140" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac", abr = 128),
-            "141" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac", abr = 256),
-            "256" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac"),
-            "258" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac"),
-            "325" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "dtse"),
-            "328" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "ec-3"),
-
-            // DASH webm
-            "167" to YtFormat(ext = "webm", height = 360, width = 640, formatNote = "DASH video", vcodec = "vp8"),
-            "168" to YtFormat(ext = "webm", height = 480, width = 854, formatNote = "DASH video", vcodec = "vp8"),
-            "169" to YtFormat(ext = "webm", height = 720, width = 1280, formatNote = "DASH video", vcodec = "vp8"),
-            "170" to YtFormat(ext = "webm", height = 1080, width = 1920, formatNote = "DASH video", vcodec = "vp8"),
-            "218" to YtFormat(ext = "webm", height = 480, width = 854, formatNote = "DASH video", vcodec = "vp8"),
-            "219" to YtFormat(ext = "webm", height = 480, width = 854, formatNote = "DASH video", vcodec = "vp8"),
-            "278" to YtFormat(ext = "webm", height = 144, formatNote = "DASH video", vcodec = "vp9"),
-            "242" to YtFormat(ext = "webm", height = 240, formatNote = "DASH video", vcodec = "vp9"),
-            "243" to YtFormat(ext = "webm", height = 360, formatNote = "DASH video", vcodec = "vp9"),
-            "244" to YtFormat(ext = "webm", height = 480, formatNote = "DASH video", vcodec = "vp9"),
-            "245" to YtFormat(ext = "webm", height = 480, formatNote = "DASH video", vcodec = "vp9"),
-            "246" to YtFormat(ext = "webm", height = 480, formatNote = "DASH video", vcodec = "vp9"),
-            "247" to YtFormat(ext = "webm", height = 720, formatNote = "DASH video", vcodec = "vp9"),
-            "248" to YtFormat(ext = "webm", height = 1080, formatNote = "DASH video", vcodec = "vp9"),
-            "271" to YtFormat(ext = "webm", height = 1440, formatNote = "DASH video", vcodec = "vp9"),
-            // itag 272 videos are either 3840x2160 (e.g. RtoitU2A-3E) or 7680x4320 (sLprVF6d7Ug)
-            "272" to YtFormat(ext = "webm", height = 2160, formatNote = "DASH video", vcodec = "vp9"),
-            "302" to YtFormat(ext = "webm", height = 720, formatNote = "DASH video", vcodec = "vp9", fps = 60),
-            "303" to YtFormat(ext = "webm", height = 1080, formatNote = "DASH video", vcodec = "vp9", fps = 60),
-            "308" to YtFormat(ext = "webm", height = 1440, formatNote = "DASH video", vcodec = "vp9", fps = 60),
-            "313" to YtFormat(ext = "webm", height = 2160, formatNote = "DASH video", vcodec = "vp9"),
-            "315" to YtFormat(ext = "webm", height = 2160, formatNote = "DASH video", vcodec = "vp9", fps = 60),
-
-            // DASH webm audio
-            "171" to YtFormat(ext = "webm", acodec = "vorbis", formatNote = "DASH audio", abr = 128),
-            "172" to YtFormat(ext = "webm", acodec = "vorbis", formatNote = "DASH audio", abr = 256),
-
-            // DASH webm audio with opus inside
-            "249" to YtFormat(ext = "webm", formatNote = "DASH audio", acodec = "opus", abr = 50),
-            "250" to YtFormat(ext = "webm", formatNote = "DASH audio", acodec = "opus", abr = 70),
-            "251" to YtFormat(ext = "webm", formatNote = "DASH audio", acodec = "opus", abr = 160),
-
-            // RTMP
-            "rtmp" to YtFormat(protocol = "rtmp"),
-
-            // av01 video only formats sometimes served with "unknown" codecs
-            "394" to YtFormat(vcodec = "av01.0.05M.08"),
-            "395" to YtFormat(vcodec = "av01.0.05M.08"),
-            "396" to YtFormat(vcodec = "av01.0.05M.08"),
-            "397" to YtFormat(vcodec = "av01.0.05M.08")
-    )
-
-    internal class ExtractException(val msg: String?) : Exception()
+    internal class ExtractException(override val message: String) : Exception(message)
 
     enum class ErrorCode {
         NETWORK,
         NO_INFO,
-        JSON,
         RENTAL,
         RTMPE,
-        DRM,
-        UNEXPECTED
+        DRM
+    }
+
+    companion object {
+        @Volatile
+        private var INSTANCE: YouTubeExtractor? = null
+
+        @JvmStatic
+        fun getInstance(context: Context): YouTubeExtractor {
+            if (INSTANCE == null) {
+                synchronized(YouTubeExtractor::class.java) {
+                    if (INSTANCE == null) {
+                        INSTANCE = YouTubeExtractor(context)
+                    }
+                }
+            }
+            return INSTANCE!!
+        }
+
+        private const val TAG = "YouTubeExtractor"
+
+        private const val AGE_GATE_RE = """[\"\']status[\"\']\s*:\s*[\"\']LOGIN_REQUIRED"""
+
+        // language=RegExp
+        private val ASSETS_RE = arrayOf(
+                """<script[^>]+\bsrc=\"([^\"]+)\"[^>]+\bname=[\"\']player_ias/base""",
+                """\"jsUrl\"\s*:\s*\"([^\"]+)\"""",
+                """\"assets\":.+?\"js\":\s*\"([^\"]+)\""""
+        )
+        private const val AGE_GATE_ASSETS_RE = """ytplayer\.config.*?"url"\s*:\s*("[^"]+")"""
+
+        // language=RegExp
+        private val PlayerInfoRE = arrayOf(
+                """/(?<id>[a-zA-Z0-9_-]{8,})/player_ias\.vflset(?:/[a-zA-Z]{2,3}_[a-zA-Z]{2,3})?/base\.(?<ext>[a-z]+)$""",
+                """\b(?<id>vfl[a-zA-Z0-9_-]+)\b.*?\.(?<ext>[a-z]+)$"""
+        )
+
+        // language=RegExp
+        private val YT_INITIAL_PLAYER_RESPONSE_RE = arrayOf(
+                """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;""",
+                """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;\s*(?:var\s+meta|</script|\n)"""
+        )
+        private const val WH_RE = """^(?<width>\d+)[xX](?<height>\d+)$"""
+        private const val FILE_SIZE_RE = """\bclen[=/](\d+)"""
+        private const val CODECS_RE = """(?<key>[a-zA-Z_-]+)=(?<quote>[\"\']?)(?<val>.+?)(?=quote)(?:;|$)"""
+        private const val RATIO_RE = """<meta\s+property=\"og:video:tag\".*?content=\"yt:stretch=(?<w>[0-9]+):(?<h>[0-9]+)\">"""
+
+        // language=RegExp
+        private val JS_FN_RE = arrayOf(
+                """\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """(?:\b|[^a-zA-Z0-9$])(?<sig>[a-zA-Z0-9$]{2})\s*=\s*function\(\s*a\s*\)\s*\{\s*a\s*=\s*a\.split\(\s*""\s*\)""",
+                """(?<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*\{\s*a\s*=\s*a\.split\(\s*\"\"\s*\)""",
+                """(["\'])signature\1\s*,\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """\.sig\|\|(?<sig>[a-zA-Z0-9$]+)\(""",
+                """yt\.akamaized\.net/\)\s*\|\|\s*.*?\s*[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*(?:encodeURIComponent\s*\()?\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """\bc\s*&&\s*a\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\(""",
+                """\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?<sig>[a-zA-Z0-9$]+)\("""
+        )
+
+        private val FORMATS = arrayMapOf(
+                "5" to YtFormat(ext = "flv", width = 400, height = 240, acodec = "mp3", abr = 64, vcodec = "h263"),
+                "6" to YtFormat(ext = "flv", width = 450, height = 270, acodec = "mp3", abr = 64, vcodec = "h263"),
+                "13" to YtFormat(ext = "3gp", acodec = "aac", abr = 64, vcodec = "mp4v"),
+                "17" to YtFormat(ext = "3gp", width = 176, height = 144, acodec = "aac", abr = 24, vcodec = "mp4v"),
+                "18" to YtFormat(ext = "mp4", width = 640, height = 360, acodec = "aac", abr = 96, vcodec = "h264"),
+                "22" to YtFormat(ext = "mp4", width = 1280, height = 720, acodec = "aac", abr = 192, vcodec = "h264"),
+                "34" to YtFormat(ext = "flv", width = 640, height = 360, acodec = "aac", abr = 128, vcodec = "h264"),
+                "35" to YtFormat(ext = "flv", width = 854, height = 480, acodec = "aac", abr = 128, vcodec = "h264"),
+                // itag 36 videos are either 320x180 (BaW_jenozKc) or 320x240 (__2ABJjxzNo), abr varies as well
+                "36" to YtFormat(ext = "3gp", width = 320, acodec = "aac", vcodec = "mp4v"),
+                "37" to YtFormat(ext = "mp4", width = 4096, height = 3072, acodec = "aac", abr = 192, vcodec = "h264"),
+                "38" to YtFormat(ext = "mp4", width = 1920, height = 1080, acodec = "aac", abr = 192, vcodec = "h264"),
+                "43" to YtFormat(ext = "webm", width = 640, height = 360, acodec = "vorbis", abr = 128, vcodec = "vp8"),
+                "44" to YtFormat(ext = "webm", width = 854, height = 480, acodec = "vorbis", abr = 128, vcodec = "vp8"),
+                "45" to YtFormat(ext = "webm", width = 1280, height = 720, acodec = "vorbis", abr = 192, vcodec = "vp8"),
+                "46" to YtFormat(ext = "webm", width = 1920, height = 1080, acodec = "vorbis", abr = 192, vcodec = "vp8"),
+                "59" to YtFormat(ext = "mp4", width = 854, height = 480, acodec = "aac", abr = 128, vcodec = "h264"),
+                "78" to YtFormat(ext = "mp4", width = 854, height = 480, acodec = "aac", abr = 128, vcodec = "h264"),
+
+                // 3D videos
+                "82" to YtFormat(ext = "mp4", width = 360, formatNote = "3D", acodec = "aac", abr = 128, vcodec = "h264"),
+                "83" to YtFormat(ext = "mp4", width = 480, formatNote = "3D", acodec = "aac", abr = 128, vcodec = "h264"),
+                "84" to YtFormat(ext = "mp4", width = 720, formatNote = "3D", acodec = "aac", abr = 192, vcodec = "h264"),
+                "85" to YtFormat(ext = "mp4", width = 1080, formatNote = "3D", acodec = "aac", abr = 192, vcodec = "h264"),
+                "100" to YtFormat(ext = "webm", width = 360, formatNote = "3D", acodec = "vorbis", abr = 128, vcodec = "vp8"),
+                "101" to YtFormat(ext = "webm", width = 480, formatNote = "3D", acodec = "vorbis", abr = 192, vcodec = "vp8"),
+                "102" to YtFormat(ext = "webm", width = 720, formatNote = "3D", acodec = "vorbis", abr = 192, vcodec = "vp8"),
+
+                // Apple HTTP Live Streaming
+                "91" to YtFormat(ext = "mp4", height = 144, formatNote = "HLS", acodec = "aac", abr = 48, vcodec = "h264"),
+                "92" to YtFormat(ext = "mp4", height = 240, formatNote = "HLS", acodec = "aac", abr = 48, vcodec = "h264"),
+                "93" to YtFormat(ext = "mp4", height = 360, formatNote = "HLS", acodec = "aac", abr = 128, vcodec = "h264"),
+                "94" to YtFormat(ext = "mp4", height = 480, formatNote = "HLS", acodec = "aac", abr = 128, vcodec = "h264"),
+                "95" to YtFormat(ext = "mp4", height = 720, formatNote = "HLS", acodec = "aac", abr = 256, vcodec = "h264"),
+                "96" to YtFormat(ext = "mp4", height = 1080, formatNote = "HLS", acodec = "aac", abr = 256, vcodec = "h264"),
+                "132" to YtFormat(ext = "mp4", height = 240, formatNote = "HLS", acodec = "aac", abr = 48, vcodec = "h264"),
+                "151" to YtFormat(ext = "mp4", height = 72, formatNote = "HLS", acodec = "aac", abr = 24, vcodec = "h264"),
+
+                // DASH mp4 video
+                "133" to YtFormat(ext = "mp4", height = 240, formatNote = "DASH video", vcodec = "h264"),
+                "134" to YtFormat(ext = "mp4", height = 360, formatNote = "DASH video", vcodec = "h264"),
+                "135" to YtFormat(ext = "mp4", height = 480, formatNote = "DASH video", vcodec = "h264"),
+                "136" to YtFormat(ext = "mp4", height = 720, formatNote = "DASH video", vcodec = "h264"),
+                "137" to YtFormat(ext = "mp4", height = 1080, formatNote = "DASH video", vcodec = "h264"),
+                "138" to YtFormat(ext = "mp4", formatNote = "DASH video", vcodec = "h264"), // Height can vary (https://github.com/ytdl-org/youtube-dl/issues/4559)
+                "160" to YtFormat(ext = "mp4", height = 144, formatNote = "DASH video", vcodec = "h264"),
+                "212" to YtFormat(ext = "mp4", height = 480, formatNote = "DASH video", vcodec = "h264"),
+                "264" to YtFormat(ext = "mp4", height = 1440, formatNote = "DASH video", vcodec = "h264"),
+                "298" to YtFormat(ext = "mp4", height = 720, formatNote = "DASH video", vcodec = "h264", fps = 60),
+                "299" to YtFormat(ext = "mp4", height = 1080, formatNote = "DASH video", vcodec = "h264", fps = 60),
+                "266" to YtFormat(ext = "mp4", height = 2160, formatNote = "DASH video", vcodec = "h264"),
+
+                // DASH mp4 audio
+                "139" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac", abr = 48),
+                "140" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac", abr = 128),
+                "141" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac", abr = 256),
+                "256" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac"),
+                "258" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "aac"),
+                "325" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "dtse"),
+                "328" to YtFormat(ext = "m4a", formatNote = "DASH audio", acodec = "ec-3"),
+
+                // DASH webm
+                "167" to YtFormat(ext = "webm", height = 360, width = 640, formatNote = "DASH video", vcodec = "vp8"),
+                "168" to YtFormat(ext = "webm", height = 480, width = 854, formatNote = "DASH video", vcodec = "vp8"),
+                "169" to YtFormat(ext = "webm", height = 720, width = 1280, formatNote = "DASH video", vcodec = "vp8"),
+                "170" to YtFormat(ext = "webm", height = 1080, width = 1920, formatNote = "DASH video", vcodec = "vp8"),
+                "218" to YtFormat(ext = "webm", height = 480, width = 854, formatNote = "DASH video", vcodec = "vp8"),
+                "219" to YtFormat(ext = "webm", height = 480, width = 854, formatNote = "DASH video", vcodec = "vp8"),
+                "278" to YtFormat(ext = "webm", height = 144, formatNote = "DASH video", vcodec = "vp9"),
+                "242" to YtFormat(ext = "webm", height = 240, formatNote = "DASH video", vcodec = "vp9"),
+                "243" to YtFormat(ext = "webm", height = 360, formatNote = "DASH video", vcodec = "vp9"),
+                "244" to YtFormat(ext = "webm", height = 480, formatNote = "DASH video", vcodec = "vp9"),
+                "245" to YtFormat(ext = "webm", height = 480, formatNote = "DASH video", vcodec = "vp9"),
+                "246" to YtFormat(ext = "webm", height = 480, formatNote = "DASH video", vcodec = "vp9"),
+                "247" to YtFormat(ext = "webm", height = 720, formatNote = "DASH video", vcodec = "vp9"),
+                "248" to YtFormat(ext = "webm", height = 1080, formatNote = "DASH video", vcodec = "vp9"),
+                "271" to YtFormat(ext = "webm", height = 1440, formatNote = "DASH video", vcodec = "vp9"),
+                // itag 272 videos are either 3840x2160 (e.g. RtoitU2A-3E) or 7680x4320 (sLprVF6d7Ug)
+                "272" to YtFormat(ext = "webm", height = 2160, formatNote = "DASH video", vcodec = "vp9"),
+                "302" to YtFormat(ext = "webm", height = 720, formatNote = "DASH video", vcodec = "vp9", fps = 60),
+                "303" to YtFormat(ext = "webm", height = 1080, formatNote = "DASH video", vcodec = "vp9", fps = 60),
+                "308" to YtFormat(ext = "webm", height = 1440, formatNote = "DASH video", vcodec = "vp9", fps = 60),
+                "313" to YtFormat(ext = "webm", height = 2160, formatNote = "DASH video", vcodec = "vp9"),
+                "315" to YtFormat(ext = "webm", height = 2160, formatNote = "DASH video", vcodec = "vp9", fps = 60),
+
+                // DASH webm audio
+                "171" to YtFormat(ext = "webm", acodec = "vorbis", formatNote = "DASH audio", abr = 128),
+                "172" to YtFormat(ext = "webm", acodec = "vorbis", formatNote = "DASH audio", abr = 256),
+
+                // DASH webm audio with opus inside
+                "249" to YtFormat(ext = "webm", formatNote = "DASH audio", acodec = "opus", abr = 50),
+                "250" to YtFormat(ext = "webm", formatNote = "DASH audio", acodec = "opus", abr = 70),
+                "251" to YtFormat(ext = "webm", formatNote = "DASH audio", acodec = "opus", abr = 160),
+
+                // RTMP
+                "rtmp" to YtFormat(protocol = "rtmp"),
+
+                // av01 video only formats sometimes served with "unknown" codecs
+                "394" to YtFormat(vcodec = "av01.0.05M.08"),
+                "395" to YtFormat(vcodec = "av01.0.05M.08"),
+                "396" to YtFormat(vcodec = "av01.0.05M.08"),
+                "397" to YtFormat(vcodec = "av01.0.05M.08")
+        )
     }
 }

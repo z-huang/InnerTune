@@ -10,10 +10,10 @@ import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
 import com.zionhuang.music.R
+import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
-import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.extractor.YouTubeExtractor
 import com.zionhuang.music.utils.SafeLiveData
 import com.zionhuang.music.utils.SafeMutableLiveData
@@ -34,6 +34,8 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
     init {
         PRDownloader.initialize(context)
     }
+
+    private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
     private val notificationChannel = NotificationChannel(DOWNLOAD_CHANNEL_ID, context.getString(R.string.channel_name_download), NotificationManager.IMPORTANCE_DEFAULT)
     private val notificationManager = (context.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager).also {
@@ -75,7 +77,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
                 downloadState = STATE_DOWNLOADING
             }
             if (task.url == null) {
-                when (val extractResult = YouTubeExtractor.extract(task.id)) {
+                when (val extractResult = youTubeExtractor.extract(task.id)) {
                     is YouTubeExtractor.Result.Success -> {
                         val format = extractResult.formats.maxByOrNull { it.abr ?: 0 }
                                 ?: return@launch songRepository.updateById(task.id) {
