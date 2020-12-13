@@ -5,13 +5,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.zionhuang.music.db.daos.ArtistDao
+import com.zionhuang.music.db.daos.ChannelDao
 import com.zionhuang.music.db.daos.SongDao
+import com.zionhuang.music.db.entities.ArtistEntity
+import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.SongEntity
 
-@Database(entities = [SongEntity::class], version = 1)
+@Database(entities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class MusicDatabase : RoomDatabase() {
     abstract val songDao: SongDao
+    abstract val artistDao: ArtistDao
+    abstract val channelDao: ChannelDao
 
     companion object {
         private const val DBNAME = "song.db"

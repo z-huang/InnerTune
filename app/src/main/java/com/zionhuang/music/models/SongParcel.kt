@@ -1,74 +1,25 @@
-package com.zionhuang.music.models;
+package com.zionhuang.music.models
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Parcelable
+import com.google.api.services.youtube.model.SearchResult
+import com.google.api.services.youtube.model.Video
+import com.zionhuang.music.db.entities.Song
+import kotlinx.android.parcel.Parcelize
 
-import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Video;
-import com.zionhuang.music.db.entities.SongEntity;
-
-public class SongParcel implements Parcelable {
-    private String id;
-    private String title;
-    private String artist;
-
-    public SongParcel(String id, String title, String artist) {
-        this.id = id;
-        this.title = title;
-        this.artist = artist;
-    }
-
-    public static SongParcel fromSongEntity(SongEntity song) {
-        return new SongParcel(song.getId(), song.getTitle(), song.getArtist());
-    }
-
-    public static SongParcel fromVideo(Video video) {
-        return new SongParcel(video.getId(), video.getSnippet().getTitle(), video.getSnippet().getChannelTitle());
-    }
-
-    public static SongParcel fromSearchResult(SearchResult item) {
-        if (!"youtube#video".equals(item.getId().getKind())) {
-            throw new IllegalArgumentException("Can't convert a " + item.getId().getKind() + " item to SongParcel.");
-        }
-        return new SongParcel(item.getId().getVideoId(), item.getSnippet().getTitle(), item.getSnippet().getChannelTitle());
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(title);
-        dest.writeString(artist);
-    }
-
-    public static final Parcelable.Creator<SongParcel> CREATOR = new Creator<SongParcel>() {
-        @Override
-        public SongParcel createFromParcel(Parcel source) {
-            String id = source.readString();
-            String name = source.readString();
-            String artist = source.readString();
-            return new SongParcel(id, name, artist);
+@Parcelize
+class SongParcel(val id: String, val title: String?, val artist: String?) : Parcelable {
+    companion object {
+        fun fromSong(song: Song): SongParcel {
+            return SongParcel(song.id, song.title, song.artistName)
         }
 
-        @Override
-        public SongParcel[] newArray(int size) {
-            return new SongParcel[size];
+        fun fromVideo(video: Video): SongParcel {
+            return SongParcel(video.id, video.snippet.title, video.snippet.channelTitle)
         }
-    };
+
+        fun fromSearchResult(item: SearchResult): SongParcel {
+            require("youtube#video" == item.id.kind) { "Can't convert a " + item.id.kind + " item to SongParcel." }
+            return SongParcel(item.id.videoId, item.snippet.title, item.snippet.channelTitle)
+        }
+    }
 }

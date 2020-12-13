@@ -56,7 +56,7 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
                 exploreAdapter.retry()
             })
             addOnClickListener { pos, _ ->
-                val video = exploreAdapter.getItemByPosition(pos)
+                val video = exploreAdapter.getItemByPosition(pos)!!
                 playbackViewModel.playMedia(SongParcel.fromVideo(video), Queue.QUEUE_SINGLE)
             }
         }

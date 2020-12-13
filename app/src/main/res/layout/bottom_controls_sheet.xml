@@ -105,11 +105,11 @@
                 app:use_controller="false" />
         </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
 
-        <ProgressBar
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            app:trackThickness="2dp"
             android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             app:layout_constraintBottom_toTopOf="@id/top_bar_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

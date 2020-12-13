@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.google.api.services.youtube.model.SearchResult
 import com.zionhuang.music.db.RemoteDatabase
-import com.zionhuang.music.db.toSearchEntity
+import com.zionhuang.music.db.entities.toSearchEntity
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)

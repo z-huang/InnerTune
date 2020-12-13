@@ -29,7 +29,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
-                playbackViewModel.playMedia(SongParcel.fromSongEntity(songsAdapter.getItemByPosition(pos)), Queue.QUEUE_ALL_SONG)
+                playbackViewModel.playMedia(SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!), Queue.QUEUE_ALL_SONG)
             }
         }
         lifecycleScope.launch {

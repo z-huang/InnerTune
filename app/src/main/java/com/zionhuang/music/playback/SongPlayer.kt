@@ -20,6 +20,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNoti
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.DOWNLOAD_MUSIC_INTENT
@@ -135,6 +136,20 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                             putString(METADATA_KEY_ARTIST, result.channelTitle)
                             putLong(METADATA_KEY_DURATION, result.duration * 1000.toLong())
                         }.build())
+                        if (!songRepository.hasSong(result.id)) {
+                            if (!songRepository.hasChannel(result.channelId)) {
+                                songRepository.insertChannel(ChannelEntity(id = result.channelId, name = result.channelTitle))
+                            }
+                            songRepository.insert(SongEntity(
+                                    id = result.id,
+                                    title = result.title,
+                                    // use channel title as artist name temporarily
+                                    artistId = songRepository.getArtistIdByName(result.channelTitle)
+                                            ?: songRepository.insertArtist(result.channelTitle).toInt(),
+                                    channelId = result.channelId,
+                                    duration = result.duration
+                            ))
+                        }
                         result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
                             Log.d(TAG, "Song url: ${format.url}")
                             musicPlayer.setSource(Uri.parse(format.url))
@@ -149,12 +164,6 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                                 })
                             }
                         }
-                        songRepository.insert(SongEntity(
-                                id = result.id,
-                                title = result.title,
-                                artist = result.channelTitle,
-                                duration = result.duration
-                        ))
                     }
                     is YouTubeExtractor.Result.Error -> {
                         Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")

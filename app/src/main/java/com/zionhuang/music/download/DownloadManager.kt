@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.downloader.Error
 import com.downloader.OnDownloadListener
@@ -15,8 +14,6 @@ import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.extractor.YouTubeExtractor
-import com.zionhuang.music.utils.SafeLiveData
-import com.zionhuang.music.utils.SafeMutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -40,14 +37,14 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
     private val notificationChannel = NotificationChannel(DOWNLOAD_CHANNEL_ID, context.getString(R.string.channel_name_download), NotificationManager.IMPORTANCE_DEFAULT)
     private val notificationManager = (context.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager).also {
         it.createNotificationChannel(notificationChannel)
-        it.notify(DOWNLOAD_SUMMARY_ID, NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_round_music_note_24)
-                .setStyle(NotificationCompat.InboxStyle())
-                .setContentTitle("DL")
-                .setGroup(DOWNLOAD_GROUP_KEY)
-                .setGroupSummary(true)
-                .build())
     }
+    private val summaryNotification = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_round_music_note_24)
+            .setStyle(NotificationCompat.InboxStyle())
+            .setGroup(DOWNLOAD_GROUP_KEY)
+            .setGroupSummary(true)
+            .build()
+
     private var notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
 
     private val songRepository = SongRepository(context)
@@ -63,12 +60,6 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
     }
 
     private val tasks = ArrayList<DownloadTask>()
-    private val _tasksLiveData = SafeMutableLiveData<List<DownloadTask>>(tasks)
-    val tasksLiveData: SafeLiveData<List<DownloadTask>>
-        get() {
-            Log.d(TAG, _tasksLiveData.value.toString())
-            return _tasksLiveData
-        }
 
     fun addDownload(task: DownloadTask) {
         tasks += task
@@ -117,7 +108,6 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             setContentText("Preparing to download...")
             setProgress(0, 0, true)
         }
-        _tasksLiveData.postValue(tasks)
         listeners.forEach { it(task) }
     }
 
@@ -129,7 +119,6 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
                 downloadState = STATE_DOWNLOADED
             }
         }
-        _tasksLiveData.postValue(tasks)
         listeners.forEach { it(task) }
     }
 
@@ -154,7 +143,6 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             setContentText("Downloading...")
             setProgress(totalBytes.toInt(), currentBytes.toInt(), false)
         }
-        _tasksLiveData.postValue(tasks)
         listeners.forEach { it(task) }
     }
 
@@ -164,5 +152,6 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
                 .setOngoing(true)
                 .setGroup(DOWNLOAD_GROUP_KEY))
         notificationManager.notify(id, notificationBuilder.build())
+        notificationManager.notify(DOWNLOAD_SUMMARY_ID, summaryNotification)
     }
 }

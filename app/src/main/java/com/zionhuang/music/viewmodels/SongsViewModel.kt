@@ -14,8 +14,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadListener
 import com.zionhuang.music.download.DownloadManager
 import com.zionhuang.music.download.DownloadService
@@ -28,13 +28,13 @@ import kotlinx.coroutines.launch
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
     private val songRepository: SongRepository = SongRepository(application)
 
-    val allSongsFlow: Flow<PagingData<SongEntity>> by lazy {
+    val allSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
             songRepository.getAllSongsAsPagingSource()
         }.flow.cachedIn(viewModelScope)
     }
 
-    val downloadingSongsFlow: Flow<PagingData<SongEntity>> by lazy {
+    val downloadingSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
             songRepository.getDownloadingSongsAsPagingSource()
         }.flow.cachedIn(viewModelScope)
@@ -52,9 +52,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             })
         }
 
-        override fun deleteSong(song: SongEntity) {
+        override fun deleteSong(songId: String) {
             viewModelScope.launch {
-                songRepository.deleteSong(song)
+                songRepository.deleteSongById(songId)
             }
         }
     }

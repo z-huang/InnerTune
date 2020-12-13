@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "artist",
+@Entity(tableName = "channel",
         indices = [Index(value = ["id"], unique = true)])
-data class ArtistEntity(
-        @PrimaryKey(autoGenerate = true) val id: Int? = null,
-        val name: String,
+data class ChannelEntity(
+        @PrimaryKey val id: String,
+        val name: String
 )

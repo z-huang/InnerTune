@@ -44,7 +44,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
         return res
     }
 
-    private suspend fun realExtract(videoId: String): Result = withContext(Dispatchers.Default) {
+    private suspend fun realExtract(videoId: String): Result = withContext(Dispatchers.Default) extraction@{
         debug = { msg ->
             Log.d(TAG, "[$videoId] $msg")
         }
@@ -53,7 +53,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
             debug("Download web page")
             downloadWebPage("https://www.youtube.com/watch?v=$videoId&gl=US&hl=en&has_verified=1&bpctr=9999999999")
         } catch (e: IOException) {
-            return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the web page of the video")
+            return@extraction Result.Error(ErrorCode.NETWORK, "Unable to download the web page of the video")
         }
 
         var playerUrl: String? = null
@@ -72,6 +72,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
 
         val ageGate: Boolean = videoWebPage.find(AGE_GATE_RE) != null
         debug("Age gate: ${if (ageGate) "true" else "false"}")
+
         var videoInfo: JsonObject? = null
         var embedWebPage: String? = null
         if (ageGate) {
@@ -79,13 +80,13 @@ class YouTubeExtractor private constructor(private val context: Context) {
                 debug("Download embed web page")
                 downloadWebPage("https://www.youtube.com/embed/$videoId")
             } catch (e: IOException) {
-                return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the embed web page of the video")
+                return@extraction Result.Error(ErrorCode.NETWORK, "Unable to download the embed web page of the video")
             }
             val videoInfoWebPage = try {
                 debug("Download video info")
                 downloadWebPage("""https://www.youtube.com/get_video_info?video_id=$videoId&eurl=https%3A%2F%2Fyoutube.googleapis.com%2Fv%2F$videoId&sts=${embedWebPage?.find("\"sts\"\\s*:\\s*(\\d+)") ?: ""}""")
             } catch (e: IOException) {
-                return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the info of the video")
+                return@extraction Result.Error(ErrorCode.NETWORK, "Unable to download the info of the video")
             }
             videoInfo = videoInfoWebPage.parseQueryString()
             playerResponse = extractPlayerResponse(videoInfo["player_response"].asStringOrNull)
@@ -100,7 +101,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
                 }
                 if (videoInfo == null && "ypc_vid" in args) {
                     debug("Rental video")
-                    return@withContext Result.Error(ErrorCode.RENTAL, "Rental video not supported")
+                    return@extraction Result.Error(ErrorCode.RENTAL, "Rental video not supported")
                 }
                 if (args["livestream"].asStringOrNull == "1" || args["live_playback"].asNumberOrNull == 1) {
                     isLive = true
@@ -114,7 +115,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
 
         if (videoInfo == null && playerResponse == null) {
             playerResponse = extractPlayerResponse(videoWebPage.search(YT_INITIAL_PLAYER_RESPONSE_RE))
-                    ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Unable to extract video data")
+                    ?: return@extraction Result.Error(ErrorCode.NO_INFO, "Unable to extract video data")
         }
 
         val videoDetails = playerResponse["videoDetails"].asJsonObjectOrNull
@@ -209,7 +210,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
                                     debug("Download embed web page")
                                     downloadWebPage("https://www.youtube.com/embed/$videoId")
                                 } catch (e: IOException) {
-                                    return@withContext Result.Error(ErrorCode.NETWORK, "Unable to download the embed web page of the video")
+                                    return@extraction Result.Error(ErrorCode.NETWORK, "Unable to download the embed web page of the video")
                                 }
                             }
                             jsPlayerJson = embedWebPage?.search(ASSETS_RE)
@@ -257,13 +258,15 @@ class YouTubeExtractor private constructor(private val context: Context) {
 
         val videoTitle = videoInfo["title"].asStringOrNull
                 ?: videoDetails["title"].asStringOrNull
-                ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Can't extract video title")
+                ?: return@extraction Result.Error(ErrorCode.NO_INFO, "Can't extract video title")
+        val channelId = videoDetails["channelId"].asStringOrNull
+                ?: return@extraction Result.Error(ErrorCode.NO_INFO, "Can't extract channel id")
         val channelTitle = videoInfo["author"].asStringOrNull
                 ?: videoDetails["author"].asStringOrNull
-                ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Can't extract channel title")
+                ?: return@extraction Result.Error(ErrorCode.NO_INFO, "Can't extract channel title")
         val duration = videoInfo["length_seconds"].asIntOrNull
                 ?: videoDetails["lengthSeconds"].asIntOrNull
-                ?: return@withContext Result.Error(ErrorCode.NO_INFO, "Can't extract video duration")
+                ?: return@extraction Result.Error(ErrorCode.NO_INFO, "Can't extract video duration")
 
         // TODO: look for DASH manifest
 
@@ -287,19 +290,14 @@ class YouTubeExtractor private constructor(private val context: Context) {
         Result.Success(
                 id = videoId,
                 title = videoTitle,
+                channelId = channelId,
                 channelTitle = channelTitle,
                 duration = duration,
                 formats = formats
         )
     }
 
-    private fun getYtPlayerConfig(videoWebPage: String): JsonObject? {
-        val patterns = arrayOf(
-                """;ytplayer\.config\s*=\s*(\{.+?\});ytplayer""",
-                """;ytplayer\.config\s*=\s*(\{.+?\});"""
-        )
-        return videoWebPage.search(patterns)?.parseJsonString().asJsonObjectOrNull
-    }
+    private fun getYtPlayerConfig(videoWebPage: String): JsonObject? = videoWebPage.search(YT_PLAYER_CONFIG_RE)?.parseJsonString().asJsonObjectOrNull
 
     private fun parseSigJs(jsCode: String): SignatureFunctionKt {
         val funcName = jsCode.find(JS_FN_RE, "sig")
@@ -411,6 +409,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
         class Success(
                 val id: String,
                 val title: String,
+                val channelId: String,
                 val channelTitle: String,
                 val duration: Int,
                 val formats: List<YtFormat>,
@@ -448,6 +447,12 @@ class YouTubeExtractor private constructor(private val context: Context) {
         private const val TAG = "YouTubeExtractor"
 
         private const val AGE_GATE_RE = """[\"\']status[\"\']\s*:\s*[\"\']LOGIN_REQUIRED"""
+
+        // language=RegExp
+        private val YT_PLAYER_CONFIG_RE = arrayOf(
+                """;ytplayer\.config\s*=\s*(\{.+?\});ytplayer""",
+                """;ytplayer\.config\s*=\s*(\{.+?\});"""
+        )
 
         // language=RegExp
         private val ASSETS_RE = arrayOf(

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSongBinding
-import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
@@ -15,7 +15,7 @@ import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
-class SongsAdapter(val popupMenuListener: SongPopupMenuListener, val downloadHandler: DownloadHandler) : PagingDataAdapter<SongEntity, SongsAdapter.SongViewHolder>(ItemComparator()) {
+class SongsAdapter(val popupMenuListener: SongPopupMenuListener, val downloadHandler: DownloadHandler) : PagingDataAdapter<Song, SongsAdapter.SongViewHolder>(ItemComparator()) {
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
     }
@@ -23,17 +23,17 @@ class SongsAdapter(val popupMenuListener: SongPopupMenuListener, val downloadHan
     override fun onBindViewHolder(holder: SongViewHolder, position: Int, payloads: List<Any>) {
         when {
             payloads.isEmpty() -> getItem(position)?.let { holder.bind(it) }
-            else -> holder.bind(payloads.last() as SongEntity)
+            else -> holder.bind(payloads.last() as Song)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder =
             SongViewHolder(parent.inflateWithBinding(R.layout.item_song))
 
-    fun getItemByPosition(position: Int): SongEntity? = getItem(position)
+    fun getItemByPosition(position: Int): Song? = getItem(position)
 
     inner class SongViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(song: SongEntity) {
+        fun bind(song: Song) {
             binding.song = song
             binding.btnMoreAction.setOnClickListener { view ->
                 PopupMenu(view.context, view).apply {
@@ -41,7 +41,7 @@ class SongsAdapter(val popupMenuListener: SongPopupMenuListener, val downloadHan
                         when (it.itemId) {
                             R.id.action_edit -> popupMenuListener.editSong(song.id, view)
                             R.id.action_download -> popupMenuListener.downloadSong(song.id, view.context)
-                            R.id.action_delete -> popupMenuListener.deleteSong(song)
+                            R.id.action_delete -> popupMenuListener.deleteSong(song.id)
                         }
                         true
                     }
@@ -69,10 +69,10 @@ class SongsAdapter(val popupMenuListener: SongPopupMenuListener, val downloadHan
         holder.binding.song?.id?.let { downloadHandler.remove(it) }
     }
 
-    internal class ItemComparator : DiffUtil.ItemCallback<SongEntity>() {
-        override fun areItemsTheSame(oldItem: SongEntity, newItem: SongEntity): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: SongEntity, newItem: SongEntity): Boolean = oldItem == newItem
-        override fun getChangePayload(oldItem: SongEntity, newItem: SongEntity): SongEntity = newItem
+    internal class ItemComparator : DiffUtil.ItemCallback<Song>() {
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
+        override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem
     }
 
 }

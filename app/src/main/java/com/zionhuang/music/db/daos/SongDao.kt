@@ -2,6 +2,7 @@ package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import kotlinx.coroutines.flow.Flow
@@ -10,14 +11,17 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 @Dao
 interface SongDao {
 
+    @Query("SELECT * FROM song")
+    fun getAllXSongs(): List<Song>
+
     @Query("SELECT * FROM song ORDER BY create_date DESC")
     fun getAllSongsAsFlow(): Flow<List<SongEntity>>
 
     @Query("SELECT * FROM song ORDER BY create_date DESC")
-    fun getAllSongsAsPagingSource(): PagingSource<Int, SongEntity>
+    fun getAllSongsAsPagingSource(): PagingSource<Int, Song>
 
     @Query("SELECT * FROM song WHERE download_state=$STATE_DOWNLOADING")
-    fun getDownloadingSongsAsPagingSource(): PagingSource<Int, SongEntity>
+    fun getDownloadingSongsAsPagingSource(): PagingSource<Int, Song>
 
     @Query("SELECT * FROM song WHERE id = :songId")
     fun getSongById(songId: String): SongEntity?
@@ -36,4 +40,9 @@ interface SongDao {
     @Delete
     suspend fun delete(vararg songs: SongEntity)
 
+    @Query("DELETE FROM song WHERE id = :songId")
+    suspend fun deleteById(songId: String)
+
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
+    suspend fun contains(songId: String): Boolean
 }

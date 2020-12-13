@@ -9,6 +9,7 @@ import androidx.room.TypeConverters;
 
 import com.zionhuang.music.db.daos.RemoteDao;
 import com.zionhuang.music.db.entities.RemoteKey;
+import com.zionhuang.music.db.entities.SearchEntity;
 
 @Database(entities = {RemoteKey.class, SearchEntity.class}, version = 1)
 @TypeConverters({Converters.class})

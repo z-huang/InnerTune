@@ -7,7 +7,7 @@
 
         <variable
             name="song"
-            type="com.zionhuang.music.db.entities.SongEntity" />
+            type="com.zionhuang.music.db.entities.Song" />
 
         <import type="com.zionhuang.music.download.DownloadTask" />
 
@@ -94,7 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:text="@{song.artist}"
+                    android:text="@{song.artistName}"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Song Artist" />
