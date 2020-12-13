@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentLibraryBinding
 import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.ui.fragments.songs.ArtistsFragment
 import com.zionhuang.music.ui.fragments.songs.DownloadFragment
 import com.zionhuang.music.ui.fragments.songs.SongsFragment
 import java.util.*
@@ -29,6 +30,7 @@ class LibraryFragment : MainFragment<FragmentLibraryBinding>(showTabs = true) {
         val libraryAdapter = LibraryAdapter(childFragmentManager).apply {
             addFragment(SongsFragment(), "All Songs")
             addFragment(DownloadFragment(), "Downloads")
+            addFragment(ArtistsFragment(), "Artists")
         }
         binding.viewpager.apply {
             adapter = libraryAdapter

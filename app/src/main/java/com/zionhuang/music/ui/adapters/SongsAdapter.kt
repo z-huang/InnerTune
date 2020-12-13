@@ -74,5 +74,4 @@ class SongsAdapter(val popupMenuListener: SongPopupMenuListener, val downloadHan
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem
     }
-
 }

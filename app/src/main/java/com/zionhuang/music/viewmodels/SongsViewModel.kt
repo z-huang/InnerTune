@@ -15,6 +15,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadListener
 import com.zionhuang.music.download.DownloadManager
@@ -37,6 +38,12 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val downloadingSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
             songRepository.getDownloadingSongsAsPagingSource()
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    val allArtistsFlow: Flow<PagingData<ArtistEntity>> by lazy {
+        Pager(PagingConfig(pageSize = 50)) {
+            songRepository.getAllArtists()
         }.flow.cachedIn(viewModelScope)
     }
 

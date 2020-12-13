@@ -10,10 +10,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Dao
 interface SongDao {
-
-    @Query("SELECT * FROM song")
-    fun getAllXSongs(): List<Song>
-
     @Query("SELECT * FROM song ORDER BY create_date DESC")
     fun getAllSongsAsFlow(): Flow<List<SongEntity>>
 
