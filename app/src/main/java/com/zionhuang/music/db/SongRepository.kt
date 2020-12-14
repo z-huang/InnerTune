@@ -21,11 +21,11 @@ class SongRepository(context: Context) {
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val channelDao: ChannelDao = musicDatabase.channelDao
 
-    fun getAllSongsAsFlow() = songDao.getAllSongsAsFlow()
-
-    fun getAllSongsAsPagingSource() = songDao.getAllSongsAsPagingSource()
-
-    fun getDownloadingSongsAsPagingSource() = songDao.getDownloadingSongsAsPagingSource()
+    val allSongsAsFlow get() = songDao.getAllSongsAsFlow()
+    val allSongsAsPagingSource get() = songDao.getAllSongsAsPagingSource()
+    val downloadingSongsAsPagingSource get() = songDao.getDownloadingSongsAsPagingSource()
+    val allArtists get() = artistDao.getAllArtistsAsPagingSource()
+    val allChannels get() = channelDao.getAllChannelsAsPagingSource()
 
     suspend fun getSongById(id: String): SongEntity? = withContext(IO) { songDao.getSongById(id) }
 
@@ -45,7 +45,6 @@ class SongRepository(context: Context) {
 
     suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }
 
-    fun getAllArtists() = artistDao.getAllArtistsAsPagingSource()
 
     suspend fun getArtistIdByName(name: String) = withContext(IO) { artistDao.getArtistIdByName(name) }
 

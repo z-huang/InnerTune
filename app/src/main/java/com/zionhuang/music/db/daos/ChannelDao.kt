@@ -1,5 +1,6 @@
 package com.zionhuang.music.db.daos
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -8,6 +9,9 @@ import com.zionhuang.music.db.entities.ChannelEntity
 
 @Dao
 interface ChannelDao {
+    @Query("SELECT * FROM channel")
+    fun getAllChannelsAsPagingSource(): PagingSource<Int, ChannelEntity>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(channel: ChannelEntity): Long
 

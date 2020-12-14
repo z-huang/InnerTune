@@ -3,11 +3,15 @@
     <string name="title_library">Library</string>
     <string name="title_explore">Explore</string>
     <string name="title_settings">Settings</string>
-    <string name="search">Search</string>
-    <string name="history">History</string>
+    <string name="library_tab_downloading">Downloading</string>
+    <string name="library_tab_all_song">All Songs</string>
+    <string name="library_tab_artists">Artists</string>
+    <string name="library_tab_channels">Channels</string>
+    <string name="menu_search_title">Search</string>
     <string name="search_item_menu_add">Add to list</string>
     <string name="search_item_menu_download">Download</string>
     <string name="menu_song_edit">Edit</string>
+    <string name="menu_song_delete">Delete</string>
     <string name="song_title">Song Title</string>
     <string name="song_artist">Song Artist</string>
     <string name="channel_name_playback">Music Player</string>
@@ -19,5 +23,4 @@
     <string name="menu_song_download">Download</string>
     <string name="pref_auto_download">Auto download</string>
     <string name="pref_auto_download_summary">Auto download song when playing</string>
-    <string name="menu_song_delete">Delete</string>
 </resources>

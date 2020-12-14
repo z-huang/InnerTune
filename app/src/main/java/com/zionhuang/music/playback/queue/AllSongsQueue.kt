@@ -15,14 +15,14 @@ class AllSongsQueue(songsRepository: SongRepository, scope: CoroutineScope) : Qu
         const val TAG = "AllSongsQueue"
     }
 
-    private val songsFlow = songsRepository.getAllSongsAsFlow()
+    private val songsFlow = songsRepository.allSongsAsFlow
 
     init {
         runBlocking {
             list = songsFlow.first()
         }
         scope.launch(Dispatchers.IO) {
-            songsRepository.getAllSongsAsFlow().collect { l ->
+            songsRepository.allSongsAsFlow.collect { l ->
                 index = l.indexOfFirst { it.id == list[index].id }
                 list = l
             }
