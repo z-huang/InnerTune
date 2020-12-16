@@ -7,7 +7,7 @@
 
         <variable
             name="song"
-            type="com.zionhuang.music.db.entities.SongEntity" />
+            type="com.zionhuang.music.db.entities.Song" />
     </data>
 
     <LinearLayout
@@ -28,7 +28,7 @@
             tools:src="@drawable/ic_round_music_note_24" />
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/song_title"
@@ -44,18 +44,19 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/song_artist"
             app:startIconDrawable="@drawable/ic_round_person_24">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.zionhuang.music.ui.widgets.InstantAutoCompleteTextView
                 android:id="@+id/songArtist_textField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:text="@{song.artist}"
+                android:completionThreshold="1"
+                android:singleLine="true"
+                android:text="@{song.artistName}"
                 tools:text="Song Artist" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>

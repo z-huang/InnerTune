@@ -1,6 +1,7 @@
 package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -18,9 +19,7 @@ import com.zionhuang.music.ui.fragments.songs.DownloadFragment
 import com.zionhuang.music.ui.fragments.songs.SongsFragment
 
 class LibraryFragment : MainFragment<FragmentLibraryBinding>(showTabs = true) {
-    companion object {
-        private const val TAG = "LibraryFragment"
-    }
+    private lateinit var tabLayoutMediator: TabLayoutMediator
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,20 +27,21 @@ class LibraryFragment : MainFragment<FragmentLibraryBinding>(showTabs = true) {
     }
 
     private fun setupViewPager() {
-        val libraryAdapter2 = LibraryAdapter2(this).apply {
+        Log.d(TAG, "setup viewpager")
+        val libraryAdapter = LibraryAdapter(this).apply {
             addFragment(DownloadFragment(), R.string.library_tab_downloading)
             addFragment(SongsFragment(), R.string.library_tab_all_song)
             addFragment(ArtistsFragment(), R.string.library_tab_artists)
             addFragment(ChannelsFragment(), R.string.library_tab_channels)
         }
         binding.viewpager2.apply {
-            adapter = libraryAdapter2
+            adapter = libraryAdapter
             offscreenPageLimit = 1
             currentItem = 1
         }
-        TabLayoutMediator(tabLayout, binding.viewpager2) { tab, position ->
-            tab.setText(libraryAdapter2.getTitle(position))
-        }.attach()
+        tabLayoutMediator = TabLayoutMediator(tabLayout, binding.viewpager2) { tab, position ->
+            tab.setText(libraryAdapter.getTitle(position))
+        }.apply { attach() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -53,7 +53,7 @@ class LibraryFragment : MainFragment<FragmentLibraryBinding>(showTabs = true) {
         return true
     }
 
-    private class LibraryAdapter2(fragment: Fragment) : FragmentStateAdapter(fragment) {
+    private class LibraryAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
         private val pages = mutableListOf<Page>()
 
         fun addFragment(fragment: Fragment, @StringRes titleResId: Int) {
@@ -67,5 +67,9 @@ class LibraryFragment : MainFragment<FragmentLibraryBinding>(showTabs = true) {
         override fun getItemCount(): Int = pages.size
 
         inner class Page(val fragment: Fragment, @StringRes val titleResId: Int)
+    }
+
+    companion object {
+        private const val TAG = "LibraryFragment"
     }
 }

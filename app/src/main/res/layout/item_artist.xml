@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/song_item_height"
         android:background="?android:selectableItemBackground"
-        android:clickable="true"
         android:orientation="vertical">
 
         <LinearLayout

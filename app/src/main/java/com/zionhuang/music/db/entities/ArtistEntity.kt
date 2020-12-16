@@ -9,4 +9,6 @@ import androidx.room.PrimaryKey
 data class ArtistEntity(
         @PrimaryKey(autoGenerate = true) val id: Int? = null,
         val name: String,
-)
+) {
+    override fun toString(): String = name
+}

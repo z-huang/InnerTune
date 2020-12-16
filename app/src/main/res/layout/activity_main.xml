@@ -48,6 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    app:tabContentStart="56dp"
                     app:tabIndicatorFullWidth="false"
                     app:tabMode="scrollable"
                     app:tabRippleColor="@null" />

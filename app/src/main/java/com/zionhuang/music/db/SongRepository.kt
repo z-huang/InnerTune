@@ -6,12 +6,13 @@ import com.zionhuang.music.db.daos.ChannelDao
 import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import java.io.File
 
-class SongRepository(context: Context) {
+class SongRepository(private val context: Context) {
     companion object {
         private const val TAG = "SongRepository"
     }
@@ -23,30 +24,41 @@ class SongRepository(context: Context) {
 
     val allSongsAsFlow get() = songDao.getAllSongsAsFlow()
     val allSongsAsPagingSource get() = songDao.getAllSongsAsPagingSource()
-    val downloadingSongsAsPagingSource get() = songDao.getDownloadingSongsAsPagingSource()
-    val allArtists get() = artistDao.getAllArtistsAsPagingSource()
+    val downloadingSongsPagingSource get() = songDao.getDownloadingSongsAsPagingSource()
+    val allArtistsPagingSource get() = artistDao.getAllArtistsAsPagingSource()
+    val allArtists get() = artistDao.getAllArtists()
     val allChannels get() = channelDao.getAllChannelsAsPagingSource()
 
-    suspend fun getSongById(id: String): SongEntity? = withContext(IO) { songDao.getSongById(id) }
+    suspend fun getSongEntityById(id: String) = withContext(IO) { songDao.getSongEntityById(id) }
 
-    fun getSongAsFlow(songId: String): Flow<SongEntity> = songDao.getSongByIdAsFlowDistinct(songId)
+    suspend fun getSongById(id: String) = withContext(IO) { songDao.getSongById(id) }
+
+    fun getSongAsFlow(songId: String) = songDao.getSongByIdAsFlowDistinct(songId)
+
+    fun getArtistSongsAsPagingSource(artistId: Int) = songDao.getArtistSongsAsPagingSource(artistId)
 
     suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
+    suspend fun insert(song: Song) = withContext(IO) { songDao.insert(SongEntity(song.id, song.title, song.artistId, song.channelId, song.duration, song.liked, song.downloadState, song.createDate, song.modifyDate)) }
 
     suspend fun updateById(songId: String, applier: SongEntity.() -> Unit) = withContext(IO) {
-        songDao.update(getSongById(songId)!!.apply {
+        songDao.update(getSongEntityById(songId)!!.apply {
             applier(this)
         })
     }
 
-    suspend fun deleteSong(song: SongEntity) = withContext(IO) { songDao.delete(song) }
-
-    suspend fun deleteSongById(songId: String) = withContext(IO) { songDao.deleteById(songId) }
+    suspend fun deleteSongById(songId: String) = withContext(IO) {
+        songDao.deleteById(songId)
+        val songFile = File(context.getExternalFilesDir(null), "audio/$songId")
+        if (songFile.exists()) {
+            songFile.delete()
+        }
+    }
 
     suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }
 
-
     suspend fun getArtistIdByName(name: String) = withContext(IO) { artistDao.getArtistIdByName(name) }
+
+    fun findArtists(query: CharSequence) = artistDao.findArtists(query.toString())
 
     suspend fun insertArtist(name: String) = withContext(IO) { artistDao.insert(ArtistEntity(name = name)) }
 

@@ -38,13 +38,13 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     val downloadingSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
-            songRepository.downloadingSongsAsPagingSource
+            songRepository.downloadingSongsPagingSource
         }.flow.cachedIn(viewModelScope)
     }
 
     val allArtistsFlow: Flow<PagingData<ArtistEntity>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
-            songRepository.allArtists
+            songRepository.allArtistsPagingSource
         }.flow.cachedIn(viewModelScope)
     }
 
@@ -53,6 +53,12 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             songRepository.allChannels
         }.flow.cachedIn(viewModelScope)
     }
+
+    fun getSongAsFlow(songId: String) = songRepository.getSongAsFlow(songId)
+
+    fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
+        songRepository.getArtistSongsAsPagingSource(artistId)
+    }.flow.cachedIn(viewModelScope)
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(songId: String, view: View) {

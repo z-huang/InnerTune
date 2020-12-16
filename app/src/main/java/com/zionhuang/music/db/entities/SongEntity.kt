@@ -21,7 +21,6 @@ import java.util.*
 data class SongEntity(
         @PrimaryKey val id: String,
         var title: String? = null,
-        var artist: String? = null,
         var artistId: Int = 0,
         var channelId: String? = null,
         var duration: Int = 0, // in seconds

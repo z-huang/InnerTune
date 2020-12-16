@@ -10,25 +10,39 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Dao
 interface SongDao {
+    @Transaction
     @Query("SELECT * FROM song ORDER BY create_date DESC")
-    fun getAllSongsAsFlow(): Flow<List<SongEntity>>
+    fun getAllSongsAsFlow(): Flow<List<Song>>
 
+    @Transaction
     @Query("SELECT * FROM song ORDER BY create_date DESC")
     fun getAllSongsAsPagingSource(): PagingSource<Int, Song>
 
-    @Query("SELECT * FROM song WHERE download_state=$STATE_DOWNLOADING")
+    @Transaction
+    @Query("SELECT * FROM song WHERE download_state = $STATE_DOWNLOADING")
     fun getDownloadingSongsAsPagingSource(): PagingSource<Int, Song>
 
-    @Query("SELECT * FROM song WHERE id = :songId")
-    fun getSongById(songId: String): SongEntity?
+    @Transaction
+    @Query("SELECT * FROM song WHERE artistId = :artistId")
+    fun getArtistSongsAsPagingSource(artistId: Int): PagingSource<Int, Song>
 
     @Query("SELECT * FROM song WHERE id = :songId")
-    fun getSongByIdAsFlow(songId: String): Flow<SongEntity>
+    suspend fun getSongEntityById(songId: String): SongEntity?
+
+    @Transaction
+    @Query("SELECT * FROM song WHERE id = :songId")
+    suspend fun getSongById(songId: String): Song?
+
+    @Transaction
+    @Query("SELECT * FROM song WHERE id = :songId")
+    fun getSongByIdAsFlow(songId: String): Flow<Song>
 
     fun getSongByIdAsFlowDistinct(songId: String) = getSongByIdAsFlow(songId).distinctUntilChanged()
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(vararg songs: SongEntity)
+
+    fun insert(vararg songs: Song) = Unit
 
     @Update
     suspend fun update(vararg songs: SongEntity)

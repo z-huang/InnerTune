@@ -23,7 +23,6 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
     companion object {
         private const val TAG = "YTDownloadService"
         private const val DOWNLOAD_CHANNEL_ID = "download_channel_01"
-        private const val DOWNLOAD_NOTIFICATION_ID = 999
         private const val DOWNLOAD_GROUP_KEY = "com.zionhuang.music.downloadGroup"
         private const val DOWNLOAD_SUMMARY_ID = 0
     }
@@ -104,7 +103,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
 
     private fun onTaskStarted(task: DownloadTask) {
         updateNotification(task.id.hashCode()) {
-            setContentTitle(task.songTitle)
+            setContentTitle(task.title)
             setContentText("Preparing to download...")
             setProgress(0, 0, true)
         }
@@ -124,7 +123,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
 
     private fun onDownloadError(task: DownloadTask, error: Error?) {
         updateNotification(task.id.hashCode()) {
-            setContentTitle(task.songTitle)
+            setContentTitle(task.title)
             setContentText("Download failed.")
         }
         scope.launch {
@@ -139,7 +138,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
         task.currentBytes = currentBytes
         task.totalBytes = totalBytes
         updateNotification(task.id.hashCode()) {
-            setContentTitle(task.songTitle)
+            setContentTitle(task.title)
             setContentText("Downloading...")
             setProgress(totalBytes.toInt(), currentBytes.toInt(), false)
         }

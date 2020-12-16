@@ -21,6 +21,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ChannelEntity
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.DOWNLOAD_MUSIC_INTENT
@@ -75,8 +76,8 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         get() = _mediaSession
 
     private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.channel_name_playback, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
-        override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title ?: ""
-        override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artist
+        override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title ?: "No Song"
+        override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artistName
         override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null
         override fun createCurrentContentIntent(player: Player): PendingIntent? = null
     }).apply {
@@ -86,7 +87,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     private var queue: Queue = EMPTY_QUEUE
 
-    private val currentSong: SongEntity?
+    private val currentSong: Song?
         get() = queue.currentSong
 
     private val autoDownload = PreferenceHelper(context, R.string.auto_download, false)
@@ -96,7 +97,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             currentSong?.duration = (duration / 1000).toInt()
             mediaSession.setMetadata(metadataBuilder.apply {
                 putString(METADATA_KEY_TITLE, currentSong?.title)
-                putString(METADATA_KEY_ARTIST, currentSong?.artist)
+                putString(METADATA_KEY_ARTIST, currentSong?.artistName)
                 putLong(METADATA_KEY_DURATION, duration)
             }.build())
         }
@@ -158,7 +159,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                                     action = DOWNLOAD_MUSIC_INTENT
                                     putExtra("task", DownloadTask(
                                             id = result.id,
-                                            songTitle = result.title,
+                                            title = result.title,
                                             url = format.url!!
                                     ))
                                 })

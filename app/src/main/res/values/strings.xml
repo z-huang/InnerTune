@@ -23,4 +23,5 @@
     <string name="menu_song_download">Download</string>
     <string name="pref_auto_download">Auto download</string>
     <string name="pref_auto_download_summary">Auto download song when playing</string>
+    <string name="menu_save">Save</string>
 </resources>

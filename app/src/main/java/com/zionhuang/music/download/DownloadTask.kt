@@ -6,9 +6,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class DownloadTask(
         val id: String,
-        val songTitle: String? = null,
+        val title: String? = null,
         var url: String? = null,
-        var fileName: String? = null,
         var currentBytes: Long = 0,
         var totalBytes: Long = -1,
 ) : Parcelable {

@@ -11,7 +11,7 @@ import com.zionhuang.music.db.daos.RemoteDao;
 import com.zionhuang.music.db.entities.RemoteKey;
 import com.zionhuang.music.db.entities.SearchEntity;
 
-@Database(entities = {RemoteKey.class, SearchEntity.class}, version = 1)
+@Database(entities = {RemoteKey.class, SearchEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class RemoteDatabase extends RoomDatabase {
     private static final String DBNAME = "remote.db";

@@ -10,6 +10,12 @@
         <item name="invertedColor">@color/colorInverted</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteTextView</item>
+        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="android:contextPopupMenuStyle">
+            @style/Widget.MaterialComponents.PopupMenu.ContextMenu
+        </item>
+        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow
+        </item>
     </style>
 
     <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">

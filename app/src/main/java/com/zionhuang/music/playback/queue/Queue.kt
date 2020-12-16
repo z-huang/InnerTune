@@ -1,17 +1,17 @@
 package com.zionhuang.music.playback.queue
 
 import androidx.annotation.IntDef
-import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.SongParcel
 
 interface Queue {
     var currentSongId: String?
-    val currentSong: SongEntity?
-    val previousSong: SongEntity?
-    val nextSong: SongEntity?
+    val currentSong: Song?
+    val previousSong: Song?
+    val nextSong: Song?
     fun playNext()
     fun playPrevious()
-    fun findSongById(id: String): SongEntity?
+    fun findSongById(id: String): Song?
     fun updateSongMeta(id: String, songParcel: SongParcel)
 
     companion object {
