@@ -18,6 +18,11 @@
         </item>
     </style>
 
+    <style name="Theme.App.Dialog.FullScreen" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
     <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">
         <item name="android:layout_width">wrap_content</item>
         <item name="queryHint">@string/abc_search_hint</item>

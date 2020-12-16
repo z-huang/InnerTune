@@ -23,4 +23,8 @@
     <string name="pref_auto_download">自動下載</string>
     <string name="pref_auto_download_summary">在播放歌曲時自動下載</string>
     <string name="menu_save">儲存</string>
+    <string name="title_song_details">詳細資料</string>
+    <string name="error_song_title_empty">歌名不能為空</string>
+    <string name="error_song_artist_empty">作曲家不能為空</string>
+    <string name="song_channel">頻道</string>
 </resources>

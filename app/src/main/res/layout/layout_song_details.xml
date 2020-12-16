@@ -12,52 +12,165 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="match_parent"
+        android:background="?colorSurface"
+        android:clickable="true"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/background_song_cover"
-            android:minWidth="50dp"
-            android:minHeight="50dp"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/ic_round_music_note_24" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:contentInsetStartWithNavigation="0dp"
+            app:title="@string/title_song_details" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/song_title"
-            app:startIconDrawable="@drawable/ic_round_music_note_24">
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/songTitle_textField"
+            <ImageView
+                coverId="@{song.id}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/background_song_cover"
+                android:minWidth="50dp"
+                android:minHeight="50dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_round_music_note_24" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:text="@{song.title}"
-                tools:text="Song Title" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/song_artist"
-            app:startIconDrawable="@drawable/ic_round_person_24">
+                <com.google.android.material.internal.CheckableImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?attr/actionBarItemBackground"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_round_music_note_24" />
 
-            <com.zionhuang.music.ui.widgets.InstantAutoCompleteTextView
-                android:id="@+id/songArtist_textField"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/songTitle_inputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/song_title"
+                    app:endIconMode="clear_text"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/song_title_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:text="@{song.title}"
+                        tools:text="Song Title" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:completionThreshold="1"
-                android:singleLine="true"
-                android:text="@{song.artistName}"
-                tools:text="Song Artist" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="horizontal">
+
+                <com.google.android.material.internal.CheckableImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="?attr/actionBarItemBackground"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_round_person_24" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/songArtist_inputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/song_artist"
+                    app:errorEnabled="true">
+
+                    <com.zionhuang.music.ui.widgets.InstantAutoCompleteTextView
+                        android:id="@+id/song_artist_autoCompleteTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:completionThreshold="1"
+                        android:singleLine="true"
+                        android:text="@{song.artistName}"
+                        tools:text="Song Artist" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.internal.CheckableImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginBottom="10dp"
+                    android:background="?attr/actionBarItemBackground"
+                    android:minWidth="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_subscriptions_24" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                    android:layout_width="match_parent"
+                    android:enabled="false"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/song_channel"
+                    app:errorEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:text="@{song.channelName}"
+                        tools:text="Channel" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.internal.CheckableImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:background="?attr/actionBarItemBackground"
+                    android:minWidth="48dp"
+                    android:layout_marginEnd="8dp"
+                    android:minHeight="48dp"
+                    android:src="@drawable/ic_baseline_access_time_24" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    duration="@{song.duration}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:textSize="18sp"
+                    tools:text="3:00" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </layout>

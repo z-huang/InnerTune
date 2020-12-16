@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_save"
-        app:showAsAction="always|collapseActionView"
-        android:title="@string/menu_save" />
+        android:icon="@drawable/ic_baseline_save_24"
+        android:title="@string/menu_save"
+        app:showAsAction="always|collapseActionView" />
 </menu>

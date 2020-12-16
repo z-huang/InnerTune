@@ -24,4 +24,8 @@
     <string name="pref_auto_download">Auto download</string>
     <string name="pref_auto_download_summary">Auto download song when playing</string>
     <string name="menu_save">Save</string>
+    <string name="title_song_details">Details</string>
+    <string name="error_song_title_empty">Song title cannot be empty.</string>
+    <string name="error_song_artist_empty">Song artist cannot be empty.</string>
+    <string name="song_channel">Channel</string>
 </resources>

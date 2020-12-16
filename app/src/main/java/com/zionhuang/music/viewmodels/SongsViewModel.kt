@@ -7,9 +7,9 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.view.View
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.findNavController
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -22,13 +22,15 @@ import com.zionhuang.music.download.DownloadListener
 import com.zionhuang.music.download.DownloadManager
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadTask
-import com.zionhuang.music.ui.fragments.LibraryFragmentDirections
+import com.zionhuang.music.extensions.getActivity
+import com.zionhuang.music.ui.activities.MainActivity
+import com.zionhuang.music.ui.fragments.songs.SongDetailsDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
-    private val songRepository: SongRepository = SongRepository(application)
+    val songRepository: SongRepository = SongRepository(application)
 
     val allSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
@@ -54,7 +56,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         }.flow.cachedIn(viewModelScope)
     }
 
-    fun getSongAsFlow(songId: String) = songRepository.getSongAsFlow(songId)
+    suspend fun getSong(songId: String) = songRepository.getSongById(songId)
 
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getArtistSongsAsPagingSource(artistId)
@@ -62,7 +64,12 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(songId: String, view: View) {
-            view.findNavController().navigate(LibraryFragmentDirections.actionLibraryFragmentToSongDetailsFragment(songId))
+            (view.context.getActivity() as? MainActivity)?.supportFragmentManager?.beginTransaction()?.apply {
+                setTransition(TRANSIT_FRAGMENT_OPEN)
+                add(android.R.id.content, SongDetailsDialog(songId))
+                addToBackStack(null)
+                commit()
+            }
         }
 
         override fun downloadSong(songId: String, context: Context) {

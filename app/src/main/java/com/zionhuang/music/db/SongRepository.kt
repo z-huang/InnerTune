@@ -46,6 +46,20 @@ class SongRepository(private val context: Context) {
         })
     }
 
+    suspend fun updateSong(song: Song) = withContext(IO) {
+        songDao.update(SongEntity(
+                song.id,
+                song.title,
+                getOrInsertArtist(song.artistName),
+                song.channelId,
+                song.duration,
+                song.liked,
+                song.downloadState,
+                song.createDate,
+                song.modifyDate
+        ))
+    }
+
     suspend fun deleteSongById(songId: String) = withContext(IO) {
         songDao.deleteById(songId)
         val songFile = File(context.getExternalFilesDir(null), "audio/$songId")
@@ -61,6 +75,10 @@ class SongRepository(private val context: Context) {
     fun findArtists(query: CharSequence) = artistDao.findArtists(query.toString())
 
     suspend fun insertArtist(name: String) = withContext(IO) { artistDao.insert(ArtistEntity(name = name)) }
+
+    suspend fun getOrInsertArtist(name: String) = withContext(IO) {
+        getArtistIdByName(name) ?: insertArtist(name).toInt()
+    }
 
     suspend fun insertChannel(channel: ChannelEntity) = withContext(IO) { channelDao.insert(channel) }
 

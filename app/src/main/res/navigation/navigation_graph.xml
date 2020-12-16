@@ -80,7 +80,7 @@
     </fragment>
     <fragment
         android:id="@+id/songDetailsFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.SongDetailsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.SongDetailsDialog"
         android:label="SongDetailsFragment">
         <argument
             android:name="songId"
