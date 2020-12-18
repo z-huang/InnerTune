@@ -225,6 +225,12 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     }
 
     fun toggleLike() {
+        scope.launch {
+            currentSong?.let {
+                songRepository.insert(it)
+                songRepository.toggleLike(it.id)
+            }
+        }
     }
 
     private fun updatePlaybackState(applier: PlaybackStateCompat.Builder.() -> Unit) {

@@ -67,7 +67,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@{viewModel.currentSong.artist}"
+                android:text="@{viewModel.currentSong.artistName}"
                 android:textSize="12sp"
                 tools:text="Song Artist" />
         </LinearLayout>
@@ -149,7 +149,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@{viewModel.currentSong.artist}"
+                android:text="@{viewModel.currentSong.artistName}"
                 android:textAlignment="center"
                 tools:text="Song Artist" />
         </LinearLayout>

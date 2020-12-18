@@ -21,12 +21,8 @@ class MediaSessionCallback internal constructor(private val mediaSession: MediaS
 
     override fun onCustomAction(action: String, extras: Bundle) {
         when (action) {
-            ACTION_ADD_TO_LIBRARY -> {
-                songPlayer.addToLibrary()
-            }
-            ACTION_TOGGLE_LIKE -> {
-                songPlayer.toggleLike()
-            }
+            ACTION_ADD_TO_LIBRARY -> songPlayer.addToLibrary()
+            ACTION_TOGGLE_LIKE -> songPlayer.toggleLike()
         }
     }
 

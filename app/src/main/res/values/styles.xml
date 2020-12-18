@@ -18,9 +18,14 @@
         </item>
     </style>
 
-    <style name="Theme.App.Dialog.FullScreen" parent="Theme.MaterialComponents.Dialog">
+    <style name="Theme.App.Dialog.FullScreen" parent="AppTheme">
         <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowBackground">?background</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fragment_open_enter</item>
+        <item name="android:windowExitAnimation">@anim/fragment_open_exit</item>
     </style>
 
     <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">

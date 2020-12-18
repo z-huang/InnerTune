@@ -2,13 +2,13 @@ package com.zionhuang.music.ui.fragments.songs
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.view.WindowCompat.FEATURE_ACTION_BAR_OVERLAY
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.zionhuang.music.R
@@ -18,13 +18,13 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.launch
 
 
-class SongDetailsDialog(private val songId: String) : AppCompatDialogFragment() {
+class SongDetailsDialog(private val songId: String) : DialogFragment() {
     private lateinit var binding: LayoutSongDetailsBinding
     private val songsViewModel by activityViewModels<SongsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.Theme_MaterialComponents_Dialog)
+        setStyle(STYLE_NORMAL, R.style.AppTheme)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -40,6 +40,7 @@ class SongDetailsDialog(private val songId: String) : AppCompatDialogFragment() 
     }
 
     private fun setupUI() {
+        requireDialog().window!!.setWindowAnimations(R.style.DialogAnimation)
         binding.toolbar.apply {
             setNavigationIcon(R.drawable.ic_baseline_close_24)
             inflateMenu(R.menu.menu_save)
@@ -79,8 +80,10 @@ class SongDetailsDialog(private val songId: String) : AppCompatDialogFragment() 
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            (super.onCreateDialog(savedInstanceState) as AppCompatDialog).apply {
-                supportRequestWindowFeature(FEATURE_ACTION_BAR_OVERLAY)
+            super.onCreateDialog(savedInstanceState).apply {
+                requestWindowFeature(FEATURE_ACTION_BAR_OVERLAY)
+            }.also {
+                Log.d(TAG, "on create dialog ")
             }
 
     companion object {

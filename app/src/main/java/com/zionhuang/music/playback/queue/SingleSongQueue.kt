@@ -10,12 +10,10 @@ class SingleSongQueue(
         songsRepository: SongRepository,
         var songId: String,
 ) : Queue {
-    private var song: Song? = runBlocking(Dispatchers.IO) {
+    private var song: Song? = runBlocking {
         songsRepository.getSongById(songId) ?: Song(songId)
     }
-    override var currentSongId: String?
-        get() = songId
-        set(_) {}
+    override var currentSongId: String? = songId
     override val currentSong: Song?
         get() = song
     override val previousSong: Song? = currentSong

@@ -10,6 +10,7 @@ import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.SongParcel
+import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queue.Queue.Companion.QueueType
 
@@ -25,7 +26,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     private val mediaMetadataObserver = Observer<MediaMetadataCompat?> { mediaMetadata ->
         if (mediaMetadata != null) {
             val newValue = currentSong.value?.pullMediaMetadata(mediaMetadata)
-                    ?: MediaData().pullMediaMetadata(mediaMetadata)
+                    ?: mediaMetadata.toMediaData()
             _currentSong.postValue(newValue)
         }
     }

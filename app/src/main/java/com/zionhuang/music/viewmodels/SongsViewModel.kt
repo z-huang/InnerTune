@@ -64,11 +64,10 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(songId: String, view: View) {
-            (view.context.getActivity() as? MainActivity)?.supportFragmentManager?.beginTransaction()?.apply {
-                setTransition(TRANSIT_FRAGMENT_OPEN)
-                add(android.R.id.content, SongDetailsDialog(songId))
-                addToBackStack(null)
-                commit()
+            (view.getActivity() as? MainActivity)?.let { activity ->
+                val transition = activity.supportFragmentManager.beginTransaction()
+                        .addToBackStack(null)
+                SongDetailsDialog(songId).show(transition, "SongDialog")
             }
         }
 

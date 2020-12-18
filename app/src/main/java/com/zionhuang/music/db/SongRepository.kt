@@ -83,4 +83,10 @@ class SongRepository(private val context: Context) {
     suspend fun insertChannel(channel: ChannelEntity) = withContext(IO) { channelDao.insert(channel) }
 
     suspend fun hasChannel(channelId: String) = withContext(IO) { channelDao.contains(channelId) }
+
+    suspend fun toggleLike(songId: String) {
+        updateById(songId) {
+            liked = !liked
+        }
+    }
 }
