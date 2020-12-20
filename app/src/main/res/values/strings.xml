@@ -28,4 +28,6 @@
     <string name="error_song_title_empty">Song title cannot be empty.</string>
     <string name="error_song_artist_empty">Song artist cannot be empty.</string>
     <string name="song_channel">Channel</string>
+    <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
+    <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
 </resources>

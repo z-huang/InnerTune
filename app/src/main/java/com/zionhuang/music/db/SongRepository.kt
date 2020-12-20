@@ -70,6 +70,8 @@ class SongRepository(private val context: Context) {
 
     suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }
 
+    suspend fun getArtistById(artistId: Int) = withContext(IO) { artistDao.getArtistById(artistId) }
+
     suspend fun getArtistIdByName(name: String) = withContext(IO) { artistDao.getArtistIdByName(name) }
 
     fun findArtists(query: CharSequence) = artistDao.findArtists(query.toString())

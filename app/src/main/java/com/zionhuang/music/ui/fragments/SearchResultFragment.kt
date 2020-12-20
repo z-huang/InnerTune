@@ -41,7 +41,7 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
         }
         val searchResultAdapter = SearchResultAdapter().apply {
-            addLoadStateListener { (loadState) ->
+            addLoadStateListener { loadState ->
                 binding.progressBar.isVisible = loadState.refresh is Loading
                 binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
                 binding.tvErrorMsg.isVisible = loadState.refresh is LoadState.Error

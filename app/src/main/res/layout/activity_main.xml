@@ -39,8 +39,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:elevation="0dp"
-                    app:contentInsetStartWithNavigation="0dp"
-                    app:layout_scrollFlags="scroll|enterAlways|snap" />
+                    app:layout_scrollFlags="scroll|enterAlways|snap"
+                    app:contentInsetStartWithNavigation="0dp" />
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
