@@ -1,6 +1,9 @@
 package com.zionhuang.music.extensions
 
 import com.google.gson.*
+import java.io.Reader
+
+fun Reader.parseJson(): JsonElement = JsonParser.parseReader(this)
 
 fun Any.toJsonElement(): JsonElement = when (this) {
     is JsonElement -> this

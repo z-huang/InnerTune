@@ -11,7 +11,8 @@ import com.zionhuang.music.extensions.*
 import com.zionhuang.music.extractor.ExtractorUtils.determineExt
 import com.zionhuang.music.extractor.ExtractorUtils.mimeType2ext
 import com.zionhuang.music.extractor.ExtractorUtils.parseCodecs
-import kotlinx.coroutines.Dispatchers
+import com.zionhuang.music.models.SearchItem
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
@@ -35,6 +36,42 @@ class YouTubeExtractor private constructor(private val context: Context) {
     private var debug: (String) -> Unit = {}
     private val playerCache = mutableMapOf<String, SignatureFunctionKt>()
 
+    sealed class SearchResult {
+        class Success(val items: List<SearchItem>, val nextPageToken: String?) : SearchResult()
+        class Error(val errorMessage: String) : SearchResult()
+    }
+
+    suspend fun search(query: String, pageToken: String? = null): SearchResult = withContext(Default) {
+        val data = jsonObjectOf(
+                "context" to jsonObjectOf(
+                        "client" to jsonObjectOf(
+                                "clientName" to "WEB",
+                                "clientVersion" to "2.20201021.03.00"
+                        )
+                ),
+                "query" to query,
+                "continuation" to pageToken
+        )
+        val res = urlRequest(SEARCH_URL, mapOf("content-type" to "application/json"), data).inputReader.parseJson().asJsonObjectOrNull
+        val slrContents = (res["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"]["sectionListRenderer"]["contents"]
+                ?: res["onResponseReceivedCommands"][0]["appendContinuationItemsAction"]["continuationItems"]).asJsonArrayOrNull
+        val isrContents = slrContents[0]["itemSectionRenderer"]["contents"].asJsonArrayOrNull
+                ?: return@withContext SearchResult.Error("Failed to extractor isr contents")
+
+        val items = mutableListOf<SearchItem>()
+        for (content in isrContents) {
+            val video = content["videoRenderer"].asJsonObjectOrNull ?: continue
+            items += SearchItem(
+                    video["videoId"].asStringOrNull ?: continue,
+                    video["title"]["runs"][0]["text"].asStringOrNull,
+                    video["ownerText"]["runs"][0]["text"].asStringOrNull,
+                    video["lengthText"]["simpleText"].asStringOrNull
+            )
+        }
+        val nextPageToken = slrContents[1]["continuationItemRenderer"]["continuationEndpoint"]["continuationCommand"]["token"].asStringOrNull
+        return@withContext SearchResult.Success(items, nextPageToken)
+    }
+
     suspend fun extract(videoId: String): Result {
         val res: Result
         val duration = measureTimeMillis {
@@ -44,7 +81,7 @@ class YouTubeExtractor private constructor(private val context: Context) {
         return res
     }
 
-    private suspend fun realExtract(videoId: String): Result = withContext(Dispatchers.Default) extraction@{
+    private suspend fun realExtract(videoId: String): Result = withContext(Default) extraction@{
         debug = { msg ->
             Log.d(TAG, "[$videoId] $msg")
         }
@@ -445,6 +482,8 @@ class YouTubeExtractor private constructor(private val context: Context) {
         }
 
         private const val TAG = "YouTubeExtractor"
+
+        private const val SEARCH_URL = "https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 
         private const val AGE_GATE_RE = """[\"\']status[\"\']\s*:\s*[\"\']LOGIN_REQUIRED"""
 
