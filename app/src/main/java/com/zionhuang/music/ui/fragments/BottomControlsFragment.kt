@@ -60,7 +60,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIKE, null)
         }
 
-        mediaWidgetsController = MediaWidgetsController(requireContext(), binding.progressBar, binding.seekBar, binding.positionText)
+        mediaWidgetsController = MediaWidgetsController(requireContext(), binding.progressBar, binding.slider, binding.positionText)
     }
 
     override fun onResume() {

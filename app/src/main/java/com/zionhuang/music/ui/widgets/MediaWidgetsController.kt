@@ -9,16 +9,15 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.animation.LinearInterpolator
 import android.widget.ProgressBar
-import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import com.google.android.material.slider.Slider
 import com.zionhuang.music.utils.makeTimeString
 
 class MediaWidgetsController(
         context: Context,
         private val progressBar: ProgressBar,
-        private val seekBar: SeekBar,
-        private val progressTextView: TextView
+        private val slider: Slider,
+        private val progressTextView: TextView,
 ) {
     private var seekBarIsTracking = false
     private var mediaController: MediaControllerCompat? = null
@@ -29,20 +28,34 @@ class MediaWidgetsController(
     private val durationScale: Float = Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
 
     init {
-        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                progressTextView.text = makeTimeString(progress / 1000.toLong())
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {
+        slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+            override fun onStartTrackingTouch(slider: Slider) {
                 seekBarIsTracking = true
             }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                mediaController?.transportControls?.seekTo(this@MediaWidgetsController.seekBar.progress.toLong())
+            override fun onStopTrackingTouch(slider: Slider) {
+                mediaController?.transportControls?.seekTo(slider.value.toLong())
                 seekBarIsTracking = false
             }
+
         })
+        slider.addOnChangeListener { _, value, _ ->
+            progressTextView.text = makeTimeString((value / 1000).toLong())
+        }
+//        slider.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+//            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+//                progressTextView.text = makeTimeString(progress / 1000.toLong())
+//            }
+//
+//            override fun onStartTrackingTouch(seekBar: SeekBar) {
+//                seekBarIsTracking = true
+//            }
+//
+//            override fun onStopTrackingTouch(seekBar: SeekBar) {
+//                mediaController?.transportControls?.seekTo(this@MediaWidgetsController.slider.progress.toLong())
+//                seekBarIsTracking = false
+//            }
+//        })
     }
 
     fun setMediaController(newController: MediaControllerCompat?) {
@@ -79,7 +92,7 @@ class MediaWidgetsController(
 
             val progress = state.position.toInt()
             progressBar.progress = progress
-            seekBar.progress = progress
+            slider.value = progress.toFloat()
             progressTextView.text = makeTimeString(progress.toLong() / 1000)
             if (state.state == PlaybackStateCompat.STATE_PLAYING) {
                 val timeToEnd = ((duration - progress) / state.playbackSpeed).toInt()
@@ -99,7 +112,7 @@ class MediaWidgetsController(
             super.onMetadataChanged(metadata)
             duration = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) ?: 0
             progressBar.max = duration.toInt()
-            seekBar.max = duration.toInt()
+            slider.valueTo = if (duration != 0L) duration.toFloat() else 0.1f
             mediaController?.let {
                 onPlaybackStateChanged(it.playbackState)
             }
@@ -112,7 +125,7 @@ class MediaWidgetsController(
             }
             val animatedValue = animation.animatedValue as Int
             progressBar.progress = animatedValue
-            seekBar.progress = animatedValue
+            slider.value = animatedValue.toFloat()
             progressTextView.text = makeTimeString(animatedValue / 1000.toLong())
         }
     }

@@ -106,13 +106,13 @@
         </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            app:trackThickness="2dp"
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             app:layout_constraintBottom_toTopOf="@id/top_bar_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:trackThickness="2dp"
             tools:progress="50" />
 
         <LinearLayout
@@ -203,23 +203,26 @@
             app:layout_constraintStart_toStartOf="@id/title_layout"
             app:layout_constraintTop_toBottomOf="@id/title_layout">
 
-            <SeekBar
-                android:id="@+id/seek_bar"
+            <com.google.android.material.slider.Slider
+                android:id="@+id/slider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
+                android:valueFrom="0"
+                android:valueTo="100"
+                app:labelBehavior="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:progress="50" />
+                tools:value="50"
+                tools:valueFrom="0"
+                tools:valueTo="100" />
 
             <TextView
                 android:id="@+id/position_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/seek_bar"
+                app:layout_constraintTop_toBottomOf="@id/slider"
                 tools:text="0:00" />
 
             <TextView
@@ -228,7 +231,7 @@
                 android:layout_height="wrap_content"
                 app:duration="@{viewModel.currentSong.duration}"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/seek_bar"
+                app:layout_constraintTop_toBottomOf="@id/slider"
                 tools:text="4:00" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
