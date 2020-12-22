@@ -12,7 +12,7 @@ private const val HMS_FORMAT = """%1${"$"}d:%2$02d:%3$02d"""
  * @return formatted string
  */
 @Suppress("NAME_SHADOWING")
-fun makeTimeString(duration: Long): String? {
+fun makeTimeString(duration: Long): String {
     var duration = duration
     val hours = duration / 3600
     duration %= 3600
@@ -23,5 +23,8 @@ fun makeTimeString(duration: Long): String? {
 }
 
 fun getMaxResThumbnailUrl(thumbnails: ThumbnailDetails): String? =
-        thumbnails.maxres?.url ?: thumbnails.high?.url ?: thumbnails.medium?.url
-        ?: thumbnails.standard?.url ?: thumbnails.default?.url
+        thumbnails.maxres?.url
+                ?: thumbnails.high?.url
+                ?: thumbnails.medium?.url
+                ?: thumbnails.standard?.url
+                ?: thumbnails.default?.url

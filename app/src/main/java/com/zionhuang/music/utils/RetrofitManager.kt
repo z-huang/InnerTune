@@ -1,7 +1,9 @@
-package com.zionhuang.music.youtube
+package com.zionhuang.music.utils
 
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.zionhuang.music.youtube.api.SuggestionAPIService
+import com.zionhuang.music.youtube.SuggestionResult
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

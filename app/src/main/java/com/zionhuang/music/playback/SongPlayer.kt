@@ -4,7 +4,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.support.v4.media.session.MediaSessionCompat
@@ -45,7 +50,7 @@ import java.io.File
  * A wrapper around [MusicPlayer] to support actions from [MediaSessionCallback]
  */
 
-class SongPlayer(private val context: Context, private val scope: CoroutineScope) {
+class SongPlayer(private val context: Context, private val scope: CoroutineScope) : AudioManager.OnAudioFocusChangeListener {
     companion object {
         const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
@@ -55,6 +60,9 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     private val songRepository = SongRepository(context)
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
     private val musicPlayer = MusicPlayer(context)
+
+    private val audioManager: AudioManager
+    private val focusRequest: AudioFocusRequest
 
     private var metadataBuilder = MediaMetadataCompat.Builder()
     private var stateBuilder = PlaybackStateCompat.Builder().setActions(
@@ -76,7 +84,9 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         get() = _mediaSession
 
     private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.channel_name_playback, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
-        override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title ?: "No Song"
+        override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title
+                ?: "No Song"
+
         override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artistName
         override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null
         override fun createCurrentContentIntent(player: Player): PendingIntent? = null
@@ -117,6 +127,18 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 setState(state, musicPlayer.position, musicPlayer.playbackSpeed)
             }
         }
+
+        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
+            setAudioAttributes(AudioAttributes.Builder().run {
+                setUsage(AudioAttributes.USAGE_MEDIA)
+                setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                build()
+            })
+            setAcceptsDelayedFocusGain(true)
+            setOnAudioFocusChangeListener(this@SongPlayer, Handler(Looper.getMainLooper()))
+            build()
+        }
     }
 
     private var job: Job? = null
@@ -126,6 +148,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         currentSong?.let { song ->
             job?.cancel()
             job = scope.launch extractScope@{
+                audioManager.requestAudioFocus(focusRequest)
                 if (song.downloadState == STATE_DOWNLOADED) {
                     musicPlayer.setSource(File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri())
                     return@extractScope
@@ -186,6 +209,12 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             setState(mediaSession.controller.playbackState.state, pos, musicPlayer.playbackSpeed)
         }
     }
+
+    var volume: Float
+        get() = musicPlayer.volume
+        set(value) {
+            musicPlayer.volume = value
+        }
 
     fun playNext() {
         queue.playNext()
@@ -250,4 +279,16 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     }
 
     fun setPlayerView(playerView: PlayerView?) = musicPlayer.setPlayerView(playerView)
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_LOSS -> pause()
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> pause()
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> volume = 0.5F
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                volume = 1F
+                play()
+            }
+        }
+    }
 }

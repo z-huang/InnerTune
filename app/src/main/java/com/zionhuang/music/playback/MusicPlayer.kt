@@ -17,14 +17,28 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
         private const val TAG = "MusicPlayer"
     }
 
+    private var mDurationSet = false
+    private var onDurationSet: OnDurationSet = {}
+    private var onPlaybackStateChanged: OnPlaybackStateChanged = {}
+
     private var player: SimpleExoPlayer = SimpleExoPlayer.Builder(context).build().apply {
         addListener(this@MusicPlayer)
         playWhenReady = true
     }
 
-    private var mDurationSet = false
-    private var onDurationSet: OnDurationSet = {}
-    private var onPlaybackStateChanged: OnPlaybackStateChanged = {}
+    val exoPlayer: ExoPlayer get() = player
+
+    val isPlaying: Boolean get() = player.playWhenReady
+    val position: Long get() = player.currentPosition
+    val duration: Long get() = player.duration
+    var volume: Float
+        get() = player.volume
+        set(value) {
+            player.volume = value
+        }
+    var playbackSpeed: Float
+        get() = player.playbackParameters.speed
+        set(playbackSpeed) = player.setPlaybackParameters(PlaybackParameters(playbackSpeed))
 
     fun play() {
         player.playWhenReady = true
@@ -38,9 +52,6 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
         player.seekTo(pos)
     }
 
-    val isPlaying: Boolean
-        get() = player.playWhenReady
-
     fun stop() {
         player.stop(true)
     }
@@ -53,17 +64,6 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
         }
         mDurationSet = false
     }
-
-    val position: Long
-        get() = player.currentPosition
-    val duration: Long
-        get() = player.duration
-    var playbackSpeed: Float
-        get() = player.playbackParameters.speed
-        set(playbackSpeed) = player.setPlaybackParameters(PlaybackParameters(playbackSpeed))
-
-    val exoPlayer: ExoPlayer
-        get() = player
 
     fun release() {
         player.release()

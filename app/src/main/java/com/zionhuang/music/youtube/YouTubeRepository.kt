@@ -3,6 +3,9 @@ package com.zionhuang.music.youtube
 import android.content.Context
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.VideoListResponse
+import com.zionhuang.music.utils.RetrofitManager
+import com.zionhuang.music.youtube.api.SuggestionAPIService
+import com.zionhuang.music.youtube.api.YouTubeAPIService
 
 class YouTubeRepository private constructor(context: Context) {
 
