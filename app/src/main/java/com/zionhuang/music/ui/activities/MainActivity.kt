@@ -29,7 +29,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         setSupportActionBar(binding.toolbar)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.libraryFragment, R.id.explorationFragment, R.id.settingsFragment))
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.songsFragment, R.id.artistsFragment, R.id.channelsFragment, R.id.playlistsFragment, R.id.explorationFragment))
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())

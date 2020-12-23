@@ -3,6 +3,7 @@ package com.zionhuang.music.ui.fragments.songs
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,9 +39,8 @@ class ArtistSongsFragment : MainFragment<LayoutArtistSongsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
-        binding.recyclerView.viewTreeObserver.addOnPreDrawListener {
+        binding.recyclerView.doOnPreDraw {
             startPostponedEnterTransition()
-            true
         }
         val artistId = ArtistSongsFragmentArgs.fromBundle(requireArguments()).artistId
         songsViewModel.addDownloadListener(downloadHandler.downloadListener)

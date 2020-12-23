@@ -3,7 +3,7 @@ package com.zionhuang.music.models
 import android.graphics.Bitmap
 import android.os.Parcelable
 import android.support.v4.media.MediaMetadataCompat
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class MediaData(

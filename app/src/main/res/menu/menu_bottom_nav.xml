@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
-        android:id="@+id/libraryFragment"
-        android:icon="@drawable/ic_library_music_black_24dp"
-        android:title="@string/title_library" />
-
+        android:id="@+id/songsFragment"
+        android:icon="@drawable/ic_round_music_note_24"
+        android:title="@string/title_songs" />
+    <item
+        android:id="@+id/artistsFragment"
+        android:icon="@drawable/ic_round_person_24"
+        android:title="@string/title_artists" />
+    <item
+        android:id="@+id/channelsFragment"
+        android:icon="@drawable/ic_baseline_subscriptions_24"
+        android:title="@string/title_channels" />
+    <item
+        android:id="@+id/playlistsFragment"
+        android:icon="@drawable/ic_baseline_queue_music_24"
+        android:title="@string/title_playlists" />
     <item
         android:id="@+id/explorationFragment"
         android:icon="@drawable/ic_explore_black_24dp"
         android:title="@string/title_explore" />
-
-    <item
-        android:id="@+id/settingsFragment"
-        android:icon="@drawable/ic_settings_black_24dp"
-        android:title="@string/title_settings" />
-
 </menu>

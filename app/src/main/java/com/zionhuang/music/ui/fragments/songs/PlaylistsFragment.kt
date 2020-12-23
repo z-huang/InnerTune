@@ -2,10 +2,8 @@ package com.zionhuang.music.ui.fragments.songs
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.Hold
@@ -18,22 +16,19 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+class PlaylistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
         val artistsAdapter = ArtistsAdapter()
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = artistsAdapter
             addOnClickListener { position, view ->
-                exitTransition = Hold()
-                reenterTransition = Hold()
+                requireParentFragment().exitTransition = Hold()
+                requireParentFragment().reenterTransition = Hold()
                 val transitionName = getString(R.string.artist_songs_transition_name)
                 val extras = FragmentNavigatorExtras(view to transitionName)
-                val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(artistsAdapter.getItemByPosition(position)!!.id!!)
-                findNavController().navigate(directions, extras)
+                //findNavController().navigate(directions, extras)
             }
         }
         lifecycleScope.launch {
@@ -44,6 +39,6 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     companion object {
-        const val TAG = "ArtistsFragment"
+        const val TAG = "PlaylistsFragment"
     }
 }

@@ -199,9 +199,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     fun play() = musicPlayer.play()
 
-    fun pause() {
-        musicPlayer.pause()
-    }
+    fun pause() = musicPlayer.pause()
 
     fun seekTo(pos: Long) {
         musicPlayer.seekTo(pos)
@@ -215,6 +213,9 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         set(value) {
             musicPlayer.volume = value
         }
+
+    fun fastForward() = musicPlayer.fastForward()
+    fun rewind() = musicPlayer.rewind()
 
     fun playNext() {
         queue.playNext()

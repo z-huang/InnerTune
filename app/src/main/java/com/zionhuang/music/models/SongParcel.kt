@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 import com.zionhuang.music.db.entities.Song
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class SongParcel(val id: String, val title: String?, val artist: String?) : Parcelable {

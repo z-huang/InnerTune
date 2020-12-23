@@ -52,11 +52,12 @@ class YouTubeExtractor private constructor(private val context: Context) {
                 "query" to query,
                 "continuation" to pageToken
         )
+        Log.d(TAG, "Downloading API page")
         val res = urlRequest(SEARCH_URL, mapOf("content-type" to "application/json"), data).inputReader.parseJson().asJsonObjectOrNull
         val slrContents = (res["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"]["sectionListRenderer"]["contents"]
                 ?: res["onResponseReceivedCommands"][0]["appendContinuationItemsAction"]["continuationItems"]).asJsonArrayOrNull
         val isrContents = slrContents[0]["itemSectionRenderer"]["contents"].asJsonArrayOrNull
-                ?: return@withContext SearchResult.Error("Failed to extractor isr contents")
+                ?: return@withContext SearchResult.Error("Failed to extract isr contents")
 
         val items = mutableListOf<SearchItem>()
         for (content in isrContents) {

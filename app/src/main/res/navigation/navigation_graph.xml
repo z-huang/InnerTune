@@ -2,30 +2,31 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/libraryFragment">
+    app:startDestination="@id/songsFragment">
     <fragment
-        android:id="@+id/libraryFragment"
-        android:name="com.zionhuang.music.ui.fragments.LibraryFragment"
-        android:label="@string/title_library">
+        android:id="@+id/songsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.SongsFragment"
+        android:label="@string/title_songs" />
+    <fragment
+        android:id="@+id/artistsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.ArtistsFragment"
+        android:label="@string/title_artists">
         <action
-            android:id="@+id/action_libraryFragment_to_songDetailsFragment"
-            app:destination="@id/songDetailsFragment"
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_close_exit"
-            app:popEnterAnim="@anim/fragment_open_enter"
-            app:popExitAnim="@anim/fragment_open_exit">
-            <argument
-                android:name="songId"
-                app:argType="string" />
-        </action>
-        <action
-            android:id="@+id/action_libraryFragment_to_artistSongsFragment"
+            android:id="@+id/action_artistsFragment_to_artistSongsFragment"
             app:destination="@id/artistSongsFragment">
             <argument
                 android:name="artistId"
                 app:argType="integer" />
         </action>
     </fragment>
+    <fragment
+        android:id="@+id/channelsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.ChannelsFragment"
+        android:label="@string/title_channels" />
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.PlaylistsFragment"
+        android:label="@string/title_channels" />
     <fragment
         android:id="@+id/explorationFragment"
         android:name="com.zionhuang.music.ui.fragments.ExploreFragment"

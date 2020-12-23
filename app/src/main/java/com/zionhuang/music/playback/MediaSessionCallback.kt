@@ -69,6 +69,8 @@ class MediaSessionCallback internal constructor(
     override fun onStop() = songPlayer.stop()
     override fun onSkipToNext() = songPlayer.playNext()
     override fun onSkipToPrevious() = songPlayer.playPrevious()
+    override fun onFastForward() = songPlayer.fastForward()
+    override fun onRewind() = songPlayer.rewind()
 
     companion object {
         const val TAG = "MediaSessionCallback"

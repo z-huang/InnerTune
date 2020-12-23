@@ -48,13 +48,13 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
         player.playWhenReady = false
     }
 
-    fun seekTo(pos: Long) {
-        player.seekTo(pos)
-    }
+    fun seekTo(pos: Long) = player.seekTo(pos)
 
-    fun stop() {
-        player.stop(true)
-    }
+    fun fastForward() = seekTo(minOf(position + 10000, duration))
+
+    fun rewind() = seekTo(maxOf(position - 10000, 0))
+
+    fun stop() = player.stop(true)
 
     fun setSource(uri: Uri) {
         player.apply {
@@ -65,15 +65,9 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
         mDurationSet = false
     }
 
-    fun release() {
-        player.release()
-    }
+    fun release() = player.release()
 
-    fun setPlayerView(playerView: PlayerView?) {
-        if (playerView != null) {
-            playerView.player = player
-        }
-    }
+    fun setPlayerView(playerView: PlayerView?) = playerView?.let { it.player = player }
 
     override fun onPlaybackStateChanged(state: Int) {
         if (state == Player.STATE_READY) {

@@ -90,6 +90,7 @@
         android:layout_height="@dimen/bottom_navigation_height"
         android:layout_alignParentBottom="true"
         android:clickable="true"
+        app:labelVisibilityMode="selected"
         android:focusable="true"
         app:elevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

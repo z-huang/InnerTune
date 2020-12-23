@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Music</string>
-    <string name="title_library">我的音樂</string>
+    <string name="title_songs">歌曲</string>
+    <string name="title_artists">演出者</string>
+    <string name="title_channels">頻道</string>
+    <string name="title_playlists">播放清單</string>
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
     <string name="library_tab_downloading">下載中</string>

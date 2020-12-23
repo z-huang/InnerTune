@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.fragments.songs
+package com.zionhuang.music.ui.fragments.deprecated
 
 import android.os.Bundle
 import android.view.View
