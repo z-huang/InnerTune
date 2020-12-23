@@ -481,7 +481,75 @@ class YouTubeExtractor private constructor(private val context: Context) {
             return INSTANCE!!
         }
 
+        fun extractId(url: String): String? = url.find(URL_RE, "id")
+
         private const val TAG = "YouTubeExtractor"
+
+        private val URL_RE = """
+                     (?x)^
+                     (
+                         (?:https?:\/\/|\/\/)
+                         (?:(?:(?:(?:\w+\.)?[yY][oO][uU][tT][uU][bB][eE](?:-nocookie|kids)?\.com\/|
+                            (?:www\.)?deturl\.com\/www\.youtube\.com\/|
+                            (?:www\.)?pwnyoutube\.com\/|
+                            (?:www\.)?hooktube\.com\/|
+                            (?:www\.)?yourepeat\.com\/|
+                            tube\.majestyc\.net\/|
+                            (?:(?:www|dev)\.)?invidio\.us\/|
+                            (?:(?:www|no)\.)?invidiou\.sh\/|
+                            (?:(?:www|fi|de)\.)?invidious\.snopyta\.org\/|
+                            (?:www\.)?invidious\.kabi\.tk\/|
+                            (?:www\.)?invidious\.13ad\.de\/|
+                            (?:www\.)?invidious\.mastodon\.host\/|
+                            (?:www\.)?invidious\.nixnet\.xyz\/|
+                            (?:www\.)?invidious\.drycat\.fr\/|
+                            (?:www\.)?tube\.poal\.co\/|
+                            (?:www\.)?vid\.wxzm\.sx\/|
+                            (?:www\.)?yewtu\.be\/|
+                            (?:www\.)?yt\.elukerio\.org\/|
+                            (?:www\.)?yt\.lelux\.fi\/|
+                            (?:www\.)?invidious\.ggc-project\.de\/|
+                            (?:www\.)?yt\.maisputain\.ovh\/|
+                            (?:www\.)?invidious\.13ad\.de\/|
+                            (?:www\.)?invidious\.toot\.koeln\/|
+                            (?:www\.)?invidious\.fdn\.fr\/|
+                            (?:www\.)?watch\.nettohikari\.com\/|
+                            (?:www\.)?kgg2m7yk5aybusll\.onion\/|
+                            (?:www\.)?qklhadlycap4cnod\.onion\/|
+                            (?:www\.)?axqzx4s6s54s32yentfqojs3x5i7faxza6xo3ehd4bzzsg2ii4fv2iid\.onion\/|
+                            (?:www\.)?c7hqkpkpemu6e7emz5b4vyz7idjgdvgaaa3dyimmeojqbgpea3xqjoid\.onion\/|
+                            (?:www\.)?fz253lmuao3strwbfbmx46yu7acac2jz27iwtorgmbqlkurlclmancad\.onion\/|
+                            (?:www\.)?invidious\.l4qlywnpwqsluw65ts7md3khrivpirse744un3x7mlskqauz5pyuzgqd\.onion\/|
+                            (?:www\.)?owxfohz4kjyv25fvlqilyxast7inivgiktls3th44jhk3ej3i7ya\.b32\.i2p\/|
+                            (?:www\.)?4l2dgddgsrkf2ous66i6seeyi6etzfgrue332grh2n7madpwopotugyd\.onion\/|
+                            youtube\.googleapis\.com\/)
+                         (?:.*?\#\/)?
+                         (?:
+                             (?:(?:v|embed|e)\/(?!videoseries))
+                             |(?:
+                                 (?:(?:watch|movie)(?:_popup)?(?:\.php)?\/?)?
+                                 (?:\?|\#!?)
+                                 (?:.*?[&;])??
+                                 v=
+                             )
+                         ))
+                         |(?:
+                            youtu\.be|
+                            vid\.plus|
+                            zwearz\.com\/watch|
+                         )\/
+                         |(?:www\.)?cleanvideosearch\.com\/media\/action\/yt\/watch\?videoId=
+                         )
+                     )?
+                     (?<id>[0-9A-Za-z_-]{11})
+                     (?!.*?\blist=
+                        (?:
+                            (?:(?:PL|LL|EC|UU|FL|RD|UL|TL|PU|OLAK5uy_)[0-9A-Za-z-_]{10,}|RDMM)s|
+                            WL
+                        )
+                     )
+                     .*
+                     $""".trimLineStartSpaces()
 
         private const val SEARCH_URL = "https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 

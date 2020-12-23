@@ -46,6 +46,8 @@ fun String.rPartition(sep: Char): Triple<String, String, String> {
     return Triple(this, "", "")
 }
 
+fun String.trimLineStartSpaces() = lines().joinToString("") { it.trim() }
+
 @Suppress("BlockingMethodInNonBlockingContext")
 suspend fun downloadWebPage(url: String): String = withContext(Dispatchers.IO) {
     Jsoup.connect(url).timeout(60 * 1000).get().html()

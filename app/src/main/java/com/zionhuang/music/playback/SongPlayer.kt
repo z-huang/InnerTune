@@ -76,7 +76,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         setFlags(FLAG_HANDLES_MEDIA_BUTTONS or FLAG_HANDLES_TRANSPORT_CONTROLS)
-        setCallback(MediaSessionCallback(this, this@SongPlayer))
+        setCallback(MediaSessionCallback(context, this@SongPlayer, scope))
         setPlaybackState(stateBuilder.build())
         isActive = true
     }
