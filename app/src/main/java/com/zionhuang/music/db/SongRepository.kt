@@ -37,6 +37,7 @@ class SongRepository(private val context: Context) {
 
     fun getArtistSongsAsPagingSource(artistId: Int) = songDao.getArtistSongsAsPagingSource(artistId)
 
+    fun getChannelSongsAsPagingSource(channelId: String) = songDao.getChannelSongsAsPagingSource(channelId)
     suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
     suspend fun insert(song: Song) = withContext(IO) { songDao.insert(SongEntity(song.id, song.title, song.artistId, song.channelId, song.duration, song.liked, song.downloadState, song.createDate, song.modifyDate)) }
 
@@ -81,6 +82,8 @@ class SongRepository(private val context: Context) {
     suspend fun getOrInsertArtist(name: String) = withContext(IO) {
         getArtistIdByName(name) ?: insertArtist(name).toInt()
     }
+
+    suspend fun getChannel(channelId: String) = withContext(IO) { channelDao.getChannelById(channelId) }
 
     suspend fun insertChannel(channel: ChannelEntity) = withContext(IO) { channelDao.insert(channel) }
 

@@ -33,4 +33,6 @@
     <string name="song_channel">Channel</string>
     <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
     <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
+    <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="channel_songs_transition_name" translatable="false">channel_songs</string>
 </resources>

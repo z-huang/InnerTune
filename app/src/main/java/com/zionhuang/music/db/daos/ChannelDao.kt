@@ -12,6 +12,9 @@ interface ChannelDao {
     @Query("SELECT * FROM channel")
     fun getAllChannelsAsPagingSource(): PagingSource<Int, ChannelEntity>
 
+    @Query("SELECT * FROM channel WHERE id = :channelId")
+    fun getChannelById(channelId: String): ChannelEntity?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(channel: ChannelEntity): Long
 

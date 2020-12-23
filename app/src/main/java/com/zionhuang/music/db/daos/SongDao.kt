@@ -26,6 +26,10 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE artistId = :artistId")
     fun getArtistSongsAsPagingSource(artistId: Int): PagingSource<Int, Song>
 
+    @Transaction
+    @Query("SELECT * FROM song WHERE channelId = :channelId")
+    fun getChannelSongsAsPagingSource(channelId: String): PagingSource<Int, Song>
+
     @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSongEntityById(songId: String): SongEntity?
 

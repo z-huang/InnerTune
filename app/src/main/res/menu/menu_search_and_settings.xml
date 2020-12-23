@@ -9,4 +9,9 @@
         android:orderInCategory="300"
         android:title="@string/menu_search_title"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/title_settings"
+        app:showAsAction="collapseActionView" />
 </menu>

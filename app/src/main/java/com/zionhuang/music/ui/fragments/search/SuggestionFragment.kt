@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.fragments
+package com.zionhuang.music.ui.fragments.search
 
 import android.app.SearchManager
 import android.content.Context

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.LoadState
 import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentExploreBinding
 import com.zionhuang.music.extensions.addOnClickListener
@@ -33,6 +34,12 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
 
     private val viewModel by viewModels<ExploreViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough().apply { duration = 300L }
+        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,7 +77,7 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search_icon, menu)
+        inflater.inflate(R.menu.menu_search_and_settings, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

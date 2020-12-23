@@ -5,11 +5,11 @@
     app:startDestination="@id/songsFragment">
     <fragment
         android:id="@+id/songsFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.SongsFragment"
+        android:name="com.zionhuang.music.ui.fragments.SongsFragment"
         android:label="@string/title_songs" />
     <fragment
         android:id="@+id/artistsFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.ArtistsFragment"
+        android:name="com.zionhuang.music.ui.fragments.ArtistsFragment"
         android:label="@string/title_artists">
         <action
             android:id="@+id/action_artistsFragment_to_artistSongsFragment"
@@ -21,11 +21,19 @@
     </fragment>
     <fragment
         android:id="@+id/channelsFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.ChannelsFragment"
-        android:label="@string/title_channels" />
+        android:name="com.zionhuang.music.ui.fragments.ChannelsFragment"
+        android:label="@string/title_channels">
+        <action
+            android:id="@+id/action_channelsFragment_to_channelSongsFragment"
+            app:destination="@id/channelSongsFragment">
+            <argument
+                android:name="channelId"
+                app:argType="string" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/playlistsFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.PlaylistsFragment"
+        android:name="com.zionhuang.music.ui.fragments.PlaylistsFragment"
         android:label="@string/title_channels" />
     <fragment
         android:id="@+id/explorationFragment"
@@ -40,12 +48,8 @@
             app:popExitAnim="@anim/fragment_open_exit" />
     </fragment>
     <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
-        android:label="@string/title_settings" />
-    <fragment
         android:id="@+id/suggestionFragment"
-        android:name="com.zionhuang.music.ui.fragments.SuggestionFragment">
+        android:name="com.zionhuang.music.ui.fragments.search.SuggestionFragment">
         <action
             android:id="@+id/action_suggestionFragment_to_searchResultFragment"
             app:destination="@id/searchResultFragment"
@@ -61,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchResultFragment"
-        android:name="com.zionhuang.music.ui.fragments.SearchResultFragment"
+        android:name="com.zionhuang.music.ui.fragments.search.SearchResultFragment"
         android:label="Search Result">
         <argument
             android:name="searchQuery"
@@ -89,4 +93,19 @@
             android:name="artistId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/channelSongsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment"
+        android:label="ChannelSongsFragment">
+        <argument
+            android:name="channelId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
+        android:label="@string/title_settings" />
+    <action
+        android:id="@+id/open_settingsFragment"
+        app:destination="@id/settingsFragment" />
 </navigation>

@@ -1,51 +1,40 @@
-package com.zionhuang.music.ui.fragments.songs
+package com.zionhuang.music.ui.fragments
 
-import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.LayoutArtistSongsBinding
+import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.ui.adapters.SongsAdapter
-import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistSongsFragment : MainFragment<LayoutArtistSongsBinding>() {
-    private val args: ArtistSongsFragmentArgs by navArgs()
-    private val artistId by lazy { args.artistId }
-
+class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val downloadHandler = DownloadHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.nav_host_fragment
-            duration = 300L
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
-        }
+        enterTransition = MaterialFadeThrough().apply { duration = 300L }
+        exitTransition = MaterialFadeThrough().apply { duration = 300L }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-        binding.recyclerView.doOnPreDraw {
-            startPostponedEnterTransition()
-        }
         songsViewModel.addDownloadListener(downloadHandler.downloadListener)
         val songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler)
         binding.recyclerView.apply {
@@ -56,19 +45,27 @@ class ArtistSongsFragment : MainFragment<LayoutArtistSongsBinding>() {
             }
         }
         lifecycleScope.launch {
-            activity.title = songsViewModel.songRepository.getArtistById(artistId)!!.name
-            songsViewModel.getArtistSongsAsFlow(artistId).collectLatest {
+            songsViewModel.allSongsFlow.collectLatest {
                 songsAdapter.submitData(it)
             }
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> {
+                findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
+            }
+        }
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_search_and_settings, menu)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         songsViewModel.removeDownloadListener(downloadHandler.downloadListener)
-    }
-
-    companion object {
-        val TAG = "ArtistSongsFragment"
     }
 }

@@ -23,6 +23,8 @@ class ChannelsAdapter : PagingDataAdapter<ChannelEntity, ChannelsAdapter.Channel
         }
     }
 
+    fun getItemByPosition(position: Int): ChannelEntity? = getItem(position)
+
     internal class ItemComparator : DiffUtil.ItemCallback<ChannelEntity>() {
         override fun areItemsTheSame(oldItem: ChannelEntity, newItem: ChannelEntity): Boolean = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: ChannelEntity, newItem: ChannelEntity): Boolean = oldItem.name == newItem.name

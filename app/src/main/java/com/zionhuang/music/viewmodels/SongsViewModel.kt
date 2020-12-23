@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.view.View
-import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -60,6 +59,10 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getArtistSongsAsPagingSource(artistId)
+    }.flow.cachedIn(viewModelScope)
+
+    fun getChannelSongsAsFlow(channelId: String) = Pager(PagingConfig(pageSize = 50)) {
+        songRepository.getChannelSongsAsPagingSource(channelId)
     }.flow.cachedIn(viewModelScope)
 
     val songPopupMenuListener = object : SongPopupMenuListener {

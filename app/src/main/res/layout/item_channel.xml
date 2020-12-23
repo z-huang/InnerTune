@@ -15,7 +15,8 @@
         android:layout_height="@dimen/song_item_height"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:transitionName="@{@string/channel_item_transition_name(channel.id)}">
 
         <LinearLayout
             android:id="@+id/thumbnail_container"
