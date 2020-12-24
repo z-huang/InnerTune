@@ -2,7 +2,7 @@ package com.zionhuang.music.ui.activities
 
 import android.os.Bundle
 import android.view.View
-import androidx.cardview.widget.CardView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -18,7 +18,7 @@ import com.zionhuang.music.ui.widgets.BottomSheetListener
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     private var bottomSheetCallback: BottomSheetListener? = null
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<CardView>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<CoordinatorLayout>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
-        bottomSheetBehavior = from<CardView>(binding.bottomControlsSheet).apply {
+        bottomSheetBehavior = from<CoordinatorLayout>(binding.bottomControlsSheet).apply {
             isHideable = true
             addBottomSheetCallback(BottomSheetCallback())
         }
@@ -41,7 +41,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight((54 * getDensity()).toInt(), true)
+        bottomSheetBehavior.setPeekHeight((108 * getDensity()).toInt(), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {
@@ -61,6 +61,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            binding.bottomNav.translationY = resources.getDimensionPixelOffset(R.dimen.bottom_navigation_height) * slideOffset.coerceIn(0F, 1F)
             bottomSheetCallback?.onSlide(bottomSheet, slideOffset)
         }
     }
