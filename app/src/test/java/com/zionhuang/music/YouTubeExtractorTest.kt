@@ -1,8 +1,8 @@
 package com.zionhuang.music
 
 import android.content.Context
-import com.zionhuang.music.extractor.YouTubeExtractor
-import com.zionhuang.music.extractor.models.YouTubeSearch
+import com.zionhuang.music.youtube.YouTubeExtractor
+import com.zionhuang.music.youtube.models.YouTubeSearch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

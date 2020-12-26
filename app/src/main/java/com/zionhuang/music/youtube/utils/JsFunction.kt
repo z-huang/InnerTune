@@ -1,4 +1,4 @@
-package com.zionhuang.music.extractor.utils
+package com.zionhuang.music.youtube.utils
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement

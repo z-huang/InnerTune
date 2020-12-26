@@ -1,4 +1,4 @@
-package com.zionhuang.music.youtube
+package com.zionhuang.music.youtube.models
 
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -7,7 +7,7 @@ import com.zionhuang.music.extensions.asStringOrBlank
 import com.zionhuang.music.extensions.get
 import java.util.*
 
-data class SuggestionResult(val query: String, val suggestions: List<String>) {
+data class YouTubeSuggestion(val query: String, val suggestions: List<String>) {
     companion object {
         @JvmField
         val deserializer = JsonDeserializer { json: JsonElement, _, _ ->
@@ -17,7 +17,7 @@ data class SuggestionResult(val query: String, val suggestions: List<String>) {
                     suggestions += jsonElement.asStringOrBlank
                 }
             }
-            SuggestionResult(json[0].asStringOrBlank, suggestions)
+            YouTubeSuggestion(json[0].asStringOrBlank, suggestions)
         }
     }
 }

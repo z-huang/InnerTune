@@ -1,4 +1,4 @@
-package com.zionhuang.music.extractor.models
+package com.zionhuang.music.youtube.models
 
 sealed class YouTubeChannel {
     class Success(

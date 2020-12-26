@@ -5,13 +5,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
-import com.zionhuang.music.extractor.YouTubeExtractor
-import com.zionhuang.music.extractor.models.YouTubeSearch
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.playback.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_NONE
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
+import com.zionhuang.music.youtube.YouTubeExtractor
+import com.zionhuang.music.youtube.models.YouTubeSearch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

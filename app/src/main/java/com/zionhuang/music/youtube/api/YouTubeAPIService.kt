@@ -8,7 +8,7 @@ import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.VideoListResponse
 import com.zionhuang.music.R
 import com.zionhuang.music.utils.PreferenceHelper
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class YouTubeAPIService(context: Context) {
@@ -24,8 +24,8 @@ class YouTubeAPIService(context: Context) {
             .build()
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun search(query: String, pageToken: String?): SearchListResponse = withContext(Dispatchers.IO) {
-        return@withContext youTube.search().list("snippet")
+    suspend fun search(query: String, pageToken: String?): SearchListResponse = withContext(IO) {
+        youTube.search().list("snippet")
                 .setKey(apiKey.value)
                 .setQ(query)
                 .setPageToken(pageToken)
@@ -34,7 +34,7 @@ class YouTubeAPIService(context: Context) {
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun popularMusic(pageToken: String?): VideoListResponse = withContext(Dispatchers.IO) {
+    suspend fun popularMusic(pageToken: String?): VideoListResponse = withContext(IO) {
         youTube.videos().list("snippet,contentDetails,statistics")
                 .setKey(apiKey.value)
                 .setChart("mostPopular")

@@ -1,4 +1,4 @@
-package com.zionhuang.music.extractor.models
+package com.zionhuang.music.youtube.models
 
 import com.google.gson.JsonObject
 import com.zionhuang.music.extensions.asFloatOrNull

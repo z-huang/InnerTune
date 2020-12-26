@@ -1,6 +1,8 @@
-package com.zionhuang.music.extractor.utils
+package com.zionhuang.music.youtube.utils
 
-import com.zionhuang.music.extensions.*
+import com.zionhuang.music.extensions.rPartition
+import com.zionhuang.music.extensions.rStrip
+import com.zionhuang.music.extensions.strip
 import java.util.*
 
 object ExtractorUtils {

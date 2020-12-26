@@ -5,7 +5,7 @@ import com.zionhuang.music.extensions.toJsonPrimitive
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import com.google.gson.JsonNull.INSTANCE as NULL
-import com.zionhuang.music.extractor.utils.JsInterpreter as JSI
+import com.zionhuang.music.youtube.utils.JsInterpreter as JSI
 
 class JsInterpreterTest {
     @Test

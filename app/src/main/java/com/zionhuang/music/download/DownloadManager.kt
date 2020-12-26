@@ -13,10 +13,10 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
-import com.zionhuang.music.extractor.YouTubeExtractor
-import com.zionhuang.music.extractor.models.YouTubeStream
 import com.zionhuang.music.models.AssetDownloadMission
 import com.zionhuang.music.models.AssetDownloadMission.Companion.ASSET_CHANNEL
+import com.zionhuang.music.youtube.YouTubeExtractor
+import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -70,7 +70,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
                 downloadState = STATE_DOWNLOADING
             }
             if (task.url == null) {
-                when (val extractResult = youTubeExtractor.extract(task.id)) {
+                when (val extractResult = youTubeExtractor.extractStream(task.id)) {
                     is YouTubeStream.Success -> {
                         val format = extractResult.formats.maxByOrNull { it.abr ?: 0 }
                                 ?: return@launch songRepository.updateById(task.id) {

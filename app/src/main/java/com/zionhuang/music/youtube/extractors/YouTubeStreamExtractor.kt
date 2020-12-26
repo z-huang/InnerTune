@@ -1,6 +1,6 @@
 @file:Suppress("RegExpRedundantEscape", "SpellCheckingInspection")
 
-package com.zionhuang.music.extractor.ytextractors
+package com.zionhuang.music.youtube.extractors
 
 import android.content.Context
 import android.util.Log
@@ -8,14 +8,13 @@ import androidx.collection.arrayMapOf
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.extractor.*
-import com.zionhuang.music.extractor.models.YouTubeStream
-import com.zionhuang.music.extractor.models.YtFormat
-import com.zionhuang.music.extractor.models.plus
-import com.zionhuang.music.extractor.utils.ExtractorUtils.determineExt
-import com.zionhuang.music.extractor.utils.ExtractorUtils.mimeType2ext
-import com.zionhuang.music.extractor.utils.ExtractorUtils.parseCodecs
-import com.zionhuang.music.extractor.utils.JsInterpreter
+import com.zionhuang.music.youtube.models.YouTubeStream
+import com.zionhuang.music.youtube.models.YtFormat
+import com.zionhuang.music.youtube.models.plus
+import com.zionhuang.music.youtube.utils.ExtractorUtils.determineExt
+import com.zionhuang.music.youtube.utils.ExtractorUtils.mimeType2ext
+import com.zionhuang.music.youtube.utils.ExtractorUtils.parseCodecs
+import com.zionhuang.music.youtube.utils.JsInterpreter
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -33,6 +32,8 @@ import kotlin.system.measureTimeMillis
  * @author Zion Huang
  * @version 2020.12.02
  */
+
+typealias SignatureFunctionKt = (String) -> String
 
 class YouTubeStreamExtractor private constructor(private val context: Context) {
     private var debug: (String) -> Unit = {}

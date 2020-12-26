@@ -32,8 +32,6 @@ import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.ACTION_DOWNLOAD_MUSIC
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
-import com.zionhuang.music.extractor.YouTubeExtractor
-import com.zionhuang.music.extractor.models.YouTubeStream
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.playback.queue.EmptyQueue.Companion.EMPTY_QUEUE
@@ -42,6 +40,8 @@ import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.playback.queue.SingleSongQueue
 import com.zionhuang.music.utils.PreferenceHelper
+import com.zionhuang.music.youtube.YouTubeExtractor
+import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -154,7 +154,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                     musicPlayer.setSource(File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri())
                     return@extractScope
                 }
-                when (val result = youTubeExtractor.extract(currentSong!!.id)) {
+                when (val result = youTubeExtractor.extractStream(currentSong!!.id)) {
                     is YouTubeStream.Success -> {
                         mediaSession.setMetadata(metadataBuilder.apply {
                             putString(METADATA_KEY_TITLE, result.title)

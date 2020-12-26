@@ -4,13 +4,13 @@ import android.content.Context
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.VideoListResponse
 import com.zionhuang.music.utils.RetrofitManager
-import com.zionhuang.music.youtube.api.SuggestionAPIService
 import com.zionhuang.music.youtube.api.YouTubeAPIService
+import com.zionhuang.music.youtube.api.YouTubeSuggestionAPIService
 
 class YouTubeRepository private constructor(context: Context) {
 
     private val youTubeAPIService: YouTubeAPIService = YouTubeAPIService(context)
-    private val suggestionAPIService: SuggestionAPIService = RetrofitManager.suggestionAPIService
+    private val suggestionAPIService: YouTubeSuggestionAPIService = RetrofitManager.suggestionAPIService
 
     suspend fun getSuggestions(query: String): List<String> {
         val response = suggestionAPIService.suggest(query)

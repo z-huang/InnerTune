@@ -62,8 +62,8 @@
                     android:id="@+id/song_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
                     android:layout_weight="1"
+                    android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="3dp"
                     android:text="@{song.title}"
@@ -126,11 +126,12 @@
                 android:layout_height="wrap_content"
                 android:visibility="@{song.downloadState == DownloadTask.STATE_DOWNLOADING ? View.VISIBLE : View.GONE}">
 
-                <ProgressBar
+                <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/progress_bar"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    style="@style/Widget.MaterialComponents.LinearProgressIndicator"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:progress="50" />
             </LinearLayout>
         </LinearLayout>
 

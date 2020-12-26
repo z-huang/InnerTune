@@ -1,10 +1,9 @@
 @file:Suppress("RegExpRedundantEscape")
 
-package com.zionhuang.music.extractor.utils
+package com.zionhuang.music.youtube.utils
 
 import com.google.gson.*
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.extractor.utils.JsFunction
 import okhttp3.internal.toImmutableMap
 import org.intellij.lang.annotations.Language
 
