@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import com.zionhuang.music.extractor.YouTubeExtractor
+import com.zionhuang.music.extractor.models.YouTubeSearch
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.playback.MediaSessionConstants.ACTION_TOGGLE_LIKE
@@ -32,7 +33,7 @@ class MediaSessionCallback internal constructor(
     }
 
     override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
-        val id = YouTubeExtractor.extractId(uri.toString())
+        val id = youTubeExtractor.extractId(uri.toString())
         if (id == null) {
             Log.d(TAG, "Can't extract video id from the url.")
             return
@@ -45,11 +46,11 @@ class MediaSessionCallback internal constructor(
         if (query == null) return
         scope.launch {
             when (val res = youTubeExtractor.search(query)) {
-                is YouTubeExtractor.SearchResult.Success -> {
+                is YouTubeSearch.Success -> {
                     songPlayer.setQueue(QUEUE_SINGLE, res.items[0].id)
                     songPlayer.playSong()
                 }
-                is YouTubeExtractor.SearchResult.Error -> {
+                is YouTubeSearch.Error -> {
                     Log.d(TAG, "Failed to search: $query")
                 }
             }

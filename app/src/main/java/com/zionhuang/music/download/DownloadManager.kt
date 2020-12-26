@@ -14,6 +14,9 @@ import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.extractor.YouTubeExtractor
+import com.zionhuang.music.extractor.models.YouTubeStream
+import com.zionhuang.music.models.AssetDownloadMission
+import com.zionhuang.music.models.AssetDownloadMission.Companion.ASSET_CHANNEL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -60,7 +63,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
 
     private val tasks = ArrayList<DownloadTask>()
 
-    fun addDownload(task: DownloadTask) {
+    fun addMusicDownload(task: DownloadTask) {
         tasks += task
         scope.launch {
             songRepository.updateById(task.id) {
@@ -68,14 +71,14 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             }
             if (task.url == null) {
                 when (val extractResult = youTubeExtractor.extract(task.id)) {
-                    is YouTubeExtractor.Result.Success -> {
+                    is YouTubeStream.Success -> {
                         val format = extractResult.formats.maxByOrNull { it.abr ?: 0 }
                                 ?: return@launch songRepository.updateById(task.id) {
                                     downloadState = STATE_NOT_DOWNLOADED
                                 }
                         task.url = format.url
                     }
-                    is YouTubeExtractor.Result.Error -> {
+                    is YouTubeStream.Error -> {
                         songRepository.updateById(task.id) {
                             downloadState = STATE_NOT_DOWNLOADED
                         }
@@ -143,6 +146,14 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             setProgress(totalBytes.toInt(), currentBytes.toInt(), false)
         }
         listeners.forEach { it(task) }
+    }
+
+    fun addAssetDownload(task:AssetDownloadMission) {
+        when (task.type) {
+            ASSET_CHANNEL->{
+
+            }
+        }
     }
 
     private fun updateNotification(id: Int, applier: NotificationCompat.Builder.() -> Unit) {

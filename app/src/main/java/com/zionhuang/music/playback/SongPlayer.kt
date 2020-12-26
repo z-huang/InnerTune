@@ -29,10 +29,11 @@ import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadService
-import com.zionhuang.music.download.DownloadService.Companion.DOWNLOAD_MUSIC_INTENT
+import com.zionhuang.music.download.DownloadService.Companion.ACTION_DOWNLOAD_MUSIC
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extractor.YouTubeExtractor
+import com.zionhuang.music.extractor.models.YouTubeStream
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.playback.queue.EmptyQueue.Companion.EMPTY_QUEUE
@@ -154,7 +155,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                     return@extractScope
                 }
                 when (val result = youTubeExtractor.extract(currentSong!!.id)) {
-                    is YouTubeExtractor.Result.Success -> {
+                    is YouTubeStream.Success -> {
                         mediaSession.setMetadata(metadataBuilder.apply {
                             putString(METADATA_KEY_TITLE, result.title)
                             putString(METADATA_KEY_ARTIST, result.channelTitle)
@@ -179,7 +180,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                             musicPlayer.setSource(Uri.parse(format.url))
                             if (autoDownload.value) {
                                 context.startService(Intent(context, DownloadService::class.java).apply {
-                                    action = DOWNLOAD_MUSIC_INTENT
+                                    action = ACTION_DOWNLOAD_MUSIC
                                     putExtra("task", DownloadTask(
                                             id = result.id,
                                             title = result.title,
@@ -189,7 +190,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                             }
                         }
                     }
-                    is YouTubeExtractor.Result.Error -> {
+                    is YouTubeStream.Error -> {
                         Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")
                     }
                 }

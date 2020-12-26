@@ -11,7 +11,8 @@ import androidx.lifecycle.lifecycleScope
 class DownloadService : LifecycleService() {
     companion object {
         private const val TAG = "YTDownloadService"
-        const val DOWNLOAD_MUSIC_INTENT = "download_music"
+        const val ACTION_DOWNLOAD_MUSIC = "download_music"
+        const val ACTION_DOWNLOAD_ASSET  = "download_asset"
     }
 
     private val binder = DownloadServiceBinder()
@@ -26,9 +27,11 @@ class DownloadService : LifecycleService() {
         super.onStartCommand(intent, flags, startId)
         if (intent == null) return START_STICKY
         when (intent.action) {
-            DOWNLOAD_MUSIC_INTENT -> {
-                Log.d(TAG, "intent action: download music: $intent")
-                downloadManager.addDownload(intent.getParcelableExtra("task")!!)
+            ACTION_DOWNLOAD_MUSIC -> {
+                downloadManager.addMusicDownload(intent.getParcelableExtra("task")!!)
+            }
+            ACTION_DOWNLOAD_ASSET->{
+                downloadManager.addAssetDownload(intent.getParcelableExtra("asset")!!)
             }
         }
         return START_STICKY

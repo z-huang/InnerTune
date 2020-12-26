@@ -76,7 +76,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun downloadSong(songId: String, context: Context) {
             context.startService(Intent(context, DownloadService::class.java).apply {
-                action = DownloadService.DOWNLOAD_MUSIC_INTENT
+                action = DownloadService.ACTION_DOWNLOAD_MUSIC
                 putExtra("task", DownloadTask(id = songId))
             })
         }
