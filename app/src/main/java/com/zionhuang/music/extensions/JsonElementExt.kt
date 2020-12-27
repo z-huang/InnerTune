@@ -78,7 +78,11 @@ fun <T> Iterable<T>.mapToJsonArray(transform: (T) -> JsonElement): JsonArray = J
 
 operator fun JsonElement?.get(index: Int): JsonElement? = if (this is JsonArray) this.get(index) else null
 operator fun JsonArray?.get(index: Int): JsonElement? = this?.get(index)
+
 fun JsonArray.isNotEmpty() = this.size() > 0
+
+fun JsonElement?.last(): JsonElement? = if (this is JsonArray && this.isNotEmpty()) this[size() - 1] else null
+
 fun JsonArray.selfReverse() = this.apply {
     for (i in 0 until (size() shr 1)) {
         val temp = this[i]

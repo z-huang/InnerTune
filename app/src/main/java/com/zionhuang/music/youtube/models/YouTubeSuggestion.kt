@@ -7,7 +7,10 @@ import com.zionhuang.music.extensions.asStringOrBlank
 import com.zionhuang.music.extensions.get
 import java.util.*
 
-data class YouTubeSuggestion(val query: String, val suggestions: List<String>) {
+data class YouTubeSuggestion(
+        val query: String,
+        val suggestions: List<String>,
+) {
     companion object {
         @JvmField
         val deserializer = JsonDeserializer { json: JsonElement, _, _ ->

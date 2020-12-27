@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.fragments.songs
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -13,6 +14,8 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutChannelSongsBinding
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.circle
+import com.zionhuang.music.extensions.load
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue
@@ -20,6 +23,8 @@ import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
+import com.zionhuang.music.youtube.YouTubeExtractor
+import com.zionhuang.music.youtube.models.YouTubeChannel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -55,9 +60,24 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
             }
         }
         lifecycleScope.launch {
-            activity.title = songsViewModel.songRepository.getChannel(channelId)!!.name
+            songsViewModel.songRepository.getChannel(channelId)!!.name.let {
+                activity.title = it
+                binding.channelName.text = it
+            }
             songsViewModel.getChannelSongsAsFlow(channelId).collectLatest {
                 songsAdapter.submitData(it)
+            }
+        }
+        lifecycleScope.launch {
+            when (val channel = YouTubeExtractor.getInstance(requireContext()).getChannel(channelId)) {
+                is YouTubeChannel.Success -> {
+                    Log.d(TAG, channel.toString())
+                    channel.bannerUrl?.let { binding.banner.load(it) }
+                    channel.avatarUrl?.let { binding.avatar.load(it) { circle() } }
+                }
+                is YouTubeChannel.Error -> {
+                    Log.d(TAG, "Get channel error ${channel.errorMessage}")
+                }
             }
         }
     }
@@ -68,6 +88,6 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
     }
 
     companion object {
-        val TAG = "ArtistSongsFragment"
+        val TAG = "ChannelSongsFragment"
     }
 }

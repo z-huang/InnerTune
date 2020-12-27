@@ -10,9 +10,11 @@ import java.net.URL
 import java.nio.charset.StandardCharsets.UTF_8
 
 fun urlRequest(url: String, headers: Map<String, String>, data: String? = null): HttpURLConnection = (URL(url).openConnection() as HttpURLConnection).apply {
-    doOutput = true
+    requestMethod = "GET"
+    setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101 Firefox/68.0")
     headers.forEach { (key, value) -> setRequestProperty(key, value) }
     data?.let {
+        doOutput = true
         outputStream.write(data.toByteArray(UTF_8))
     }
 }
