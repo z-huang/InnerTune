@@ -1,5 +1,6 @@
 package com.zionhuang.music.playback
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -47,6 +48,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.File
 
+typealias OnNotificationPosted = (notificationId: Int, notification: Notification, ongoing: Boolean) -> Unit
+
 /**
  * A wrapper around [MusicPlayer] to support actions from [MediaSessionCallback]
  */
@@ -84,14 +87,28 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     val mediaSession: MediaSessionCompat
         get() = _mediaSession
 
-    private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.channel_name_playback, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
-        override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title
-                ?: "No Song"
+    private var onNotificationPosted: OnNotificationPosted = { _, _, _ -> }
 
-        override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artistName
-        override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null
-        override fun createCurrentContentIntent(player: Player): PendingIntent? = null
-    }).apply {
+    private val playerNotificationManager = createWithNotificationChannel(
+            context,
+            CHANNEL_ID,
+            R.string.channel_name_playback,
+            0,
+            NOTIFICATION_ID,
+            object : PlayerNotificationManager.MediaDescriptionAdapter {
+                override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title
+                        ?: "No Song"
+
+                override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artistName
+                override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null
+                override fun createCurrentContentIntent(player: Player): PendingIntent? = null
+            },
+            object : PlayerNotificationManager.NotificationListener {
+                override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
+                    this@SongPlayer.onNotificationPosted(notificationId, notification, ongoing)
+                }
+            }
+    ).apply {
         setPlayer(musicPlayer.exoPlayer)
         setMediaSessionToken(mediaSession.sessionToken)
     }
@@ -269,6 +286,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         setPlaybackState(stateBuilder.build())
     }
 
+
     private fun setPlaybackState(state: PlaybackStateCompat) = mediaSession.setPlaybackState(state)
 
     fun release() {
@@ -292,5 +310,9 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 play()
             }
         }
+    }
+
+    fun onNotificationPosted(block: OnNotificationPosted) {
+        onNotificationPosted = block
     }
 }

@@ -19,6 +19,13 @@ class MusicService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
         songPlayer = SongPlayer(this, lifecycleScope)
+        songPlayer.onNotificationPosted { notificationId, notification, ongoing ->
+            if (ongoing) {
+                startForeground(notificationId, notification)
+            } else {
+                stopForeground(false)
+            }
+        }
     }
 
     override fun onDestroy() {
