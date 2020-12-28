@@ -4,6 +4,7 @@ import android.text.Html
 import android.text.Html.FROM_HTML_MODE_LEGACY
 import com.google.gson.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils.unescapeJava
 import org.jsoup.Jsoup
@@ -49,12 +50,12 @@ fun String.rPartition(sep: Char): Triple<String, String, String> {
 fun String.trimLineStartSpaces() = lines().joinToString("") { it.trim() }
 
 @Suppress("BlockingMethodInNonBlockingContext")
-suspend fun downloadWebPage(url: String): String = withContext(Dispatchers.IO) {
+suspend fun downloadWebPage(url: String): String = withContext(IO) {
     Jsoup.connect(url).timeout(60 * 1000).get().html()
 }
 
 @Suppress("BlockingMethodInNonBlockingContext")
-suspend fun downloadPlainText(url: String): String = withContext(Dispatchers.IO) {
+suspend fun downloadPlainText(url: String): String = withContext(IO) {
     Jsoup.connect(url).ignoreContentType(true).execute().body()
 }
 

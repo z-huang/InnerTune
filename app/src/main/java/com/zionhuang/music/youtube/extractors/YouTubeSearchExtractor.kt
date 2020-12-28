@@ -5,6 +5,7 @@ import com.zionhuang.music.extensions.*
 import com.zionhuang.music.youtube.models.YouTubeSearch
 import com.zionhuang.music.youtube.models.YouTubeSearchItem
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.withContext
 
 object YouTubeSearchExtractor {
@@ -12,7 +13,7 @@ object YouTubeSearchExtractor {
 
     private const val SEARCH_URL = "https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
 
-    suspend fun search(query: String, pageToken: String? = null): YouTubeSearch = withContext(Dispatchers.Default) {
+    suspend fun search(query: String, pageToken: String? = null): YouTubeSearch = withContext(Default) {
         val data = jsonObjectOf(
                 "context" to jsonObjectOf(
                         "client" to jsonObjectOf(

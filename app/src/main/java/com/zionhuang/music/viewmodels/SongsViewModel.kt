@@ -33,7 +33,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     val allSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
-            songRepository.allSongsAsPagingSource
+            songRepository.allSongsPagingSource
         }.flow.cachedIn(viewModelScope)
     }
 
@@ -51,7 +51,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     val allChannelsFlow: Flow<PagingData<ChannelEntity>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
-            songRepository.allChannels
+            songRepository.allChannelsPagingSource
         }.flow.cachedIn(viewModelScope)
     }
 

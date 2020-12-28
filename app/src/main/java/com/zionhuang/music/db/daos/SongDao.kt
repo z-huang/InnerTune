@@ -1,5 +1,6 @@
 package com.zionhuang.music.db.daos
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.zionhuang.music.db.entities.Song
@@ -37,11 +38,11 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSongById(songId: String): Song?
 
-    @Transaction
-    @Query("SELECT * FROM song WHERE id = :songId")
-    fun getSongByIdAsFlow(songId: String): Flow<Song>
+    @Query("SELECT COUNT(id) FROM song WHERE channelId = :channelId")
+    fun channelSongsCount(channelId: String): LiveData<Int>
 
-    fun getSongByIdAsFlowDistinct(songId: String) = getSongByIdAsFlow(songId).distinctUntilChanged()
+    @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
+    fun channelSongsDuration(channelId: String): LiveData<Long>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(vararg songs: SongEntity)

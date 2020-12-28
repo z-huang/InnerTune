@@ -30,4 +30,7 @@
     <string name="error_song_title_empty">歌名不能為空</string>
     <string name="error_song_artist_empty">作曲家不能為空</string>
     <string name="song_channel">頻道</string>
+    <plurals name="channel_songs_count">
+        <item quantity="other">%d 首歌曲</item>
+    </plurals>
 </resources>

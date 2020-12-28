@@ -22,43 +22,26 @@ class SongRepository(private val context: Context) {
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val channelDao: ChannelDao = musicDatabase.channelDao
 
-    val allSongsAsFlow get() = songDao.getAllSongsAsFlow()
-    val allSongsAsPagingSource get() = songDao.getAllSongsAsPagingSource()
+    val allSongsFlow get() = songDao.getAllSongsAsFlow()
+    val allSongsPagingSource get() = songDao.getAllSongsAsPagingSource()
     val downloadingSongsPagingSource get() = songDao.getDownloadingSongsAsPagingSource()
-    val allArtistsPagingSource get() = artistDao.getAllArtistsAsPagingSource()
     val allArtists get() = artistDao.getAllArtists()
-    val allChannels get() = channelDao.getAllChannelsAsPagingSource()
-
-    suspend fun getSongEntityById(id: String) = withContext(IO) { songDao.getSongEntityById(id) }
+    val allArtistsPagingSource get() = artistDao.getAllArtistsAsPagingSource()
+    fun getArtistSongsAsPagingSource(artistId: Int) = songDao.getArtistSongsAsPagingSource(artistId)
+    val allChannelsPagingSource get() = channelDao.getAllChannelsAsPagingSource()
+    fun getChannelSongsAsPagingSource(channelId: String) = songDao.getChannelSongsAsPagingSource(channelId)
 
     suspend fun getSongById(id: String) = withContext(IO) { songDao.getSongById(id) }
 
-    fun getSongAsFlow(songId: String) = songDao.getSongByIdAsFlowDistinct(songId)
-
-    fun getArtistSongsAsPagingSource(artistId: Int) = songDao.getArtistSongsAsPagingSource(artistId)
-
-    fun getChannelSongsAsPagingSource(channelId: String) = songDao.getChannelSongsAsPagingSource(channelId)
     suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
     suspend fun insert(song: Song) = withContext(IO) { songDao.insert(SongEntity(song.id, song.title, song.artistId, song.channelId, song.duration, song.liked, song.downloadState, song.createDate, song.modifyDate)) }
 
     suspend fun updateById(songId: String, applier: SongEntity.() -> Unit) = withContext(IO) {
-        songDao.update(getSongEntityById(songId)!!.apply {
-            applier(this)
-        })
+        songDao.update(songDao.getSongEntityById(songId)!!.apply { applier(this) })
     }
 
     suspend fun updateSong(song: Song) = withContext(IO) {
-        songDao.update(SongEntity(
-                song.id,
-                song.title,
-                getOrInsertArtist(song.artistName),
-                song.channelId,
-                song.duration,
-                song.liked,
-                song.downloadState,
-                song.createDate,
-                song.modifyDate
-        ))
+        songDao.update(SongEntity(song.id, song.title, getOrInsertArtist(song.artistName), song.channelId, song.duration, song.liked, song.downloadState, song.createDate, song.modifyDate))
     }
 
     suspend fun deleteSongById(songId: String) = withContext(IO) {
@@ -94,4 +77,8 @@ class SongRepository(private val context: Context) {
             liked = !liked
         }
     }
+
+    fun channelSongsCount(channelId: String) = songDao.channelSongsCount(channelId)
+
+    fun channelSongsDuration(channelId: String) = songDao.channelSongsDuration(channelId)
 }

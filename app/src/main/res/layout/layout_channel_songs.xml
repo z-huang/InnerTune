@@ -42,10 +42,9 @@
                     tools:text="Channel Name" />
 
                 <TextView
-                    android:id="@+id/song_counts"
+                    android:id="@+id/songs_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="50 songs"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     tools:text="50 songs" />
 
@@ -53,7 +52,6 @@
                     android:id="@+id/total_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1:20:45"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     tools:text="1:20:45" />
             </LinearLayout>

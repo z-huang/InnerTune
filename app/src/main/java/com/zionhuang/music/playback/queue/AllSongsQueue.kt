@@ -1,11 +1,10 @@
 package com.zionhuang.music.playback.queue
 
-import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -16,14 +15,14 @@ class AllSongsQueue(songsRepository: SongRepository, scope: CoroutineScope) : Qu
         const val TAG = "AllSongsQueue"
     }
 
-    private val songsFlow = songsRepository.allSongsAsFlow
+    private val songsFlow = songsRepository.allSongsFlow
 
     init {
         runBlocking {
             list = songsFlow.first()
         }
-        scope.launch(Dispatchers.IO) {
-            songsRepository.allSongsAsFlow.collect { l ->
+        scope.launch(IO) {
+            songsRepository.allSongsFlow.collect { l ->
                 index = l.indexOfFirst { it.id == list[index].id }
                 list = l
             }

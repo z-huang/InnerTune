@@ -21,6 +21,7 @@ import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.youtube.YouTubeExtractor
@@ -58,6 +59,12 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
             addOnClickListener { pos, _ ->
                 playbackViewModel.playMedia(SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!), Queue.QUEUE_ALL_SONG)
             }
+        }
+        songsViewModel.songRepository.channelSongsCount(channelId).observe(viewLifecycleOwner) { count ->
+            binding.songsCount.text = resources.getQuantityString(R.plurals.channel_songs_count, count, count)
+        }
+        songsViewModel.songRepository.channelSongsDuration(channelId).observe(viewLifecycleOwner) {duration->
+            binding.totalDuration.text = makeTimeString(duration)
         }
         lifecycleScope.launch {
             songsViewModel.songRepository.getChannel(channelId)!!.name.let {
