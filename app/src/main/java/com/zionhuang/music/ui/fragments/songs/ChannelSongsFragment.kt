@@ -60,10 +60,11 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
                 playbackViewModel.playMedia(SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!), Queue.QUEUE_ALL_SONG)
             }
         }
+
         songsViewModel.songRepository.channelSongsCount(channelId).observe(viewLifecycleOwner) { count ->
             binding.songsCount.text = resources.getQuantityString(R.plurals.channel_songs_count, count, count)
         }
-        songsViewModel.songRepository.channelSongsDuration(channelId).observe(viewLifecycleOwner) {duration->
+        songsViewModel.songRepository.channelSongsDuration(channelId).observe(viewLifecycleOwner) { duration ->
             binding.totalDuration.text = makeTimeString(duration)
         }
         lifecycleScope.launch {
@@ -71,11 +72,6 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
                 activity.title = it
                 binding.channelName.text = it
             }
-            songsViewModel.getChannelSongsAsFlow(channelId).collectLatest {
-                songsAdapter.submitData(it)
-            }
-        }
-        lifecycleScope.launch {
             when (val channel = YouTubeExtractor.getInstance(requireContext()).getChannel(channelId)) {
                 is YouTubeChannel.Success -> {
                     Log.d(TAG, channel.toString())
@@ -85,6 +81,9 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
                 is YouTubeChannel.Error -> {
                     Log.d(TAG, "Get channel error ${channel.errorMessage}")
                 }
+            }
+            songsViewModel.getChannelSongsAsFlow(channelId).collectLatest {
+                songsAdapter.submitData(it)
             }
         }
     }

@@ -12,7 +12,8 @@ private const val HMS_FORMAT = """%1${"$"}d:%2$02d:%3$02d"""
  * @return formatted string
  */
 @Suppress("NAME_SHADOWING")
-fun makeTimeString(duration: Long): String {
+fun makeTimeString(duration: Long?): String {
+    if (duration == null) return "0:00"
     var duration = duration
     val hours = duration / 3600
     duration %= 3600

@@ -7,7 +7,6 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Dao
 interface SongDao {
@@ -42,7 +41,7 @@ interface SongDao {
     fun channelSongsCount(channelId: String): LiveData<Int>
 
     @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
-    fun channelSongsDuration(channelId: String): LiveData<Long>
+    fun channelSongsDuration(channelId: String): LiveData<Long?>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(vararg songs: SongEntity)

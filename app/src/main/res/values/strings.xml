@@ -36,6 +36,7 @@
     <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>
     <string name="channel_songs_transition_name" translatable="false">channel_songs</string>
     <plurals name="channel_songs_count">
+        <item quantity="zero">%d song</item>
         <item quantity="one">%d song</item>
         <item quantity="other">%d songs</item>
     </plurals>
