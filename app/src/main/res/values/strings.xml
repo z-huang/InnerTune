@@ -40,4 +40,6 @@
         <item quantity="one">%d song</item>
         <item quantity="other">%d songs</item>
     </plurals>
+    <string name="btn_play_all">Play All</string>
+    <string name="btn_shuffle">Shuffle</string>
 </resources>
