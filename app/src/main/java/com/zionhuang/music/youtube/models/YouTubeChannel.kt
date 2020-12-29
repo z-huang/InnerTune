@@ -8,5 +8,5 @@ sealed class YouTubeChannel {
             val bannerUrl: String?,
     ) : YouTubeChannel()
 
-    class Error(val errorMessage: String) : YouTubeChannel()
+    class Error(val errorMessage: String?) : YouTubeChannel()
 }

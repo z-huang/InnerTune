@@ -95,11 +95,14 @@ dependencies {
     implementation 'com.google.http-client:google-http-client-android:1.38.0'
     implementation 'com.google.api-client:google-api-client-android:1.31.1'
     implementation 'com.google.api-client:google-api-client-gson:1.31.1'
+    // NewPipe Extractor
+    implementation 'com.github.TeamNewPipe:NewPipeExtractor:v0.20.8'
     // Apache Utils
     implementation "org.apache.commons:commons-lang3:3.11"
     implementation "org.apache.commons:commons-text:1.9"
-    // Retrofit
+    // OkHttp
     implementation "com.squareup.okhttp3:okhttp:4.9.0"
+    // Retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation "com.squareup.retrofit2:adapter-rxjava3:2.9.0"

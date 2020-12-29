@@ -13,6 +13,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.Hold
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
@@ -41,8 +42,12 @@ class ChannelsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = channelsAdapter
             addOnClickListener { position, view ->
-                exitTransition = Hold()
-                reenterTransition = Hold()
+                exitTransition = MaterialElevationScale(false).apply {
+                    duration = 300L
+                }
+                reenterTransition = MaterialElevationScale(true).apply {
+                    duration = 300L
+                }
                 val transitionName = getString(R.string.channel_songs_transition_name)
                 val extras = FragmentNavigatorExtras(view to transitionName)
                 val directions = ChannelsFragmentDirections.actionChannelsFragmentToChannelSongsFragment(channelsAdapter.getItemByPosition(position)!!.id)

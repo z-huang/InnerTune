@@ -94,6 +94,6 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
     }
 
     companion object {
-        val TAG = "ChannelSongsFragment"
+        const val TAG = "ChannelSongsFragment"
     }
 }

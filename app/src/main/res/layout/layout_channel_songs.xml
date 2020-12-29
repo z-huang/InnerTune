@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:transitionName="@string/channel_songs_transition_name">
 
         <ImageView
             android:id="@+id/banner"
@@ -96,7 +97,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:orientation="vertical"
-            android:transitionName="@string/channel_songs_transition_name" />
+            android:orientation="vertical" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
