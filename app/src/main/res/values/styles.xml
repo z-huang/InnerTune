@@ -6,7 +6,7 @@
         <!--        <item name="android:windowBackground">@color/colorPrimary</item>-->
         <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
         <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">?colorPrimary</item>
         <item name="invertedColor">@color/colorInverted</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteTextView</item>
