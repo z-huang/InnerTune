@@ -13,6 +13,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.zionhuang.music.R
+import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
@@ -25,22 +27,22 @@ import com.zionhuang.music.extensions.getActivity
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.songs.SongDetailsDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import com.zionhuang.music.utils.preference
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songRepository: SongRepository = SongRepository(application)
 
-    val allSongsFlow: Flow<PagingData<Song>> by lazy {
-        Pager(PagingConfig(pageSize = 50)) {
-            songRepository.allSongsPagingSource
-        }.flow.cachedIn(viewModelScope)
-    }
+    var sortType by preference(R.string.sort_type, ORDER_NAME)
 
-    val downloadingSongsFlow: Flow<PagingData<Song>> by lazy {
-        Pager(PagingConfig(pageSize = 50)) {
-            songRepository.downloadingSongsPagingSource
-        }.flow.cachedIn(viewModelScope)
+    val allSongsFlow: Flow<PagingData<Song>> by lazy {
+        Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
+            songRepository.getAllSongs(sortType)
+        }.flow.map { pagingData ->
+            pagingData.insertHeaderItem(Song("\$HEADER$"))
+        }.cachedIn(viewModelScope)
     }
 
     val allArtistsFlow: Flow<PagingData<ArtistEntity>> by lazy {

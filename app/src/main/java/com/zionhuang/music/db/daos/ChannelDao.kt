@@ -15,6 +15,9 @@ interface ChannelDao {
     @Query("SELECT * FROM channel WHERE id = :channelId")
     fun getChannelById(channelId: String): ChannelEntity?
 
+    @Query("SELECT * FROM channel WHERE name = :name")
+    fun getChannelByName(name: String): ChannelEntity?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(channel: ChannelEntity): Long
 

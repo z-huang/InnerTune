@@ -1,6 +1,10 @@
 package com.zionhuang.music.db
 
 import android.content.Context
+import com.zionhuang.music.constants.ORDER_ARTIST
+import com.zionhuang.music.constants.ORDER_CREATE_DATE
+import com.zionhuang.music.constants.ORDER_NAME
+import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.ChannelDao
 import com.zionhuang.music.db.daos.SongDao
@@ -13,18 +17,19 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class SongRepository(private val context: Context) {
-    companion object {
-        private const val TAG = "SongRepository"
-    }
-
     private val musicDatabase = MusicDatabase.getInstance(context)
     private val songDao: SongDao = musicDatabase.songDao
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val channelDao: ChannelDao = musicDatabase.channelDao
 
+    fun getAllSongs(@SongSortType order: Int) = when (order) {
+        ORDER_CREATE_DATE -> songDao.getAllSongsByCreateDateAsPagingSource()
+        ORDER_NAME -> songDao.getAllSongsByName()
+        ORDER_ARTIST -> songDao.getAllSongsByArtist()
+        else -> throw IllegalArgumentException("Unexpected order type.")
+    }
+
     val allSongsFlow get() = songDao.getAllSongsAsFlow()
-    val allSongsPagingSource get() = songDao.getAllSongsAsPagingSource()
-    val downloadingSongsPagingSource get() = songDao.getDownloadingSongsAsPagingSource()
     val allArtists get() = artistDao.getAllArtists()
     val allArtistsPagingSource get() = artistDao.getAllArtistsAsPagingSource()
     fun getArtistSongsAsPagingSource(artistId: Int) = songDao.getArtistSongsAsPagingSource(artistId)
@@ -34,7 +39,7 @@ class SongRepository(private val context: Context) {
     suspend fun getSongById(id: String) = withContext(IO) { songDao.getSongById(id) }
 
     suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
-    suspend fun insert(song: Song) = withContext(IO) { songDao.insert(SongEntity(song.id, song.title, song.artistId, song.channelId, song.duration, song.liked, song.downloadState, song.createDate, song.modifyDate)) }
+    suspend fun insert(song: Song) = withContext(IO) { songDao.insert(SongEntity(song.id, song.title, getOrInsertArtist(song.artistName), getOrInsertChannel(song.channelName), song.duration, song.liked, song.downloadState, song.createDate, song.modifyDate)) }
 
     suspend fun updateById(songId: String, applier: SongEntity.() -> Unit) = withContext(IO) {
         songDao.update(songDao.getSongEntityById(songId)!!.apply { applier(this) })
@@ -68,7 +73,14 @@ class SongRepository(private val context: Context) {
 
     suspend fun getChannel(channelId: String) = withContext(IO) { channelDao.getChannelById(channelId) }
 
+    suspend fun getChannelByName(name: String) = withContext(IO) { channelDao.getChannelByName(name) }
+
     suspend fun insertChannel(channel: ChannelEntity) = withContext(IO) { channelDao.insert(channel) }
+
+    suspend fun getOrInsertChannel(name: String) = withContext(IO) {
+        getChannelByName(name) ?: insertChannel(ChannelEntity(name, name))
+        return@withContext name
+    }
 
     suspend fun hasChannel(channelId: String) = withContext(IO) { channelDao.contains(channelId) }
 
@@ -81,4 +93,8 @@ class SongRepository(private val context: Context) {
     fun channelSongsCount(channelId: String) = songDao.channelSongsCount(channelId)
 
     fun channelSongsDuration(channelId: String) = songDao.channelSongsDuration(channelId)
+
+    companion object {
+        private const val TAG = "SongRepository"
+    }
 }

@@ -18,5 +18,5 @@ data class Song(
         var liked: Boolean = false,
         @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,
         @ColumnInfo(name = "create_date") var createDate: Date = Date(),
-        @ColumnInfo(name = "modify_date") var modifyDate: Date = Date()
+        @ColumnInfo(name = "modify_date") var modifyDate: Date = Date(),
 )

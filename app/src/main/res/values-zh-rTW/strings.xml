@@ -35,4 +35,7 @@
     </plurals>
     <string name="btn_play_all">全部播放</string>
     <string name="btn_shuffle">隨機播放</string>
+    <string name="sort_by_name">曲名</string>
+    <string name="sort_by_artist">作曲家</string>
+    <string name="sort_by_create_date">新增時間</string>
 </resources>

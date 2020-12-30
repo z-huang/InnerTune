@@ -5,7 +5,6 @@ import androidx.paging.PagingSource
 import androidx.room.*
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,12 +14,16 @@ interface SongDao {
     fun getAllSongsAsFlow(): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song ORDER BY create_date DESC")
-    fun getAllSongsAsPagingSource(): PagingSource<Int, Song>
+    @Query("SELECT * FROM song ORDER BY title DESC")
+    fun getAllSongsByName(): PagingSource<Int, Song>
 
     @Transaction
-    @Query("SELECT * FROM song WHERE download_state = $STATE_DOWNLOADING")
-    fun getDownloadingSongsAsPagingSource(): PagingSource<Int, Song>
+    @Query("SELECT * FROM song ORDER BY artistId DESC")
+    fun getAllSongsByArtist(): PagingSource<Int, Song>
+
+    @Transaction
+    @Query("SELECT * FROM song ORDER BY create_date DESC")
+    fun getAllSongsByCreateDateAsPagingSource(): PagingSource<Int, Song>
 
     @Transaction
     @Query("SELECT * FROM song WHERE artistId = :artistId")

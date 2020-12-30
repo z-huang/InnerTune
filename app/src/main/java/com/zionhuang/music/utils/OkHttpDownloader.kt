@@ -1,6 +1,7 @@
 package com.zionhuang.music.utils
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
 import com.zionhuang.music.extensions.parseJsonString
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,6 +29,8 @@ object OkHttpDownloader {
         return try {
             client.newCall(request).execute().body?.string()?.parseJsonString()
         } catch (e: IOException) {
+            throw DownloadException(e.message)
+        } catch (e: JsonParseException) {
             throw DownloadException(e.message)
         }
     }

@@ -2,4 +2,5 @@
 <resources>
     <string name="api_key" translatable="false">API_KEY</string>
     <string name="auto_download" translatable="false">AUTO_DOWNLOAD</string>
+    <string name="sort_type" translatable="false">SORT_TYPE</string>
 </resources>
