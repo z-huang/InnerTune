@@ -7,7 +7,14 @@ import android.util.Log
 import androidx.annotation.StringRes
 import kotlin.reflect.KProperty
 
-class Preference<T : Any>(private val contextFactory: () -> Context, @StringRes private val keyId: Int, private val defaultValue: T) {
+/**
+ * A delegate providing easy access to dynamic preference value through [PreferenceStore]
+ */
+class Preference<T : Any>(
+        private val contextFactory: () -> Context,
+        @StringRes private val keyId: Int,
+        private val defaultValue: T,
+) {
     private var isInitialized = false
 
     private lateinit var key: String
