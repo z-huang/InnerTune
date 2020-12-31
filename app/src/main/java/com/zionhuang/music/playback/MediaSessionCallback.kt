@@ -6,8 +6,9 @@ import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
-import com.zionhuang.music.playback.MediaSessionConstants.ACTION_TOGGLE_LIKE
+import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
+import com.zionhuang.music.constants.MediaSessionConstants.ACTION_DOWNLOAD
+import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_NONE
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.youtube.YouTubeExtractor
@@ -61,6 +62,7 @@ class MediaSessionCallback internal constructor(
         when (action) {
             ACTION_ADD_TO_LIBRARY -> songPlayer.addToLibrary()
             ACTION_TOGGLE_LIKE -> songPlayer.toggleLike()
+            ACTION_DOWNLOAD -> songPlayer.downloadCurrentSong()
         }
     }
 

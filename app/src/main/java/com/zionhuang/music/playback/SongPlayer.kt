@@ -9,6 +9,7 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
@@ -141,9 +142,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 }
                 else -> STATE_NONE
             }
-            updatePlaybackState {
-                setState(state, musicPlayer.position, musicPlayer.playbackSpeed)
-            }
+            updatePlaybackState(state, musicPlayer.position)
         }
 
         audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -168,7 +167,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             job = scope.launch extractScope@{
                 audioManager.requestAudioFocus(focusRequest)
                 if (song.downloadState == STATE_DOWNLOADED) {
-                    musicPlayer.setSource(File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri())
+                    musicPlayer.source = File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri()
                     return@extractScope
                 }
                 when (val result = youTubeExtractor.extractStream(currentSong!!.id)) {
@@ -194,7 +193,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                         }
                         result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
                             Log.d(TAG, "Song url: ${format.url}")
-                            musicPlayer.setSource(Uri.parse(format.url))
+                            musicPlayer.source = Uri.parse(format.url)
                             if (autoDownload.value) {
                                 context.startService(Intent(context, DownloadService::class.java).apply {
                                     action = ACTION_DOWNLOAD_MUSIC
@@ -221,15 +220,19 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     fun seekTo(pos: Long) {
         musicPlayer.seekTo(pos)
-        updatePlaybackState {
-            setState(mediaSession.controller.playbackState.state, pos, musicPlayer.playbackSpeed)
-        }
+        updatePlaybackState(mediaSession.controller.playbackState.state, pos)
     }
 
-    var volume: Float
+    private var volume: Float
         get() = musicPlayer.volume
         set(value) {
             musicPlayer.volume = value
+        }
+
+    private var playbackSpeed: Float
+        get() = musicPlayer.playbackSpeed
+        set(value) {
+            musicPlayer.playbackSpeed = value
         }
 
     fun fastForward() = musicPlayer.fastForward()
@@ -247,9 +250,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     fun stop() {
         musicPlayer.stop()
-        updatePlaybackState {
-            setState(STATE_NONE, 0, musicPlayer.playbackSpeed)
-        }
+        updatePlaybackState(STATE_NONE, 0)
     }
 
     fun setQueue(queueType: Int, currentSongId: String) {
@@ -281,13 +282,23 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         }
     }
 
-    private fun updatePlaybackState(applier: PlaybackStateCompat.Builder.() -> Unit) {
-        applier(stateBuilder)
-        setPlaybackState(stateBuilder.build())
+    fun downloadCurrentSong() {
+        currentSong?.let { song ->
+            context.startService(Intent(context, DownloadService::class.java).apply {
+                action = ACTION_DOWNLOAD_MUSIC
+                putExtra("task", DownloadTask(
+                        id = song.id,
+                        title = song.title,
+                        url = musicPlayer.source.toString()
+                ))
+            })
+        }
     }
 
-
-    private fun setPlaybackState(state: PlaybackStateCompat) = mediaSession.setPlaybackState(state)
+    private fun updatePlaybackState(@State state: Int, position: Long) {
+        stateBuilder.setState(state, position, playbackSpeed)
+        mediaSession.setPlaybackState(stateBuilder.build())
+    }
 
     fun release() {
         mediaSession.apply {

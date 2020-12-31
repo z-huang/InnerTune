@@ -56,14 +56,20 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
 
     fun stop() = player.stop(true)
 
-    fun setSource(uri: Uri) {
-        player.apply {
-            setMediaItem(MediaItem.fromUri(uri))
-            prepare()
-            seekTo(0)
+    var source: Uri?
+        get() = player.currentMediaItem?.playbackProperties?.uri
+        set(value) {
+            if (value == null) {
+                stop()
+            } else {
+                player.apply {
+                    setMediaItem(MediaItem.fromUri(value))
+                    prepare()
+                    seekTo(0)
+                }
+            }
+            mDurationSet = false
         }
-        mDurationSet = false
-    }
 
     fun release() = player.release()
 

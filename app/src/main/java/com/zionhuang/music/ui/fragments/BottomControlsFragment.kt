@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
-import com.zionhuang.music.playback.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
-import com.zionhuang.music.playback.MediaSessionConstants.ACTION_TOGGLE_LIKE
+import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
+import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MediaWidgetsController

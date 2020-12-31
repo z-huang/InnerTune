@@ -5,14 +5,20 @@ import androidx.paging.PagingSource
 import androidx.room.*
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.playback.queue.Queue
+import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongDao {
-    @Transaction
-    @Query("SELECT * FROM song ORDER BY create_date DESC")
-    fun getAllSongsAsFlow(): Flow<List<Song>>
+    /**
+     * Methods for the UI
+     */
 
+    /**
+     * All Songs with order [Name, Artist, CreateDate]
+     * @return [PagingSource]
+     */
     @Transaction
     @Query("SELECT * FROM song ORDER BY title DESC")
     fun getAllSongsByName(): PagingSource<Int, Song>
@@ -23,16 +29,43 @@ interface SongDao {
 
     @Transaction
     @Query("SELECT * FROM song ORDER BY create_date DESC")
-    fun getAllSongsByCreateDateAsPagingSource(): PagingSource<Int, Song>
+    fun getAllSongsByCreateDate(): PagingSource<Int, Song>
 
+    /**
+     * Artist Songs
+     * @return [PagingSource]
+     */
     @Transaction
     @Query("SELECT * FROM song WHERE artistId = :artistId")
     fun getArtistSongsAsPagingSource(artistId: Int): PagingSource<Int, Song>
 
+    /**
+     * Channel Songs
+     * @return [PagingSource]
+     */
     @Transaction
     @Query("SELECT * FROM song WHERE channelId = :channelId")
     fun getChannelSongsAsPagingSource(channelId: String): PagingSource<Int, Song>
 
+    /**
+     * Methods for [ChannelSongsFragment]
+     */
+    @Query("SELECT COUNT(id) FROM song WHERE channelId = :channelId")
+    fun channelSongsCount(channelId: String): LiveData<Int>
+
+    @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
+    fun channelSongsDuration(channelId: String): LiveData<Long?>
+
+    /**
+     * Methods for [Queue]
+     */
+    @Transaction
+    @Query("SELECT * FROM song ORDER BY create_date DESC")
+    fun getAllSongsAsFlow(): Flow<List<Song>>
+
+    /**
+     * Internal methods
+     */
     @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSongEntityById(songId: String): SongEntity?
 
@@ -40,16 +73,8 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSongById(songId: String): Song?
 
-    @Query("SELECT COUNT(id) FROM song WHERE channelId = :channelId")
-    fun channelSongsCount(channelId: String): LiveData<Int>
-
-    @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
-    fun channelSongsDuration(channelId: String): LiveData<Long?>
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(vararg songs: SongEntity)
-
-    fun insert(vararg songs: Song) = Unit
 
     @Update
     suspend fun update(vararg songs: SongEntity)

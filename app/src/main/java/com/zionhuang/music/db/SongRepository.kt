@@ -23,7 +23,7 @@ class SongRepository(private val context: Context) {
     private val channelDao: ChannelDao = musicDatabase.channelDao
 
     fun getAllSongs(@SongSortType order: Int) = when (order) {
-        ORDER_CREATE_DATE -> songDao.getAllSongsByCreateDateAsPagingSource()
+        ORDER_CREATE_DATE -> songDao.getAllSongsByCreateDate()
         ORDER_NAME -> songDao.getAllSongsByName()
         ORDER_ARTIST -> songDao.getAllSongsByArtist()
         else -> throw IllegalArgumentException("Unexpected order type.")
