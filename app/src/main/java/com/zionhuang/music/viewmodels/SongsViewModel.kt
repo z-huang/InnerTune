@@ -24,10 +24,10 @@ import com.zionhuang.music.download.DownloadManager
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.getActivity
+import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.songs.SongDetailsDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
-import com.zionhuang.music.utils.preference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch

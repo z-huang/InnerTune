@@ -9,7 +9,6 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
@@ -34,6 +33,7 @@ import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.ACTION_DOWNLOAD_MUSIC
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
+import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.playback.queue.EmptyQueue.Companion.EMPTY_QUEUE
@@ -41,7 +41,6 @@ import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.playback.queue.SingleSongQueue
-import com.zionhuang.music.utils.PreferenceHelper
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.coroutines.CoroutineScope
@@ -119,7 +118,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     private val currentSong: Song?
         get() = queue.currentSong
 
-    private val autoDownload = PreferenceHelper(context, R.string.auto_download, false)
+    private var autoDownload by context.preference(R.string.auto_download, false)
 
     init {
         musicPlayer.onDurationSet { duration ->
@@ -194,7 +193,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                         result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
                             Log.d(TAG, "Song url: ${format.url}")
                             musicPlayer.source = Uri.parse(format.url)
-                            if (autoDownload.value) {
+                            if (autoDownload) {
                                 context.startService(Intent(context, DownloadService::class.java).apply {
                                     action = ACTION_DOWNLOAD_MUSIC
                                     putExtra("task", DownloadTask(
