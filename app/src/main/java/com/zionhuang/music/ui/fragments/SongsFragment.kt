@@ -42,7 +42,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        songsViewModel.addDownloadListener(downloadHandler.downloadListener)
+        songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
         songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler).apply {
             sortMenuListener = this@SongsFragment.sortMenuListener
         }
@@ -76,7 +76,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        songsViewModel.removeDownloadListener(downloadHandler.downloadListener)
+        songsViewModel.downloadServiceConnection.removeDownloadListener(downloadHandler.downloadListener)
     }
 
     private val sortMenuListener = object : SortMenuListener {

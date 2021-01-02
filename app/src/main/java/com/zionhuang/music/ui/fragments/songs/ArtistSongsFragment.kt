@@ -46,7 +46,7 @@ class ArtistSongsFragment : MainFragment<LayoutArtistSongsBinding>() {
         binding.recyclerView.doOnPreDraw {
             startPostponedEnterTransition()
         }
-        songsViewModel.addDownloadListener(downloadHandler.downloadListener)
+        songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
         val songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -65,7 +65,7 @@ class ArtistSongsFragment : MainFragment<LayoutArtistSongsBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        songsViewModel.removeDownloadListener(downloadHandler.downloadListener)
+        songsViewModel.downloadServiceConnection.removeDownloadListener(downloadHandler.downloadListener)
     }
 
     companion object {
