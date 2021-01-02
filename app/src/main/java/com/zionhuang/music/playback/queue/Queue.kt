@@ -5,17 +5,17 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.SongParcel
 
 interface Queue {
-    var currentSongId: String?
+    val currentSongId: String?
     val currentSong: Song?
     val previousSong: Song?
     val nextSong: Song?
-    fun playNext()
+    fun playNext(repeat: Boolean = false)
     fun playPrevious()
     fun findSongById(id: String): Song?
     fun updateSongMeta(id: String, songParcel: SongParcel)
 
     companion object {
-        @IntDef(QUEUE_NONE, QUEUE_ALL_SONG, QUEUE_PLAYLIST, QUEUE_ARTIST, QUEUE_SINGLE)
+        @IntDef(QUEUE_NONE, QUEUE_ALL_SONG, QUEUE_PLAYLIST, QUEUE_ARTIST, QUEUE_CHANNEL, QUEUE_SINGLE)
         @Retention(AnnotationRetention.SOURCE)
         annotation class QueueType
 
@@ -23,6 +23,7 @@ interface Queue {
         const val QUEUE_ALL_SONG = 1
         const val QUEUE_PLAYLIST = 2
         const val QUEUE_ARTIST = 3
-        const val QUEUE_SINGLE = 4
+        const val QUEUE_CHANNEL = 4
+        const val QUEUE_SINGLE = 5
     }
 }

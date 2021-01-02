@@ -20,10 +20,10 @@
     <string name="channel_name_playback">音樂播放器</string>
     <string name="channel_name_download">下載</string>
     <string name="item_load_state_retry">重試</string>
-    <string name="pref_api_key">API 金鑰</string>
+    <string name="pref_api_key_title">API 金鑰</string>
     <string name="pref_about">關於</string>
     <string name="menu_song_download">下載</string>
-    <string name="pref_auto_download">自動下載</string>
+    <string name="pref_auto_download_title">自動下載</string>
     <string name="pref_auto_download_summary">在播放歌曲時自動下載</string>
     <string name="menu_save">儲存</string>
     <string name="title_song_details">詳細資料</string>
@@ -38,4 +38,6 @@
     <string name="sort_by_name">曲名</string>
     <string name="sort_by_artist">作曲家</string>
     <string name="sort_by_create_date">新增時間</string>
+    <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
+    <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
 </resources>

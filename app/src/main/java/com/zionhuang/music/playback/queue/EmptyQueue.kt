@@ -9,11 +9,12 @@ class EmptyQueue private constructor() : Queue {
         val EMPTY_QUEUE = EmptyQueue()
     }
 
-    override var currentSongId: String? = null
+    override val currentSongId: String? = null
     override val currentSong: Song? = null
     override val previousSong: Song? = null
     override val nextSong: Song? = null
-    override fun playNext() = Unit
+
+    override fun playNext(repeat: Boolean) = Unit
     override fun playPrevious() = Unit
     override fun findSongById(id: String): Song? = null
     override fun updateSongMeta(id: String, songParcel: SongParcel) = Unit

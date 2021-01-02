@@ -18,7 +18,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentExploreBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.queue.Queue
+import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.ui.adapters.ExploreAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
@@ -64,7 +64,7 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
             })
             addOnClickListener { pos, _ ->
                 val video = exploreAdapter.getItemByPosition(pos)!!
-                playbackViewModel.playMedia(SongParcel.fromVideo(video), Queue.QUEUE_SINGLE)
+                playbackViewModel.playMedia(QUEUE_SINGLE, SongParcel.fromVideo(video))
             }
         }
 

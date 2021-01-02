@@ -9,6 +9,7 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.net.Uri
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
@@ -19,6 +20,8 @@ import android.support.v4.media.session.MediaSessionCompat.FLAG_HANDLES_TRANSPOR
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Log
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.core.net.toUri
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
@@ -80,7 +83,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         setFlags(FLAG_HANDLES_MEDIA_BUTTONS or FLAG_HANDLES_TRANSPORT_CONTROLS)
-        setCallback(MediaSessionCallback(context, this@SongPlayer, scope))
+        setCallback(MediaSessionCallback(context, this, this@SongPlayer))
         setPlaybackState(stateBuilder.build())
         isActive = true
     }
@@ -118,7 +121,8 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     private val currentSong: Song?
         get() = queue.currentSong
 
-    private var autoDownload by context.preference(R.string.auto_download, false)
+    private var autoDownload by context.preference(R.string.pref_auto_download, false)
+    private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
     init {
         musicPlayer.onDurationSet { duration ->
@@ -135,8 +139,16 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 Player.STATE_BUFFERING -> STATE_BUFFERING
                 Player.STATE_READY -> if (musicPlayer.isPlaying) STATE_PLAYING else STATE_PAUSED
                 Player.STATE_ENDED -> {
-                    addToLibrary()
-                    playNext()
+                    if (autoAddSong) {
+                        addToLibrary()
+                    }
+                    when (mediaSession.controller.repeatMode) {
+                        REPEAT_MODE_ONE -> seekTo(0)
+                        REPEAT_MODE_ALL -> {
+                            playNext(true)
+                        }
+                        else -> playNext()
+                    }
                     STATE_BUFFERING
                 }
                 else -> STATE_NONE
@@ -157,19 +169,18 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         }
     }
 
-    private var job: Job? = null
+    private var playSongJob: Job? = null
 
-    fun playSong() {
-        musicPlayer.stop()
+    private fun playSong() {
+        updatePlaybackState(STATE_CONNECTING)
+        pause()
         currentSong?.let { song ->
-            job?.cancel()
-            job = scope.launch extractScope@{
+            playSongJob?.cancel()
+            playSongJob = scope.launch extractScope@{
                 audioManager.requestAudioFocus(focusRequest)
                 if (song.downloadState == STATE_DOWNLOADED) {
                     musicPlayer.source = File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri()
-                    return@extractScope
-                }
-                when (val result = youTubeExtractor.extractStream(currentSong!!.id)) {
+                } else when (val result = youTubeExtractor.extractStream(song.id)) {
                     is YouTubeStream.Success -> {
                         mediaSession.setMetadata(metadataBuilder.apply {
                             putString(METADATA_KEY_TITLE, result.title)
@@ -184,8 +195,8 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                                     id = result.id,
                                     title = result.title,
                                     // use channel title as artist name temporarily
-                                    artistId = songRepository.getArtistIdByName(result.channelTitle)
-                                            ?: songRepository.insertArtist(result.channelTitle).toInt(),
+                                    artistId = songRepository.getArtist(result.channelTitle)
+                                            ?: songRepository.insertArtist(result.channelTitle),
                                     channelId = result.channelId,
                                     duration = result.duration
                             ))
@@ -206,9 +217,11 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                         }
                     }
                     is YouTubeStream.Error -> {
+                        Toast.makeText(context, result.errorMessage, LENGTH_SHORT).show()
                         Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")
                     }
                 }
+                play()
             }
         }
     }
@@ -237,8 +250,8 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     fun fastForward() = musicPlayer.fastForward()
     fun rewind() = musicPlayer.rewind()
 
-    fun playNext() {
-        queue.playNext()
+    fun playNext(repeat: Boolean = false) {
+        queue.playNext(repeat)
         playSong()
     }
 
@@ -249,16 +262,18 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     fun stop() {
         musicPlayer.stop()
-        updatePlaybackState(STATE_NONE, 0)
+        updatePlaybackState(STATE_STOPPED, 0)
     }
 
-    fun setQueue(queueType: Int, currentSongId: String) {
-        queue = when (queueType) {
-            QUEUE_ALL_SONG -> AllSongsQueue(songRepository, scope)
-            QUEUE_SINGLE -> SingleSongQueue(songRepository, currentSongId)
-            else -> EMPTY_QUEUE
-        }.apply {
-            this.currentSongId = currentSongId
+    fun setQueue(extras: Bundle) {
+        updatePlaybackState(STATE_CONNECTING)
+        scope.launch {
+            queue = when (extras.getInt("queue_type")) {
+                QUEUE_ALL_SONG -> AllSongsQueue.create(songRepository, scope, extras)
+                QUEUE_SINGLE -> SingleSongQueue.create(songRepository, scope, extras)
+                else -> EMPTY_QUEUE
+            }
+            playSong()
         }
     }
 
@@ -294,7 +309,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         }
     }
 
-    private fun updatePlaybackState(@State state: Int, position: Long) {
+    private fun updatePlaybackState(@State state: Int, position: Long = 0) {
         stateBuilder.setState(state, position, playbackSpeed)
         mediaSession.setPlaybackState(stateBuilder.build())
     }

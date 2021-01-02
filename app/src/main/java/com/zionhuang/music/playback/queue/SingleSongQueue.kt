@@ -1,35 +1,44 @@
 package com.zionhuang.music.playback.queue
 
+import android.os.Bundle
+import com.zionhuang.music.constants.QueueConstants.SONG_PARCEL
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.SongParcel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
-class SingleSongQueue(
-        songsRepository: SongRepository,
-        var songId: String,
+class SingleSongQueue private constructor(
+        song: Song,
 ) : Queue {
-    private var song: Song? = runBlocking {
-        songsRepository.getSongById(songId) ?: Song(songId)
-    }
-    override var currentSongId: String? = songId
-    override val currentSong: Song?
-        get() = song
-    override val previousSong: Song? = currentSong
-    override val nextSong: Song? = currentSong
+    override val currentSongId: String = song.id
+    override val currentSong: Song = song
+    override val previousSong: Song? = null
+    override val nextSong: Song? = null
 
-    override fun playNext() = Unit
-
+    override fun playNext(repeat: Boolean) = Unit
     override fun playPrevious() = Unit
 
-    override fun findSongById(id: String): Song? = if (songId == id) song else null
+    override fun findSongById(id: String): Song? = if (currentSong.id == id) currentSong else null
 
     override fun updateSongMeta(id: String, songParcel: SongParcel) {
-        if (songId == id) {
-            song?.apply {
+        if (currentSong.id == id) {
+            currentSong.apply {
                 title = songParcel.title
                 artistName = songParcel.artist.toString()
+            }
+        }
+    }
+
+    companion object {
+        suspend fun create(songsRepository: SongRepository, scope: CoroutineScope, extras: Bundle): SingleSongQueue = withContext(Dispatchers.IO) {
+            val songId = extras.getString("song_id")!!
+            val song = songsRepository.getSongById(songId) ?: Song(songId)
+            return@withContext SingleSongQueue(song).apply {
+                extras.getParcelable<SongParcel>(SONG_PARCEL)?.let { songParcel ->
+                    updateSongMeta(songId, songParcel)
+                }
             }
         }
     }

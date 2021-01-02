@@ -14,7 +14,7 @@ class ArtistAutoCompleteAdapter(context: Context) : ArrayAdapter<ArtistEntity>(c
             val resultsList = if (constraint.isNullOrEmpty()) {
                 songRepository.allArtists
             } else {
-                songRepository.findArtists(constraint)
+                songRepository.searchArtists(constraint)
             }
             return FilterResults().apply {
                 values = resultsList

@@ -11,7 +11,7 @@ data class Song(
         var artistId: Int = 0,
         @Relation(entity = ArtistEntity::class, parentColumn = "artistId", entityColumn = "id", projection = ["name"])
         var artistName: String = "",
-        var channelId: String? = null,
+        var channelId: String = "",
         @Relation(entity = ChannelEntity::class, parentColumn = "channelId", entityColumn = "id", projection = ["name"])
         val channelName: String = "",
         var duration: Int = 0, // in seconds

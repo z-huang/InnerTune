@@ -16,13 +16,13 @@ interface ArtistDao {
     fun getAllArtistsAsPagingSource(): PagingSource<Int, ArtistEntity>
 
     @Query("SELECT * FROM artist WHERE id = :id")
-    fun getArtistById(id: Int): ArtistEntity?
+    fun getArtist(id: Int): ArtistEntity?
 
     @Query("SELECT id FROM artist WHERE name = :name")
-    fun getArtistIdByName(name: String): Int?
+    fun getArtistId(name: String): Int?
 
     @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
-    fun findArtists(query: String): List<ArtistEntity>
+    fun searchArtists(query: String): List<ArtistEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(artist: ArtistEntity): Long

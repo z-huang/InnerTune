@@ -66,20 +66,20 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
     fun addMusicDownload(task: DownloadTask) {
         tasks += task
         scope.launch {
-            songRepository.updateById(task.id) {
+            songRepository.updateSong(task.id) {
                 downloadState = STATE_DOWNLOADING
             }
             if (task.url == null) {
                 when (val extractResult = youTubeExtractor.extractStream(task.id)) {
                     is YouTubeStream.Success -> {
                         val format = extractResult.formats.maxByOrNull { it.abr ?: 0 }
-                                ?: return@launch songRepository.updateById(task.id) {
+                                ?: return@launch songRepository.updateSong(task.id) {
                                     downloadState = STATE_NOT_DOWNLOADED
                                 }
                         task.url = format.url
                     }
                     is YouTubeStream.Error -> {
-                        songRepository.updateById(task.id) {
+                        songRepository.updateSong(task.id) {
                             downloadState = STATE_NOT_DOWNLOADED
                         }
                         return@launch
@@ -117,7 +117,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
         notificationManager.cancel(task.id.hashCode())
         tasks.remove(task)
         scope.launch {
-            songRepository.updateById(task.id) {
+            songRepository.updateSong(task.id) {
                 downloadState = STATE_DOWNLOADED
             }
         }
@@ -130,7 +130,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             setContentText("Download failed.")
         }
         scope.launch {
-            songRepository.updateById(task.id) {
+            songRepository.updateSong(task.id) {
                 downloadState = STATE_NOT_DOWNLOADED
             }
         }

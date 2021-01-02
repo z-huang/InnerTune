@@ -1,56 +1,29 @@
 package com.zionhuang.music.playback.queue
 
-import com.zionhuang.music.models.SongParcel
+import android.os.Bundle
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.models.SongParcel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
-class AllSongsQueue(songsRepository: SongRepository, scope: CoroutineScope) : Queue {
-    companion object {
-        const val TAG = "AllSongsQueue"
-    }
-
-    private val songsFlow = songsRepository.allSongsFlow
-
-    init {
-        runBlocking {
-            list = songsFlow.first()
-        }
-        scope.launch(IO) {
-            songsRepository.allSongsFlow.collect { l ->
-                index = l.indexOfFirst { it.id == list[index].id }
-                list = l
-            }
-        }
-    }
-
-    private var list: List<Song>
-    private var index: Int = -1
-    override var currentSongId: String?
-        get() = list.getOrNull(index)?.id
-        set(songId) {
-            index = list.indexOfFirst { it.id == songId }
-        }
-    override val currentSong: Song?
-        get() = list.getOrNull(index)
-    override val previousSong: Song?
-        get() = list.getOrNull(if (index == 0) list.size - 1 else index - 1)
-    override val nextSong: Song?
-        get() = list.getOrNull(if (index == list.size - 1) 0 else index + 1)
-
-    override fun playNext() {
+class AllSongsQueue private constructor(
+        val list: MutableList<Song>,
+        songId: String,
+) : Queue {
+    private var index: Int = list.indexOfFirst { it.id == songId }
+    override val currentSongId: String? get() = list.getOrNull(index)?.id
+    override val currentSong: Song? get() = list.getOrNull(index)
+    override val previousSong: Song? get() = list.getOrNull(index - 1)
+    override val nextSong: Song? get() = list.getOrNull(index + 1)
+    override fun playNext(repeat: Boolean) {
         index++
-        if (index == list.size) index = 0
+        if (index == list.size && repeat) index = 0
     }
 
     override fun playPrevious() {
         index--
-        if (index == -1) index = list.size - 1
     }
 
     override fun findSongById(id: String): Song? = list.find { it.id == id }
@@ -62,4 +35,11 @@ class AllSongsQueue(songsRepository: SongRepository, scope: CoroutineScope) : Qu
         }
     }
 
+    companion object {
+        const val TAG = "AllSongsQueue"
+        suspend fun create(songsRepository: SongRepository, scope: CoroutineScope, extras: Bundle): AllSongsQueue = withContext(IO) {
+            val list = songsRepository.getAllSongsMutableList(extras.getInt("sort_type"))
+            return@withContext AllSongsQueue(list, extras.getString("song_id")!!)
+        }
+    }
 }

@@ -19,7 +19,7 @@ interface ChannelDao {
     fun getChannelByName(name: String): ChannelEntity?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(channel: ChannelEntity): Long
+    fun insert(channel: ChannelEntity)
 
     @Query("SELECT EXISTS (SELECT 1 FROM channel WHERE id=:channelId)")
     suspend fun contains(channelId: String): Boolean

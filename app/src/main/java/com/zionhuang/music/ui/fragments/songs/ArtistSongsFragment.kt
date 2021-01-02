@@ -15,7 +15,7 @@ import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.queue.Queue
+import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -52,11 +52,11 @@ class ArtistSongsFragment : MainFragment<LayoutArtistSongsBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
-                playbackViewModel.playMedia(SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!), Queue.QUEUE_ALL_SONG)
+                playbackViewModel.playMedia(QUEUE_ALL_SONG, SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!))
             }
         }
         lifecycleScope.launch {
-            activity.title = songsViewModel.songRepository.getArtistById(artistId)!!.name
+            activity.title = songsViewModel.songRepository.getArtist(artistId)!!.name
             songsViewModel.getArtistSongsAsFlow(artistId).collectLatest {
                 songsAdapter.submitData(it)
             }

@@ -3,14 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <EditTextPreference
         app:icon="@drawable/ic_baseline_vpn_key_24"
-        app:key="@string/api_key"
-        app:title="@string/pref_api_key" />
+        app:key="@string/pref_api_key"
+        app:title="@string/pref_api_key_title" />
     <SwitchPreferenceCompat
         android:defaultValue="true"
         app:icon="@drawable/ic_round_save_alt_24"
-        app:key="@string/auto_download"
+        app:key="@string/pref_auto_download"
         app:summary="@string/pref_auto_download_summary"
-        app:title="@string/pref_auto_download" />
+        app:title="@string/pref_auto_download_title" />
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:icon="@drawable/ic_baseline_library_add_24"
+        android:key="@string/pref_auto_add_song"
+        android:summary="@string/pref_auto_add_song_summary"
+        android:title="@string/pref_auto_add_song_title" />
     <Preference
         app:icon="@drawable/ic_outline_info_24"
         app:title="@string/pref_about" />

@@ -17,7 +17,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentSearchResultBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.queue.Queue
+import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.SearchResultAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
@@ -58,7 +58,7 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
                 if ("youtube#video" != item.id.kind) {
                     return@addOnClickListener
                 }
-                playbackViewModel.playMedia(SongParcel.fromSearchResult(item), Queue.QUEUE_SINGLE)
+                playbackViewModel.playMedia(QUEUE_SINGLE, SongParcel.fromSearchResult(item))
             }
         }
 

@@ -32,7 +32,7 @@ class SongsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SongViewHolder -> getItem(position)?.let { holder.bind(it) }
-            is SongHeaderViewHolder -> holder.bind(itemCount)
+            is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }
     }
 
@@ -42,7 +42,7 @@ class SongsAdapter(
                 payloads.isEmpty() -> getItem(position)?.let { holder.bind(it) }
                 else -> holder.bind(payloads.last() as Song)
             }
-            is SongHeaderViewHolder -> holder.bind(itemCount)
+            is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }
     }
 
@@ -59,7 +59,7 @@ class SongsAdapter(
     fun getItemByPosition(position: Int): Song? = getItem(position)
 
     override fun getItemViewType(position: Int): Int =
-            if (getItem(position)!!.id == "\$HEADER$") {
+            if (getItem(position)?.id == "\$HEADER$") {
                 TYPE_HEADER
             } else {
                 TYPE_ITEM

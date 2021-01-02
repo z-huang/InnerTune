@@ -35,11 +35,11 @@ import kotlinx.coroutines.launch
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songRepository: SongRepository = SongRepository(application)
 
-    var sortType by preference(R.string.sort_type, ORDER_NAME)
+    var sortType by preference(R.string.pref_sort_type, ORDER_NAME)
 
     val allSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
-            songRepository.getAllSongs(sortType)
+            songRepository.getAllSongsPagingSource(sortType)
         }.flow.map { pagingData ->
             pagingData.insertHeaderItem(Song("\$HEADER$"))
         }.cachedIn(viewModelScope)
@@ -85,7 +85,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun deleteSong(songId: String) {
             viewModelScope.launch {
-                songRepository.deleteSongById(songId)
+                songRepository.deleteSong(songId)
             }
         }
     }

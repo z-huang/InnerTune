@@ -1,13 +1,16 @@
 package com.zionhuang.music.viewmodels
 
 import android.app.Application
-import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
+import androidx.core.os.bundleOf
 import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
+import com.zionhuang.music.constants.QueueConstants.QUEUE_TYPE
+import com.zionhuang.music.constants.QueueConstants.SONG_ID
+import com.zionhuang.music.constants.QueueConstants.SONG_PARCEL
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.models.toMediaData
@@ -63,11 +66,12 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun playMedia(song: SongParcel, @QueueType queueType: Int) {
-        mediaSessionConnection.transportControls?.playFromMediaId(song.id, Bundle().apply {
-            putParcelable("song", song)
-            putInt("queueType", queueType)
-        })
+    fun playMedia(@QueueType queueType: Int, song: SongParcel) {
+        mediaSessionConnection.transportControls?.playFromMediaId(song.id, bundleOf(
+                QUEUE_TYPE to queueType,
+                SONG_ID to song.id,
+                SONG_PARCEL to song
+        ))
     }
 
     override fun onCleared() {

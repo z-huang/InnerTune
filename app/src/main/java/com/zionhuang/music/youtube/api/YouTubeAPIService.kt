@@ -18,7 +18,7 @@ class YouTubeAPIService(context: Context) {
         private const val CATEGORY_MUSIC = "10"
     }
 
-    private val apiKey by context.preference(R.string.api_key, "")
+    private val apiKey by context.preference(R.string.pref_api_key, "")
     private val youTube: YouTube = YouTube.Builder(NetHttpTransport.Builder().build(), GsonFactory(), null)
             .setApplicationName(context.resources.getString(R.string.app_name))
             .build()

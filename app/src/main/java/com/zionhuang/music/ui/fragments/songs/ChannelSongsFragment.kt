@@ -18,7 +18,7 @@ import com.zionhuang.music.extensions.circle
 import com.zionhuang.music.extensions.load
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.queue.Queue
+import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.utils.makeTimeString
@@ -57,7 +57,7 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
-                playbackViewModel.playMedia(SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!), Queue.QUEUE_ALL_SONG)
+                playbackViewModel.playMedia(QUEUE_ALL_SONG, SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!))
             }
         }
 
@@ -68,7 +68,7 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
             binding.totalDuration.text = makeTimeString(duration)
         }
         lifecycleScope.launch {
-            songsViewModel.songRepository.getChannel(channelId)!!.name.let {
+            songsViewModel.songRepository.getChannelById(channelId)!!.name.let {
                 activity.title = it
                 binding.channelName.text = it
             }

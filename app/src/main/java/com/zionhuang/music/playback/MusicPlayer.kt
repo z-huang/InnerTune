@@ -17,7 +17,7 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
         private const val TAG = "MusicPlayer"
     }
 
-    private var mDurationSet = false
+    private var durationSet = false
     private var onDurationSet: OnDurationSet = {}
     private var onPlaybackStateChanged: OnPlaybackStateChanged = {}
 
@@ -68,7 +68,7 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
                     seekTo(0)
                 }
             }
-            mDurationSet = false
+            durationSet = false
         }
 
     fun release() = player.release()
@@ -77,8 +77,8 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
 
     override fun onPlaybackStateChanged(state: Int) {
         if (state == Player.STATE_READY) {
-            if (!mDurationSet) {
-                mDurationSet = true
+            if (!durationSet) {
+                durationSet = true
                 onDurationSet(duration)
             }
         }

@@ -8,6 +8,7 @@ import androidx.collection.arrayMapOf
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor.ErrorCode.NO_INFO
 import com.zionhuang.music.youtube.models.YouTubeStream
 import com.zionhuang.music.youtube.models.YtFormat
 import com.zionhuang.music.youtube.models.plus
@@ -120,7 +121,7 @@ class YouTubeStreamExtractor private constructor(private val context: Context) {
 
         if (videoInfo == null && playerResponse == null) {
             playerResponse = extractPlayerResponse(videoWebPage.search(YT_INITIAL_PLAYER_RESPONSE_RE))
-                    ?: return@extraction YouTubeStream.Error(ErrorCode.NO_INFO, "Unable to extract video data")
+                    ?: return@extraction YouTubeStream.Error(NO_INFO, "Unable to extract video data")
         }
 
         val videoDetails = playerResponse["videoDetails"].asJsonObjectOrNull
@@ -258,20 +259,27 @@ class YouTubeStreamExtractor private constructor(private val context: Context) {
                 ))!!
             }
         } else {
-            TODO("implement m3u8")
+            val manifestUrl = playerResponse["streamingData"]["hlsManifestUrl"].asStringOrNull
+                    ?: videoInfo["hlsvp"][0].asStringOrNull
+            if (manifestUrl != null) {
+                TODO("implement m3u8")
+            } else {
+                return@extraction YouTubeStream.Error(NO_INFO, playerResponse["playabilityStatus"]["reason"].asStringOrNull
+                        ?: "no conn, hlsvp, hlsManifestUrl or url_encoded_fmt_stream_map information found in video info")
+            }
         }
 
         val videoTitle = videoInfo["title"].asStringOrNull
                 ?: videoDetails["title"].asStringOrNull
-                ?: return@extraction YouTubeStream.Error(ErrorCode.NO_INFO, "Can't extract video title")
+                ?: return@extraction YouTubeStream.Error(NO_INFO, "Can't extract video title")
         val channelId = videoDetails["channelId"].asStringOrNull
-                ?: return@extraction YouTubeStream.Error(ErrorCode.NO_INFO, "Can't extract channel id")
+                ?: return@extraction YouTubeStream.Error(NO_INFO, "Can't extract channel id")
         val channelTitle = videoInfo["author"].asStringOrNull
                 ?: videoDetails["author"].asStringOrNull
-                ?: return@extraction YouTubeStream.Error(ErrorCode.NO_INFO, "Can't extract channel title")
+                ?: return@extraction YouTubeStream.Error(NO_INFO, "Can't extract channel title")
         val duration = videoInfo["length_seconds"].asIntOrNull
                 ?: videoDetails["lengthSeconds"].asIntOrNull
-                ?: return@extraction YouTubeStream.Error(ErrorCode.NO_INFO, "Can't extract video duration")
+                ?: return@extraction YouTubeStream.Error(NO_INFO, "Can't extract video duration")
 
         // TODO: look for DASH manifest
 
@@ -531,7 +539,7 @@ class YouTubeStreamExtractor private constructor(private val context: Context) {
         // language=RegExp
         private val YT_INITIAL_PLAYER_RESPONSE_RE = arrayOf(
                 """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;""",
-                """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;\s*(?:var\s+meta|</script|\n)"""
+                """ytInitialPlayerResponse\s*=\s*(\{.+?\})\s*;\s*(?:var\s+meta|<\/script|\n)"""
         )
         private const val WH_RE = """^(?<width>\d+)[xX](?<height>\d+)$"""
         private const val FILE_SIZE_RE = """\bclen[=/](\d+)"""

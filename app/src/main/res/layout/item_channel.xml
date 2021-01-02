@@ -64,7 +64,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/song_details"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Artist Name" />
+                tools:text="Channel Name" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatImageButton

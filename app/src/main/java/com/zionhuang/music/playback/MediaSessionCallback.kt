@@ -5,32 +5,30 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
-import com.zionhuang.music.models.SongParcel
+import androidx.core.os.bundleOf
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_DOWNLOAD
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
-import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_NONE
+import com.zionhuang.music.constants.QueueConstants.QUEUE_TYPE
+import com.zionhuang.music.constants.QueueConstants.SONG_ID
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.youtube.YouTubeExtractor
-import com.zionhuang.music.youtube.models.YouTubeSearch
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class MediaSessionCallback internal constructor(
         context: Context,
+        val mediaSession: MediaSessionCompat,
         private val songPlayer: SongPlayer,
-        private val scope: CoroutineScope,
 ) : MediaSessionCompat.Callback() {
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
     override fun onPlayFromMediaId(mediaId: String, extras: Bundle) {
-        val songParcel: SongParcel? = extras.getParcelable("song")
-        val queueType = extras.getInt("queueType").let { if (it != QUEUE_NONE) it else QUEUE_SINGLE }
-        songPlayer.setQueue(queueType, mediaId)
-        songParcel?.let {
-            songPlayer.updateSongMeta(it.id, it)
+        if (extras.isEmpty) {
+            extras.apply {
+                putInt(QUEUE_TYPE, QUEUE_SINGLE)
+                putString(SONG_ID, mediaId)
+            }
         }
-        songPlayer.playSong()
+        songPlayer.setQueue(extras)
     }
 
     override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
@@ -39,23 +37,14 @@ class MediaSessionCallback internal constructor(
             Log.d(TAG, "Can't extract video id from the url.")
             return
         }
-        songPlayer.setQueue(QUEUE_SINGLE, id)
-        songPlayer.playSong()
+        songPlayer.setQueue(bundleOf(
+                QUEUE_TYPE to QUEUE_SINGLE,
+                SONG_ID to id
+        ))
     }
 
     override fun onPlayFromSearch(query: String?, extras: Bundle?) {
-        if (query == null) return
-        scope.launch {
-            when (val res = youTubeExtractor.search(query)) {
-                is YouTubeSearch.Success -> {
-                    songPlayer.setQueue(QUEUE_SINGLE, res.items[0].id)
-                    songPlayer.playSong()
-                }
-                is YouTubeSearch.Error -> {
-                    Log.d(TAG, "Failed to search: $query")
-                }
-            }
-        }
+        // TODO
     }
 
     override fun onCustomAction(action: String, extras: Bundle) {
@@ -74,6 +63,9 @@ class MediaSessionCallback internal constructor(
     override fun onSkipToPrevious() = songPlayer.playPrevious()
     override fun onFastForward() = songPlayer.fastForward()
     override fun onRewind() = songPlayer.rewind()
+
+    override fun onSetRepeatMode(repeatMode: Int) {
+    }
 
     companion object {
         const val TAG = "MediaSessionCallback"
