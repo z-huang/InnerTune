@@ -16,16 +16,17 @@ object OkHttpDownloader {
 
     @Throws(DownloadException::class)
     fun downloadJson(url: String, headers: Map<String, String>, data: String? = null): JsonElement? {
-        val request = Request.Builder()
-                .url(url)
-                .method("GET", data?.toByteArray(StandardCharsets.UTF_8)?.toRequestBody())
-                .addHeader("User-Agent", USER_AGENT)
-                .apply {
-                    headers.forEach { (key, value) ->
-                        header(key, value)
-                    }
-                }
-                .build()
+        val request = Request.Builder().apply {
+            url(url)
+            if (data != null) {
+                method("POST", data.toByteArray(StandardCharsets.UTF_8).toRequestBody())
+            }
+            addHeader("User-Agent", USER_AGENT)
+            headers.forEach { (key, value) ->
+                header(key, value)
+            }
+        }.build()
+
 
         return try {
             client.newCall(request).execute().body?.string()?.parseJsonString()
@@ -37,7 +38,7 @@ object OkHttpDownloader {
     }
 
     fun downloadJson(url: String, headers: Map<String, String>, data: JsonObject): JsonElement? =
-            OkHttpDownloader.downloadJson(url, headers, data.toString())
+            downloadJson(url, headers, data.toString())
 
     class DownloadException(override val message: String?) : Exception(message)
 }
