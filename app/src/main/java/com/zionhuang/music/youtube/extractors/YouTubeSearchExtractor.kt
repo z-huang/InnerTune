@@ -2,9 +2,9 @@ package com.zionhuang.music.youtube.extractors
 
 import android.util.Log
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.youtube.models.YouTubeSearch
 import com.zionhuang.music.youtube.models.YouTubeSearchItem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.withContext
 
@@ -25,8 +25,7 @@ object YouTubeSearchExtractor {
                 "continuation" to pageToken
         )
         Log.d(TAG, "Downloading API page")
-        val response = urlRequest(SEARCH_URL, mapOf("content-type" to "application/json"), data).get()
-        val res = response.parseJsonString()
+        val res = OkHttpDownloader.downloadJson(SEARCH_URL, mapOf("content-type" to "application/json"), data)
         val slrContents = (res["contents"]["twoColumnSearchResultsRenderer"]["primaryContents"]["sectionListRenderer"]["contents"]
                 ?: res["onResponseReceivedCommands"][0]["appendContinuationItemsAction"]["continuationItems"]).asJsonArrayOrNull
         val isrContents = slrContents[0]["itemSectionRenderer"]["contents"].asJsonArrayOrNull

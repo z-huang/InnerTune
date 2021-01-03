@@ -1,6 +1,7 @@
 package com.zionhuang.music.utils
 
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.zionhuang.music.extensions.parseJsonString
 import okhttp3.OkHttpClient
@@ -34,6 +35,9 @@ object OkHttpDownloader {
             throw DownloadException(e.message)
         }
     }
+
+    fun downloadJson(url: String, headers: Map<String, String>, data: JsonObject): JsonElement? =
+            OkHttpDownloader.downloadJson(url, headers, data.toString())
 
     class DownloadException(override val message: String?) : Exception(message)
 }
