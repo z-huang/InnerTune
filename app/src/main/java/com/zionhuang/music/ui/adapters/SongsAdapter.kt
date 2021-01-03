@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
+import com.zionhuang.music.constants.Constants.TYPE_HEADER
+import com.zionhuang.music.constants.Constants.TYPE_ITEM
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
@@ -19,9 +21,6 @@ import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.text.DateFormat
-
-private const val TYPE_HEADER = 0
-private const val TYPE_ITEM = 1
 
 class SongsAdapter(
         private val popupMenuListener: SongPopupMenuListener,
@@ -86,9 +85,8 @@ class SongsAdapter(
     private val dateFormat = DateFormat.getDateInstance()
 
     override fun getPopupText(position: Int): String =
-            if (getItemViewType(position) == TYPE_HEADER) {
-                "#"
-            } else when (sortMenuListener?.sortType()) {
+            if (getItemViewType(position) == TYPE_HEADER) "#"
+            else when (sortMenuListener?.sortType()) {
                 ORDER_CREATE_DATE -> dateFormat.format(getItem(position)!!.createDate)
                 ORDER_NAME -> getItem(position)!!.title?.get(0).toString()
                 ORDER_ARTIST -> getItem(position)!!.artistName
