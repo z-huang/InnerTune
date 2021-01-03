@@ -11,12 +11,15 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.download.*
+import com.zionhuang.music.download.DownloadService
+import com.zionhuang.music.download.DownloadServiceConnection
+import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.getActivity
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.ui.activities.MainActivity
@@ -35,7 +38,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
             songRepository.getAllSongsPagingSource(sortType)
         }.flow.map { pagingData ->
-            pagingData.insertHeaderItem(Song("\$HEADER$"))
+            pagingData.insertHeaderItem(Song(HEADER_ITEM_ID))
         }.cachedIn(viewModelScope)
     }
 

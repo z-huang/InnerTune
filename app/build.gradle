@@ -116,6 +116,8 @@ dependencies {
     implementation "org.jsoup:jsoup:1.13.1"
     // PR Downloader
     implementation "com.mindorks.android:prdownloader:0.6.0"
+    // Fast Scroll
+    implementation 'me.zhanghai.android.fastscroll:library:1.1.5'
     // Test
     testImplementation "junit:junit:4.13.1"
     androidTestImplementation "android.arch.core:core-testing:1.1.1"

@@ -18,6 +18,7 @@ import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.download.DownloadHandler
+import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
@@ -53,6 +54,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(QUEUE_ALL_SONG, SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!))
             }
+            addFastScroller { useMd2Style() }
         }
         lifecycleScope.launch {
             songsViewModel.allSongsFlow.collectLatest {

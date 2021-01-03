@@ -6,6 +6,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
@@ -19,6 +20,8 @@ import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import com.zionhuang.music.ui.listeners.SortMenuListener
+import me.zhanghai.android.fastscroll.PopupTextProvider
+import java.text.DateFormat
 
 private const val TYPE_HEADER = 0
 private const val TYPE_ITEM = 1
@@ -26,7 +29,7 @@ private const val TYPE_ITEM = 1
 class SongsAdapter(
         val popupMenuListener: SongPopupMenuListener,
         val downloadHandler: DownloadHandler,
-) : PagingDataAdapter<Song, RecyclerView.ViewHolder>(ItemComparator()) {
+) : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
     var sortMenuListener: SortMenuListener? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -59,7 +62,7 @@ class SongsAdapter(
     fun getItemByPosition(position: Int): Song? = getItem(position)
 
     override fun getItemViewType(position: Int): Int =
-            if (getItem(position)?.id == "\$HEADER$") {
+            if (getItem(position)?.id == HEADER_ITEM_ID) {
                 TYPE_HEADER
             } else {
                 TYPE_ITEM
@@ -132,7 +135,19 @@ class SongsAdapter(
         }
     }
 
-    internal class ItemComparator : DiffUtil.ItemCallback<Song>() {
+    private val dateFormat = DateFormat.getDateInstance()
+
+    override fun getPopupText(position: Int): String =
+            if (getItemViewType(position) == TYPE_HEADER) {
+                "#"
+            } else when (sortMenuListener?.sortType()) {
+                ORDER_CREATE_DATE -> dateFormat.format(getItem(position)!!.createDate)
+                ORDER_NAME -> getItem(position)!!.title?.get(0).toString()
+                ORDER_ARTIST -> getItem(position)!!.artistName
+                else -> getItem(position)!!.title?.get(0).toString()
+            }
+
+    internal class SongItemComparator : DiffUtil.ItemCallback<Song>() {
         override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem

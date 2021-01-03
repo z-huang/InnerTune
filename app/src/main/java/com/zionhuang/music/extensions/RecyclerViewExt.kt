@@ -2,6 +2,8 @@ package com.zionhuang.music.extensions
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import me.zhanghai.android.fastscroll.FastScroller
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 typealias RecyclerViewItemClickListener = (position: Int, view: View) -> Unit
 
@@ -40,3 +42,8 @@ fun RecyclerView.addOnLongClickListener(longClickListener: RecyclerViewItemClick
         }
     })
 }
+
+fun RecyclerView.addFastScroller(applier: (FastScrollerBuilder.() -> Unit)? = null): FastScroller =
+        FastScrollerBuilder(this).apply {
+            applier?.invoke(this)
+        }.build()
