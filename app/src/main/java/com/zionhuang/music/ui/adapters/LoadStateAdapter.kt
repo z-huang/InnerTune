@@ -7,11 +7,10 @@ import com.zionhuang.music.R
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.viewholders.LoadStateViewHolder
 
-class LoadStateAdapter(private val mRetryFn: Runnable) : LoadStateAdapter<LoadStateViewHolder>() {
-    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
-        holder.bind(loadState)
-    }
+class LoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<LoadStateViewHolder>() {
+    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) =
+            holder.bind(loadState)
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder =
-            LoadStateViewHolder(parent.inflateWithBinding(R.layout.item_load_state), mRetryFn)
+            LoadStateViewHolder(parent.inflateWithBinding(R.layout.item_load_state), retry)
 }

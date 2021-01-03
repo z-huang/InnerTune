@@ -37,7 +37,9 @@ class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val suggestionAdapter = SearchSuggestionAdapter(viewModel)
+        val suggestionAdapter = SearchSuggestionAdapter { query ->
+            viewModel.fillQuery(query)
+        }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())

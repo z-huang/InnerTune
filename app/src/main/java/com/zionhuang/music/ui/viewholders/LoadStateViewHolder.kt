@@ -8,11 +8,11 @@ import com.zionhuang.music.databinding.ItemLoadStateBinding
 
 class LoadStateViewHolder(
         private val binding: ItemLoadStateBinding,
-        private val mRetryFn: Runnable
+        private val retry: () -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.btnRetry.setOnClickListener { mRetryFn.run() }
+        binding.btnRetry.setOnClickListener { retry() }
     }
 
     fun bind(loadState: LoadState) {
