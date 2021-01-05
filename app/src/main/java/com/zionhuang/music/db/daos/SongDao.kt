@@ -1,6 +1,5 @@
 package com.zionhuang.music.db.daos
 
-import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.zionhuang.music.constants.ORDER_ARTIST
@@ -10,6 +9,7 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongDao {
@@ -50,10 +50,10 @@ interface SongDao {
      * Methods for [ChannelSongsFragment]
      */
     @Query("SELECT COUNT(id) FROM song WHERE channelId = :channelId")
-    fun channelSongsCount(channelId: String): LiveData<Int>
+    fun channelSongsCount(channelId: String): Flow<Int>
 
     @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
-    fun channelSongsDuration(channelId: String): LiveData<Long?>
+    fun channelSongsDuration(channelId: String): Flow<Long?>
 
     /**
      * All Songs [MutableList] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]

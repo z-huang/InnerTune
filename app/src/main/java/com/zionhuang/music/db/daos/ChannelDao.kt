@@ -6,14 +6,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zionhuang.music.db.entities.ChannelEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ChannelDao {
     @Query("SELECT * FROM channel")
     fun getAllChannelsAsPagingSource(): PagingSource<Int, ChannelEntity>
 
+    // TODO nullable
     @Query("SELECT * FROM channel WHERE id = :channelId")
-    fun getChannelById(channelId: String): ChannelEntity?
+    fun getChannelById(channelId: String): Flow<ChannelEntity>
 
     @Query("SELECT * FROM channel WHERE name = :name")
     fun getChannelByName(name: String): ChannelEntity?

@@ -14,7 +14,7 @@ class SongHeaderViewHolder(
         private val sortMenuListener: SortMenuListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(songsCount: Int) {
-        binding.allSongsCount.text = binding.root.context.resources.getQuantityString(R.plurals.channel_songs_count, songsCount, songsCount)
+        binding.allSongsCount.text = binding.root.context.resources.getQuantityString(R.plurals.songs_count, songsCount, songsCount)
         binding.sortMenu.setOnClickListener { view ->
             PopupMenu(view.context, view).apply {
                 inflate(R.menu.sort_song)

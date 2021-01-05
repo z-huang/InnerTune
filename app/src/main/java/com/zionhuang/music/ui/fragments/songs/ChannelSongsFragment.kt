@@ -2,10 +2,10 @@ package com.zionhuang.music.ui.fragments.songs
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,18 +14,15 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutChannelSongsBinding
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.circle
-import com.zionhuang.music.extensions.load
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
-import com.zionhuang.music.ui.adapters.SongsAdapter
+import com.zionhuang.music.ui.adapters.ChannelSongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
-import com.zionhuang.music.utils.makeTimeString
+import com.zionhuang.music.viewmodels.ChannelViewModel
+import com.zionhuang.music.viewmodels.ChannelViewModelFactory
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import com.zionhuang.music.youtube.YouTubeExtractor
-import com.zionhuang.music.youtube.models.YouTubeChannel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -35,6 +32,7 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val channelViewModel by viewModels<ChannelViewModel> { ChannelViewModelFactory(requireActivity().application, channelId) }
     private val downloadHandler = DownloadHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,38 +50,23 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
 
         songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
-        val songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler)
+        val channelSongsAdapter = ChannelSongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler, channelViewModel, viewLifecycleOwner)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = songsAdapter
+            adapter = channelSongsAdapter
             addOnClickListener { pos, _ ->
-                playbackViewModel.playMedia(QUEUE_ALL_SONG, SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!))
+                if (pos == 0) return@addOnClickListener
+                playbackViewModel.playMedia(QUEUE_ALL_SONG, SongParcel.fromSong(channelSongsAdapter.getItemByPosition(pos)!!))
             }
         }
 
-        songsViewModel.songRepository.channelSongsCount(channelId).observe(viewLifecycleOwner) { count ->
-            binding.songsCount.text = resources.getQuantityString(R.plurals.channel_songs_count, count, count)
+        channelViewModel.channel.observe(viewLifecycleOwner) { channel ->
+            activity.title = channel.name
         }
-        songsViewModel.songRepository.channelSongsDuration(channelId).observe(viewLifecycleOwner) { duration ->
-            binding.totalDuration.text = makeTimeString(duration)
-        }
+
         lifecycleScope.launch {
-            songsViewModel.songRepository.getChannelById(channelId)!!.name.let {
-                activity.title = it
-                binding.channelName.text = it
-            }
-            when (val channel = YouTubeExtractor.getInstance(requireContext()).getChannel(channelId)) {
-                is YouTubeChannel.Success -> {
-                    Log.d(TAG, channel.toString())
-                    channel.bannerUrl?.let { binding.banner.load(it) }
-                    channel.avatarUrl?.let { binding.avatar.load(it) { circle() } }
-                }
-                is YouTubeChannel.Error -> {
-                    Log.d(TAG, "Get channel error ${channel.errorMessage}")
-                }
-            }
             songsViewModel.getChannelSongsAsFlow(channelId).collectLatest {
-                songsAdapter.submitData(it)
+                channelSongsAdapter.submitData(it)
             }
         }
     }

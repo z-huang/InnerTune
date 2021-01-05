@@ -3,7 +3,6 @@ package com.zionhuang.music.download
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.util.Log
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 
@@ -19,7 +18,6 @@ class DownloadService : LifecycleService() {
     private lateinit var downloadManager: DownloadManager
     override fun onCreate() {
         super.onCreate()
-        Log.d(TAG, "onCreate")
         downloadManager = DownloadManager(this, lifecycleScope)
     }
 
@@ -35,11 +33,6 @@ class DownloadService : LifecycleService() {
             }
         }
         return START_STICKY
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy")
     }
 
     override fun onBind(intent: Intent): IBinder {

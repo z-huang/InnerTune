@@ -10,6 +10,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.model.SearchResult
 import com.zionhuang.music.R
+import com.zionhuang.music.extensions.circle
+import com.zionhuang.music.extensions.load
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.getMaxResThumbnailUrl
 import com.zionhuang.music.utils.makeTimeString
@@ -17,6 +19,11 @@ import com.zionhuang.music.utils.makeTimeString
 @BindingAdapter("duration")
 fun setDuration(view: TextView, duration: Int) {
     view.text = makeTimeString(duration.toLong())
+}
+
+@BindingAdapter("duration")
+fun setDuration(view: TextView, duration: Long) {
+    view.text = makeTimeString(duration)
 }
 
 @BindingAdapter("playState")
@@ -54,4 +61,13 @@ fun setThumbnails(view: ImageView, item: SearchResult) {
 @BindingAdapter("publishDate")
 fun setPublishDate(view: TextView, date: DateTime) {
     view.text = date.toString()
+}
+
+@BindingAdapter("srcUrl", "circleCrop", requireAll = false)
+fun setUrl(view: ImageView, url: String? = null, circleCrop: Boolean = false) {
+    url?.let {
+        view.load(it) {
+            if (circleCrop) circle()
+        }
+    }
 }

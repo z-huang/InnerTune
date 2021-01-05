@@ -62,7 +62,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getChannelSongsAsFlow(channelId: String) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getChannelSongsAsPagingSource(channelId)
-    }.flow.cachedIn(viewModelScope)
+    }.flow.map { pagingData ->
+        pagingData.insertHeaderItem(Song(HEADER_ITEM_ID))
+    }.cachedIn(viewModelScope)
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(songId: String, view: View) {

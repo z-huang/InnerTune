@@ -16,6 +16,7 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -116,7 +117,7 @@ class SongRepository(private val context: Context) {
     /**
      * Channel Operations
      */
-    suspend fun getChannelById(channelId: String): ChannelEntity? = withContext(IO) { channelDao.getChannelById(channelId) }
+    fun getChannelById(channelId: String): Flow<ChannelEntity> = channelDao.getChannelById(channelId)
     private suspend fun getChannelByName(name: String): ChannelEntity? = withContext(IO) { channelDao.getChannelByName(name) }
     private suspend fun getOrInsertChannel(chanelId: String, name: String): ChannelEntity = withContext(IO) {
         getChannelByName(name) ?: ChannelEntity(chanelId, name).apply { insertChannel(this) }

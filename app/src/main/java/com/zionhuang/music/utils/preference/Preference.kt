@@ -3,7 +3,6 @@
 package com.zionhuang.music.utils.preference
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.StringRes
 import kotlin.reflect.KProperty
 
@@ -30,9 +29,7 @@ class Preference<T : Any>(
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         if (!isInitialized) init()
-        return preferenceStore.get(key, defaultValue).also {
-            Log.d("Preference", "get value: $it")
-        }
+        return preferenceStore.get(key, defaultValue)
     }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
