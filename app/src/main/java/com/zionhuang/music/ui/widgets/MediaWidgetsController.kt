@@ -19,7 +19,7 @@ class MediaWidgetsController(
         private val slider: Slider,
         private val progressTextView: TextView,
 ) {
-    private var seekBarIsTracking = false
+    private var sliderIsTracking = false
     private var mediaController: MediaControllerCompat? = null
 
     private var controllerCallback: ControllerCallback? = null
@@ -30,32 +30,18 @@ class MediaWidgetsController(
     init {
         slider.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
-                seekBarIsTracking = true
+                sliderIsTracking = true
             }
 
             override fun onStopTrackingTouch(slider: Slider) {
                 mediaController?.transportControls?.seekTo(slider.value.toLong())
-                seekBarIsTracking = false
+                sliderIsTracking = false
             }
 
         })
         slider.addOnChangeListener { _, value, _ ->
             progressTextView.text = makeTimeString((value / 1000).toLong())
         }
-//        slider.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-//            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-//                progressTextView.text = makeTimeString(progress / 1000.toLong())
-//            }
-//
-//            override fun onStartTrackingTouch(seekBar: SeekBar) {
-//                seekBarIsTracking = true
-//            }
-//
-//            override fun onStopTrackingTouch(seekBar: SeekBar) {
-//                mediaController?.transportControls?.seekTo(this@MediaWidgetsController.slider.progress.toLong())
-//                seekBarIsTracking = false
-//            }
-//        })
     }
 
     fun setMediaController(newController: MediaControllerCompat?) {
@@ -92,40 +78,45 @@ class MediaWidgetsController(
 
             val progress = state.position.toInt()
             progressBar.progress = progress
-            slider.value = progress.toFloat()
+            slider.value = progress.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
             progressTextView.text = makeTimeString(progress.toLong() / 1000)
             if (state.state == PlaybackStateCompat.STATE_PLAYING) {
                 val timeToEnd = ((duration - progress) / state.playbackSpeed).toInt()
                 if (timeToEnd > 0) {
                     progressAnimator?.cancel()
-                    progressAnimator = ValueAnimator.ofInt(progress, duration.toInt())
-                            .setDuration((timeToEnd / durationScale).toLong()).apply {
-                                interpolator = LinearInterpolator()
-                                addUpdateListener(this@ControllerCallback)
-                                start()
-                            }
+                    progressAnimator = ValueAnimator.ofInt(progress, duration.toInt()).apply {
+                        duration = (timeToEnd / durationScale).toLong()
+                        interpolator = LinearInterpolator()
+                        addUpdateListener(this@ControllerCallback)
+                        start()
+                    }
                 }
             }
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
-            duration = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) ?: 0
+            duration = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) ?: 0L
             progressBar.max = duration.toInt()
-            slider.valueTo = if (duration != 0L) duration.toFloat() else 0.1f
+            if (duration == 0L) {
+                slider.isEnabled = false
+            } else {
+                slider.isEnabled = true
+                slider.valueTo = duration.toFloat()
+            }
             mediaController?.let {
                 onPlaybackStateChanged(it.playbackState)
             }
         }
 
         override fun onAnimationUpdate(animation: ValueAnimator) {
-            if (seekBarIsTracking) {
+            if (sliderIsTracking) {
                 animation.cancel()
                 return
             }
             val animatedValue = animation.animatedValue as Int
             progressBar.progress = animatedValue
-            slider.value = animatedValue.toFloat()
+            slider.value = animatedValue.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
             progressTextView.text = makeTimeString(animatedValue / 1000.toLong())
         }
     }
