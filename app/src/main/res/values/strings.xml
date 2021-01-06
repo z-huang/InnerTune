@@ -25,7 +25,7 @@
     <string name="pref_about">About</string>
     <string name="menu_song_download">Download</string>
     <string name="pref_auto_download_title">Auto download</string>
-    <string name="pref_auto_download_summary">Auto download song when playing</string>
+    <string name="pref_auto_download_summary">Download song when added to library</string>
     <string name="menu_save">Save</string>
     <string name="title_song_details">Details</string>
     <string name="error_song_title_empty">Song title cannot be empty.</string>
