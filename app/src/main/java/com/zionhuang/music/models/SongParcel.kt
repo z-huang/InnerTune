@@ -14,20 +14,21 @@ data class SongParcel(
         val artist: String?,
         val channelId: String,
         val channelName: String,
+        val artworkUrl: String?,
 ) : Parcelable {
     companion object {
         fun fromSong(song: Song): SongParcel =
-                SongParcel(song.id, song.title, song.artistName, song.channelId, song.channelName)
+                SongParcel(song.id, song.title, song.artistName, song.channelId, song.channelName, null)
 
         fun fromStream(stream: YouTubeStream.Success): SongParcel =
-                SongParcel(stream.id, stream.title, null, stream.channelId, stream.channelTitle)
+                SongParcel(stream.id, stream.title, null, stream.channelId, stream.channelTitle, stream.thumbnailUrl)
 
         fun fromVideo(video: Video): SongParcel =
-                SongParcel(video.id, video.snippet.title, null, video.snippet.channelId, video.snippet.channelTitle)
+                SongParcel(video.id, video.snippet.title, null, video.snippet.channelId, video.snippet.channelTitle, video.snippet.thumbnails.maxres.url)
 
         fun fromSearchResult(item: SearchResult): SongParcel {
             require("youtube#video" == item.id.kind) { "Can't convert a " + item.id.kind + " item to SongParcel." }
-            return SongParcel(item.id.videoId, item.snippet.title, null, item.snippet.channelId, item.snippet.channelTitle)
+            return SongParcel(item.id.videoId, item.snippet.title, null, item.snippet.channelId, item.snippet.channelTitle, item.snippet.thumbnails.maxres.url)
         }
     }
 }

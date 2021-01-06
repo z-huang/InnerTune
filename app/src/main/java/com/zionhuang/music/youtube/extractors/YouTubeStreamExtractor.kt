@@ -234,7 +234,6 @@ class YouTubeStreamExtractor private constructor(private val context: Context) {
                             debug("Failed to decrypt signature: ${e.message}")
                             continue
                         }
-                        debug("decrypted signature: $signature")
                         url += "&${urlData["sp"].asStringOrNull ?: "signature"}=$signature"
                     }
                 }
@@ -280,6 +279,7 @@ class YouTubeStreamExtractor private constructor(private val context: Context) {
         val duration = videoInfo["length_seconds"].asIntOrNull
                 ?: videoDetails["lengthSeconds"].asIntOrNull
                 ?: return@extraction YouTubeStream.Error(NO_INFO, "Can't extract video duration")
+        val thumbnailUrl = playerResponse["videoDetails"]["thumbnail"]["thumbnails"].last()["url"].asStringOrNull
 
         // TODO: look for DASH manifest
 
@@ -306,6 +306,7 @@ class YouTubeStreamExtractor private constructor(private val context: Context) {
                 channelId = channelId,
                 channelTitle = channelTitle,
                 duration = duration,
+                thumbnailUrl = thumbnailUrl,
                 formats = formats
         )
     }

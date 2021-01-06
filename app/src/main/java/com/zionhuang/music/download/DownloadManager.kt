@@ -13,8 +13,11 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
+import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.models.AssetDownloadMission
 import com.zionhuang.music.models.AssetDownloadMission.Companion.ASSET_CHANNEL
+import com.zionhuang.music.utils.OkHttpDownloader
+import com.zionhuang.music.utils.OkHttpDownloader.requestOf
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.coroutines.CoroutineScope
@@ -69,14 +72,15 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             songRepository.updateSong(task.id) {
                 downloadState = STATE_DOWNLOADING
             }
-            if (task.url == null) {
+            if (task.audioUrl == null || task.artworkUrl == null) {
                 when (val extractResult = youTubeExtractor.extractStream(task.id)) {
                     is YouTubeStream.Success -> {
                         val format = extractResult.formats.maxByOrNull { it.abr ?: 0 }
                                 ?: return@launch songRepository.updateSong(task.id) {
                                     downloadState = STATE_NOT_DOWNLOADED
                                 }
-                        task.url = format.url
+                        task.audioUrl = format.url
+                        task.artworkUrl = extractResult.thumbnailUrl
                     }
                     is YouTubeStream.Error -> {
                         songRepository.updateSong(task.id) {
@@ -88,7 +92,10 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             }
 
             onTaskStarted(task)
-            PRDownloader.download(task.url, "${context.getExternalFilesDir(null)!!.absolutePath}/audio", task.id)
+            task.artworkUrl?.let {
+                OkHttpDownloader.downloadFile(requestOf(it), context.getArtworkFile(task.id))
+            }
+            PRDownloader.download(task.audioUrl, "${context.getExternalFilesDir(null)!!.absolutePath}/audio", task.id)
                     .build()
                     .setOnProgressListener {
                         updateState(task, it.currentBytes, it.totalBytes)
@@ -148,9 +155,9 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
         listeners.forEach { it(task) }
     }
 
-    fun addAssetDownload(task:AssetDownloadMission) {
+    fun addAssetDownload(task: AssetDownloadMission) {
         when (task.type) {
-            ASSET_CHANNEL->{
+            ASSET_CHANNEL -> {
 
             }
         }

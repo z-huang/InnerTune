@@ -9,6 +9,7 @@ sealed class YouTubeStream {
             val channelId: String,
             val channelTitle: String,
             val duration: Int,
+            val thumbnailUrl: String?,
             val formats: List<YtFormat>,
     ) : YouTubeStream()
 

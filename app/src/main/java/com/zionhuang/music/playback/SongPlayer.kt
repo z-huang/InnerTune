@@ -184,6 +184,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                             putString(METADATA_KEY_TITLE, result.title)
                             putString(METADATA_KEY_ARTIST, result.channelTitle)
                             putLong(METADATA_KEY_DURATION, result.duration * 1000.toLong())
+                            putString(METADATA_KEY_ART_URI, result.thumbnailUrl)
                         }.build())
                         queue.updateSongMeta(song.id, fromStream(result))
                         result.formats.maxByOrNull { it.abr ?: 0 }?.let {
@@ -279,7 +280,8 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 putExtra("task", DownloadTask(
                         id = song.id,
                         title = song.title,
-                        url = musicPlayer.source.toString()
+                        audioUrl = musicPlayer.source.toString(),
+                        artworkUrl = mediaSession.controller.metadata.getString(METADATA_KEY_ART_URI)
                 ))
             })
         }

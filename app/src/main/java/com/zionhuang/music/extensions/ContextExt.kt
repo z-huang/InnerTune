@@ -26,9 +26,11 @@ fun Context.themeColor(@AttrRes themeAttrId: Int): Int = obtainStyledAttributes(
 fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference({ this }, keyId, defaultValue)
 
 val Context.externalFilesDir: File get() = getExternalFilesDir(null)!!
+val Context.artworkDir get() = File(externalFilesDir, "artwork")
 val Context.audioDir get() = File(externalFilesDir, "audio")
 val Context.channelDir get() = File(externalFilesDir, "channel")
 
 fun Context.getAudioFile(songId: String) = File(audioDir, songId)
+fun Context.getArtworkFile(songId: String) = File(artworkDir, songId)
 fun Context.getChannelBannerFile(channelId: String) = File(channelDir, "${channelId}_banner")
 fun Context.getChannelAvatarFile(channelId: String) = File(channelDir, "${channelId}_avatar")
