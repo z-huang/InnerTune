@@ -13,7 +13,7 @@ data class Song(
         var artistName: String = "",
         var channelId: String = "",
         @Relation(entity = ChannelEntity::class, parentColumn = "channelId", entityColumn = "id", projection = ["name"])
-        val channelName: String = "",
+        var channelName: String = "",
         var duration: Int = 0, // in seconds
         var liked: Boolean = false,
         @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,

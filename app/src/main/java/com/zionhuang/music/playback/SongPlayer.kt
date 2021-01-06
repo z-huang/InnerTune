@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,15 +28,15 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNoti
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.SongRepository
-import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.ACTION_DOWNLOAD_MUSIC
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
+import com.zionhuang.music.extensions.getAudioFile
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.SongParcel
+import com.zionhuang.music.models.SongParcel.Companion.fromStream
 import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.playback.queue.EmptyQueue.Companion.EMPTY_QUEUE
 import com.zionhuang.music.playback.queue.Queue
@@ -49,7 +48,6 @@ import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.io.File
 
 typealias OnNotificationPosted = (notificationId: Int, notification: Notification, ongoing: Boolean) -> Unit
 
@@ -179,7 +177,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             playSongJob = scope.launch extractScope@{
                 audioManager.requestAudioFocus(focusRequest)
                 if (song.downloadState == STATE_DOWNLOADED) {
-                    musicPlayer.source = File("${context.getExternalFilesDir(null)?.absolutePath}/audio", song.id).toUri()
+                    musicPlayer.source = context.getAudioFile(song.id).toUri()
                 } else when (val result = youTubeExtractor.extractStream(song.id)) {
                     is YouTubeStream.Success -> {
                         mediaSession.setMetadata(metadataBuilder.apply {
@@ -187,38 +185,15 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                             putString(METADATA_KEY_ARTIST, result.channelTitle)
                             putLong(METADATA_KEY_DURATION, result.duration * 1000.toLong())
                         }.build())
-                        if (!songRepository.hasSong(result.id)) {
-                            if (!songRepository.hasChannel(result.channelId)) {
-                                songRepository.insertChannel(ChannelEntity(id = result.channelId, name = result.channelTitle))
-                            }
-                            songRepository.insert(SongEntity(
-                                    id = result.id,
-                                    title = result.title,
-                                    // use channel title as artist name temporarily
-                                    artistId = songRepository.getArtist(result.channelTitle)
-                                            ?: songRepository.insertArtist(result.channelTitle),
-                                    channelId = result.channelId,
-                                    duration = result.duration
-                            ))
-                        }
-                        result.formats.maxByOrNull { it.abr ?: 0 }?.let { format ->
-                            Log.d(TAG, "Song url: ${format.url}")
-                            musicPlayer.source = Uri.parse(format.url)
-                            if (autoDownload) {
-                                context.startService(Intent(context, DownloadService::class.java).apply {
-                                    action = ACTION_DOWNLOAD_MUSIC
-                                    putExtra("task", DownloadTask(
-                                            id = result.id,
-                                            title = result.title,
-                                            url = format.url!!
-                                    ))
-                                })
-                            }
-                        }
+                        queue.updateSongMeta(song.id, fromStream(result))
+                        result.formats.maxByOrNull { it.abr ?: 0 }?.let {
+                            musicPlayer.source = it.url!!.toUri()
+                        } ?: Log.d(TAG, "Can't find any audio stream.")
                     }
                     is YouTubeStream.Error -> {
                         Toast.makeText(context, result.errorMessage, LENGTH_SHORT).show()
                         Log.d(TAG, """${result.errorCode}: ${result.errorMessage}""")
+                        return@extractScope
                     }
                 }
                 play()
@@ -227,9 +202,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     }
 
     fun play() = musicPlayer.play()
-
     fun pause() = musicPlayer.pause()
-
     fun seekTo(pos: Long) {
         musicPlayer.seekTo(pos)
         updatePlaybackState(mediaSession.controller.playbackState.state, pos)
@@ -283,6 +256,9 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         scope.launch {
             currentSong?.let {
                 songRepository.insert(it)
+                if (autoDownload) {
+                    downloadCurrentSong()
+                }
             }
         }
     }

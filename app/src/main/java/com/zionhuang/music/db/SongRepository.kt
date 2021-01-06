@@ -14,17 +14,25 @@ import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.extensions.getAudioFile
+import com.zionhuang.music.extensions.getChannelAvatarFile
+import com.zionhuang.music.extensions.getChannelBannerFile
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
+import com.zionhuang.music.utils.OkHttpDownloader
+import com.zionhuang.music.utils.OkHttpDownloader.requestOf
+import com.zionhuang.music.youtube.YouTubeExtractor
+import com.zionhuang.music.youtube.models.YouTubeChannel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class SongRepository(private val context: Context) {
     private val musicDatabase = MusicDatabase.getInstance(context)
     private val songDao: SongDao = musicDatabase.songDao
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val channelDao: ChannelDao = musicDatabase.channelDao
+
+    private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
@@ -94,7 +102,7 @@ class SongRepository(private val context: Context) {
 
     suspend fun deleteSong(songId: String) = withContext(IO) {
         songDao.delete(songId)
-        File(context.getExternalFilesDir(null), "audio/$songId").let { file ->
+        context.getAudioFile(songId).let { file ->
             if (file.exists()) file.delete()
         }
     }
@@ -117,13 +125,33 @@ class SongRepository(private val context: Context) {
     /**
      * Channel Operations
      */
-    fun getChannelById(channelId: String): Flow<ChannelEntity> = channelDao.getChannelById(channelId)
+    fun getChannelFlowById(channelId: String): Flow<ChannelEntity> = channelDao.getChannelFlowById(channelId)
+    fun getChannelById(channelId: String): ChannelEntity? = channelDao.getChannelById(channelId)
     private suspend fun getChannelByName(name: String): ChannelEntity? = withContext(IO) { channelDao.getChannelByName(name) }
     private suspend fun getOrInsertChannel(chanelId: String, name: String): ChannelEntity = withContext(IO) {
         getChannelByName(name) ?: ChannelEntity(chanelId, name).apply { insertChannel(this) }
     }
 
-    suspend fun insertChannel(channel: ChannelEntity) = withContext(IO) { channelDao.insert(channel) }
+    private suspend fun insertChannel(channel: ChannelEntity) = withContext(IO) {
+        channelDao.insert(channel)
+        downloadChannel(channel.id)
+    }
+
+    suspend fun downloadChannel(channelId: String) = withContext(IO) {
+        val res = youTubeExtractor.getChannel(channelId)
+        if (res is YouTubeChannel.Success) {
+            OkHttpDownloader.downloadFile(requestOf(res.avatarUrl!!), context.getChannelAvatarFile(channelId))
+            OkHttpDownloader.downloadFile(requestOf(res.bannerUrl!!), context.getChannelBannerFile(channelId))
+        }
+    }
+
+    suspend fun deleteChannel(channel: ChannelEntity) = withContext(IO) {
+        channelDao.delete(channel)
+        context.getChannelAvatarFile(channel.id).delete()
+        context.getChannelBannerFile(channel.id).delete()
+    }
+
+    suspend fun deleteChannel(channelId: String) = getChannelById(channelId)?.let { deleteChannel(it) }
 
     suspend fun hasChannel(channelId: String): Boolean = withContext(IO) { channelDao.contains(channelId) }
 

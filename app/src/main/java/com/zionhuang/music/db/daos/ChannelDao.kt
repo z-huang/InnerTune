@@ -1,10 +1,7 @@
 package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.zionhuang.music.db.entities.ChannelEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -13,9 +10,12 @@ interface ChannelDao {
     @Query("SELECT * FROM channel")
     fun getAllChannelsAsPagingSource(): PagingSource<Int, ChannelEntity>
 
+    @Query("SELECT * FROM channel WHERE id = :channelId")
+    fun getChannelById(channelId: String): ChannelEntity?
+
     // TODO nullable
     @Query("SELECT * FROM channel WHERE id = :channelId")
-    fun getChannelById(channelId: String): Flow<ChannelEntity>
+    fun getChannelFlowById(channelId: String): Flow<ChannelEntity>
 
     @Query("SELECT * FROM channel WHERE name = :name")
     fun getChannelByName(name: String): ChannelEntity?
@@ -25,4 +25,7 @@ interface ChannelDao {
 
     @Query("SELECT EXISTS (SELECT 1 FROM channel WHERE id=:channelId)")
     suspend fun contains(channelId: String): Boolean
+
+    @Delete
+    suspend fun delete(channel: ChannelEntity)
 }

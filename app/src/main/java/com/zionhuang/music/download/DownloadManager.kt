@@ -88,7 +88,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             }
 
             onTaskStarted(task)
-            PRDownloader.download(task.url, "${context.getExternalFilesDir(null)?.absolutePath}/audio", task.id)
+            PRDownloader.download(task.url, "${context.getExternalFilesDir(null)!!.absolutePath}/audio", task.id)
                     .build()
                     .setOnProgressListener {
                         updateState(task, it.currentBytes, it.totalBytes)

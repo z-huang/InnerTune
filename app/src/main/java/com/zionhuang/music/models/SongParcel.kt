@@ -4,22 +4,30 @@ import android.os.Parcelable
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class SongParcel(val id: String, val title: String?, val artist: String?) : Parcelable {
+data class SongParcel(
+        val id: String,
+        val title: String?,
+        val artist: String?,
+        val channelId: String,
+        val channelName: String,
+) : Parcelable {
     companion object {
-        fun fromSong(song: Song): SongParcel {
-            return SongParcel(song.id, song.title, song.artistName)
-        }
+        fun fromSong(song: Song): SongParcel =
+                SongParcel(song.id, song.title, song.artistName, song.channelId, song.channelName)
 
-        fun fromVideo(video: Video): SongParcel {
-            return SongParcel(video.id, video.snippet.title, video.snippet.channelTitle)
-        }
+        fun fromStream(stream: YouTubeStream.Success): SongParcel =
+                SongParcel(stream.id, stream.title, null, stream.channelId, stream.channelTitle)
+
+        fun fromVideo(video: Video): SongParcel =
+                SongParcel(video.id, video.snippet.title, null, video.snippet.channelId, video.snippet.channelTitle)
 
         fun fromSearchResult(item: SearchResult): SongParcel {
             require("youtube#video" == item.id.kind) { "Can't convert a " + item.id.kind + " item to SongParcel." }
-            return SongParcel(item.id.videoId, item.snippet.title, item.snippet.channelTitle)
+            return SongParcel(item.id.videoId, item.snippet.title, null, item.snippet.channelId, item.snippet.channelTitle)
         }
     }
 }

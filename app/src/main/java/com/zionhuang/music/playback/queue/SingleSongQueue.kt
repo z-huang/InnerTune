@@ -27,6 +27,8 @@ class SingleSongQueue private constructor(
             currentSong.apply {
                 title = songParcel.title
                 artistName = songParcel.artist.toString()
+                channelId = songParcel.channelId
+                channelName = songParcel.channelName
             }
         }
     }
