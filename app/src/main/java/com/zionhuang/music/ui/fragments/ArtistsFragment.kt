@@ -37,6 +37,7 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
 
         val artistsAdapter = ArtistsAdapter()
+
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = artistsAdapter
@@ -49,6 +50,7 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 findNavController().navigate(directions, extras)
             }
         }
+
         lifecycleScope.launch {
             songsViewModel.allArtistsFlow.collectLatest {
                 artistsAdapter.submitData(it)

@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.LayoutChannelSongsBinding
+import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
@@ -26,7 +26,7 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
+class ChannelSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
     private val args: ChannelSongsFragmentArgs by navArgs()
     private val channelId by lazy { args.channelId }
 
@@ -52,6 +52,7 @@ class ChannelSongsFragment : MainFragment<LayoutChannelSongsBinding>() {
         songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
         val channelSongsAdapter = ChannelSongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler, channelViewModel, viewLifecycleOwner)
         binding.recyclerView.apply {
+            transitionName = getString(R.string.channel_songs_transition_name)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = channelSongsAdapter
             addOnClickListener { pos, _ ->
