@@ -12,31 +12,38 @@ import com.zionhuang.music.constants.QueueConstants.QUEUE_TYPE
 import com.zionhuang.music.constants.QueueConstants.SONG_ID
 import com.zionhuang.music.constants.QueueConstants.SONG_PARCEL
 import com.zionhuang.music.models.MediaData
+import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queue.Queue.Companion.QueueType
+import com.zionhuang.music.utils.livedata.SafeLiveData
+import com.zionhuang.music.utils.livedata.SafeMutableLiveData
 
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
-    private val _currentSong = MutableLiveData<MediaData?>(null)
-    val currentSong: LiveData<MediaData?>
-        get() = _currentSong
+    private val _mediaData = MutableLiveData<MediaData?>(null)
+    val mediaData: LiveData<MediaData?>
+        get() = _mediaData
 
+    private val _playbackState = SafeMutableLiveData(PlaybackStateData())
+    val playbackState: SafeLiveData<PlaybackStateData>
+        get() = _playbackState
     private val _currentState = MutableLiveData(STATE_NONE)
     val currentState: LiveData<Int>
         get() = _currentState
 
     private val mediaMetadataObserver = Observer<MediaMetadataCompat?> { mediaMetadata ->
         if (mediaMetadata != null) {
-            val newValue = currentSong.value?.pullMediaMetadata(mediaMetadata)
+            val newValue = mediaData.value?.pullMediaMetadata(mediaMetadata)
                     ?: mediaMetadata.toMediaData()
-            _currentSong.postValue(newValue)
+            _mediaData.postValue(newValue)
         }
     }
 
     private val playbackStateObserver = Observer<PlaybackStateCompat?> { playbackState ->
         if (playbackState != null) {
             _currentState.postValue(playbackState.state)
+            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState))
         }
     }
 

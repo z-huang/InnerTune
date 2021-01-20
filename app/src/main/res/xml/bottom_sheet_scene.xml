@@ -18,19 +18,25 @@
 
         <Constraint
             android:id="@id/player_frame"
-            android:layout_width="96dp"
+            android:layout_width="0dp"
             android:layout_height="0dp"
+            android:padding="6dp"
             android:scaleType="centerCrop"
             motion:layout_constraintBottom_toBottomOf="@id/player_container"
+            motion:layout_constraintDimensionRatio="1:1"
             motion:layout_constraintStart_toStartOf="@id/player_container"
             motion:layout_constraintTop_toTopOf="@id/player_container" />
+
+        <Constraint android:id="@id/progress_bar">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
     </ConstraintSet>
     <ConstraintSet android:id="@+id/expanded">
         <Constraint
             android:id="@id/player_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            motion:layout_constraintDimensionRatio="H,16:9"
+            motion:layout_constraintDimensionRatio="1:1"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
@@ -39,9 +45,14 @@
             android:id="@id/player_frame"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:padding="12dp"
             motion:layout_constraintBottom_toBottomOf="@id/player_container"
             motion:layout_constraintEnd_toEndOf="@id/player_container"
             motion:layout_constraintStart_toStartOf="@id/player_container"
             motion:layout_constraintTop_toTopOf="@id/player_container" />
+
+        <Constraint android:id="@id/progress_bar">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
     </ConstraintSet>
 </MotionScene>
