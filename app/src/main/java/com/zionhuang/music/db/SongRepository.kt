@@ -37,12 +37,7 @@ class SongRepository(private val context: Context) {
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    fun getAllSongsPagingSource(@SongSortType order: Int): PagingSource<Int, Song> = when (order) {
-        ORDER_CREATE_DATE -> songDao.getAllSongsByCreateDateAsPagingSource()
-        ORDER_NAME -> songDao.getAllSongsByNameAsPagingSource()
-        ORDER_ARTIST -> songDao.getAllSongsByArtistAsPagingSource()
-        else -> throw IllegalArgumentException("Unexpected order type.")
-    }
+    fun getAllSongsPagingSource(@SongSortType order: Int): PagingSource<Int, Song> = songDao.getAllSongsAsPagingSource(order)
 
     /**
      * All Songs [MutableList] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]

@@ -2,14 +2,19 @@ package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
+import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
 import kotlinx.coroutines.flow.Flow
+
+const val QUERY_ALL_SONG = "SELECT * FROM song ORDER BY %s DESC"
 
 @Dao
 interface SongDao {
@@ -20,17 +25,17 @@ interface SongDao {
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    @Transaction
-    @Query("SELECT * FROM song ORDER BY create_date DESC")
-    fun getAllSongsByCreateDateAsPagingSource(): PagingSource<Int, Song>
+    fun getAllSongsAsPagingSource(@SongSortType order: Int): PagingSource<Int, Song> =
+            getAllSongsAsPagingSource(QUERY_ALL_SONG.format(when (order) {
+                ORDER_CREATE_DATE -> "create_date"
+                ORDER_NAME -> "title"
+                ORDER_ARTIST -> "artistId"
+                else -> throw IllegalArgumentException("Unexpected song sort type.")
+            }).toSQLiteQuery())
 
     @Transaction
-    @Query("SELECT * FROM song ORDER BY title DESC")
-    fun getAllSongsByNameAsPagingSource(): PagingSource<Int, Song>
-
-    @Transaction
-    @Query("SELECT * FROM song ORDER BY artistId DESC")
-    fun getAllSongsByArtistAsPagingSource(): PagingSource<Int, Song>
+    @RawQuery(observedEntities = [Song::class, SongEntity::class])
+    fun getAllSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
 
     /**
      * Artist Songs [PagingSource]

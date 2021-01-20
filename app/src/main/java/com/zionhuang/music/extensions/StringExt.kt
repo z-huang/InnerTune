@@ -1,9 +1,7 @@
 package com.zionhuang.music.extensions
 
-import android.text.Html
-import android.text.Html.FROM_HTML_MODE_LEGACY
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.gson.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils.unescapeJava
@@ -71,3 +69,8 @@ fun String.parseQueryString(): JsonObject = JsonObject().apply {
 
 @Throws(JsonSyntaxException::class)
 fun String.parseJsonString(): JsonElement = JsonParser.parseString(this)
+
+/**
+ * Database Extensions
+ */
+fun String.toSQLiteQuery(): SimpleSQLiteQuery = SimpleSQLiteQuery(this)
