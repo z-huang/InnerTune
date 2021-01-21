@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -17,6 +19,7 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadServiceConnection
 import com.zionhuang.music.download.DownloadTask
@@ -66,6 +69,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         pagingData.insertHeaderItem(Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)
 
+    private val _deleteSong = MutableLiveData<SongEntity>()
+    val deleteSong: LiveData<SongEntity>
+        get() = _deleteSong
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(songId: String, view: View) {
             (view.getActivity() as? MainActivity)?.let { activity ->
@@ -84,7 +90,10 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun deleteSong(songId: String) {
             viewModelScope.launch {
-                songRepository.deleteSong(songId)
+                songRepository.getSongEntityById(songId)?.let { song ->
+                    songRepository.deleteSong(song)
+                    _deleteSong.postValue(song)
+                }
             }
         }
     }

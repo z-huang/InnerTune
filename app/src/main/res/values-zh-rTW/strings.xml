@@ -40,4 +40,6 @@
     <string name="sort_by_create_date">新增時間</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
+    <string name="snack_bar_delete_song">已刪除「%1$s」</string>
+    <string name="snack_bar_undo">復原</string>
 </resources>

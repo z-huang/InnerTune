@@ -79,7 +79,7 @@ class SongRepository(private val context: Context) {
     /**
      * Song Operations
      */
-    private suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
+    suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
     suspend fun getSongById(id: String): Song? = withContext(IO) { songDao.getSongById(id) }
 
     suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
@@ -95,6 +95,7 @@ class SongRepository(private val context: Context) {
 
     suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }
 
+    suspend fun deleteSong(song: SongEntity) = withContext(IO) { songDao.delete(song) }
     suspend fun deleteSong(songId: String) = withContext(IO) {
         songDao.delete(songId)
         context.getAudioFile(songId).let { file ->

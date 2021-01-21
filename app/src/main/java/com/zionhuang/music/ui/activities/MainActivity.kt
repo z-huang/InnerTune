@@ -2,12 +2,17 @@ package com.zionhuang.music.ui.activities
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
@@ -15,14 +20,29 @@ import com.zionhuang.music.extensions.getDensity
 import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
+import com.zionhuang.music.viewmodels.SongsViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<CoordinatorLayout>
 
+    private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
+        songsViewModel.deleteSong.observe(this) { song ->
+            Toast.makeText(applicationContext, song.toString(), LENGTH_LONG).show()
+            Snackbar.make(binding.root, getString(R.string.snack_bar_delete_song, song.title), Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.bottomNav)
+                    .setAction(R.string.snack_bar_undo) {
+                        lifecycleScope.launch {
+                            songsViewModel.songRepository.insert(song)
+                        }
+                    }
+                    .show()
+        }
     }
 
     private fun setupUI() {

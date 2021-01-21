@@ -47,4 +47,6 @@
     <string name="sort_by_create_date">Date added</string>
     <string name="pref_auto_add_song_title">Auto add song to library</string>
     <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
+    <string name="snack_bar_delete_song">"%1$s" has been deleted.</string>
+    <string name="snack_bar_undo">Undo</string>
 </resources>
