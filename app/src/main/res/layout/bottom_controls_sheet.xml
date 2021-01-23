@@ -232,6 +232,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/slider"
                 tools:text="4:00" />
+
             <ImageView
                 android:id="@+id/btn_shuffle"
                 android:layout_width="36dp"
@@ -247,19 +248,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
 
-            <ImageView
+            <com.zionhuang.music.ui.widgets.SkipPreviousButton
                 android:id="@+id/btn_previous"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
                 android:onClick="@{()->viewModel.mediaController.transportControls.skipToPrevious()}"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_baseline_skip_previous_48"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
                 app:layout_constraintEnd_toStartOf="@id/btn_play_pause"
                 app:layout_constraintStart_toEndOf="@id/btn_shuffle"
-                app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
+                app:layout_constraintTop_toTopOf="@id/btn_play_pause"
+                tools:src="@drawable/ic_baseline_skip_previous_48" />
 
             <com.zionhuang.music.ui.widgets.PlayPauseButton
                 android:id="@+id/btn_play_pause"
@@ -273,19 +271,16 @@
                 app:playState="@{viewModel.currentState}"
                 tools:src="@drawable/ic_baseline_pause_48" />
 
-            <ImageView
+            <com.zionhuang.music.ui.widgets.SkipNextButton
                 android:id="@+id/btn_next"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
                 android:onClick="@{()->viewModel.mediaController.transportControls.skipToNext()}"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_baseline_skip_next_48"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
                 app:layout_constraintEnd_toStartOf="@id/btn_repeat"
                 app:layout_constraintStart_toEndOf="@id/btn_play_pause"
-                app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
+                app:layout_constraintTop_toTopOf="@id/btn_play_pause"
+                tools:src="@drawable/ic_baseline_skip_next_48" />
 
             <ImageView
                 android:id="@+id/btn_repeat"

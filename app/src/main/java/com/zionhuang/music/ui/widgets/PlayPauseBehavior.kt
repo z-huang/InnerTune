@@ -10,12 +10,12 @@ import com.zionhuang.music.extensions.getAnimatedVectorDrawable
 class PlayPauseBehavior(context: Context) {
     private val playAnimation = context.getAnimatedVectorDrawable(R.drawable.avd_play_to_pause)
     private val pauseAnimation = context.getAnimatedVectorDrawable(R.drawable.avd_pause_to_play)
-    private val playDrawable = ContextCompat.getDrawable(context, R.drawable.ic_play_arrow_black_24dp)
-    private val pauseDrawable = ContextCompat.getDrawable(context, R.drawable.ic_baseline_pause_48)
+    private val playDrawable = ContextCompat.getDrawable(context, R.drawable.ic_play_arrow_black_24dp)!!
+    private val pauseDrawable = ContextCompat.getDrawable(context, R.drawable.ic_baseline_pause_48)!!
     private val callbacks = mutableMapOf<PlayPauseButton, AnimationCallback>()
 
     fun animatePlay(button: PlayPauseButton) {
-        if (button.drawable != pauseDrawable) {
+        if (button.drawable.constantState != pauseDrawable.constantState) {
             with(playAnimation) {
                 button.setImageDrawable(this)
                 start()
@@ -26,7 +26,7 @@ class PlayPauseBehavior(context: Context) {
     }
 
     fun animationPause(button: PlayPauseButton) {
-        if (button.drawable != playDrawable) {
+        if (button.drawable.constantState != playDrawable.constantState) {
             with(pauseAnimation) {
                 button.setImageDrawable(this)
                 start()
