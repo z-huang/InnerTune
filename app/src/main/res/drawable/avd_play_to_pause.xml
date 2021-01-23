@@ -13,7 +13,7 @@
                 android:pivotY="12">
                 <path
                     android:name="path"
-                    android:fillColor="#000000"
+                    android:fillColor="?invertedColor"
                     android:pathData="M 8 5 L 8 19 L 19 12 Z"
                     android:strokeWidth="1" />
             </group>
