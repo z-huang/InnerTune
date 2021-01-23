@@ -39,7 +39,7 @@
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
                 app:coverId="@{song.id}"
-                tools:src="@drawable/ic_round_music_note_24" />
+                tools:src="@drawable/ic_music_note" />
         </LinearLayout>
 
         <LinearLayout
@@ -80,7 +80,7 @@
                     android:layout_gravity="end"
                     android:layout_weight="0"
                     android:padding="2dp"
-                    android:src="@drawable/ic_round_offline_pin_24"
+                    android:src="@drawable/ic_offline_pin"
                     android:visibility="@{song.downloadState == DownloadTask.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
             </LinearLayout>
 
@@ -148,7 +148,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+            app:srcCompat="@drawable/ic_more_vert" />
 
         <FrameLayout
             android:id="@+id/overlay_selection"

@@ -5,13 +5,13 @@
     tools:context="com.zionhuang.music.ui.activities.MainActivity">
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search"
         android:orderInCategory="300"
         android:title="@string/menu_search_title"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings_black_24dp"
+        android:icon="@drawable/ic_settings"
         android:title="@string/title_settings"
         app:showAsAction="collapseActionView" />
 </menu>

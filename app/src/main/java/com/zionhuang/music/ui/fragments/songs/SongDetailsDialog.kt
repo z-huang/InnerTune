@@ -42,7 +42,7 @@ class SongDetailsDialog(private val songId: String) : DialogFragment() {
     private fun setupUI() {
         requireDialog().window!!.setWindowAnimations(R.style.DialogAnimation)
         binding.toolbar.apply {
-            setNavigationIcon(R.drawable.ic_baseline_close_24)
+            setNavigationIcon(R.drawable.ic_close)
             inflateMenu(R.menu.menu_save)
             setNavigationOnClickListener {
                 dismiss()

@@ -25,6 +25,6 @@
             android:layout_alignParentEnd="true"
             android:background="?selectableItemBackgroundBorderless"
             android:padding="6dp"
-            android:src="@drawable/ic_baseline_sort_24" />
+            android:src="@drawable/ic_sort" />
     </RelativeLayout>
 </layout>

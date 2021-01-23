@@ -35,7 +35,7 @@
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
                 app:thumbnails="@{item}"
-                tools:src="@drawable/ic_round_music_note_24" />
+                tools:src="@drawable/ic_music_note" />
         </LinearLayout>
 
         <LinearLayout
@@ -114,7 +114,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+            app:srcCompat="@drawable/ic_more_vert" />
 
         <FrameLayout
             android:id="@+id/overlay_selection"

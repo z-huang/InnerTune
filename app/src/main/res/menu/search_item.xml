@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_add"
-        android:icon="@drawable/ic_add_black_24dp"
+        android:icon="@drawable/ic_add"
         android:title="@string/search_item_menu_add"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_download"
-        android:icon="@drawable/ic_file_download_black_24dp"
+        android:icon="@drawable/ic_file_download"
         android:title="@string/search_item_menu_download"
         app:showAsAction="never" />
 </menu>

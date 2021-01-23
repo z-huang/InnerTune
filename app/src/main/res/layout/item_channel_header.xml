@@ -37,7 +37,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_round_person_24"
+                android:src="@drawable/ic_person"
                 app:circleCrop="@{true}"
                 app:srcUrl="@{viewModel.channelMeta.avatarUrl}" />
 
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/btn_shuffle"
-                app:icon="@drawable/ic_baseline_shuffle_24"
+                app:icon="@drawable/ic_shuffle"
                 app:iconGravity="start" />
 
             <Space
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/btn_play_all"
-                app:icon="@drawable/ic_play_arrow_black_24dp"
+                app:icon="@drawable/ic_play"
                 app:iconGravity="start" />
 
         </LinearLayout>

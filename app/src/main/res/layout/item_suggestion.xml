@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toStartOf="@id/guideline_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_search_black_24dp"
+            app:srcCompat="@drawable/ic_search"
             app:tint="@android:color/tab_indicator_text" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -64,7 +64,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline_right"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_top_left_black_24dp"
+            app:srcCompat="@drawable/ic_arrow_top_left"
             app:tint="@android:color/tab_indicator_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -40,7 +40,7 @@
                 android:minWidth="50dp"
                 android:minHeight="50dp"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/ic_round_music_note_24" />
+                tools:src="@drawable/ic_music_note" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,12 +51,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
                     android:background="?attr/actionBarItemBackground"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
-                    android:src="@drawable/ic_round_music_note_24" />
+                    android:src="@drawable/ic_music_note" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/songTitle_inputLayout"
@@ -87,12 +87,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="10dp"
                     android:background="?attr/actionBarItemBackground"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
-                    android:src="@drawable/ic_round_person_24" />
+                    android:src="@drawable/ic_person" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/songArtist_inputLayout"
@@ -122,18 +122,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="10dp"
                     android:background="?attr/actionBarItemBackground"
                     android:minWidth="48dp"
-                    android:layout_marginEnd="8dp"
                     android:minHeight="48dp"
-                    android:src="@drawable/ic_baseline_subscriptions_24" />
+                    android:src="@drawable/ic_subscriptions" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                     android:layout_width="match_parent"
-                    android:enabled="false"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:hint="@string/song_channel"
                     app:errorEnabled="true">
 
@@ -155,11 +155,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
+                    android:layout_marginEnd="8dp"
                     android:background="?attr/actionBarItemBackground"
                     android:minWidth="48dp"
-                    android:layout_marginEnd="8dp"
                     android:minHeight="48dp"
-                    android:src="@drawable/ic_baseline_access_time_24" />
+                    android:src="@drawable/ic_access_time" />
 
                 <com.google.android.material.textview.MaterialTextView
                     duration="@{song.duration}"

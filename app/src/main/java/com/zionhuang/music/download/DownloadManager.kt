@@ -44,7 +44,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
         it.createNotificationChannel(notificationChannel)
     }
     private val summaryNotification = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_round_music_note_24)
+            .setSmallIcon(R.drawable.ic_music_note)
             .setStyle(NotificationCompat.InboxStyle())
             .setGroup(DOWNLOAD_GROUP_KEY)
             .setGroupSummary(true)
@@ -165,7 +165,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
 
     private fun updateNotification(id: Int, applier: NotificationCompat.Builder.() -> Unit) {
         applier(notificationBuilder
-                .setSmallIcon(R.drawable.ic_round_music_note_24)
+                .setSmallIcon(R.drawable.ic_music_note)
                 .setOngoing(true)
                 .setGroup(DOWNLOAD_GROUP_KEY))
         notificationManager.notify(id, notificationBuilder.build())

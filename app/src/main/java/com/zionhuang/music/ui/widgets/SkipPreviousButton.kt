@@ -12,7 +12,7 @@ import com.zionhuang.music.extensions.getAnimatedVectorDrawable
 
 
 class SkipPreviousButton : AppCompatImageView {
-    private val skipPreviousDrawable = ContextCompat.getDrawable(context, R.drawable.ic_baseline_skip_previous_48)
+    private val skipPreviousDrawable = ContextCompat.getDrawable(context, R.drawable.ic_skip_previous)
     private val skipPreviousAnimation = context.getAnimatedVectorDrawable(R.drawable.avd_skip_previous)
     private val animationCallback = object : Animatable2Compat.AnimationCallback() {
         override fun onAnimationEnd(drawable: Drawable?) {

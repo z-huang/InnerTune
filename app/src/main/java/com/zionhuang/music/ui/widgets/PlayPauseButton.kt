@@ -19,7 +19,7 @@ class PlayPauseButton : AppCompatImageView {
         }
         isClickable = true
         scaleType = ScaleType.CENTER_CROP
-        setImageResource(R.drawable.ic_baseline_play_arrow_48)
+        setImageResource(R.drawable.ic_play)
     }
 
     fun setBehavior(behavior: PlayPauseBehavior) {

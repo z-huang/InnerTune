@@ -5,7 +5,7 @@
     tools:context="com.zionhuang.music.ui.activities.MainActivity">
     <item
         android:id="@+id/search_view"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search"
         android:orderInCategory="300"
         android:title="@string/menu_search_title"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
