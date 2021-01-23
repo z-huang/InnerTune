@@ -74,16 +74,13 @@
                 tools:text="Song Artist" />
         </LinearLayout>
 
-        <ImageView
+        <com.zionhuang.music.ui.widgets.PlayPauseButton
             android:id="@+id/btn_btm_play_pause"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
             android:onClick="@{()->viewModel.togglePlayPause()}"
             android:padding="4dp"
-            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@id/top_bar_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -264,15 +261,12 @@
                 app:layout_constraintStart_toEndOf="@id/btn_shuffle"
                 app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
 
-            <ImageView
+            <com.zionhuang.music.ui.widgets.PlayPauseButton
                 android:id="@+id/btn_play_pause"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
                 android:onClick="@{()->viewModel.togglePlayPause()}"
                 android:padding="6dp"
-                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toStartOf="@id/btn_next"
                 app:layout_constraintStart_toEndOf="@id/btn_previous"
                 app:layout_constraintTop_toBottomOf="@id/duration_text"

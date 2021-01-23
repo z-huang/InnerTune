@@ -6,8 +6,10 @@ import android.content.ContextWrapper
 import android.graphics.Color
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.res.use
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.zionhuang.music.utils.preference.Preference
 import java.io.File
 
@@ -22,6 +24,9 @@ tailrec fun Context?.getActivity(): Activity? = when (this) {
 fun Context.themeColor(@AttrRes themeAttrId: Int): Int = obtainStyledAttributes(intArrayOf(themeAttrId)).use {
     it.getColor(0, Color.MAGENTA)
 }
+
+fun Context.getAnimatedVectorDrawable(@DrawableRes id: Int): AnimatedVectorDrawableCompat =
+        AnimatedVectorDrawableCompat.create(this, id)!!
 
 fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference({ this }, keyId, defaultValue)
 

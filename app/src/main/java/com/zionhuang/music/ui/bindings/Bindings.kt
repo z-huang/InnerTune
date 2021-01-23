@@ -12,6 +12,7 @@ import com.google.api.services.youtube.model.SearchResult
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.circle
 import com.zionhuang.music.extensions.load
+import com.zionhuang.music.ui.widgets.PlayPauseButton
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.getMaxResThumbnailUrl
 import com.zionhuang.music.utils.makeTimeString
@@ -27,11 +28,11 @@ fun setDuration(view: TextView, duration: Long) {
 }
 
 @BindingAdapter("playState")
-fun setPlayState(view: ImageView, state: Int) {
+fun setPlayState(view: PlayPauseButton, state: Int) {
     if (state == PlaybackStateCompat.STATE_PAUSED || state == PlaybackStateCompat.STATE_NONE) {
-        view.setImageResource(R.drawable.ic_baseline_play_arrow_48)
+        view.animationPause()
     } else {
-        view.setImageResource(R.drawable.ic_baseline_pause_48)
+        view.animatePlay()
     }
 }
 

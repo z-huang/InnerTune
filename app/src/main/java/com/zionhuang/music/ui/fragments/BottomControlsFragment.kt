@@ -10,12 +10,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
+import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MediaWidgetsController
+import com.zionhuang.music.ui.widgets.PlayPauseBehavior
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 
 class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.TransitionListener {
@@ -58,6 +59,11 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         }
         binding.btnFavorite.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIKE, null)
+        }
+
+        with(PlayPauseBehavior(requireContext())) {
+            binding.btnBtmPlayPause.setBehavior(this)
+            binding.btnPlayPause.setBehavior(this)
         }
 
         mediaWidgetsController = MediaWidgetsController(requireContext(), binding.progressBar, binding.slider, binding.positionText)

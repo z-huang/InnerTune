@@ -2,8 +2,6 @@ package com.zionhuang.music.ui.activities
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +31,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         super.onCreate(savedInstanceState)
         setupUI()
         songsViewModel.deleteSong.observe(this) { song ->
-            Toast.makeText(applicationContext, song.toString(), LENGTH_LONG).show()
             Snackbar.make(binding.root, getString(R.string.snack_bar_delete_song, song.title), Snackbar.LENGTH_LONG)
                     .setAnchorView(binding.bottomNav)
                     .setAction(R.string.snack_bar_undo) {
