@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.getAnimatedVectorDrawable
 
@@ -16,23 +17,22 @@ class PlayPauseBehavior(context: Context) {
 
     fun animatePlay(button: PlayPauseButton) {
         if (button.drawable.constantState != pauseDrawable.constantState) {
-            with(playAnimation) {
-                button.setImageDrawable(this)
-                start()
-                registerAnimationCallback(callbacks[button]
-                        ?: AnimationCallback(button).also { callbacks[button] = it })
-            }
+            button.setAvd(playAnimation)
         }
     }
 
     fun animationPause(button: PlayPauseButton) {
         if (button.drawable.constantState != playDrawable.constantState) {
-            with(pauseAnimation) {
-                button.setImageDrawable(this)
-                start()
-                registerAnimationCallback(callbacks[button]
-                        ?: AnimationCallback(button).also { callbacks[button] = it })
-            }
+            button.setAvd(pauseAnimation)
+        }
+    }
+
+    private fun PlayPauseButton.setAvd(avd: AnimatedVectorDrawableCompat) {
+        with(avd) {
+            setImageDrawable(this)
+            start()
+            registerAnimationCallback(callbacks[this@setAvd]
+                    ?: AnimationCallback(this@setAvd).also { callbacks[this@setAvd] = it })
         }
     }
 

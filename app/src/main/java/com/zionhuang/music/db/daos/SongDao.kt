@@ -14,7 +14,7 @@ import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
 import kotlinx.coroutines.flow.Flow
 
-const val QUERY_ALL_SONG = "SELECT * FROM song ORDER BY %s DESC"
+const val QUERY_ALL_SONG = "SELECT * FROM song ORDER BY %s %s"
 
 @Dao
 interface SongDao {
@@ -25,13 +25,16 @@ interface SongDao {
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    fun getAllSongsAsPagingSource(@SongSortType order: Int): PagingSource<Int, Song> =
-            getAllSongsAsPagingSource(QUERY_ALL_SONG.format(when (order) {
-                ORDER_CREATE_DATE -> "create_date"
-                ORDER_NAME -> "title"
-                ORDER_ARTIST -> "artistId"
-                else -> throw IllegalArgumentException("Unexpected song sort type.")
-            }).toSQLiteQuery())
+    fun getAllSongsAsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
+            getAllSongsAsPagingSource(QUERY_ALL_SONG.format(
+                    when (order) {
+                        ORDER_CREATE_DATE -> "create_date"
+                        ORDER_NAME -> "title"
+                        ORDER_ARTIST -> "artistId"
+                        else -> throw IllegalArgumentException("Unexpected song sort type.")
+                    },
+                    if (descending) "DESC" else "ASC"
+            ).toSQLiteQuery())
 
     @Transaction
     @RawQuery(observedEntities = [Song::class, SongEntity::class])

@@ -33,10 +33,11 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songRepository: SongRepository = SongRepository(application)
 
     var sortType by preference(R.string.pref_sort_type, ORDER_NAME)
+    var sortDescending by preference(R.string.pref_sort_descending, true)
 
     val allSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
-            songRepository.getAllSongsPagingSource(sortType)
+            songRepository.getAllSongsPagingSource(sortType, sortDescending)
         }.flow.map { pagingData ->
             pagingData.insertHeaderItem(Song(HEADER_ITEM_ID))
         }.cachedIn(viewModelScope)

@@ -4,4 +4,5 @@
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_sort_type" translatable="false">SORT_TYPE</string>
+    <string name="pref_sort_descending" translatable="false">SORT_DESC</string>
 </resources>

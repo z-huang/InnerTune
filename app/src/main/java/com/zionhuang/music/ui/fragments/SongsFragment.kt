@@ -65,9 +65,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> {
-                findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
-            }
+            R.id.action_settings -> findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
         }
         return true
     }
@@ -84,9 +82,14 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val sortMenuListener = object : SortMenuListener {
         @IdRes
         override fun sortType(): Int = songsViewModel.sortType
+        override fun sortDescending(): Boolean = songsViewModel.sortDescending
         override fun sortByCreateDate() = updateSortType(ORDER_CREATE_DATE)
         override fun sortByName() = updateSortType(ORDER_NAME)
         override fun sortByArtist() = updateSortType(ORDER_ARTIST)
+        override fun toggleSortOrder() {
+            songsViewModel.sortDescending = !songsViewModel.sortDescending
+            songsAdapter.refresh()
+        }
     }
 
     private fun updateSortType(@SongSortType sortType: Int) {
