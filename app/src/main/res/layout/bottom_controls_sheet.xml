@@ -5,6 +5,12 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import
+            alias="PlaybackState"
+            type="android.support.v4.media.session.PlaybackStateCompat" />
+
         <variable
             name="viewModel"
             type="com.zionhuang.music.viewmodels.PlaybackViewModel" />
@@ -21,7 +27,7 @@
         app:layoutDescription="@xml/bottom_sheet_scene">
 
         <FrameLayout
-            android:id="@+id/player_container"
+            android:id="@+id/bottom_bar"
             android:layout_width="0dp"
             android:layout_height="54dp"
             app:layout_constrainedWidth="true"
@@ -87,22 +93,48 @@
             app:playState="@{viewModel.currentState}"
             tools:src="@drawable/ic_pause" />
 
-        <com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-            android:id="@+id/player_frame"
+        <FrameLayout
+            android:id="@+id/artwork_frame"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="@id/player_container"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintStart_toStartOf="@id/player_container"
-            app:layout_constraintTop_toTopOf="@id/player_container">
+            android:clickable="true" />
 
-            <com.google.android.exoplayer2.ui.PlayerView
-                android:id="@+id/player_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:use_controller="false" />
-        </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
+        <ImageView
+            android:id="@+id/artwork"
+            fullResolution="@{true}"
+            srcUrl="@{viewModel.mediaData.artwork}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/background_song_cover"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_music_note"
+            app:layout_constraintBottom_toBottomOf="@id/artwork_frame"
+            app:layout_constraintEnd_toEndOf="@id/artwork_frame"
+            app:layout_constraintStart_toStartOf="@id/artwork_frame"
+            app:layout_constraintTop_toTopOf="@id/artwork_frame" />
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/artwork_frame"
+            app:layout_constraintEnd_toEndOf="@id/artwork_frame"
+            app:layout_constraintStart_toStartOf="@id/artwork_frame"
+            app:layout_constraintTop_toTopOf="@id/artwork_frame"
+            app:use_controller="false" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/load_indicator"
+            style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="@{viewModel.playbackState.state == PlaybackState.STATE_BUFFERING ? 1 : 0}"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="@id/artwork_frame"
+            app:layout_constraintEnd_toEndOf="@id/artwork_frame"
+            app:layout_constraintStart_toStartOf="@id/artwork_frame"
+            app:layout_constraintTop_toTopOf="@id/artwork_frame" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_bar"
@@ -118,13 +150,13 @@
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginRight="36dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@id/time_component_group"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_container">
+            app:layout_constraintTop_toBottomOf="@id/artwork_frame">
 
             <TextView
                 android:id="@+id/song_title"

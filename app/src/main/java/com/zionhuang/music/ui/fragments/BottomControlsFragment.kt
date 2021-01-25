@@ -41,7 +41,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     }
 
     private fun setupUI() {
-        viewModel.setPlayerView(binding.playerView)
+        viewModel.setPlayerView(binding.player)
         // Marquee
         binding.btmSongTitle.isSelected = true
         binding.btmSongArtist.isSelected = true
@@ -50,7 +50,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
         binding.motionLayout.addTransitionListener(this)
         (requireActivity() as MainActivity).setBottomSheetListener(this)
-        binding.playerContainer.setOnClickListener {
+        binding.bottomBar.setOnClickListener {
             (requireActivity() as MainActivity).expandBottomSheet()
         }
 

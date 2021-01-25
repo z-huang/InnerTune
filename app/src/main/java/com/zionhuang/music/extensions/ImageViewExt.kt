@@ -7,10 +7,6 @@ import com.zionhuang.music.utils.GlideRequest
 fun ImageView.load(url: String, applier: (GlideRequest<*>.() -> Unit)? = null) {
     GlideApp.with(this)
             .load(url)
-            .apply {
-                if (applier != null) {
-                    applier(this)
-                }
-            }
+            .apply { applier?.invoke(this) }
             .into(this)
 }

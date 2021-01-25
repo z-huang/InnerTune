@@ -1,13 +1,13 @@
 package com.zionhuang.music.ui.fragments.search
 
 import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.getSystemService
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -67,7 +67,7 @@ class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
     @FlowPreview
     @ExperimentalTime
     private fun setupSearchView() {
-        val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchManager: SearchManager = requireContext().getSystemService()!!
         searchView.apply {
 
             isIconified = false

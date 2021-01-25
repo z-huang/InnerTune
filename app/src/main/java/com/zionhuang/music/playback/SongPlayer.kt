@@ -21,6 +21,7 @@ import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
@@ -154,7 +155,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             updatePlaybackState(state, musicPlayer.position)
         }
 
-        audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager = context.getSystemService()!!
         focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
             setAudioAttributes(AudioAttributes.Builder().run {
                 setUsage(AudioAttributes.USAGE_MEDIA)

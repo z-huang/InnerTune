@@ -2,9 +2,9 @@ package com.zionhuang.music.download
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.Service
 import android.content.Context
 import androidx.core.app.NotificationCompat
+import androidx.core.content.getSystemService
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
@@ -40,7 +40,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
     private val notificationChannel = NotificationChannel(DOWNLOAD_CHANNEL_ID, context.getString(R.string.channel_name_download), NotificationManager.IMPORTANCE_DEFAULT)
-    private val notificationManager = (context.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager).also {
+    private val notificationManager = context.getSystemService<NotificationManager>()!!.also {
         it.createNotificationChannel(notificationChannel)
     }
     private val summaryNotification = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)

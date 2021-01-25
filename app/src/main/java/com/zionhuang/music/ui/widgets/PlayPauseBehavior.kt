@@ -16,14 +16,16 @@ class PlayPauseBehavior(context: Context) {
     private val callbacks = mutableMapOf<PlayPauseButton, AnimationCallback>()
 
     fun animatePlay(button: PlayPauseButton) {
-        if (button.drawable.constantState != pauseDrawable.constantState) {
+        if (button.tag != STATE_PLAY) {
             button.setAvd(playAnimation)
+            button.tag = STATE_PLAY
         }
     }
 
     fun animationPause(button: PlayPauseButton) {
-        if (button.drawable.constantState != playDrawable.constantState) {
+        if (button.tag != STATE_PAUSE) {
             button.setAvd(pauseAnimation)
+            button.tag = STATE_PAUSE
         }
     }
 
@@ -43,5 +45,10 @@ class PlayPauseBehavior(context: Context) {
                 pauseAnimation -> button.setImageDrawable(playDrawable)
             }
         }
+    }
+
+    companion object {
+        private const val STATE_PLAY = "PLAY"
+        private const val STATE_PAUSE = "PAUSE"
     }
 }

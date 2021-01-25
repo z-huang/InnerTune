@@ -1,55 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:motion="http://schemas.android.com/apk/res-auto">
     <Transition
         android:id="@+id/expand_collapse_transition"
         motion:constraintSetEnd="@id/expanded"
         motion:constraintSetStart="@id/collapsed"
         motion:duration="500"
-        motion:motionInterpolator="easeOut" />
+        motion:motionInterpolator="easeOut">
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="1"
+                app:framePosition="0"
+                app:motionTarget="@id/bottom_title_layout" />
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="100"
+                app:motionTarget="@id/bottom_title_layout" />
+            <KeyAttribute
+                android:alpha="1"
+                app:framePosition="0"
+                app:motionTarget="@id/btn_btm_play_pause" />
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="100"
+                app:motionTarget="@id/btn_btm_play_pause" />
+            <KeyAttribute
+                android:translationX="50dp"
+                app:framePosition="50"
+                app:motionTarget="@id/bottom_bar" />
+            <KeyPosition
+                app:framePosition="50"
+                app:keyPositionType="parentRelative"
+                app:motionTarget="@id/artwork_frame"
+                app:percentX="0.4" />
+        </KeyFrameSet>
+    </Transition>
+
     <ConstraintSet android:id="@+id/collapsed">
         <Constraint
-            android:id="@id/player_container"
+            android:id="@id/artwork_frame"
             android:layout_width="0dp"
             android:layout_height="54dp"
-            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            motion:layout_constraintDimensionRatio="1:1"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
 
-        <Constraint
-            android:id="@id/player_frame"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="6dp"
-            android:scaleType="centerCrop"
-            motion:layout_constraintBottom_toBottomOf="@id/player_container"
-            motion:layout_constraintDimensionRatio="1:1"
-            motion:layout_constraintStart_toStartOf="@id/player_container"
-            motion:layout_constraintTop_toTopOf="@id/player_container" />
+        <Constraint android:id="@id/load_indicator">
+            <PropertySet app:visibilityMode="ignore" />
+        </Constraint>
 
         <Constraint android:id="@id/progress_bar">
             <PropertySet motion:visibilityMode="ignore" />
         </Constraint>
     </ConstraintSet>
+
     <ConstraintSet android:id="@+id/expanded">
         <Constraint
-            android:id="@id/player_container"
+            android:id="@id/artwork_frame"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginBottom="36dp"
             motion:layout_constraintDimensionRatio="1:1"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent" />
 
-        <Constraint
-            android:id="@id/player_frame"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="12dp"
-            motion:layout_constraintBottom_toBottomOf="@id/player_container"
-            motion:layout_constraintEnd_toEndOf="@id/player_container"
-            motion:layout_constraintStart_toStartOf="@id/player_container"
-            motion:layout_constraintTop_toTopOf="@id/player_container" />
+        <Constraint android:id="@id/load_indicator">
+            <PropertySet app:visibilityMode="ignore" />
+        </Constraint>
 
         <Constraint android:id="@id/progress_bar">
             <PropertySet motion:visibilityMode="ignore" />

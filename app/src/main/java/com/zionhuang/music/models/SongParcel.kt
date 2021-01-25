@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.maxResUrl
 import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.parcelize.Parcelize
 
@@ -24,11 +25,11 @@ data class SongParcel(
                 SongParcel(stream.id, stream.title, null, stream.channelId, stream.channelTitle, stream.thumbnailUrl)
 
         fun fromVideo(video: Video): SongParcel =
-                SongParcel(video.id, video.snippet.title, null, video.snippet.channelId, video.snippet.channelTitle, video.snippet.thumbnails.maxres.url)
+                SongParcel(video.id, video.snippet.title, null, video.snippet.channelId, video.snippet.channelTitle, video.snippet.thumbnails.maxResUrl)
 
         fun fromSearchResult(item: SearchResult): SongParcel {
             require("youtube#video" == item.id.kind) { "Can't convert a " + item.id.kind + " item to SongParcel." }
-            return SongParcel(item.id.videoId, item.snippet.title, null, item.snippet.channelId, item.snippet.channelTitle, item.snippet.thumbnails.maxres.url)
+            return SongParcel(item.id.videoId, item.snippet.title, null, item.snippet.channelId, item.snippet.channelTitle, item.snippet.thumbnails.maxResUrl)
         }
     }
 }
