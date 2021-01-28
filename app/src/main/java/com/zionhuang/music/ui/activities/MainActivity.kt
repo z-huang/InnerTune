@@ -18,9 +18,7 @@ import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.viewmodels.SongsViewModel
-import com.zionhuang.music.youtube.DownloaderImpl
 import kotlinx.coroutines.launch
-import org.schabi.newpipe.extractor.NewPipe
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     private var bottomSheetCallback: BottomSheetListener? = null
@@ -41,7 +39,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     }
                     .show()
         }
-        NewPipe.init(DownloaderImpl.init(null))
     }
 
     private fun setupUI() {
