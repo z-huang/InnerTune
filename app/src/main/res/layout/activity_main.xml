@@ -8,7 +8,8 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_nav">
+        android:layout_above="@id/bottom_nav"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -52,8 +53,9 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <FrameLayout
         android:id="@+id/bottom_controls_sheet"
+        style="@style/Widget.MaterialComponents.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_hideable="true"
@@ -64,17 +66,16 @@
             android:id="@+id/bottom_controls_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_navigation_height"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:clickable="true"
         android:focusable="true"
-        app:elevation="0dp"
         app:labelVisibilityMode="selected"
         app:menu="@menu/menu_bottom_nav" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

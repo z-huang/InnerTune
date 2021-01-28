@@ -2,7 +2,6 @@ package com.zionhuang.music.ui.activities
 
 import android.os.Bundle
 import android.view.View
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -19,11 +18,13 @@ import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.viewmodels.SongsViewModel
+import com.zionhuang.music.youtube.DownloaderImpl
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.NewPipe
 
 class MainActivity : BindingActivity<ActivityMainBinding>() {
     private var bottomSheetCallback: BottomSheetListener? = null
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<CoordinatorLayout>
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
 
@@ -40,6 +41,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     }
                     .show()
         }
+        NewPipe.init(DownloaderImpl.init(null))
     }
 
     private fun setupUI() {
@@ -56,7 +58,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
-        bottomSheetBehavior = from<CoordinatorLayout>(binding.bottomControlsSheet).apply {
+        bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
             isHideable = true
             addBottomSheetCallback(BottomSheetCallback())
         }
@@ -64,7 +66,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight((108 * getDensity()).toInt(), true)
+        bottomSheetBehavior.setPeekHeight(binding.bottomNav.height + (54 * getDensity()).toInt(), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {
@@ -84,7 +86,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            binding.bottomNav.translationY = resources.getDimensionPixelOffset(R.dimen.bottom_navigation_height) * slideOffset.coerceIn(0F, 1F)
+            binding.bottomNav.translationY = binding.bottomNav.height * slideOffset.coerceIn(0F, 1F)
             bottomSheetCallback?.onSlide(bottomSheet, slideOffset)
         }
     }

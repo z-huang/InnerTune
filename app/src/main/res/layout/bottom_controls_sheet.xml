@@ -20,7 +20,7 @@
         android:id="@+id/motion_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="?colorSurface"
         android:clickable="true"
         android:focusable="true"
         app:currentState="@id/collapsed"
@@ -97,44 +97,34 @@
             android:id="@+id/artwork_frame"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clickable="true" />
+            android:clickable="true">
 
-        <ImageView
-            android:id="@+id/artwork"
-            fullResolution="@{true}"
-            srcUrl="@{viewModel.mediaData.artwork}"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/background_song_cover"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_music_note"
-            app:layout_constraintBottom_toBottomOf="@id/artwork_frame"
-            app:layout_constraintEnd_toEndOf="@id/artwork_frame"
-            app:layout_constraintStart_toStartOf="@id/artwork_frame"
-            app:layout_constraintTop_toTopOf="@id/artwork_frame" />
+            <ImageView
+                android:id="@+id/artwork"
+                fullResolution="@{true}"
+                srcUrl="@{viewModel.mediaData.artwork}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_song_cover"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_music_note" />
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/player"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/artwork_frame"
-            app:layout_constraintEnd_toEndOf="@id/artwork_frame"
-            app:layout_constraintStart_toStartOf="@id/artwork_frame"
-            app:layout_constraintTop_toTopOf="@id/artwork_frame"
-            app:use_controller="false" />
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/player"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:use_controller="false" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/load_indicator"
-            style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="@{viewModel.playbackState.state == PlaybackState.STATE_BUFFERING ? 1 : 0}"
-            android:indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="@id/artwork_frame"
-            app:layout_constraintEnd_toEndOf="@id/artwork_frame"
-            app:layout_constraintStart_toStartOf="@id/artwork_frame"
-            app:layout_constraintTop_toTopOf="@id/artwork_frame" />
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/load_indicator"
+                style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="@{viewModel.playbackState.state == PlaybackState.STATE_BUFFERING ? 1 : 0}"
+                android:indeterminate="true" />
+        </FrameLayout>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_bar"
