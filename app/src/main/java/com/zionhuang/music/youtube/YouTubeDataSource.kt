@@ -1,6 +1,7 @@
 package com.zionhuang.music.youtube
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
