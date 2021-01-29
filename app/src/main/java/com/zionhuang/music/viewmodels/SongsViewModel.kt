@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
+import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.ORDER_NAME
@@ -39,7 +40,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
             songRepository.getAllSongsPagingSource(sortType, sortDescending)
         }.flow.map { pagingData ->
-            pagingData.insertHeaderItem(Song(HEADER_ITEM_ID))
+            pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
         }.cachedIn(viewModelScope)
     }
 
@@ -64,7 +65,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     fun getChannelSongsAsFlow(channelId: String) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getChannelSongsAsPagingSource(channelId)
     }.flow.map { pagingData ->
-        pagingData.insertHeaderItem(Song(HEADER_ITEM_ID))
+        pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)
 
     private val _deleteSong = MutableLiveData<SongEntity>()
