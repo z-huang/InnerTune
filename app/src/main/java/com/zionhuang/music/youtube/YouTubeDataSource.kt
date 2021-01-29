@@ -22,6 +22,8 @@ class YouTubeDataSource {
                 LoadResult.Error(e)
             }
         }
+
+        override fun getRefreshKey(state: PagingState<String, SearchResult>): String? = null
     }
 
     class Popular(private val youTubeRepository: YouTubeRepository) : PagingSource<String, Video>() {
@@ -40,5 +42,7 @@ class YouTubeDataSource {
                 LoadResult.Error(e)
             }
         }
+
+        override fun getRefreshKey(state: PagingState<String, Video>): String? = null
     }
 }
