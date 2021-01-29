@@ -3,7 +3,6 @@ package com.zionhuang.music
 import android.content.Context
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeChannel
-import com.zionhuang.music.youtube.models.YouTubeSearch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -13,15 +12,6 @@ import org.mockito.Mockito.mock
 class YouTubeExtractorTest {
     private val context = mock(Context::class.java)
     private val extractor = YouTubeExtractor.getInstance(context)
-
-    @Test
-    fun testSearch() {
-        val res: YouTubeSearch
-        runBlocking {
-            res = extractor.search("music")
-        }
-        assertTrue(res is YouTubeSearch.Success)
-    }
 
     @Test
     fun testChannel() {
