@@ -40,6 +40,15 @@
         <item quantity="one">%d song</item>
         <item quantity="other">%d songs</item>
     </plurals>
+    <plurals name="subscribers">
+        <item quantity="zero">%d subscriber</item>
+        <item quantity="one">%d subscriber</item>
+        <item quantity="other">%d subscribers</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videos</item>
+    </plurals>
     <string name="btn_play_all">Play All</string>
     <string name="btn_shuffle">Shuffle</string>
     <string name="sort_by_name">Name</string>

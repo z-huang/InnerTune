@@ -5,6 +5,12 @@ import androidx.paging.PagingState
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import org.schabi.newpipe.extractor.InfoItem
+import org.schabi.newpipe.extractor.NewPipe
+import org.schabi.newpipe.extractor.Page
+import org.schabi.newpipe.extractor.ServiceList
+import org.schabi.newpipe.extractor.services.youtube.YoutubeService
 
 class YouTubeDataSource {
     class Search(private val youTubeRepository: YouTubeRepository, private val query: String) : PagingSource<String, SearchResult>() {
@@ -25,6 +31,36 @@ class YouTubeDataSource {
         }
 
         override fun getRefreshKey(state: PagingState<String, SearchResult>): String? = null
+    }
+
+    class NewPipeSearch(private val query: String) : PagingSource<Page, InfoItem>() {
+        private val youtubeService = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
+        private val contentFilter = emptyList<String>()
+        private val sortFilter = ""
+
+        @Suppress("BlockingMethodInNonBlockingContext")
+        override suspend fun load(params: LoadParams<Page>): LoadResult<Page, InfoItem> =
+                try {
+                    if (params.key == null) {
+                        val searchInfo = ExtractorHelper.search(youtubeService, query, contentFilter, sortFilter)
+                        LoadResult.Page(
+                                data = searchInfo.relatedItems,
+                                nextKey = searchInfo.nextPage,
+                                prevKey = null
+                        )
+                    } else {
+                        val infoItemsPage = ExtractorHelper.search(youtubeService, query, contentFilter, sortFilter, params.key!!)
+                        LoadResult.Page(
+                                data = infoItemsPage.items,
+                                nextKey = infoItemsPage.nextPage,
+                                prevKey = null
+                        )
+                    }
+                } catch (e: Exception) {
+                    LoadResult.Error(e)
+                }
+
+        override fun getRefreshKey(state: PagingState<Page, InfoItem>): Page? = null
     }
 
     class Popular(private val youTubeRepository: YouTubeRepository) : PagingSource<String, Video>() {

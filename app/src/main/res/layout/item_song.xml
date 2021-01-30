@@ -111,7 +111,7 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/tv_publish_time"
+                    android:id="@+id/duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"

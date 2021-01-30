@@ -92,12 +92,12 @@
                     android:text="@string/bullet"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/tv_publish_time"
+                    app:layout_constraintEnd_toStartOf="@id/publish_date"
                     app:layout_constraintStart_toEndOf="@id/song_artist"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_publish_time"
+                    android:id="@+id/publish_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"

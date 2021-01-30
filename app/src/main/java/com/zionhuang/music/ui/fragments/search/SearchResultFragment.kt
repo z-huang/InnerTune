@@ -16,10 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentSearchResultBinding
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
-import com.zionhuang.music.ui.adapters.SearchResultAdapter
+import com.zionhuang.music.ui.adapters.NewPipeSearchResultAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
@@ -40,7 +38,7 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
         }
-        val searchResultAdapter = SearchResultAdapter().apply {
+        val searchResultAdapter = NewPipeSearchResultAdapter().apply {
             addLoadStateListener { loadState ->
                 binding.progressBar.isVisible = loadState.refresh is Loading
                 binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
@@ -54,11 +52,11 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
         binding.recyclerView.apply {
             adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, _ ->
-                val item = searchResultAdapter.getItemByPosition(pos)!!
-                if ("youtube#video" != item.id.kind) {
-                    return@addOnClickListener
-                }
-                playbackViewModel.playMedia(QUEUE_SINGLE, SongParcel.fromSearchResult(item))
+//                val item = searchResultAdapter.getItemByPosition(pos)!!
+//                if ("youtube#video" != item.id.kind) {
+//                    return@addOnClickListener
+//                }
+//                playbackViewModel.playMedia(QUEUE_SINGLE, SongParcel.fromSearchResult(item))
             }
         }
 

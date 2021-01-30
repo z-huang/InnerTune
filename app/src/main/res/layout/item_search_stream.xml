@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="item"
-            type="com.google.api.services.youtube.model.SearchResult" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/song_item_height"
@@ -34,7 +27,6 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
-                app:thumbnails="@{item}"
                 tools:src="@drawable/ic_music_note" />
         </LinearLayout>
 
@@ -55,13 +47,12 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{item.snippet.title}"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/item_details"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Item Title" />
+                tools:text="Video Title" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -69,17 +60,36 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textSize="12sp"
+                    tools:text="3:00" />
+
+                <TextView
+                    android:id="@+id/duration_bullet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:singleLine="true"
+                    android:text="@string/bullet"
+                    android:textSize="12sp" />
+
+                <TextView
                     android:id="@+id/song_artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:text="@{item.snippet.channelTitle}"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Channel" />
 
                 <TextView
-                    android:id="@+id/tv_bullet"
+                    android:id="@+id/publish_bullet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -96,7 +106,6 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textSize="12sp"
-                    app:publishDate="@{item.snippet.publishedAt}"
                     tools:text="YYYY-MM-DD" />
             </LinearLayout>
         </LinearLayout>

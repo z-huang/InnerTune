@@ -7,6 +7,7 @@
     <color name="colorOnSurface">#FF000000</color>
     <color name="textColor">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#000000</color>
     <color name="songCoverBackground">#FFFFFF</color>
     <color name="transparent">#80FFFFFF</color>
 </resources>
