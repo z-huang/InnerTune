@@ -12,13 +12,15 @@ class YouTubeRepository private constructor(context: Context) {
     private val youTubeAPIService: YouTubeAPIService = YouTubeAPIService(context)
     private val suggestionAPIService: YouTubeSuggestionAPIService = RetrofitManager.suggestionAPIService
 
-    suspend fun getSuggestions(query: String): List<String> {
+    suspend fun getSuggestions(query: String): List<String> = try {
         val response = suggestionAPIService.suggest(query)
-        return if (response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.suggestions ?: emptyList()
         } else {
             emptyList()
         }
+    } catch (e: Exception) {
+        emptyList()
     }
 
     suspend fun search(query: String, pageToken: String? = null): SearchListResponse = youTubeAPIService.search(query, pageToken)
