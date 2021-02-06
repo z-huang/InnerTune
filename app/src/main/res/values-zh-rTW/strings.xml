@@ -42,4 +42,7 @@
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="snack_bar_delete_song">已刪除「%1$s」</string>
     <string name="snack_bar_undo">復原</string>
+    <string name="dialog_edit_details_title">編輯詳細資料</string>
+    <string name="dialog_button_save">儲存</string>
+    <string name="dialog_button_cancel">取消</string>
 </resources>

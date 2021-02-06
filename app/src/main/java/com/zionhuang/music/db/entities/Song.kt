@@ -1,10 +1,13 @@
 package com.zionhuang.music.db.entities
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Relation
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
+@Parcelize
 data class Song(
         val id: String,
         var title: String? = null,
@@ -19,4 +22,4 @@ data class Song(
         @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,
         @ColumnInfo(name = "create_date") var createDate: Date = Date(),
         @ColumnInfo(name = "modify_date") var modifyDate: Date = Date(),
-)
+) : Parcelable

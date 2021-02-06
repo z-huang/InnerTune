@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -71,12 +72,13 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     private val _deleteSong = MutableLiveData<SongEntity>()
     val deleteSong: LiveData<SongEntity>
         get() = _deleteSong
+
     val songPopupMenuListener = object : SongPopupMenuListener {
-        override fun editSong(songId: String, view: View) {
+        override fun editSong(song: Song, view: View) {
             (view.getActivity() as? MainActivity)?.let { activity ->
-                val transition = activity.supportFragmentManager.beginTransaction()
-                        .addToBackStack(null)
-                SongDetailsDialog(songId).show(transition, "SongDialog")
+                SongDetailsDialog().apply {
+                    arguments = bundleOf("song" to song)
+                }.show(activity.supportFragmentManager, SongDetailsDialog.TAG)
             }
         }
 

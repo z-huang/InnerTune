@@ -7,6 +7,8 @@ import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
+import com.zionhuang.music.db.entities.ArtistEntity
+import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.extensions.toSQLiteQuery
@@ -37,7 +39,7 @@ interface SongDao {
             ).toSQLiteQuery())
 
     @Transaction
-    @RawQuery(observedEntities = [Song::class, SongEntity::class])
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class])
     fun getAllSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
 
     /**

@@ -58,4 +58,7 @@
     <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
     <string name="snack_bar_delete_song">"%1$s" has been deleted.</string>
     <string name="snack_bar_undo">Undo</string>
+    <string name="dialog_edit_details_title">Edit details</string>
+    <string name="dialog_button_save">Save</string>
+    <string name="dialog_button_cancel">Cancel</string>
 </resources>

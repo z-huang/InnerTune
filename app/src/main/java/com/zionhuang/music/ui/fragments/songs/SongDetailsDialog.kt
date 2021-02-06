@@ -2,59 +2,28 @@ package com.zionhuang.music.ui.fragments.songs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.WindowCompat.FEATURE_ACTION_BAR_OVERLAY
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutSongDetailsBinding
+import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.utils.ArtistAutoCompleteAdapter
-import com.zionhuang.music.viewmodels.SongsViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class SongDetailsDialog(private val songId: String) : DialogFragment() {
+class SongDetailsDialog : AppCompatDialogFragment() {
     private lateinit var binding: LayoutSongDetailsBinding
-    private val songsViewModel by activityViewModels<SongsViewModel>()
+    private lateinit var song: Song
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.AppTheme)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = LayoutSongDetailsBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupUI()
-        lifecycleScope.launch {
-            binding.song = songsViewModel.getSong(songId)
-        }
+        song = arguments?.getParcelable("song")!!
     }
 
     private fun setupUI() {
-        requireDialog().window!!.setWindowAnimations(R.style.DialogAnimation)
-        binding.toolbar.apply {
-            setNavigationIcon(R.drawable.ic_close)
-            inflateMenu(R.menu.menu_save)
-            setNavigationOnClickListener {
-                dismiss()
-            }
-            setOnMenuItemClickListener { item ->
-                if (item.itemId == R.id.action_save) {
-                    item.isEnabled = false
-                    saveAndExit()
-                }
-                true
-            }
-        }
         binding.songArtistAutoCompleteTextView.apply {
             setAdapter(ArtistAutoCompleteAdapter(requireContext()))
         }
@@ -64,29 +33,34 @@ class SongDetailsDialog(private val songId: String) : DialogFragment() {
         binding.songArtistAutoCompleteTextView.doOnTextChanged { text, _, _, _ ->
             binding.songArtistInputLayout.error = if (text.isNullOrEmpty()) getString(R.string.error_song_artist_empty) else null
         }
-    }
-
-    private fun saveAndExit() {
-        if (binding.songTitleInputLayout.error != null || binding.songArtistInputLayout.error != null) return
-        lifecycleScope.launch {
-            binding.song?.let { song ->
-                songsViewModel.songRepository.updateSong(song.apply {
-                    title = binding.songTitleEditText.text.toString()
-                    artistName = binding.songArtistAutoCompleteTextView.text.toString()
-                })
-            }
-            dismiss()
+        with(binding) {
+            songTitleEditText.setText(song.title)
+            songArtistAutoCompleteTextView.setText(song.artistName)
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            super.onCreateDialog(savedInstanceState).apply {
-                requestWindowFeature(FEATURE_ACTION_BAR_OVERLAY)
-            }.also {
-                Log.d(TAG, "on create dialog ")
-            }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        binding = LayoutSongDetailsBinding.inflate(requireActivity().layoutInflater, null, false)
+        setupUI()
+
+        return AlertDialog.Builder(requireContext())
+                .setView(binding.root)
+                .setTitle(R.string.dialog_edit_details_title)
+                .setPositiveButton(R.string.dialog_button_save) { _, _ ->
+                    val title = binding.songTitleEditText.text.toString()
+                    val artistName = binding.songArtistAutoCompleteTextView.text.toString()
+                    GlobalScope.launch {
+                        SongRepository(requireContext()).updateSong(song.apply {
+                            this.title = title
+                            this.artistName = artistName
+                        })
+                    }
+                }
+                .setNegativeButton(R.string.dialog_button_cancel, null)
+                .create()
+    }
 
     companion object {
-        private const val TAG = "SongDetailsFragment"
+        const val TAG = "SongDetailsFragment"
     }
 }

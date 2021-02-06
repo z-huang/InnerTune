@@ -19,7 +19,7 @@ class SongViewHolder(
                 inflate(R.menu.menu_song)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener.editSong(song.id, view)
+                        R.id.action_edit -> popupMenuListener.editSong(song, view)
                         R.id.action_download -> popupMenuListener.downloadSong(song.id, view.context)
                         R.id.action_delete -> popupMenuListener.deleteSong(song.id)
                     }
