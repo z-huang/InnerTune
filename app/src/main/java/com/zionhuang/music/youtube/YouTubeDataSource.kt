@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import com.zionhuang.music.youtube.newpipe.SearchCache
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
@@ -15,20 +16,19 @@ import org.schabi.newpipe.extractor.services.youtube.YoutubeService
 class YouTubeDataSource {
     class Search(private val youTubeRepository: YouTubeRepository, private val query: String) : PagingSource<String, SearchResult>() {
         @Suppress("BlockingMethodInNonBlockingContext")
-        override suspend fun load(params: LoadParams<String>): LoadResult<String, SearchResult> {
-            return try {
-                val res = youTubeRepository.search(query, params.key)
-                LoadResult.Page(
-                        data = res.items,
-                        prevKey = res.prevPageToken,
-                        nextKey = res.nextPageToken
-                )
-            } catch (e: GoogleJsonResponseException) {
-                LoadResult.Error(Throwable(e.details.message))
-            } catch (e: Exception) {
-                LoadResult.Error(e)
-            }
-        }
+        override suspend fun load(params: LoadParams<String>): LoadResult<String, SearchResult> =
+                try {
+                    val res = youTubeRepository.search(query, params.key)
+                    LoadResult.Page(
+                            data = res.items,
+                            prevKey = res.prevPageToken,
+                            nextKey = res.nextPageToken
+                    )
+                } catch (e: GoogleJsonResponseException) {
+                    LoadResult.Error(Throwable(e.details.message))
+                } catch (e: Exception) {
+                    LoadResult.Error(e)
+                }
 
         override fun getRefreshKey(state: PagingState<String, SearchResult>): String? = null
     }
@@ -40,9 +40,17 @@ class YouTubeDataSource {
 
         @Suppress("BlockingMethodInNonBlockingContext")
         override suspend fun load(params: LoadParams<Page>): LoadResult<Page, InfoItem> =
-                try {
+                if (query in SearchCache && SearchCache[query]!!.nextKey != params.key) {
+                    val cache = SearchCache[query]!!
+                    LoadResult.Page(
+                            data = cache.items,
+                            nextKey = cache.nextKey,
+                            prevKey = null
+                    )
+                } else try {
                     if (params.key == null) {
                         val searchInfo = ExtractorHelper.search(youtubeService, query, contentFilter, sortFilter)
+                        SearchCache.add(query, searchInfo)
                         LoadResult.Page(
                                 data = searchInfo.relatedItems,
                                 nextKey = searchInfo.nextPage,
@@ -50,6 +58,7 @@ class YouTubeDataSource {
                         )
                     } else {
                         val infoItemsPage = ExtractorHelper.search(youtubeService, query, contentFilter, sortFilter, params.key!!)
+                        SearchCache.add(query, infoItemsPage)
                         LoadResult.Page(
                                 data = infoItemsPage.items,
                                 nextKey = infoItemsPage.nextPage,
