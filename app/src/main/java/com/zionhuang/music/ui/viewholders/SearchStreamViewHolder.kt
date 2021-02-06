@@ -19,7 +19,7 @@ class SearchStreamViewHolder(private val binding: ItemSearchStreamBinding) : Sea
         binding.duration.text = makeTimeString(item.duration)
         binding.songArtist.text = item.uploaderName
         binding.publishDate.text = item.textualUploadDate
-        if (!item.textualUploadDate.isNullOrEmpty()) {
+        if (item.textualUploadDate.isNullOrEmpty()) {
             binding.publishBullet.isVisible = false
         }
         binding.thumbnail.load(item.thumbnailUrl) {
