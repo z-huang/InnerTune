@@ -103,7 +103,8 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
                 override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artistName
                 override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null
-                override fun createCurrentContentIntent(player: Player): PendingIntent? = null
+                override fun createCurrentContentIntent(player: Player): PendingIntent? =
+                        PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
             },
             object : PlayerNotificationManager.NotificationListener {
                 override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {

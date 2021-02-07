@@ -20,7 +20,8 @@
             android:required="false" />
         <activity
             android:name="com.zionhuang.music.ui.activities.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
