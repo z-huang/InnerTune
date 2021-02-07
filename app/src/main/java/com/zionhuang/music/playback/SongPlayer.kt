@@ -44,6 +44,7 @@ import com.zionhuang.music.playback.queue.Queue
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_SINGLE
 import com.zionhuang.music.playback.queue.SingleSongQueue
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.coroutines.CoroutineScope
