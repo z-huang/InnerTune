@@ -78,7 +78,9 @@ class MediaWidgetsController(
 
             val progress = state.position.toInt()
             progressBar.progress = progress
-            slider.value = progress.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
+            if (slider.isEnabled) {
+                slider.value = progress.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
+            }
             progressTextView.text = makeTimeString(progress.toLong() / 1000)
             if (state.state == PlaybackStateCompat.STATE_PLAYING) {
                 val timeToEnd = ((duration - progress) / state.playbackSpeed).toInt()
@@ -94,11 +96,11 @@ class MediaWidgetsController(
             }
         }
 
-        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
             super.onMetadataChanged(metadata)
-            duration = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) ?: 0L
+            duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
             progressBar.max = duration.toInt()
-            if (duration == 0L) {
+            if (duration <= 0L) {
                 slider.isEnabled = false
             } else {
                 slider.isEnabled = true
