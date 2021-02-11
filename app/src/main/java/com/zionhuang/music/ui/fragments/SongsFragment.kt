@@ -55,7 +55,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.transportControls?.playFromMediaId(songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
+                playbackViewModel.playMedia(requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
                         QUEUE_TYPE to QUEUE_ALL_SONG,
                         QUEUE_ORDER to sortMenuListener.sortType(),
                         QUEUE_DESC to sortMenuListener.sortDescending()

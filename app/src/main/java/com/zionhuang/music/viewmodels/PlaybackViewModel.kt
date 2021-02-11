@@ -1,22 +1,20 @@
 package com.zionhuang.music.viewmodels
 
+import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.core.os.bundleOf
 import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
-import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
-import com.zionhuang.music.constants.MediaConstants.SONG_ID
-import com.zionhuang.music.constants.MediaConstants.SONG_PARCEL
+import com.zionhuang.music.R
+import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.PlaybackStateData
-import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
-import com.zionhuang.music.playback.queue.Queue.Companion.QueueType
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.livedata.SafeLiveData
 import com.zionhuang.music.utils.livedata.SafeMutableLiveData
 
@@ -52,6 +50,8 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     val transportControls: MediaControllerCompat.TransportControls? get() = mediaSessionConnection.transportControls
 
+    private val expandOnPlay by preference(R.string.pref_expand_on_play, false)
+
     fun setPlayerView(playerView: PlayerView) = mediaSessionConnection.setPlayerView(playerView)
 
     fun togglePlayPause() {
@@ -62,12 +62,18 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun playMedia(@QueueType queueType: Int, song: SongParcel) {
-        mediaSessionConnection.transportControls?.playFromMediaId(song.id, bundleOf(
-                QUEUE_TYPE to queueType,
-                SONG_ID to song.id,
-                SONG_PARCEL to song
-        ))
+    fun playMedia(activity: Activity, mediaId: String, extras: Bundle) {
+        mediaSessionConnection.transportControls?.playFromMediaId(mediaId, extras)
+        if (expandOnPlay) {
+            (activity as? MainActivity)?.expandBottomSheet()
+        }
+    }
+
+    fun playFromSearch(activity: Activity, query: String, extras: Bundle) {
+        transportControls?.playFromSearch(query, extras)
+        if (expandOnPlay) {
+            (activity as? MainActivity)?.expandBottomSheet()
+        }
     }
 
     override fun onCleared() {

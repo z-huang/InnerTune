@@ -60,7 +60,7 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
             addOnClickListener { pos, _ ->
                 val item = searchResultAdapter.getItemByPosition(pos)!!
                 if (item is StreamInfoItem) {
-                    playbackViewModel.transportControls?.playFromSearch(query, bundleOf(
+                    playbackViewModel.playFromSearch(requireActivity(), query, bundleOf(
                             SONG_ID to YouTubeStreamExtractor.extractId(item.url)
                     ))
                 }

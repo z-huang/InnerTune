@@ -103,7 +103,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     val exoPlayer: ExoPlayer get() = musicPlayer.exoPlayer
 
-    val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
+    private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
         setPlayer(exoPlayer)
         setPlaybackPreparer(object : MediaSessionConnector.PlaybackPreparer {
             override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle?, cb: ResultReceiver?) = false

@@ -17,6 +17,11 @@
         android:key="@string/pref_auto_add_song"
         android:summary="@string/pref_auto_add_song_summary"
         android:title="@string/pref_auto_add_song_title" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:icon="@drawable/ic_open_in_full"
+        android:key="@string/pref_expand_on_play"
+        android:title="@string/pref_expand_on_play_title" />
     <Preference
         app:icon="@drawable/ic_info"
         app:title="@string/pref_about" />

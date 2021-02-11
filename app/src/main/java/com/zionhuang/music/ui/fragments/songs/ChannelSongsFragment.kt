@@ -15,8 +15,6 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
-import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.ui.adapters.ChannelSongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.ChannelViewModel
@@ -57,7 +55,7 @@ class ChannelSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
             adapter = channelSongsAdapter
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.playMedia(QUEUE_ALL_SONG, SongParcel.fromSong(channelSongsAdapter.getItemByPosition(pos)!!))
+                //playbackViewModel.playMedia(requireActivity(), QUEUE_ALL_SONG, SongParcel.fromSong(channelSongsAdapter.getItemByPosition(pos)!!))
             }
         }
 
