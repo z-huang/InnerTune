@@ -111,7 +111,6 @@ class SongRepository(private val context: Context) {
     /**
      * Artist Operations
      */
-
     suspend fun getArtist(artistId: Int): ArtistEntity? = withContext(IO) { artistDao.getArtist(artistId) }
     suspend fun getArtist(name: String): Int? = withContext(IO) { artistDao.getArtistId(name) }
     private suspend fun getOrInsertArtist(name: String): Int = withContext(IO) {
