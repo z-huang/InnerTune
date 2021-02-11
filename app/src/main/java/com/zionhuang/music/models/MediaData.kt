@@ -16,7 +16,7 @@ data class MediaData(
         id = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
         title = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
         artistName = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE)
-        artwork = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI)
+        artwork = mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI)
         duration = (mediaMetadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) / 1000).toInt()
     }
 }
