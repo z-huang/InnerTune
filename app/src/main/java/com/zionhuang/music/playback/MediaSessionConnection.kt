@@ -23,7 +23,7 @@ class MediaSessionConnection(private val context: Context) {
     private val mediaControllerCallback = MediaControllerCallback()
     private var serviceConnection: MediaServiceConnection? = null
 
-    val isConnected = MutableLiveData<Boolean>(false)
+    val isConnected = MutableLiveData(false)
     val playbackState = MutableLiveData<PlaybackStateCompat?>(null)
     val nowPlaying = MutableLiveData<MediaMetadataCompat?>(null)
     val queueData = MutableLiveData(QueueData())
@@ -68,16 +68,8 @@ class MediaSessionConnection(private val context: Context) {
     }
 
     private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-            playbackState.postValue(state)
-        }
-
-        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-            nowPlaying.postValue(metadata)
-        }
-
-        override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) {
-            queueData.postValue(queueData.value!!.update(mediaController, queue))
-        }
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat) = playbackState.postValue(state)
+        override fun onMetadataChanged(metadata: MediaMetadataCompat) = nowPlaying.postValue(metadata)
+        override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) = queueData.postValue(queueData.value!!.update(mediaController!!, queue))
     }
 }

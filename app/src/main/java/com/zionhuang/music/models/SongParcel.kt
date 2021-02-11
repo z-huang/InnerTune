@@ -5,8 +5,10 @@ import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.maxResUrl
+import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
 import kotlinx.parcelize.Parcelize
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 @Parcelize
 data class SongParcel(
@@ -31,5 +33,8 @@ data class SongParcel(
             require("youtube#video" == item.id.kind) { "Can't convert a " + item.id.kind + " item to SongParcel." }
             return SongParcel(item.id.videoId, item.snippet.title, null, item.snippet.channelId, item.snippet.channelTitle, item.snippet.thumbnails.maxResUrl)
         }
+
+        fun fromStreamInfoItem(item: StreamInfoItem): SongParcel =
+                SongParcel(YouTubeStreamExtractor.extractId(item.url)!!, item.name, "", "", "", item.thumbnailUrl)
     }
 }

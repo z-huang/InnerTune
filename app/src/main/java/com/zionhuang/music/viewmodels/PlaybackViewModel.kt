@@ -8,9 +8,9 @@ import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import androidx.core.os.bundleOf
 import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
-import com.zionhuang.music.constants.QueueConstants.QUEUE_TYPE
-import com.zionhuang.music.constants.QueueConstants.SONG_ID
-import com.zionhuang.music.constants.QueueConstants.SONG_PARCEL
+import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.SONG_ID
+import com.zionhuang.music.constants.MediaConstants.SONG_PARCEL
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.models.SongParcel

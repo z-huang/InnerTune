@@ -2,8 +2,16 @@ package com.zionhuang.music.playback
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.net.toUri
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.ResolvingDataSource
+import com.zionhuang.music.youtube.YouTubeExtractor
+import com.zionhuang.music.youtube.models.YouTubeStream
+import com.zionhuang.music.youtube.models.YtFormat
+import kotlinx.coroutines.runBlocking
 
 typealias OnDurationSet = (Long) -> Unit
 typealias OnPlaybackStateChanged = (state: Int) -> Unit
@@ -21,10 +29,30 @@ class MusicPlayer internal constructor(context: Context) : Player.EventListener 
     private var onDurationSet: OnDurationSet = {}
     private var onPlaybackStateChanged: OnPlaybackStateChanged = {}
 
-    private var player: SimpleExoPlayer = SimpleExoPlayer.Builder(context).build().apply {
-        addListener(this@MusicPlayer)
-        playWhenReady = true
-    }
+    private var player: SimpleExoPlayer = SimpleExoPlayer.Builder(context)
+            .setMediaSourceFactory(DefaultMediaSourceFactory(
+                    ResolvingDataSource.Factory(
+                            DefaultDataSourceFactory(context)
+                    ) { dataSpec ->
+                        val stream: YtFormat? = runBlocking {
+                            val res = YouTubeExtractor.getInstance(context).extractStream(dataSpec.uri.host!!)
+                            return@runBlocking if (res is YouTubeStream.Success) {
+                                res.formats.maxByOrNull {
+                                    it.abr ?: 0
+                                }!!
+                            } else null
+                        }
+                        return@Factory if (stream != null) {
+                            dataSpec.withUri(stream.url!!.toUri())
+                        } else {
+                            dataSpec
+                        }
+                    }
+            ))
+            .build().apply {
+                addListener(this@MusicPlayer)
+                playWhenReady = true
+            }
 
     val exoPlayer: ExoPlayer get() = player
 

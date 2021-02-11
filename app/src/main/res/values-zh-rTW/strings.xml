@@ -45,4 +45,6 @@
     <string name="dialog_edit_details_title">編輯詳細資料</string>
     <string name="dialog_button_save">儲存</string>
     <string name="dialog_button_cancel">取消</string>
+    <string name="download">下載</string>
+    <string name="add_to_library">加入音樂庫</string>
 </resources>

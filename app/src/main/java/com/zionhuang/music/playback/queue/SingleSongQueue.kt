@@ -1,7 +1,7 @@
 package com.zionhuang.music.playback.queue
 
 import android.os.Bundle
-import com.zionhuang.music.constants.QueueConstants.SONG_PARCEL
+import com.zionhuang.music.constants.MediaConstants.SONG_PARCEL
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.SongParcel

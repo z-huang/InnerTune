@@ -28,6 +28,4 @@ data class SongEntity(
         @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,
         @ColumnInfo(name = "create_date") var createDate: Date = Date(),
         @ColumnInfo(name = "modify_date") var modifyDate: Date = Date(),
-) {
-    constructor(videoId: String) : this(id = videoId)
-}
+)

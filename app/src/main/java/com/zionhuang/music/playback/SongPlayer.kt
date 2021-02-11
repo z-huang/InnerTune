@@ -8,9 +8,11 @@ import android.graphics.Bitmap
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.ResultReceiver
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.support.v4.media.session.MediaSessionCompat
@@ -23,19 +25,27 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import com.google.android.exoplayer2.ControlDispatcher
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.QUEUE_DESC
+import com.zionhuang.music.constants.MediaConstants.QUEUE_ORDER
+import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.SONG_ID
+import com.zionhuang.music.constants.MediaConstants.SONG_PARCEL
+import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadService.Companion.ACTION_DOWNLOAD_MUSIC
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
-import com.zionhuang.music.extensions.getAudioFile
-import com.zionhuang.music.extensions.preference
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.models.SongParcel.Companion.fromStream
 import com.zionhuang.music.playback.queue.AllSongsQueue
@@ -47,6 +57,7 @@ import com.zionhuang.music.playback.queue.SingleSongQueue
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
+import com.zionhuang.music.youtube.newpipe.SearchCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -90,6 +101,81 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     val mediaSession: MediaSessionCompat
         get() = _mediaSession
 
+    val exoPlayer: ExoPlayer get() = musicPlayer.exoPlayer
+
+    val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
+        setPlayer(exoPlayer)
+        setPlaybackPreparer(object : MediaSessionConnector.PlaybackPreparer {
+            override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle?, cb: ResultReceiver?) = false
+
+            override fun getSupportedPrepareActions() =
+                    ACTION_PREPARE_FROM_MEDIA_ID or ACTION_PREPARE_FROM_SEARCH or ACTION_PREPARE_FROM_URI or
+                            ACTION_PLAY_FROM_MEDIA_ID or ACTION_PLAY_FROM_SEARCH or ACTION_PLAY_FROM_URI
+
+            override fun onPrepare(playWhenReady: Boolean) {
+                exoPlayer.playWhenReady = playWhenReady
+                exoPlayer.prepare()
+            }
+
+            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
+                scope.launch {
+                    when (extras!!.getInt(QUEUE_TYPE)) {
+                        QUEUE_ALL_SONG -> {
+                            val items = songRepository.getAllSongsList(extras.getInt(QUEUE_ORDER), extras.getBoolean(QUEUE_DESC)).toMediaItems()
+                            exoPlayer.setMediaItems(items)
+                            exoPlayer.seekToDefaultPosition(items.indexOfFirst { it.mediaId == mediaId })
+                        }
+                        else -> {
+                            exoPlayer.setMediaItem(extras.getParcelable<SongParcel>(SONG_PARCEL)?.toMediaItem()
+                                    ?: mediaId.toMediaItem())
+
+                        }
+                    }
+                    exoPlayer.prepare()
+                    exoPlayer.playWhenReady = playWhenReady
+                }
+            }
+
+            override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
+                val mediaId = extras!!.getString(SONG_ID)
+                        ?: return setCustomErrorMessage("Media id not found.", ERROR_CODE_UNKNOWN_ERROR)
+                val items = SearchCache[query]?.toMediaItems()
+                        ?: return setCustomErrorMessage("Search items not found.", ERROR_CODE_UNKNOWN_ERROR)
+                exoPlayer.run {
+                    setMediaItems(items)
+                    seekToDefaultPosition(items.indexOfFirst { it.mediaId == mediaId })
+                    prepare()
+                    this.playWhenReady = playWhenReady
+                }
+            }
+
+
+            override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
+                val id = youTubeExtractor.extractId(uri.toString())
+                        ?: return setCustomErrorMessage("Can't extract video id from the url.", ERROR_CODE_UNKNOWN_ERROR)
+                exoPlayer.setMediaItem(id.toMediaItem())
+                exoPlayer.prepare()
+                exoPlayer.playWhenReady = playWhenReady
+            }
+        })
+        setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.add_to_library, R.drawable.ic_library_add) { _, _, _, _ ->
+            scope.launch {
+                (exoPlayer.currentMediaItem?.playbackProperties?.tag as? CustomMetadata)?.let {
+                    songRepository.insert(Song(
+                            id = it.id,
+                            title = it.title,
+                            artistName = it.artist ?: "",
+                            duration = (exoPlayer.duration / 1000).toInt()
+                    ))
+                    if (autoDownload) {
+                        downloadCurrentSong()
+                    }
+                }
+            }
+        })
+        setQueueNavigator { player, windowIndex -> (player.getMediaItemAt(windowIndex).playbackProperties?.tag as? CustomMetadata).toMediaDescription() }
+    }
+
     private var onNotificationPosted: OnNotificationPosted = { _, _, _ -> }
 
     private val playerNotificationManager = createWithNotificationChannel(
@@ -99,10 +185,12 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             0,
             NOTIFICATION_ID,
             object : PlayerNotificationManager.MediaDescriptionAdapter {
-                override fun getCurrentContentTitle(player: Player): CharSequence = currentSong?.title
-                        ?: "No Song"
+                override fun getCurrentContentTitle(player: Player): CharSequence =
+                        (player.currentMediaItem?.playbackProperties?.tag as? CustomMetadata)?.title.orEmpty()
 
-                override fun getCurrentContentText(player: Player): CharSequence? = currentSong?.artistName
+                override fun getCurrentContentText(player: Player): CharSequence? =
+                        (player.currentMediaItem?.playbackProperties?.tag as? CustomMetadata)?.artist
+
                 override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null
                 override fun createCurrentContentIntent(player: Player): PendingIntent? =
                         PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
@@ -258,6 +346,16 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     fun addToLibrary() {
         scope.launch {
+            (exoPlayer.currentMediaItem?.playbackProperties?.tag as? CustomMetadata)?.let {
+                songRepository.insert(Song(
+                        id = it.id,
+                        artistName = it.artist ?: "",
+                        duration = (exoPlayer.duration / 1000).toInt()
+                ))
+                if (autoDownload) {
+                    downloadCurrentSong()
+                }
+            }
             currentSong?.let {
                 songRepository.insert(it)
                 if (autoDownload) {
@@ -300,6 +398,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             isActive = false
             release()
         }
+        mediaSessionConnector.setPlayer(null)
         playerNotificationManager.setPlayer(null)
         musicPlayer.release()
     }

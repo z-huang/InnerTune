@@ -40,6 +40,11 @@ class SongRepository(private val context: Context) {
     fun getAllSongsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> = songDao.getAllSongsAsPagingSource(order, descending)
 
     /**
+     * All Songs [List] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
+     */
+    suspend fun getAllSongsList(@SongSortType order: Int, descending: Boolean): List<Song> = withContext(IO) { songDao.getAllSongsAsList(order, descending) }
+
+    /**
      * All Songs [MutableList] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
     fun getAllSongsMutableList(@SongSortType order: Int): MutableList<Song> = when (order) {

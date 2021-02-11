@@ -2,6 +2,7 @@ package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
@@ -27,20 +28,30 @@ interface SongDao {
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
+    fun getAllSongsQuery(@SongSortType order: Int, descending: Boolean): SimpleSQLiteQuery = QUERY_ALL_SONG.format(
+            when (order) {
+                ORDER_CREATE_DATE -> "create_date"
+                ORDER_NAME -> "title"
+                ORDER_ARTIST -> "artistId"
+                else -> throw IllegalArgumentException("Unexpected song sort type.")
+            },
+            if (descending) "DESC" else "ASC"
+    ).toSQLiteQuery()
+
     fun getAllSongsAsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-            getAllSongsAsPagingSource(QUERY_ALL_SONG.format(
-                    when (order) {
-                        ORDER_CREATE_DATE -> "create_date"
-                        ORDER_NAME -> "title"
-                        ORDER_ARTIST -> "artistId"
-                        else -> throw IllegalArgumentException("Unexpected song sort type.")
-                    },
-                    if (descending) "DESC" else "ASC"
-            ).toSQLiteQuery())
+            getAllSongsAsPagingSource(getAllSongsQuery(order, descending))
 
     @Transaction
     @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class])
     fun getAllSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
+
+
+    suspend fun getAllSongsAsList(@SongSortType order: Int, descending: Boolean): List<Song> =
+            getAllSongsAsList(getAllSongsQuery(order, descending))
+
+    @Transaction
+    @RawQuery
+    fun getAllSongsAsList(query: SupportSQLiteQuery): List<Song>
 
     /**
      * Artist Songs [PagingSource]

@@ -61,4 +61,6 @@
     <string name="dialog_edit_details_title">Edit details</string>
     <string name="dialog_button_save">Save</string>
     <string name="dialog_button_cancel">Cancel</string>
+    <string name="download">Download</string>
+    <string name="add_to_library">Add to library</string>
 </resources>

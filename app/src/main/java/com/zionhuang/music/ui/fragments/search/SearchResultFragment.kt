@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -14,6 +15,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.SONG_ID
 import com.zionhuang.music.databinding.FragmentSearchResultBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
@@ -21,8 +23,10 @@ import com.zionhuang.music.ui.adapters.NewPipeSearchResultAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
+import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
     companion object {
@@ -34,10 +38,10 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(requireContext())
-        }
+
+        val query = SearchResultFragmentArgs.fromBundle(requireArguments()).searchQuery
+        activity.supportActionBar?.title = query
+
         val searchResultAdapter = NewPipeSearchResultAdapter().apply {
             addLoadStateListener { loadState ->
                 binding.progressBar.isVisible = loadState.refresh is Loading
@@ -50,18 +54,22 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
         }
         binding.btnRetry.setOnClickListener { searchResultAdapter.retry() }
         binding.recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, _ ->
-//                val item = searchResultAdapter.getItemByPosition(pos)!!
+                val item = searchResultAdapter.getItemByPosition(pos)!!
+                if (item is StreamInfoItem) {
+                    playbackViewModel.transportControls?.playFromSearch(query, bundleOf(
+                            SONG_ID to YouTubeStreamExtractor.extractId(item.url)
+                    ))
+                }
 //                if ("youtube#video" != item.id.kind) {
 //                    return@addOnClickListener
 //                }
 //                playbackViewModel.playMedia(QUEUE_SINGLE, SongParcel.fromSearchResult(item))
             }
         }
-
-        val query = SearchResultFragmentArgs.fromBundle(requireArguments()).searchQuery
-        activity.supportActionBar?.title = query
 
         lifecycleScope.launch {
             viewModel.search(query).collectLatest {

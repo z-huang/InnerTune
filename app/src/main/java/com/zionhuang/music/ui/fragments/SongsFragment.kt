@@ -6,12 +6,16 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.QUEUE_DESC
+import com.zionhuang.music.constants.MediaConstants.QUEUE_ORDER
+import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
@@ -20,7 +24,6 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
@@ -52,7 +55,11 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.playMedia(QUEUE_ALL_SONG, SongParcel.fromSong(songsAdapter.getItemByPosition(pos)!!))
+                playbackViewModel.transportControls?.playFromMediaId(songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
+                        QUEUE_TYPE to QUEUE_ALL_SONG,
+                        QUEUE_ORDER to sortMenuListener.sortType(),
+                        QUEUE_DESC to sortMenuListener.sortDescending()
+                ))
             }
             addFastScroller { useMd2Style() }
         }
