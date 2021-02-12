@@ -25,7 +25,7 @@ class YouTubeAPIService(context: Context) {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun search(query: String, pageToken: String?): SearchListResponse = withContext(IO) {
-        youTube.search().list("snippet")
+        youTube.search().list(listOf("snippet"))
                 .setKey(apiKey)
                 .setQ(query)
                 .setPageToken(pageToken)
@@ -35,7 +35,7 @@ class YouTubeAPIService(context: Context) {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun popularMusic(pageToken: String?): VideoListResponse = withContext(IO) {
-        youTube.videos().list("snippet,contentDetails,statistics")
+        youTube.videos().list(listOf("snippet,contentDetails,statistics"))
                 .setKey(apiKey)
                 .setChart("mostPopular")
                 .setVideoCategoryId(CATEGORY_MUSIC)
