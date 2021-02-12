@@ -16,7 +16,7 @@ import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.SONG_PARCEL
+import com.zionhuang.music.constants.MediaConstants.SONG
 import com.zionhuang.music.databinding.FragmentExploreBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.models.SongParcel
@@ -66,7 +66,7 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
             addOnClickListener { pos, _ ->
                 val video = exploreAdapter.getItemByPosition(pos)!!
                 playbackViewModel.playMedia(requireActivity(), video.id, bundleOf(
-                        SONG_PARCEL to SongParcel.fromVideo(video)
+                        SONG to SongParcel.fromVideo(video)
                 ))
             }
         }

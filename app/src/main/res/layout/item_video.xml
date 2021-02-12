@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/thumbnail_container"
+            android:id="@+id/artwork_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="6dp"
@@ -28,12 +28,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imageView_thumbnail"
+                android:id="@+id/artwork"
+                thumbnail="@{video.snippet.thumbnails}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/background_song_cover"
-                android:scaleType="center"
-                app:coverId="@{video.id}" />
+                android:scaleType="center" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +43,7 @@
             android:layout_marginEnd="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_more_action"
-            app:layout_constraintStart_toEndOf="@id/thumbnail_container"
+            app:layout_constraintStart_toEndOf="@id/artwork_container"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView

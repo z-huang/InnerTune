@@ -1,7 +1,7 @@
 package com.zionhuang.music.playback.queue
 
 import android.os.Bundle
-import com.zionhuang.music.constants.MediaConstants.SONG_PARCEL
+import com.zionhuang.music.constants.MediaConstants.SONG
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.SongParcel
@@ -38,7 +38,7 @@ class SingleSongQueue private constructor(
             val songId = extras.getString("song_id")!!
             val song = songsRepository.getSongById(songId) ?: Song(songId)
             return@withContext SingleSongQueue(song).apply {
-                extras.getParcelable<SongParcel>(SONG_PARCEL)?.let { songParcel ->
+                extras.getParcelable<SongParcel>(SONG)?.let { songParcel ->
                     updateSongMeta(songId, songParcel)
                 }
             }

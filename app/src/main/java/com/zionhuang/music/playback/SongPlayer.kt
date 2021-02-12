@@ -25,8 +25,8 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.SONG
 import com.zionhuang.music.constants.MediaConstants.SONG_ID
-import com.zionhuang.music.constants.MediaConstants.SONG_PARCEL
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
@@ -98,12 +98,12 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 scope.launch {
                     when (extras!!.getInt(QUEUE_TYPE)) {
                         QUEUE_ALL_SONG -> {
-                            val items = songRepository.getAllSongsList(extras.getInt(QUEUE_ORDER), extras.getBoolean(QUEUE_DESC)).toMediaItems()
+                            val items = songRepository.getAllSongsList(extras.getInt(QUEUE_ORDER), extras.getBoolean(QUEUE_DESC)).toMediaItems(context)
                             player.setMediaItems(items)
                             player.seekToDefaultPosition(items.indexOfFirst { it.mediaId == mediaId })
                         }
                         else -> {
-                            player.setMediaItem(extras.getParcelable<SongParcel>(SONG_PARCEL)?.toMediaItem()
+                            player.setMediaItem(extras.getParcelable<SongParcel>(SONG)?.toMediaItem()
                                     ?: mediaId.toMediaItem())
 
                         }
@@ -143,7 +143,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                             title = it.title,
                             artistName = it.artist ?: "",
                             duration = (player.duration / 1000).toInt()
-                    ))
+                    ), it.artwork)
                     if (autoDownload) {
                         //downloadCurrentSong()
                     }

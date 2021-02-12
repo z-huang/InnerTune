@@ -34,7 +34,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                     .setAnchorView(binding.bottomNav)
                     .setAction(R.string.snack_bar_undo) {
                         lifecycleScope.launch {
-                            songsViewModel.songRepository.insert(song)
+                            songsViewModel.songRepository.restoreSong(song)
                         }
                     }
                     .show()

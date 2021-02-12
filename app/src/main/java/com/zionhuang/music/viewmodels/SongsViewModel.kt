@@ -18,7 +18,6 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadServiceConnection
 import com.zionhuang.music.download.DownloadTask
@@ -69,9 +68,8 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)
 
-    private val _deleteSong = MutableLiveData<SongEntity>()
-    val deleteSong: LiveData<SongEntity>
-        get() = _deleteSong
+    private val _deleteSong = MutableLiveData<Song>()
+    val deleteSong: LiveData<Song> get() = _deleteSong
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(song: Song, view: View) {
@@ -91,8 +89,8 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun deleteSong(songId: String) {
             viewModelScope.launch {
-                songRepository.getSongEntityById(songId)?.let { song ->
-                    songRepository.deleteSong(song)
+                songRepository.getSongById(songId)?.let { song ->
+                    songRepository.deleteSong(songId)
                     _deleteSong.postValue(song)
                 }
             }

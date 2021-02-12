@@ -22,7 +22,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/thumbnail_container"
+            android:id="@+id/artwork_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="6dp"
@@ -33,12 +33,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imageView_thumbnail"
+                android:id="@+id/artwork"
+                artwork="@{song.id}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
-                app:coverId="@{song.id}"
                 tools:src="@drawable/ic_music_note" />
         </LinearLayout>
 
@@ -50,7 +50,7 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_more_action"
-            app:layout_constraintStart_toEndOf="@id/thumbnail_container"
+            app:layout_constraintStart_toEndOf="@id/artwork_container"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout

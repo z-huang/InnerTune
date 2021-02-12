@@ -14,9 +14,7 @@ import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
-import com.zionhuang.music.extensions.getAudioFile
-import com.zionhuang.music.extensions.getChannelAvatarFile
-import com.zionhuang.music.extensions.getChannelBannerFile
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
 import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.OkHttpDownloader.requestOf
@@ -87,8 +85,13 @@ class SongRepository(private val context: Context) {
     suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
     suspend fun getSongById(id: String): Song? = withContext(IO) { songDao.getSongById(id) }
 
-    suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
-    suspend fun insert(song: Song) = insert(song.toSongEntity())
+    private suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
+    suspend fun insert(song: Song, artwork: String? = null) = withContext(IO) {
+        artwork?.let {
+            OkHttpDownloader.downloadFile(requestOf(it), context.getArtworkFile(song.id))
+        }
+        insert(song.toSongEntity())
+    }
 
     private suspend fun updateSong(song: SongEntity) = withContext(IO) { songDao.update(song) }
     suspend fun updateSong(song: Song) = updateSong(song.toSongEntity())
@@ -100,12 +103,16 @@ class SongRepository(private val context: Context) {
 
     suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }
 
-    suspend fun deleteSong(song: SongEntity) = withContext(IO) { songDao.delete(song) }
     suspend fun deleteSong(songId: String) = withContext(IO) {
         songDao.delete(songId)
-        context.getAudioFile(songId).let { file ->
-            if (file.exists()) file.delete()
-        }
+        context.getAudioFile(songId).takeIf { it.exists() }?.moveTo(context.getRecycledAudioFile(songId))
+        context.getArtworkFile(songId).takeIf { it.exists() }?.moveTo(context.getRecycledAudioFile(songId))
+    }
+
+    suspend fun restoreSong(song: Song) {
+        context.getRecycledAudioFile(song.id).takeIf { it.exists() }?.moveTo(context.getAudioFile(song.id))
+        context.getRecycledArtworkFile(song.id).takeIf { it.exists() }?.moveTo(context.getArtworkFile(song.id))
+        insert(song)
     }
 
     /**

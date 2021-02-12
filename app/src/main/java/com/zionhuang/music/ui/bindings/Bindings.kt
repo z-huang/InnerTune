@@ -4,18 +4,11 @@ import android.support.v4.media.session.PlaybackStateCompat.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.api.client.util.DateTime
-import com.google.api.services.youtube.model.SearchResult
+import com.google.api.services.youtube.model.ThumbnailDetails
 import com.zionhuang.music.R
-import com.zionhuang.music.extensions.circle
-import com.zionhuang.music.extensions.fullResolution
-import com.zionhuang.music.extensions.load
-import com.zionhuang.music.extensions.maxResUrl
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.widgets.PlayPauseButton
-import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.makeTimeString
 
 @BindingAdapter("duration")
@@ -37,27 +30,20 @@ fun setPlayState(view: PlayPauseButton, state: Int) {
     }
 }
 
-@BindingAdapter("coverId")
-fun setCoverId(view: ImageView, id: String?) {
-    GlideApp.with(view)
-            .load("https://i3.ytimg.com/vi/$id/maxresdefault.jpg")
-            .placeholder(R.drawable.ic_music_note)
-            .transform(MultiTransformation(CenterCrop(), RoundedCorners(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))))
-            .into(view)
+@BindingAdapter("artwork")
+fun setArtwork(view: ImageView, id: String) {
+    view.load(view.context.getArtworkFile(id)) {
+        placeholder(R.drawable.ic_music_note)
+        roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
+    }
 }
 
-@BindingAdapter("thumbnails")
-fun setThumbnails(view: ImageView, item: SearchResult) {
-    val url = if (item.id.kind == "youtube#video") {
-        "https://i3.ytimg.com/vi/" + item.id.videoId + "/maxresdefault.jpg"
-    } else {
-        item.snippet.thumbnails.maxResUrl
+@BindingAdapter("thumbnail")
+fun setThumbnail(view: ImageView, thumbnail: ThumbnailDetails) {
+    view.load(thumbnail.maxResUrl) {
+        placeholder(R.drawable.ic_music_note)
+        roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
     }
-    GlideApp.with(view)
-            .load(url)
-            .placeholder(R.drawable.ic_music_note)
-            .transform(MultiTransformation(CenterCrop(), RoundedCorners(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))))
-            .into(view)
 }
 
 @BindingAdapter("publishDate")

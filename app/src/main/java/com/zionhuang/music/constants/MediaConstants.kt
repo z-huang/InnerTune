@@ -5,5 +5,5 @@ object MediaConstants {
     const val QUEUE_ORDER = "queue_order"
     const val QUEUE_DESC = "queue_desc"
     const val SONG_ID = "song_id"
-    const val SONG_PARCEL = "song_parcel"
+    const val SONG = "song"
 }

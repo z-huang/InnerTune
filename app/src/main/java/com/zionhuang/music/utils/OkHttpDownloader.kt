@@ -63,6 +63,10 @@ object OkHttpDownloader {
         if (!response.isSuccessful) {
             throw DownloadException(response.message)
         }
+        destination.run {
+            parentFile?.mkdirs()
+            createNewFile()
+        }
         destination.parentFile?.mkdirs()
         destination.apply {
             createNewFile()

@@ -1,8 +1,10 @@
 package com.zionhuang.music.playback
 
+import android.content.Context
 import android.support.v4.media.MediaDescriptionCompat
 import androidx.core.net.toUri
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.CustomMetadata.Companion.EMPTY_MEDIA_DESCRIPTION
 import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
@@ -27,7 +29,7 @@ data class CustomMetadata(
 
         val EMPTY_MEDIA_DESCRIPTION: MediaDescriptionCompat = builder.build()
 
-        fun Song.toCustomMetadata() = CustomMetadata(id, title, artistName, null)
+        fun Song.toCustomMetadata(context: Context) = CustomMetadata(id, title, artistName, context.getArtworkFile(id).canonicalPath)
 
         fun SongParcel.toCustomMetadata() = CustomMetadata(id, title, artist, artworkUrl)
 
