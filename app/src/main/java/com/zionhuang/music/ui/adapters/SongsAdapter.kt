@@ -43,15 +43,13 @@ class SongsAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         when (holder) {
-            is SongViewHolder -> when {
-                payloads.isEmpty() -> getItem(position)?.let {
-                    holder.bind(it)
-                    if (it.downloadState == STATE_DOWNLOADING) {
-                        holder.binding.progressBar.progress = 0
-                        downloadHandler.add(it.id, holder)
-                    }
+            is SongViewHolder -> {
+                val song = if (payloads.isEmpty()) getItem(position)!! else payloads.last() as Song
+                holder.bind(song)
+                if (song.downloadState == STATE_DOWNLOADING) {
+                    holder.binding.progressBar.progress = 0
+                    downloadHandler.add(song.id, holder)
                 }
-                else -> holder.bind(payloads.last() as Song)
             }
             is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }

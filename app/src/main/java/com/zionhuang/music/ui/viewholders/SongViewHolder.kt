@@ -33,7 +33,7 @@ class SongViewHolder(
     }
 
     fun setProgress(task: DownloadTask) {
-        binding.progressBar.apply {
+        binding.progressBar.run {
             max = task.totalBytes.toInt()
             progress = task.currentBytes.toInt()
         }
