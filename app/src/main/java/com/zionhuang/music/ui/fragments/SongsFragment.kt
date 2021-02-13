@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
 import com.zionhuang.music.constants.MediaConstants.QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
@@ -24,7 +25,6 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.ui.listeners.SortMenuListener

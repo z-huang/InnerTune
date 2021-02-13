@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
 import com.zionhuang.music.constants.MediaConstants.QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
@@ -32,7 +33,6 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.SongParcel
-import com.zionhuang.music.playback.queue.Queue.Companion.QUEUE_ALL_SONG
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream

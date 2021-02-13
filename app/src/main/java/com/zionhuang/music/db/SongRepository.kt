@@ -43,16 +43,6 @@ class SongRepository(private val context: Context) {
     suspend fun getAllSongsList(@SongSortType order: Int, descending: Boolean): List<Song> = withContext(IO) { songDao.getAllSongsAsList(order, descending) }
 
     /**
-     * All Songs [MutableList] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
-     */
-    fun getAllSongsMutableList(@SongSortType order: Int): MutableList<Song> = when (order) {
-        ORDER_CREATE_DATE -> songDao.getAllSongsByCreateDateAsMutableList()
-        ORDER_NAME -> songDao.getAllSongsByNameAsMutableList()
-        ORDER_ARTIST -> songDao.getAllSongsByArtistAsMutableList()
-        else -> throw IllegalArgumentException("Unexpected order type.")
-    }
-
-    /**
      * Artist Songs [PagingSource]
      */
     fun getArtistSongsAsPagingSource(artistId: Int): PagingSource<Int, Song> = songDao.getArtistSongsAsPagingSource(artistId)
@@ -82,7 +72,7 @@ class SongRepository(private val context: Context) {
     /**
      * Song Operations
      */
-    suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
+    private suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
     suspend fun getSongById(id: String): Song? = withContext(IO) { songDao.getSongById(id) }
 
     private suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
@@ -93,12 +83,20 @@ class SongRepository(private val context: Context) {
         insert(song.toSongEntity())
     }
 
-    private suspend fun updateSong(song: SongEntity) = withContext(IO) { songDao.update(song) }
-    suspend fun updateSong(song: Song) = updateSong(song.toSongEntity())
-    suspend fun updateSong(songId: String, applier: SongEntity.() -> Unit) = updateSong(getSongEntityById(songId)!!.apply { applier(this) })
+    private suspend fun updateSongEntity(song: SongEntity) = withContext(IO) { songDao.update(song) }
+    suspend fun updateSong(song: Song) = updateSongEntity(song.toSongEntity())
+
+    /** [SongEntity.artistId] should not be edited. **/
+    suspend fun updateSongEntity(songId: String, applier: SongEntity.() -> Unit) {
+        getSongEntityById(songId)?.apply(applier)?.let { updateSongEntity(it) }
+    }
+
+    suspend fun updateSong(songId: String, applier: Song.() -> Unit) {
+        getSongById(songId)?.apply(applier)?.let { updateSongEntity(it.toSongEntity()) }
+    }
 
     suspend fun toggleLike(songId: String) {
-        updateSong(songId) { liked = !liked }
+        updateSongEntity(songId) { liked = !liked }
     }
 
     suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }

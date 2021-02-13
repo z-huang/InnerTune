@@ -69,21 +69,21 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
     fun addMusicDownload(task: DownloadTask) {
         tasks += task
         scope.launch {
-            songRepository.updateSong(task.id) {
+            songRepository.updateSongEntity(task.id) {
                 downloadState = STATE_DOWNLOADING
             }
             if (task.audioUrl == null || task.artworkUrl == null) {
                 when (val extractResult = youTubeExtractor.extractStream(task.id)) {
                     is YouTubeStream.Success -> {
                         val format = extractResult.formats.maxByOrNull { it.abr ?: 0 }
-                                ?: return@launch songRepository.updateSong(task.id) {
+                                ?: return@launch songRepository.updateSongEntity(task.id) {
                                     downloadState = STATE_NOT_DOWNLOADED
                                 }
                         task.audioUrl = format.url
                         task.artworkUrl = extractResult.thumbnailUrl
                     }
                     is YouTubeStream.Error -> {
-                        songRepository.updateSong(task.id) {
+                        songRepository.updateSongEntity(task.id) {
                             downloadState = STATE_NOT_DOWNLOADED
                         }
                         return@launch
@@ -124,7 +124,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
         notificationManager.cancel(task.id.hashCode())
         tasks.remove(task)
         scope.launch {
-            songRepository.updateSong(task.id) {
+            songRepository.updateSongEntity(task.id) {
                 downloadState = STATE_DOWNLOADED
             }
         }
@@ -137,7 +137,7 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
             setContentText("Download failed.")
         }
         scope.launch {
-            songRepository.updateSong(task.id) {
+            songRepository.updateSongEntity(task.id) {
                 downloadState = STATE_NOT_DOWNLOADED
             }
         }

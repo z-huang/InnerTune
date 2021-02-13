@@ -13,7 +13,6 @@ import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.extensions.toSQLiteQuery
-import com.zionhuang.music.playback.queue.AllSongsQueue
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
 import kotlinx.coroutines.flow.Flow
 
@@ -75,22 +74,6 @@ interface SongDao {
 
     @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
     fun channelSongsDuration(channelId: String): Flow<Long?>
-
-    /**
-     * All Songs [MutableList] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
-     * Used by [AllSongsQueue]
-     */
-    @Transaction
-    @Query("SELECT * FROM song ORDER BY create_date DESC")
-    fun getAllSongsByCreateDateAsMutableList(): MutableList<Song>
-
-    @Transaction
-    @Query("SELECT * FROM song ORDER BY title DESC")
-    fun getAllSongsByNameAsMutableList(): MutableList<Song>
-
-    @Transaction
-    @Query("SELECT * FROM song ORDER BY artistId DESC")
-    fun getAllSongsByArtistAsMutableList(): MutableList<Song>
 
     /**
      * Internal methods

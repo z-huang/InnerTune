@@ -11,7 +11,7 @@ import java.util.*
 data class Song(
         val id: String,
         var title: String? = null,
-        var artistId: Int = 0,
+        private var artistId: Int = 0,
         @Relation(entity = ArtistEntity::class, parentColumn = "artistId", entityColumn = "id", projection = ["name"])
         var artistName: String = "",
         var channelId: String = "",
