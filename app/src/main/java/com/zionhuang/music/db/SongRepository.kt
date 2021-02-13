@@ -75,6 +75,7 @@ class SongRepository(private val context: Context) {
     private suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
     suspend fun getSongById(id: String): Song? = withContext(IO) { songDao.getSongById(id) }
 
+    private suspend fun artistSongsCount(artistId: Int) = withContext(IO) { songDao.artistSongsCount(artistId) }
     private suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
     suspend fun insert(song: Song, artwork: String? = null) = withContext(IO) {
         artwork?.let {
@@ -84,7 +85,7 @@ class SongRepository(private val context: Context) {
     }
 
     private suspend fun updateSongEntity(song: SongEntity) = withContext(IO) { songDao.update(song) }
-    suspend fun updateSong(song: Song) = updateSongEntity(song.toSongEntity())
+    private suspend fun updateSong(song: Song) = updateSongEntity(song.toSongEntity())
 
     /** [SongEntity.artistId] should not be edited. **/
     suspend fun updateSongEntity(songId: String, applier: SongEntity.() -> Unit) {
@@ -92,7 +93,13 @@ class SongRepository(private val context: Context) {
     }
 
     suspend fun updateSong(songId: String, applier: Song.() -> Unit) {
-        getSongById(songId)?.apply(applier)?.let { updateSongEntity(it.toSongEntity()) }
+        val song = getSongById(songId) ?: return
+        val artistName = song.artistName
+        val newSong = song.apply(applier)
+        updateSong(newSong)
+        if (newSong.artistName != artistName && artistSongsCount(song.artistId) == 0) {
+            deleteArtist(song.artistId)
+        }
     }
 
     suspend fun toggleLike(songId: String) {
@@ -126,6 +133,8 @@ class SongRepository(private val context: Context) {
     fun searchArtists(query: CharSequence): List<ArtistEntity> = artistDao.searchArtists(query.toString())
 
     suspend fun insertArtist(name: String): Int = withContext(IO) { artistDao.insert(ArtistEntity(name = name)).toInt() }
+
+    private suspend fun deleteArtist(artistId: Int) = withContext(IO) { artistDao.delete(artistId) }
 
     /**
      * Channel Operations

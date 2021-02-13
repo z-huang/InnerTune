@@ -37,20 +37,25 @@ interface SongDao {
             if (descending) "DESC" else "ASC"
     ).toSQLiteQuery()
 
-    fun getAllSongsAsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-            getAllSongsAsPagingSource(getAllSongsQuery(order, descending))
-
     @Transaction
     @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class])
     fun getAllSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
 
+    fun getAllSongsAsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
+            getAllSongsAsPagingSource(getAllSongsQuery(order, descending))
+
+    @Transaction
+    @RawQuery
+    suspend fun getAllSongsAsList(query: SupportSQLiteQuery): List<Song>
 
     suspend fun getAllSongsAsList(@SongSortType order: Int, descending: Boolean): List<Song> =
             getAllSongsAsList(getAllSongsQuery(order, descending))
 
-    @Transaction
-    @RawQuery
-    fun getAllSongsAsList(query: SupportSQLiteQuery): List<Song>
+    /**
+     * Artist songs count
+     */
+    @Query("SELECT COUNT(id) FROM song WHERE artistId = :artistId")
+    suspend fun artistSongsCount(artistId: Int): Int
 
     /**
      * Artist Songs [PagingSource]

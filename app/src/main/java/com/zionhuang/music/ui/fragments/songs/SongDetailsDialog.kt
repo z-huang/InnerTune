@@ -50,10 +50,10 @@ class SongDetailsDialog : AppCompatDialogFragment() {
                     val title = binding.songTitleEditText.text.toString()
                     val artistName = binding.songArtistAutoCompleteTextView.text.toString()
                     GlobalScope.launch {
-                        SongRepository(requireContext()).updateSong(song.apply {
+                        SongRepository(requireContext()).updateSong(song.id) {
                             this.title = title
                             this.artistName = artistName
-                        })
+                        }
                     }
                 }
                 .setNegativeButton(R.string.dialog_button_cancel, null)
