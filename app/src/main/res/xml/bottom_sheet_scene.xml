@@ -71,7 +71,7 @@
             motion:layout_constraintDimensionRatio="1:1"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="parent" />
+            motion:layout_constraintTop_toBottomOf="@id/status_bar" />
 
         <Constraint android:id="@id/load_indicator">
             <PropertySet app:visibilityMode="ignore" />
