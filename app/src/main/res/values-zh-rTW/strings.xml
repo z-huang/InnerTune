@@ -16,7 +16,7 @@
     <string name="menu_song_edit">編輯</string>
     <string name="menu_song_delete">移除</string>
     <string name="song_title">歌名</string>
-    <string name="song_artist">作曲家</string>
+    <string name="song_artist">演出者</string>
     <string name="channel_name_playback">音樂播放器</string>
     <string name="channel_name_download">下載</string>
     <string name="item_load_state_retry">重試</string>
