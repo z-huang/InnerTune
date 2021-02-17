@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
+import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
 import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
@@ -34,7 +36,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     private val playbackStateObserver = Observer<PlaybackStateCompat?> { playbackState ->
         if (playbackState != null) {
-            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState))
+            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState, mediaController.value))
         }
     }
 
@@ -62,6 +64,15 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun toggleShuffleMode() {
+        mediaSessionConnection.mediaController?.let { mediaController ->
+            when (mediaController.shuffleMode) {
+                SHUFFLE_MODE_NONE -> mediaController.transportControls.setShuffleMode(SHUFFLE_MODE_ALL)
+                SHUFFLE_MODE_ALL -> mediaController.transportControls.setShuffleMode(SHUFFLE_MODE_NONE)
+            }
+        }
+    }
+
     fun playMedia(activity: Activity, mediaId: String, extras: Bundle) {
         mediaSessionConnection.transportControls?.playFromMediaId(mediaId, extras)
         if (expandOnPlay) {
@@ -83,5 +94,9 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
             nowPlaying.removeObserver(mediaMetadataObserver)
             disconnect()
         }
+    }
+
+    init {
+
     }
 }

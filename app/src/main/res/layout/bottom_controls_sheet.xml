@@ -260,20 +260,19 @@
                 app:layout_constraintTop_toBottomOf="@id/slider"
                 tools:text="4:00" />
 
-            <ImageView
+            <com.zionhuang.music.ui.widgets.ShuffleButton
                 android:id="@+id/btn_shuffle"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:padding="6dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_shuffle"
+                android:onClick="@{()->viewModel.toggleShuffleMode()}"
+                android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
                 app:layout_constraintEnd_toStartOf="@id/btn_previous"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
+                app:layout_constraintTop_toTopOf="@id/btn_play_pause"
+                app:shuffleMode="@{viewModel.playbackState.shuffleMode}"
+                tools:src="@drawable/ic_shuffle" />
 
             <com.zionhuang.music.ui.widgets.SkipPreviousButton
                 android:id="@+id/btn_previous"
@@ -315,7 +314,7 @@
                 android:layout_height="36dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:padding="6dp"
+                android:padding="4dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_repeat"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"

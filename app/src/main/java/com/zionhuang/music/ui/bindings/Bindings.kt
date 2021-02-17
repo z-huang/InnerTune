@@ -9,6 +9,7 @@ import com.google.api.services.youtube.model.ThumbnailDetails
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.widgets.PlayPauseButton
+import com.zionhuang.music.ui.widgets.ShuffleButton
 import com.zionhuang.music.utils.makeTimeString
 
 @BindingAdapter("duration")
@@ -22,11 +23,21 @@ fun setDuration(view: TextView, duration: Long) {
 }
 
 @BindingAdapter("playState")
-fun setPlayState(view: PlayPauseButton, state: Int) {
+fun setPlayState(view: PlayPauseButton, @State state: Int) {
     if (state == STATE_PAUSED || state == STATE_NONE) {
         view.animationPause()
     } else if (state == STATE_PLAYING) {
         view.animatePlay()
+    }
+}
+
+@BindingAdapter("shuffleMode")
+fun setShuffleMode(view: ShuffleButton, @ShuffleMode mode: Int) {
+    when (mode) {
+        SHUFFLE_MODE_INVALID -> view.disable()
+        SHUFFLE_MODE_NONE -> view.disable()
+        SHUFFLE_MODE_ALL -> view.enable()
+        SHUFFLE_MODE_GROUP -> view.enable()
     }
 }
 
