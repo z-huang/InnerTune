@@ -308,19 +308,19 @@
                 app:layout_constraintTop_toTopOf="@id/btn_play_pause"
                 tools:src="@drawable/ic_skip_next" />
 
-            <ImageView
+            <com.zionhuang.music.ui.widgets.RepeatButton
                 android:id="@+id/btn_repeat"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:onClick="@{()->viewModel.toggleRepeatMode()}"
                 android:padding="4dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_repeat"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_next"
-                app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
+                app:layout_constraintTop_toTopOf="@id/btn_play_pause"
+                app:repeatMode="@{viewModel.playbackState.repeatMode}"
+                tools:src="@drawable/ic_repeat" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -9,6 +9,7 @@ import com.google.api.services.youtube.model.ThumbnailDetails
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.widgets.PlayPauseButton
+import com.zionhuang.music.ui.widgets.RepeatButton
 import com.zionhuang.music.ui.widgets.ShuffleButton
 import com.zionhuang.music.utils.makeTimeString
 
@@ -34,11 +35,14 @@ fun setPlayState(view: PlayPauseButton, @State state: Int) {
 @BindingAdapter("shuffleMode")
 fun setShuffleMode(view: ShuffleButton, @ShuffleMode mode: Int) {
     when (mode) {
-        SHUFFLE_MODE_INVALID -> view.disable()
-        SHUFFLE_MODE_NONE -> view.disable()
-        SHUFFLE_MODE_ALL -> view.enable()
-        SHUFFLE_MODE_GROUP -> view.enable()
+        SHUFFLE_MODE_NONE, SHUFFLE_MODE_INVALID -> view.disable()
+        SHUFFLE_MODE_ALL, SHUFFLE_MODE_GROUP -> view.enable()
     }
+}
+
+@BindingAdapter("repeatMode")
+fun setRepeatMode(view: RepeatButton, @RepeatMode state: Int) {
+    view.setState(state)
 }
 
 @BindingAdapter("artwork")

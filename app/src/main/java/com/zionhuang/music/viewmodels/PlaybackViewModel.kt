@@ -6,8 +6,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
-import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
+import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
@@ -69,6 +68,16 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
             when (mediaController.shuffleMode) {
                 SHUFFLE_MODE_NONE -> mediaController.transportControls.setShuffleMode(SHUFFLE_MODE_ALL)
                 SHUFFLE_MODE_ALL -> mediaController.transportControls.setShuffleMode(SHUFFLE_MODE_NONE)
+            }
+        }
+    }
+
+    fun toggleRepeatMode() {
+        mediaSessionConnection.mediaController?.let { mediaController ->
+            when (mediaController.repeatMode) {
+                REPEAT_MODE_NONE, REPEAT_MODE_INVALID -> mediaController.transportControls.setRepeatMode(REPEAT_MODE_ALL)
+                REPEAT_MODE_ALL, REPEAT_MODE_GROUP -> mediaController.transportControls.setRepeatMode(REPEAT_MODE_ONE)
+                REPEAT_MODE_ONE -> mediaController.transportControls.setRepeatMode(REPEAT_MODE_NONE)
             }
         }
     }
