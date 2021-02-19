@@ -51,7 +51,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     val transportControls: MediaControllerCompat.TransportControls? get() = mediaSessionConnection.transportControls
 
-    private val expandOnPlay by preference(R.string.pref_expand_on_play, false)
+    val expandOnPlay by preference(R.string.pref_expand_on_play, false)
 
     fun setPlayerView(playerView: PlayerView) = mediaSessionConnection.setPlayerView(playerView)
 

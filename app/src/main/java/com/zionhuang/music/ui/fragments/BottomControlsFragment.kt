@@ -2,6 +2,8 @@ package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
+import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
@@ -50,6 +53,13 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
         binding.motionLayout.addTransitionListener(this)
         (requireActivity() as MainActivity).setBottomSheetListener(this)
+
+        viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
+            if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED && !viewModel.expandOnPlay) {
+                (requireActivity() as MainActivity).showBottomSheet()
+            }
+        }
+
         binding.bottomBar.setOnClickListener {
             (requireActivity() as MainActivity).expandBottomSheet()
         }
@@ -57,6 +67,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         binding.btnAddToLibrary.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_ADD_TO_LIBRARY, null)
         }
+
         binding.btnFavorite.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIKE, null)
         }
@@ -81,6 +92,9 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
         binding.progressBar.isVisible = newState == BottomSheetBehavior.STATE_COLLAPSED
+        if (newState == STATE_HIDDEN) {
+            viewModel.transportControls?.stop()
+        }
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {

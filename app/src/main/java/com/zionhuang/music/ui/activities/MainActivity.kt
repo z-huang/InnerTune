@@ -57,6 +57,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
             isHideable = true
+            state = STATE_HIDDEN
             addBottomSheetCallback(BottomSheetCallback())
         }
     }
@@ -72,6 +73,12 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
 
     fun expandBottomSheet() {
         bottomSheetBehavior.state = STATE_EXPANDED
+    }
+
+    fun showBottomSheet() {
+        if (bottomSheetBehavior.state == STATE_HIDDEN) {
+            bottomSheetBehavior.state = STATE_COLLAPSED
+        }
     }
 
     val tabLayout: TabLayout
