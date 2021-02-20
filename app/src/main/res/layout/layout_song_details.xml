@@ -23,7 +23,7 @@
             tools:src="@drawable/ic_music_note" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/songTitle_inputLayout"
+            android:id="@+id/song_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +32,6 @@
             app:errorEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/song_title_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
@@ -40,7 +39,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/songArtist_inputLayout"
+            android:id="@+id/song_artist"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +47,6 @@
             app:errorEnabled="true">
 
             <com.zionhuang.music.ui.widgets.InstantAutoCompleteTextView
-                android:id="@+id/song_artist_autoCompleteTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:completionThreshold="1"

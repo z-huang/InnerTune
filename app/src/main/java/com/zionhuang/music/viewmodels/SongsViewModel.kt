@@ -24,7 +24,7 @@ import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.getActivity
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.ui.fragments.songs.SongDetailsDialog
+import com.zionhuang.music.ui.fragments.songs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -74,9 +74,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(song: Song, view: View) {
             (view.getActivity() as? MainActivity)?.let { activity ->
-                SongDetailsDialog().apply {
+                EditSongDialog().apply {
                     arguments = bundleOf("song" to song)
-                }.show(activity.supportFragmentManager, SongDetailsDialog.TAG)
+                }.show(activity.supportFragmentManager, EditSongDialog.TAG)
             }
         }
 
