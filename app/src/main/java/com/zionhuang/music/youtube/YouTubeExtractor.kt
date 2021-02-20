@@ -8,6 +8,8 @@ import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import com.zionhuang.music.youtube.models.YouTubeChannel
 import com.zionhuang.music.youtube.models.YouTubeSearch
 import com.zionhuang.music.youtube.models.YouTubeSearchItem
+import com.zionhuang.music.youtube.models.YouTubeStream
+import kotlinx.coroutines.runBlocking
 
 class YouTubeExtractor private constructor(private val context: Context) {
     private val youTubeStreamExtractor by lazy { YouTubeStreamExtractor.getInstance(context) }
@@ -30,6 +32,8 @@ class YouTubeExtractor private constructor(private val context: Context) {
             YouTubeChannelExtractor.extractChannel(channelId)
 
     suspend fun extractStream(videoId: String) = youTubeStreamExtractor.extract(videoId)
+
+    fun extractStreamBlocking(videoId: String): YouTubeStream = runBlocking { extractStream(videoId) }
 
     fun extractId(url: String) = YouTubeStreamExtractor.extractId(url)
 

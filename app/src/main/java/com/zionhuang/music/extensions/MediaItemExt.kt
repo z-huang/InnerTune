@@ -1,6 +1,7 @@
 package com.zionhuang.music.extensions
 
 import android.content.Context
+import android.net.Uri
 import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.SongParcel
@@ -17,7 +18,17 @@ fun CustomMetadata.toMediaItem() = mediaItemBuilder
         .setTag(this)
         .build()
 
-fun Song.toMediaItem(context: Context): MediaItem = toCustomMetadata(context).toMediaItem()
+fun Song.toMediaItem(context: Context): MediaItem {
+    return mediaItemBuilder
+            .setMediaId(id)
+            .setUri(Uri.Builder()
+                    .scheme("music")
+                    .authority(id)
+                    .appendQueryParameter("fromLocal", "1")
+                    .build())
+            .setTag(toCustomMetadata(context))
+            .build()
+}
 
 fun SongParcel.toMediaItem(): MediaItem = toCustomMetadata().toMediaItem()
 

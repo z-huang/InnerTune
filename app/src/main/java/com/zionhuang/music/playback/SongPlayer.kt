@@ -11,6 +11,7 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaMetadataCompat.*
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
+import android.util.Pair
 import androidx.core.net.toUri
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
@@ -40,7 +41,6 @@ import com.zionhuang.music.youtube.models.YtFormat
 import com.zionhuang.music.youtube.newpipe.SearchCache
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 typealias OnNotificationPosted = (notificationId: Int, notification: Notification, ongoing: Boolean) -> Unit
 
@@ -59,20 +59,18 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     val player: SimpleExoPlayer = SimpleExoPlayer.Builder(context)
             .setMediaSourceFactory(DefaultMediaSourceFactory(ResolvingDataSource.Factory(DefaultDataSourceFactory(context)) { dataSpec ->
-                val stream: YtFormat? = runBlocking {
-                    val res = YouTubeExtractor.getInstance(context).extractStream(dataSpec.uri.host!!)
-                    return@runBlocking if (res is YouTubeStream.Success) {
-                        res.formats.maxByOrNull {
-                            it.abr ?: 0
-                        }!!
-                    } else null
+                val id = dataSpec.uri.host
+                        ?: throw IllegalArgumentException("Cannot find media id from uri host")
+                if (dataSpec.uri.getQueryParameter("fromLocal") == "1") {
+                    return@Factory dataSpec.withUri(context.getAudioFile(id).toUri())
                 }
-                return@Factory if (stream != null) {
-                    dataSpec.withUri(stream.url!!.toUri())
-                } else {
-                    dataSpec
+                val stream: YtFormat? = (YouTubeExtractor.getInstance(context).extractStreamBlocking(id) as? YouTubeStream.Success)?.formats?.maxByOrNull {
+                    it.abr ?: 0
                 }
-            })).build().apply {
+                return@Factory if (stream != null) dataSpec.withUri(stream.url!!.toUri()) else dataSpec
+            }))
+            .build()
+            .apply {
                 val audioAttributes = AudioAttributes.Builder()
                         .setUsage(C.USAGE_MEDIA)
                         .setContentType(C.CONTENT_TYPE_MUSIC)
@@ -151,6 +149,9 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             }
         })
         setQueueNavigator { player, windowIndex -> (player.getMediaItemAt(windowIndex).playbackProperties?.tag as? CustomMetadata).toMediaDescription() }
+        setErrorMessageProvider { e ->
+            return@setErrorMessageProvider Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage)
+        }
     }
 
     private var onNotificationPosted: OnNotificationPosted = { _, _, _ -> }
