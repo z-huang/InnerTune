@@ -111,7 +111,7 @@ class SongRepository(private val context: Context) {
     suspend fun deleteSong(songId: String) = withContext(IO) {
         songDao.delete(songId)
         context.getAudioFile(songId).takeIf { it.exists() }?.moveTo(context.getRecycledAudioFile(songId))
-        context.getArtworkFile(songId).takeIf { it.exists() }?.moveTo(context.getRecycledAudioFile(songId))
+        context.getArtworkFile(songId).takeIf { it.exists() }?.moveTo(context.getRecycledArtworkFile(songId))
     }
 
     suspend fun restoreSong(song: Song) {
