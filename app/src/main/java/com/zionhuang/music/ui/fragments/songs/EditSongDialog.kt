@@ -45,7 +45,7 @@ class EditSongDialog : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = LayoutSongDetailsBinding.inflate(requireActivity().layoutInflater)
         setupUI()
-        return MaterialAlertDialogBuilder(requireContext(), theme)
+        return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                 .setView(binding.root)
                 .setTitle(R.string.dialog_edit_details_title)
                 .setPositiveButton(R.string.dialog_button_save, null)

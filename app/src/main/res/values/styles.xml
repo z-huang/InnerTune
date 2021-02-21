@@ -20,16 +20,6 @@
         </item>
     </style>
 
-    <style name="Theme.App.Dialog.FullScreen" parent="AppTheme">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">?background</item>
-    </style>
-
-    <style name="DialogAnimation">
-        <item name="android:windowEnterAnimation">@anim/fragment_open_enter</item>
-        <item name="android:windowExitAnimation">@anim/fragment_open_exit</item>
-    </style>
-
     <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">
         <item name="android:layout_width">wrap_content</item>
         <item name="queryHint">@string/abc_search_hint</item>
@@ -39,5 +29,9 @@
     <style name="AppTheme.AutoCompleteTextView" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textColorHint">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowTranslucentNavigation">false</item>
     </style>
 </resources>
