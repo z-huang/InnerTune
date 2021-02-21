@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.ResultReceiver
@@ -13,6 +14,8 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Pair
 import androidx.core.net.toUri
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -35,6 +38,7 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.ui.activities.MainActivity
+import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
 import com.zionhuang.music.youtube.models.YtFormat
@@ -135,7 +139,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         })
         setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.add_to_library, R.drawable.ic_library_add) { _, _, _, _ ->
             scope.launch {
-                (player.currentMediaItem?.playbackProperties?.tag as? CustomMetadata)?.let {
+                player.currentMetadata?.let {
                     songRepository.insert(Song(
                             id = it.id,
                             title = it.title,
@@ -157,13 +161,32 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     private var onNotificationPosted: OnNotificationPosted = { _, _, _ -> }
 
     private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.channel_name_playback, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
-        override fun getCurrentContentTitle(player: Player): CharSequence =
-                (player.currentMediaItem?.playbackProperties?.tag as? CustomMetadata)?.title.orEmpty()
+        override fun getCurrentContentTitle(player: Player): CharSequence = player.currentMetadata?.title.orEmpty()
 
-        override fun getCurrentContentText(player: Player): CharSequence? =
-                (player.currentMediaItem?.playbackProperties?.tag as? CustomMetadata)?.artist
+        override fun getCurrentContentText(player: Player): CharSequence? = player.currentMetadata?.artist
 
-        override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? = null
+        override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
+            val url = player.currentMetadata?.artwork
+            val bitmap = GlideApp.with(context)
+                    .asBitmap()
+                    .load(url)
+                    .onlyRetrieveFromCache(true)
+                    .getBlocking()
+            if (bitmap == null) {
+                GlideApp.with(context)
+                        .asBitmap()
+                        .load(url)
+                        .onlyRetrieveFromCache(false)
+                        .into(object : CustomTarget<Bitmap>() {
+                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                callback.onBitmap(resource)
+                            }
+
+                            override fun onLoadCleared(placeholder: Drawable?) = Unit
+                        })
+            }
+            return bitmap
+        }
 
         override fun createCurrentContentIntent(player: Player): PendingIntent? =
                 PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
