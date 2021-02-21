@@ -152,7 +152,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 }
             }
         })
-        setQueueNavigator { player, windowIndex -> (player.getMediaItemAt(windowIndex).playbackProperties?.tag as? CustomMetadata).toMediaDescription() }
+        setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata.toMediaDescription() }
         setErrorMessageProvider { e ->
             return@setErrorMessageProvider Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage)
         }
