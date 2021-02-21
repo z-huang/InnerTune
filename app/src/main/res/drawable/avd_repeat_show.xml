@@ -11,7 +11,7 @@
                 android:name="line_top"
                 android:pathData="M 6 11 L 6 6 L 18 6 L 18 18 L 6 18 Z"
                 android:strokeWidth="2"
-                android:strokeColor="#000000"
+                android:strokeColor="?invertedColor"
                 android:strokeLineCap="square"
                 android:trimPathEnd="0.35416" />
             <group
@@ -20,7 +20,7 @@
                 android:pivotY="6">
                 <path
                     android:name="arrow_top_path"
-                    android:fillColor="#000000"
+                    android:fillColor="?invertedColor"
                     android:pathData="M 17 2 L 17 10 L 21 6 L 17 2 Z"
                     android:strokeWidth="1" />
             </group>
@@ -30,7 +30,7 @@
                 android:pivotY="18">
                 <path
                     android:name="arrow_bottom_path"
-                    android:fillColor="#000000"
+                    android:fillColor="?invertedColor"
                     android:pathData="M 7 17 L 7 14 L 3 18 L 7 22 L 7 17 Z"
                     android:strokeWidth="1" />
             </group>
@@ -38,7 +38,7 @@
                 android:name="line_bottom"
                 android:pathData="M 18 13 L 18 18 L 6 18 L 6 6 L 18 6 Z"
                 android:strokeWidth="2"
-                android:strokeColor="#000000"
+                android:strokeColor="?invertedColor"
                 android:strokeLineCap="square"
                 android:trimPathEnd="0.35416" />
         </vector>

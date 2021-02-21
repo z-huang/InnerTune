@@ -50,4 +50,15 @@
                 android:valueType="floatType" />
         </aapt:attr>
     </target>
+    <target android:name="new_arrow">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="200"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="pathData"
+                android:valueFrom="M 18 12 L 9.5 12 L 18 12 Z"
+                android:valueTo="M 18 6 L 9.5 12 L 18 18 Z"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
 </animated-vector>
