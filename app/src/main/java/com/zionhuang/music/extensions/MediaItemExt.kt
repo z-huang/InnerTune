@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.CustomMetadata
 import com.zionhuang.music.playback.CustomMetadata.Companion.toCustomMetadata
@@ -24,7 +25,7 @@ fun Song.toMediaItem(context: Context): MediaItem {
             .setUri(Uri.Builder()
                     .scheme("music")
                     .authority(id)
-                    .appendQueryParameter("fromLocal", "1")
+                    .appendQueryParameter("fromLocal", if (downloadState == STATE_DOWNLOADED) "1" else "0")
                     .build())
             .setTag(toCustomMetadata(context))
             .build()
