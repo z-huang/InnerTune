@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.bindings
 
+import android.net.Uri
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.view.View
 import android.widget.ImageView
@@ -52,9 +53,17 @@ fun setRepeatMode(view: RepeatButton, @RepeatMode state: Int) {
     view.setState(state)
 }
 
-@BindingAdapter("artwork")
-fun setArtwork(view: ImageView, id: String) {
+@BindingAdapter("artworkId")
+fun setArtworkId(view: ImageView, id: String) {
     view.load(view.context.getArtworkFile(id)) {
+        placeholder(R.drawable.ic_music_note)
+        roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
+    }
+}
+
+@BindingAdapter("artworkUri")
+fun setArtworkUri(view: ImageView, uri: Uri) {
+    view.load(uri) {
         placeholder(R.drawable.ic_music_note)
         roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
     }

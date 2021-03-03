@@ -11,11 +11,13 @@ import com.zionhuang.music.ui.viewholders.SearchPlaylistViewHolder
 import com.zionhuang.music.ui.viewholders.SearchStreamViewHolder
 import com.zionhuang.music.ui.viewholders.base.SearchViewHolder
 
-const val ITEM_VIDEO = 0
-const val ITEM_CHANNEL = 1
-const val ITEM_PLAYLIST = 2
-
 class SearchResultAdapter : PagingDataAdapter<SearchResult, SearchViewHolder>(SearchResultItemComparator()) {
+    companion object {
+        const val ITEM_VIDEO = 0
+        const val ITEM_CHANNEL = 1
+        const val ITEM_PLAYLIST = 2
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder = when (viewType) {
         ITEM_VIDEO -> SearchStreamViewHolder(parent.inflateWithBinding(R.layout.item_search_stream))
         ITEM_CHANNEL -> SearchChannelViewHolder(parent.inflateWithBinding(R.layout.item_search_channel))

@@ -15,6 +15,12 @@ import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class NewPipeSearchResultAdapter : PagingDataAdapter<InfoItem, SearchViewHolder>(InfoItemComparator()) {
+    companion object {
+        const val ITEM_VIDEO = 0
+        const val ITEM_CHANNEL = 1
+        const val ITEM_PLAYLIST = 2
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder = when (viewType) {
         ITEM_VIDEO -> SearchStreamViewHolder(parent.inflateWithBinding(R.layout.item_search_stream))
         ITEM_CHANNEL -> SearchChannelViewHolder(parent.inflateWithBinding(R.layout.item_search_channel))

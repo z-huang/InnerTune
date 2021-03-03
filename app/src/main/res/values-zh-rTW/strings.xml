@@ -48,4 +48,5 @@
     <string name="download">下載</string>
     <string name="add_to_library">加入音樂庫</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
+    <string name="title_now_playing">現正播放</string>
 </resources>

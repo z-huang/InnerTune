@@ -11,6 +11,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
@@ -69,6 +70,11 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
         binding.btnHide.setOnClickListener {
             mainActivity.showBottomSheet(true)
+        }
+
+        binding.btnQueue.setOnClickListener {
+            mainActivity.showBottomSheet(true)
+            findNavController().navigate(QueueFragmentDirections.openQueueFragment())
         }
 
         binding.btnAddToLibrary.setOnClickListener {

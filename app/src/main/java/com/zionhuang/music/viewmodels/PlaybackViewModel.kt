@@ -13,6 +13,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.PlaybackStateData
+import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
@@ -25,6 +26,9 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     private val _playbackState = SafeMutableLiveData(PlaybackStateData())
     val playbackState: SafeLiveData<PlaybackStateData> get() = _playbackState
+
+    private val _queueData = SafeMutableLiveData(QueueData())
+    val queueData: SafeLiveData<QueueData> get() = _queueData
 
     private val mediaMetadataObserver = Observer<MediaMetadataCompat?> { mediaMetadata ->
         if (mediaMetadata != null) {
@@ -39,10 +43,15 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    private val queueDataObserver = Observer<QueueData> { queueData ->
+        _queueData.postValue(queueData)
+    }
+
     private val mediaSessionConnection = MediaSessionConnection(application).apply {
         connect()
         playbackState.observeForever(playbackStateObserver)
         nowPlaying.observeForever(mediaMetadataObserver)
+        queueData.observeForever(queueDataObserver)
     }
 
     val mediaController: LiveData<MediaControllerCompat?> = mediaSessionConnection.isConnected.map { isConnected ->
@@ -101,6 +110,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         mediaSessionConnection.apply {
             playbackState.removeObserver(playbackStateObserver)
             nowPlaying.removeObserver(mediaMetadataObserver)
+            queueData.removeObserver(queueDataObserver)
             disconnect()
         }
     }

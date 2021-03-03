@@ -6,12 +6,8 @@
     <data>
 
         <variable
-            name="song"
-            type="com.zionhuang.music.db.entities.Song" />
-
-        <import type="com.zionhuang.music.download.DownloadTask" />
-
-        <import type="android.view.View" />
+            name="item"
+            type="android.support.v4.media.session.MediaSessionCompat.QueueItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,11 +30,11 @@
 
             <ImageView
                 android:id="@+id/artwork"
-                artworkId="@{song.id}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
+                app:artworkUri="@{item.description.iconUri}"
                 tools:src="@drawable/ic_music_note" />
         </LinearLayout>
 
@@ -60,28 +56,19 @@
 
                 <TextView
                     android:id="@+id/song_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingBottom="3dp"
-                    android:text="@{song.title}"
+                    android:text="@{item.description.title}"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@+id/song_details"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed"
                     tools:text="Song Title" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_weight="0"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_offline_pin"
-                    android:visibility="@{song.downloadState == DownloadTask.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:text="@{song.artistName}"
+                    android:text="@{item.description.subtitle}"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Song Artist" />
@@ -108,7 +95,8 @@
                     android:paddingRight="5dp"
                     android:singleLine="true"
                     android:text="@string/bullet"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/duration"
@@ -117,21 +105,8 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textSize="12sp"
-                    app:duration="@{song.duration}"
+                    android:visibility="gone"
                     tools:text="3:00" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{song.downloadState == DownloadTask.STATE_DOWNLOADING ? View.VISIBLE : View.GONE}">
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/progress_bar"
-                    style="@style/Widget.MaterialComponents.LinearProgressIndicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:progress="50" />
             </LinearLayout>
         </LinearLayout>
 
