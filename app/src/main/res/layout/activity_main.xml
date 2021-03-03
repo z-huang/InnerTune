@@ -5,6 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
+    <com.zionhuang.music.ui.widgets.StatusBarView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?colorPrimaryVariant"
+        tools:layout_height="36dp" />
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"

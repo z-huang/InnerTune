@@ -12,23 +12,27 @@
             <KeyAttribute
                 android:alpha="1"
                 app:framePosition="0"
-                app:motionTarget="@id/bottom_title_layout" />
+                app:motionTarget="@id/bottom_bar" />
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="25"
+                app:motionTarget="@id/bottom_bar" />
             <KeyAttribute
                 android:alpha="0"
                 app:framePosition="100"
-                app:motionTarget="@id/bottom_title_layout" />
+                app:motionTarget="@id/bottom_bar" />
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="0"
+                app:motionTarget="@id/action_bar" />
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="75"
+                app:motionTarget="@id/action_bar" />
             <KeyAttribute
                 android:alpha="1"
-                app:framePosition="0"
-                app:motionTarget="@id/btn_btm_play_pause" />
-            <KeyAttribute
-                android:alpha="0"
                 app:framePosition="100"
-                app:motionTarget="@id/btn_btm_play_pause" />
-            <KeyAttribute
-                android:translationX="50dp"
-                app:framePosition="50"
-                app:motionTarget="@id/bottom_bar" />
+                app:motionTarget="@id/action_bar" />
             <KeyPosition
                 app:framePosition="50"
                 app:keyPositionType="parentRelative"
@@ -71,7 +75,7 @@
             motion:layout_constraintDimensionRatio="1:1"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@id/status_bar" />
+            motion:layout_constraintTop_toBottomOf="@id/action_bar" />
 
         <Constraint android:id="@id/load_indicator">
             <PropertySet app:visibilityMode="ignore" />

@@ -29,16 +29,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        songsViewModel.deleteSong.observe(this) { song ->
-            Snackbar.make(binding.root, getString(R.string.snack_bar_delete_song, song.title), Snackbar.LENGTH_LONG)
-                    .setAnchorView(binding.bottomNav)
-                    .setAction(R.string.snack_bar_undo) {
-                        lifecycleScope.launch {
-                            songsViewModel.songRepository.restoreSong(song)
-                        }
-                    }
-                    .show()
-        }
     }
 
     private fun setupUI() {
@@ -60,6 +50,17 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             state = STATE_HIDDEN
             addBottomSheetCallback(BottomSheetCallback())
         }
+
+        songsViewModel.deleteSong.observe(this) { song ->
+            Snackbar.make(binding.root, getString(R.string.snack_bar_delete_song, song.title), Snackbar.LENGTH_LONG)
+                    .setAnchorView(binding.bottomNav)
+                    .setAction(R.string.snack_bar_undo) {
+                        lifecycleScope.launch {
+                            songsViewModel.songRepository.restoreSong(song)
+                        }
+                    }
+                    .show()
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -75,8 +76,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
         bottomSheetBehavior.state = STATE_EXPANDED
     }
 
-    fun showBottomSheet() {
-        if (bottomSheetBehavior.state == STATE_HIDDEN) {
+    fun showBottomSheet(force: Boolean = false) {
+        if (bottomSheetBehavior.state == STATE_HIDDEN || force) {
             bottomSheetBehavior.state = STATE_COLLAPSED
         }
     }

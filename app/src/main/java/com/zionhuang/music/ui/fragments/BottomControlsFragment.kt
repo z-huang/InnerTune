@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
@@ -30,6 +31,8 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     private lateinit var binding: BottomControlsSheetBinding
     private val viewModel by activityViewModels<PlaybackViewModel>()
     private lateinit var mediaWidgetsController: MediaWidgetsController
+
+    private val mainActivity: MainActivity get() = requireActivity() as MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = BottomControlsSheetBinding.inflate(inflater, container, false)
@@ -52,16 +55,20 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         binding.songArtist.isSelected = true
 
         binding.motionLayout.addTransitionListener(this)
-        (requireActivity() as MainActivity).setBottomSheetListener(this)
+        mainActivity.setBottomSheetListener(this)
 
         viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
             if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED && !viewModel.expandOnPlay) {
-                (requireActivity() as MainActivity).showBottomSheet()
+                mainActivity.showBottomSheet()
             }
         }
 
         binding.bottomBar.setOnClickListener {
-            (requireActivity() as MainActivity).expandBottomSheet()
+            mainActivity.expandBottomSheet()
+        }
+
+        binding.btnHide.setOnClickListener {
+            mainActivity.showBottomSheet(true)
         }
 
         binding.btnAddToLibrary.setOnClickListener {
@@ -95,6 +102,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         if (newState == STATE_HIDDEN) {
             viewModel.transportControls?.stop()
         }
+        binding.bottomBar.isVisible = newState != STATE_EXPANDED
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {

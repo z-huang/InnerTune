@@ -1,6 +1,7 @@
 package com.zionhuang.music.ui.bindings
 
 import android.support.v4.media.session.PlaybackStateCompat.*
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -12,6 +13,12 @@ import com.zionhuang.music.ui.widgets.PlayPauseButton
 import com.zionhuang.music.ui.widgets.RepeatButton
 import com.zionhuang.music.ui.widgets.ShuffleButton
 import com.zionhuang.music.utils.makeTimeString
+
+@BindingAdapter("enabled")
+fun setEnabled(view: View, enabled: Boolean) {
+    view.isEnabled = enabled
+    view.alpha = if (enabled) 1f else 0.5f
+}
 
 @BindingAdapter("duration")
 fun setDuration(view: TextView, duration: Int) {

@@ -26,77 +26,127 @@
         app:currentState="@id/collapsed"
         app:layoutDescription="@xml/bottom_sheet_scene">
 
-        <FrameLayout
-            android:id="@+id/bottom_bar"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <com.zionhuang.music.ui.widgets.StatusBarView
+            android:id="@+id/status_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/top_bar_guideline"
+            android:id="@+id/bottom_bar_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="54dp" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/action_bar"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_bar">
+
+            <com.zionhuang.music.ui.widgets.IconButton
+                android:id="@+id/btn_hide"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_margin="13dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_expand_more"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.zionhuang.music.ui.widgets.IconButton
+                android:id="@+id/btn_queue"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_margin="13dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_queue_music"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_more"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.zionhuang.music.ui.widgets.IconButton
+                android:id="@+id/btn_more"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_margin="13dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_more_vert"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
-            android:id="@+id/bottom_title_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/bottom_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="66dp"
-            android:layout_marginEnd="52dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/top_bar_guideline"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_bar_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/btm_song_title"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/bottom_title_layout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="@{viewModel.mediaData.title}"
-                android:textColor="?android:textColorPrimary"
-                android:textSize="16sp"
-                tools:text="Song Title" />
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_btm_play_pause"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/btm_song_artist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="@{viewModel.mediaData.artistName}"
-                android:textColor="?android:textColorSecondary"
-                android:textSize="12sp"
-                tools:text="Song Artist" />
+                <TextView
+                    android:id="@+id/btm_song_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@{viewModel.mediaData.title}"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="16sp"
+                    tools:text="Song Title" />
+
+                <TextView
+                    android:id="@+id/btm_song_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@{viewModel.mediaData.artistName}"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="12sp"
+                    tools:text="Song Artist" />
+            </LinearLayout>
+
+            <com.zionhuang.music.ui.widgets.PlayPauseButton
+                android:id="@+id/btn_btm_play_pause"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:onClick="@{()->viewModel.togglePlayPause()}"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:playState="@{viewModel.playbackState.state}"
+                tools:src="@drawable/ic_pause" />
         </LinearLayout>
-
-        <com.zionhuang.music.ui.widgets.PlayPauseButton
-            android:id="@+id/btn_btm_play_pause"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="10dp"
-            android:onClick="@{()->viewModel.togglePlayPause()}"
-            android:padding="4dp"
-            app:layout_constraintBottom_toBottomOf="@id/top_bar_guideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:playState="@{viewModel.playbackState.state}"
-            tools:src="@drawable/ic_pause" />
-
-        <com.zionhuang.music.ui.widgets.StatusBarView
-            android:id="@+id/status_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <FrameLayout
             android:id="@+id/artwork_frame"
@@ -135,7 +185,7 @@
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            app:layout_constraintBottom_toTopOf="@id/top_bar_guideline"
+            app:layout_constraintBottom_toTopOf="@id/bottom_bar_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:trackThickness="2dp"
@@ -158,6 +208,7 @@
                 style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
@@ -177,6 +228,7 @@
                 android:singleLine="true"
                 android:text="@{viewModel.mediaData.artistName}"
                 android:textAlignment="center"
+                android:textColor="?android:textColorSecondary"
                 tools:text="Song Artist" />
         </LinearLayout>
 
@@ -302,6 +354,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:onClick="@{()->viewModel.mediaController.transportControls.skipToNext()}"
+                app:enabled="@{(viewModel.playbackState.actions &amp; PlaybackState.ACTION_SKIP_TO_NEXT) != 0}"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
                 app:layout_constraintEnd_toStartOf="@id/btn_repeat"
                 app:layout_constraintStart_toEndOf="@id/btn_play_pause"
