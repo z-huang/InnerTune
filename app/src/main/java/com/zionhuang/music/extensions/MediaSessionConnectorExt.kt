@@ -18,6 +18,6 @@ fun Context.createCustomAction(action: String, @StringRes name: Int, @DrawableRe
     override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction? = if (permitted()) PlaybackStateCompat.CustomAction.Builder(action, getString(name), icon).build() else null
 }
 
-fun MediaSessionConnector.setQueueNavigator(getMediaDescription: (player: Player, windowIndex: Int) -> MediaDescriptionCompat) = setQueueNavigator(object : TimelineQueueNavigator(mediaSession) {
+fun MediaSessionConnector.setQueueNavigator(getMediaDescription: (player: Player, windowIndex: Int) -> MediaDescriptionCompat) = setQueueNavigator(object : TimelineQueueNavigator(mediaSession, Int.MAX_VALUE) {
     override fun getMediaDescription(player: Player, windowIndex: Int) = getMediaDescription(player, windowIndex)
 })

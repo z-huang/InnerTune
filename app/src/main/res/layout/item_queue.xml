@@ -45,7 +45,7 @@
             android:layout_marginEnd="6dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_more_action"
+            app:layout_constraintEnd_toStartOf="@id/drag_handle"
             app:layout_constraintStart_toEndOf="@id/artwork_container"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -110,20 +110,17 @@
             </LinearLayout>
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btn_more_action"
+        <ImageView
+            android:id="@+id/drag_handle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginEnd="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
             android:padding="5dp"
             android:scaleType="center"
-            android:tint="?android:textColorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more_vert" />
+            app:srcCompat="@drawable/ic_drag_handle" />
 
         <FrameLayout
             android:id="@+id/overlay_selection"

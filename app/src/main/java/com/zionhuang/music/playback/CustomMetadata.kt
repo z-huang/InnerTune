@@ -34,10 +34,10 @@ data class CustomMetadata(
         fun SongParcel.toCustomMetadata() = CustomMetadata(id, title, artist, artworkUrl)
 
         fun StreamInfoItem.toCustomMetadata(): CustomMetadata? = YouTubeStreamExtractor.extractId(url)?.let { CustomMetadata(it, name, uploaderName, thumbnailUrl) }
+
+        fun MediaDescriptionCompat.toCustomMetadata(): CustomMetadata = CustomMetadata(mediaId!!, title.toString(), subtitle.toString(), iconUri.toString())
     }
 }
-
-private val builder = MediaDescriptionCompat.Builder()
 
 fun CustomMetadata?.toMediaDescription(): MediaDescriptionCompat = this?.toMediaDescription()
         ?: EMPTY_MEDIA_DESCRIPTION

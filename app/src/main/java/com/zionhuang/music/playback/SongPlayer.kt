@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.ResultReceiver
+import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
@@ -19,6 +20,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.createWithNotificationChannel
@@ -156,6 +158,31 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         setErrorMessageProvider { e ->
             return@setErrorMessageProvider Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage)
         }
+        setQueueEditor(object : MediaSessionConnector.QueueEditor {
+            override fun onCommand(player: Player, controlDispatcher: ControlDispatcher, command: String, extras: Bundle?, cb: ResultReceiver?): Boolean {
+                if (COMMAND_MOVE_QUEUE_ITEM != command || extras == null) {
+                    return false
+                }
+                val from = extras.getInt(EXTRA_FROM_INDEX, C.INDEX_UNSET)
+                val to = extras.getInt(EXTRA_TO_INDEX, C.INDEX_UNSET)
+                if (from != C.INDEX_UNSET && to != C.INDEX_UNSET) {
+                    player.moveMediaItem(from, to)
+                }
+                return true
+            }
+
+            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) =
+                    player.addMediaItem(description.toMediaItem())
+
+            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat, index: Int) =
+                    player.addMediaItem(index, description.toMediaItem())
+
+            override fun onRemoveQueueItem(player: Player, description: MediaDescriptionCompat) {
+                player.mediaItemIndexOf(description.mediaId)?.let { i ->
+                    player.removeMediaItem(i)
+                }
+            }
+        })
     }
 
     private var onNotificationPosted: OnNotificationPosted = { _, _, _ -> }
