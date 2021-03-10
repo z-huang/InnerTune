@@ -142,10 +142,24 @@
                 android:onClick="@{()->viewModel.togglePlayPause()}"
                 android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_btm_skip_next"
                 app:layout_constraintTop_toTopOf="parent"
                 app:playState="@{viewModel.playbackState.state}"
                 tools:src="@drawable/ic_pause" />
+
+            <com.zionhuang.music.ui.widgets.SkipNextButton
+                android:id="@+id/btn_btm_skip_next"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:onClick="@{()->viewModel.mediaController.transportControls.skipToNext()}"
+                android:padding="4dp"
+                app:enabled="@{(viewModel.playbackState.actions &amp; PlaybackState.ACTION_SKIP_TO_NEXT) != 0}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_skip_next" />
         </LinearLayout>
 
         <FrameLayout
