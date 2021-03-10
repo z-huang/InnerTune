@@ -35,6 +35,8 @@ import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
 import com.zionhuang.music.constants.MediaConstants.SONG
 import com.zionhuang.music.constants.MediaConstants.SONG_ID
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
+import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
+import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
@@ -139,6 +141,17 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 player.playWhenReady = playWhenReady
             }
         })
+        registerCustomCommandReceiver { player, controlDispatcher, command, extras, cb ->
+            if (command == COMMAND_SEEK_TO_QUEUE_ITEM) {
+                val mediaId = extras?.getString(EXTRA_MEDIA_ID)
+                        ?: return@registerCustomCommandReceiver true
+                player.mediaItemIndexOf(mediaId)?.let {
+                    player.seekToDefaultPosition(it)
+                }
+                return@registerCustomCommandReceiver true
+            }
+            return@registerCustomCommandReceiver false
+        }
         setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.add_to_library, R.drawable.ic_library_add) { _, _, _, _ ->
             scope.launch {
                 player.currentMetadata?.let {

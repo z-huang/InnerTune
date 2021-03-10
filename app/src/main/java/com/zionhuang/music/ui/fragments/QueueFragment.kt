@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.moveQueueItem
+import com.zionhuang.music.extensions.seekToQueueItem
 import com.zionhuang.music.ui.adapters.MediaQueueAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -62,6 +64,11 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = queueAdapter
             itemTouchHelper.attachToRecyclerView(this)
+            addOnClickListener { pos, _ ->
+                queueAdapter.getItem(pos).description.mediaId?.let {
+                    viewModel.mediaController.value?.seekToQueueItem(it)
+                }
+            }
         }
 
         lifecycleScope.launch {
