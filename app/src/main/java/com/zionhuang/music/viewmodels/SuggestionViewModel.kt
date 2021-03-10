@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class SuggestionViewModel(application: Application) : AndroidViewModel(application) {
     private val youtubeRepo: YouTubeRepository = getInstance(application)
-    val onFillQuery = MutableLiveData<String>()
+    val onFillQuery = MutableLiveData<String?>()
     val query = MutableLiveData<String?>(null)
     val suggestions = MutableLiveData<List<String>>(emptyList())
 
