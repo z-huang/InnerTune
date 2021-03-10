@@ -41,11 +41,7 @@
         android:label="@string/title_explore">
         <action
             android:id="@+id/action_explorationFragment_to_searchSuggestionFragment"
-            app:destination="@id/suggestionFragment"
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_close_exit"
-            app:popEnterAnim="@anim/fragment_open_enter"
-            app:popExitAnim="@anim/fragment_open_exit" />
+            app:destination="@id/suggestionFragment" />
     </fragment>
     <fragment
         android:id="@+id/suggestionFragment"
@@ -53,10 +49,6 @@
         <action
             android:id="@+id/action_suggestionFragment_to_searchResultFragment"
             app:destination="@id/searchResultFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit"
             app:popUpTo="@id/explorationFragment">
             <argument
                 android:name="searchQuery"
@@ -72,11 +64,7 @@
             app:argType="string" />
         <action
             android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
-            app:destination="@id/suggestionFragment"
-            app:enterAnim="@anim/fragment_close_enter"
-            app:exitAnim="@anim/fragment_close_exit"
-            app:popEnterAnim="@anim/fragment_open_enter"
-            app:popExitAnim="@anim/fragment_open_exit" />
+            app:destination="@id/suggestionFragment" />
     </fragment>
     <fragment
         android:id="@+id/songDetailsFragment"

@@ -6,7 +6,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,8 +13,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.LoadState
 import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.SONG_ID
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.databinding.FragmentSearchResultBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
@@ -35,6 +35,12 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
 
     private val viewModel by viewModels<SearchViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough().apply { duration = 300L }
+        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +67,7 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
                 val item = searchResultAdapter.getItemByPosition(pos)!!
                 if (item is StreamInfoItem) {
                     playbackViewModel.playFromSearch(requireActivity(), query, bundleOf(
-                            SONG_ID to YouTubeStreamExtractor.extractId(item.url)
+                            EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url)
                     ))
                 }
 //                if ("youtube#video" != item.id.kind) {

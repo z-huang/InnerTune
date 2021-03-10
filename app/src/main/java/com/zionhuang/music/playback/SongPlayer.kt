@@ -28,12 +28,12 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
-import com.zionhuang.music.constants.MediaConstants.QUEUE_DESC
-import com.zionhuang.music.constants.MediaConstants.QUEUE_ORDER
-import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
-import com.zionhuang.music.constants.MediaConstants.SONG
-import com.zionhuang.music.constants.MediaConstants.SONG_ID
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
@@ -102,14 +102,14 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
             override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
                 scope.launch {
-                    when (extras!!.getInt(QUEUE_TYPE)) {
+                    when (extras!!.getInt(EXTRA_QUEUE_TYPE)) {
                         QUEUE_ALL_SONG -> {
-                            val items = songRepository.getAllSongsList(extras.getInt(QUEUE_ORDER), extras.getBoolean(QUEUE_DESC)).toMediaItems(context)
+                            val items = songRepository.getAllSongsList(extras.getInt(EXTRA_QUEUE_ORDER), extras.getBoolean(EXTRA_QUEUE_DESC)).toMediaItems(context)
                             player.setMediaItems(items)
                             player.seekToDefaultPosition(items.indexOfFirst { it.mediaId == mediaId })
                         }
                         else -> {
-                            player.setMediaItem(extras.getParcelable<SongParcel>(SONG)?.toMediaItem()
+                            player.setMediaItem(extras.getParcelable<SongParcel>(EXTRA_SONG)?.toMediaItem()
                                     ?: mediaId.toMediaItem())
 
                         }
@@ -120,7 +120,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             }
 
             override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-                val mediaId = extras!!.getString(SONG_ID)
+                val mediaId = extras!!.getString(EXTRA_SONG_ID)
                         ?: return setCustomErrorMessage("Media id not found.", ERROR_CODE_UNKNOWN_ERROR)
                 val items = SearchCache[query]?.toMediaItems()
                         ?: return setCustomErrorMessage("Search items not found.", ERROR_CODE_UNKNOWN_ERROR)

@@ -3,11 +3,11 @@ package com.zionhuang.music.constants
 import androidx.annotation.IntDef
 
 object MediaConstants {
-    const val QUEUE_TYPE = "queue_type"
-    const val QUEUE_ORDER = "queue_order"
-    const val QUEUE_DESC = "queue_desc"
-    const val SONG_ID = "song_id"
-    const val SONG = "song"
+    const val EXTRA_QUEUE_TYPE = "queue_type"
+    const val EXTRA_QUEUE_ORDER = "queue_order"
+    const val EXTRA_QUEUE_DESC = "queue_desc"
+    const val EXTRA_SONG_ID = "song_id"
+    const val EXTRA_SONG = "song"
 
     @IntDef(QUEUE_NONE, QUEUE_ALL_SONG, QUEUE_PLAYLIST, QUEUE_ARTIST, QUEUE_CHANNEL, QUEUE_SINGLE)
     @Retention(AnnotationRetention.SOURCE)

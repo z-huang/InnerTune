@@ -70,6 +70,6 @@ class MediaSessionConnection(private val context: Context) {
     private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) = playbackState.postValue(state)
         override fun onMetadataChanged(metadata: MediaMetadataCompat) = nowPlaying.postValue(metadata)
-        override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) = queueData.postValue(queueData.value!!.update(mediaController!!, queue))
+        override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) = queueData.postValue(queueData.value!!.update(queue))
     }
 }

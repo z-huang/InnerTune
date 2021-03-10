@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentSearchSuggestionBinding
 import com.zionhuang.music.extensions.addOnClickListener
@@ -34,6 +35,12 @@ class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
 
     private val viewModel by viewModels<SuggestionViewModel>()
     private lateinit var searchView: SearchView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough().apply { duration = 300L }
+        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -13,9 +13,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        enterTransition = MaterialFadeThrough().apply {
-            duration = 300L
-        }
+        enterTransition = MaterialFadeThrough().apply { duration = 300L }
     }
 
     companion object {

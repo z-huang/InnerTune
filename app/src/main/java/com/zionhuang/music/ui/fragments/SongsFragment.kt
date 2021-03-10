@@ -13,10 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
-import com.zionhuang.music.constants.MediaConstants.QUEUE_DESC
-import com.zionhuang.music.constants.MediaConstants.QUEUE_ORDER
-import com.zionhuang.music.constants.MediaConstants.QUEUE_TYPE
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
@@ -56,9 +56,9 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
-                        QUEUE_TYPE to QUEUE_ALL_SONG,
-                        QUEUE_ORDER to sortMenuListener.sortType(),
-                        QUEUE_DESC to sortMenuListener.sortDescending()
+                        EXTRA_QUEUE_TYPE to QUEUE_ALL_SONG,
+                        EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
+                        EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
                 ))
             }
             addFastScroller { useMd2Style() }
