@@ -60,7 +60,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getArtistSongsAsPagingSource(artistId)
-    }.flow.cachedIn(viewModelScope)
+    }.flow.map { pagingData ->
+        pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
+    }.cachedIn(viewModelScope)
 
     fun getChannelSongsAsFlow(channelId: String) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getChannelSongsAsPagingSource(channelId)

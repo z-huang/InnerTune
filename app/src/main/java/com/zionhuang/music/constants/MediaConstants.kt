@@ -8,6 +8,7 @@ object MediaConstants {
     const val EXTRA_QUEUE_DESC = "queue_desc"
     const val EXTRA_SONG_ID = "song_id"
     const val EXTRA_SONG = "song"
+    const val EXTRA_ARTIST_ID = "artist_id"
 
     @IntDef(QUEUE_NONE, QUEUE_ALL_SONG, QUEUE_PLAYLIST, QUEUE_ARTIST, QUEUE_CHANNEL, QUEUE_SINGLE)
     @Retention(AnnotationRetention.SOURCE)

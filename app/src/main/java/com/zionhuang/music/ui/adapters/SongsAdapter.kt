@@ -57,9 +57,7 @@ class SongsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
             when (viewType) {
-                TYPE_HEADER -> {
-                    SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortMenuListener!!)
-                }
+                TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortMenuListener!!)
                 TYPE_ITEM -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), popupMenuListener)
                 else -> throw IllegalArgumentException("Unexpected view type.")
             }

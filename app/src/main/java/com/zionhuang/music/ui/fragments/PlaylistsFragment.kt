@@ -52,9 +52,7 @@ class PlaylistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> {
-                findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
-            }
+            R.id.action_settings -> findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
         }
         return true
     }

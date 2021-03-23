@@ -12,7 +12,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
@@ -63,9 +62,7 @@ class ChannelsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> {
-                findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
-            }
+            R.id.action_settings -> findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
         }
         return true
     }

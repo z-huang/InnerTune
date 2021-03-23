@@ -28,12 +28,14 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
+import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
@@ -106,12 +108,20 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                         QUEUE_ALL_SONG -> {
                             val items = songRepository.getAllSongsList(extras.getInt(EXTRA_QUEUE_ORDER), extras.getBoolean(EXTRA_QUEUE_DESC)).toMediaItems(context)
                             player.setMediaItems(items)
-                            player.seekToDefaultPosition(items.indexOfFirst { it.mediaId == mediaId })
+                            items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
+                                player.seekToDefaultPosition(index)
+                            }
+                        }
+                        QUEUE_ARTIST -> {
+                            val items = songRepository.getArtistSongsList(extras.getInt(EXTRA_ARTIST_ID), extras.getInt(EXTRA_QUEUE_ORDER), extras.getBoolean(EXTRA_QUEUE_DESC)).toMediaItems(context)
+                            player.setMediaItems(items)
+                            items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
+                                player.seekToDefaultPosition(index)
+                            }
                         }
                         else -> {
                             player.setMediaItem(extras.getParcelable<SongParcel>(EXTRA_SONG)?.toMediaItem()
                                     ?: mediaId.toMediaItem())
-
                         }
                     }
                     player.prepare()
