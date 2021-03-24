@@ -49,4 +49,9 @@
     <string name="add_to_library">加入音樂庫</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
     <string name="title_now_playing">現正播放</string>
+    <string name="search_filter_all">全部</string>
+    <string name="search_filter_songs">歌曲</string>
+    <string name="search_filter_videos">影片</string>
+    <string name="search_filter_playlists">播放清單</string>
+    <string name="search_filter_channels">頻道</string>
 </resources>

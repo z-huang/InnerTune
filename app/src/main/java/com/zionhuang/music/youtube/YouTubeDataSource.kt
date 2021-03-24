@@ -7,6 +7,7 @@ import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import com.zionhuang.music.youtube.newpipe.SearchCache
+import com.zionhuang.music.youtube.newpipe.SearchQuery
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
@@ -33,15 +34,16 @@ class YouTubeDataSource {
         override fun getRefreshKey(state: PagingState<String, SearchResult>): String? = null
     }
 
-    class NewPipeSearch(private val query: String) : PagingSource<Page, InfoItem>() {
+    class NewPipeSearch(queryString: String, filter: String) : PagingSource<Page, InfoItem>() {
         private val youtubeService = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
-        private val contentFilter = emptyList<String>()
+        private val searchQuery = SearchQuery(queryString, filter)
+        private val contentFilter = listOf(filter)
         private val sortFilter = ""
 
         @Suppress("BlockingMethodInNonBlockingContext")
         override suspend fun load(params: LoadParams<Page>): LoadResult<Page, InfoItem> =
-                if (query in SearchCache && SearchCache[query]!!.nextKey != params.key) {
-                    val cache = SearchCache[query]!!
+                if (searchQuery in SearchCache && SearchCache[searchQuery]!!.nextKey != params.key) {
+                    val cache = SearchCache[searchQuery]!!
                     LoadResult.Page(
                             data = cache.items,
                             nextKey = cache.nextKey,
@@ -49,16 +51,16 @@ class YouTubeDataSource {
                     )
                 } else try {
                     if (params.key == null) {
-                        val searchInfo = ExtractorHelper.search(youtubeService, query, contentFilter, sortFilter)
-                        SearchCache.add(query, searchInfo)
+                        val searchInfo = ExtractorHelper.search(youtubeService, searchQuery.query, contentFilter, sortFilter)
+                        SearchCache.add(searchQuery, searchInfo)
                         LoadResult.Page(
                                 data = searchInfo.relatedItems,
                                 nextKey = searchInfo.nextPage,
                                 prevKey = null
                         )
                     } else {
-                        val infoItemsPage = ExtractorHelper.search(youtubeService, query, contentFilter, sortFilter, params.key!!)
-                        SearchCache.add(query, infoItemsPage)
+                        val infoItemsPage = ExtractorHelper.search(youtubeService, searchQuery.query, contentFilter, sortFilter, params.key!!)
+                        SearchCache.add(searchQuery, infoItemsPage)
                         LoadResult.Page(
                                 data = infoItemsPage.items,
                                 nextKey = infoItemsPage.nextPage,

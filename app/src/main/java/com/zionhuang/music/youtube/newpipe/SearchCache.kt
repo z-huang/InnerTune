@@ -5,9 +5,9 @@ import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.search.SearchInfo
 
 object SearchCache {
-    private val map = mutableMapOf<String, SearchCacheData>()
+    private val map = mutableMapOf<SearchQuery, SearchCacheData>()
 
-    fun add(query: String, cache: SearchCacheData) {
+    fun add(query: SearchQuery, cache: SearchCacheData) {
         if (query !in map) {
             map[query] = cache
         } else {
@@ -16,13 +16,13 @@ object SearchCache {
         }
     }
 
-    fun add(query: String, searchInfo: SearchInfo) =
+    fun add(query: SearchQuery, searchInfo: SearchInfo) =
             add(query, SearchCacheData(searchInfo.relatedItems.toMutableList(), searchInfo.nextPage))
 
-    fun add(query: String, infoItemsPage: ListExtractor.InfoItemsPage<InfoItem>) =
+    fun add(query: SearchQuery, infoItemsPage: ListExtractor.InfoItemsPage<InfoItem>) =
             add(query, SearchCacheData(infoItemsPage.items.toMutableList(), infoItemsPage.nextPage))
 
-    operator fun get(query: String): SearchCacheData? = map[query]
+    operator fun get(query: SearchQuery): SearchCacheData? = map[query]
 
-    operator fun contains(query: String) = query in map
+    operator fun contains(query: SearchQuery) = query in map
 }

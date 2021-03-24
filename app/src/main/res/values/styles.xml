@@ -34,4 +34,12 @@
     <style name="Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="android:windowTranslucentNavigation">false</item>
     </style>
+
+    <style name="Widget.App.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Chip.Choice</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Chip.Choice" parent="">
+        <item name="elevationOverlayEnabled">false</item>
+    </style>
 </resources>

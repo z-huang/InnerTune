@@ -11,17 +11,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_FILTER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.databinding.FragmentSearchResultBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.NewPipeSearchResultAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
@@ -30,12 +33,13 @@ import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
-    companion object {
-        private const val TAG = "SearchResultFragment"
-    }
+    private val args: SearchResultFragmentArgs by navArgs()
+    private val query by lazy { args.searchQuery }
 
     private val viewModel by viewModels<SearchViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
+
+    private lateinit var searchResultAdapter: NewPipeSearchResultAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +50,9 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val query = SearchResultFragmentArgs.fromBundle(requireArguments()).searchQuery
         activity.supportActionBar?.title = query
 
-        val searchResultAdapter = NewPipeSearchResultAdapter().apply {
+        searchResultAdapter = NewPipeSearchResultAdapter(searchFilterListener).apply {
             addLoadStateListener { loadState ->
                 binding.progressBar.isVisible = loadState.refresh is Loading
                 binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
@@ -65,9 +68,11 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, _ ->
+                if (pos == 0) return@addOnClickListener
                 val item = searchResultAdapter.getItemByPosition(pos)!!
                 if (item is StreamInfoItem) {
                     playbackViewModel.playFromSearch(requireActivity(), query, bundleOf(
+                            EXTRA_FILTER to searchFilterListener.filter,
                             EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url)
                     ))
                 }
@@ -85,6 +90,16 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
         }
     }
 
+    private val searchFilterListener = object : SearchFilterListener {
+        override var filter: String
+            get() = viewModel.filter
+            set(value) {
+                viewModel.filter = value
+                searchResultAdapter.refresh()
+            }
+
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search_icon, menu)
@@ -95,5 +110,9 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
             NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
         }
         return true
+    }
+
+    companion object {
+        private const val TAG = "SearchResultFragment"
     }
 }

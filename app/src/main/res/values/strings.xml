@@ -65,4 +65,9 @@
     <string name="add_to_library">Add to library</string>
     <string name="pref_expand_on_play_title">Expand bottom player on play</string>
     <string name="title_now_playing">Now playing</string>
+    <string name="search_filter_all">All</string>
+    <string name="search_filter_songs">Songs</string>
+    <string name="search_filter_videos">Videos</string>
+    <string name="search_filter_playlists">Playlists</string>
+    <string name="search_filter_channels">Channels</string>
 </resources>

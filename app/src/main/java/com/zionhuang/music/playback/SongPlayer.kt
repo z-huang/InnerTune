@@ -29,6 +29,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
+import com.zionhuang.music.constants.MediaConstants.EXTRA_FILTER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
@@ -49,6 +50,7 @@ import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
 import com.zionhuang.music.youtube.models.YtFormat
 import com.zionhuang.music.youtube.newpipe.SearchCache
+import com.zionhuang.music.youtube.newpipe.SearchQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -130,9 +132,10 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             }
 
             override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-                val mediaId = extras!!.getString(EXTRA_SONG_ID)
+                if (extras == null) return
+                val mediaId = extras.getString(EXTRA_SONG_ID)
                         ?: return setCustomErrorMessage("Media id not found.", ERROR_CODE_UNKNOWN_ERROR)
-                val items = SearchCache[query]?.toMediaItems()
+                val items = SearchCache[SearchQuery(query, extras.getString(EXTRA_FILTER)!!)]?.toMediaItems()
                         ?: return setCustomErrorMessage("Search items not found.", ERROR_CODE_UNKNOWN_ERROR)
                 player.run {
                     setMediaItems(items)
