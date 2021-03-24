@@ -13,13 +13,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/song_item_height"
-        android:background="?colorSurface">
+        android:background="?colorSurface"
+        android:clickable="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?android:selectableItemBackground"
-            android:clickable="true"
             android:orientation="vertical">
 
             <LinearLayout

@@ -151,7 +151,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 player.playWhenReady = playWhenReady
             }
         })
-        registerCustomCommandReceiver { player, controlDispatcher, command, extras, cb ->
+        registerCustomCommandReceiver { player, _, command, extras, _ ->
             if (command == COMMAND_SEEK_TO_QUEUE_ITEM) {
                 val mediaId = extras?.getString(EXTRA_MEDIA_ID)
                         ?: return@registerCustomCommandReceiver true
