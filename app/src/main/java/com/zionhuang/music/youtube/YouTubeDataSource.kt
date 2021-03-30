@@ -9,10 +9,7 @@ import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import com.zionhuang.music.youtube.newpipe.SearchCache
 import com.zionhuang.music.youtube.newpipe.SearchQuery
 import org.schabi.newpipe.extractor.InfoItem
-import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
-import org.schabi.newpipe.extractor.ServiceList
-import org.schabi.newpipe.extractor.services.youtube.YoutubeService
 
 class YouTubeDataSource {
     class Search(private val youTubeRepository: YouTubeRepository, private val query: String) : PagingSource<String, SearchResult>() {
@@ -35,10 +32,8 @@ class YouTubeDataSource {
     }
 
     class NewPipeSearch(queryString: String, filter: String) : PagingSource<Page, InfoItem>() {
-        private val youtubeService = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
         private val searchQuery = SearchQuery(queryString, filter)
         private val contentFilter = listOf(filter)
-        private val sortFilter = ""
 
         @Suppress("BlockingMethodInNonBlockingContext")
         override suspend fun load(params: LoadParams<Page>): LoadResult<Page, InfoItem> =
@@ -51,7 +46,7 @@ class YouTubeDataSource {
                     )
                 } else try {
                     if (params.key == null) {
-                        val searchInfo = ExtractorHelper.search(youtubeService, searchQuery.query, contentFilter, sortFilter)
+                        val searchInfo = ExtractorHelper.search(searchQuery.query, contentFilter)
                         SearchCache.add(searchQuery, searchInfo)
                         LoadResult.Page(
                                 data = searchInfo.relatedItems,
@@ -59,7 +54,7 @@ class YouTubeDataSource {
                                 prevKey = null
                         )
                     } else {
-                        val infoItemsPage = ExtractorHelper.search(youtubeService, searchQuery.query, contentFilter, sortFilter, params.key!!)
+                        val infoItemsPage = ExtractorHelper.search(searchQuery.query, contentFilter, params.key!!)
                         SearchCache.add(searchQuery, infoItemsPage)
                         LoadResult.Page(
                                 data = infoItemsPage.items,
@@ -70,6 +65,30 @@ class YouTubeDataSource {
                 } catch (e: Exception) {
                     LoadResult.Error(e)
                 }
+
+        override fun getRefreshKey(state: PagingState<Page, InfoItem>): Page? = null
+    }
+
+    class NewPipePlaylist(private val url: String) : PagingSource<Page, InfoItem>() {
+        override suspend fun load(params: LoadParams<Page>): LoadResult<Page, InfoItem> = try {
+            if (params.key == null) {
+                val playlistInfo = ExtractorHelper.getPlaylist(url)
+                LoadResult.Page(
+                        data = playlistInfo.relatedItems,
+                        nextKey = playlistInfo.nextPage,
+                        prevKey = null
+                )
+            } else {
+                val infoItemsPage = ExtractorHelper.getPlaylist(url, params.key!!)
+                LoadResult.Page(
+                        data = infoItemsPage.items,
+                        nextKey = infoItemsPage.nextPage,
+                        prevKey = null
+                )
+            }
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
 
         override fun getRefreshKey(state: PagingState<Page, InfoItem>): Page? = null
     }

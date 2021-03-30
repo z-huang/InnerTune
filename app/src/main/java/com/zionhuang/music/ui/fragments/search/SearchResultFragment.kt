@@ -10,11 +10,15 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.Hold
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_FILTER
@@ -30,6 +34,7 @@ import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
@@ -56,9 +61,9 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
             addLoadStateListener { loadState ->
                 binding.progressBar.isVisible = loadState.refresh is Loading
                 binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-                binding.tvErrorMsg.isVisible = loadState.refresh is LoadState.Error
+                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
                 if (loadState.refresh is LoadState.Error) {
-                    binding.tvErrorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
+                    binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
                 }
             }
         }
@@ -67,19 +72,24 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
-            addOnClickListener { pos, _ ->
+            addOnClickListener { pos, view ->
                 if (pos == 0) return@addOnClickListener
-                val item = searchResultAdapter.getItemByPosition(pos)!!
-                if (item is StreamInfoItem) {
-                    playbackViewModel.playFromSearch(requireActivity(), query, bundleOf(
-                            EXTRA_FILTER to searchFilterListener.filter,
-                            EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url)
-                    ))
+                when (val item = searchResultAdapter.getItemByPosition(pos)!!) {
+                    is StreamInfoItem -> {
+                        playbackViewModel.playFromSearch(requireActivity(), query, bundleOf(
+                                EXTRA_FILTER to searchFilterListener.filter,
+                                EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url)
+                        ))
+                    }
+                    is PlaylistInfoItem -> {
+                        exitTransition = Hold()
+                        reenterTransition = MaterialElevationScale(true).apply { duration = 300 }
+                        val transitionName = getString(R.string.youtube_playlist_transition_name)
+                        val extras = FragmentNavigatorExtras(view to transitionName)
+                        val directions = SearchResultFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(item.url)
+                        findNavController().navigate(directions, extras)
+                    }
                 }
-//                if ("youtube#video" != item.id.kind) {
-//                    return@addOnClickListener
-//                }
-//                playbackViewModel.playMedia(QUEUE_SINGLE, SongParcel.fromSearchResult(item))
             }
         }
 

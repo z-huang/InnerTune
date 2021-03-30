@@ -65,6 +65,13 @@
         <action
             android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
             app:destination="@id/suggestionFragment" />
+        <action
+            android:id="@+id/action_searchResultFragment_to_youTubePlaylistFragment"
+            app:destination="@id/youTubePlaylistFragment">
+            <argument
+                android:name="url"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/songDetailsFragment"
@@ -87,6 +94,14 @@
         android:label="ChannelSongsFragment">
         <argument
             android:name="channelId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/youTubePlaylistFragment"
+        android:name="com.zionhuang.music.ui.fragments.YouTubePlaylistFragment"
+        android:label="YouTubePlaylistFragment">
+        <argument
+            android:name="url"
             app:argType="string" />
     </fragment>
     <fragment
