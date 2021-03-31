@@ -18,6 +18,7 @@ import androidx.core.net.toUri
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
@@ -29,7 +30,8 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_FILTER
+import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUERY_STRING
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
@@ -37,6 +39,9 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
+import com.zionhuang.music.constants.MediaConstants.QUEUE_SEARCH
+import com.zionhuang.music.constants.MediaConstants.QUEUE_SINGLE
+import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_PLAYLIST
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
@@ -49,20 +54,22 @@ import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeStream
 import com.zionhuang.music.youtube.models.YtFormat
-import com.zionhuang.music.youtube.newpipe.SearchCache
-import com.zionhuang.music.youtube.newpipe.SearchQuery
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.Page
+import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 
 typealias OnNotificationPosted = (notificationId: Int, notification: Notification, ongoing: Boolean) -> Unit
 
 /**
  * A wrapper around [ExoPlayer]
  */
-class SongPlayer(private val context: Context, private val scope: CoroutineScope) {
+class SongPlayer(private val context: Context, private val scope: CoroutineScope) : Player.EventListener {
 
     private val songRepository = SongRepository(context)
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
+    private val playlistData = PlaylistData()
 
     private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
@@ -83,12 +90,75 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             }))
             .build()
             .apply {
+                addListener(this@SongPlayer)
                 val audioAttributes = AudioAttributes.Builder()
                         .setUsage(C.USAGE_MEDIA)
                         .setContentType(C.CONTENT_TYPE_MUSIC)
                         .build()
                 setAudioAttributes(audioAttributes, true)
             }
+
+    private fun playMedia(mediaId: String, playWhenReady: Boolean, extras: Bundle) {
+        scope.launch {
+            playlistData.queueType = extras.getInt(EXTRA_QUEUE_TYPE)
+            when (playlistData.queueType) {
+                QUEUE_ALL_SONG -> {
+                    val items = songRepository.getAllSongsList(extras.getInt(EXTRA_QUEUE_ORDER), extras.getBoolean(EXTRA_QUEUE_DESC)).toMediaItems(context)
+                    player.setMediaItems(items)
+                    items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
+                        player.seekToDefaultPosition(index)
+                    }
+                }
+                QUEUE_ARTIST -> {
+                    val items = songRepository.getArtistSongsList(extras.getInt(EXTRA_ARTIST_ID), extras.getInt(EXTRA_QUEUE_ORDER), extras.getBoolean(EXTRA_QUEUE_DESC)).toMediaItems(context)
+                    player.setMediaItems(items)
+                    items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
+                        player.seekToDefaultPosition(index)
+                    }
+                }
+                QUEUE_SEARCH -> {
+                    val queryHandler = extras.getSerializable(EXTRA_LINK_HANDLER) as SearchQueryHandler
+                    val initialItems = ExtractorHelper.search(queryHandler)
+                    var nextPage: Page? = initialItems.nextPage
+
+                    player.clearMediaItems()
+
+                    var idx = -1
+                    initialItems.relatedItems.toMediaItems().let { items ->
+                        val lastItemCount = player.mediaItemCount
+                        player.addMediaItems(items)
+                        idx = items.indexOfFirst { it.mediaId == mediaId }
+                        if (idx != -1) {
+                            player.seekToDefaultPosition(lastItemCount + idx)
+                        }
+                    }
+                    while (idx == -1 && nextPage != null) {
+                        val infoItemsPage = ExtractorHelper.search(queryHandler, nextPage)
+                        nextPage = infoItemsPage.nextPage
+                        infoItemsPage.items.toMediaItems().let { items ->
+                            val lastItemCount = player.mediaItemCount
+                            player.addMediaItems(items)
+                            idx = items.indexOfFirst { it.mediaId == mediaId }
+                            if (idx != -1) {
+                                player.seekToDefaultPosition(lastItemCount + idx)
+                            }
+                        }
+                    }
+                    if (idx == -1) {
+                        return@launch mediaSessionConnector.setCustomErrorMessage("Search items not found.", ERROR_CODE_UNKNOWN_ERROR)
+                    }
+                    playlistData.query = queryHandler
+                    playlistData.nextPage = nextPage
+                }
+                QUEUE_SINGLE -> {
+                    player.setMediaItem(extras.getParcelable<SongParcel>(EXTRA_SONG)?.toMediaItem()
+                            ?: mediaId.toMediaItem())
+                }
+            }
+            player.prepare()
+            player.playWhenReady = playWhenReady
+        }
+    }
 
     private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
         setPlayer(player)
@@ -104,54 +174,24 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 player.prepare()
             }
 
-            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
-                scope.launch {
-                    when (extras!!.getInt(EXTRA_QUEUE_TYPE)) {
-                        QUEUE_ALL_SONG -> {
-                            val items = songRepository.getAllSongsList(extras.getInt(EXTRA_QUEUE_ORDER), extras.getBoolean(EXTRA_QUEUE_DESC)).toMediaItems(context)
-                            player.setMediaItems(items)
-                            items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
-                                player.seekToDefaultPosition(index)
-                            }
-                        }
-                        QUEUE_ARTIST -> {
-                            val items = songRepository.getArtistSongsList(extras.getInt(EXTRA_ARTIST_ID), extras.getInt(EXTRA_QUEUE_ORDER), extras.getBoolean(EXTRA_QUEUE_DESC)).toMediaItems(context)
-                            player.setMediaItems(items)
-                            items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
-                                player.seekToDefaultPosition(index)
-                            }
-                        }
-                        else -> {
-                            player.setMediaItem(extras.getParcelable<SongParcel>(EXTRA_SONG)?.toMediaItem()
-                                    ?: mediaId.toMediaItem())
-                        }
-                    }
-                    player.prepare()
-                    player.playWhenReady = playWhenReady
-                }
-            }
+            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) =
+                    playMedia(mediaId, playWhenReady, extras!!)
 
             override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-                if (extras == null) return
-                val mediaId = extras.getString(EXTRA_SONG_ID)
+                val mediaId = extras?.getString(EXTRA_SONG_ID)
                         ?: return setCustomErrorMessage("Media id not found.", ERROR_CODE_UNKNOWN_ERROR)
-                val items = SearchCache[SearchQuery(query, extras.getString(EXTRA_FILTER)!!)]?.toMediaItems()
-                        ?: return setCustomErrorMessage("Search items not found.", ERROR_CODE_UNKNOWN_ERROR)
-                player.run {
-                    setMediaItems(items)
-                    seekToDefaultPosition(items.indexOfFirst { it.mediaId == mediaId })
-                    prepare()
-                    this.playWhenReady = playWhenReady
-                }
+                playMedia(mediaId, playWhenReady, extras.apply {
+                    putInt(EXTRA_QUEUE_TYPE, QUEUE_SEARCH)
+                    putString(EXTRA_QUERY_STRING, query)
+                })
             }
 
-
             override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
-                val id = youTubeExtractor.extractId(uri.toString())
+                val mediaId = youTubeExtractor.extractId(uri.toString())
                         ?: return setCustomErrorMessage("Can't extract video id from the url.", ERROR_CODE_UNKNOWN_ERROR)
-                player.setMediaItem(id.toMediaItem())
-                player.prepare()
-                player.playWhenReady = playWhenReady
+                playMedia(mediaId, playWhenReady, extras!!.apply {
+                    putInt(EXTRA_QUEUE_TYPE, QUEUE_SINGLE)
+                })
             }
         })
         registerCustomCommandReceiver { player, _, command, extras, _ ->
@@ -249,6 +289,24 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     }).apply {
         setPlayer(player)
         setMediaSessionToken(mediaSession.sessionToken)
+    }
+
+    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+        if (reason == MEDIA_ITEM_TRANSITION_REASON_REPEAT || !playlistData.hasMoreItems) return
+        scope.launch {
+            when (playlistData.queueType) {
+                QUEUE_SEARCH -> {
+                    if (player.mediaItemCount - player.currentWindowIndex <= 5 && playlistData.query != null && playlistData.nextPage != null) {
+                        val searchInfo = ExtractorHelper.search(playlistData.query as SearchQueryHandler, playlistData.nextPage!!)
+                        playlistData.nextPage = searchInfo.nextPage
+                        player.addMediaItems(searchInfo.items.toMediaItems())
+                    }
+                }
+                QUEUE_YT_PLAYLIST -> {
+
+                }
+            }
+        }
     }
 
     private var autoDownload by context.preference(R.string.pref_auto_download, false)

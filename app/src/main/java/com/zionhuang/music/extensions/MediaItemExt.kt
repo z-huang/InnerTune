@@ -9,7 +9,7 @@ import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.CustomMetadata
 import com.zionhuang.music.playback.CustomMetadata.Companion.toCustomMetadata
-import com.zionhuang.music.youtube.newpipe.SearchCacheData
+import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 val MediaItem.metadata: CustomMetadata?
@@ -50,4 +50,4 @@ fun MediaDescriptionCompat.toMediaItem() = mediaItemBuilder
 
 fun List<Song>.toMediaItems(context: Context): List<MediaItem> = map { it.toMediaItem(context) }
 
-fun SearchCacheData.toMediaItems(): List<MediaItem> = items.filterIsInstance<StreamInfoItem>().mapNotNull { it.toMediaItem() }
+fun List<InfoItem>.toMediaItems(): List<MediaItem> = filterIsInstance<StreamInfoItem>().mapNotNull { it.toMediaItem() }

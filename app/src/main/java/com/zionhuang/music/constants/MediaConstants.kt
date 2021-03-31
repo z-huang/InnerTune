@@ -9,9 +9,10 @@ object MediaConstants {
     const val EXTRA_SONG_ID = "song_id"
     const val EXTRA_SONG = "song"
     const val EXTRA_ARTIST_ID = "artist_id"
-    const val EXTRA_FILTER = "filter"
+    const val EXTRA_LINK_HANDLER = "link_handler"
+    const val EXTRA_QUERY_STRING = "query_string"
 
-    @IntDef(QUEUE_NONE, QUEUE_ALL_SONG, QUEUE_PLAYLIST, QUEUE_ARTIST, QUEUE_CHANNEL, QUEUE_SINGLE)
+    @IntDef(QUEUE_NONE, QUEUE_ALL_SONG, QUEUE_PLAYLIST, QUEUE_ARTIST, QUEUE_CHANNEL, QUEUE_SINGLE, QUEUE_SEARCH, QUEUE_YT_PLAYLIST)
     @Retention(AnnotationRetention.SOURCE)
     annotation class QueueType
 
@@ -21,4 +22,6 @@ object MediaConstants {
     const val QUEUE_ARTIST = 3
     const val QUEUE_CHANNEL = 4
     const val QUEUE_SINGLE = 5
+    const val QUEUE_SEARCH = 6
+    const val QUEUE_YT_PLAYLIST = 7
 }

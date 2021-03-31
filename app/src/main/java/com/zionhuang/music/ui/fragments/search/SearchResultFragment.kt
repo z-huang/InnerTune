@@ -21,7 +21,7 @@ import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_FILTER
+import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.databinding.FragmentSearchResultBinding
 import com.zionhuang.music.extensions.addOnClickListener
@@ -32,6 +32,7 @@ import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
@@ -77,8 +78,8 @@ class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
                 when (val item = searchResultAdapter.getItemByPosition(pos)!!) {
                     is StreamInfoItem -> {
                         playbackViewModel.playFromSearch(requireActivity(), query, bundleOf(
-                                EXTRA_FILTER to searchFilterListener.filter,
-                                EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url)
+                                EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url),
+                                EXTRA_LINK_HANDLER to ExtractorHelper.getSearchQueryHandler(query, listOf(searchFilterListener.filter))
                         ))
                     }
                     is PlaylistInfoItem -> {
