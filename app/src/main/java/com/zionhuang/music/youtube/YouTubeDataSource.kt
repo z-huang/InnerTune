@@ -6,7 +6,6 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.Video
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
-import com.zionhuang.music.youtube.newpipe.SearchQuery
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.Page
 
@@ -30,8 +29,7 @@ class YouTubeDataSource {
         override fun getRefreshKey(state: PagingState<String, SearchResult>): String? = null
     }
 
-    class NewPipeSearch(val queryString: String, filter: String) : PagingSource<Page, InfoItem>() {
-        private val searchQuery = SearchQuery(queryString, filter)
+    class NewPipeSearch(private val queryString: String, filter: String) : PagingSource<Page, InfoItem>() {
         private val contentFilter = listOf(filter)
 
         @Suppress("BlockingMethodInNonBlockingContext")
