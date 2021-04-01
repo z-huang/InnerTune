@@ -34,19 +34,19 @@ object InfoCache {
         return data.info
     }
 
-    fun getFromKey(url: String): Any? =
-            synchronized(LRU_CACHE) { getInfo(keyOf(url)) }
+    fun getFromKey(id: String): Any? =
+            synchronized(LRU_CACHE) { getInfo(keyOf(id)) }
 
-    fun putInfo(url: String, info: Any) {
+    fun putInfo(id: String, info: Any) {
         val expirationMillis = MILLISECONDS.convert(1, HOURS)
         synchronized(LRU_CACHE) {
             val data = CacheData(info, expirationMillis)
-            LRU_CACHE.put(keyOf(url), data)
+            LRU_CACHE.put(keyOf(id), data)
         }
     }
 
-    fun removeInfo(url: String, infoType: InfoType) {
-        synchronized(LRU_CACHE) { LRU_CACHE.remove(keyOf(url)) }
+    fun removeInfo(id: String, infoType: InfoType) {
+        synchronized(LRU_CACHE) { LRU_CACHE.remove(keyOf(id)) }
     }
 
     fun clearCache() = synchronized(LRU_CACHE) { LRU_CACHE.evictAll() }

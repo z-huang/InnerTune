@@ -23,14 +23,14 @@ object ExtractorHelper {
     suspend fun search(query: String, contentFilter: List<String>): SearchInfo =
             search(getSearchQueryHandler(query, contentFilter))
 
-    suspend fun search(queryHandler: SearchQueryHandler): SearchInfo = checkCache(queryHandler.url) {
+    suspend fun search(queryHandler: SearchQueryHandler): SearchInfo = checkCache("${queryHandler.searchString}$${queryHandler.contentFilters[0]}") {
         SearchInfo.getInfo(service, queryHandler)
     }
 
     suspend fun search(query: String, contentFilter: List<String>, page: Page): InfoItemsPage<InfoItem> =
             search(service.searchQHFactory.fromQuery(query, contentFilter, ""), page)
 
-    suspend fun search(queryHandler: SearchQueryHandler, page: Page): InfoItemsPage<InfoItem> = checkCache("${queryHandler.url}$${page.id}") {
+    suspend fun search(queryHandler: SearchQueryHandler, page: Page): InfoItemsPage<InfoItem> = checkCache("${queryHandler.searchString}$${queryHandler.contentFilters[0]}$${page.hashCode()}") {
         SearchInfo.getMoreItems(service, queryHandler, page)
     }
 
@@ -42,14 +42,14 @@ object ExtractorHelper {
         PlaylistInfo.getMoreItems(service, url, nextPage)
     }
 
-    private suspend fun <T : Any> checkCache(url: String, loadFromNetwork: suspend () -> T): T =
-            loadFromCache(url) ?: withContext(IO) {
+    private suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
+            loadFromCache(id) ?: withContext(IO) {
                 loadFromNetwork().also {
-                    InfoCache.putInfo(url, it)
+                    InfoCache.putInfo(id, it)
                 }
             }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T : Any> loadFromCache(url: String): T? =
-            InfoCache.getFromKey(url) as T?
+    private fun <T : Any> loadFromCache(id: String): T? =
+            InfoCache.getFromKey(id) as T?
 }
