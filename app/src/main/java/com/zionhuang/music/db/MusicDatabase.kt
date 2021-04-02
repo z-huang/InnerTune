@@ -8,11 +8,15 @@ import androidx.room.TypeConverters
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.ChannelDao
 import com.zionhuang.music.db.daos.SongDao
-import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.db.entities.ChannelEntity
-import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.db.entities.*
 
-@Database(entities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class], version = 1, exportSchema = false)
+@Database(entities = [
+    SongEntity::class,
+    ArtistEntity::class,
+    ChannelEntity::class,
+    PlaylistEntity::class,
+    PlaylistSongEntity::class
+], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class MusicDatabase : RoomDatabase() {
     abstract val songDao: SongDao
