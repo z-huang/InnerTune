@@ -13,6 +13,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
+import android.util.Log
 import android.util.Pair
 import androidx.core.net.toUri
 import com.bumptech.glide.request.target.CustomTarget
@@ -29,6 +30,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.Constants.FROM_LOCAL
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUERY_STRING
@@ -52,13 +54,14 @@ import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.youtube.YouTubeExtractor
-import com.zionhuang.music.youtube.models.YouTubeStream
-import com.zionhuang.music.youtube.models.YtFormat
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
+import org.schabi.newpipe.extractor.stream.StreamInfo
+import kotlin.system.measureTimeMillis
 
 typealias OnNotificationPosted = (notificationId: Int, notification: Notification, ongoing: Boolean) -> Unit
 
@@ -80,13 +83,25 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             .setMediaSourceFactory(DefaultMediaSourceFactory(ResolvingDataSource.Factory(DefaultDataSourceFactory(context)) { dataSpec ->
                 val id = dataSpec.uri.host
                         ?: throw IllegalArgumentException("Cannot find media id from uri host")
-                if (dataSpec.uri.getQueryParameter("fromLocal") == "1") {
+                if (dataSpec.uri.getQueryParameter(FROM_LOCAL) == "1") {
                     return@Factory dataSpec.withUri(context.getAudioFile(id).toUri())
                 }
-                val stream: YtFormat? = (YouTubeExtractor.getInstance(context).extractStreamBlocking(id) as? YouTubeStream.Success)?.formats?.maxByOrNull {
-                    it.abr ?: 0
+                val streamInfo: StreamInfo
+                val duration = measureTimeMillis {
+                    streamInfo = runBlocking {
+                        ExtractorHelper.getStreamInfo(id)
+                    }
                 }
-                return@Factory if (stream != null) dataSpec.withUri(stream.url!!.toUri()) else dataSpec
+                Log.d(TAG, "Extract duration: ${duration}ms")
+                val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
+
+//                val stream: YouTubeStream.Success
+//                val duration = measureTimeMillis {
+//                    stream = YouTubeExtractor.getInstance(context).extractStreamBlocking(id) as YouTubeStream.Success
+//                }
+//                Log.d(TAG, "Extract duration: ${duration}ms")
+//                val uri = stream.formats.maxByOrNull { it.abr ?: 0 }?.url?.toUri()
+                if (uri != null) dataSpec.withUri(uri) else dataSpec
             }))
             .build()
             .apply {

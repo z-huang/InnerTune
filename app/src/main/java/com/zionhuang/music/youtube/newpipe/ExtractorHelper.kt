@@ -11,6 +11,7 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
 import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.services.youtube.YoutubeService
+import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 @Suppress("BlockingMethodInNonBlockingContext")
@@ -40,6 +41,10 @@ object ExtractorHelper {
 
     suspend fun getPlaylist(url: String, nextPage: Page): InfoItemsPage<StreamInfoItem> = checkCache(url) {
         PlaylistInfo.getMoreItems(service, url, nextPage)
+    }
+
+    suspend fun getStreamInfo(id: String): StreamInfo = checkCache("stream$$id") {
+        StreamInfo.getInfo(service, service.streamLHFactory.getUrl(id))
     }
 
     private suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
