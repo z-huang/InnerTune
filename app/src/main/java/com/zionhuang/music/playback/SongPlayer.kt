@@ -289,6 +289,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
     }).apply {
         setPlayer(player)
         setMediaSessionToken(mediaSession.sessionToken)
+        setSmallIcon(R.drawable.ic_notification)
     }
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
