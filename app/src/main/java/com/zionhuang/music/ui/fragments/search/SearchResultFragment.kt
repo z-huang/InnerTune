@@ -23,7 +23,7 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
-import com.zionhuang.music.databinding.FragmentSearchResultBinding
+import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.NewPipeSearchResultAdapter
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
-class SearchResultFragment : MainFragment<FragmentSearchResultBinding>() {
+class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
     private val args: SearchResultFragmentArgs by navArgs()
     private val query by lazy { args.searchQuery }
 

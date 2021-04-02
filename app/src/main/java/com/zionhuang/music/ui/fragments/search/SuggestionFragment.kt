@@ -14,7 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.FragmentSearchSuggestionBinding
+import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getQueryTextChangeFlow
 import com.zionhuang.music.ui.adapters.SearchSuggestionAdapter
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
-class SuggestionFragment : MainFragment<FragmentSearchSuggestionBinding>() {
+class SuggestionFragment : MainFragment<LayoutRecyclerviewBinding>() {
     companion object {
         private const val TAG = "SearchSuggestionFragment"
     }
