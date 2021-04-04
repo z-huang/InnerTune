@@ -10,4 +10,13 @@
     <color name="black">#000000</color>
     <color name="songCoverBackground">#FFFFFF</color>
     <color name="transparent">#80FFFFFF</color>
+
+    <color name="primaryColor">#546e7a</color>
+    <color name="primaryLightColor">#819ca9</color>
+    <color name="primaryDarkColor">#29434e</color>
+    <color name="secondaryColor">#cfd8dc</color>
+    <color name="secondaryLightColor">#ffffff</color>
+    <color name="secondaryDarkColor">#9ea7aa</color>
+    <color name="primaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#000000</color>
 </resources>

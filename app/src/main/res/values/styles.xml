@@ -6,9 +6,15 @@
         <!--        <item name="android:windowBackground">@color/colorPrimary</item>-->
         <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
         <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorOnPrimary">@color/primaryTextColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorOnSecondary">@color/secondaryTextColor</item>
+        <item name="colorAccent">@color/primaryDarkColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
-        <item name="colorAccent">?colorPrimary</item>
         <item name="invertedColor">@color/colorInverted</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteTextView</item>
@@ -18,6 +24,7 @@
         </item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
+
     </style>
 
     <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">
