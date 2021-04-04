@@ -59,6 +59,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.schabi.newpipe.extractor.Page
+import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import kotlin.system.measureTimeMillis
@@ -162,7 +163,41 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                     if (idx == -1) {
                         return@launch mediaSessionConnector.setCustomErrorMessage("Search items not found.", ERROR_CODE_UNKNOWN_ERROR)
                     }
-                    playlistData.query = queryHandler
+                    playlistData.linkHandler = queryHandler
+                    playlistData.nextPage = nextPage
+                }
+                QUEUE_YT_PLAYLIST -> {
+                    val linkHandler = extras.getSerializable(EXTRA_LINK_HANDLER) as ListLinkHandler
+                    val initialItems = ExtractorHelper.getPlaylist(linkHandler.url)
+                    var nextPage: Page? = initialItems.nextPage
+
+                    player.clearMediaItems()
+
+                    var idx = -1
+                    initialItems.relatedItems.toMediaItems().let { items ->
+                        val lastItemCount = player.mediaItemCount
+                        player.addMediaItems(items)
+                        idx = items.indexOfFirst { it.mediaId == mediaId }
+                        if (idx != -1) {
+                            player.seekToDefaultPosition(lastItemCount + idx)
+                        }
+                    }
+                    while (idx == -1 && nextPage != null) {
+                        val infoItemsPage = ExtractorHelper.getPlaylist(linkHandler.url, nextPage)
+                        nextPage = infoItemsPage.nextPage
+                        infoItemsPage.items.toMediaItems().let { items ->
+                            val lastItemCount = player.mediaItemCount
+                            player.addMediaItems(items)
+                            idx = items.indexOfFirst { it.mediaId == mediaId }
+                            if (idx != -1) {
+                                player.seekToDefaultPosition(lastItemCount + idx)
+                            }
+                        }
+                    }
+                    if (idx == -1) {
+                        return@launch mediaSessionConnector.setCustomErrorMessage("Search items not found.", ERROR_CODE_UNKNOWN_ERROR)
+                    }
+                    playlistData.linkHandler = linkHandler
                     playlistData.nextPage = nextPage
                 }
                 QUEUE_SINGLE -> {
@@ -309,17 +344,22 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         if (reason == MEDIA_ITEM_TRANSITION_REASON_REPEAT || !playlistData.hasMoreItems) return
+        if (player.mediaItemCount - player.currentWindowIndex > 5) return
         scope.launch {
             when (playlistData.queueType) {
                 QUEUE_SEARCH -> {
-                    if (player.mediaItemCount - player.currentWindowIndex <= 5 && playlistData.query != null && playlistData.nextPage != null) {
-                        val searchInfo = ExtractorHelper.search(playlistData.query as SearchQueryHandler, playlistData.nextPage!!)
+                    if (playlistData.linkHandler != null && playlistData.nextPage != null) {
+                        val searchInfo = ExtractorHelper.search(playlistData.linkHandler as SearchQueryHandler, playlistData.nextPage!!)
                         playlistData.nextPage = searchInfo.nextPage
                         player.addMediaItems(searchInfo.items.toMediaItems())
                     }
                 }
                 QUEUE_YT_PLAYLIST -> {
-
+                    if (playlistData.linkHandler != null && playlistData.nextPage != null) {
+                        val playlistInfo = ExtractorHelper.getPlaylist(playlistData.linkHandler!!.url, playlistData.nextPage!!)
+                        playlistData.nextPage = playlistInfo.nextPage
+                        player.addMediaItems(playlistInfo.items.toMediaItems())
+                    }
                 }
             }
         }

@@ -10,7 +10,7 @@ data class PlaylistData(
         @QueueType
         var queueType: Int = QUEUE_NONE,
         var nextPage: Page? = null,
-        var query: LinkHandler? = null,
+        var linkHandler: LinkHandler? = null,
 ) {
     val hasMoreItems: Boolean get() = isValid(nextPage)
 }

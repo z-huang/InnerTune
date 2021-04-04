@@ -7,6 +7,7 @@ import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.ServiceList
+import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
 import org.schabi.newpipe.extractor.search.SearchInfo
@@ -18,6 +19,9 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem
 object ExtractorHelper {
     private val service = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
 
+    /**
+     * Search
+     */
     fun getSearchQueryHandler(query: String, contentFilter: List<String>): SearchQueryHandler =
             service.searchQHFactory.fromQuery(query, contentFilter, "")
 
@@ -35,12 +39,18 @@ object ExtractorHelper {
         SearchInfo.getMoreItems(service, queryHandler, page)
     }
 
+    /**
+     * Playlist
+     */
+    fun getPlaylistLinkHandler(url: String): ListLinkHandler =
+            service.playlistLHFactory.fromUrl(url)
+
     suspend fun getPlaylist(url: String): PlaylistInfo = checkCache(url) {
         PlaylistInfo.getInfo(service, url)
     }
 
-    suspend fun getPlaylist(url: String, nextPage: Page): InfoItemsPage<StreamInfoItem> = checkCache(url) {
-        PlaylistInfo.getMoreItems(service, url, nextPage)
+    suspend fun getPlaylist(url: String, page: Page): InfoItemsPage<StreamInfoItem> = checkCache("$url$${page.hashCode()}") {
+        PlaylistInfo.getMoreItems(service, url, page)
     }
 
     suspend fun getStreamInfo(id: String): StreamInfo = checkCache("stream$$id") {

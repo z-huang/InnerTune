@@ -13,6 +13,9 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_PLAYLIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
@@ -22,6 +25,7 @@ import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.YouTubePlaylistViewModel
 import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -63,7 +67,8 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 val item = infoItemAdapter.getItemByPosition(pos)
                 if (item is StreamInfoItem) {
                     playbackViewModel.playMedia(requireActivity(), YouTubeStreamExtractor.extractId(item.url)!!, bundleOf(
-
+                            EXTRA_QUEUE_TYPE to QUEUE_YT_PLAYLIST,
+                            EXTRA_LINK_HANDLER to ExtractorHelper.getPlaylistLinkHandler(url)
                     ))
                 }
             }
