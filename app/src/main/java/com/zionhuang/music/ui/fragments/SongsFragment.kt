@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -46,6 +47,9 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
+        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+
         songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
         songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler).apply {
             sortMenuListener = this@SongsFragment.sortMenuListener
