@@ -6,7 +6,7 @@
         android:title="@string/title_songs" />
     <item
         android:id="@+id/artistsFragment"
-        android:icon="@drawable/ic_person"
+        android:icon="@drawable/ic_artist"
         android:title="@string/title_artists" />
     <item
         android:id="@+id/playlistsFragment"
