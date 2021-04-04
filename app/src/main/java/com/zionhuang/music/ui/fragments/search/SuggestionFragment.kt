@@ -66,7 +66,7 @@ class SuggestionFragment : MainFragment<LayoutRecyclerviewBinding>() {
     @ExperimentalTime
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search_view, menu)
+        inflater.inflate(R.menu.search_view, menu)
         searchView = menu.findItem(R.id.search_view).actionView as SearchView
         setupSearchView()
     }

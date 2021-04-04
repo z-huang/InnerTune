@@ -42,7 +42,6 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = artistsAdapter
             addOnClickListener { position, view ->
-                exitTransition = Hold()
                 reenterTransition = Hold()
                 val transitionName = getString(R.string.artist_songs_transition_name)
                 val extras = FragmentNavigatorExtras(view to transitionName)
@@ -66,7 +65,7 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search_and_settings, menu)
+        inflater.inflate(R.menu.search_and_settings, menu)
     }
 
     companion object {

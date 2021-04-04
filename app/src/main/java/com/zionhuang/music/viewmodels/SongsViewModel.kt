@@ -17,6 +17,7 @@ import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
+import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadService
 import com.zionhuang.music.download.DownloadServiceConnection
@@ -53,6 +54,12 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val allChannelsFlow: Flow<PagingData<ChannelEntity>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
             songRepository.allChannelsPagingSource
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    val allPlaylistsFlow: Flow<PagingData<PlaylistEntity>> by lazy {
+        Pager(PagingConfig(pageSize = 50)) {
+            songRepository.allPlaylistsPagingSource
         }.flow.cachedIn(viewModelScope)
     }
 

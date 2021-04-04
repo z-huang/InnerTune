@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.LayoutSongDetailsBinding
+import com.zionhuang.music.databinding.EditSongDialogBinding
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.utils.ArtistAutoCompleteAdapter
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 
 class EditSongDialog : AppCompatDialogFragment() {
-    private lateinit var binding: LayoutSongDetailsBinding
+    private lateinit var binding: EditSongDialogBinding
     private lateinit var song: Song
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +43,9 @@ class EditSongDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = LayoutSongDetailsBinding.inflate(requireActivity().layoutInflater)
+        binding = EditSongDialogBinding.inflate(requireActivity().layoutInflater)
         setupUI()
+
         return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                 .setView(binding.root)
                 .setTitle(R.string.dialog_edit_details_title)

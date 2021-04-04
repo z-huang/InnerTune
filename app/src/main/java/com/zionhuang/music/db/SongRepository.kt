@@ -9,11 +9,9 @@ import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.ChannelDao
+import com.zionhuang.music.db.daos.PlaylistDao
 import com.zionhuang.music.db.daos.SongDao
-import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.db.entities.ChannelEntity
-import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
 import com.zionhuang.music.utils.OkHttpDownloader
@@ -29,6 +27,7 @@ class SongRepository(private val context: Context) {
     private val songDao: SongDao = musicDatabase.songDao
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val channelDao: ChannelDao = musicDatabase.channelDao
+    private val playlistDao: PlaylistDao = musicDatabase.playlistDao
 
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
@@ -64,6 +63,11 @@ class SongRepository(private val context: Context) {
      * Channels [PagingSource]
      */
     val allChannelsPagingSource: PagingSource<Int, ChannelEntity> get() = channelDao.getAllChannelsAsPagingSource()
+
+    /**
+     * Playlists [PagingSource]
+     */
+    val allPlaylistsPagingSource: PagingSource<Int, PlaylistEntity> get() = playlistDao.getAllPlaylistsAsPagingSource()
 
     /**
      * [ChannelSongsFragment] methods
@@ -170,6 +174,13 @@ class SongRepository(private val context: Context) {
     suspend fun deleteChannel(channelId: String) = getChannelById(channelId)?.let { deleteChannel(it) }
 
     suspend fun hasChannel(channelId: String): Boolean = withContext(IO) { channelDao.contains(channelId) }
+
+    /**
+     * Playlists
+     */
+    suspend fun insertPlaylist(name: String) = withContext(IO) {
+        playlistDao.insert(PlaylistEntity(name = name))
+    }
 
     /**
      * Extensions

@@ -9,13 +9,13 @@
         android:icon="@drawable/ic_person"
         android:title="@string/title_artists" />
     <item
-        android:id="@+id/channelsFragment"
-        android:icon="@drawable/ic_subscriptions"
-        android:title="@string/title_channels" />
-    <item
         android:id="@+id/playlistsFragment"
         android:icon="@drawable/ic_queue_music"
         android:title="@string/title_playlists" />
+    <item
+        android:id="@+id/channelsFragment"
+        android:icon="@drawable/ic_subscriptions"
+        android:title="@string/title_channels" />
     <item
         android:id="@+id/explorationFragment"
         android:icon="@drawable/ic_explore"

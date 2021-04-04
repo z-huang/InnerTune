@@ -113,7 +113,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search_icon, menu)
+        inflater.inflate(R.menu.search_icon, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

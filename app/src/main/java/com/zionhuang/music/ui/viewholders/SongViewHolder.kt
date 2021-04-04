@@ -16,7 +16,7 @@ class SongViewHolder(
         binding.song = song
         binding.btnMoreAction.setOnClickListener { view ->
             PopupMenu(view.context, view).apply {
-                inflate(R.menu.menu_song)
+                inflate(R.menu.song)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.action_edit -> popupMenuListener.editSong(song, view)

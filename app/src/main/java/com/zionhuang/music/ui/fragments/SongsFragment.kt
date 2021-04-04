@@ -78,7 +78,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search_and_settings, menu)
+        inflater.inflate(R.menu.search_and_settings, menu)
     }
 
     override fun onDestroy() {

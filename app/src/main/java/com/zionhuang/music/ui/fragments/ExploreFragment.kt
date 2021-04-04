@@ -80,7 +80,7 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search_and_settings, menu)
+        inflater.inflate(R.menu.search_and_settings, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

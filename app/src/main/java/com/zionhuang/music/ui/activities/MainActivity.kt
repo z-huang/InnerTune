@@ -2,15 +2,18 @@ package com.zionhuang.music.ui.activities
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.getDensity
@@ -20,37 +23,17 @@ import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.launch
 
-class MainActivity : BindingActivity<ActivityMainBinding>() {
+class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
 
+    val fab: FloatingActionButton get() = binding.fab
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-    }
-
-    private fun setupUI() {
-        setSupportActionBar(binding.toolbar)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.songsFragment,
-                R.id.artistsFragment,
-                R.id.channelsFragment,
-                R.id.playlistsFragment,
-                R.id.explorationFragment
-        ))
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-        binding.bottomNav.setupWithNavController(navController)
-        replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
-        bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
-            isHideable = true
-            state = STATE_HIDDEN
-            addBottomSheetCallback(BottomSheetCallback())
-        }
-
         songsViewModel.deleteSong.observe(this) { song ->
             Snackbar.make(binding.root, getString(R.string.snack_bar_delete_song, song.title), Snackbar.LENGTH_LONG)
                     .setAnchorView(binding.bottomNav)
@@ -60,6 +43,39 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
                         }
                     }
                     .show()
+        }
+    }
+
+    private fun setupUI() {
+        setSupportActionBar(binding.toolbar)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val appBarConfiguration = AppBarConfiguration(setOf(
+                R.id.songsFragment,
+                R.id.artistsFragment,
+                R.id.playlistsFragment,
+                R.id.channelsFragment,
+                R.id.explorationFragment
+        ))
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        binding.bottomNav.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener(this)
+
+        replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
+        bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
+            isHideable = true
+            state = STATE_HIDDEN
+            addBottomSheetCallback(BottomSheetCallback())
+        }
+
+        binding.fab.hide()
+    }
+
+    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+        if (destination.id == R.id.playlistsFragment) {
+            binding.fab.show()
+        } else if (binding.fab.isVisible) {
+            binding.fab.hide()
         }
     }
 
@@ -81,9 +97,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>() {
             bottomSheetBehavior.state = STATE_COLLAPSED
         }
     }
-
-    val tabLayout: TabLayout
-        get() = binding.tabLayout
 
     private inner class BottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, @State newState: Int) {

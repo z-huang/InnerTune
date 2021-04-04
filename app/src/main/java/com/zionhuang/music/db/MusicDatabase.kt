@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.ChannelDao
+import com.zionhuang.music.db.daos.PlaylistDao
 import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
 
@@ -22,6 +23,7 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract val songDao: SongDao
     abstract val artistDao: ArtistDao
     abstract val channelDao: ChannelDao
+    abstract val playlistDao: PlaylistDao
 
     companion object {
         private const val DBNAME = "song.db"

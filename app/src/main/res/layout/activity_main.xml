@@ -57,6 +57,16 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:navGraph="@navigation/navigation_graph" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_nav"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            app:layout_behavior=".ui.widgets.HideOnScrollFabBehavior"
+            app:srcCompat="@drawable/ic_playlist_add" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <FrameLayout
@@ -82,5 +92,6 @@
         android:clickable="true"
         android:focusable="true"
         app:labelVisibilityMode="selected"
-        app:menu="@menu/menu_bottom_nav" />
+        app:menu="@menu/bottom_nav" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

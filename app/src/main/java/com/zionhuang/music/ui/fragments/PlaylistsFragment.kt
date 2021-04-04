@@ -5,23 +5,23 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.databinding.FragmentPlaylistsBinding
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.ui.adapters.ArtistsAdapter
+import com.zionhuang.music.ui.activities.MainActivity
+import com.zionhuang.music.ui.adapters.PlaylistsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,21 +31,26 @@ class PlaylistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val artistsAdapter = ArtistsAdapter()
+        postponeEnterTransition()
+        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+
+        (requireActivity() as MainActivity).fab.setOnClickListener {
+            CreatePlaylistDialog().show(childFragmentManager, null)
+        }
+
+        val playlistsAdapter = PlaylistsAdapter()
+
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = artistsAdapter
+            adapter = playlistsAdapter
             addOnClickListener { position, view ->
-                requireParentFragment().exitTransition = Hold()
-                requireParentFragment().reenterTransition = Hold()
-                val transitionName = getString(R.string.artist_songs_transition_name)
-                val extras = FragmentNavigatorExtras(view to transitionName)
-                //findNavController().navigate(directions, extras)
+
             }
         }
+
         lifecycleScope.launch {
-            songsViewModel.allArtistsFlow.collectLatest {
-                artistsAdapter.submitData(it)
+            songsViewModel.allPlaylistsFlow.collectLatest {
+                playlistsAdapter.submitData(it)
             }
         }
     }
@@ -58,7 +63,7 @@ class PlaylistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_search_and_settings, menu)
+        inflater.inflate(R.menu.search_and_settings, menu)
     }
 
     companion object {
