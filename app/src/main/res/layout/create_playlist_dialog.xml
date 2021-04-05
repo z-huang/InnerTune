@@ -10,7 +10,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/song_title"
+        android:hint="@string/playlist_name"
         android:paddingStart="?dialogPreferredPadding"
         android:paddingTop="24dp"
         android:paddingEnd="?dialogPreferredPadding"

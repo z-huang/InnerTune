@@ -75,4 +75,5 @@
     <string name="search_filter_videos">Videos</string>
     <string name="search_filter_playlists">Playlists</string>
     <string name="search_filter_channels">Channels</string>
+    <string name="playlist_name">Playlist name</string>
 </resources>

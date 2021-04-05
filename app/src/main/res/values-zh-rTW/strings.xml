@@ -53,4 +53,5 @@
     <string name="search_filter_videos">影片</string>
     <string name="search_filter_playlists">播放清單</string>
     <string name="search_filter_channels">頻道</string>
+    <string name="playlist_name">名稱</string>
 </resources>
