@@ -50,7 +50,7 @@ class EditSongDialog : AppCompatDialogFragment() {
                 .setView(binding.root)
                 .setTitle(R.string.dialog_edit_details_title)
                 .setPositiveButton(R.string.dialog_button_save, null)
-                .setNegativeButton(R.string.dialog_button_cancel, null)
+                .setNegativeButton(android.R.string.cancel, null)
                 .create()
                 .apply {
                     window!!.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)

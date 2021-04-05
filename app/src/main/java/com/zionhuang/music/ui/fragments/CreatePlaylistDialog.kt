@@ -26,7 +26,7 @@ class CreatePlaylistDialog : AppCompatDialogFragment() {
         setupUI()
 
         return MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Create playlist")
+                .setTitle(R.string.dialog_create_playlist_title)
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null)

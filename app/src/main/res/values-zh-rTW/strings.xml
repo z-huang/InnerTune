@@ -42,8 +42,8 @@
     <string name="snack_bar_delete_song">已刪除「%1$s」</string>
     <string name="snack_bar_undo">復原</string>
     <string name="dialog_edit_details_title">編輯詳細資料</string>
+    <string name="dialog_create_playlist_title">新增播放清單</string>
     <string name="dialog_button_save">儲存</string>
-    <string name="dialog_button_cancel">取消</string>
     <string name="download">下載</string>
     <string name="add_to_library">加入音樂庫</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>

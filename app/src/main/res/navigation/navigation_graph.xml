@@ -34,7 +34,7 @@
     <fragment
         android:id="@+id/playlistsFragment"
         android:name="com.zionhuang.music.ui.fragments.PlaylistsFragment"
-        android:label="@string/title_channels" />
+        android:label="@string/title_playlists" />
     <fragment
         android:id="@+id/explorationFragment"
         android:name="com.zionhuang.music.ui.fragments.ExploreFragment"
