@@ -12,7 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.Hold
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 
 class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val artistsAdapter = ArtistsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,15 +35,14 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
-        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
-
-        val artistsAdapter = ArtistsAdapter()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = artistsAdapter
             addOnClickListener { position, view ->
-                reenterTransition = Hold()
+                exitTransition = MaterialElevationScale(false).apply { duration = 300L }
+                reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
                 val transitionName = getString(R.string.artist_songs_transition_name)
                 val extras = FragmentNavigatorExtras(view to transitionName)
                 val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(artistsAdapter.getItemByPosition(position)!!.id!!)

@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val playlistsAdapter = PlaylistsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +38,6 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
         (requireActivity() as MainActivity).fab.setOnClickListener {
             CreatePlaylistDialog().show(childFragmentManager, null)
         }
-
-        val playlistsAdapter = PlaylistsAdapter()
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

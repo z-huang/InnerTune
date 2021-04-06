@@ -22,9 +22,8 @@ import kotlinx.coroutines.launch
 
 class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val viewModel by activityViewModels<PlaybackViewModel>()
-    private lateinit var queueAdapter: MediaQueueAdapter
-    private val dragEventManager = DragEventManager()
 
+    private val dragEventManager = DragEventManager()
     private val itemTouchHelper = ItemTouchHelper(object : SimpleCallback(UP or DOWN, LEFT or RIGHT) {
         override fun isLongPressDragEnabled(): Boolean = false
 
@@ -52,6 +51,8 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
     })
 
+    private val queueAdapter: MediaQueueAdapter = MediaQueueAdapter(itemTouchHelper)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough().apply { duration = 300L }
@@ -59,7 +60,6 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        queueAdapter = MediaQueueAdapter(itemTouchHelper)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = queueAdapter

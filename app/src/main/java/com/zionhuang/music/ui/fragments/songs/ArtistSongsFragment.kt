@@ -51,7 +51,7 @@ class ArtistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
-        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
 

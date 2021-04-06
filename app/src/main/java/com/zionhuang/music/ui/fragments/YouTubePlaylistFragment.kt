@@ -37,6 +37,8 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val viewModel by viewModels<YouTubePlaylistViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
+    private val infoItemAdapter = InfoItemAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
@@ -48,14 +50,12 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val infoItemAdapter = InfoItemAdapter().apply {
-            addLoadStateListener { loadState ->
-                binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
-                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
-                if (loadState.refresh is LoadState.Error) {
-                    binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
-                }
+        infoItemAdapter.addLoadStateListener { loadState ->
+            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+            binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
+            binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
+            if (loadState.refresh is LoadState.Error) {
+                binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
             }
         }
 

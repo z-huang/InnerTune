@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -17,7 +18,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.Hold
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
@@ -45,7 +45,16 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
     private val viewModel by viewModels<SearchViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
-    private lateinit var searchResultAdapter: NewPipeSearchResultAdapter
+    private val searchFilterListener = object : SearchFilterListener {
+        override var filter: String
+            get() = viewModel.filter
+            set(value) {
+                viewModel.filter = value
+                searchResultAdapter.refresh()
+            }
+    }
+
+    private val searchResultAdapter: NewPipeSearchResultAdapter = NewPipeSearchResultAdapter(searchFilterListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,18 +63,17 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         activity.supportActionBar?.title = query
 
-        searchResultAdapter = NewPipeSearchResultAdapter(searchFilterListener).apply {
-            addLoadStateListener { loadState ->
-                binding.progressBar.isVisible = loadState.refresh is Loading
-                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
-                if (loadState.refresh is LoadState.Error) {
-                    binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
-                }
+        searchResultAdapter.addLoadStateListener { loadState ->
+            binding.progressBar.isVisible = loadState.refresh is Loading
+            binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
+            binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
+            if (loadState.refresh is LoadState.Error) {
+                binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
             }
         }
         binding.btnRetry.setOnClickListener { searchResultAdapter.retry() }
@@ -83,8 +91,8 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
                         ))
                     }
                     is PlaylistInfoItem -> {
-                        exitTransition = Hold()
-                        reenterTransition = MaterialElevationScale(true).apply { duration = 300 }
+                        exitTransition = MaterialElevationScale(false).apply { duration = 300L }
+                        reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
                         val transitionName = getString(R.string.youtube_playlist_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
                         val directions = SearchResultFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(item.url)
@@ -99,16 +107,6 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
                 searchResultAdapter.submitData(it)
             }
         }
-    }
-
-    private val searchFilterListener = object : SearchFilterListener {
-        override var filter: String
-            get() = viewModel.filter
-            set(value) {
-                viewModel.filter = value
-                searchResultAdapter.refresh()
-            }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

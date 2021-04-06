@@ -51,9 +51,11 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
 
         songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
+
         songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler).apply {
             sortMenuListener = this@SongsFragment.sortMenuListener
         }
+
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songsAdapter
@@ -67,6 +69,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             }
             addFastScroller { useMd2Style() }
         }
+
         lifecycleScope.launch {
             songsViewModel.allSongsFlow.collectLatest {
                 songsAdapter.submitData(it)

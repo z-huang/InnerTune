@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 
 class ChannelsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val channelsAdapter = ChannelsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +35,8 @@ class ChannelsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
-        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
-        val channelsAdapter = ChannelsAdapter()
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = channelsAdapter
@@ -53,6 +53,7 @@ class ChannelsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 findNavController().navigate(directions, extras)
             }
         }
+
         lifecycleScope.launch {
             songsViewModel.allChannelsFlow.collectLatest {
                 channelsAdapter.submitData(it)
