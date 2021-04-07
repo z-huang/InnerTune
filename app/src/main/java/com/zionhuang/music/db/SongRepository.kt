@@ -44,7 +44,7 @@ class SongRepository(private val context: Context) {
     /**
      * Artist Songs [PagingSource]
      */
-    fun getArtistSongsAsPagingSource(artistId: Int): PagingSource<Int, Song> = songDao.getArtistSongsAsPagingSource(artistId)
+    fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> = songDao.getArtistSongsAsPagingSource(artistId, order, descending)
 
     suspend fun getArtistSongsList(artistId: Int, @SongSortType order: Int, descending: Boolean) = withContext(IO) { songDao.getArtistSongsAsList(artistId, order, descending) }
 

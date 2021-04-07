@@ -24,23 +24,22 @@ interface SongDao {
     /**
      * Methods for the UI
      */
+    @Transaction
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class])
+    fun getSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
+
+    @Transaction
+    @RawQuery
+    suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
 
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    @Transaction
-    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class])
-    fun getAllSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
-
     fun getAllSongsAsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-            getAllSongsAsPagingSource((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
-
-    @Transaction
-    @RawQuery
-    suspend fun getAllSongsAsList(query: SupportSQLiteQuery): List<Song>
+            getSongsAsPagingSource((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
 
     suspend fun getAllSongsAsList(@SongSortType order: Int, descending: Boolean): List<Song> =
-            getAllSongsAsList((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
+            getSongsAsList((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
 
     /**
      * Artist songs count
@@ -51,16 +50,11 @@ interface SongDao {
     /**
      * Artist Songs [PagingSource]
      */
-    @Transaction
-    @Query("SELECT * FROM song WHERE artistId = :artistId")
-    fun getArtistSongsAsPagingSource(artistId: Int): PagingSource<Int, Song>
-
-    @Transaction
-    @RawQuery
-    suspend fun getArtistSongsAsList(query: SupportSQLiteQuery): List<Song>
+    fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
+            getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(order, descending)).toSQLiteQuery())
 
     suspend fun getArtistSongsAsList(artistId: Int, @SongSortType order: Int, descending: Boolean) =
-            getArtistSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(order, descending)).toSQLiteQuery())
+            getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(order, descending)).toSQLiteQuery())
 
     /**
      * Channel Songs [PagingSource]

@@ -66,7 +66,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun getSong(songId: String) = songRepository.getSongById(songId)
 
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getArtistSongsAsPagingSource(artistId)
+        songRepository.getArtistSongsAsPagingSource(artistId, sortType, sortDescending)
     }.flow.map { pagingData ->
         pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)
