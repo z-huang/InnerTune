@@ -7,10 +7,7 @@ import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
-import com.zionhuang.music.db.daos.ArtistDao
-import com.zionhuang.music.db.daos.ChannelDao
-import com.zionhuang.music.db.daos.PlaylistDao
-import com.zionhuang.music.db.daos.SongDao
+import com.zionhuang.music.db.daos.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
@@ -28,6 +25,7 @@ class SongRepository(private val context: Context) {
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val channelDao: ChannelDao = musicDatabase.channelDao
     private val playlistDao: PlaylistDao = musicDatabase.playlistDao
+    private val playlistSongDao: PlaylistSongDao = musicDatabase.playlistSongDao
 
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
@@ -178,8 +176,23 @@ class SongRepository(private val context: Context) {
     /**
      * Playlists
      */
+    suspend fun getPlaylists() = withContext(IO) {
+        playlistDao.getAllPlaylists()
+    }
+
     suspend fun insertPlaylist(name: String) = withContext(IO) {
         playlistDao.insert(PlaylistEntity(name = name))
+    }
+
+    /**
+     * Playlist songs
+     */
+    private suspend fun insertPlaylistSong(playlistSong: PlaylistSongEntity) = withContext(IO) {
+        playlistSongDao.insert(playlistSong)
+    }
+
+    suspend fun insertToPlaylist(song: Song, playlistId: Int) {
+        insertPlaylistSong(PlaylistSongEntity(playlistId = playlistId, songId = song.id))
     }
 
     /**

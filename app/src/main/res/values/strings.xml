@@ -76,4 +76,6 @@
     <string name="search_filter_playlists">Playlists</string>
     <string name="search_filter_channels">Channels</string>
     <string name="playlist_name">Playlist name</string>
+    <string name="menu_song_add_to_playlist">Add to playlist</string>
+    <string name="dialog_choose_playlist_title">Choose playlist</string>
 </resources>

@@ -75,7 +75,7 @@
     </fragment>
     <fragment
         android:id="@+id/songDetailsFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.EditSongDialog"
+        android:name="com.zionhuang.music.ui.fragments.dialogs.EditSongDialog"
         android:label="SongDetailsFragment">
         <argument
             android:name="songId"

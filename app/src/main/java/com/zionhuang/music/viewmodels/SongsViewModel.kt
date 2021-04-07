@@ -3,7 +3,6 @@ package com.zionhuang.music.viewmodels
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -11,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.ORDER_NAME
@@ -25,7 +25,7 @@ import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.getActivity
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.ui.fragments.songs.EditSongDialog
+import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -81,11 +81,25 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val deleteSong: LiveData<Song> get() = _deleteSong
 
     val songPopupMenuListener = object : SongPopupMenuListener {
-        override fun editSong(song: Song, view: View) {
-            (view.getActivity() as? MainActivity)?.let { activity ->
+        override fun editSong(song: Song, context: Context) {
+            (context.getActivity() as? MainActivity)?.let { activity ->
                 EditSongDialog().apply {
                     arguments = bundleOf("song" to song)
                 }.show(activity.supportFragmentManager, EditSongDialog.TAG)
+            }
+        }
+
+        override fun addToPlaylist(song: Song, context: Context) {
+            viewModelScope.launch {
+                val playlists = songRepository.getPlaylists()
+                MaterialAlertDialogBuilder(context)
+                        .setTitle(R.string.dialog_choose_playlist_title)
+                        .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
+                            viewModelScope.launch {
+                                playlists[i].id?.let { songRepository.insertToPlaylist(song, it) }
+                            }
+                        }
+                        .show()
             }
         }
 

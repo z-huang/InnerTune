@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.fragments.songs
+package com.zionhuang.music.ui.fragments.dialogs
 
 import android.app.Dialog
 import android.content.DialogInterface.BUTTON_POSITIVE

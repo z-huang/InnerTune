@@ -17,6 +17,7 @@ import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.PlaylistsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

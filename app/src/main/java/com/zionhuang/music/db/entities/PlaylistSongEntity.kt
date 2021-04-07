@@ -21,5 +21,6 @@ import androidx.room.PrimaryKey
 data class PlaylistSongEntity(
         @PrimaryKey(autoGenerate = true) val id: Int? = 0,
         val playlistId: Int,
-        val songId: Int,
+        val idInPlaylist: Int = 0,
+        val songId: String,
 )
