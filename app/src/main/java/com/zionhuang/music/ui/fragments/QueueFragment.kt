@@ -1,7 +1,9 @@
 package com.zionhuang.music.ui.fragments
 
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialFadeThrough
+import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.moveQueueItem
@@ -25,6 +28,8 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     private val dragEventManager = DragEventManager()
     private val itemTouchHelper = ItemTouchHelper(object : SimpleCallback(UP or DOWN, LEFT or RIGHT) {
+        private val elevation by lazy { requireContext().resources.getDimension(R.dimen.drag_item_elevation) }
+
         override fun isLongPressDragEnabled(): Boolean = false
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -34,8 +39,16 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             }
         }
 
+        override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            if (isCurrentlyActive) {
+                ViewCompat.setElevation(viewHolder.itemView, elevation)
+            }
+        }
+
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
+            ViewCompat.setElevation(viewHolder.itemView, 0f)
             dragEventManager.postDragEnd(viewHolder.absoluteAdapterPosition)
         }
 
