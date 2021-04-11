@@ -39,7 +39,7 @@ class ChannelSongsAdapter(
                 holder.bind(it)
                 if (it.downloadState == STATE_DOWNLOADING) {
                     holder.binding.progressBar.progress = 0
-                    downloadHandler.add(it.id, holder)
+                    downloadHandler.add(it.songId, holder)
                 }
             }
             is ChannelHeaderViewHolder -> holder.bind(viewModel, itemCount - 1)
@@ -53,7 +53,7 @@ class ChannelSongsAdapter(
                     holder.bind(it)
                     if (it.downloadState == STATE_DOWNLOADING) {
                         holder.binding.progressBar.progress = 0
-                        downloadHandler.add(it.id, holder)
+                        downloadHandler.add(it.songId, holder)
                     }
                 }
                 else -> holder.bind(payloads.last() as Song)
@@ -77,7 +77,7 @@ class ChannelSongsAdapter(
     fun getItemByPosition(position: Int): Song? = getItem(position)
 
     override fun getItemViewType(position: Int): Int =
-            if (getItem(position)?.id == HEADER_ITEM_ID) {
+            if (getItem(position)?.songId == HEADER_ITEM_ID) {
                 TYPE_HEADER
             } else {
                 TYPE_ITEM
@@ -85,7 +85,7 @@ class ChannelSongsAdapter(
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         if (holder is SongViewHolder) {
-            holder.binding.song?.id?.let { downloadHandler.remove(it) }
+            holder.binding.song?.songId?.let { downloadHandler.remove(it) }
         }
     }
 
@@ -101,7 +101,7 @@ class ChannelSongsAdapter(
             }
 
     class SongItemComparator : DiffUtil.ItemCallback<Song>() {
-        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.songId == newItem.songId
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem
     }

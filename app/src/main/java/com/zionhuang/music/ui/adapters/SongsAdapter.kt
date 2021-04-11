@@ -34,7 +34,7 @@ class SongsAdapter(
                 holder.bind(it)
                 if (it.downloadState == STATE_DOWNLOADING) {
                     holder.binding.progressBar.progress = 0
-                    downloadHandler.add(it.id, holder)
+                    downloadHandler.add(it.songId, holder)
                 }
             }
             is SongHeaderViewHolder -> holder.bind(itemCount - 1)
@@ -48,7 +48,7 @@ class SongsAdapter(
                 holder.bind(song)
                 if (song.downloadState == STATE_DOWNLOADING) {
                     holder.binding.progressBar.progress = 0
-                    downloadHandler.add(song.id, holder)
+                    downloadHandler.add(song.songId, holder)
                 }
             }
             is SongHeaderViewHolder -> holder.bind(itemCount - 1)
@@ -66,7 +66,7 @@ class SongsAdapter(
     fun getItemByPosition(position: Int): Song? = getItem(position)
 
     override fun getItemViewType(position: Int): Int =
-            if (getItem(position)?.id == HEADER_ITEM_ID) {
+            if (getItem(position)?.songId == HEADER_ITEM_ID) {
                 TYPE_HEADER
             } else {
                 TYPE_ITEM
@@ -74,7 +74,7 @@ class SongsAdapter(
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         if (holder is SongViewHolder) {
-            holder.binding.song?.id?.let { downloadHandler.remove(it) }
+            holder.binding.song?.songId?.let { downloadHandler.remove(it) }
         }
     }
 
@@ -90,7 +90,7 @@ class SongsAdapter(
             }
 
     class SongItemComparator : DiffUtil.ItemCallback<Song>() {
-        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.songId == newItem.songId
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem
     }

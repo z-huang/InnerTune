@@ -8,8 +8,11 @@ import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentPlaylistsBinding
@@ -44,7 +47,12 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = playlistsAdapter
             addOnClickListener { position, view ->
-
+                exitTransition = MaterialElevationScale(false).apply { duration = 300L }
+                reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
+                val transitionName = getString(R.string.playlist_songs_transition_name)
+                val extras = FragmentNavigatorExtras(view to transitionName)
+                val directions = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(playlistsAdapter.getItemByPosition(position)!!.playlistId)
+                findNavController().navigate(directions, extras)
             }
         }
 

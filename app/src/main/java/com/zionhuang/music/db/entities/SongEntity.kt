@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity(tableName = "song",
         indices = [
-            Index(value = ["id"], unique = true),
+            Index(value = ["songId"], unique = true),
             Index(value = ["artistId"]),
             Index(value = ["channelId"])],
         foreignKeys = [
@@ -19,7 +19,7 @@ import java.util.*
                     parentColumns = ["id"],
                     childColumns = ["channelId"])])
 data class SongEntity(
-        @PrimaryKey val id: String,
+        @PrimaryKey val songId: String,
         var title: String? = null,
         var artistId: Int = 0,
         var channelId: String? = null,

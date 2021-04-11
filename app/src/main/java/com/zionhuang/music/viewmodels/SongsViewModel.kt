@@ -71,6 +71,12 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)
 
+    fun getPlaylistSongsAsFlow(playlistId: Int) = Pager(PagingConfig(pageSize = 50)) {
+        songRepository.getPlaylistSongsAsPagingSource(playlistId)
+    }.flow.map { pagingData ->
+        pagingData.map { it.song }
+    }.cachedIn(viewModelScope)
+
     fun getChannelSongsAsFlow(channelId: String) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getChannelSongsAsPagingSource(channelId)
     }.flow.map { pagingData ->
@@ -96,7 +102,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                         .setTitle(R.string.dialog_choose_playlist_title)
                         .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
                             viewModelScope.launch {
-                                playlists[i].id?.let { songRepository.insertToPlaylist(song, it) }
+                                playlists[i].playlistId?.let { songRepository.insertToPlaylist(song, it) }
                             }
                         }
                         .show()

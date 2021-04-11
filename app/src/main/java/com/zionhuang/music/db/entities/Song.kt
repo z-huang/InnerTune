@@ -9,7 +9,7 @@ import java.util.*
 
 @Parcelize
 data class Song(
-        val id: String,
+        val songId: String,
         var title: String? = null,
         var artistId: Int = 0,
         @Relation(entity = ArtistEntity::class, parentColumn = "artistId", entityColumn = "id", projection = ["name"])

@@ -29,7 +29,7 @@ data class CustomMetadata(
 
         val EMPTY_MEDIA_DESCRIPTION: MediaDescriptionCompat = builder.build()
 
-        fun Song.toCustomMetadata(context: Context) = CustomMetadata(id, title, artistName, context.getArtworkFile(id).canonicalPath)
+        fun Song.toCustomMetadata(context: Context) = CustomMetadata(songId, title, artistName, context.getArtworkFile(songId).canonicalPath)
 
         fun SongParcel.toCustomMetadata() = CustomMetadata(id, title, artist, artworkUrl)
 

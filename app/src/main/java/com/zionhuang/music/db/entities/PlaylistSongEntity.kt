@@ -6,21 +6,22 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "playlist_song",
-        indices = [
-            Index(value = ["playlistId"]),
-            Index(value = ["songId"])],
+        indices = [Index("playlistId"), Index("songId")],
         foreignKeys = [
             ForeignKey(
                     entity = PlaylistEntity::class,
-                    parentColumns = ["id"],
-                    childColumns = ["playlistId"]),
+                    parentColumns = ["playlistId"],
+                    childColumns = ["playlistId"],
+                    onDelete = ForeignKey.CASCADE
+            ),
             ForeignKey(
                     entity = SongEntity::class,
-                    parentColumns = ["id"],
-                    childColumns = ["songId"])])
+                    parentColumns = ["songId"],
+                    childColumns = ["songId"],
+                    onDelete = ForeignKey.CASCADE)])
 data class PlaylistSongEntity(
-        @PrimaryKey(autoGenerate = true) val id: Int? = 0,
+        @PrimaryKey(autoGenerate = true) val id: Int = 0,
         val playlistId: Int,
-        val idInPlaylist: Int = 0,
         val songId: String,
+        val idInPlaylist: Int = 0,
 )

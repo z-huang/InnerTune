@@ -19,7 +19,7 @@ class PlaylistsAdapter : PagingDataAdapter<PlaylistEntity, PlaylistViewHolder>(P
     fun getItemByPosition(position: Int): PlaylistEntity? = getItem(position)
 
     class PlaylistItemComparator : DiffUtil.ItemCallback<PlaylistEntity>() {
-        override fun areItemsTheSame(oldItem: PlaylistEntity, newItem: PlaylistEntity): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: PlaylistEntity, newItem: PlaylistEntity): Boolean = oldItem.playlistId == newItem.playlistId
         override fun areContentsTheSame(oldItem: PlaylistEntity, newItem: PlaylistEntity): Boolean = oldItem.name == newItem.name
     }
 }

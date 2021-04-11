@@ -21,7 +21,7 @@ data class SongParcel(
 ) : Parcelable {
     companion object {
         fun fromSong(song: Song): SongParcel =
-                SongParcel(song.id, song.title, song.artistName, song.channelId, song.channelName, null)
+                SongParcel(song.songId, song.title, song.artistName, song.channelId, song.channelName, null)
 
         fun fromStream(stream: YouTubeStream.Success): SongParcel =
                 SongParcel(stream.id, stream.title, null, stream.channelId, stream.channelTitle, stream.thumbnailUrl)

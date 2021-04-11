@@ -16,7 +16,7 @@
         android:background="?android:selectableItemBackground"
         android:clickable="true"
         android:orientation="vertical"
-        android:transitionName="@{@string/playlist_item_transition_name(playlist.id)}">
+        android:transitionName="@{@string/playlist_item_transition_name(playlist.playlistId)}">
 
         <LinearLayout
             android:id="@+id/thumbnail_container"

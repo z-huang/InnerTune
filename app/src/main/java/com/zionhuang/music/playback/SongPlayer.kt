@@ -259,7 +259,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             scope.launch {
                 player.currentMetadata?.let {
                     songRepository.insert(Song(
-                            id = it.id,
+                            songId = it.id,
                             title = it.title,
                             artistName = it.artist ?: "",
                             duration = (player.duration / 1000).toInt()

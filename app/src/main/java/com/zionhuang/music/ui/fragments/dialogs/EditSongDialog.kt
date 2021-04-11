@@ -67,7 +67,7 @@ class EditSongDialog : AppCompatDialogFragment() {
         val title = binding.songTitle.editText?.text.toString()
         val artistName = binding.songArtist.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository(requireContext()).updateSong(song.id) {
+            SongRepository(requireContext()).updateSong(song.songId) {
                 this.title = title
                 this.artistName = artistName
             }

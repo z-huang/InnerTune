@@ -44,7 +44,7 @@ interface SongDao {
     /**
      * Artist songs count
      */
-    @Query("SELECT COUNT(id) FROM song WHERE artistId = :artistId")
+    @Query("SELECT COUNT(songId) FROM song WHERE artistId = :artistId")
     suspend fun artistSongsCount(artistId: Int): Int
 
     /**
@@ -66,7 +66,7 @@ interface SongDao {
     /**
      * Methods for [ChannelSongsFragment]
      */
-    @Query("SELECT COUNT(id) FROM song WHERE channelId = :channelId")
+    @Query("SELECT COUNT(songId) FROM song WHERE channelId = :channelId")
     fun channelSongsCount(channelId: String): Flow<Int>
 
     @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
@@ -75,11 +75,11 @@ interface SongDao {
     /**
      * Internal methods
      */
-    @Query("SELECT * FROM song WHERE id = :songId")
+    @Query("SELECT * FROM song WHERE songId = :songId")
     suspend fun getSongEntityById(songId: String): SongEntity?
 
     @Transaction
-    @Query("SELECT * FROM song WHERE id = :songId")
+    @Query("SELECT * FROM song WHERE songId = :songId")
     suspend fun getSongById(songId: String): Song?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -91,10 +91,10 @@ interface SongDao {
     @Delete
     suspend fun delete(vararg songs: SongEntity)
 
-    @Query("DELETE FROM song WHERE id = :songId")
+    @Query("DELETE FROM song WHERE songId = :songId")
     suspend fun delete(songId: String)
 
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE songId=:songId)")
     suspend fun contains(songId: String): Boolean
 
     fun getOrderQuery(@SongSortType order: Int, descending: Boolean) = QUERY_ORDER.format(

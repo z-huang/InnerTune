@@ -25,10 +25,10 @@ fun CustomMetadata.toMediaItem() = mediaItemBuilder
         .build()
 
 fun Song.toMediaItem(context: Context): MediaItem = mediaItemBuilder
-        .setMediaId(id)
+        .setMediaId(songId)
         .setUri(Uri.Builder()
                 .scheme("music")
-                .authority(id)
+                .authority(songId)
                 .appendQueryParameter(FROM_LOCAL, if (downloadState == STATE_DOWNLOADED) "1" else "0")
                 .build())
         .setTag(toCustomMetadata(context))

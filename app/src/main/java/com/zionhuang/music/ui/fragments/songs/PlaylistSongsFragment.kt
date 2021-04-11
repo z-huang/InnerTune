@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
+import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
@@ -30,9 +30,9 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
-    private val args: ArtistSongsFragmentArgs by navArgs()
-    private val artistId by lazy { args.artistId }
+class PlaylistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
+    private val args: PlaylistSongsFragmentArgs by navArgs()
+    private val playlistId by lazy { args.playlistId }
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
@@ -56,17 +56,17 @@ class ArtistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
         songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
 
         songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler).apply {
-            sortMenuListener = this@ArtistSongsFragment.sortMenuListener
+            sortMenuListener = this@PlaylistSongsFragment.sortMenuListener
         }
 
         binding.recyclerView.apply {
-            transitionName = getString(R.string.artist_songs_transition_name)
+            transitionName = getString(R.string.playlist_songs_transition_name)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
-                        EXTRA_ARTIST_ID to artistId,
+                        EXTRA_PLAYLIST_ID to playlistId,
                         EXTRA_QUEUE_TYPE to QUEUE_ARTIST,
                         EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
                         EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
@@ -75,10 +75,12 @@ class ArtistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
         }
 
         lifecycleScope.launch {
-            activity.title = songsViewModel.songRepository.getArtist(artistId)!!.name
-            songsViewModel.getArtistSongsAsFlow(artistId).collectLatest {
+            //activity.title = songsViewModel.songRepository.getArtist(artistId)!!.name
+            songsViewModel.getPlaylistSongsAsFlow(playlistId).collectLatest {
                 songsAdapter.submitData(it)
             }
+            //val items = songsViewModel.songRepository.getPlaylistSongsList(playlistId)
+            //Log.d(TAG, items.toString())
         }
     }
 

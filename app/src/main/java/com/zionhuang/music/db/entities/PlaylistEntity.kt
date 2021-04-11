@@ -5,8 +5,8 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "playlist",
-        indices = [Index(value = ["id"], unique = true)])
+        indices = [Index(value = ["playlistId"], unique = true)])
 data class PlaylistEntity(
-        @PrimaryKey(autoGenerate = true) val id: Int? = null,
+        @PrimaryKey(autoGenerate = true) val playlistId: Int = 0,
         val name: String,
 )

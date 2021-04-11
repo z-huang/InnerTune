@@ -52,6 +52,13 @@ class SongRepository(private val context: Context) {
     fun getChannelSongsAsPagingSource(channelId: String): PagingSource<Int, Song> = songDao.getChannelSongsAsPagingSource(channelId)
 
     /**
+     * Playlist Songs [PagingSource]
+     */
+    fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, PlaylistSong> = playlistDao.getPlaylistSongs(playlistId)
+
+    //suspend fun getPlaylistSongsList(playlistId: Int) = withContext(IO) { playlistSongDao.getSongsAsList(playlistId) }
+
+    /**
      * Artists [List], [PagingSource]
      */
     val allArtists: List<ArtistEntity> get() = artistDao.getAllArtists()
@@ -83,7 +90,7 @@ class SongRepository(private val context: Context) {
     private suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
     suspend fun insert(song: Song, artwork: String? = null) = withContext(IO) {
         artwork?.let {
-            OkHttpDownloader.downloadFile(requestOf(it), context.getArtworkFile(song.id))
+            OkHttpDownloader.downloadFile(requestOf(it), context.getArtworkFile(song.songId))
         }
         insert(song.toSongEntity())
     }
@@ -119,8 +126,8 @@ class SongRepository(private val context: Context) {
     }
 
     suspend fun restoreSong(song: Song) {
-        context.getRecycledAudioFile(song.id).takeIf { it.exists() }?.moveTo(context.getAudioFile(song.id))
-        context.getRecycledArtworkFile(song.id).takeIf { it.exists() }?.moveTo(context.getArtworkFile(song.id))
+        context.getRecycledAudioFile(song.songId).takeIf { it.exists() }?.moveTo(context.getAudioFile(song.songId))
+        context.getRecycledArtworkFile(song.songId).takeIf { it.exists() }?.moveTo(context.getArtworkFile(song.songId))
         insert(song)
     }
 
@@ -192,14 +199,14 @@ class SongRepository(private val context: Context) {
     }
 
     suspend fun insertToPlaylist(song: Song, playlistId: Int) {
-        insertPlaylistSong(PlaylistSongEntity(playlistId = playlistId, songId = song.id))
+        insertPlaylistSong(PlaylistSongEntity(playlistId = playlistId, songId = song.songId))
     }
 
     /**
      * Extensions
      */
     private suspend fun Song.toSongEntity() = SongEntity(
-            id,
+            songId,
             title,
             getOrInsertArtist(artistName),
             getOrInsertChannel(channelId, channelName).id,

@@ -34,7 +34,15 @@
     <fragment
         android:id="@+id/playlistsFragment"
         android:name="com.zionhuang.music.ui.fragments.PlaylistsFragment"
-        android:label="@string/title_playlists" />
+        android:label="@string/title_playlists">
+        <action
+            android:id="@+id/action_playlistsFragment_to_playlistSongsFragment"
+            app:destination="@id/playlistSongsFragment">
+            <argument
+                android:name="playlistId"
+                app:argType="integer" />
+        </action>
+    </fragment>
     <fragment
         android:id="@+id/explorationFragment"
         android:name="com.zionhuang.music.ui.fragments.ExploreFragment"
@@ -86,6 +94,13 @@
         android:name="com.zionhuang.music.ui.fragments.songs.ArtistSongsFragment">
         <argument
             android:name="artistId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistSongsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragment">
+        <argument
+            android:name="playlistId"
             app:argType="integer" />
     </fragment>
     <fragment

@@ -21,8 +21,8 @@ class SongViewHolder(
                     when (it.itemId) {
                         R.id.action_edit -> popupMenuListener.editSong(song, binding.root.context)
                         R.id.action_add_to_playlist -> popupMenuListener.addToPlaylist(song, binding.root.context)
-                        R.id.action_download -> popupMenuListener.downloadSong(song.id, binding.root.context)
-                        R.id.action_delete -> popupMenuListener.deleteSong(song.id)
+                        R.id.action_download -> popupMenuListener.downloadSong(song.songId, binding.root.context)
+                        R.id.action_delete -> popupMenuListener.deleteSong(song.songId)
                     }
                     true
                 }
