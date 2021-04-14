@@ -143,7 +143,9 @@ class SongRepository(private val context: Context) {
     @WorkerThread
     fun searchArtists(query: CharSequence): List<ArtistEntity> = artistDao.searchArtists(query.toString())
 
-    suspend fun insertArtist(name: String): Int = withContext(IO) { artistDao.insert(ArtistEntity(name = name)).toInt() }
+    private suspend fun insertArtist(name: String): Int = withContext(IO) { artistDao.insert(ArtistEntity(name = name)).toInt() }
+
+    suspend fun updateArtist(artist: ArtistEntity) = withContext(IO) { artistDao.update(artist) }
 
     private suspend fun deleteArtist(artistId: Int) = withContext(IO) { artistDao.delete(artistId) }
 
