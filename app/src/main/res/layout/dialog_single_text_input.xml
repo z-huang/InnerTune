@@ -6,21 +6,21 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/playlist_name"
+        android:id="@+id/text_input"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/playlist_name"
         android:paddingStart="?dialogPreferredPadding"
         android:paddingTop="24dp"
         android:paddingEnd="?dialogPreferredPadding"
         app:endIconMode="clear_text"
-        app:errorEnabled="true">
+        app:errorEnabled="true"
+        tools:hint="Hint">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
-            tools:text="Playlist name" />
+            tools:text="Text" />
     </com.google.android.material.textfield.TextInputLayout>
 </FrameLayout>

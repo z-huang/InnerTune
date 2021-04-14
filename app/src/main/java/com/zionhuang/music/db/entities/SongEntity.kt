@@ -13,7 +13,8 @@ import java.util.*
             ForeignKey(
                     entity = ArtistEntity::class,
                     parentColumns = ["id"],
-                    childColumns = ["artistId"]),
+                    childColumns = ["artistId"],
+                    onDelete = ForeignKey.CASCADE),
             ForeignKey(
                     entity = ChannelEntity::class,
                     parentColumns = ["id"],

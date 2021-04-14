@@ -1,10 +1,7 @@
 package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.zionhuang.music.db.entities.ArtistEntity
 
 @Dao
@@ -29,4 +26,7 @@ interface ArtistDao {
 
     @Query("DELETE FROM artist WHERE id = :artistId")
     suspend fun delete(artistId: Int)
+
+    @Delete
+    suspend fun delete(artist: ArtistEntity)
 }

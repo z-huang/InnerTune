@@ -1,36 +1,58 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Music</string>
+
+    <!-- Title -->
     <string name="title_songs">Songs</string>
     <string name="title_artists">Artists</string>
     <string name="title_channels">Channels</string>
     <string name="title_playlists">Playlists</string>
     <string name="title_explore">Explore</string>
     <string name="title_settings">Settings</string>
-    <string name="library_tab_downloading">Downloading</string>
-    <string name="library_tab_all_song">All Songs</string>
-    <string name="library_tab_artists">Artists</string>
-    <string name="library_tab_channels">Channels</string>
+    <string name="title_now_playing">Now playing</string>
+
+    <!-- Preference Title -->
+    <string name="pref_api_key_title">API Key</string>
+    <string name="pref_auto_download_title">Auto download</string>
+    <string name="pref_auto_download_summary">Download song when added to library</string>
+    <string name="pref_auto_add_song_title">Auto add song to library</string>
+    <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
+    <string name="pref_expand_on_play_title">Expand bottom player on play</string>
+    <string name="pref_about">About</string>
+
+    <!-- Nav Menu -->
     <string name="menu_search_title">Search</string>
+
+    <!-- Popup Menu -->
     <string name="search_item_menu_add">Add to list</string>
     <string name="search_item_menu_download">Download</string>
     <string name="menu_song_edit">Edit</string>
+    <string name="menu_song_add_to_playlist">Add to playlist</string>
+    <string name="menu_song_download">Download</string>
     <string name="menu_song_delete">Delete</string>
+
+    <!-- Dialog -->
+    <string name="dialog_edit_song_title">Edit song</string>
     <string name="song_title">Song Title</string>
     <string name="song_artist">Song Artist</string>
-    <string name="channel_name_playback">Music Player</string>
-    <string name="channel_name_download">Download</string>
-    <string name="bullet" translatable="false">•</string>
-    <string name="item_load_state_retry">Retry</string>
-    <string name="pref_api_key_title">API Key</string>
-    <string name="pref_about">About</string>
-    <string name="menu_song_download">Download</string>
-    <string name="pref_auto_download_title">Auto download</string>
-    <string name="pref_auto_download_summary">Download song when added to library</string>
-    <string name="title_song_details">Details</string>
     <string name="error_song_title_empty">Song title cannot be empty.</string>
     <string name="error_song_artist_empty">Song artist cannot be empty.</string>
-    <string name="song_channel">Channel</string>
-    <!-- Transition names -->
+    <string name="dialog_button_save">Save</string>
+
+    <string name="dialog_create_playlist_title">Create playlist</string>
+    <string name="text_view_hint_playlist_name">Playlist name</string>
+    <string name="error_playlist_name_empty">Playlist name cannot be empty.</string>
+
+    <string name="dialog_edit_artist_title">Edit artist</string>
+    <string name="text_view_hint_artist_name">Artist name</string>
+    <string name="error_artist_name_empty">Artist name cannot be empty.</string>
+    <string name="dialog_choose_playlist_title">Choose playlist</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Music Player</string>
+    <string name="channel_name_download">Download</string>
+
+    <!-- Transition Name -->
     <string name="youtube_playlist_item_transition_name" translatable="false">playlist_%1$s</string>
     <string name="youtube_playlist_transition_name" translatable="false">youtube_playlist</string>
     <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
@@ -40,6 +62,7 @@
     <string name="playlist_item_transition_name" translatable="false">playlist_%1$d</string>
     <string name="playlist_songs_transition_name" translatable="false">playlist_songs</string>
 
+    <!-- Noun -->
     <plurals name="songs_count">
         <item quantity="zero">%d song</item>
         <item quantity="one">%d song</item>
@@ -54,28 +77,30 @@
         <item quantity="one">%d video</item>
         <item quantity="other">%d videos</item>
     </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Retry</string>
     <string name="btn_play_all">Play All</string>
     <string name="btn_shuffle">Shuffle</string>
+
+    <!-- Sort Menu -->
     <string name="sort_by_name">Name</string>
     <string name="sort_by_artist">Artist</string>
     <string name="sort_by_create_date">Date added</string>
-    <string name="pref_auto_add_song_title">Auto add song to library</string>
-    <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
+
+    <!-- Snackbar -->
     <string name="snack_bar_delete_song">"%1$s" has been deleted.</string>
     <string name="snack_bar_undo">Undo</string>
-    <string name="dialog_edit_details_title">Edit details</string>
-    <string name="dialog_create_playlist_title">Create playlist</string>
-    <string name="dialog_button_save">Save</string>
-    <string name="download">Download</string>
-    <string name="add_to_library">Add to library</string>
-    <string name="pref_expand_on_play_title">Expand bottom player on play</string>
-    <string name="title_now_playing">Now playing</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">Add to library</string>
+
+    <!-- Search Filter -->
     <string name="search_filter_all">All</string>
     <string name="search_filter_songs">Songs</string>
     <string name="search_filter_videos">Videos</string>
     <string name="search_filter_playlists">Playlists</string>
     <string name="search_filter_channels">Channels</string>
-    <string name="playlist_name">Playlist name</string>
-    <string name="menu_song_add_to_playlist">Add to playlist</string>
-    <string name="dialog_choose_playlist_title">Choose playlist</string>
+
+    <string name="bullet" translatable="false">•</string>
 </resources>

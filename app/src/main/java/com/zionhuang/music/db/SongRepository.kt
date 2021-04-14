@@ -147,6 +147,8 @@ class SongRepository(private val context: Context) {
 
     private suspend fun deleteArtist(artistId: Int) = withContext(IO) { artistDao.delete(artistId) }
 
+    suspend fun deleteArtist(artist: ArtistEntity) = withContext(IO) { artistDao.delete(artist) }
+
     /**
      * Channel Operations
      */

@@ -7,19 +7,28 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
 import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.db.entities.ArtistEntity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class CreatePlaylistDialog : AppCompatDialogFragment() {
+class EditArtistDialog : AppCompatDialogFragment() {
     private lateinit var binding: DialogSingleTextInputBinding
+    private lateinit var artist: ArtistEntity
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        artist = arguments?.getParcelable(EXTRA_ARTIST)!!
+    }
 
     private fun setupUI() {
         binding.textInput.apply {
-            setHint(R.string.text_view_hint_playlist_name)
+            setHint(R.string.text_view_hint_artist_name)
+            editText?.setText(artist.name)
             editText?.doOnTextChanged { text, _, _, _ ->
-                binding.textInput.error = if (text.isNullOrEmpty()) getString(R.string.error_playlist_name_empty) else null
+                binding.textInput.error = if (text.isNullOrEmpty()) getString(R.string.error_artist_name_empty) else null
             }
         }
     }
@@ -29,9 +38,9 @@ class CreatePlaylistDialog : AppCompatDialogFragment() {
         setupUI()
 
         return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
-                .setTitle(R.string.dialog_create_playlist_title)
+                .setTitle(R.string.dialog_edit_artist_title)
                 .setView(binding.root)
-                .setPositiveButton(android.R.string.ok, null)
+                .setPositiveButton(R.string.dialog_button_save, null)
                 .setNegativeButton(android.R.string.cancel, null)
                 .create()
                 .apply {

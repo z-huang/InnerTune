@@ -13,6 +13,7 @@ import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
@@ -63,8 +64,6 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         }.flow.cachedIn(viewModelScope)
     }
 
-    suspend fun getSong(songId: String) = songRepository.getSongById(songId)
-
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getArtistSongsAsPagingSource(artistId, sortType, sortDescending)
     }.flow.map { pagingData ->
@@ -90,9 +89,17 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun editSong(song: Song, context: Context) {
             (context.getActivity() as? MainActivity)?.let { activity ->
                 EditSongDialog().apply {
-                    arguments = bundleOf("song" to song)
+                    arguments = bundleOf(EXTRA_SONG to song)
                 }.show(activity.supportFragmentManager, EditSongDialog.TAG)
             }
+        }
+
+        override fun playNext(song: Song, context: Context) {
+            TODO("Not yet implemented")
+        }
+
+        override fun addToQueue(song: Song, context: Context) {
+            TODO("Not yet implemented")
         }
 
         override fun addToPlaylist(song: Song, context: Context) {

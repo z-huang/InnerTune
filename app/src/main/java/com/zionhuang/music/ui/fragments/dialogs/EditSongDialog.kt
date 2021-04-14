@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.databinding.EditSongDialogBinding
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
@@ -23,7 +24,7 @@ class EditSongDialog : AppCompatDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        song = arguments?.getParcelable("song")!!
+        song = arguments?.getParcelable(EXTRA_SONG)!!
     }
 
     private fun setupUI() {
@@ -48,7 +49,7 @@ class EditSongDialog : AppCompatDialogFragment() {
 
         return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                 .setView(binding.root)
-                .setTitle(R.string.dialog_edit_details_title)
+                .setTitle(R.string.dialog_edit_song_title)
                 .setPositiveButton(R.string.dialog_button_save, null)
                 .setNegativeButton(android.R.string.cancel, null)
                 .create()

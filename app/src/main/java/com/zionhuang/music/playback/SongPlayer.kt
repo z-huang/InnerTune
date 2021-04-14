@@ -255,7 +255,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             }
             return@registerCustomCommandReceiver false
         }
-        setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.add_to_library, R.drawable.ic_library_add) { _, _, _, _ ->
+        setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.custom_action_add_to_library, R.drawable.ic_library_add) { _, _, _, _ ->
             scope.launch {
                 player.currentMetadata?.let {
                     songRepository.insert(Song(
