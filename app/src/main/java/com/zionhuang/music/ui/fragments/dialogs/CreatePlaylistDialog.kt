@@ -25,7 +25,7 @@ class CreatePlaylistDialog : AppCompatDialogFragment() {
         binding = CreatePlaylistDialogBinding.inflate(requireActivity().layoutInflater)
         setupUI()
 
-        return MaterialAlertDialogBuilder(requireContext())
+        return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                 .setTitle(R.string.dialog_create_playlist_title)
                 .setView(binding.root)
                 .setPositiveButton(android.R.string.ok, null)
