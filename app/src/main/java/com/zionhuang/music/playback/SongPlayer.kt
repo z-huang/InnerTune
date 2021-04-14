@@ -45,6 +45,8 @@ import com.zionhuang.music.constants.MediaConstants.QUEUE_SEARCH
 import com.zionhuang.music.constants.MediaConstants.QUEUE_SINGLE
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_PLAYLIST
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
+import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
+import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
 import com.zionhuang.music.db.SongRepository
@@ -245,15 +247,30 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
             }
         })
         registerCustomCommandReceiver { player, _, command, extras, _ ->
-            if (command == COMMAND_SEEK_TO_QUEUE_ITEM) {
-                val mediaId = extras?.getString(EXTRA_MEDIA_ID)
-                        ?: return@registerCustomCommandReceiver true
-                player.mediaItemIndexOf(mediaId)?.let {
-                    player.seekToDefaultPosition(it)
-                }
-                return@registerCustomCommandReceiver true
+            if (extras == null) {
+                return@registerCustomCommandReceiver false
             }
-            return@registerCustomCommandReceiver false
+            when (command) {
+                COMMAND_SEEK_TO_QUEUE_ITEM -> {
+                    val mediaId = extras.getString(EXTRA_MEDIA_ID)
+                            ?: return@registerCustomCommandReceiver true
+                    player.mediaItemIndexOf(mediaId)?.let {
+                        player.seekToDefaultPosition(it)
+                    }
+                    true
+                }
+                COMMAND_PLAY_NEXT -> {
+                    val song = extras.getParcelable<Song>(EXTRA_SONG)!!
+                    player.addMediaItem(player.currentWindowIndex + 1, song.toMediaItem(context))
+                    true
+                }
+                COMMAND_ADD_TO_QUEUE -> {
+                    val song = extras.getParcelable<Song>(EXTRA_SONG)!!
+                    player.addMediaItem(song.toMediaItem(context))
+                    true
+                }
+                else -> false
+            }
         }
         setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.custom_action_add_to_library, R.drawable.ic_library_add) { _, _, _, _ ->
             scope.launch {

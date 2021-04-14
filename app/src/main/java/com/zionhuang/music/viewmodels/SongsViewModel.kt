@@ -13,7 +13,10 @@ import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
+import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
+import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
+import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
@@ -25,6 +28,7 @@ import com.zionhuang.music.download.DownloadServiceConnection
 import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.getActivity
 import com.zionhuang.music.extensions.preference
+import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
@@ -34,6 +38,8 @@ import kotlinx.coroutines.launch
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songRepository: SongRepository = SongRepository(application)
+    val downloadServiceConnection = DownloadServiceConnection(application)
+    val mediaSessionConnection = MediaSessionConnection
 
     var sortType by preference(R.string.pref_sort_type, ORDER_NAME)
     var sortDescending by preference(R.string.pref_sort_descending, true)
@@ -89,17 +95,17 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun editSong(song: Song, context: Context) {
             (context.getActivity() as? MainActivity)?.let { activity ->
                 EditSongDialog().apply {
-                    arguments = bundleOf(EXTRA_SONG to song)
+                    arguments = bundleOf(MediaConstants.EXTRA_SONG to song)
                 }.show(activity.supportFragmentManager, EditSongDialog.TAG)
             }
         }
 
-        override fun playNext(song: Song, context: Context) {
-            TODO("Not yet implemented")
+        override fun playNext(song: Song) {
+            mediaSessionConnection.mediaController?.sendCommand(COMMAND_PLAY_NEXT, bundleOf(EXTRA_SONG to song), null)
         }
 
-        override fun addToQueue(song: Song, context: Context) {
-            TODO("Not yet implemented")
+        override fun addToQueue(song: Song) {
+            mediaSessionConnection.mediaController?.sendCommand(COMMAND_ADD_TO_QUEUE, bundleOf(EXTRA_SONG to song), null)
         }
 
         override fun addToPlaylist(song: Song, context: Context) {
@@ -132,6 +138,4 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
-    val downloadServiceConnection = DownloadServiceConnection(application)
 }

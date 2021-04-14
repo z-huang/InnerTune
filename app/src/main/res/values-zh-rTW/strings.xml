@@ -53,4 +53,6 @@
     <string name="text_view_hint_artist_name">演出者名稱</string>
     <string name="error_artist_name_empty">演出者名稱不能為空</string>
     <string name="dialog_edit_artist_title">編輯作曲家</string>
+    <string name="menu_song_play_next">接著播放</string>
+    <string name="menu_song_add_to_queue">加入待播清單</string>
 </resources>

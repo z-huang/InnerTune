@@ -4,6 +4,12 @@
         android:id="@+id/action_edit"
         android:title="@string/menu_song_edit" />
     <item
+        android:id="@+id/action_play_next"
+        android:title="@string/menu_song_play_next" />
+    <item
+        android:id="@+id/action_add_to_queue"
+        android:title="@string/menu_song_add_to_queue" />
+    <item
         android:id="@+id/action_add_to_playlist"
         android:title="@string/menu_song_add_to_playlist" />
     <item

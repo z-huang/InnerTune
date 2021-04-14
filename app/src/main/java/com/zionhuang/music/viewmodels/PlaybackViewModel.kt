@@ -10,6 +10,7 @@ import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
+import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.PlaybackStateData
@@ -21,6 +22,8 @@ import com.zionhuang.music.utils.livedata.SafeLiveData
 import com.zionhuang.music.utils.livedata.SafeMutableLiveData
 
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
+    private val songRepository: SongRepository = SongRepository(application)
+
     private val _mediaData = MutableLiveData<MediaData?>(null)
     val mediaData: LiveData<MediaData?> get() = _mediaData
 
@@ -47,8 +50,8 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         _queueData.postValue(queueData)
     }
 
-    private val mediaSessionConnection = MediaSessionConnection(application).apply {
-        connect()
+    private val mediaSessionConnection = MediaSessionConnection.apply {
+        connect(application)
         playbackState.observeForever(playbackStateObserver)
         nowPlaying.observeForever(mediaMetadataObserver)
         queueData.observeForever(queueDataObserver)
@@ -62,10 +65,12 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     val expandOnPlay by preference(R.string.pref_expand_on_play, false)
 
-    fun setPlayerView(playerView: PlayerView) = mediaSessionConnection.setPlayerView(playerView)
+    fun setPlayerView(playerView: PlayerView) {
+        mediaSessionConnection.playerView = playerView
+    }
 
     fun togglePlayPause() {
-        if (playbackState.value.state == PlaybackStateCompat.STATE_PLAYING) {
+        if (playbackState.value.state == STATE_PLAYING) {
             mediaSessionConnection.transportControls?.pause()
         } else {
             mediaSessionConnection.transportControls?.play()
@@ -111,11 +116,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
             playbackState.removeObserver(playbackStateObserver)
             nowPlaying.removeObserver(mediaMetadataObserver)
             queueData.removeObserver(queueDataObserver)
-            disconnect()
+            disconnect(getApplication())
         }
-    }
-
-    init {
-
     }
 }
