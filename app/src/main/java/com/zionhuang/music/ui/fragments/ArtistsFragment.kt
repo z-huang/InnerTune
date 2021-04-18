@@ -9,7 +9,6 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
 class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val artistsViewModel by viewModels<ArtistsViewModel>()
-    private lateinit var artistsAdapter: ArtistsAdapter
+    private val artistsAdapter = ArtistsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +39,7 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        artistsAdapter = ArtistsAdapter(artistsViewModel.popupMenuListener)
+        artistsAdapter.popupMenuListener = artistsViewModel.popupMenuListener
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

@@ -9,7 +9,7 @@ import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 
 class ArtistViewHolder(
         val binding: ItemArtistBinding,
-        private val popupMenuListener: ArtistPopupMenuListener,
+        private val popupMenuListener: ArtistPopupMenuListener?,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(artist: ArtistEntity) {
         binding.artist = artist
@@ -18,8 +18,8 @@ class ArtistViewHolder(
                 inflate(R.menu.artist)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener.editArtist(artist, binding.root.context)
-                        R.id.action_delete -> popupMenuListener.deleteArtist(artist)
+                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.root.context)
+                        R.id.action_delete -> popupMenuListener?.deleteArtist(artist)
                     }
                     true
                 }
