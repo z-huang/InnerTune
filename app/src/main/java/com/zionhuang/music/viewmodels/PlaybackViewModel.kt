@@ -10,7 +10,6 @@ import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
-import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.PlaybackStateData
@@ -22,8 +21,6 @@ import com.zionhuang.music.utils.livedata.SafeLiveData
 import com.zionhuang.music.utils.livedata.SafeMutableLiveData
 
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
-    private val songRepository: SongRepository = SongRepository(application)
-
     private val _mediaData = MutableLiveData<MediaData?>(null)
     val mediaData: LiveData<MediaData?> get() = _mediaData
 
@@ -42,7 +39,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     private val playbackStateObserver = Observer<PlaybackStateCompat?> { playbackState ->
         if (playbackState != null) {
-            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState, mediaController.value))
+            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState, mediaController?.value))
         }
     }
 
