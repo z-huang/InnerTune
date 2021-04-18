@@ -9,9 +9,8 @@ import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 import com.zionhuang.music.ui.viewholders.ArtistViewHolder
 
-class ArtistsAdapter(
-        private val popupMenuListener: ArtistPopupMenuListener,
-) : PagingDataAdapter<ArtistEntity, ArtistViewHolder>(ArtistItemComparator()) {
+class ArtistsAdapter : PagingDataAdapter<ArtistEntity, ArtistViewHolder>(ArtistItemComparator()) {
+    var popupMenuListener: ArtistPopupMenuListener? = null
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
     }
