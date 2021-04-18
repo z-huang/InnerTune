@@ -1,6 +1,5 @@
 package com.zionhuang.music.playback
 
-import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -66,12 +65,14 @@ import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import kotlin.system.measureTimeMillis
 
-typealias OnNotificationPosted = (notificationId: Int, notification: Notification, ongoing: Boolean) -> Unit
-
 /**
  * A wrapper around [ExoPlayer]
  */
-class SongPlayer(private val context: Context, private val scope: CoroutineScope) : Player.EventListener {
+class SongPlayer(
+        private val context: Context,
+        private val scope: CoroutineScope,
+        notificationListener: PlayerNotificationManager.NotificationListener,
+) : Player.EventListener {
 
     private val songRepository = SongRepository(context)
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
@@ -261,12 +262,14 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
                 }
                 COMMAND_PLAY_NEXT -> {
                     val song = extras.getParcelable<Song>(EXTRA_SONG)!!
-                    player.addMediaItem(player.currentWindowIndex + 1, song.toMediaItem(context))
+                    player.addMediaItem((if (player.mediaItemCount == 0) -1 else player.currentWindowIndex) + 1, song.toMediaItem(context))
+                    player.prepare()
                     true
                 }
                 COMMAND_ADD_TO_QUEUE -> {
                     val song = extras.getParcelable<Song>(EXTRA_SONG)!!
                     player.addMediaItem(song.toMediaItem(context))
+                    player.prepare()
                     true
                 }
                 else -> false
@@ -318,8 +321,6 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
         })
     }
 
-    private var onNotificationPosted: OnNotificationPosted = { _, _, _ -> }
-
     private val playerNotificationManager = createWithNotificationChannel(context, CHANNEL_ID, R.string.channel_name_playback, 0, NOTIFICATION_ID, object : PlayerNotificationManager.MediaDescriptionAdapter {
         override fun getCurrentContentTitle(player: Player): CharSequence = player.currentMetadata?.title.orEmpty()
 
@@ -350,10 +351,7 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
         override fun createCurrentContentIntent(player: Player): PendingIntent? =
                 PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
-    }, object : PlayerNotificationManager.NotificationListener {
-        override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) =
-                this@SongPlayer.onNotificationPosted(notificationId, notification, ongoing)
-    }).apply {
+    }, notificationListener).apply {
         setPlayer(player)
         setMediaSessionToken(mediaSession.sessionToken)
         setSmallIcon(R.drawable.ic_notification)
@@ -397,10 +395,6 @@ class SongPlayer(private val context: Context, private val scope: CoroutineScope
 
     fun setPlayerView(playerView: PlayerView?) {
         playerView?.player = player
-    }
-
-    fun onNotificationPosted(block: OnNotificationPosted) {
-        onNotificationPosted = block
     }
 
     companion object {

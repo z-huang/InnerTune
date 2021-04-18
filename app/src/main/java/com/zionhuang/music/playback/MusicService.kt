@@ -1,11 +1,13 @@
 package com.zionhuang.music.playback
 
+import android.app.Notification
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerView
 
 class MusicService : LifecycleService() {
@@ -18,14 +20,19 @@ class MusicService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        songPlayer = SongPlayer(this, lifecycleScope)
-        songPlayer.onNotificationPosted { notificationId, notification, ongoing ->
-            if (ongoing) {
-                startForeground(notificationId, notification)
-            } else {
-                stopForeground(false)
+        songPlayer = SongPlayer(this, lifecycleScope, object : PlayerNotificationManager.NotificationListener {
+            override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+                stopForeground(true)
             }
-        }
+
+            override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
+                if (ongoing) {
+                    startForeground(notificationId, notification)
+                } else {
+                    stopForeground(false)
+                }
+            }
+        })
     }
 
     override fun onDestroy() {
