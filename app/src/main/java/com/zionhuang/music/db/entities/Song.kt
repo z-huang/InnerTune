@@ -3,6 +3,8 @@ package com.zionhuang.music.db.entities
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Relation
+import com.zionhuang.music.constants.MediaConstants.ArtworkType
+import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import kotlinx.parcelize.Parcelize
 import java.util.*
@@ -17,6 +19,7 @@ data class Song(
         var channelId: String = "",
         @Relation(entity = ChannelEntity::class, parentColumn = "channelId", entityColumn = "id", projection = ["name"])
         var channelName: String = "",
+        @ArtworkType val artworkType: Int = TYPE_RECTANGLE,
         var duration: Int = 0, // in seconds
         var liked: Boolean = false,
         @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,

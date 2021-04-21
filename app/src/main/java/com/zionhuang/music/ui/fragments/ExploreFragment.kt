@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -16,10 +15,7 @@ import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.databinding.FragmentExploreBinding
-import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.ui.adapters.ExploreAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
@@ -63,12 +59,6 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
             adapter = exploreAdapter.withLoadStateFooter(LoadStateAdapter {
                 exploreAdapter.retry()
             })
-            addOnClickListener { pos, _ ->
-                val video = exploreAdapter.getItemByPosition(pos)!!
-                playbackViewModel.playMedia(requireActivity(), video.id, bundleOf(
-                        EXTRA_SONG to SongParcel.fromVideo(video)
-                ))
-            }
         }
 
         lifecycleScope.launch {

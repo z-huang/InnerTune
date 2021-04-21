@@ -1,6 +1,7 @@
 package com.zionhuang.music.db.entities
 
 import androidx.room.*
+import com.zionhuang.music.constants.MediaConstants.ArtworkType
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import java.util.*
 
@@ -26,6 +27,7 @@ data class SongEntity(
         var channelId: String? = null,
         var duration: Int = 0, // in seconds
         var liked: Boolean = false,
+        @ArtworkType var artworkType: Int,
         @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,
         @ColumnInfo(name = "create_date") var createDate: Date = Date(),
         @ColumnInfo(name = "modify_date") var modifyDate: Date = Date(),

@@ -51,12 +51,12 @@ import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.schabi.newpipe.extractor.Page
@@ -83,28 +83,28 @@ class SongPlayer(
     }
     val mediaSession: MediaSessionCompat get() = _mediaSession
 
+
     val player: SimpleExoPlayer = SimpleExoPlayer.Builder(context)
             .setMediaSourceFactory(DefaultMediaSourceFactory(ResolvingDataSource.Factory(DefaultDataSourceFactory(context)) { dataSpec ->
-                val id = dataSpec.uri.host
+                val mediaId = dataSpec.uri.host
                         ?: throw IllegalArgumentException("Cannot find media id from uri host")
                 if (dataSpec.uri.getQueryParameter(FROM_LOCAL) == "1") {
-                    return@Factory dataSpec.withUri(context.getAudioFile(id).toUri())
+                    return@Factory dataSpec.withUri(context.getAudioFile(mediaId).toUri())
                 }
                 val streamInfo: StreamInfo
                 val duration = measureTimeMillis {
                     streamInfo = runBlocking {
-                        ExtractorHelper.getStreamInfo(id)
+                        ExtractorHelper.getStreamInfo(mediaId)
                     }
                 }
                 Log.d(TAG, "Extract duration: ${duration}ms")
                 val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
-
-//                val stream: YouTubeStream.Success
-//                val duration = measureTimeMillis {
-//                    stream = YouTubeExtractor.getInstance(context).extractStreamBlocking(id) as YouTubeStream.Success
-//                }
-//                Log.d(TAG, "Extract duration: ${duration}ms")
-//                val uri = stream.formats.maxByOrNull { it.abr ?: 0 }?.url?.toUri()
+                updateMetadata(mediaId) {
+                    if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
+                        artwork = streamInfo.thumbnailUrl
+                        mediaSessionConnector.invalidateMediaSessionMetadata()
+                    }
+                }
                 if (uri != null) dataSpec.withUri(uri) else dataSpec
             }))
             .build()
@@ -116,6 +116,15 @@ class SongPlayer(
                         .build()
                 setAudioAttributes(audioAttributes, true)
             }
+
+    private fun updateMetadata(mediaId: String, applier: CustomMetadata.() -> Unit) {
+        scope.launch(Dispatchers.Main) {
+            (player.currentMediaItem.takeIf { mediaId == mediaId }
+                    ?: player.findMediaItemById(mediaId))?.metadata?.let {
+                applier(it)
+            }
+        }
+    }
 
     private fun playMedia(mediaId: String, playWhenReady: Boolean, extras: Bundle) {
         scope.launch {
@@ -203,10 +212,6 @@ class SongPlayer(
                     playlistData.linkHandler = linkHandler
                     playlistData.nextPage = nextPage
                 }
-                QUEUE_SINGLE -> {
-                    player.setMediaItem(extras.getParcelable<SongParcel>(EXTRA_SONG)?.toMediaItem()
-                            ?: mediaId.toMediaItem())
-                }
             }
             player.prepare()
             player.playWhenReady = playWhenReady
@@ -282,7 +287,8 @@ class SongPlayer(
                             songId = it.id,
                             title = it.title,
                             artistName = it.artist ?: "",
-                            duration = (player.duration / 1000).toInt()
+                            duration = (player.duration / 1000).toInt(),
+                            artworkType = it.artworkType
                     ), it.artwork)
                     if (autoDownload) {
                         //downloadCurrentSong()

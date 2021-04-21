@@ -13,6 +13,7 @@ object MediaConstants {
     const val EXTRA_PLAYLIST_ID = "playlist_id"
     const val EXTRA_LINK_HANDLER = "link_handler"
     const val EXTRA_QUERY_STRING = "query_string"
+    const val EXTRA_ARTWORK_TYPE = "artwork_type"
 
     @IntDef(QUEUE_NONE, QUEUE_ALL_SONG, QUEUE_PLAYLIST, QUEUE_ARTIST, QUEUE_CHANNEL, QUEUE_SINGLE, QUEUE_SEARCH, QUEUE_YT_PLAYLIST)
     @Retention(AnnotationRetention.SOURCE)
@@ -26,4 +27,11 @@ object MediaConstants {
     const val QUEUE_SINGLE = 5
     const val QUEUE_SEARCH = 6
     const val QUEUE_YT_PLAYLIST = 7
+
+    @IntDef(TYPE_SQUARE, TYPE_RECTANGLE)
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class ArtworkType
+
+    const val TYPE_SQUARE = 0
+    const val TYPE_RECTANGLE = 1
 }

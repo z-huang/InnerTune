@@ -13,7 +13,6 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.download.DownloadHandler
-import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.ui.adapters.ChannelSongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
@@ -53,10 +52,6 @@ class ChannelSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
             transitionName = getString(R.string.channel_songs_transition_name)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = channelSongsAdapter
-            addOnClickListener { pos, _ ->
-                if (pos == 0) return@addOnClickListener
-                //playbackViewModel.playMedia(requireActivity(), QUEUE_ALL_SONG, SongParcel.fromSong(channelSongsAdapter.getItemByPosition(pos)!!))
-            }
         }
 
         channelViewModel.channel.observe(viewLifecycleOwner) { channel ->

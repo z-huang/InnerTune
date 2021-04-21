@@ -7,7 +7,6 @@ import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.music.constants.Constants.FROM_LOCAL
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
-import com.zionhuang.music.models.SongParcel
 import com.zionhuang.music.playback.CustomMetadata
 import com.zionhuang.music.playback.CustomMetadata.Companion.toCustomMetadata
 import org.schabi.newpipe.extractor.InfoItem
@@ -34,14 +33,7 @@ fun Song.toMediaItem(context: Context): MediaItem = mediaItemBuilder
         .setTag(toCustomMetadata(context))
         .build()
 
-fun SongParcel.toMediaItem(): MediaItem = toCustomMetadata().toMediaItem()
-
 fun StreamInfoItem.toMediaItem(): MediaItem? = toCustomMetadata()?.toMediaItem()
-
-fun String.toMediaItem(): MediaItem = mediaItemBuilder
-        .setMediaId(this)
-        .setUri("music://$this")
-        .build()
 
 fun MediaDescriptionCompat.toMediaItem() = mediaItemBuilder
         .setMediaId(mediaId)

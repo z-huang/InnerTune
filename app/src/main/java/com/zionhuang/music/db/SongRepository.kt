@@ -216,6 +216,7 @@ class SongRepository(private val context: Context) {
             getOrInsertChannel(channelId, channelName).id,
             duration,
             liked,
+            artworkType,
             downloadState,
             createDate,
             modifyDate

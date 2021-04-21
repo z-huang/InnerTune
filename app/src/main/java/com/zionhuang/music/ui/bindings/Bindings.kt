@@ -9,6 +9,9 @@ import androidx.databinding.BindingAdapter
 import com.google.api.client.util.DateTime
 import com.google.api.services.youtube.model.ThumbnailDetails
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.ArtworkType
+import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
+import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.widgets.PlayPauseButton
 import com.zionhuang.music.ui.widgets.RepeatButton
@@ -19,6 +22,15 @@ import com.zionhuang.music.utils.makeTimeString
 fun setEnabled(view: View, enabled: Boolean) {
     view.isEnabled = enabled
     view.alpha = if (enabled) 1f else 0.5f
+}
+
+@BindingAdapter("artworkType")
+fun setArtworkType(view: ImageView, @ArtworkType source: Int) {
+    view.scaleType = when (source) {
+        TYPE_SQUARE -> ImageView.ScaleType.CENTER_CROP
+        TYPE_RECTANGLE -> ImageView.ScaleType.FIT_CENTER
+        else -> throw IllegalArgumentException("Unknown artwork type.")
+    }
 }
 
 @BindingAdapter("duration")
