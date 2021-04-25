@@ -35,8 +35,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
-                android:src="@drawable/ic_music_note"
-                tools:src="@drawable/ic_music_note" />
+                android:src="@drawable/ic_artist" />
         </LinearLayout>
 
         <LinearLayout
