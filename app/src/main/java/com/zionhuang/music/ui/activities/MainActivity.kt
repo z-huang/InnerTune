@@ -1,10 +1,12 @@
 package com.zionhuang.music.ui.activities
 
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.map
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -12,7 +14,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
@@ -20,6 +21,8 @@ import com.zionhuang.music.extensions.getDensity
 import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
+import com.zionhuang.music.ui.widgets.MainFloatingActionButton
+import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.launch
 
@@ -27,9 +30,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
-    private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
+    private val songsViewModel by lazy { ViewModelProvider(this).get(SongsViewModel::class.java) }
+    private val playbackViewModel by lazy { ViewModelProvider(this).get(PlaybackViewModel::class.java) }
 
-    val fab: FloatingActionButton get() = binding.fab
+    val fab: MainFloatingActionButton get() = binding.fab
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,12 +58,19 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
                 R.id.songsFragment,
                 R.id.artistsFragment,
                 R.id.playlistsFragment,
-                R.id.channelsFragment,
                 R.id.explorationFragment
         ))
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener(this)
+
+        playbackViewModel.playbackState.map { it.state != STATE_NONE }.observe(this) { show ->
+            if (show) {
+                fab.onPlayerShow()
+            } else {
+                fab.onPlayerHide()
+            }
+        }
 
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
@@ -67,8 +78,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
             state = STATE_HIDDEN
             addBottomSheetCallback(BottomSheetCallback())
         }
-
-        binding.fab.hide()
     }
 
     override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
@@ -116,15 +125,4 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
         }
         super.onBackPressed()
     }
-
-//    override fun onApplyThemeResource(theme: Theme, resId: Int, first: Boolean) {
-//        super.onApplyThemeResource(theme, resId, first)
-//        // TODO: make this a setting option
-//        val config = resources.configuration
-//        val currentNightMode = config.uiMode and Configuration.UI_MODE_NIGHT_MASK
-//        if (currentNightMode == Configuration.UI_MODE_NIGHT_NO) {
-//            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
-//            window.statusBarColor = ContextCompat.getColor(this, R.color.white)
-//        }
-//    }
 }
