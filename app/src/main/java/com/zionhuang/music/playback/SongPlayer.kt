@@ -288,9 +288,9 @@ class SongPlayer(
                             songId = it.id,
                             title = it.title,
                             artistName = it.artist ?: "",
-                            duration = (player.duration / 1000).toInt(),
+                            duration = if (player.duration != C.TIME_UNSET) (player.duration / 1000).toInt() else -1,
                             artworkType = it.artworkType
-                    ), it.artwork)
+                    ))
                     if (autoDownload) {
                         //downloadCurrentSong()
                     }
