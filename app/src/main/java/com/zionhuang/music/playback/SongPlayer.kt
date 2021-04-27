@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT
+import com.google.android.exoplayer2.Player.STATE_IDLE
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
@@ -364,8 +365,10 @@ class SongPlayer(
     }
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        if (reason == MEDIA_ITEM_TRANSITION_REASON_REPEAT || !playlistData.hasMoreItems) return
-        if (player.mediaItemCount - player.currentWindowIndex > 5) return
+        if (reason == MEDIA_ITEM_TRANSITION_REASON_REPEAT ||
+                player.playbackState == STATE_IDLE ||
+                !playlistData.hasMoreItems ||
+                player.mediaItemCount - player.currentWindowIndex > 5) return
         scope.launch {
             when (playlistData.queueType) {
                 QUEUE_SEARCH -> {
