@@ -15,6 +15,7 @@ import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.OkHttpDownloader.requestOf
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.models.YouTubeChannel
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -26,6 +27,7 @@ class SongRepository(private val context: Context) {
     private val channelDao: ChannelDao = musicDatabase.channelDao
     private val playlistDao: PlaylistDao = musicDatabase.playlistDao
     private val playlistSongDao: PlaylistSongDao = musicDatabase.playlistSongDao
+    private val downloadDao: DownloadDao = musicDatabase.downloadDao
 
     private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
@@ -83,19 +85,28 @@ class SongRepository(private val context: Context) {
     /**
      * Song Operations
      */
-    private suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
+    private suspend fun getSongEntityById(id: String): SongEntity? =
+        withContext(IO) { songDao.getSongEntityById(id) }
+
     suspend fun getSongById(id: String): Song? = withContext(IO) { songDao.getSongById(id) }
 
-    private suspend fun artistSongsCount(artistId: Int) = withContext(IO) { songDao.artistSongsCount(artistId) }
+    private suspend fun artistSongsCount(artistId: Int) =
+        withContext(IO) { songDao.artistSongsCount(artistId) }
+
     private suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
-    suspend fun insert(song: Song, artwork: String? = null) = withContext(IO) {
-        artwork?.let {
-            OkHttpDownloader.downloadFile(requestOf(it), context.getArtworkFile(song.songId))
-        }
+    suspend fun insert(song: Song) = withContext(IO) {
+        val stream = ExtractorHelper.getStreamInfo(song.songId)
+        OkHttpDownloader.downloadFile(
+            requestOf(stream.thumbnailUrl),
+            context.getArtworkFile(song.songId)
+        )
+        if (song.duration == -1) song.duration = stream.duration.toInt()
         insert(song.toSongEntity())
     }
 
-    private suspend fun updateSongEntity(song: SongEntity) = withContext(IO) { songDao.update(song) }
+    private suspend fun updateSongEntity(song: SongEntity) =
+        withContext(IO) { songDao.update(song) }
+
     private suspend fun updateSong(song: Song) = updateSongEntity(song.toSongEntity())
 
     /** [SongEntity.artistId] should not be edited. **/
@@ -207,19 +218,38 @@ class SongRepository(private val context: Context) {
     }
 
     /**
+     * Downloads
+     */
+    suspend fun getAllDownloads() = withContext(IO) {
+        downloadDao.getAll()
+    }
+
+    suspend fun addDownload(downloadId: Long, songId: String) = withContext(IO) {
+        downloadDao.insert(DownloadEntity(downloadId, songId))
+    }
+
+    suspend fun getSongIdByDownloadId(downloadId: Long): String = withContext(IO) {
+        downloadDao.getDownloadEntity(downloadId).songId
+    }
+
+    suspend fun removeDownload(downloadId: Long) = withContext(IO) {
+        downloadDao.delete(downloadDao.getDownloadEntity(downloadId))
+    }
+
+    /**
      * Extensions
      */
     private suspend fun Song.toSongEntity() = SongEntity(
-            songId,
-            title,
-            getOrInsertArtist(artistName),
-            getOrInsertChannel(channelId, channelName).id,
-            duration,
-            liked,
-            artworkType,
-            downloadState,
-            createDate,
-            modifyDate
+        songId,
+        title,
+        getOrInsertArtist(artistName),
+        getOrInsertChannel(channelId, channelName).id,
+        duration,
+        liked,
+        artworkType,
+        downloadState,
+        createDate,
+        modifyDate
     )
 
     companion object {

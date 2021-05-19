@@ -1,158 +1,52 @@
 package com.zionhuang.music.download
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.DownloadManager
 import android.content.Context
-import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
-import com.downloader.Error
-import com.downloader.OnDownloadListener
-import com.downloader.PRDownloader
-import com.zionhuang.music.R
+import androidx.core.net.toUri
+import com.downloader.Status.*
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
+import com.zionhuang.music.extensions.audioDir
+import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.models.AssetDownloadMission
 import com.zionhuang.music.models.AssetDownloadMission.Companion.ASSET_CHANNEL
 import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.OkHttpDownloader.requestOf
-import com.zionhuang.music.youtube.YouTubeExtractor
-import com.zionhuang.music.youtube.models.YouTubeStream
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 typealias DownloadListener = (DownloadTask) -> Unit
 
 class DownloadManager(private val context: Context, private val scope: CoroutineScope) {
-    companion object {
-        private const val TAG = "YTDownloadService"
-        private const val DOWNLOAD_CHANNEL_ID = "download_channel_01"
-        private const val DOWNLOAD_GROUP_KEY = "com.zionhuang.music.downloadGroup"
-        private const val DOWNLOAD_SUMMARY_ID = 0
-    }
-
-    init {
-        PRDownloader.initialize(context)
-    }
-
-    private val youTubeExtractor = YouTubeExtractor.getInstance(context)
-
-    private val notificationChannel = NotificationChannel(DOWNLOAD_CHANNEL_ID, context.getString(R.string.channel_name_download), NotificationManager.IMPORTANCE_DEFAULT)
-    private val notificationManager = context.getSystemService<NotificationManager>()!!.also {
-        it.createNotificationChannel(notificationChannel)
-    }
-    private val summaryNotification = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_music_note)
-            .setStyle(NotificationCompat.InboxStyle())
-            .setGroup(DOWNLOAD_GROUP_KEY)
-            .setGroupSummary(true)
-            .build()
-
-    private var notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(context, DOWNLOAD_CHANNEL_ID)
-
     private val songRepository = SongRepository(context)
 
-    private val listeners = ArrayList<DownloadListener>()
-
-    fun addEventListener(listener: DownloadListener) {
-        listeners.add(listener)
-    }
-
-    fun removeListener(listener: DownloadListener) {
-        listeners.remove(listener)
-    }
-
-    private val tasks = ArrayList<DownloadTask>()
-
     fun addMusicDownload(task: DownloadTask) {
-        tasks += task
         scope.launch {
+            if (songRepository.getSongById(task.id)!!.downloadState == STATE_DOWNLOADED) return@launch
             songRepository.updateSongEntity(task.id) {
                 downloadState = STATE_DOWNLOADING
             }
-            if (task.audioUrl == null || task.artworkUrl == null) {
-                when (val extractResult = youTubeExtractor.extractStream(task.id)) {
-                    is YouTubeStream.Success -> {
-                        val format = extractResult.formats.maxByOrNull { it.abr ?: 0 }
-                                ?: return@launch songRepository.updateSongEntity(task.id) {
-                                    downloadState = STATE_NOT_DOWNLOADED
-                                }
-                        task.audioUrl = format.url
-                        task.artworkUrl = extractResult.thumbnailUrl
-                    }
-                    is YouTubeStream.Error -> {
-                        songRepository.updateSongEntity(task.id) {
-                            downloadState = STATE_NOT_DOWNLOADED
-                        }
-                        return@launch
-                    }
-                }
+            val stream = ExtractorHelper.getStreamInfo(task.id)
+            task.apply {
+                title = stream.name
             }
-
-            onTaskStarted(task)
-            task.artworkUrl?.let {
+            stream.thumbnailUrl?.let {
                 OkHttpDownloader.downloadFile(requestOf(it), context.getArtworkFile(task.id))
             }
-            PRDownloader.download(task.audioUrl, "${context.getExternalFilesDir(null)!!.absolutePath}/audio", task.id)
-                    .build()
-                    .setOnProgressListener {
-                        updateState(task, it.currentBytes, it.totalBytes)
-                    }.start(object : OnDownloadListener {
-                        override fun onDownloadComplete() {
-                            onDownloadCompleted(task)
-                        }
-
-                        override fun onError(error: Error?) {
-                            onDownloadError(task, error)
-                        }
-                    })
+            val downloadManager = context.getSystemService<DownloadManager>()!!
+            val req =
+                DownloadManager.Request(stream.videoStreams.maxByOrNull { it.width }?.url?.toUri())
+                    .setTitle(stream.name)
+                    .setDestinationUri((context.audioDir / stream.id).toUri())
+                    .setVisibleInDownloadsUi(false)
+            val id = downloadManager.enqueue(req)
+            songRepository.addDownload(id, task.id)
         }
-    }
-
-    private fun onTaskStarted(task: DownloadTask) {
-        updateNotification(task.id.hashCode()) {
-            setContentTitle(task.title)
-            setContentText("Preparing to download...")
-            setProgress(0, 0, true)
-        }
-        listeners.forEach { it(task) }
-    }
-
-    private fun onDownloadCompleted(task: DownloadTask) {
-        notificationManager.cancel(task.id.hashCode())
-        tasks.remove(task)
-        scope.launch {
-            songRepository.updateSongEntity(task.id) {
-                downloadState = STATE_DOWNLOADED
-            }
-        }
-        listeners.forEach { it(task) }
-    }
-
-    private fun onDownloadError(task: DownloadTask, error: Error?) {
-        updateNotification(task.id.hashCode()) {
-            setContentTitle(task.title)
-            setContentText("Download failed.")
-        }
-        scope.launch {
-            songRepository.updateSongEntity(task.id) {
-                downloadState = STATE_NOT_DOWNLOADED
-            }
-        }
-        listeners.forEach { it(task) }
-    }
-
-    private fun updateState(task: DownloadTask, currentBytes: Long, totalBytes: Long) {
-        task.currentBytes = currentBytes
-        task.totalBytes = totalBytes
-        updateNotification(task.id.hashCode()) {
-            setContentTitle(task.title)
-            setContentText("Downloading...")
-            setProgress(totalBytes.toInt(), currentBytes.toInt(), false)
-        }
-        listeners.forEach { it(task) }
     }
 
     fun addAssetDownload(task: AssetDownloadMission) {
@@ -161,14 +55,5 @@ class DownloadManager(private val context: Context, private val scope: Coroutine
 
             }
         }
-    }
-
-    private fun updateNotification(id: Int, applier: NotificationCompat.Builder.() -> Unit) {
-        applier(notificationBuilder
-                .setSmallIcon(R.drawable.ic_music_note)
-                .setOngoing(true)
-                .setGroup(DOWNLOAD_GROUP_KEY))
-        notificationManager.notify(id, notificationBuilder.build())
-        notificationManager.notify(DOWNLOAD_SUMMARY_ID, summaryNotification)
     }
 }

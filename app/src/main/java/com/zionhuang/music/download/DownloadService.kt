@@ -11,7 +11,7 @@ class DownloadService : LifecycleService() {
     companion object {
         private const val TAG = "YTDownloadService"
         const val ACTION_DOWNLOAD_MUSIC = "download_music"
-        const val ACTION_DOWNLOAD_ASSET  = "download_asset"
+        const val ACTION_DOWNLOAD_ASSET = "download_asset"
     }
 
     private val binder = DownloadServiceBinder()
@@ -28,7 +28,7 @@ class DownloadService : LifecycleService() {
             ACTION_DOWNLOAD_MUSIC -> {
                 downloadManager.addMusicDownload(intent.getParcelableExtra("task")!!)
             }
-            ACTION_DOWNLOAD_ASSET->{
+            ACTION_DOWNLOAD_ASSET -> {
                 downloadManager.addAssetDownload(intent.getParcelableExtra("asset")!!)
             }
         }

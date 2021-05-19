@@ -6,6 +6,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSongBinding
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadTask
+import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
 class SongViewHolder(
@@ -22,13 +23,20 @@ class SongViewHolder(
                         R.id.action_edit -> popupMenuListener.editSong(song, binding.root.context)
                         R.id.action_play_next -> popupMenuListener.playNext(song)
                         R.id.action_add_to_queue -> popupMenuListener.addToQueue(song)
-                        R.id.action_add_to_playlist -> popupMenuListener.addToPlaylist(song, binding.root.context)
-                        R.id.action_download -> popupMenuListener.downloadSong(song.songId, binding.root.context)
+                        R.id.action_add_to_playlist -> popupMenuListener.addToPlaylist(
+                            song,
+                            binding.root.context
+                        )
+                        R.id.action_download -> popupMenuListener.downloadSong(
+                            song.songId,
+                            binding.root.context
+                        )
                         R.id.action_delete -> popupMenuListener.deleteSong(song.songId)
                     }
                     true
                 }
-                menu.findItem(R.id.action_download).isVisible = song.downloadState == DownloadTask.STATE_NOT_DOWNLOADED
+                menu.findItem(R.id.action_download).isVisible =
+                    song.downloadState == DownloadTask.STATE_NOT_DOWNLOADED
                 show()
             }
         }
@@ -38,7 +46,14 @@ class SongViewHolder(
     fun setProgress(task: DownloadTask) {
         binding.progressBar.run {
             max = task.totalBytes.toInt()
-            progress = task.currentBytes.toInt()
+            setProgress(task.currentBytes.toInt(), true)
+        }
+    }
+
+    fun setProgress(progress: DownloadProgress, animate: Boolean = true) {
+        binding.progressBar.run {
+            max = progress.totalBytes
+            setProgress(progress.currentBytes, animate)
         }
     }
 }

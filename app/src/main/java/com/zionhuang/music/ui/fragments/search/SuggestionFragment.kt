@@ -76,7 +76,6 @@ class SuggestionFragment : MainFragment<LayoutRecyclerviewBinding>() {
     private fun setupSearchView() {
         val searchManager: SearchManager = requireContext().getSystemService()!!
         searchView.apply {
-
             isIconified = false
             findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.setPadding(0, 2, 0, 2)
             setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))

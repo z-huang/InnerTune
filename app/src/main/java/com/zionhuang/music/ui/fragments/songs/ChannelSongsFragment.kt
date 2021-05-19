@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
-import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.ui.adapters.ChannelSongsAdapter
 import com.zionhuang.music.ui.fragments.base.MainFragment
@@ -30,7 +29,6 @@ class ChannelSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val channelViewModel by viewModels<ChannelViewModel> { ChannelViewModelFactory(requireActivity().application, channelId) }
-    private val downloadHandler = DownloadHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +44,11 @@ class ChannelSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
         postponeEnterTransition()
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
 
-        songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
-        val channelSongsAdapter = ChannelSongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler, channelViewModel, viewLifecycleOwner)
+        val channelSongsAdapter = ChannelSongsAdapter(
+            songsViewModel.songPopupMenuListener,
+            channelViewModel,
+            viewLifecycleOwner
+        )
         binding.recyclerView.apply {
             transitionName = getString(R.string.channel_songs_transition_name)
             layoutManager = LinearLayoutManager(requireContext())
@@ -63,11 +64,6 @@ class ChannelSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
                 channelSongsAdapter.submitData(it)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        songsViewModel.downloadServiceConnection.removeDownloadListener(downloadHandler.downloadListener)
     }
 
     companion object {

@@ -43,7 +43,5 @@ fun RecyclerView.addOnLongClickListener(longClickListener: RecyclerViewItemClick
     })
 }
 
-fun RecyclerView.addFastScroller(applier: (FastScrollerBuilder.() -> Unit)? = null): FastScroller =
-        FastScrollerBuilder(this).apply {
-            applier?.invoke(this)
-        }.build()
+fun RecyclerView.addFastScroller(applier: (FastScrollerBuilder.() -> Unit)): FastScroller =
+    FastScrollerBuilder(this).apply(applier).build()

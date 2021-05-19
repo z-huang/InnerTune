@@ -1,19 +1,17 @@
 package com.zionhuang.music.viewmodels
 
 import android.app.Application
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.*
 import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
-import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
@@ -24,21 +22,26 @@ import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadService
-import com.zionhuang.music.download.DownloadServiceConnection
 import com.zionhuang.music.download.DownloadTask
+import com.zionhuang.music.extensions.forEach
+import com.zionhuang.music.extensions.get
 import com.zionhuang.music.extensions.getActivity
 import com.zionhuang.music.extensions.preference
+import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.collections.set
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songRepository: SongRepository = SongRepository(application)
-    val downloadServiceConnection = DownloadServiceConnection(application)
     val mediaSessionConnection = MediaSessionConnection
 
     var sortType by preference(R.string.pref_sort_type, ORDER_NAME)
@@ -95,7 +98,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun editSong(song: Song, context: Context) {
             (context.getActivity() as? MainActivity)?.let { activity ->
                 EditSongDialog().apply {
-                    arguments = bundleOf(MediaConstants.EXTRA_SONG to song)
+                    arguments = bundleOf(EXTRA_SONG to song)
                 }.show(activity.supportFragmentManager, EditSongDialog.TAG)
             }
         }
@@ -137,5 +140,31 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
+    }
+
+    val downloadInfoLiveData = liveData(viewModelScope.coroutineContext + IO) {
+        songRepository.getAllDownloads().collectLatest { list ->
+            list.associateBy { it.id }.let { map ->
+                while (true) {
+                    emit(if (list.isEmpty()) emptyMap() else getDownloadInfo(*list.map { it.id }
+                        .toLongArray()).mapKeys { map[it.key]!!.songId })
+                    delay(500)
+                }
+            }
+        }
+    }
+
+    private val downloadManager = application.getSystemService<DownloadManager>()!!
+
+    private fun getDownloadInfo(vararg ids: Long): Map<Long, DownloadProgress> {
+        val res = mutableMapOf<Long, DownloadProgress>()
+        downloadManager.query(DownloadManager.Query().setFilterById(*ids)).forEach {
+            res[get(DownloadManager.COLUMN_ID)] = DownloadProgress(
+                status = get(DownloadManager.COLUMN_STATUS),
+                currentBytes = get(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR),
+                totalBytes = get(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)
+            )
+        }
+        return res
     }
 }

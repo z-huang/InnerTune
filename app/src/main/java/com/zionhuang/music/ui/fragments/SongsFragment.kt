@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.fragments
 
+import android.app.DownloadManager.*
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -23,7 +24,6 @@ import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
-import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.SongsAdapter
@@ -31,6 +31,7 @@ import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.ui.listeners.SortMenuListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,6 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private lateinit var songsAdapter: SongsAdapter
-    private val downloadHandler = DownloadHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +46,14 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         exitTransition = MaterialFadeThrough().apply { duration = 300L }
     }
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
         binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
 
-        songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
-
-        songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler).apply {
+        songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener).apply {
             sortMenuListener = this@SongsFragment.sortMenuListener
+            downloadInfo = songsViewModel.downloadInfoLiveData
         }
 
         binding.recyclerView.apply {
@@ -61,11 +61,13 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.playMedia(requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
+                playbackViewModel.playMedia(
+                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
                         EXTRA_QUEUE_TYPE to QUEUE_ALL_SONG,
                         EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
                         EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
-                ))
+                    )
+                )
             }
             addFastScroller { useMd2Style() }
         }
@@ -73,6 +75,12 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         lifecycleScope.launch {
             songsViewModel.allSongsFlow.collectLatest {
                 songsAdapter.submitData(it)
+            }
+        }
+
+        songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
+            map.forEach { (key, value) ->
+                songsAdapter.setProgress(key, value)
             }
         }
     }
@@ -86,11 +94,6 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        songsViewModel.downloadServiceConnection.removeDownloadListener(downloadHandler.downloadListener)
     }
 
     private val sortMenuListener = object : SortMenuListener {

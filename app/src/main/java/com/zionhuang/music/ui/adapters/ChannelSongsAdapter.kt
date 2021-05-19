@@ -14,7 +14,6 @@ import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.databinding.ItemChannelHeaderBinding
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
@@ -27,7 +26,6 @@ import java.text.DateFormat
 
 class ChannelSongsAdapter(
         private val popupMenuListener: SongPopupMenuListener,
-        private val downloadHandler: DownloadHandler,
         private val viewModel: ChannelViewModel,
         private val lifecycleOwner: LifecycleOwner,
 ) : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
@@ -39,7 +37,6 @@ class ChannelSongsAdapter(
                 holder.bind(it)
                 if (it.downloadState == STATE_DOWNLOADING) {
                     holder.binding.progressBar.progress = 0
-                    downloadHandler.add(it.songId, holder)
                 }
             }
             is ChannelHeaderViewHolder -> holder.bind(viewModel, itemCount - 1)
@@ -53,7 +50,6 @@ class ChannelSongsAdapter(
                     holder.bind(it)
                     if (it.downloadState == STATE_DOWNLOADING) {
                         holder.binding.progressBar.progress = 0
-                        downloadHandler.add(it.songId, holder)
                     }
                 }
                 else -> holder.bind(payloads.last() as Song)
@@ -82,12 +78,6 @@ class ChannelSongsAdapter(
             } else {
                 TYPE_ITEM
             }
-
-    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        if (holder is SongViewHolder) {
-            holder.binding.song?.songId?.let { downloadHandler.remove(it) }
-        }
-    }
 
     private val dateFormat = DateFormat.getDateInstance()
 

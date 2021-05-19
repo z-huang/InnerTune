@@ -51,6 +51,9 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.download.DownloadService
+import com.zionhuang.music.download.DownloadService.Companion.ACTION_DOWNLOAD_MUSIC
+import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
@@ -84,7 +87,6 @@ class SongPlayer(
     }
     val mediaSession: MediaSessionCompat get() = _mediaSession
 
-
     val player: SimpleExoPlayer = SimpleExoPlayer.Builder(context)
             .setMediaSourceFactory(DefaultMediaSourceFactory(ResolvingDataSource.Factory(DefaultDataSourceFactory(context)) { dataSpec ->
                 val mediaId = dataSpec.uri.host
@@ -108,20 +110,23 @@ class SongPlayer(
                 }
                 if (uri != null) dataSpec.withUri(uri) else dataSpec
             }))
-            .build()
-            .apply {
-                addListener(this@SongPlayer)
-                val audioAttributes = AudioAttributes.Builder()
-                        .setUsage(C.USAGE_MEDIA)
-                        .setContentType(C.CONTENT_TYPE_MUSIC)
-                        .build()
-                setAudioAttributes(audioAttributes, true)
-            }
+        .build()
+        .apply {
+            addListener(this@SongPlayer)
+            val audioAttributes = AudioAttributes.Builder()
+                .setUsage(C.USAGE_MEDIA)
+                .setContentType(C.CONTENT_TYPE_MUSIC)
+                .build()
+            setAudioAttributes(audioAttributes, true)
+        }
+
+    private var autoDownload by context.preference(R.string.pref_auto_download, false)
+    private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
     private fun updateMetadata(mediaId: String, applier: CustomMetadata.() -> Unit) {
         scope.launch(Dispatchers.Main) {
             (player.currentMediaItem.takeIf { mediaId == mediaId }
-                    ?: player.findMediaItemById(mediaId))?.metadata?.let {
+                ?: player.findMediaItemById(mediaId))?.metadata?.let {
                 applier(it)
             }
         }
@@ -292,7 +297,19 @@ class SongPlayer(
                             artworkType = it.artworkType
                     ))
                     if (autoDownload) {
-                        //downloadCurrentSong()
+                        player.currentMetadata?.let { metadata ->
+                            context.startService(
+                                Intent(
+                                    context,
+                                    DownloadService::class.java
+                                ).apply {
+                                    action = ACTION_DOWNLOAD_MUSIC
+                                    putExtra(
+                                        "task",
+                                        DownloadTask(id = metadata.id, title = metadata.title)
+                                    )
+                                })
+                        }
                     }
                 }
             }
@@ -388,9 +405,6 @@ class SongPlayer(
             }
         }
     }
-
-    private var autoDownload by context.preference(R.string.pref_auto_download, false)
-    private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
     fun release() {
         mediaSession.apply {

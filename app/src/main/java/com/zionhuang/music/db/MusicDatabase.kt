@@ -13,7 +13,8 @@ import com.zionhuang.music.db.entities.*
     ArtistEntity::class,
     ChannelEntity::class,
     PlaylistEntity::class,
-    PlaylistSongEntity::class
+    PlaylistSongEntity::class,
+    DownloadEntity::class
 ], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class MusicDatabase : RoomDatabase() {
@@ -22,6 +23,7 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract val channelDao: ChannelDao
     abstract val playlistDao: PlaylistDao
     abstract val playlistSongDao: PlaylistSongDao
+    abstract val downloadDao: DownloadDao
 
     companion object {
         private const val DBNAME = "song.db"

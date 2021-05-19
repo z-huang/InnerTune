@@ -4,6 +4,7 @@ import com.zionhuang.music.ui.viewholders.SongViewHolder
 
 class DownloadHandler {
     private val songs = mutableMapOf<String, SongViewHolder>()
+
     val downloadListener: DownloadListener = { task ->
         songs[task.id]?.setProgress(task)
     }

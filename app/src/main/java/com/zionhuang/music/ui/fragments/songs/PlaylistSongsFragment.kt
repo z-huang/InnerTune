@@ -19,7 +19,6 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
-import com.zionhuang.music.download.DownloadHandler
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.ui.adapters.SongsAdapter
@@ -37,7 +36,6 @@ class PlaylistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private lateinit var songsAdapter: SongsAdapter
-    private val downloadHandler = DownloadHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +51,7 @@ class PlaylistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        songsViewModel.downloadServiceConnection.addDownloadListener(downloadHandler.downloadListener)
-
-        songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener, downloadHandler).apply {
+        songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener).apply {
             sortMenuListener = this@PlaylistSongsFragment.sortMenuListener
         }
 
@@ -82,11 +78,6 @@ class PlaylistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
             //val items = songsViewModel.songRepository.getPlaylistSongsList(playlistId)
             //Log.d(TAG, items.toString())
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        songsViewModel.downloadServiceConnection.removeDownloadListener(downloadHandler.downloadListener)
     }
 
     private val sortMenuListener = object : SortMenuListener {
