@@ -18,29 +18,32 @@ val MediaItem.metadata: CustomMetadata?
 private val mediaItemBuilder = MediaItem.Builder()
 
 fun CustomMetadata.toMediaItem() = mediaItemBuilder
-        .setMediaId(id)
-        .setUri("music://$id")
-        .setTag(this)
-        .build()
+    .setMediaId(id)
+    .setUri("music://$id")
+    .setTag(this)
+    .build()
 
 fun Song.toMediaItem(context: Context): MediaItem = mediaItemBuilder
-        .setMediaId(songId)
-        .setUri(Uri.Builder()
-                .scheme("music")
-                .authority(songId)
-                .appendQueryParameter(FROM_LOCAL, if (downloadState == STATE_DOWNLOADED) "1" else "0")
-                .build())
-        .setTag(toCustomMetadata(context))
-        .build()
+    .setMediaId(songId)
+    .setUri(
+        Uri.Builder()
+            .scheme("music")
+            .authority(songId)
+            .appendQueryParameter(FROM_LOCAL, if (downloadState == STATE_DOWNLOADED) "1" else "0")
+            .build()
+    )
+    .setTag(toCustomMetadata(context))
+    .build()
 
 fun StreamInfoItem.toMediaItem(): MediaItem? = toCustomMetadata()?.toMediaItem()
 
 fun MediaDescriptionCompat.toMediaItem() = mediaItemBuilder
-        .setMediaId(mediaId)
-        .setUri("music://$mediaId")
-        .setTag(toCustomMetadata())
-        .build()
+    .setMediaId(mediaId!!)
+    .setUri("music://$mediaId")
+    .setTag(toCustomMetadata())
+    .build()
 
 fun List<Song>.toMediaItems(context: Context): List<MediaItem> = map { it.toMediaItem(context) }
 
-fun List<InfoItem>.toMediaItems(): List<MediaItem> = filterIsInstance<StreamInfoItem>().mapNotNull { it.toMediaItem() }
+fun List<InfoItem>.toMediaItems(): List<MediaItem> =
+    filterIsInstance<StreamInfoItem>().mapNotNull { it.toMediaItem() }

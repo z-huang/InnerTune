@@ -34,29 +34,40 @@ class SongRepository(private val context: Context) {
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    fun getAllSongsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> = songDao.getAllSongsAsPagingSource(order, descending)
+    fun getAllSongsPagingSource(
+        @SongSortType order: Int,
+        descending: Boolean
+    ): PagingSource<Int, Song> = songDao.getAllSongsAsPagingSource(order, descending)
 
     /**
      * All Songs [List] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    suspend fun getAllSongsList(@SongSortType order: Int, descending: Boolean): List<Song> = withContext(IO) { songDao.getAllSongsAsList(order, descending) }
+    suspend fun getAllSongsList(@SongSortType order: Int, descending: Boolean): List<Song> =
+        withContext(IO) { songDao.getAllSongsAsList(order, descending) }
 
     /**
      * Artist Songs [PagingSource]
      */
-    fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> = songDao.getArtistSongsAsPagingSource(artistId, order, descending)
+    fun getArtistSongsAsPagingSource(
+        artistId: Int,
+        @SongSortType order: Int,
+        descending: Boolean
+    ): PagingSource<Int, Song> = songDao.getArtistSongsAsPagingSource(artistId, order, descending)
 
-    suspend fun getArtistSongsList(artistId: Int, @SongSortType order: Int, descending: Boolean) = withContext(IO) { songDao.getArtistSongsAsList(artistId, order, descending) }
+    suspend fun getArtistSongsList(artistId: Int, @SongSortType order: Int, descending: Boolean) =
+        withContext(IO) { songDao.getArtistSongsAsList(artistId, order, descending) }
 
     /**
      * Channel Songs [PagingSource]
      */
-    fun getChannelSongsAsPagingSource(channelId: String): PagingSource<Int, Song> = songDao.getChannelSongsAsPagingSource(channelId)
+    fun getChannelSongsAsPagingSource(channelId: String): PagingSource<Int, Song> =
+        songDao.getChannelSongsAsPagingSource(channelId)
 
     /**
      * Playlist Songs [PagingSource]
      */
-    fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, PlaylistSong> = playlistDao.getPlaylistSongs(playlistId)
+    fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, PlaylistSong> =
+        playlistDao.getPlaylistSongs(playlistId)
 
     //suspend fun getPlaylistSongsList(playlistId: Int) = withContext(IO) { playlistSongDao.getSongsAsList(playlistId) }
 
@@ -132,29 +143,37 @@ class SongRepository(private val context: Context) {
 
     suspend fun deleteSong(songId: String) = withContext(IO) {
         songDao.delete(songId)
-        context.getAudioFile(songId).takeIf { it.exists() }?.moveTo(context.getRecycledAudioFile(songId))
-        context.getArtworkFile(songId).takeIf { it.exists() }?.moveTo(context.getRecycledArtworkFile(songId))
+        context.getAudioFile(songId).takeIf { it.exists() }
+            ?.moveTo(context.getRecycledAudioFile(songId))
+        context.getArtworkFile(songId).takeIf { it.exists() }
+            ?.moveTo(context.getRecycledArtworkFile(songId))
     }
 
     suspend fun restoreSong(song: Song) {
-        context.getRecycledAudioFile(song.songId).takeIf { it.exists() }?.moveTo(context.getAudioFile(song.songId))
-        context.getRecycledArtworkFile(song.songId).takeIf { it.exists() }?.moveTo(context.getArtworkFile(song.songId))
+        context.getRecycledAudioFile(song.songId).takeIf { it.exists() }
+            ?.moveTo(context.getAudioFile(song.songId))
+        context.getRecycledArtworkFile(song.songId).takeIf { it.exists() }
+            ?.moveTo(context.getArtworkFile(song.songId))
         insert(song)
     }
 
     /**
      * Artist Operations
      */
-    suspend fun getArtist(artistId: Int): ArtistEntity? = withContext(IO) { artistDao.getArtist(artistId) }
+    suspend fun getArtist(artistId: Int): ArtistEntity? =
+        withContext(IO) { artistDao.getArtist(artistId) }
+
     suspend fun getArtist(name: String): Int? = withContext(IO) { artistDao.getArtistId(name) }
     private suspend fun getOrInsertArtist(name: String): Int = withContext(IO) {
         getArtist(name) ?: insertArtist(name)
     }
 
     @WorkerThread
-    fun searchArtists(query: CharSequence): List<ArtistEntity> = artistDao.searchArtists(query.toString())
+    fun searchArtists(query: CharSequence): List<ArtistEntity> =
+        artistDao.searchArtists(query.toString())
 
-    private suspend fun insertArtist(name: String): Int = withContext(IO) { artistDao.insert(ArtistEntity(name = name)).toInt() }
+    private suspend fun insertArtist(name: String): Int =
+        withContext(IO) { artistDao.insert(ArtistEntity(name = name)).toInt() }
 
     suspend fun updateArtist(artist: ArtistEntity) = withContext(IO) { artistDao.update(artist) }
 
@@ -165,12 +184,17 @@ class SongRepository(private val context: Context) {
     /**
      * Channel Operations
      */
-    fun getChannelFlowById(channelId: String): Flow<ChannelEntity> = channelDao.getChannelFlowById(channelId)
+    fun getChannelFlowById(channelId: String): Flow<ChannelEntity> =
+        channelDao.getChannelFlowById(channelId)
+
     fun getChannelById(channelId: String): ChannelEntity? = channelDao.getChannelById(channelId)
-    private suspend fun getChannelByName(name: String): ChannelEntity? = withContext(IO) { channelDao.getChannelByName(name) }
-    private suspend fun getOrInsertChannel(chanelId: String, name: String): ChannelEntity = withContext(IO) {
-        getChannelByName(name) ?: ChannelEntity(chanelId, name).apply { insertChannel(this) }
-    }
+    private suspend fun getChannelByName(name: String): ChannelEntity? =
+        withContext(IO) { channelDao.getChannelByName(name) }
+
+    private suspend fun getOrInsertChannel(chanelId: String, name: String): ChannelEntity =
+        withContext(IO) {
+            getChannelByName(name) ?: ChannelEntity(chanelId, name).apply { insertChannel(this) }
+        }
 
     private suspend fun insertChannel(channel: ChannelEntity) = withContext(IO) {
         channelDao.insert(channel)
@@ -180,8 +204,14 @@ class SongRepository(private val context: Context) {
     suspend fun downloadChannel(channelId: String) = withContext(IO) {
         val res = youTubeExtractor.getChannel(channelId)
         if (res is YouTubeChannel.Success) {
-            OkHttpDownloader.downloadFile(requestOf(res.avatarUrl!!), context.getChannelAvatarFile(channelId))
-            OkHttpDownloader.downloadFile(requestOf(res.bannerUrl!!), context.getChannelBannerFile(channelId))
+            OkHttpDownloader.downloadFile(
+                requestOf(res.avatarUrl!!),
+                context.getChannelAvatarFile(channelId)
+            )
+            OkHttpDownloader.downloadFile(
+                requestOf(res.bannerUrl!!),
+                context.getChannelBannerFile(channelId)
+            )
         }
     }
 
@@ -191,9 +221,11 @@ class SongRepository(private val context: Context) {
         context.getChannelBannerFile(channel.id).delete()
     }
 
-    suspend fun deleteChannel(channelId: String) = getChannelById(channelId)?.let { deleteChannel(it) }
+    suspend fun deleteChannel(channelId: String) =
+        getChannelById(channelId)?.let { deleteChannel(it) }
 
-    suspend fun hasChannel(channelId: String): Boolean = withContext(IO) { channelDao.contains(channelId) }
+    suspend fun hasChannel(channelId: String): Boolean =
+        withContext(IO) { channelDao.contains(channelId) }
 
     /**
      * Playlists

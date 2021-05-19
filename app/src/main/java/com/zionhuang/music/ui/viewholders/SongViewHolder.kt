@@ -10,8 +10,8 @@ import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
 class SongViewHolder(
-        val binding: ItemSongBinding,
-        private val popupMenuListener: SongPopupMenuListener,
+    val binding: ItemSongBinding,
+    private val popupMenuListener: SongPopupMenuListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(song: Song) {
         binding.song = song

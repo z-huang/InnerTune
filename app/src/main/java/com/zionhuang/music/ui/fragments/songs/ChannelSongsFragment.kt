@@ -28,7 +28,12 @@ class ChannelSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    private val channelViewModel by viewModels<ChannelViewModel> { ChannelViewModelFactory(requireActivity().application, channelId) }
+    private val channelViewModel by viewModels<ChannelViewModel> {
+        ChannelViewModelFactory(
+            requireActivity().application,
+            channelId
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

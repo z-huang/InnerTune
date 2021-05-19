@@ -1,7 +1,6 @@
 package com.zionhuang.music.youtube.newpipe
 
 import androidx.collection.LruCache
-import org.schabi.newpipe.extractor.InfoItem.InfoType
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
@@ -35,7 +34,7 @@ object InfoCache {
     }
 
     fun getFromKey(id: String): Any? =
-            synchronized(LRU_CACHE) { getInfo(keyOf(id)) }
+        synchronized(LRU_CACHE) { getInfo(keyOf(id)) }
 
     fun putInfo(id: String, info: Any) {
         val expirationMillis = MILLISECONDS.convert(1, HOURS)
@@ -45,7 +44,7 @@ object InfoCache {
         }
     }
 
-    fun removeInfo(id: String, infoType: InfoType) {
+    fun removeInfo(id: String) {
         synchronized(LRU_CACHE) { LRU_CACHE.remove(keyOf(id)) }
     }
 
