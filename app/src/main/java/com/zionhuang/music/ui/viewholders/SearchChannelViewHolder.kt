@@ -14,6 +14,10 @@ class SearchChannelViewHolder(private val binding: ItemSearchChannelBinding) : S
     private val context = binding.root.context
 
     fun bind(item: ChannelInfoItem) {
+        binding.root.transitionName = binding.root.context.resources.getString(
+            R.string.youtube_channel_item_transition_name,
+            item.url
+        )
         binding.channelTitle.text = item.name
         binding.subscribers.text = context.resources.getQuantityString(R.plurals.subscribers, item.subscriberCount.toInt(), item.subscriberCount.toInt())
         binding.streams.text = context.resources.getQuantityString(R.plurals.videos, item.streamCount.toInt(), item.streamCount.toInt())
@@ -25,6 +29,10 @@ class SearchChannelViewHolder(private val binding: ItemSearchChannelBinding) : S
 
     fun bind(item: SearchResult) {
         require(item.id?.kind == "youtube#channel") { "You should bind a channel type of [SearchResult] to [SearchStreamViewHolder]" }
+        binding.root.transitionName = binding.root.context.resources.getString(
+            R.string.youtube_channel_item_transition_name,
+            item.id
+        )
         binding.channelTitle.text = item.snippet?.channelTitle
         binding.bullet.isVisible = false
         binding.thumbnail.load(item.snippet.thumbnails.maxResUrl) {

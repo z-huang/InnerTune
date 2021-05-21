@@ -3,6 +3,7 @@ package com.zionhuang.music.extensions
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.zionhuang.music.playback.CustomMetadata
+import org.schabi.newpipe.extractor.Page
 
 fun Player.findMediaItemById(mediaId: String): MediaItem? {
     for (i in 0 until mediaItemCount) {
@@ -27,3 +28,21 @@ fun Player.mediaItemIndexOf(mediaId: String?): Int? {
 
 val Player.currentMetadata: CustomMetadata?
     get() = currentMediaItem?.metadata
+
+suspend fun Player.loadItems(
+    targetId: String,
+    initialItems: List<MediaItem>,
+    page: Page?,
+    get: suspend (Page) -> Pair<List<MediaItem>, Page>
+): Pair<Boolean, Page?> {
+    var info = Pair(initialItems, page)
+    var idx: Int
+    val update = suspend { info = get(info.second!!); true }
+    do {
+        val lastItemCount = mediaItemCount
+        addMediaItems(info.first)
+        idx = info.first.indexOfFirst { it.mediaId == targetId }
+        if (idx != -1) idx += lastItemCount
+    } while (idx == -1 && Page.isValid(info.second) && update())
+    return Pair(idx == -1, info.second)
+}

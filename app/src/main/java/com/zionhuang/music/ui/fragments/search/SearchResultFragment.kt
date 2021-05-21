@@ -35,6 +35,7 @@ import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
@@ -54,7 +55,8 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
             }
     }
 
-    private val searchResultAdapter: NewPipeSearchResultAdapter = NewPipeSearchResultAdapter(searchFilterListener)
+    private val searchResultAdapter: NewPipeSearchResultAdapter =
+        NewPipeSearchResultAdapter(searchFilterListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,29 +75,50 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
             binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
             binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
             if (loadState.refresh is LoadState.Error) {
-                binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
+                binding.errorMsg.text =
+                    (loadState.refresh as LoadState.Error).error.localizedMessage
             }
         }
         binding.btnRetry.setOnClickListener { searchResultAdapter.retry() }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
+            adapter =
+                searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, view ->
                 if (pos == 0) return@addOnClickListener
                 when (val item = searchResultAdapter.getItemByPosition(pos)!!) {
                     is StreamInfoItem -> {
-                        playbackViewModel.playFromSearch(requireActivity(), query, bundleOf(
+                        playbackViewModel.playFromSearch(
+                            requireActivity(), query, bundleOf(
                                 EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url),
-                                EXTRA_LINK_HANDLER to ExtractorHelper.getSearchQueryHandler(query, listOf(searchFilterListener.filter))
-                        ))
+                                EXTRA_LINK_HANDLER to ExtractorHelper.getSearchQueryHandler(
+                                    query,
+                                    listOf(searchFilterListener.filter)
+                                )
+                            )
+                        )
                     }
                     is PlaylistInfoItem -> {
                         exitTransition = MaterialElevationScale(false).apply { duration = 300L }
                         reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
                         val transitionName = getString(R.string.youtube_playlist_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
-                        val directions = SearchResultFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(item.url)
+                        val directions =
+                            SearchResultFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(
+                                item.url
+                            )
+                        findNavController().navigate(directions, extras)
+                    }
+                    is ChannelInfoItem -> {
+                        exitTransition = MaterialElevationScale(false).apply { duration = 300L }
+                        reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
+                        val transitionName = getString(R.string.youtube_channel_transition_name)
+                        val extras = FragmentNavigatorExtras(view to transitionName)
+                        val directions =
+                            SearchResultFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(
+                                item.url
+                            )
                         findNavController().navigate(directions, extras)
                     }
                 }
@@ -116,7 +139,8 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_search) {
-            NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
+            NavHostFragment.findNavController(this)
+                .navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
         }
         return true
     }

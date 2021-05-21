@@ -1,6 +1,5 @@
 package com.zionhuang.music.ui.adapters
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.paging.PagingDataAdapter
@@ -15,7 +14,6 @@ import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
-import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
@@ -54,7 +52,6 @@ class SongsAdapter(
                 if (payloads.isEmpty()) {
                     onBindViewHolder(holder, position)
                 } else {
-                    Log.d(TAG, payloads.toString())
                     when (val payload = payloads.last()) {
                         is Song -> holder.bind(payload)
                         is DownloadProgress -> holder.setProgress(payload)

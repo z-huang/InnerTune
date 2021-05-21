@@ -68,9 +68,9 @@ class YouTubeDataSource {
             } else {
                 val infoItemsPage = ExtractorHelper.getPlaylist(url, params.key!!)
                 LoadResult.Page(
-                        data = infoItemsPage.items,
-                        nextKey = infoItemsPage.nextPage,
-                        prevKey = null
+                    data = infoItemsPage.items,
+                    nextKey = infoItemsPage.nextPage,
+                    prevKey = null
                 )
             }
         } catch (e: Exception) {
@@ -80,7 +80,32 @@ class YouTubeDataSource {
         override fun getRefreshKey(state: PagingState<Page, InfoItem>): Page? = null
     }
 
-    class Popular(private val youTubeRepository: YouTubeRepository) : PagingSource<String, Video>() {
+    class NewPipeChannel(private val url: String) : PagingSource<Page, InfoItem>() {
+        override suspend fun load(params: LoadParams<Page>): LoadResult<Page, InfoItem> = try {
+            if (params.key == null) {
+                val channel = ExtractorHelper.getChannel(url)
+                LoadResult.Page(
+                    data = channel.relatedItems,
+                    nextKey = channel.nextPage,
+                    prevKey = null
+                )
+            } else {
+                val infoItemsPage = ExtractorHelper.getChannel(url, params.key!!)
+                LoadResult.Page(
+                    data = infoItemsPage.items,
+                    nextKey = infoItemsPage.nextPage,
+                    prevKey = null
+                )
+            }
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
+
+        override fun getRefreshKey(state: PagingState<Page, InfoItem>): Page? = null
+    }
+
+    class Popular(private val youTubeRepository: YouTubeRepository) :
+        PagingSource<String, Video>() {
         @Suppress("BlockingMethodInNonBlockingContext")
         override suspend fun load(params: LoadParams<String>): LoadResult<String, Video> {
             return try {

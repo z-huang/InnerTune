@@ -53,6 +53,7 @@ class ArtistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
         songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener).apply {
             sortMenuListener = this@ArtistSongsFragment.sortMenuListener
+            downloadInfo = songsViewModel.downloadInfoLiveData
         }
 
         binding.recyclerView.apply {
@@ -61,12 +62,14 @@ class ArtistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.playMedia(requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
+                playbackViewModel.playMedia(
+                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
                         EXTRA_ARTIST_ID to artistId,
                         EXTRA_QUEUE_TYPE to QUEUE_ARTIST,
                         EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
                         EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
-                ))
+                    )
+                )
             }
         }
 
@@ -74,6 +77,12 @@ class ArtistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
             activity.title = songsViewModel.songRepository.getArtist(artistId)!!.name
             songsViewModel.getArtistSongsAsFlow(artistId).collectLatest {
                 songsAdapter.submitData(it)
+            }
+        }
+
+        songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
+            map.forEach { (key, value) ->
+                songsAdapter.setProgress(key, value)
             }
         }
     }

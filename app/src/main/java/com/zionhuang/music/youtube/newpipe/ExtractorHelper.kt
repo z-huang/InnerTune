@@ -7,6 +7,7 @@ import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.ServiceList
+import org.schabi.newpipe.extractor.channel.ChannelInfo
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
@@ -43,25 +44,41 @@ object ExtractorHelper {
      * Playlist
      */
     fun getPlaylistLinkHandler(url: String): ListLinkHandler =
-            service.playlistLHFactory.fromUrl(url)
+        service.playlistLHFactory.fromUrl(url)
 
     suspend fun getPlaylist(url: String): PlaylistInfo = checkCache(url) {
         PlaylistInfo.getInfo(service, url)
     }
 
-    suspend fun getPlaylist(url: String, page: Page): InfoItemsPage<StreamInfoItem> = checkCache("$url$${page.hashCode()}") {
-        PlaylistInfo.getMoreItems(service, url, page)
+    suspend fun getPlaylist(url: String, page: Page): InfoItemsPage<StreamInfoItem> =
+        checkCache("$url$${page.hashCode()}") {
+            PlaylistInfo.getMoreItems(service, url, page)
+        }
+
+    /**
+     * Channel
+     */
+    fun getChannelLinkHandler(url: String): ListLinkHandler =
+        service.channelLHFactory.fromUrl(url)
+
+    suspend fun getChannel(url: String): ChannelInfo = checkCache(url) {
+        ChannelInfo.getInfo(service, url)
     }
+
+    suspend fun getChannel(url: String, page: Page): InfoItemsPage<StreamInfoItem> =
+        checkCache("$url$${page.hashCode()}") {
+            ChannelInfo.getMoreItems(service, url, page)
+        }
 
     suspend fun getStreamInfo(id: String): StreamInfo = checkCache("stream$$id") {
         StreamInfo.getInfo(service, service.streamLHFactory.getUrl(id))
     }
 
     private suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
-            loadFromCache(id) ?: withContext(IO) {
-                loadFromNetwork().also {
-                    InfoCache.putInfo(id, it)
-                }
+        loadFromCache(id) ?: withContext(IO) {
+            loadFromNetwork().also {
+                InfoCache.putInfo(id, it)
+            }
             }
 
     @Suppress("UNCHECKED_CAST")

@@ -23,7 +23,10 @@ class SearchPlaylistViewHolder(private val binding: ItemSearchPlaylistBinding) :
 
     fun bind(item: SearchResult) {
         require(item.id?.kind == "youtube#playlist") { "You should bind a playlist type of [SearchResult] to [SearchStreamViewHolder]" }
-        binding.root.transitionName = binding.root.context.resources.getString(R.string.youtube_playlist_item_transition_name, item.snippet.channelId)
+        binding.root.transitionName = binding.root.context.resources.getString(
+            R.string.youtube_playlist_item_transition_name,
+            item.id
+        )
         binding.playlistTitle.text = item.snippet?.title
         binding.uploader.text = item.snippet?.channelTitle
         binding.thumbnail.load(item.snippet.thumbnails.maxResUrl) {

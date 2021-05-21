@@ -57,6 +57,8 @@
     <!-- Transition Name -->
     <string name="youtube_playlist_item_transition_name" translatable="false">playlist_%1$s</string>
     <string name="youtube_playlist_transition_name" translatable="false">youtube_playlist</string>
+    <string name="youtube_channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="youtube_channel_transition_name" translatable="false">youtube_channel</string>
     <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
     <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
     <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>

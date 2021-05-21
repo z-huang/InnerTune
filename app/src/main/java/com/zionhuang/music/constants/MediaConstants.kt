@@ -27,6 +27,7 @@ object MediaConstants {
     const val QUEUE_SINGLE = 5
     const val QUEUE_SEARCH = 6
     const val QUEUE_YT_PLAYLIST = 7
+    const val QUEUE_YT_CHANNEL = 8
 
     @IntDef(TYPE_SQUARE, TYPE_RECTANGLE)
     @Retention(AnnotationRetention.SOURCE)
