@@ -2,7 +2,7 @@ package com.zionhuang.music.db.entities
 
 import androidx.room.*
 import com.zionhuang.music.constants.MediaConstants.ArtworkType
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
+import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import java.util.*
 
 @Entity(tableName = "song",

@@ -9,11 +9,11 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.Constants.TYPE_HEADER
 import com.zionhuang.music.constants.Constants.TYPE_ITEM
+import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADING
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener

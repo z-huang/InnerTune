@@ -5,8 +5,8 @@ import android.net.Uri
 import android.support.v4.media.MediaDescriptionCompat
 import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.music.constants.Constants.FROM_LOCAL
+import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.playback.CustomMetadata
 import com.zionhuang.music.playback.CustomMetadata.Companion.toCustomMetadata
 import org.schabi.newpipe.extractor.InfoItem

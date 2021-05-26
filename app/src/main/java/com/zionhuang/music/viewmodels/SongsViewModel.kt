@@ -3,7 +3,6 @@ package com.zionhuang.music.viewmodels
 import android.app.Application
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.lifecycle.*
@@ -21,8 +20,6 @@ import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.download.DownloadService
-import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.forEach
 import com.zionhuang.music.extensions.get
 import com.zionhuang.music.extensions.getActivity
@@ -32,6 +29,7 @@ import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import com.zionhuang.music.utils.downloadSong
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -126,10 +124,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         override fun downloadSong(songId: String, context: Context) {
-            context.startService(Intent(context, DownloadService::class.java).apply {
-                action = DownloadService.ACTION_DOWNLOAD_MUSIC
-                putExtra("task", DownloadTask(id = songId))
-            })
+            viewModelScope.launch {
+                context.downloadSong(songId)
+            }
         }
 
         override fun deleteSong(songId: String) {

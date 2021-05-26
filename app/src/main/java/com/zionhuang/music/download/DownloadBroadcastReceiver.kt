@@ -6,9 +6,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.getSystemService
+import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
+import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.db.SongRepository
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_DOWNLOADED
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.extensions.get
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope

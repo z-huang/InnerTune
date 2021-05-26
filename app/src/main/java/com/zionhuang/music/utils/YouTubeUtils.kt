@@ -1,7 +1,7 @@
 package com.zionhuang.music.utils
 
-private const val MS_FORMAT = """%2${"$"}d:%3$02d"""
-private const val HMS_FORMAT = """%1${"$"}d:%2$02d:%3$02d"""
+private const val MS_FORMAT = "%2\$d:%3$02d"
+private const val HMS_FORMAT = "%1\$d:%2$02d:%3$02d"
 
 /**
  * Convert duration in seconds to formatted time string

@@ -119,7 +119,7 @@ class MediaWidgetsController(
             val animatedValue = animation.animatedValue as Int
             progressBar.progress = animatedValue
             slider.value = animatedValue.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
-            progressTextView.text = makeTimeString(animatedValue / 1000.toLong())
+            progressTextView.text = makeTimeString((animatedValue / 1000).toLong())
         }
     }
 }

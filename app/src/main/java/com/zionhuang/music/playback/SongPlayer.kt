@@ -51,12 +51,10 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.download.DownloadService
-import com.zionhuang.music.download.DownloadService.Companion.ACTION_DOWNLOAD_MUSIC
-import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
+import com.zionhuang.music.utils.downloadSong
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.CoroutineScope
@@ -336,17 +334,7 @@ class SongPlayer(
                         )
                         if (autoDownload) {
                             player.currentMetadata?.let { metadata ->
-                                context.startService(
-                                    Intent(
-                                        context,
-                                        DownloadService::class.java
-                                    ).apply {
-                                        action = ACTION_DOWNLOAD_MUSIC
-                                        putExtra(
-                                            "task",
-                                            DownloadTask(id = metadata.id, title = metadata.title)
-                                        )
-                                    })
+                                context.downloadSong(metadata.id)
                             }
                         }
                     }

@@ -3,9 +3,9 @@ package com.zionhuang.music.ui.viewholders
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.databinding.ItemSongBinding
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.download.DownloadTask
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
@@ -36,18 +36,11 @@ class SongViewHolder(
                     true
                 }
                 menu.findItem(R.id.action_download).isVisible =
-                    song.downloadState == DownloadTask.STATE_NOT_DOWNLOADED
+                    song.downloadState == STATE_NOT_DOWNLOADED
                 show()
             }
         }
         binding.executePendingBindings()
-    }
-
-    fun setProgress(task: DownloadTask) {
-        binding.progressBar.run {
-            max = task.totalBytes.toInt()
-            setProgress(task.currentBytes.toInt(), true)
-        }
     }
 
     fun setProgress(progress: DownloadProgress, animate: Boolean = true) {

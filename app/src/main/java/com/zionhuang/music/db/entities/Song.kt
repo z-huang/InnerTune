@@ -4,8 +4,8 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Relation
 import com.zionhuang.music.constants.MediaConstants.ArtworkType
+import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
-import com.zionhuang.music.download.DownloadTask.Companion.STATE_NOT_DOWNLOADED
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
