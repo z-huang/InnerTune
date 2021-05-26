@@ -39,11 +39,10 @@ object MediaSessionConnection {
     fun connect(context: Context) {
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, iBinder: IBinder) {
-                val service = (iBinder as LocalBinder).service.apply {
-                    setPlayerView(playerView)
-                }
+                if (iBinder !is LocalBinder) return
+                iBinder.setPlayerView(playerView)
                 try {
-                    mediaController = MediaControllerCompat(context, service.sessionToken).apply {
+                    mediaController = MediaControllerCompat(context, iBinder.sessionToken).apply {
                         registerCallback(mediaControllerCallback)
                     }
                     isConnected.postValue(true)
