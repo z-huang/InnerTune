@@ -15,10 +15,17 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    applicationVariants.all { variant ->
+        variant.resValue "string", "app_version", variant.versionName
+        variant.resValue "string", "newpipe_version", newpipe_version
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            versionNameSuffix = " Debug"
         }
     }
     buildFeatures {
@@ -100,7 +107,7 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-android:1.31.2'
     implementation 'com.google.api-client:google-api-client-gson:1.31.2'
     // NewPipe Extractor
-    implementation 'com.github.TeamNewPipe:NewPipeExtractor:v0.21.0'
+    implementation "com.github.TeamNewPipe:NewPipeExtractor:v$newpipe_version"
     // Apache Utils
     implementation "org.apache.commons:commons-lang3:3.11"
     implementation "org.apache.commons:commons-text:1.9"

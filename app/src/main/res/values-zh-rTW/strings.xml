@@ -55,4 +55,6 @@
     <string name="dialog_edit_artist_title">編輯作曲家</string>
     <string name="menu_song_play_next">接著播放</string>
     <string name="menu_song_add_to_queue">加入待播清單</string>
+    <string name="pref_app_version_title">應用程式版本</string>
+    <string name="pref_newpipe_version_title">NewPipe Extractor 版本</string>
 </resources>

@@ -6,4 +6,6 @@
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
     <string name="pref_sort_type" translatable="false">SORT_TYPE</string>
     <string name="pref_sort_descending" translatable="false">SORT_DESC</string>
+    <string name="pref_app_version" translatable="false">APP_VERSION</string>
+    <string name="pref_newpipe_version" translatable="false">NEWPIPE_VERSION</string>
 </resources>
