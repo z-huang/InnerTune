@@ -16,9 +16,6 @@ data class Song(
         var artistId: Int = 0,
         @Relation(entity = ArtistEntity::class, parentColumn = "artistId", entityColumn = "id", projection = ["name"])
         var artistName: String = "",
-        var channelId: String = "",
-        @Relation(entity = ChannelEntity::class, parentColumn = "channelId", entityColumn = "id", projection = ["name"])
-        var channelName: String = "",
         @ArtworkType val artworkType: Int = TYPE_RECTANGLE,
         var duration: Int = 0, // in seconds
         var liked: Boolean = false,

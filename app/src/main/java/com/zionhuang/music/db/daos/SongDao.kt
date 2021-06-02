@@ -8,12 +8,9 @@ import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.extensions.toSQLiteQuery
-import com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment
-import kotlinx.coroutines.flow.Flow
 
 const val QUERY_ALL_SONG = "SELECT * FROM song"
 const val QUERY_ARTIST_SONG = "SELECT * FROM song WHERE artistId = %d"
@@ -25,7 +22,7 @@ interface SongDao {
      * Methods for the UI
      */
     @Transaction
-    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, ChannelEntity::class])
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class])
     fun getSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
 
     @Transaction
@@ -65,22 +62,6 @@ interface SongDao {
                 descending
             )).toSQLiteQuery()
         )
-
-    /**
-     * Channel Songs [PagingSource]
-     */
-    @Transaction
-    @Query("SELECT * FROM song WHERE channelId = :channelId")
-    fun getChannelSongsAsPagingSource(channelId: String): PagingSource<Int, Song>
-
-    /**
-     * Methods for [ChannelSongsFragment]
-     */
-    @Query("SELECT COUNT(songId) FROM song WHERE channelId = :channelId")
-    fun channelSongsCount(channelId: String): Flow<Int>
-
-    @Query("SELECT SUM(duration) FROM song WHERE channelId = :channelId")
-    fun channelSongsDuration(channelId: String): Flow<Long?>
 
     /**
      * Internal methods

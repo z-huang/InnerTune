@@ -55,8 +55,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
             }
     }
 
-    private val searchResultAdapter: NewPipeSearchResultAdapter =
-        NewPipeSearchResultAdapter(searchFilterListener)
+    private val searchResultAdapter: NewPipeSearchResultAdapter = NewPipeSearchResultAdapter(searchFilterListener)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,8 +82,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter =
-                searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
+            adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, view ->
                 if (pos == 0) return@addOnClickListener
                 when (val item = searchResultAdapter.getItemByPosition(pos)!!) {

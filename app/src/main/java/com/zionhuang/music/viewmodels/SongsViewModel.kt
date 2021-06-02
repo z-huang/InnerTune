@@ -6,7 +6,10 @@ import android.content.Context
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,7 +22,6 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
@@ -58,12 +60,6 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         }.flow.cachedIn(viewModelScope)
     }
 
-    val allChannelsFlow: Flow<PagingData<ChannelEntity>> by lazy {
-        Pager(PagingConfig(pageSize = 50)) {
-            songRepository.allChannelsPagingSource
-        }.flow.cachedIn(viewModelScope)
-    }
-
     val allPlaylistsFlow: Flow<PagingData<PlaylistEntity>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
             songRepository.allPlaylistsPagingSource
@@ -82,14 +78,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         pagingData.map { it.song }
     }.cachedIn(viewModelScope)
 
-    fun getChannelSongsAsFlow(channelId: String) = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getChannelSongsAsPagingSource(channelId)
-    }.flow.map { pagingData ->
-        pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
-    }.cachedIn(viewModelScope)
-
-    private val _deleteSong = MutableLiveData<List<Song>>()
-    val deleteSong: LiveData<List<Song>> get() = _deleteSong
+    val deletedSongs: LiveData<List<Song>> get() = songRepository.deletedSongs
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(song: Song, context: Context) {
@@ -142,7 +131,6 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun deleteSongs(songs: List<Song>) {
             viewModelScope.launch {
                 songRepository.deleteSongs(songs)
-                _deleteSong.postValue(songs)
             }
         }
     }

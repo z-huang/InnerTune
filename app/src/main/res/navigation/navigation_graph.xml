@@ -20,18 +20,6 @@
         </action>
     </fragment>
     <fragment
-        android:id="@+id/channelsFragment"
-        android:name="com.zionhuang.music.ui.fragments.ChannelsFragment"
-        android:label="@string/title_channels">
-        <action
-            android:id="@+id/action_channelsFragment_to_channelSongsFragment"
-            app:destination="@id/channelSongsFragment">
-            <argument
-                android:name="channelId"
-                app:argType="string" />
-        </action>
-    </fragment>
-    <fragment
         android:id="@+id/playlistsFragment"
         android:name="com.zionhuang.music.ui.fragments.PlaylistsFragment"
         android:label="@string/title_playlists">
@@ -109,14 +97,6 @@
         <argument
             android:name="playlistId"
             app:argType="integer" />
-    </fragment>
-    <fragment
-        android:id="@+id/channelSongsFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.ChannelSongsFragment"
-        android:label="ChannelSongsFragment">
-        <argument
-            android:name="channelId"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/youTubePlaylistFragment"

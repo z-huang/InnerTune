@@ -11,7 +11,6 @@ import com.zionhuang.music.db.entities.*
 @Database(entities = [
     SongEntity::class,
     ArtistEntity::class,
-    ChannelEntity::class,
     PlaylistEntity::class,
     PlaylistSongEntity::class,
     DownloadEntity::class
@@ -20,7 +19,6 @@ import com.zionhuang.music.db.entities.*
 abstract class MusicDatabase : RoomDatabase() {
     abstract val songDao: SongDao
     abstract val artistDao: ArtistDao
-    abstract val channelDao: ChannelDao
     abstract val playlistDao: PlaylistDao
     abstract val playlistSongDao: PlaylistSongDao
     abstract val downloadDao: DownloadDao

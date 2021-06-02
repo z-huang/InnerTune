@@ -39,7 +39,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        songsViewModel.deleteSong.observe(this) { songs ->
+        songsViewModel.deletedSongs.observe(this) { songs ->
             Snackbar.make(
                 binding.root, resources.getQuantityString(
                     R.plurals.snack_bar_delete_song,
