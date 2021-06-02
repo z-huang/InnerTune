@@ -9,7 +9,7 @@ class SongItemDetailsLookup(private val recyclerView: RecyclerView) : ItemDetail
     override fun getItemDetails(e: MotionEvent): ItemDetails<String>? {
         val view = recyclerView.findChildViewUnder(e.x, e.y)
         return view?.let { v ->
-            (recyclerView.getChildViewHolder(v) as SongViewHolder).itemDetails
+            (recyclerView.getChildViewHolder(v) as? SongViewHolder)?.itemDetails
         }
     }
 }
