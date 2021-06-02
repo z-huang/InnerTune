@@ -7,5 +7,5 @@ import com.zionhuang.music.db.entities.PlaylistSongEntity
 @Dao
 interface PlaylistSongDao {
     @Insert
-    fun insert(playlistSong: PlaylistSongEntity): Long
+    fun insert(playlistSong: List<PlaylistSongEntity>)
 }

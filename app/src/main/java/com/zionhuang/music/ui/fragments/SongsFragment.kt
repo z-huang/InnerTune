@@ -2,16 +2,16 @@ package com.zionhuang.music.ui.fragments
 
 import android.app.DownloadManager.*
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
@@ -27,8 +27,11 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.SongsAdapter
+import com.zionhuang.music.ui.adapters.selection.SongItemDetailsLookup
+import com.zionhuang.music.ui.adapters.selection.SongItemKeyProvider
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.ui.listeners.SortMenuListener
+import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,6 +42,8 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private lateinit var songsAdapter: SongsAdapter
+    private lateinit var tracker: SelectionTracker<String>
+    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +75,31 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 )
             }
             addFastScroller { useMd2Style() }
+        }
+
+        tracker = SelectionTracker.Builder(
+            "selectionId",
+            binding.recyclerView,
+            SongItemKeyProvider(songsAdapter),
+            SongItemDetailsLookup(binding.recyclerView),
+            StorageStrategy.createStringStorage()
+        ).withSelectionPredicate(
+            SelectionPredicates.createSelectAnything()
+        ).build()
+        songsAdapter.tracker = tracker
+        tracker.addActionModeObserver(requireActivity(), tracker, R.menu.song_contextual_action_bar) { item ->
+            val selectedMap = songsAdapter.snapshot().items
+                .filter { tracker.selection.contains(it.songId) }
+                .associateBy { it.songId }
+            val songs = tracker.selection.toList().mapNotNull { selectedMap[it] }
+            when (item.itemId) {
+                R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs)
+                R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs)
+                R.id.action_add_to_playlist -> songsViewModel.songPopupMenuListener.addToPlaylist(songs, requireContext())
+                R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(tracker.selection.toList(), requireContext())
+                R.id.action_delete -> songsViewModel.songPopupMenuListener.deleteSongs(songs)
+            }
+            true
         }
 
         lifecycleScope.launch {
@@ -112,6 +142,16 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private fun updateSortType(@SongSortType sortType: Int) {
         songsViewModel.sortType = sortType
         songsAdapter.refresh()
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        tracker.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        tracker.onSaveInstanceState(outState)
     }
 
     companion object {

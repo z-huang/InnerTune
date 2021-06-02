@@ -26,7 +26,8 @@ import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.launch
 
-class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
+class MainActivity : BindingActivity<ActivityMainBinding>(),
+    NavController.OnDestinationChangedListener {
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
@@ -38,28 +39,37 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        songsViewModel.deleteSong.observe(this) { song ->
-            Snackbar.make(binding.root, getString(R.string.snack_bar_delete_song, song.title), Snackbar.LENGTH_LONG)
-                    .setAnchorView(binding.bottomNav)
-                    .setAction(R.string.snack_bar_undo) {
-                        lifecycleScope.launch {
-                            songsViewModel.songRepository.restoreSong(song)
-                        }
+        songsViewModel.deleteSong.observe(this) { songs ->
+            Snackbar.make(
+                binding.root, resources.getQuantityString(
+                    R.plurals.snack_bar_delete_song,
+                    songs.size,
+                    songs.size
+                ), Snackbar.LENGTH_LONG
+            )
+                .setAnchorView(binding.bottomNav)
+                .setAction(R.string.snack_bar_undo) {
+                    lifecycleScope.launch {
+                        songsViewModel.songRepository.restoreSongs(songs)
                     }
-                    .show()
+                }
+                .show()
         }
     }
 
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
                 R.id.songsFragment,
                 R.id.artistsFragment,
                 R.id.playlistsFragment,
                 R.id.explorationFragment
-        ))
+            )
+        )
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener(this)
@@ -80,7 +90,11 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
         }
     }
 
-    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
         if (destination.id == R.id.playlistsFragment) {
             binding.fab.show()
         } else if (binding.fab.isVisible) {
@@ -90,7 +104,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight(binding.bottomNav.height + (54 * getDensity()).toInt(), true)
+        bottomSheetBehavior.setPeekHeight(
+            binding.bottomNav.height + (54 * getDensity()).toInt(),
+            true
+        )
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {

@@ -8,6 +8,7 @@ object MediaConstants {
     const val EXTRA_QUEUE_DESC = "queue_desc"
     const val EXTRA_SONG_ID = "song_id"
     const val EXTRA_SONG = "song"
+    const val EXTRA_SONGS = "songs"
     const val EXTRA_ARTIST_ID = "artist_id"
     const val EXTRA_ARTIST = "artist"
     const val EXTRA_PLAYLIST_ID = "playlist_id"

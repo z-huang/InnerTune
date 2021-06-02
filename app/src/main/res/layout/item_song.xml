@@ -9,6 +9,10 @@
             name="song"
             type="com.zionhuang.music.db.entities.Song" />
 
+        <variable
+            name="isSelected"
+            type="Boolean" />
+
         <import type="com.zionhuang.music.constants.MediaConstants" />
 
         <import type="android.view.View" />
@@ -156,6 +160,6 @@
             android:layout_height="match_parent"
             android:alpha="0.25"
             android:background="?colorAccent"
-            android:visibility="gone" />
+            android:visibility="@{(isSelected ?? true) ? View.VISIBLE : View.GONE}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

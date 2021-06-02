@@ -5,9 +5,9 @@ import com.zionhuang.music.db.entities.Song
 
 interface SongPopupMenuListener {
     fun editSong(song: Song, context: Context)
-    fun playNext(song: Song)
-    fun addToQueue(song: Song)
-    fun addToPlaylist(song: Song, context: Context)
-    fun downloadSong(songId: String, context: Context)
-    fun deleteSong(songId: String)
+    fun playNext(songs: List<Song>)
+    fun addToQueue(songs: List<Song>)
+    fun addToPlaylist(songs: List<Song>, context: Context)
+    fun downloadSongs(songIds: List<String>, context: Context)
+    fun deleteSongs(songs: List<Song>)
 }

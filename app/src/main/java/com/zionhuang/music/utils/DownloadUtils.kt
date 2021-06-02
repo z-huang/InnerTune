@@ -12,8 +12,7 @@ import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 
-suspend fun Context.downloadSong(mediaId: String) {
-    val songRepository = SongRepository(this)
+suspend fun Context.downloadSong(mediaId: String, songRepository: SongRepository) {
     if (songRepository.getSongById(mediaId)!!.downloadState == STATE_DOWNLOADED) return
     songRepository.updateSongEntity(mediaId) {
         downloadState = STATE_DOWNLOADING

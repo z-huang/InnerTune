@@ -24,7 +24,7 @@ interface PlaylistDao {
     fun getPlaylistSongs(playlistId: Int): PagingSource<Int, PlaylistSong>
 
     @Insert
-    fun insert(playlist: PlaylistEntity): Long
+    fun insert(playlist: PlaylistEntity)
 
     @Update
     fun updatePlaylistSongs(list: List<PlaylistSongEntity>)

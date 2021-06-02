@@ -36,7 +36,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_QUERY_STRING
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
-import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
@@ -298,17 +298,17 @@ class SongPlayer(
                     true
                 }
                 COMMAND_PLAY_NEXT -> {
-                    val song = extras.getParcelable<Song>(EXTRA_SONG)!!
-                    player.addMediaItem(
+                    val songs = extras.getParcelableArray(EXTRA_SONGS)!!
+                    player.addMediaItems(
                         (if (player.mediaItemCount == 0) -1 else player.currentWindowIndex) + 1,
-                        song.toMediaItem(context)
+                        songs.toList().castOrNull<Song>()!!.toMediaItems(context)
                     )
                     player.prepare()
                     true
                 }
                 COMMAND_ADD_TO_QUEUE -> {
-                    val song = extras.getParcelable<Song>(EXTRA_SONG)!!
-                    player.addMediaItem(song.toMediaItem(context))
+                    val songs = extras.getParcelableArray(EXTRA_SONGS)!!
+                    player.addMediaItems(songs.toList().castOrNull<Song>()!!.toMediaItems(context))
                     player.prepare()
                     true
                 }
@@ -334,7 +334,7 @@ class SongPlayer(
                         )
                         if (autoDownload) {
                             player.currentMetadata?.let { metadata ->
-                                context.downloadSong(metadata.id)
+                                context.downloadSong(metadata.id, songRepository)
                             }
                         }
                     }

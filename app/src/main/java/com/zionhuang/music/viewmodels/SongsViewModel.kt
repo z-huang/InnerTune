@@ -3,6 +3,7 @@ package com.zionhuang.music.viewmodels
 import android.app.Application
 import android.app.DownloadManager
 import android.content.Context
+import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.lifecycle.*
@@ -12,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.ORDER_NAME
@@ -20,10 +22,7 @@ import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.ChannelEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.extensions.forEach
-import com.zionhuang.music.extensions.get
-import com.zionhuang.music.extensions.getActivity
-import com.zionhuang.music.extensions.preference
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
@@ -78,7 +77,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     }.cachedIn(viewModelScope)
 
     fun getPlaylistSongsAsFlow(playlistId: Int) = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getPlaylistSongsAsPagingSource(playlistId)
+        songRepository.getPlaylistSongs(playlistId)
     }.flow.map { pagingData ->
         pagingData.map { it.song }
     }.cachedIn(viewModelScope)
@@ -89,8 +88,8 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)
 
-    private val _deleteSong = MutableLiveData<Song>()
-    val deleteSong: LiveData<Song> get() = _deleteSong
+    private val _deleteSong = MutableLiveData<List<Song>>()
+    val deleteSong: LiveData<List<Song>> get() = _deleteSong
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(song: Song, context: Context) {
@@ -101,40 +100,49 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-        override fun playNext(song: Song) {
-            mediaSessionConnection.mediaController?.sendCommand(COMMAND_PLAY_NEXT, bundleOf(EXTRA_SONG to song), null)
+        override fun playNext(songs: List<Song>) {
+            mediaSessionConnection.mediaController?.sendCommand(
+                COMMAND_PLAY_NEXT,
+                bundleOf(EXTRA_SONGS to songs.toTypedArray()),
+                null
+            )
         }
 
-        override fun addToQueue(song: Song) {
-            mediaSessionConnection.mediaController?.sendCommand(COMMAND_ADD_TO_QUEUE, bundleOf(EXTRA_SONG to song), null)
+        override fun addToQueue(songs: List<Song>) {
+            mediaSessionConnection.mediaController?.sendCommand(
+                COMMAND_ADD_TO_QUEUE,
+                bundleOf(EXTRA_SONGS to songs.toTypedArray()),
+                null
+            )
         }
 
-        override fun addToPlaylist(song: Song, context: Context) {
+        override fun addToPlaylist(songs: List<Song>, context: Context) {
             viewModelScope.launch {
                 val playlists = songRepository.getPlaylists()
                 MaterialAlertDialogBuilder(context)
-                        .setTitle(R.string.dialog_choose_playlist_title)
-                        .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
-                            viewModelScope.launch {
-                                playlists[i].playlistId?.let { songRepository.insertToPlaylist(song, it) }
-                            }
+                    .setTitle(R.string.dialog_choose_playlist_title)
+                    .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
+                        viewModelScope.launch {
+                            songRepository.addToPlaylist(songs, playlists[i].playlistId)
                         }
-                        .show()
+                    }
+                    .show()
             }
         }
 
-        override fun downloadSong(songId: String, context: Context) {
+        override fun downloadSongs(songIds: List<String>, context: Context) {
+            Log.d(TAG, songIds.toString())
             viewModelScope.launch {
-                context.downloadSong(songId)
-            }
-        }
-
-        override fun deleteSong(songId: String) {
-            viewModelScope.launch {
-                songRepository.getSongById(songId)?.let { song ->
-                    songRepository.deleteSong(songId)
-                    _deleteSong.postValue(song)
+                songIds.forEach {
+                    context.downloadSong(it, songRepository)
                 }
+            }
+        }
+
+        override fun deleteSongs(songs: List<Song>) {
+            viewModelScope.launch {
+                songRepository.deleteSongs(songs)
+                _deleteSong.postValue(songs)
             }
         }
     }

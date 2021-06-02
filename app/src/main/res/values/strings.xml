@@ -95,7 +95,13 @@
     <string name="sort_by_create_date">Date added</string>
 
     <!-- Snackbar -->
-    <string name="snack_bar_delete_song">"%1$s" has been deleted.</string>
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d song has been deleted.</item>
+        <item quantity="other">%d songs has been deleted.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">%d selected</item>
+    </plurals>
     <string name="snack_bar_undo">Undo</string>
 
     <!-- Custom Action -->

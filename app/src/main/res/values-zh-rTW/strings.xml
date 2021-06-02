@@ -26,6 +26,9 @@
     <plurals name="songs_count">
         <item quantity="other">%d 首歌曲</item>
     </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">已選取 %d 個項目</item>
+    </plurals>
     <string name="btn_play_all">全部播放</string>
     <string name="btn_shuffle">隨機播放</string>
     <string name="sort_by_name">曲名</string>
@@ -33,7 +36,9 @@
     <string name="sort_by_create_date">新增時間</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
-    <string name="snack_bar_delete_song">已刪除「%1$s」</string>
+    <plurals name="snack_bar_delete_song">
+        <item quantity="other">已刪除 %d 首歌曲</item>
+    </plurals>
     <string name="snack_bar_undo">復原</string>
     <string name="dialog_edit_song_title">編輯歌曲</string>
     <string name="dialog_create_playlist_title">新增播放清單</string>

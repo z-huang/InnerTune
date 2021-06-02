@@ -3,6 +3,8 @@ package com.zionhuang.music.ui.adapters
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.SelectionTracker.SELECTION_CHANGED_MARKER
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
@@ -28,11 +30,12 @@ class SongsAdapter(
 ) : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
     var sortMenuListener: SortMenuListener? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null
+    var tracker: SelectionTracker<String>? = null
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SongViewHolder -> getItem(position)?.let { song ->
-                holder.bind(song)
+                holder.bind(song, tracker?.isSelected(song.songId))
                 if (song.downloadState == STATE_DOWNLOADING) {
                     downloadInfo?.value?.get(song.songId)
                         ?.let { info -> holder.setProgress(info, false) }
@@ -51,11 +54,14 @@ class SongsAdapter(
             is SongViewHolder -> {
                 if (payloads.isEmpty()) {
                     onBindViewHolder(holder, position)
-                } else {
-                    when (val payload = payloads.last()) {
-                        is Song -> holder.bind(payload)
-                        is DownloadProgress -> holder.setProgress(payload)
-                    }
+                } else when (val payload = payloads[0]) {
+                    SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(
+                        tracker?.isSelected(
+                            holder.binding.song?.songId
+                        )
+                    )
+                    is Song -> holder.bind(payload)
+                    is DownloadProgress -> holder.setProgress(payload)
                 }
             }
             is SongHeaderViewHolder -> holder.bind(itemCount - 1)

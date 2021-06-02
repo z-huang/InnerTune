@@ -66,7 +66,7 @@ class SongRepository(private val context: Context) {
     /**
      * Playlist Songs [PagingSource]
      */
-    fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, PlaylistSong> =
+    fun getPlaylistSongs(playlistId: Int): PagingSource<Int, PlaylistSong> =
         playlistDao.getPlaylistSongs(playlistId)
 
     //suspend fun getPlaylistSongsList(playlistId: Int) = withContext(IO) { playlistSongDao.getSongsAsList(playlistId) }
@@ -105,15 +105,19 @@ class SongRepository(private val context: Context) {
         withContext(IO) { songDao.artistSongsCount(artistId) }
 
     private suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
-    suspend fun insert(song: Song) = withContext(IO) {
-        val stream = ExtractorHelper.getStreamInfo(song.songId)
-        OkHttpDownloader.downloadFile(
-            requestOf(stream.thumbnailUrl),
-            context.getArtworkFile(song.songId)
-        )
-        if (song.duration == -1) song.duration = stream.duration.toInt()
-        insert(song.toSongEntity())
+    suspend fun insert(songs: List<Song>) = withContext(IO) {
+        songs.forEach { song ->
+            val stream = ExtractorHelper.getStreamInfo(song.songId)
+            OkHttpDownloader.downloadFile(
+                requestOf(stream.thumbnailUrl),
+                context.getArtworkFile(song.songId)
+            )
+            if (song.duration == -1) song.duration = stream.duration.toInt()
+            insert(song.toSongEntity())
+        }
     }
+
+    suspend fun insert(song: Song) = insert(listOf(song))
 
     private suspend fun updateSongEntity(song: SongEntity) =
         withContext(IO) { songDao.update(song) }
@@ -141,20 +145,24 @@ class SongRepository(private val context: Context) {
 
     suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }
 
-    suspend fun deleteSong(songId: String) = withContext(IO) {
-        songDao.delete(songId)
-        context.getAudioFile(songId).takeIf { it.exists() }
-            ?.moveTo(context.getRecycledAudioFile(songId))
-        context.getArtworkFile(songId).takeIf { it.exists() }
-            ?.moveTo(context.getRecycledArtworkFile(songId))
+    suspend fun deleteSongs(songs: List<Song>) = withContext(IO) {
+        songDao.delete(songs.map { it.songId })
+        songs.forEach { song ->
+            context.getAudioFile(song.songId).takeIf { it.exists() }
+                ?.moveTo(context.getRecycledAudioFile(song.songId))
+            context.getArtworkFile(song.songId).takeIf { it.exists() }
+                ?.moveTo(context.getRecycledArtworkFile(song.songId))
+        }
     }
 
-    suspend fun restoreSong(song: Song) {
-        context.getRecycledAudioFile(song.songId).takeIf { it.exists() }
-            ?.moveTo(context.getAudioFile(song.songId))
-        context.getRecycledArtworkFile(song.songId).takeIf { it.exists() }
-            ?.moveTo(context.getArtworkFile(song.songId))
-        insert(song)
+    suspend fun restoreSongs(songs: List<Song>) {
+        songs.forEach { song ->
+            context.getRecycledAudioFile(song.songId).takeIf { it.exists() }
+                ?.moveTo(context.getAudioFile(song.songId))
+            context.getRecycledArtworkFile(song.songId).takeIf { it.exists() }
+                ?.moveTo(context.getArtworkFile(song.songId))
+        }
+        insert(songs)
     }
 
     /**
@@ -241,12 +249,18 @@ class SongRepository(private val context: Context) {
     /**
      * Playlist songs
      */
-    private suspend fun insertPlaylistSong(playlistSong: PlaylistSongEntity) = withContext(IO) {
-        playlistSongDao.insert(playlistSong)
-    }
+    private suspend fun insertPlaylistSong(playlistSongs: List<PlaylistSongEntity>) =
+        withContext(IO) {
+            playlistSongDao.insert(playlistSongs)
+        }
 
-    suspend fun insertToPlaylist(song: Song, playlistId: Int) {
-        insertPlaylistSong(PlaylistSongEntity(playlistId = playlistId, songId = song.songId))
+    suspend fun addToPlaylist(songs: List<Song>, playlistId: Int) {
+        insertPlaylistSong(songs.map {
+            PlaylistSongEntity(
+                playlistId = playlistId,
+                songId = it.songId
+            )
+        })
     }
 
     /**

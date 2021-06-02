@@ -36,10 +36,10 @@ interface SongDao {
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
     fun getAllSongsAsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-            getSongsAsPagingSource((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
+        getSongsAsPagingSource((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
 
     suspend fun getAllSongsAsList(@SongSortType order: Int, descending: Boolean): List<Song> =
-            getSongsAsList((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
+        getSongsAsList((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
 
     /**
      * Artist songs count
@@ -51,10 +51,20 @@ interface SongDao {
      * Artist Songs [PagingSource]
      */
     fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-            getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(order, descending)).toSQLiteQuery())
+        getSongsAsPagingSource(
+            (QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(
+                order,
+                descending
+            )).toSQLiteQuery()
+        )
 
     suspend fun getArtistSongsAsList(artistId: Int, @SongSortType order: Int, descending: Boolean) =
-            getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(order, descending)).toSQLiteQuery())
+        getSongsAsList(
+            (QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(
+                order,
+                descending
+            )).toSQLiteQuery()
+        )
 
     /**
      * Channel Songs [PagingSource]
@@ -88,8 +98,8 @@ interface SongDao {
     @Update
     suspend fun update(vararg songs: SongEntity)
 
-    @Delete
-    suspend fun delete(vararg songs: SongEntity)
+    @Query("DELETE FROM song WHERE songId IN (:songsId)")
+    suspend fun delete(songsId: List<String>)
 
     @Query("DELETE FROM song WHERE songId = :songId")
     suspend fun delete(songId: String)
@@ -98,12 +108,12 @@ interface SongDao {
     suspend fun contains(songId: String): Boolean
 
     fun getOrderQuery(@SongSortType order: Int, descending: Boolean) = QUERY_ORDER.format(
-            when (order) {
-                ORDER_CREATE_DATE -> "create_date"
-                ORDER_NAME -> "title"
-                ORDER_ARTIST -> "artistId"
-                else -> throw IllegalArgumentException("Unexpected song sort type.")
-            },
-            if (descending) "DESC" else "ASC"
+        when (order) {
+            ORDER_CREATE_DATE -> "create_date"
+            ORDER_NAME -> "title"
+            ORDER_ARTIST -> "artistId"
+            else -> throw IllegalArgumentException("Unexpected song sort type.")
+        },
+        if (descending) "DESC" else "ASC"
     )
 }
