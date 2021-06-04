@@ -44,5 +44,14 @@ suspend fun Player.loadItems(
         idx = info.first.indexOfFirst { it.mediaId == targetId }
         if (idx != -1) idx += lastItemCount
     } while (idx == -1 && Page.isValid(info.second) && update())
+    seekToDefaultPosition(idx)
     return Pair(idx == -1, info.second)
 }
+
+val Player.mediaItems: List<MediaItem>
+    get() = object : AbstractList<MediaItem>() {
+        override val size: Int
+            get() = mediaItemCount
+
+        override fun get(index: Int): MediaItem = getMediaItemAt(index)
+    }
