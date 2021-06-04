@@ -5,6 +5,23 @@
         app:icon="@drawable/ic_vpn_key"
         app:key="@string/pref_api_key"
         app:title="@string/pref_api_key_title" />
+    <ListPreference
+        android:defaultValue="@string/default_localization_key"
+        android:entries="@array/language_names"
+        android:entryValues="@array/language_codes"
+        android:icon="@drawable/ic_language"
+        android:key="@string/pref_content_language"
+        android:summary="%s"
+        android:title="@string/pref_content_language_title" />
+
+    <ListPreference
+        android:defaultValue="@string/default_localization_key"
+        android:entries="@array/country_names"
+        android:entryValues="@array/country_codes"
+        android:icon="@drawable/ic_place"
+        android:key="@string/pref_content_country"
+        android:summary="%s"
+        android:title="@string/pref_default_content_country_title" />
     <SwitchPreferenceCompat
         android:defaultValue="true"
         app:icon="@drawable/ic_save_alt"

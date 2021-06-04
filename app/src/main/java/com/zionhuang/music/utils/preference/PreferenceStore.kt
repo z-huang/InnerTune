@@ -17,14 +17,14 @@ class PreferenceStore private constructor(context: Context) : SharedPreferences.
     private val cache = mutableMapOf<String, Any>()
 
     fun <T : Any> get(key: String, defaultValue: T): T =
-            cache[key] as? T ?: (when (defaultValue::class) {
-                Boolean::class -> sharedPreferences.getBoolean(key, defaultValue as Boolean)
-                Float::class -> sharedPreferences.getFloat(key, defaultValue as Float)
-                Int::class -> sharedPreferences.getInt(key, defaultValue as Int)
-                Long::class -> sharedPreferences.getLong(key, defaultValue as Long)
-                String::class -> sharedPreferences.getString(key, defaultValue as String)
-                else -> throw IllegalArgumentException("Unexpected type: ${defaultValue::class.java.name}")
-            } as T).also { cache[key] = it }
+        cache[key] as? T ?: (when (defaultValue::class) {
+            Boolean::class -> sharedPreferences.getBoolean(key, defaultValue as Boolean)
+            Float::class -> sharedPreferences.getFloat(key, defaultValue as Float)
+            Int::class -> sharedPreferences.getInt(key, defaultValue as Int)
+            Long::class -> sharedPreferences.getLong(key, defaultValue as Long)
+            String::class -> sharedPreferences.getString(key, defaultValue as String)
+            else -> throw IllegalArgumentException("Unexpected type: ${defaultValue::class.java.name}")
+        } as T).also { cache[key] = it }
 
     operator fun <T : Any> set(key: String, value: T) {
         sharedPreferences.edit().apply {
@@ -42,7 +42,7 @@ class PreferenceStore private constructor(context: Context) : SharedPreferences.
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (key in cache) {
             val old = cache[key]
-                    ?: throw IllegalArgumentException("Preference $key shouldn't be null.")
+                ?: throw IllegalArgumentException("Preference $key shouldn't be null.")
             cache[key] = when (old::class) {
                 Boolean::class -> sharedPreferences.getBoolean(key, old as Boolean)
                 Float::class -> sharedPreferences.getFloat(key, old as Float)

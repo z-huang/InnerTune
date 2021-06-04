@@ -13,6 +13,8 @@
 
     <!-- Preference Title -->
     <string name="pref_api_key_title">API Key</string>
+    <string name="pref_content_language_title">Default content language</string>
+    <string name="pref_default_content_country_title">Default content country</string>
     <string name="pref_auto_download_title">Auto download</string>
     <string name="pref_auto_download_summary">Download song when added to library</string>
     <string name="pref_auto_add_song_title">Auto add song to library</string>
@@ -115,4 +117,5 @@
     <string name="search_filter_channels">Channels</string>
 
     <string name="bullet" translatable="false">•</string>
+    <string name="system_default">System default</string>
 </resources>
