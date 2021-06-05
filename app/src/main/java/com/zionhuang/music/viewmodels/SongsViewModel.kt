@@ -74,9 +74,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getPlaylistSongsAsFlow(playlistId: Int) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getPlaylistSongs(playlistId)
-    }.flow.map { pagingData ->
-        pagingData.map { it.song }
-    }.cachedIn(viewModelScope)
+    }.flow.cachedIn(viewModelScope)
 
     val deletedSongs: LiveData<List<Song>> get() = songRepository.deletedSongs
 

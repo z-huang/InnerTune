@@ -61,8 +61,8 @@ class SongRepository(private val context: Context) {
     /**
      * Playlist Songs [PagingSource]
      */
-    fun getPlaylistSongs(playlistId: Int): PagingSource<Int, PlaylistSong> =
-        playlistDao.getPlaylistSongs(playlistId)
+    fun getPlaylistSongs(playlistId: Int): PagingSource<Int, Song> =
+        songDao.getPlaylistSongs(playlistId)
 
     /**
      * Artists [List], [PagingSource]

@@ -64,6 +64,22 @@ interface SongDao {
         )
 
     /**
+     * Playlist
+     */
+    @Transaction
+    @Query(
+        """
+        SELECT song.*
+          FROM playlist_song
+               JOIN song
+                 ON playlist_song.songId = song.songId
+         WHERE playlistId = :playlistId
+         ORDER BY playlist_song.idInPlaylist
+        """
+    )
+    fun getPlaylistSongs(playlistId: Int): PagingSource<Int, Song>
+
+    /**
      * Internal methods
      */
     @Query("SELECT * FROM song WHERE songId = :songId")
