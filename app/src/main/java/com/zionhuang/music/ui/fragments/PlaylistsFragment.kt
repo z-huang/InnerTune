@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -21,12 +22,14 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.PlaylistsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
+import com.zionhuang.music.viewmodels.PlaylistsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val playlistsViewModel by viewModels<PlaylistsViewModel>()
     private val playlistsAdapter = PlaylistsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +40,9 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
-        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        playlistsAdapter.popupMenuListener = playlistsViewModel.popupMenuListener
 
         (requireActivity() as MainActivity).fab.setOnClickListener {
             CreatePlaylistDialog().show(childFragmentManager, null)

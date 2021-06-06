@@ -11,7 +11,6 @@ import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.extensions.getActivity
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.EditArtistDialog
-import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 import kotlinx.coroutines.launch
 
@@ -23,7 +22,7 @@ class ArtistsViewModel(application: Application) : AndroidViewModel(application)
             (context.getActivity() as? MainActivity)?.let { activity ->
                 EditArtistDialog().apply {
                     arguments = bundleOf(EXTRA_ARTIST to artist)
-                }.show(activity.supportFragmentManager, EditSongDialog.TAG)
+                }.show(activity.supportFragmentManager, EditArtistDialog::class.simpleName)
             }
         }
 

@@ -6,15 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.extensions.inflateWithBinding
+import com.zionhuang.music.ui.listeners.PlaylistPopupMenuListener
 import com.zionhuang.music.ui.viewholders.PlaylistViewHolder
 
 class PlaylistsAdapter : PagingDataAdapter<PlaylistEntity, PlaylistViewHolder>(PlaylistItemComparator()) {
+    var popupMenuListener: PlaylistPopupMenuListener? = null
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder =
-            PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist))
+        PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), popupMenuListener)
 
     fun getItemByPosition(position: Int): PlaylistEntity? = getItem(position)
 

@@ -183,6 +183,14 @@ class SongRepository(private val context: Context) {
         playlistDao.insert(PlaylistEntity(name = name))
     }
 
+    suspend fun updatePlaylist(playlist: PlaylistEntity) = withContext(IO) {
+        playlistDao.updatePlaylist(playlist)
+    }
+
+    suspend fun deletePlaylist(playlist: PlaylistEntity) = withContext(IO) {
+        playlistDao.delete(playlist)
+    }
+
     /**
      * Playlist songs
      */

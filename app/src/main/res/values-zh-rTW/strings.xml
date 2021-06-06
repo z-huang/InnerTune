@@ -65,4 +65,5 @@
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="system_default">系統預設</string>
+    <string name="dialog_edit_playlist_title">編輯播放清單</string>
 </resources>

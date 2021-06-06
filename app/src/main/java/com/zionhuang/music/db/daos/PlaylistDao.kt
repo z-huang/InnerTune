@@ -27,5 +27,11 @@ interface PlaylistDao {
     fun insert(playlist: PlaylistEntity)
 
     @Update
+    fun updatePlaylist(playlist: PlaylistEntity)
+
+    @Update
     fun updatePlaylistSongs(list: List<PlaylistSongEntity>)
+
+    @Delete
+    suspend fun delete(playlist: PlaylistEntity)
 }

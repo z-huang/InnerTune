@@ -52,7 +52,10 @@
     <string name="dialog_edit_artist_title">Edit artist</string>
     <string name="text_view_hint_artist_name">Artist name</string>
     <string name="error_artist_name_empty">Artist name cannot be empty.</string>
+
     <string name="dialog_choose_playlist_title">Choose playlist</string>
+
+    <string name="dialog_edit_playlist_title">Edit playlist</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">Music Player</string>
