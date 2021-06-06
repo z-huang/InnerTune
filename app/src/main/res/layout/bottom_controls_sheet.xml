@@ -126,7 +126,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@{viewModel.mediaData.artistName}"
+                    android:text="@{viewModel.mediaData.artist}"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Song Artist" />
@@ -240,7 +240,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@{viewModel.mediaData.artistName}"
+                android:text="@{viewModel.mediaData.artist}"
                 android:textAlignment="center"
                 android:textColor="?android:textColorSecondary"
                 tools:text="Song Artist" />

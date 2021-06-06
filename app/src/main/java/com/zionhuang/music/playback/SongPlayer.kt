@@ -52,6 +52,8 @@ import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.models.MediaData
+import com.zionhuang.music.models.toMediaDescription
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.downloadSong
@@ -104,7 +106,7 @@ class SongPlayer(
                     }
                     Log.d(TAG, "Extract duration: ${duration}ms")
                     val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
-                    updateMetadata(mediaId) {
+                    updateMediadata(mediaId) {
                         if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
                             artwork = streamInfo.thumbnailUrl
                             mediaSessionConnector.invalidateMediaSessionMetadata()
@@ -126,7 +128,7 @@ class SongPlayer(
     private var autoDownload by context.preference(R.string.pref_auto_download, false)
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
-    private fun updateMetadata(mediaId: String, applier: CustomMetadata.() -> Unit) {
+    private fun updateMediadata(mediaId: String, applier: MediaData.() -> Unit) {
         scope.launch(Dispatchers.Main) {
             (player.currentMediaItem.takeIf { mediaId == mediaId }
                 ?: player.findMediaItemById(mediaId))?.metadata?.let {

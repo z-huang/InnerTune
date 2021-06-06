@@ -2,7 +2,7 @@ package com.zionhuang.music.extensions
 
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.zionhuang.music.playback.CustomMetadata
+import com.zionhuang.music.models.MediaData
 import org.schabi.newpipe.extractor.Page
 
 fun Player.findMediaItemById(mediaId: String): MediaItem? {
@@ -26,7 +26,7 @@ fun Player.mediaItemIndexOf(mediaId: String?): Int? {
     return null
 }
 
-val Player.currentMetadata: CustomMetadata?
+val Player.currentMetadata: MediaData?
     get() = currentMediaItem?.metadata
 
 suspend fun Player.loadItems(

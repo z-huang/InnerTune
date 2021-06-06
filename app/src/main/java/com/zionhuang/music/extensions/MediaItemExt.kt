@@ -7,17 +7,17 @@ import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.music.constants.Constants.FROM_LOCAL
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.playback.CustomMetadata
-import com.zionhuang.music.playback.CustomMetadata.Companion.toCustomMetadata
+import com.zionhuang.music.models.MediaData
+import com.zionhuang.music.models.MediaData.Companion.toMediaData
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
-val MediaItem.metadata: CustomMetadata?
-    get() = playbackProperties?.tag as? CustomMetadata
+val MediaItem.metadata: MediaData?
+    get() = playbackProperties?.tag as? MediaData
 
 private val mediaItemBuilder = MediaItem.Builder()
 
-fun CustomMetadata.toMediaItem() = mediaItemBuilder
+fun MediaData.toMediaItem() = mediaItemBuilder
     .setMediaId(id)
     .setUri("music://$id")
     .setTag(this)
@@ -32,15 +32,15 @@ fun Song.toMediaItem(context: Context): MediaItem = mediaItemBuilder
             .appendQueryParameter(FROM_LOCAL, if (downloadState == STATE_DOWNLOADED) "1" else "0")
             .build()
     )
-    .setTag(toCustomMetadata(context))
+    .setTag(toMediaData(context))
     .build()
 
-fun StreamInfoItem.toMediaItem(): MediaItem? = toCustomMetadata()?.toMediaItem()
+fun StreamInfoItem.toMediaItem(): MediaItem? = toMediaData()?.toMediaItem()
 
 fun MediaDescriptionCompat.toMediaItem() = mediaItemBuilder
     .setMediaId(mediaId!!)
     .setUri("music://$mediaId")
-    .setTag(toCustomMetadata())
+    .setTag(toMediaData())
     .build()
 
 fun List<Song>.toMediaItems(context: Context): List<MediaItem> = map { it.toMediaItem(context) }
