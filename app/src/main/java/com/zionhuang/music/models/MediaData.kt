@@ -11,11 +11,12 @@ import com.zionhuang.music.constants.Constants.EMPTY_SONG_ID
 import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.constants.MediaConstants.ArtworkType
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTWORK_TYPE
+import com.zionhuang.music.constants.MediaConstants.EXTRA_DURATION
 import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.models.MediaData.Companion.EMPTY_MEDIA_DESCRIPTION
-import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.parcelize.Parcelize
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
@@ -26,10 +27,11 @@ data class MediaData(
     var artist: String? = null,
     var duration: Int? = null,
     var artwork: String? = null,
-    @ArtworkType var artworkType: Int = TYPE_SQUARE,
+    @ArtworkType
+    var artworkType: Int = TYPE_SQUARE,
 ) : Parcelable {
     fun pullMediaMetadata(mediaMetadata: MediaMetadataCompat): MediaData = apply {
-        id = mediaMetadata.getString(METADATA_KEY_MEDIA_ID)
+        id = mediaMetadata.getString(METADATA_KEY_MEDIA_ID) ?: EMPTY_SONG_ID
         title = mediaMetadata.getString(METADATA_KEY_TITLE)
         artist = mediaMetadata.getString(METADATA_KEY_DISPLAY_SUBTITLE)
         artwork = mediaMetadata.getString(METADATA_KEY_DISPLAY_ICON_URI)
@@ -46,7 +48,7 @@ data class MediaData(
         .setExtras(
             bundleOf(
                 EXTRA_ARTWORK_TYPE to artworkType.toLong(),
-                MediaConstants.EXTRA_DURATION to duration
+                EXTRA_DURATION to duration
             )
         )
         .build()
@@ -54,18 +56,20 @@ data class MediaData(
     companion object {
         private val builder = MediaDescriptionCompat.Builder()
 
-        val EMPTY_MEDIA_DESCRIPTION: MediaDescriptionCompat = builder.build()
+        val EMPTY_MEDIA_DESCRIPTION: MediaDescriptionCompat = builder
+            .setMediaId(EMPTY_SONG_ID)
+            .build()
 
-        fun Song.toMediaData(context: Context) = MediaData(songId, title, artistName, duration, context.getArtworkFile(songId).canonicalPath, artworkType)
-
-        fun StreamInfoItem.toMediaData() =
-            YouTubeStreamExtractor.extractId(url)
-                ?.let { MediaData(it, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else MediaConstants.TYPE_RECTANGLE) }
-
-        fun MediaDescriptionCompat.toMediaData() =
-            MediaData(mediaId!!, title.toString(), subtitle.toString(), extras?.getInt(MediaConstants.EXTRA_DURATION), iconUri.toString(), extras!!.getInt(EXTRA_ARTWORK_TYPE))
     }
 }
+
+fun Song.toMediaData(context: Context) = MediaData(songId, title, artistName, duration, context.getArtworkFile(songId).canonicalPath, artworkType)
+
+fun StreamInfoItem.toMediaData() =
+    MediaData(ExtractorHelper.extractVideoId(url), name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else MediaConstants.TYPE_RECTANGLE)
+
+fun MediaDescriptionCompat.toMediaData() =
+    MediaData(mediaId!!, title.toString(), subtitle.toString(), extras?.getInt(EXTRA_DURATION), iconUri.toString(), extras!!.getInt(EXTRA_ARTWORK_TYPE))
 
 fun MediaMetadataCompat.toMediaData(): MediaData = MediaData().pullMediaMetadata(this)
 

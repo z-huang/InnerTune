@@ -23,6 +23,7 @@ import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
+import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.viewmodels.YouTubeChannelViewModel
 import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
@@ -35,6 +36,7 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val url by lazy { args.url }
 
     private val viewModel by viewModels<YouTubeChannelViewModel>()
+    private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
     private val infoItemAdapter = InfoItemAdapter()
@@ -50,13 +52,16 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        infoItemAdapter.addLoadStateListener { loadState ->
-            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
-            binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-            binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
-            if (loadState.refresh is LoadState.Error) {
-                binding.errorMsg.text =
-                    (loadState.refresh as LoadState.Error).error.localizedMessage
+        infoItemAdapter.apply {
+            streamMenuListener = songsViewModel.streamPopupMenuListener
+            addLoadStateListener { loadState ->
+                binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
+                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
+                if (loadState.refresh is LoadState.Error) {
+                    binding.errorMsg.text =
+                        (loadState.refresh as LoadState.Error).error.localizedMessage
+                }
             }
         }
 

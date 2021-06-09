@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemArtistBinding
 import com.zionhuang.music.db.entities.ArtistEntity
+import com.zionhuang.music.extensions.context
 import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 
 class ArtistViewHolder(
@@ -18,7 +19,7 @@ class ArtistViewHolder(
                 inflate(R.menu.artist)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.root.context)
+                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.context)
                         R.id.action_delete -> popupMenuListener?.deleteArtist(artist)
                     }
                     true

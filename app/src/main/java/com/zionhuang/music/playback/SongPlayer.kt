@@ -29,7 +29,6 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.Constants.FROM_LOCAL
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUERY_STRING
@@ -44,6 +43,7 @@ import com.zionhuang.music.constants.MediaConstants.QUEUE_SEARCH
 import com.zionhuang.music.constants.MediaConstants.QUEUE_SINGLE
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_CHANNEL
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_PLAYLIST
+import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
@@ -57,6 +57,7 @@ import com.zionhuang.music.models.toMediaDescription
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.downloadSong
+import com.zionhuang.music.utils.logTimeMillis
 import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.CoroutineScope
@@ -65,8 +66,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler
 import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
-import org.schabi.newpipe.extractor.stream.StreamInfo
-import kotlin.system.measureTimeMillis
 
 /**
  * A wrapper around [ExoPlayer]
@@ -88,33 +87,25 @@ class SongPlayer(
     val mediaSession: MediaSessionCompat get() = _mediaSession
 
     val player: SimpleExoPlayer = SimpleExoPlayer.Builder(context)
-        .setMediaSourceFactory(
-            DefaultMediaSourceFactory(
-                ResolvingDataSource.Factory(
-                    DefaultDataSourceFactory(context)
-                ) { dataSpec ->
-                    val mediaId = dataSpec.uri.host
-                        ?: throw IllegalArgumentException("Cannot find media id from uri host")
-                    if (dataSpec.uri.getQueryParameter(FROM_LOCAL) == "1") {
-                        return@Factory dataSpec.withUri(context.getAudioFile(mediaId).toUri())
-                    }
-                    val streamInfo: StreamInfo
-                    val duration = measureTimeMillis {
-                        streamInfo = runBlocking {
-                            ExtractorHelper.getStreamInfo(mediaId)
-                        }
-                    }
-                    Log.d(TAG, "Extract duration: ${duration}ms")
-                    val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
-                    updateMediadata(mediaId) {
-                        if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
-                            artwork = streamInfo.thumbnailUrl
-                            mediaSessionConnector.invalidateMediaSessionMetadata()
-                        }
-                    }
-                    if (uri != null) dataSpec.withUri(uri) else dataSpec
-                })
-        )
+        .setMediaSourceFactory(DefaultMediaSourceFactory(ResolvingDataSource.Factory(DefaultDataSourceFactory(context)) { dataSpec ->
+            val mediaId = dataSpec.uri.host ?: throw IllegalArgumentException("Cannot find media id from uri host")
+            if (runBlocking { songRepository.getSongEntityById(mediaId)?.downloadState == STATE_DOWNLOADED })
+                return@Factory dataSpec.withUri(context.getAudioFile(mediaId).toUri())
+
+            val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
+                runBlocking {
+                    ExtractorHelper.getStreamInfo(mediaId)
+                }
+            }
+            val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
+            updateMediadata(mediaId) {
+                if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
+                    artwork = streamInfo.thumbnailUrl
+                    mediaSessionConnector.invalidateMediaSessionMetadata()
+                }
+            }
+            if (uri != null) dataSpec.withUri(uri) else dataSpec
+        }))
         .build()
         .apply {
             addListener(this@SongPlayer)
@@ -262,14 +253,14 @@ class SongPlayer(
                     val songs = extras.getParcelableArray(EXTRA_SONGS)!!
                     player.addMediaItems(
                         (if (player.mediaItemCount == 0) -1 else player.currentWindowIndex) + 1,
-                        songs.toList().castOrNull<Song>()!!.toMediaItems(context)
+                        songs.mapNotNull { (it as? MediaData)?.toMediaItem() }
                     )
                     player.prepare()
                     true
                 }
                 COMMAND_ADD_TO_QUEUE -> {
                     val songs = extras.getParcelableArray(EXTRA_SONGS)!!
-                    player.addMediaItems(songs.toList().castOrNull<Song>()!!.toMediaItems(context))
+                    player.addMediaItems(songs.mapNotNull { (it as? MediaData)?.toMediaItem() })
                     player.prepare()
                     true
                 }
@@ -413,6 +404,20 @@ class SongPlayer(
 
     fun setPlayerView(playerView: PlayerView?) {
         playerView?.player = player
+    }
+
+    init {
+        context.getLifeCycleOwner()?.let { lifeCycleOwner ->
+            songRepository.deletedSongs.observe(lifeCycleOwner) { deletedSongs ->
+                Log.d(TAG, deletedSongs.toString())
+                val deletedIds = deletedSongs.map { it.songId }
+                player.mediaItems.forEachIndexed { index, mediaItem ->
+                    if (mediaItem.mediaId in deletedIds) {
+                        player.removeMediaItem(index)
+                    }
+                }
+            }
+        }
     }
 
     companion object {

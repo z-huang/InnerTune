@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_add"
-        android:icon="@drawable/ic_add"
-        android:title="@string/search_item_menu_add"
-        app:showAsAction="never" />
+        android:id="@+id/action_add_to_library"
+        android:icon="@drawable/ic_library_add"
+        android:title="@string/search_item_menu_add" />
+    <item
+        android:id="@+id/action_play_next"
+        android:title="@string/menu_song_play_next" />
+    <item
+        android:id="@+id/action_add_to_queue"
+        android:title="@string/menu_song_add_to_queue" />
+    <item
+        android:id="@+id/action_add_to_playlist"
+        android:title="@string/menu_song_add_to_playlist" />
     <item
         android:id="@+id/action_download"
-        android:icon="@drawable/ic_file_download"
-        android:title="@string/search_item_menu_download"
-        app:showAsAction="never" />
+        android:title="@string/menu_song_download" />
 </menu>

@@ -7,7 +7,7 @@
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
     <string name="menu_search_title">搜尋</string>
-    <string name="search_item_menu_add">加入</string>
+    <string name="search_item_menu_add">加入媒體庫</string>
     <string name="search_item_menu_download">下載</string>
     <string name="menu_song_edit">編輯</string>
     <string name="menu_song_delete">移除</string>

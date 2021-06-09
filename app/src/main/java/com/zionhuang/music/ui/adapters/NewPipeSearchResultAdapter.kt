@@ -7,6 +7,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.HeaderInfoItem
 import com.zionhuang.music.ui.listeners.SearchFilterListener
+import com.zionhuang.music.ui.listeners.StreamPopupMenuListener
 import com.zionhuang.music.ui.viewholders.SearchChannelViewHolder
 import com.zionhuang.music.ui.viewholders.SearchHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SearchPlaylistViewHolder
@@ -18,16 +19,11 @@ import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class NewPipeSearchResultAdapter(private val listener: SearchFilterListener) : PagingDataAdapter<InfoItem, SearchViewHolder>(InfoItemComparator()) {
-    companion object {
-        const val ITEM_HEADER = 0
-        const val ITEM_VIDEO = 1
-        const val ITEM_CHANNEL = 2
-        const val ITEM_PLAYLIST = 3
-    }
+    var streamPopupMenuListener: StreamPopupMenuListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder = when (viewType) {
         ITEM_HEADER -> SearchHeaderViewHolder(parent.inflateWithBinding(R.layout.item_search_header), listener)
-        ITEM_VIDEO -> SearchStreamViewHolder(parent.inflateWithBinding(R.layout.item_search_stream))
+        ITEM_VIDEO -> SearchStreamViewHolder(parent.inflateWithBinding(R.layout.item_search_stream), streamPopupMenuListener)
         ITEM_CHANNEL -> SearchChannelViewHolder(parent.inflateWithBinding(R.layout.item_search_channel))
         ITEM_PLAYLIST -> SearchPlaylistViewHolder(parent.inflateWithBinding(R.layout.item_search_playlist))
         else -> throw IllegalArgumentException("Unexpected item type.")
@@ -55,5 +51,12 @@ class NewPipeSearchResultAdapter(private val listener: SearchFilterListener) : P
     class InfoItemComparator : DiffUtil.ItemCallback<InfoItem>() {
         override fun areItemsTheSame(oldItem: InfoItem, newItem: InfoItem): Boolean = oldItem.url == newItem.url
         override fun areContentsTheSame(oldItem: InfoItem, newItem: InfoItem): Boolean = true
+    }
+
+    companion object {
+        const val ITEM_HEADER = 0
+        const val ITEM_VIDEO = 1
+        const val ITEM_CHANNEL = 2
+        const val ITEM_PLAYLIST = 3
     }
 }

@@ -78,7 +78,7 @@ class SongRepository(private val context: Context) {
     /**
      * Song Operations
      */
-    private suspend fun getSongEntityById(id: String): SongEntity? =
+    suspend fun getSongEntityById(id: String): SongEntity? =
         withContext(IO) { songDao.getSongEntityById(id) }
 
     suspend fun getSongById(id: String): Song? = withContext(IO) { songDao.getSongById(id) }

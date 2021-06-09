@@ -19,8 +19,7 @@ import java.lang.ref.WeakReference
 object MediaSessionConnection {
     var mediaController: MediaControllerCompat? = null
         private set
-    val transportControls: MediaControllerCompat.TransportControls?
-        get() = mediaController?.transportControls
+    val transportControls: MediaControllerCompat.TransportControls? get() = mediaController?.transportControls
     private val mediaControllerCallback = MediaControllerCallback()
     private var serviceConnection: ServiceConnection? = null
 

@@ -3,6 +3,7 @@ package com.zionhuang.music.ui.viewholders
 import com.google.api.services.youtube.model.SearchResult
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSearchPlaylistBinding
+import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.load
 import com.zionhuang.music.extensions.maxResUrl
 import com.zionhuang.music.extensions.roundCorner
@@ -11,7 +12,7 @@ import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 
 class SearchPlaylistViewHolder(private val binding: ItemSearchPlaylistBinding) : SearchViewHolder(binding.root) {
     fun bind(item: PlaylistInfoItem) {
-        binding.root.transitionName = binding.root.context.resources.getString(R.string.youtube_playlist_item_transition_name, item.url)
+        binding.root.transitionName = binding.context.resources.getString(R.string.youtube_playlist_item_transition_name, item.url)
         binding.playlistTitle.text = item.name
         binding.uploader.text = item.uploaderName
         binding.streams.text = item.streamCount.toString()
@@ -23,7 +24,7 @@ class SearchPlaylistViewHolder(private val binding: ItemSearchPlaylistBinding) :
 
     fun bind(item: SearchResult) {
         require(item.id?.kind == "youtube#playlist") { "You should bind a playlist type of [SearchResult] to [SearchStreamViewHolder]" }
-        binding.root.transitionName = binding.root.context.resources.getString(
+        binding.root.transitionName = binding.context.resources.getString(
             R.string.youtube_playlist_item_transition_name,
             item.id
         )

@@ -31,6 +31,7 @@ import com.zionhuang.music.ui.fragments.base.MainFragment
 import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
+import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.flow.collectLatest
@@ -44,6 +45,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
     private val query by lazy { args.searchQuery }
 
     private val viewModel by viewModels<SearchViewModel>()
+    private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
     private val searchFilterListener = object : SearchFilterListener {
@@ -69,13 +71,16 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
         activity.supportActionBar?.title = query
 
-        searchResultAdapter.addLoadStateListener { loadState ->
-            binding.progressBar.isVisible = loadState.refresh is Loading
-            binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-            binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
-            if (loadState.refresh is LoadState.Error) {
-                binding.errorMsg.text =
-                    (loadState.refresh as LoadState.Error).error.localizedMessage
+        searchResultAdapter.apply {
+            streamPopupMenuListener = songsViewModel.streamPopupMenuListener
+            addLoadStateListener { loadState ->
+                binding.progressBar.isVisible = loadState.refresh is Loading
+                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
+                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
+                if (loadState.refresh is LoadState.Error) {
+                    binding.errorMsg.text =
+                        (loadState.refresh as LoadState.Error).error.localizedMessage
+                }
             }
         }
         binding.btnRetry.setOnClickListener { searchResultAdapter.retry() }

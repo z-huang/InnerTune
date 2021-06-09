@@ -93,8 +93,8 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 .associateBy { it.songId }
             val songs = tracker.selection.toList().mapNotNull { selectedMap[it] }
             when (item.itemId) {
-                R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs)
-                R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs)
+                R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs, requireContext())
+                R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs, requireContext())
                 R.id.action_add_to_playlist -> songsViewModel.songPopupMenuListener.addToPlaylist(songs, requireContext())
                 R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(tracker.selection.toList(), requireContext())
                 R.id.action_delete -> songsViewModel.songPopupMenuListener.deleteSongs(songs)

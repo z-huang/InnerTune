@@ -21,20 +21,25 @@ object ExtractorHelper {
     private val service = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
 
     /**
+     * Stream
+     */
+    fun extractVideoId(url: String): String = service.streamLHFactory.getId(url)
+
+    /**
      * Search
      */
     fun getSearchQueryHandler(query: String, contentFilter: List<String>): SearchQueryHandler =
-            service.searchQHFactory.fromQuery(query, contentFilter, "")
+        service.searchQHFactory.fromQuery(query, contentFilter, "")
 
     suspend fun search(query: String, contentFilter: List<String>): SearchInfo =
-            search(getSearchQueryHandler(query, contentFilter))
+        search(getSearchQueryHandler(query, contentFilter))
 
     suspend fun search(queryHandler: SearchQueryHandler): SearchInfo = checkCache("${queryHandler.searchString}$${queryHandler.contentFilters[0]}") {
         SearchInfo.getInfo(service, queryHandler)
     }
 
     suspend fun search(query: String, contentFilter: List<String>, page: Page): InfoItemsPage<InfoItem> =
-            search(service.searchQHFactory.fromQuery(query, contentFilter, ""), page)
+        search(service.searchQHFactory.fromQuery(query, contentFilter, ""), page)
 
     suspend fun search(queryHandler: SearchQueryHandler, page: Page): InfoItemsPage<InfoItem> = checkCache("${queryHandler.searchString}$${queryHandler.contentFilters[0]}$${page.hashCode()}") {
         SearchInfo.getMoreItems(service, queryHandler, page)
@@ -79,9 +84,9 @@ object ExtractorHelper {
             loadFromNetwork().also {
                 InfoCache.putInfo(id, it)
             }
-            }
+        }
 
     @Suppress("UNCHECKED_CAST")
     private fun <T : Any> loadFromCache(id: String): T? =
-            InfoCache.getFromKey(id) as T?
+        InfoCache.getFromKey(id) as T?
 }

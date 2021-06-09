@@ -7,6 +7,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.databinding.ItemSongBinding
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.context
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
@@ -27,23 +28,16 @@ class SongViewHolder(
                 inflate(R.menu.song)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener.editSong(song, binding.root.context)
-                        R.id.action_play_next -> popupMenuListener.playNext(listOf(song))
-                        R.id.action_add_to_queue -> popupMenuListener.addToQueue(listOf(song))
-                        R.id.action_add_to_playlist -> popupMenuListener.addToPlaylist(
-                            listOf(song),
-                            binding.root.context
-                        )
-                        R.id.action_download -> popupMenuListener.downloadSongs(
-                            listOf(song.songId),
-                            binding.root.context
-                        )
-                        R.id.action_delete -> popupMenuListener.deleteSongs(listOf(song))
+                        R.id.action_edit -> popupMenuListener.editSong(song, binding.context)
+                        R.id.action_play_next -> popupMenuListener.playNext(song, binding.context)
+                        R.id.action_add_to_queue -> popupMenuListener.addToQueue(song, binding.context)
+                        R.id.action_add_to_playlist -> popupMenuListener.addToPlaylist(song, binding.context)
+                        R.id.action_download -> popupMenuListener.downloadSongs(song.songId, binding.context)
+                        R.id.action_delete -> popupMenuListener.deleteSongs(song)
                     }
                     true
                 }
-                menu.findItem(R.id.action_download).isVisible =
-                    song.downloadState == STATE_NOT_DOWNLOADED
+                menu.findItem(R.id.action_download).isVisible = song.downloadState == STATE_NOT_DOWNLOADED
                 show()
             }
         }

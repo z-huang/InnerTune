@@ -28,7 +28,7 @@
     <string name="menu_search_title">Search</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">Add to list</string>
+    <string name="search_item_menu_add">Add to library</string>
     <string name="search_item_menu_download">Download</string>
     <string name="menu_song_edit">Edit</string>
     <string name="menu_song_play_next">Play next</string>

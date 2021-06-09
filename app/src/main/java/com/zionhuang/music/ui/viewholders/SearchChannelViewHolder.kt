@@ -5,16 +5,17 @@ import com.google.api.services.youtube.model.SearchResult
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSearchChannelBinding
 import com.zionhuang.music.extensions.circle
+import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.load
 import com.zionhuang.music.extensions.maxResUrl
 import com.zionhuang.music.ui.viewholders.base.SearchViewHolder
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 
 class SearchChannelViewHolder(private val binding: ItemSearchChannelBinding) : SearchViewHolder(binding.root) {
-    private val context = binding.root.context
+    private val context = binding.context
 
     fun bind(item: ChannelInfoItem) {
-        binding.root.transitionName = binding.root.context.resources.getString(
+        binding.root.transitionName = binding.context.resources.getString(
             R.string.youtube_channel_item_transition_name,
             item.url
         )
@@ -29,7 +30,7 @@ class SearchChannelViewHolder(private val binding: ItemSearchChannelBinding) : S
 
     fun bind(item: SearchResult) {
         require(item.id?.kind == "youtube#channel") { "You should bind a channel type of [SearchResult] to [SearchStreamViewHolder]" }
-        binding.root.transitionName = binding.root.context.resources.getString(
+        binding.root.transitionName = binding.context.resources.getString(
             R.string.youtube_channel_item_transition_name,
             item.id
         )
