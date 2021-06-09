@@ -37,14 +37,14 @@
         android:label="@string/title_explore">
         <action
             android:id="@+id/action_explorationFragment_to_searchSuggestionFragment"
-            app:destination="@id/suggestionFragment" />
+            app:destination="@id/youtubeSuggestionFragment" />
     </fragment>
     <fragment
-        android:id="@+id/suggestionFragment"
-        android:name="com.zionhuang.music.ui.fragments.search.SuggestionFragment">
+        android:id="@+id/youtubeSuggestionFragment"
+        android:name="com.zionhuang.music.ui.fragments.search.YouTubeSuggestionFragment">
         <action
             android:id="@+id/action_suggestionFragment_to_searchResultFragment"
-            app:destination="@id/searchResultFragment"
+            app:destination="@id/youtubeSearchFragment"
             app:popUpTo="@id/explorationFragment">
             <argument
                 android:name="searchQuery"
@@ -52,15 +52,15 @@
         </action>
     </fragment>
     <fragment
-        android:id="@+id/searchResultFragment"
-        android:name="com.zionhuang.music.ui.fragments.search.SearchResultFragment"
+        android:id="@+id/youtubeSearchFragment"
+        android:name="com.zionhuang.music.ui.fragments.search.YouTubeSearchFragment"
         android:label="Search Result">
         <argument
             android:name="searchQuery"
             app:argType="string" />
         <action
             android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
-            app:destination="@id/suggestionFragment" />
+            app:destination="@id/youtubeSuggestionFragment" />
         <action
             android:id="@+id/action_searchResultFragment_to_youTubePlaylistFragment"
             app:destination="@id/youTubePlaylistFragment">

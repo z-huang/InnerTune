@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
-class SuggestionFragment : MainFragment<LayoutRecyclerviewBinding>() {
+class YouTubeSuggestionFragment : MainFragment<LayoutRecyclerviewBinding>() {
     companion object {
         private const val TAG = "SearchSuggestionFragment"
     }
@@ -99,7 +99,7 @@ class SuggestionFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
     private fun search(query: String) {
         searchView.clearFocus()
-        val action = SuggestionFragmentDirections.actionSuggestionFragmentToSearchResultFragment(query)
+        val action = YouTubeSuggestionFragmentDirections.actionSuggestionFragmentToSearchResultFragment(query)
         NavHostFragment.findNavController(this).navigate(action)
     }
 }

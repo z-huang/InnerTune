@@ -76,7 +76,7 @@ class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_and_settings, menu)
+        inflater.inflate(R.menu.settings, menu)
     }
 
     companion object {

@@ -9,7 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,11 +71,13 @@ class ExploreFragment : MainFragment<FragmentExploreBinding>() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.search_and_settings, menu)
+        menu.findItem(R.id.action_search).actionView = null
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_search) {
-            findNavController(this).navigate(R.id.action_explorationFragment_to_searchSuggestionFragment)
+        when (item.itemId) {
+            R.id.action_search -> findNavController().navigate(R.id.action_explorationFragment_to_searchSuggestionFragment)
+            R.id.action_settings -> findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
         }
         return true
     }

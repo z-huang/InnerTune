@@ -13,7 +13,7 @@ import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
 class SongViewHolder(
     val binding: ItemSongBinding,
-    private val popupMenuListener: SongPopupMenuListener,
+    private val popupMenuListener: SongPopupMenuListener?,
 ) : RecyclerView.ViewHolder(binding.root) {
     val itemDetails: ItemDetailsLookup.ItemDetails<String>
         get() = object : ItemDetailsLookup.ItemDetails<String>() {
@@ -28,12 +28,12 @@ class SongViewHolder(
                 inflate(R.menu.song)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener.editSong(song, binding.context)
-                        R.id.action_play_next -> popupMenuListener.playNext(song, binding.context)
-                        R.id.action_add_to_queue -> popupMenuListener.addToQueue(song, binding.context)
-                        R.id.action_add_to_playlist -> popupMenuListener.addToPlaylist(song, binding.context)
-                        R.id.action_download -> popupMenuListener.downloadSongs(song.songId, binding.context)
-                        R.id.action_delete -> popupMenuListener.deleteSongs(song)
+                        R.id.action_edit -> popupMenuListener?.editSong(song, binding.context)
+                        R.id.action_play_next -> popupMenuListener?.playNext(song, binding.context)
+                        R.id.action_add_to_queue -> popupMenuListener?.addToQueue(song, binding.context)
+                        R.id.action_add_to_playlist -> popupMenuListener?.addToPlaylist(song, binding.context)
+                        R.id.action_download -> popupMenuListener?.downloadSongs(song.songId, binding.context)
+                        R.id.action_delete -> popupMenuListener?.deleteSongs(song)
                     }
                     true
                 }

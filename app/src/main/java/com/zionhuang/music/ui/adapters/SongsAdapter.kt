@@ -25,9 +25,8 @@ import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.text.DateFormat
 
-class SongsAdapter(
-    private val popupMenuListener: SongPopupMenuListener,
-) : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
+class SongsAdapter() : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
+    var popupMenuListener: SongPopupMenuListener? = null
     var sortMenuListener: SortMenuListener? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null
     var tracker: SelectionTracker<String>? = null
@@ -70,17 +69,10 @@ class SongsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            TYPE_HEADER -> SongHeaderViewHolder(
-                parent.inflateWithBinding(R.layout.item_song_header),
-                sortMenuListener!!
-            )
-            TYPE_ITEM -> SongViewHolder(
-                parent.inflateWithBinding(R.layout.item_song),
-                popupMenuListener
-            )
+            TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortMenuListener!!)
+            TYPE_ITEM -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), popupMenuListener)
             else -> throw IllegalArgumentException("Unexpected view type.")
         }
-
 
     fun getItemByPosition(position: Int): Song? = getItem(position)
 

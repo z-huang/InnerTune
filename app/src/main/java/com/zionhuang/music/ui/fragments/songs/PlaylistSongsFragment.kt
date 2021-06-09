@@ -35,7 +35,7 @@ class PlaylistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    private lateinit var songsAdapter: SongsAdapter
+    private val songsAdapter = SongsAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,8 @@ class PlaylistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener).apply {
+        songsAdapter.apply {
+            popupMenuListener = songsViewModel.songPopupMenuListener
             sortMenuListener = this@PlaylistSongsFragment.sortMenuListener
         }
 
@@ -61,12 +62,14 @@ class PlaylistSongsFragment : MainFragment<LayoutRecyclerviewBinding>() {
             adapter = songsAdapter
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.playMedia(requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
+                playbackViewModel.playMedia(
+                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
                         EXTRA_PLAYLIST_ID to playlistId,
                         EXTRA_QUEUE_TYPE to QUEUE_ARTIST,
                         EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
                         EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
-                ))
+                    )
+                )
             }
         }
 

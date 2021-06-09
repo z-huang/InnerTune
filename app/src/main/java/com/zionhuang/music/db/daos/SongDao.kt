@@ -80,6 +80,12 @@ interface SongDao {
     fun getPlaylistSongs(playlistId: Int): PagingSource<Int, Song>
 
     /**
+     * Search
+     */
+    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%'")
+    fun searchSongs(query: String): PagingSource<Int, Song>
+
+    /**
      * Internal methods
      */
     @Query("SELECT * FROM song WHERE songId = :songId")

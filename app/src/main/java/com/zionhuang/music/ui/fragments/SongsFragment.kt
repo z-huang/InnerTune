@@ -1,9 +1,13 @@
 package com.zionhuang.music.ui.fragments
 
 import android.app.DownloadManager.*
+import android.app.SearchManager
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
 import androidx.annotation.IdRes
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -26,6 +30,7 @@ import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.getQueryTextChangeFlow
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.adapters.selection.SongItemDetailsLookup
 import com.zionhuang.music.ui.adapters.selection.SongItemKeyProvider
@@ -34,16 +39,19 @@ import com.zionhuang.music.ui.listeners.SortMenuListener
 import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
+import kotlin.time.ExperimentalTime
+import kotlin.time.toDuration
 
 class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    private lateinit var songsAdapter: SongsAdapter
+    private val songsAdapter = SongsAdapter()
     private lateinit var tracker: SelectionTracker<String>
-    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,12 +59,12 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         exitTransition = MaterialFadeThrough().apply { duration = 300L }
     }
 
-    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         postponeEnterTransition()
-        binding.recyclerView.doOnPreDraw { startPostponedEnterTransition() }
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
-        songsAdapter = SongsAdapter(songsViewModel.songPopupMenuListener).apply {
+        songsAdapter.apply {
+            popupMenuListener = songsViewModel.songPopupMenuListener
             sortMenuListener = this@SongsFragment.sortMenuListener
             downloadInfo = songsViewModel.downloadInfoLiveData
         }
@@ -122,8 +130,22 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         return true
     }
 
+    @ExperimentalTime
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
+        val searchView = menu.findItem(R.id.action_search).actionView as SearchView
+        searchView.apply {
+            findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.setPadding(0, 2, 0, 2)
+            setSearchableInfo(requireContext().getSystemService<SearchManager>()?.getSearchableInfo(requireActivity().componentName))
+            viewLifecycleOwner.lifecycleScope.launch {
+                getQueryTextChangeFlow()
+                    .debounce(100.toDuration(TimeUnit.MILLISECONDS))
+                    .collect { e ->
+                        songsViewModel.query = e.query
+                        songsAdapter.refresh()
+                    }
+            }
+        }
     }
 
     private val sortMenuListener = object : SortMenuListener {
@@ -152,9 +174,5 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         tracker.onSaveInstanceState(outState)
-    }
-
-    companion object {
-        private const val TAG = "SongsFragment"
     }
 }

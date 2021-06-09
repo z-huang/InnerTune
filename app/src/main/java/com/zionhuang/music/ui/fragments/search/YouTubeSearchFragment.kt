@@ -40,8 +40,8 @@ import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
-class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
-    private val args: SearchResultFragmentArgs by navArgs()
+class YouTubeSearchFragment : MainFragment<LayoutRecyclerviewBinding>() {
+    private val args: YouTubeSearchFragmentArgs by navArgs()
     private val query by lazy { args.searchQuery }
 
     private val viewModel by viewModels<SearchViewModel>()
@@ -95,10 +95,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
                         playbackViewModel.playFromSearch(
                             requireActivity(), query, bundleOf(
                                 EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url),
-                                EXTRA_LINK_HANDLER to ExtractorHelper.getSearchQueryHandler(
-                                    query,
-                                    listOf(searchFilterListener.filter)
-                                )
+                                EXTRA_LINK_HANDLER to ExtractorHelper.getSearchQueryHandler(query, listOf(searchFilterListener.filter))
                             )
                         )
                     }
@@ -107,10 +104,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
                         reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
                         val transitionName = getString(R.string.youtube_playlist_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
-                        val directions =
-                            SearchResultFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(
-                                item.url
-                            )
+                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(item.url)
                         findNavController().navigate(directions, extras)
                     }
                     is ChannelInfoItem -> {
@@ -118,10 +112,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
                         reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
                         val transitionName = getString(R.string.youtube_channel_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
-                        val directions =
-                            SearchResultFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(
-                                item.url
-                            )
+                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(item.url)
                         findNavController().navigate(directions, extras)
                     }
                 }
@@ -142,8 +133,7 @@ class SearchResultFragment : MainFragment<LayoutRecyclerviewBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_search) {
-            NavHostFragment.findNavController(this)
-                .navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
+            NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
         }
         return true
     }

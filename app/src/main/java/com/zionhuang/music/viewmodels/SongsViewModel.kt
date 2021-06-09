@@ -48,11 +48,18 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     var sortType by preference(R.string.pref_sort_type, ORDER_NAME)
     var sortDescending by preference(R.string.pref_sort_descending, true)
 
+    var query: String? = null
+
     val allSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
-            songRepository.getAllSongsPagingSource(sortType, sortDescending)
+            if (!query.isNullOrBlank()) {
+                songRepository.searchSongs(query!!)
+            } else {
+                songRepository.getAllSongsPagingSource(sortType, sortDescending)
+            }
         }.flow.map { pagingData ->
-            pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
+            if (query.isNullOrBlank()) pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
+            else pagingData
         }.cachedIn(viewModelScope)
     }
 

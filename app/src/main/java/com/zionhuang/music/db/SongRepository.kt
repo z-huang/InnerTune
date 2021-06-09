@@ -40,6 +40,8 @@ class SongRepository(private val context: Context) {
         descending: Boolean
     ): PagingSource<Int, Song> = songDao.getAllSongsAsPagingSource(order, descending)
 
+    fun searchSongs(query: String) = songDao.searchSongs(query)
+
     /**
      * All Songs [List] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
