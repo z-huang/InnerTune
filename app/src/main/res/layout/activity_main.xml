@@ -63,7 +63,7 @@
             android:layout_above="@+id/bottom_nav"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
-            app:layout_behavior=".ui.widgets.HideOnScrollFabBehavior"
+            app:layout_behavior="com.zionhuang.music.ui.widgets.HideOnScrollFabBehavior"
             app:srcCompat="@drawable/ic_playlist_add" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

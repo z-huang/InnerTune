@@ -25,9 +25,10 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.NewPipeSearchResultAdapter
-import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
@@ -40,7 +41,9 @@ import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
-class YouTubeSearchFragment : MainFragment<LayoutRecyclerviewBinding>() {
+class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+
     private val args: YouTubeSearchFragmentArgs by navArgs()
     private val query by lazy { args.searchQuery }
 
@@ -69,7 +72,7 @@ class YouTubeSearchFragment : MainFragment<LayoutRecyclerviewBinding>() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        activity.supportActionBar?.title = query
+        (requireActivity() as MainActivity).supportActionBar?.title = query
 
         searchResultAdapter.apply {
             streamPopupMenuListener = songsViewModel.streamPopupMenuListener

@@ -28,6 +28,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
+    override fun getViewBinding() = FragmentPlaylistsBinding.inflate(layoutInflater)
+
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playlistsViewModel by viewModels<PlaylistsViewModel>()
     private val playlistsAdapter = PlaylistsAdapter()

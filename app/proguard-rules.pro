@@ -20,6 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# Rules for Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule
 -keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
@@ -27,3 +28,10 @@
   **[] $VALUES;
   public *;
 }
+
+# Rules for NewPipe
+-dontobfuscate
+-keep class org.schabi.newpipe.extractor.timeago.patterns.** { *; }
+-keep class org.ocpsoft.prettytime.i18n.** { *; }
+
+-keep class org.mozilla.javascript.** { *; }

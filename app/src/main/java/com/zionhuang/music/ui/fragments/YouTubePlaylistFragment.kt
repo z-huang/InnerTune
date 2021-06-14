@@ -31,6 +31,8 @@ import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+
     private val args: YouTubePlaylistFragmentArgs by navArgs()
     private val url by lazy { args.url }
 
@@ -66,10 +68,12 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             addOnClickListener { pos, _ ->
                 val item = infoItemAdapter.getItemByPosition(pos)
                 if (item is StreamInfoItem) {
-                    playbackViewModel.playMedia(requireActivity(), YouTubeStreamExtractor.extractId(item.url)!!, bundleOf(
+                    playbackViewModel.playMedia(
+                        requireActivity(), YouTubeStreamExtractor.extractId(item.url)!!, bundleOf(
                             EXTRA_QUEUE_TYPE to QUEUE_YT_PLAYLIST,
                             EXTRA_LINK_HANDLER to ExtractorHelper.getPlaylistLinkHandler(url)
-                    ))
+                        )
+                    )
                 }
             }
         }

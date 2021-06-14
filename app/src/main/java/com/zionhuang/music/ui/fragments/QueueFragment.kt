@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+
     private val viewModel by activityViewModels<PlaybackViewModel>()
 
     private val dragEventManager = DragEventManager()

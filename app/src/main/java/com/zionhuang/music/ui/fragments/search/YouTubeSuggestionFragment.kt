@@ -18,7 +18,7 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getQueryTextChangeFlow
 import com.zionhuang.music.ui.adapters.SearchSuggestionAdapter
-import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.SuggestionViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
@@ -28,10 +28,8 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
-class YouTubeSuggestionFragment : MainFragment<LayoutRecyclerviewBinding>() {
-    companion object {
-        private const val TAG = "SearchSuggestionFragment"
-    }
+class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
 
     private val viewModel by viewModels<SuggestionViewModel>()
     private lateinit var searchView: SearchView

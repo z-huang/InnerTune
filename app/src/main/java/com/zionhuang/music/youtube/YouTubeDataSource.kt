@@ -13,18 +13,18 @@ class YouTubeDataSource {
     class Search(private val youTubeRepository: YouTubeRepository, private val query: String) : PagingSource<String, SearchResult>() {
         @Suppress("BlockingMethodInNonBlockingContext")
         override suspend fun load(params: LoadParams<String>): LoadResult<String, SearchResult> =
-                try {
-                    val res = youTubeRepository.search(query, params.key)
-                    LoadResult.Page(
-                            data = res.items,
-                            prevKey = res.prevPageToken,
-                            nextKey = res.nextPageToken
-                    )
-                } catch (e: GoogleJsonResponseException) {
-                    LoadResult.Error(Throwable(e.details.message))
-                } catch (e: Exception) {
-                    LoadResult.Error(e)
-                }
+            try {
+                val res = youTubeRepository.search(query, params.key)
+                LoadResult.Page(
+                    data = res.items,
+                    prevKey = res.prevPageToken,
+                    nextKey = res.nextPageToken
+                )
+            } catch (e: GoogleJsonResponseException) {
+                LoadResult.Error(Throwable(e.details.message))
+            } catch (e: Exception) {
+                LoadResult.Error(e)
+            }
 
         override fun getRefreshKey(state: PagingState<String, SearchResult>): String? = null
     }
@@ -37,16 +37,16 @@ class YouTubeDataSource {
             if (params.key == null) {
                 val searchInfo = ExtractorHelper.search(queryString, contentFilter)
                 LoadResult.Page(
-                        data = searchInfo.relatedItems,
-                        nextKey = searchInfo.nextPage,
-                        prevKey = null
+                    data = searchInfo.relatedItems,
+                    nextKey = searchInfo.nextPage,
+                    prevKey = null
                 )
             } else {
                 val infoItemsPage = ExtractorHelper.search(queryString, contentFilter, params.key!!)
                 LoadResult.Page(
-                        data = infoItemsPage.items,
-                        nextKey = infoItemsPage.nextPage,
-                        prevKey = null
+                    data = infoItemsPage.items,
+                    nextKey = infoItemsPage.nextPage,
+                    prevKey = null
                 )
             }
         } catch (e: Exception) {
@@ -61,9 +61,9 @@ class YouTubeDataSource {
             if (params.key == null) {
                 val playlistInfo = ExtractorHelper.getPlaylist(url)
                 LoadResult.Page(
-                        data = playlistInfo.relatedItems,
-                        nextKey = playlistInfo.nextPage,
-                        prevKey = null
+                    data = playlistInfo.relatedItems,
+                    nextKey = playlistInfo.nextPage,
+                    prevKey = null
                 )
             } else {
                 val infoItemsPage = ExtractorHelper.getPlaylist(url, params.key!!)
@@ -111,9 +111,9 @@ class YouTubeDataSource {
             return try {
                 val res = youTubeRepository.getPopularMusic(params.key)
                 LoadResult.Page(
-                        data = res.items,
-                        prevKey = res.prevPageToken,
-                        nextKey = res.nextPageToken
+                    data = res.items,
+                    prevKey = res.prevPageToken,
+                    nextKey = res.nextPageToken
                 )
             } catch (e: GoogleJsonResponseException) {
                 LoadResult.Error(Throwable(e.details.message))

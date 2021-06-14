@@ -18,16 +18,14 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentExploreBinding
 import com.zionhuang.music.ui.adapters.ExploreAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
-import com.zionhuang.music.ui.fragments.base.MainFragment
+import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.ExploreViewModel
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ExploreFragment : MainFragment<FragmentExploreBinding>() {
-    companion object {
-        private const val TAG = "ExplorationFragment"
-    }
+class ExploreFragment : BindingFragment<FragmentExploreBinding>() {
+    override fun getViewBinding() = FragmentExploreBinding.inflate(layoutInflater)
 
     private val viewModel by viewModels<ExploreViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()

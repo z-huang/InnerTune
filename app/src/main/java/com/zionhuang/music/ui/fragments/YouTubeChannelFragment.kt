@@ -32,6 +32,8 @@ import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+
     private val args: YouTubeChannelFragmentArgs by navArgs()
     private val url by lazy { args.url }
 

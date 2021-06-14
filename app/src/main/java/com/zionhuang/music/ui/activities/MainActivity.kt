@@ -26,8 +26,9 @@ import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.launch
 
-class MainActivity : BindingActivity<ActivityMainBinding>(),
-    NavController.OnDestinationChangedListener {
+class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
+    override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
+
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
@@ -40,13 +41,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(),
         super.onCreate(savedInstanceState)
         setupUI()
         songsViewModel.deletedSongs.observe(this) { songs ->
-            Snackbar.make(
-                binding.root, resources.getQuantityString(
-                    R.plurals.snack_bar_delete_song,
-                    songs.size,
-                    songs.size
-                ), Snackbar.LENGTH_LONG
-            )
+            Snackbar.make(binding.root, resources.getQuantityString(R.plurals.snack_bar_delete_song, songs.size, songs.size), Snackbar.LENGTH_LONG)
                 .setAnchorView(binding.bottomNav)
                 .setAction(R.string.snack_bar_undo) {
                     lifecycleScope.launch {

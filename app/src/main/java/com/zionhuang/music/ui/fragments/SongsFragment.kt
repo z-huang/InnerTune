@@ -48,6 +48,8 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
 class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val songsAdapter = SongsAdapter()

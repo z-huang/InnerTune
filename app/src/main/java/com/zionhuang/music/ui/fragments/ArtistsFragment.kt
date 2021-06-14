@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val artistsViewModel by viewModels<ArtistsViewModel>()
     private val artistsAdapter = ArtistsAdapter()
