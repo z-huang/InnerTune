@@ -67,7 +67,7 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 playbackViewModel.playMedia(
                     requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
                         EXTRA_PLAYLIST_ID to playlistId,
-                        EXTRA_QUEUE_TYPE to QUEUE_ARTIST,
+                        EXTRA_QUEUE_TYPE to QUEUE_PLAYLIST,
                         EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
                         EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
                     )
