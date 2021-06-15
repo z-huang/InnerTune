@@ -77,11 +77,25 @@ interface SongDao {
          ORDER BY playlist_song.idInPlaylist
         """
     )
-    fun getPlaylistSongs(playlistId: Int): PagingSource<Int, Song>
+    fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, Song>
+
+    @Transaction
+    @Query(
+        """
+        SELECT song.*
+          FROM playlist_song
+               JOIN song
+                 ON playlist_song.songId = song.songId
+         WHERE playlistId = :playlistId
+         ORDER BY playlist_song.idInPlaylist
+        """
+    )
+    suspend fun getPlaylistSongsAsList(playlistId: Int): List<Song>
 
     /**
      * Search
      */
+    @Transaction
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%'")
     fun searchSongs(query: String): PagingSource<Int, Song>
 

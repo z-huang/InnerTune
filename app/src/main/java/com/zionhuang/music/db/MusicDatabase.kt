@@ -5,7 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.zionhuang.music.db.daos.*
+import com.zionhuang.music.db.daos.ArtistDao
+import com.zionhuang.music.db.daos.DownloadDao
+import com.zionhuang.music.db.daos.PlaylistDao
+import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
 
 @Database(entities = [
@@ -20,7 +23,6 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract val songDao: SongDao
     abstract val artistDao: ArtistDao
     abstract val playlistDao: PlaylistDao
-    abstract val playlistSongDao: PlaylistSongDao
     abstract val downloadDao: DownloadDao
 
     companion object {

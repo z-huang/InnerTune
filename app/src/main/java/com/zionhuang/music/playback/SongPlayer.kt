@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
+import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUERY_STRING
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
@@ -39,6 +40,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
+import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
 import com.zionhuang.music.constants.MediaConstants.QUEUE_SEARCH
 import com.zionhuang.music.constants.MediaConstants.QUEUE_SINGLE
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_CHANNEL
@@ -145,6 +147,13 @@ class SongPlayer(
                         extras.getInt(EXTRA_QUEUE_ORDER),
                         extras.getBoolean(EXTRA_QUEUE_DESC)
                     ).toMediaItems(context)
+                    player.setMediaItems(items)
+                    items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
+                        player.seekToDefaultPosition(index)
+                    }
+                }
+                QUEUE_PLAYLIST -> {
+                    val items = songRepository.getPlaylistSongsList(extras.getInt(EXTRA_PLAYLIST_ID)).toMediaItems(context)
                     player.setMediaItems(items)
                     items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
                         player.seekToDefaultPosition(index)

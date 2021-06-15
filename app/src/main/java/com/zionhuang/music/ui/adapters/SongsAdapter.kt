@@ -25,7 +25,7 @@ import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.text.DateFormat
 
-class SongsAdapter() : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
+class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
     var popupMenuListener: SongPopupMenuListener? = null
     var sortMenuListener: SortMenuListener? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null

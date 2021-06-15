@@ -3,7 +3,6 @@ package com.zionhuang.music.db.daos
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.zionhuang.music.db.entities.PlaylistEntity
-import com.zionhuang.music.db.entities.PlaylistSong
 import com.zionhuang.music.db.entities.PlaylistSongEntity
 import com.zionhuang.music.db.entities.PlaylistWithSongs
 
@@ -19,18 +18,23 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlist WHERE playlistId = :playlistId")
     fun getPlaylistWithSongs(playlistId: Int): PagingSource<Int, PlaylistWithSongs>
 
-    @Transaction
-    @Query("SELECT * FROM playlist_song WHERE playlistId = :playlistId ORDER BY idInPlaylist")
-    fun getPlaylistSongs(playlistId: Int): PagingSource<Int, PlaylistSong>
+    @Query("SELECT max(idInPlaylist) FROM playlist_song WHERE playlistId = :playlistId")
+    suspend fun getPlaylistMaxId(playlistId: Int): Int?
 
     @Insert
-    fun insert(playlist: PlaylistEntity)
+    suspend fun insertPlaylist(playlist: PlaylistEntity)
+
+    @Insert
+    suspend fun insertPlaylistSongs(playlistSong: List<PlaylistSongEntity>)
+
+    @Query("DELETE FROM playlist_song WHERE playlistId = :playlistId AND idInPlaylist IN (:idsInPlaylist)")
+    suspend fun deletePlaylistSongs(playlistId: Int, idsInPlaylist: List<Int>)
 
     @Update
-    fun updatePlaylist(playlist: PlaylistEntity)
+    suspend fun updatePlaylist(playlist: PlaylistEntity)
 
     @Update
-    fun updatePlaylistSongs(list: List<PlaylistSongEntity>)
+    suspend fun updatePlaylistSongs(list: List<PlaylistSongEntity>)
 
     @Delete
     suspend fun delete(playlist: PlaylistEntity)

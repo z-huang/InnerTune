@@ -9,12 +9,14 @@ import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
-import com.zionhuang.music.db.daos.*
+import com.zionhuang.music.db.daos.ArtistDao
+import com.zionhuang.music.db.daos.DownloadDao
+import com.zionhuang.music.db.daos.PlaylistDao
+import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.OkHttpDownloader.requestOf
-import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -24,10 +26,7 @@ class SongRepository(private val context: Context) {
     private val songDao: SongDao = musicDatabase.songDao
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val playlistDao: PlaylistDao = musicDatabase.playlistDao
-    private val playlistSongDao: PlaylistSongDao = musicDatabase.playlistSongDao
     private val downloadDao: DownloadDao = musicDatabase.downloadDao
-
-    private val youTubeExtractor = YouTubeExtractor.getInstance(context)
 
     private val _deletedSongs = MutableLiveData<List<Song>>()
     val deletedSongs: LiveData<List<Song>> get() = _deletedSongs
@@ -35,10 +34,8 @@ class SongRepository(private val context: Context) {
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    fun getAllSongsPagingSource(
-        @SongSortType order: Int,
-        descending: Boolean
-    ): PagingSource<Int, Song> = songDao.getAllSongsAsPagingSource(order, descending)
+    fun getAllSongsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
+        songDao.getAllSongsAsPagingSource(order, descending)
 
     fun searchSongs(query: String) = songDao.searchSongs(query)
 
@@ -51,11 +48,8 @@ class SongRepository(private val context: Context) {
     /**
      * Artist Songs [PagingSource]
      */
-    fun getArtistSongsAsPagingSource(
-        artistId: Int,
-        @SongSortType order: Int,
-        descending: Boolean
-    ): PagingSource<Int, Song> = songDao.getArtistSongsAsPagingSource(artistId, order, descending)
+    fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
+        songDao.getArtistSongsAsPagingSource(artistId, order, descending)
 
     suspend fun getArtistSongsList(artistId: Int, @SongSortType order: Int, descending: Boolean) =
         withContext(IO) { songDao.getArtistSongsAsList(artistId, order, descending) }
@@ -63,8 +57,9 @@ class SongRepository(private val context: Context) {
     /**
      * Playlist Songs [PagingSource]
      */
-    fun getPlaylistSongs(playlistId: Int): PagingSource<Int, Song> =
-        songDao.getPlaylistSongs(playlistId)
+    fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, Song> = songDao.getPlaylistSongsAsPagingSource(playlistId)
+
+    suspend fun getPlaylistSongsList(playlistId: Int): List<Song> = withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) }
 
     /**
      * Artists [List], [PagingSource]
@@ -80,15 +75,14 @@ class SongRepository(private val context: Context) {
     /**
      * Song Operations
      */
-    suspend fun getSongEntityById(id: String): SongEntity? =
-        withContext(IO) { songDao.getSongEntityById(id) }
+    suspend fun getSongEntityById(id: String): SongEntity? = withContext(IO) { songDao.getSongEntityById(id) }
 
     suspend fun getSongById(id: String): Song? = withContext(IO) { songDao.getSongById(id) }
 
-    private suspend fun artistSongsCount(artistId: Int) =
-        withContext(IO) { songDao.artistSongsCount(artistId) }
+    private suspend fun artistSongsCount(artistId: Int) = withContext(IO) { songDao.artistSongsCount(artistId) }
 
     private suspend fun insert(song: SongEntity) = withContext(IO) { songDao.insert(song) }
+
     suspend fun insert(songs: List<Song>) = withContext(IO) {
         songs.forEach { song ->
             val stream = ExtractorHelper.getStreamInfo(song.songId)
@@ -132,20 +126,16 @@ class SongRepository(private val context: Context) {
     suspend fun deleteSongs(songs: List<Song>) = withContext(IO) {
         songDao.delete(songs.map { it.songId })
         songs.forEach { song ->
-            context.getAudioFile(song.songId).takeIf { it.exists() }
-                ?.moveTo(context.getRecycledAudioFile(song.songId))
-            context.getArtworkFile(song.songId).takeIf { it.exists() }
-                ?.moveTo(context.getRecycledArtworkFile(song.songId))
+            context.getAudioFile(song.songId).takeIf { it.exists() }?.moveTo(context.getRecycledAudioFile(song.songId))
+            context.getArtworkFile(song.songId).takeIf { it.exists() }?.moveTo(context.getRecycledArtworkFile(song.songId))
         }
         _deletedSongs.postValue(songs)
     }
 
     suspend fun restoreSongs(songs: List<Song>) {
         songs.forEach { song ->
-            context.getRecycledAudioFile(song.songId).takeIf { it.exists() }
-                ?.moveTo(context.getAudioFile(song.songId))
-            context.getRecycledArtworkFile(song.songId).takeIf { it.exists() }
-                ?.moveTo(context.getArtworkFile(song.songId))
+            context.getRecycledAudioFile(song.songId).takeIf { it.exists() }?.moveTo(context.getAudioFile(song.songId))
+            context.getRecycledArtworkFile(song.songId).takeIf { it.exists() }?.moveTo(context.getArtworkFile(song.songId))
         }
         insert(songs)
     }
@@ -153,20 +143,16 @@ class SongRepository(private val context: Context) {
     /**
      * Artist Operations
      */
-    suspend fun getArtist(artistId: Int): ArtistEntity? =
-        withContext(IO) { artistDao.getArtist(artistId) }
+    suspend fun getArtist(artistId: Int): ArtistEntity? = withContext(IO) { artistDao.getArtist(artistId) }
 
     suspend fun getArtist(name: String): Int? = withContext(IO) { artistDao.getArtistId(name) }
-    private suspend fun getOrInsertArtist(name: String): Int = withContext(IO) {
-        getArtist(name) ?: insertArtist(name)
-    }
+
+    private suspend fun getOrInsertArtist(name: String): Int = withContext(IO) { getArtist(name) ?: insertArtist(name) }
 
     @WorkerThread
-    fun searchArtists(query: CharSequence): List<ArtistEntity> =
-        artistDao.searchArtists(query.toString())
+    fun searchArtists(query: CharSequence): List<ArtistEntity> = artistDao.searchArtists(query.toString())
 
-    private suspend fun insertArtist(name: String): Int =
-        withContext(IO) { artistDao.insert(ArtistEntity(name = name)).toInt() }
+    private suspend fun insertArtist(name: String): Int = withContext(IO) { artistDao.insert(ArtistEntity(name = name)).toInt() }
 
     suspend fun updateArtist(artist: ArtistEntity) = withContext(IO) { artistDao.update(artist) }
 
@@ -182,7 +168,7 @@ class SongRepository(private val context: Context) {
     }
 
     suspend fun insertPlaylist(name: String) = withContext(IO) {
-        playlistDao.insert(PlaylistEntity(name = name))
+        playlistDao.insertPlaylist(PlaylistEntity(name = name))
     }
 
     suspend fun updatePlaylist(playlist: PlaylistEntity) = withContext(IO) {
@@ -196,16 +182,17 @@ class SongRepository(private val context: Context) {
     /**
      * Playlist songs
      */
-    private suspend fun insertPlaylistSong(playlistSongs: List<PlaylistSongEntity>) =
-        withContext(IO) {
-            playlistSongDao.insert(playlistSongs)
-        }
+    private suspend fun insertPlaylistSongs(playlistSongs: List<PlaylistSongEntity>) = withContext(IO) {
+        playlistDao.insertPlaylistSongs(playlistSongs)
+    }
 
     suspend fun addToPlaylist(songs: List<Song>, playlistId: Int) {
-        insertPlaylistSong(songs.map {
+        var maxId = playlistDao.getPlaylistMaxId(playlistId) ?: -1
+        insertPlaylistSongs(songs.map {
             PlaylistSongEntity(
                 playlistId = playlistId,
-                songId = it.songId
+                songId = it.songId,
+                idInPlaylist = ++maxId
             )
         })
     }
@@ -243,8 +230,4 @@ class SongRepository(private val context: Context) {
         createDate,
         modifyDate
     )
-
-    companion object {
-        private const val TAG = "SongRepository"
-    }
 }
