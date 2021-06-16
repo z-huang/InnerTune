@@ -4,66 +4,19 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
-import androidx.paging.LoadState.Loading
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentExploreBinding
-import com.zionhuang.music.ui.adapters.ExploreAdapter
-import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
-import com.zionhuang.music.viewmodels.ExploreViewModel
-import com.zionhuang.music.viewmodels.PlaybackViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class ExploreFragment : BindingFragment<FragmentExploreBinding>() {
     override fun getViewBinding() = FragmentExploreBinding.inflate(layoutInflater)
-
-    private val viewModel by viewModels<ExploreViewModel>()
-    private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough().apply { duration = 300L }
         exitTransition = MaterialFadeThrough().apply { duration = 300L }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-        val exploreAdapter = ExploreAdapter().apply {
-            addLoadStateListener { loadState ->
-                binding.progressBar.isVisible = loadState.refresh is Loading
-                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-                binding.tvErrorMsg.isVisible = loadState.refresh is LoadState.Error
-                if (loadState.refresh is LoadState.Error) {
-                    binding.tvErrorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
-                }
-            }
-        }
-        binding.btnRetry.setOnClickListener { exploreAdapter.retry() }
-        binding.recyclerView.apply {
-            adapter = exploreAdapter.withLoadStateFooter(LoadStateAdapter {
-                exploreAdapter.retry()
-            })
-        }
-
-        lifecycleScope.launch {
-            viewModel.flow.collectLatest {
-                exploreAdapter.submitData(it)
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

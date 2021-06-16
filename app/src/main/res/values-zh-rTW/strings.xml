@@ -66,4 +66,5 @@
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="system_default">系統預設</string>
     <string name="dialog_edit_playlist_title">編輯播放清單</string>
+    <string name="explore_page_content">搜尋以尋找音樂</string>
 </resources>
