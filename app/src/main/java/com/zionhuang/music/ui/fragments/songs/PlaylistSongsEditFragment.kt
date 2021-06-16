@@ -3,17 +3,12 @@ package com.zionhuang.music.ui.fragments.songs
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,32 +16,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
-import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
-import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
-import com.zionhuang.music.ui.adapters.PlaylistSongsAdapter
+import com.zionhuang.music.ui.adapters.PlaylistSongsEditAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
-import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.PlaylistSongsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+class PlaylistSongsEditFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
 
-    private val args: PlaylistSongsFragmentArgs by navArgs()
+    private val args: PlaylistSongsEditFragmentArgs by navArgs()
     private val playlistId by lazy { args.playlistId }
 
-    private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val viewModel by viewModels<PlaylistSongsViewModel>()
-    private val songsAdapter = PlaylistSongsAdapter()
+    private val songsAdapter = PlaylistSongsEditAdapter()
 
-    private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+    private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
         private val elevation by lazy { requireContext().resources.getDimension(R.dimen.drag_item_elevation) }
 
         override fun isLongPressDragEnabled(): Boolean = false
@@ -61,7 +49,6 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             ViewCompat.setElevation(viewHolder.itemView, 0f)
-            songsAdapter.processMove()
         }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -71,9 +58,7 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             return true
         }
 
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.removeFromPlaylist(playlistId, songsAdapter.getItemByPosition(viewHolder.absoluteAdapterPosition)!!.idInPlaylist!!)
-        }
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,9 +76,7 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         view.doOnPreDraw { startPostponedEnterTransition() }
 
         songsAdapter.apply {
-            popupMenuListener = songsViewModel.songPopupMenuListener
-            downloadInfo = songsViewModel.downloadInfoLiveData
-            itemTouchHelper = this@PlaylistSongsFragment.itemTouchHelper
+            itemTouchHelper = this@PlaylistSongsEditFragment.itemTouchHelper
             onProcessMove = {
                 viewModel.processMove(playlistId, it)
             }
@@ -104,38 +87,15 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songsAdapter
             itemTouchHelper.attachToRecyclerView(this)
-            addOnClickListener { pos, _ ->
-                playbackViewModel.playMedia(
-                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
-                        EXTRA_PLAYLIST_ID to playlistId,
-                        EXTRA_QUEUE_TYPE to QUEUE_PLAYLIST
-                    )
-                )
-            }
         }
 
         lifecycleScope.launch {
-            songsViewModel.getPlaylistSongsAsFlow(playlistId).collectLatest {
-                songsAdapter.submitData(it)
-            }
-        }
-
-        songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
-            map.forEach { (key, value) ->
-                songsAdapter.setProgress(key, value)
-            }
+            songsAdapter.submitList(songsViewModel.songRepository.getPlaylistSongsList(playlistId))
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.playlist_songs_fragment, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_edit -> findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToPlaylistSongsEditFragment(playlistId))
-        }
-        return true
+    override fun onDestroy() {
+        songsAdapter.processMove()
+        super.onDestroy()
     }
 }

@@ -18,148 +18,168 @@
         <import type="android.view.View" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/song_item_height"
-        android:background="?android:selectableItemBackground"
-        android:clickable="true"
-        android:orientation="vertical">
+        android:background="?colorSurface"
+        android:clickable="true">
 
-        <LinearLayout
-            android:id="@+id/artwork_container"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="6dp"
-            android:padding="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/song_item_height"
+            android:background="?android:selectableItemBackground"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/artwork"
-                artworkId="@{song.songId}"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/artwork_container"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/background_song_cover"
-                android:scaleType="center"
-                tools:src="@drawable/ic_music_note" />
-        </LinearLayout>
+                android:layout_marginStart="6dp"
+                android:padding="6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="6dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_more_action"
-            app:layout_constraintStart_toEndOf="@id/artwork_container"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/song_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="3dp"
-                    android:text="@{song.title}"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/song_details"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    tools:text="Song Title" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/artwork"
+                    artworkId="@{song.songId}"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_weight="0"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_offline_pin"
-                    android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
+                    android:background="@drawable/background_song_cover"
+                    android:scaleType="center"
+                    tools:src="@drawable/ic_music_note" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_more_action"
+                app:layout_constraintStart_toEndOf="@id/artwork_container"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/song_artist"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:text="@{song.artistName}"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="12sp"
-                    tools:text="Song Artist" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_bullet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:singleLine="true"
-                    android:text="@string/bullet"
-                    android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/song_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingBottom="3dp"
+                        android:text="@{song.title}"
+                        android:textColor="?android:textColorPrimary"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@+id/song_details"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed"
+                        tools:text="Song Title" />
 
-                <TextView
-                    android:id="@+id/duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textSize="12sp"
-                    app:duration="@{song.duration}"
-                    tools:text="3:00" />
-            </LinearLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:layout_weight="0"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_offline_pin"
+                        android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADING ? View.VISIBLE : View.GONE}">
-
-                <com.google.android.material.progressindicator.LinearProgressIndicator
-                    android:id="@+id/progress_bar"
-                    style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:progress="50" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/song_artist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="@{song.artistName}"
+                        android:textColor="?android:textColorSecondary"
+                        android:textSize="12sp"
+                        tools:text="Song Artist" />
+
+                    <TextView
+                        android:id="@+id/tv_bullet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:singleLine="true"
+                        android:text="@string/bullet"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textSize="12sp"
+                        app:duration="@{song.duration}"
+                        tools:text="3:00" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADING ? View.VISIBLE : View.GONE}">
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progress_bar"
+                        style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:progress="50" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/btn_more_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:padding="5dp"
-            android:scaleType="center"
-            android:tint="?android:textColorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more_vert" />
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_more_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:padding="5dp"
+                android:scaleType="center"
+                android:tint="?android:textColorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/drag_handle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_more_vert" />
 
-        <FrameLayout
-            android:id="@+id/overlay_selection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.25"
-            android:background="?colorAccent"
-            android:visibility="@{(isSelected ?? true) ? View.VISIBLE : View.GONE}" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/drag_handle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="12dp"
+                android:padding="5dp"
+                android:scaleType="center"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_drag_handle" />
+
+            <FrameLayout
+                android:id="@+id/overlay_selection"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.25"
+                android:background="?colorAccent"
+                android:visibility="@{(isSelected ?? true) ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 </layout>

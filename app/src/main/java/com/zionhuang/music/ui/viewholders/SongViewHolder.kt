@@ -11,8 +11,8 @@ import com.zionhuang.music.extensions.context
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 
-class SongViewHolder(
-    val binding: ItemSongBinding,
+open class SongViewHolder(
+    open val binding: ItemSongBinding,
     private val popupMenuListener: SongPopupMenuListener?,
 ) : RecyclerView.ViewHolder(binding.root) {
     val itemDetails: ItemDetailsLookup.ItemDetails<String>

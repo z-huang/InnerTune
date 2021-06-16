@@ -1,13 +1,11 @@
 package com.zionhuang.music.db
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
-import com.zionhuang.music.constants.ORDER_ARTIST
-import com.zionhuang.music.constants.ORDER_CREATE_DATE
-import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.DownloadDao
@@ -32,21 +30,18 @@ class SongRepository(private val context: Context) {
     val deletedSongs: LiveData<List<Song>> get() = _deletedSongs
 
     /**
-     * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
+     * All Songs
      */
     fun getAllSongsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
         songDao.getAllSongsAsPagingSource(order, descending)
 
     fun searchSongs(query: String) = songDao.searchSongs(query)
 
-    /**
-     * All Songs [List] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
-     */
     suspend fun getAllSongsList(@SongSortType order: Int, descending: Boolean): List<Song> =
         withContext(IO) { songDao.getAllSongsAsList(order, descending) }
 
     /**
-     * Artist Songs [PagingSource]
+     * Artist Songs
      */
     fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
         songDao.getArtistSongsAsPagingSource(artistId, order, descending)
@@ -55,20 +50,22 @@ class SongRepository(private val context: Context) {
         withContext(IO) { songDao.getArtistSongsAsList(artistId, order, descending) }
 
     /**
-     * Playlist Songs [PagingSource]
+     * Playlist Songs
      */
     fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, Song> = songDao.getPlaylistSongsAsPagingSource(playlistId)
 
     suspend fun getPlaylistSongsList(playlistId: Int): List<Song> = withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) }
 
+    suspend fun getPlaylistSongEntities(playlistId: Int): List<PlaylistSongEntity> = withContext(IO) { playlistDao.getPlaylistSongEntities(playlistId) }
+
     /**
-     * Artists [List], [PagingSource]
+     * Artists
      */
     val allArtists: List<ArtistEntity> get() = artistDao.getAllArtists()
     val allArtistsPagingSource: PagingSource<Int, ArtistEntity> get() = artistDao.getAllArtistsAsPagingSource()
 
     /**
-     * Playlists [PagingSource]
+     * Playlists
      */
     val allPlaylistsPagingSource: PagingSource<Int, PlaylistEntity> get() = playlistDao.getAllPlaylistsAsPagingSource()
 
@@ -117,11 +114,7 @@ class SongRepository(private val context: Context) {
         }
     }
 
-    suspend fun toggleLike(songId: String) {
-        updateSongEntity(songId) { liked = !liked }
-    }
-
-    suspend fun hasSong(songId: String) = withContext(IO) { songDao.contains(songId) }
+    suspend fun toggleLike(songId: String) = updateSongEntity(songId) { liked = !liked }
 
     suspend fun deleteSongs(songs: List<Song>) = withContext(IO) {
         songDao.delete(songs.map { it.songId })
@@ -173,6 +166,15 @@ class SongRepository(private val context: Context) {
 
     suspend fun updatePlaylist(playlist: PlaylistEntity) = withContext(IO) {
         playlistDao.updatePlaylist(playlist)
+    }
+
+    suspend fun updatePlaylistSongsOrder(playlistSongs: List<PlaylistSongEntity>) = withContext(IO) {
+        Log.d(TAG, playlistSongs.toString())
+        playlistDao.updatePlaylistSongs(playlistSongs)
+    }
+
+    suspend fun removeSongFromPlaylist(playlistId: Int, idInPlaylist: Int) = withContext(IO) {
+        playlistDao.removeSong(playlistId, idInPlaylist)
     }
 
     suspend fun deletePlaylist(playlist: PlaylistEntity) = withContext(IO) {

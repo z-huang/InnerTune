@@ -1,11 +1,13 @@
 package com.zionhuang.music.ui.adapters
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.SelectionTracker.SELECTION_CHANGED_MARKER
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
@@ -25,11 +27,27 @@ import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.text.DateFormat
 
-class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
+class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
     var popupMenuListener: SongPopupMenuListener? = null
     var sortMenuListener: SortMenuListener? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null
     var tracker: SelectionTracker<String>? = null
+    var itemTouchHelper: ItemTouchHelper? = null
+
+    private val moves: MutableList<Pair<Int, Int>> = mutableListOf()
+    var onProcessMove: ((List<Pair<Int, Int>>) -> Unit)? = null
+
+    fun moveItem(from: Int, to: Int) {
+        moves.add(Pair(from, to))
+        notifyItemMoved(from, to)
+    }
+
+    fun processMove() {
+        onProcessMove?.let {
+            it(moves.toList())
+            moves.clear()
+        }
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
@@ -68,6 +86,7 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortMenuListener!!)
@@ -78,8 +97,10 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
     fun getItemByPosition(position: Int): Song? = getItem(position)
 
     fun setProgress(id: String, progress: DownloadProgress) {
-        snapshot().indexOfFirst { it?.songId == id }.takeIf { it != -1 }?.let {
-            notifyItemChanged(it, progress)
+        snapshot().items.forEachIndexed { index, song ->
+            if (song.songId == id) {
+                notifyItemChanged(index, progress)
+            }
         }
     }
 

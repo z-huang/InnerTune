@@ -69,7 +69,7 @@ interface SongDao {
     @Transaction
     @Query(
         """
-        SELECT song.*
+        SELECT song.*, playlist_song.idInPlaylist
           FROM playlist_song
                JOIN song
                  ON playlist_song.songId = song.songId
@@ -82,7 +82,7 @@ interface SongDao {
     @Transaction
     @Query(
         """
-        SELECT song.*
+        SELECT song.*, playlist_song.idInPlaylist
           FROM playlist_song
                JOIN song
                  ON playlist_song.songId = song.songId

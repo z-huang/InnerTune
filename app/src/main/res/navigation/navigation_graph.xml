@@ -97,6 +97,16 @@
         <argument
             android:name="playlistId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_playlistSongsFragment_to_playlistSongsEditFragment"
+            app:destination="@id/playlistSongsEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistSongsEditFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.PlaylistSongsEditFragment">
+        <argument
+            android:name="playlistId"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/youTubePlaylistFragment"
