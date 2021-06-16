@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.activities
 
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
+import android.view.ActionMode
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     private val playbackViewModel by lazy { ViewModelProvider(this).get(PlaybackViewModel::class.java) }
 
     val fab: MainFloatingActionButton get() = binding.fab
+
+    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +93,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
         destination: NavDestination,
         arguments: Bundle?
     ) {
+        actionMode?.finish()
         if (destination.id == R.id.playlistsFragment) {
             binding.fab.show()
         } else if (binding.fab.isVisible) {
@@ -136,5 +140,15 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
             return
         }
         super.onBackPressed()
+    }
+
+    override fun onActionModeStarted(mode: ActionMode?) {
+        super.onActionModeStarted(mode)
+        actionMode = mode
+    }
+
+    override fun onActionModeFinished(mode: ActionMode?) {
+        super.onActionModeFinished(mode)
+        actionMode = null
     }
 }
