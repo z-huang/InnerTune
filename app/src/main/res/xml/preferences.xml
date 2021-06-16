@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <EditTextPreference
-        app:icon="@drawable/ic_vpn_key"
-        app:key="@string/pref_api_key"
-        app:title="@string/pref_api_key_title" />
     <ListPreference
         android:defaultValue="@string/default_localization_key"
         android:entries="@array/language_names"
