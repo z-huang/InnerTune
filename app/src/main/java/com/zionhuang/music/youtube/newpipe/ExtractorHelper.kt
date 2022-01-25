@@ -46,6 +46,9 @@ object ExtractorHelper {
         SearchInfo.getMoreItems(service, queryHandler, page)
     }
 
+    suspend fun suggestionsFor(query: String): List<String> = withContext(IO) {
+        service.suggestionExtractor.suggestionList(query)
+    }
     /**
      * Playlist
      */

@@ -32,8 +32,8 @@ android {
         }
     }
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
+        viewBinding true
+        dataBinding true
     }
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
@@ -117,11 +117,6 @@ dependencies {
     implementation "org.apache.commons:commons-text:1.9"
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
-    implementation "com.squareup.retrofit2:adapter-rxjava3:2.9.0"
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
     implementation 'com.github.bumptech.glide:annotations:4.12.0'

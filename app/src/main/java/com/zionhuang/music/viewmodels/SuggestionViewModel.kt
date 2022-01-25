@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.music.youtube.YouTubeRepository
 import com.zionhuang.music.youtube.YouTubeRepository.Companion.getInstance
+import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.launch
 
 class SuggestionViewModel(application: Application) : AndroidViewModel(application) {
@@ -28,7 +29,7 @@ class SuggestionViewModel(application: Application) : AndroidViewModel(applicati
             return
         }
         viewModelScope.launch {
-            suggestions.postValue(youtubeRepo.getSuggestions(query))
+            suggestions.postValue(ExtractorHelper.suggestionsFor(query))
         }
     }
 }
