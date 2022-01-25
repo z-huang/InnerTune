@@ -1,5 +1,6 @@
 package com.zionhuang.music.youtube.newpipe
 
+import com.zionhuang.music.extensions.tryOrNull
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.InfoItem
@@ -23,7 +24,7 @@ object ExtractorHelper {
     /**
      * Stream
      */
-    fun extractVideoId(url: String): String = service.streamLHFactory.getId(url)
+    fun extractVideoId(url: String): String? = tryOrNull { service.streamLHFactory.getId(url) }
 
     /**
      * Search

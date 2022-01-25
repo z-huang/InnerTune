@@ -24,7 +24,6 @@ import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.YouTubePlaylistViewModel
-import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -69,7 +68,7 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 val item = infoItemAdapter.getItemByPosition(pos)
                 if (item is StreamInfoItem) {
                     playbackViewModel.playMedia(
-                        requireActivity(), YouTubeStreamExtractor.extractId(item.url)!!, bundleOf(
+                        requireActivity(), ExtractorHelper.extractVideoId(item.url)!!, bundleOf(
                             EXTRA_QUEUE_TYPE to QUEUE_YT_PLAYLIST,
                             EXTRA_LINK_HANDLER to ExtractorHelper.getPlaylistLinkHandler(url)
                         )

@@ -33,7 +33,6 @@ import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import com.zionhuang.music.youtube.extractors.YouTubeStreamExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -97,7 +96,7 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                     is StreamInfoItem -> {
                         playbackViewModel.playFromSearch(
                             requireActivity(), query, bundleOf(
-                                EXTRA_SONG_ID to YouTubeStreamExtractor.extractId(item.url),
+                                EXTRA_SONG_ID to ExtractorHelper.extractVideoId(item.url),
                                 EXTRA_LINK_HANDLER to ExtractorHelper.getSearchQueryHandler(query, listOf(searchFilterListener.filter))
                             )
                         )

@@ -60,7 +60,6 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.downloadSong
 import com.zionhuang.music.utils.logTimeMillis
-import com.zionhuang.music.youtube.YouTubeExtractor
 import com.zionhuang.music.youtube.newpipe.ExtractorHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -79,7 +78,6 @@ class SongPlayer(
 ) : Player.Listener {
 
     private val songRepository = SongRepository(context)
-    private val youTubeExtractor = YouTubeExtractor.getInstance(context)
     private val playlistData = PlaylistData()
 
     private val _mediaSession =
@@ -272,11 +270,10 @@ class SongPlayer(
             }
 
             override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
-                val mediaId =
-                    youTubeExtractor.extractId(uri.toString()) ?: return setCustomErrorMessage(
-                        "Can't extract video id from the url.",
-                        ERROR_CODE_UNKNOWN_ERROR
-                    )
+                val mediaId = ExtractorHelper.extractVideoId(uri.toString()) ?: return setCustomErrorMessage(
+                    "Can't extract video id from the url.",
+                    ERROR_CODE_UNKNOWN_ERROR
+                )
                 playMedia(mediaId, playWhenReady, extras!!.apply {
                     putInt(EXTRA_QUEUE_TYPE, QUEUE_SINGLE)
                 })

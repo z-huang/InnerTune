@@ -66,7 +66,7 @@ data class MediaData(
 fun Song.toMediaData(context: Context) = MediaData(songId, title, artistName, duration, context.getArtworkFile(songId).canonicalPath, artworkType)
 
 fun StreamInfoItem.toMediaData() =
-    MediaData(ExtractorHelper.extractVideoId(url), name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else MediaConstants.TYPE_RECTANGLE)
+    MediaData(ExtractorHelper.extractVideoId(url)!!, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else MediaConstants.TYPE_RECTANGLE)
 
 fun MediaDescriptionCompat.toMediaData() =
     MediaData(mediaId!!, title.toString(), subtitle.toString(), extras?.getInt(EXTRA_DURATION), iconUri.toString(), extras!!.getInt(EXTRA_ARTWORK_TYPE))
