@@ -43,7 +43,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
+import kotlin.time.DurationUnit
 import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
@@ -132,7 +132,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         return true
     }
 
-    @ExperimentalTime
+    @OptIn(ExperimentalTime::class)
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
@@ -141,7 +141,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             setSearchableInfo(requireContext().getSystemService<SearchManager>()?.getSearchableInfo(requireActivity().componentName))
             viewLifecycleOwner.lifecycleScope.launch {
                 getQueryTextChangeFlow()
-                    .debounce(100.toDuration(TimeUnit.MILLISECONDS))
+                    .debounce(100.toDuration(DurationUnit.MILLISECONDS))
                     .collect { e ->
                         songsViewModel.query = e.query
                         songsAdapter.refresh()

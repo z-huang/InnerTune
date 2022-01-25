@@ -60,10 +60,10 @@ object ExtractorUtils {
         }
         val res = mt.split("/").run {
             getOrNull(size - 1)
-                    ?.split(";")
-                    ?.getOrNull(0)
-                    ?.trim()
-                    ?.toLowerCase(Locale.ROOT)
+                ?.split(";")
+                ?.getOrNull(0)
+                ?.trim()
+                ?.lowercase(Locale.ROOT)
         }
         return when (res) {
             "3gpp" -> "3gp"

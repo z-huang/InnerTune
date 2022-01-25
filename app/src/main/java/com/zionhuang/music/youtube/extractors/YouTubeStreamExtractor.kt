@@ -366,7 +366,7 @@ class YouTubeStreamExtractor private constructor(private val context: Context) {
             val fn = parseSigJs(code)
             val testString = (exampleSig.indices).map { it.toChar() }.joinToString("")
             val cacheRes = fn(testString)
-            cacheSpec = cacheRes.map { it.toInt() }
+            cacheSpec = cacheRes.map { it.code }
             debug("Save signature function to disk")
             sigFile.createNewFile()
             sigFile.outputStream().use { fos ->
