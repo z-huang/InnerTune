@@ -29,22 +29,11 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
-import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUERY_STRING
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
-import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
-import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
-import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
-import com.zionhuang.music.constants.MediaConstants.QUEUE_SEARCH
-import com.zionhuang.music.constants.MediaConstants.QUEUE_SINGLE
-import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_CHANNEL
-import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_PLAYLIST
+import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SEARCH
+import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SINGLE
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
@@ -55,18 +44,19 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.MediaData
+import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.models.toMediaDescription
+import com.zionhuang.music.playback.queues.EmptyQueue
+import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.downloadSong
 import com.zionhuang.music.utils.logTimeMillis
-import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler
-import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 
 /**
  * A wrapper around [ExoPlayer]
@@ -77,8 +67,8 @@ class SongPlayer(
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Player.Listener {
 
-    private val songRepository = SongRepository(context)
-    private val playlistData = PlaylistData()
+    private val songRepository = SongRepository()
+    private var currentQueue: Queue = EmptyQueue()
 
     private val _mediaSession =
         MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
@@ -88,29 +78,28 @@ class SongPlayer(
 
     val player: ExoPlayer = ExoPlayer.Builder(context)
         .setMediaSourceFactory(
-            DefaultMediaSourceFactory(
-                ResolvingDataSource.Factory(
-                    DefaultDataSource.Factory(context)
-                ) { dataSpec ->
-                    val mediaId = dataSpec.uri.host
-                        ?: throw IllegalArgumentException("Cannot find media id from uri host")
-                    if (runBlocking { songRepository.getSongEntityById(mediaId)?.downloadState == STATE_DOWNLOADED })
-                        return@Factory dataSpec.withUri(context.getAudioFile(mediaId).toUri())
+            DefaultMediaSourceFactory(ResolvingDataSource.Factory(
+                DefaultDataSource.Factory(context)
+            ) { dataSpec ->
+                val mediaId = dataSpec.uri.host
+                    ?: throw IllegalArgumentException("Cannot find media id from uri host")
+                if (runBlocking { songRepository.getSongEntityById(mediaId)?.downloadState == STATE_DOWNLOADED })
+                    return@Factory dataSpec.withUri(context.getAudioFile(mediaId).toUri())
 
-                    val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
-                        runBlocking {
-                            ExtractorHelper.getStreamInfo(mediaId)
-                        }
+                val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
+                    runBlocking {
+                        NewPipeYouTubeHelper.getStreamInfo(mediaId)
                     }
-                    val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
-                    updateMediadata(mediaId) {
-                        if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
-                            artwork = streamInfo.thumbnailUrl
-                            mediaSessionConnector.invalidateMediaSessionMetadata()
-                        }
+                }
+                val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
+                updateMediadata(mediaId) {
+                    if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
+                        artwork = streamInfo.thumbnailUrl
+                        mediaSessionConnector.invalidateMediaSessionMetadata()
                     }
-                    if (uri != null) dataSpec.withUri(uri) else dataSpec
-                })
+                }
+                if (uri != null) dataSpec.withUri(uri) else dataSpec
+            })
         )
         .build()
         .apply {
@@ -134,102 +123,10 @@ class SongPlayer(
         }
     }
 
-    private fun playMedia(mediaId: String, playWhenReady: Boolean, extras: Bundle) {
+    private fun playMedia(mediaId: String?, playWhenReady: Boolean, queueData: QueueData) {
         scope.launch {
-            playlistData.queueType = extras.getInt(EXTRA_QUEUE_TYPE)
-            when (playlistData.queueType) {
-                QUEUE_ALL_SONG -> {
-                    val items = songRepository.getAllSongsList(
-                        extras.getInt(EXTRA_QUEUE_ORDER),
-                        extras.getBoolean(EXTRA_QUEUE_DESC)
-                    ).toMediaItems(context)
-                    player.setMediaItems(items)
-                    items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
-                        player.seekToDefaultPosition(index)
-                    }
-                }
-                QUEUE_ARTIST -> {
-                    val items = songRepository.getArtistSongsList(
-                        extras.getInt(EXTRA_ARTIST_ID),
-                        extras.getInt(EXTRA_QUEUE_ORDER),
-                        extras.getBoolean(EXTRA_QUEUE_DESC)
-                    ).toMediaItems(context)
-                    player.setMediaItems(items)
-                    items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
-                        player.seekToDefaultPosition(index)
-                    }
-                }
-                QUEUE_PLAYLIST -> {
-                    val items =
-                        songRepository.getPlaylistSongsList(extras.getInt(EXTRA_PLAYLIST_ID))
-                            .toMediaItems(context)
-                    player.setMediaItems(items)
-                    items.indexOfFirst { it.mediaId == mediaId }.takeIf { it != -1 }?.let { index ->
-                        player.seekToDefaultPosition(index)
-                    }
-                }
-                QUEUE_SEARCH -> {
-                    val queryHandler =
-                        extras.getSerializable(EXTRA_LINK_HANDLER) as SearchQueryHandler
-                    val initialInfo = ExtractorHelper.search(queryHandler)
-
-                    player.clearMediaItems()
-                    val res = player.loadItems(
-                        mediaId,
-                        initialInfo.relatedItems.toMediaItems(),
-                        initialInfo.nextPage
-                    ) { page ->
-                        val info = ExtractorHelper.search(queryHandler, page)
-                        kotlin.Pair(info.items.toMediaItems(), info.nextPage)
-                    }
-                    if (res.first) return@launch mediaSessionConnector.setCustomErrorMessage(
-                        "Search items not found.",
-                        ERROR_CODE_UNKNOWN_ERROR
-                    )
-                    playlistData.linkHandler = queryHandler
-                    playlistData.nextPage = res.second
-                }
-                QUEUE_YT_PLAYLIST -> {
-                    val linkHandler = extras.getSerializable(EXTRA_LINK_HANDLER) as ListLinkHandler
-                    val initialInfo = ExtractorHelper.getPlaylist(linkHandler.url)
-
-                    player.clearMediaItems()
-                    val res = player.loadItems(
-                        mediaId,
-                        initialInfo.relatedItems.toMediaItems(),
-                        initialInfo.nextPage
-                    ) { page ->
-                        val info = ExtractorHelper.getPlaylist(linkHandler.url, page)
-                        kotlin.Pair(info.items.toMediaItems(), info.nextPage)
-                    }
-                    if (res.first) return@launch mediaSessionConnector.setCustomErrorMessage(
-                        "Playlist items not found.",
-                        ERROR_CODE_UNKNOWN_ERROR
-                    )
-                    playlistData.linkHandler = linkHandler
-                    playlistData.nextPage = res.second
-                }
-                QUEUE_YT_CHANNEL -> {
-                    val linkHandler = extras.getSerializable(EXTRA_LINK_HANDLER) as ListLinkHandler
-                    val initialInfo = ExtractorHelper.getChannel(linkHandler.url)
-
-                    player.clearMediaItems()
-                    val res = player.loadItems(
-                        mediaId,
-                        initialInfo.relatedItems.toMediaItems(),
-                        initialInfo.nextPage
-                    ) { page ->
-                        val info = ExtractorHelper.getChannel(linkHandler.url, page)
-                        kotlin.Pair(info.items.toMediaItems(), info.nextPage)
-                    }
-                    if (res.first) return@launch mediaSessionConnector.setCustomErrorMessage(
-                        "Channel items not found.",
-                        ERROR_CODE_UNKNOWN_ERROR
-                    )
-                    playlistData.linkHandler = linkHandler
-                    playlistData.nextPage = res.second
-                }
-            }
+            currentQueue = queueData.toQueue()
+            player.loadQueue(currentQueue, mediaId)
             player.prepare()
             player.playWhenReady = playWhenReady
         }
@@ -249,34 +146,20 @@ class SongPlayer(
                 player.prepare()
             }
 
-            override fun onPrepareFromMediaId(
-                mediaId: String,
-                playWhenReady: Boolean,
-                extras: Bundle?
-            ) =
-                playMedia(mediaId, playWhenReady, extras!!)
+            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) =
+                playMedia(mediaId, playWhenReady, extras!!.getParcelable(EXTRA_QUEUE_DATA)!!)
 
-            override fun onPrepareFromSearch(
-                query: String,
-                playWhenReady: Boolean,
-                extras: Bundle?
-            ) {
+            override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
                 val mediaId = extras?.getString(EXTRA_SONG_ID)
-                    ?: return setCustomErrorMessage("Media id not found.", ERROR_CODE_UNKNOWN_ERROR)
-                playMedia(mediaId, playWhenReady, extras.apply {
-                    putInt(EXTRA_QUEUE_TYPE, QUEUE_SEARCH)
-                    putString(EXTRA_QUERY_STRING, query)
-                })
+                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SEARCH, query))
             }
 
             override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
-                val mediaId = ExtractorHelper.extractVideoId(uri.toString()) ?: return setCustomErrorMessage(
+                val mediaId = NewPipeYouTubeHelper.extractVideoId(uri.toString()) ?: return setCustomErrorMessage(
                     "Can't extract video id from the url.",
                     ERROR_CODE_UNKNOWN_ERROR
                 )
-                playMedia(mediaId, playWhenReady, extras!!.apply {
-                    putInt(EXTRA_QUEUE_TYPE, QUEUE_SINGLE)
-                })
+                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SINGLE, mediaId))
             }
         })
         registerCustomCommandReceiver { player, command, extras, _ ->
@@ -403,38 +286,11 @@ class SongPlayer(
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         if (reason == MEDIA_ITEM_TRANSITION_REASON_REPEAT ||
             player.playbackState == STATE_IDLE ||
-            !playlistData.hasMoreItems ||
             player.mediaItemCount - player.currentMediaItemIndex > 5 ||
-            playlistData.linkHandler == null ||
-            playlistData.nextPage == null
+            !currentQueue.hasNextPage()
         ) return
         scope.launch {
-            when (playlistData.queueType) {
-                QUEUE_SEARCH -> {
-                    val searchInfo = ExtractorHelper.search(
-                        playlistData.linkHandler as SearchQueryHandler,
-                        playlistData.nextPage!!
-                    )
-                    playlistData.nextPage = searchInfo.nextPage
-                    player.addMediaItems(searchInfo.items.toMediaItems())
-                }
-                QUEUE_YT_PLAYLIST -> {
-                    val playlistInfo = ExtractorHelper.getPlaylist(
-                        playlistData.linkHandler!!.url,
-                        playlistData.nextPage!!
-                    )
-                    playlistData.nextPage = playlistInfo.nextPage
-                    player.addMediaItems(playlistInfo.items.toMediaItems())
-                }
-                QUEUE_YT_CHANNEL -> {
-                    val channelInfo = ExtractorHelper.getChannel(
-                        playlistData.linkHandler!!.url,
-                        playlistData.nextPage!!
-                    )
-                    playlistData.nextPage = channelInfo.nextPage
-                    player.addMediaItems(channelInfo.items.toMediaItems())
-                }
-            }
+            player.addMediaItems(currentQueue.nextPage())
         }
     }
 

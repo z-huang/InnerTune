@@ -12,7 +12,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.ui.PlayerView
-import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.models.MediaSessionQueueData
 import com.zionhuang.music.playback.MusicService.LocalBinder
 import java.lang.ref.WeakReference
 
@@ -26,7 +26,7 @@ object MediaSessionConnection {
     val isConnected = MutableLiveData(false)
     val playbackState = MutableLiveData<PlaybackStateCompat?>(null)
     val nowPlaying = MutableLiveData<MediaMetadataCompat?>(null)
-    val queueData = MutableLiveData(QueueData())
+    val queueData = MutableLiveData(MediaSessionQueueData())
 
     private var weakPlayerView = WeakReference<PlayerView>(null)
     var playerView: PlayerView?

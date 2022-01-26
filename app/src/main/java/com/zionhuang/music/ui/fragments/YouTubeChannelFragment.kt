@@ -13,19 +13,19 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_CHANNEL
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
+import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.viewmodels.YouTubeChannelViewModel
-import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -34,7 +34,7 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
 
     private val args: YouTubeChannelFragmentArgs by navArgs()
-    private val url by lazy { args.url }
+    private val channelId by lazy { args.channelId }
 
     private val viewModel by viewModels<YouTubeChannelViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
@@ -75,9 +75,8 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 val item = infoItemAdapter.getItemByPosition(pos)
                 if (item is StreamInfoItem) {
                     playbackViewModel.playMedia(
-                        requireActivity(), ExtractorHelper.extractVideoId(item.url)!!, bundleOf(
-                            EXTRA_QUEUE_TYPE to QUEUE_YT_CHANNEL,
-                            EXTRA_LINK_HANDLER to ExtractorHelper.getChannelLinkHandler(url)
+                        requireActivity(), NewPipeYouTubeHelper.extractVideoId(item.url)!!, bundleOf(
+                            EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_CHANNEL, channelId)
                         )
                     )
                 }
@@ -85,7 +84,7 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
 
         lifecycleScope.launch {
-            viewModel.getChannel(url).collectLatest {
+            viewModel.getChannel(channelId).collectLatest {
                 infoItemAdapter.submitData(it)
             }
         }

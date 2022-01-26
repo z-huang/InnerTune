@@ -18,7 +18,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 @Suppress("BlockingMethodInNonBlockingContext")
-object ExtractorHelper {
+object NewPipeYouTubeHelper {
     private val service = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
 
     /**
@@ -29,55 +29,43 @@ object ExtractorHelper {
     /**
      * Search
      */
-    fun getSearchQueryHandler(query: String, contentFilter: List<String>): SearchQueryHandler =
-        service.searchQHFactory.fromQuery(query, contentFilter, "")
-
-    suspend fun search(query: String, contentFilter: List<String>): SearchInfo =
-        search(getSearchQueryHandler(query, contentFilter))
-
-    suspend fun search(queryHandler: SearchQueryHandler): SearchInfo = checkCache("${queryHandler.searchString}$${queryHandler.contentFilters[0]}") {
-        SearchInfo.getInfo(service, queryHandler)
+    suspend fun search(query: String, contentFilter: List<String>): SearchInfo = checkCache("${query}$${contentFilter[0]}") {
+        SearchInfo.getInfo(service, service.searchQHFactory.fromQuery(query, contentFilter, ""))
     }
 
-    suspend fun search(query: String, contentFilter: List<String>, page: Page): InfoItemsPage<InfoItem> =
-        search(service.searchQHFactory.fromQuery(query, contentFilter, ""), page)
-
-    suspend fun search(queryHandler: SearchQueryHandler, page: Page): InfoItemsPage<InfoItem> = checkCache("${queryHandler.searchString}$${queryHandler.contentFilters[0]}$${page.hashCode()}") {
-        SearchInfo.getMoreItems(service, queryHandler, page)
+    suspend fun search(query: String, contentFilter: List<String>, page: Page): InfoItemsPage<InfoItem> = checkCache("${query}$${contentFilter[0]}$${page.hashCode()}") {
+        SearchInfo.getMoreItems(service, service.searchQHFactory.fromQuery(query, contentFilter, ""), page)
     }
 
     suspend fun suggestionsFor(query: String): List<String> = withContext(IO) {
         service.suggestionExtractor.suggestionList(query)
     }
+
     /**
      * Playlist
      */
-    fun getPlaylistLinkHandler(url: String): ListLinkHandler =
-        service.playlistLHFactory.fromUrl(url)
+    fun extractPlaylistId(url: String): String? = tryOrNull { service.playlistLHFactory.getId(url) }
 
-    suspend fun getPlaylist(url: String): PlaylistInfo = checkCache(url) {
-        PlaylistInfo.getInfo(service, url)
+    suspend fun getPlaylist(id: String): PlaylistInfo = checkCache(id) {
+        PlaylistInfo.getInfo(service, service.playlistLHFactory.getUrl(id))
     }
 
-    suspend fun getPlaylist(url: String, page: Page): InfoItemsPage<StreamInfoItem> =
-        checkCache("$url$${page.hashCode()}") {
-            PlaylistInfo.getMoreItems(service, url, page)
-        }
+    suspend fun getPlaylist(id: String, page: Page): InfoItemsPage<StreamInfoItem> = checkCache("$id$${page.hashCode()}") {
+        PlaylistInfo.getMoreItems(service, service.playlistLHFactory.getUrl(id), page)
+    }
 
     /**
      * Channel
      */
-    fun getChannelLinkHandler(url: String): ListLinkHandler =
-        service.channelLHFactory.fromUrl(url)
+    fun extractChannelId(url: String): String? = tryOrNull { service.channelLHFactory.getId(url) }
 
-    suspend fun getChannel(url: String): ChannelInfo = checkCache(url) {
-        ChannelInfo.getInfo(service, url)
+    suspend fun getChannel(id: String): ChannelInfo = checkCache(id) {
+        ChannelInfo.getInfo(service, service.channelLHFactory.getUrl(id))
     }
 
-    suspend fun getChannel(url: String, page: Page): InfoItemsPage<StreamInfoItem> =
-        checkCache("$url$${page.hashCode()}") {
-            ChannelInfo.getMoreItems(service, url, page)
-        }
+    suspend fun getChannel(id: String, page: Page): InfoItemsPage<StreamInfoItem> = checkCache("$id$${page.hashCode()}") {
+        ChannelInfo.getMoreItems(service, service.channelLHFactory.getUrl(id), page)
+    }
 
     suspend fun getStreamInfo(id: String): StreamInfo = checkCache("stream$$id") {
         StreamInfo.getInfo(service, service.streamLHFactory.getUrl(id))

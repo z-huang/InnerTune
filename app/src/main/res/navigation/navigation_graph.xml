@@ -65,14 +65,14 @@
             android:id="@+id/action_searchResultFragment_to_youTubePlaylistFragment"
             app:destination="@id/youTubePlaylistFragment">
             <argument
-                android:name="url"
+                android:name="playlistId"
                 app:argType="string" />
         </action>
         <action
             android:id="@+id/action_searchResultFragment_to_youTubeChannelFragment"
             app:destination="@id/youTubeChannelFragment">
             <argument
-                android:name="url"
+                android:name="channelId"
                 app:argType="string" />
         </action>
     </fragment>
@@ -113,7 +113,7 @@
         android:name="com.zionhuang.music.ui.fragments.YouTubePlaylistFragment"
         android:label="YouTubePlaylistFragment">
         <argument
-            android:name="url"
+            android:name="playlistId"
             app:argType="string" />
     </fragment>
     <fragment
@@ -121,7 +121,7 @@
         android:name="com.zionhuang.music.ui.fragments.YouTubeChannelFragment"
         android:label="YouTubeChannelFragment">
         <argument
-            android:name="url"
+            android:name="channelId"
             app:argType="string" />
     </fragment>
     <fragment

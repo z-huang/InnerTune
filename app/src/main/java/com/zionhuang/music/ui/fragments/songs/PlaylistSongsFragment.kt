@@ -22,11 +22,12 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
+import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.PlaylistSongsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -107,8 +108,9 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             addOnClickListener { pos, _ ->
                 playbackViewModel.playMedia(
                     requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
-                        EXTRA_PLAYLIST_ID to playlistId,
-                        EXTRA_QUEUE_TYPE to QUEUE_PLAYLIST
+                        EXTRA_QUEUE_DATA to QueueData(QUEUE_PLAYLIST, extras = bundleOf(
+                            EXTRA_PLAYLIST_ID to playlistId
+                        ))
                     )
                 )
             }

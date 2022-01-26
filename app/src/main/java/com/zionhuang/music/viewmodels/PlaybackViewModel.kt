@@ -13,7 +13,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.PlaybackStateData
-import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.models.MediaSessionQueueData
 import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
@@ -27,8 +27,8 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     private val _playbackState = SafeMutableLiveData(PlaybackStateData())
     val playbackState: SafeLiveData<PlaybackStateData> get() = _playbackState
 
-    private val _queueData = SafeMutableLiveData(QueueData())
-    val queueData: SafeLiveData<QueueData> get() = _queueData
+    private val _queueData = SafeMutableLiveData(MediaSessionQueueData())
+    val queueData: SafeLiveData<MediaSessionQueueData> get() = _queueData
 
     private val mediaMetadataObserver = Observer<MediaMetadataCompat?> { mediaMetadata ->
         if (mediaMetadata != null) {
@@ -43,7 +43,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    private val queueDataObserver = Observer<QueueData> { queueData ->
+    private val queueDataObserver = Observer<MediaSessionQueueData> { queueData ->
         _queueData.postValue(queueData)
     }
 
@@ -94,14 +94,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun playMedia(activity: Activity, mediaId: String, extras: Bundle) {
-        mediaSessionConnection.transportControls?.playFromMediaId(mediaId, extras)
-        if (expandOnPlay) {
-            (activity as? MainActivity)?.expandBottomSheet()
-        }
-    }
-
-    fun playFromSearch(activity: Activity, query: String, extras: Bundle) {
-        transportControls?.playFromSearch(query, extras)
+        transportControls?.playFromMediaId(mediaId, extras)
         if (expandOnPlay) {
             (activity as? MainActivity)?.expandBottomSheet()
         }

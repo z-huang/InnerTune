@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.zionhuang.music.App
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.daos.PlaylistDao
@@ -29,13 +30,13 @@ abstract class MusicDatabase : RoomDatabase() {
         private const val DBNAME = "song.db"
 
         @Volatile
-        private var INSTANCE: MusicDatabase? = null
+        var INSTANCE: MusicDatabase? = null
 
-        fun getInstance(context: Context): MusicDatabase {
+        fun getInstance(): MusicDatabase {
             if (INSTANCE == null) {
                 synchronized(MusicDatabase::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(context, MusicDatabase::class.java, DBNAME).build()
+                        INSTANCE = Room.databaseBuilder(App.INSTANCE, MusicDatabase::class.java, DBNAME).build()
                     }
                 }
             }

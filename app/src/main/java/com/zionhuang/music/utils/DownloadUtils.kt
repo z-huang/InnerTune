@@ -10,14 +10,14 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.extensions.audioDir
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getArtworkFile
-import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
 
 suspend fun Context.downloadSong(mediaId: String, songRepository: SongRepository) {
     if (songRepository.getSongById(mediaId)!!.downloadState == STATE_DOWNLOADED) return
     songRepository.updateSongEntity(mediaId) {
         downloadState = STATE_DOWNLOADING
     }
-    val stream = ExtractorHelper.getStreamInfo(mediaId)
+    val stream = NewPipeYouTubeHelper.getStreamInfo(mediaId)
     stream.thumbnailUrl?.let {
         OkHttpDownloader.downloadFile(
             OkHttpDownloader.requestOf(it),

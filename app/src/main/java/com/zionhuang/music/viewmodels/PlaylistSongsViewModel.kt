@@ -8,7 +8,7 @@ import com.zionhuang.music.extensions.swap
 import kotlinx.coroutines.launch
 
 class PlaylistSongsViewModel(application: Application) : AndroidViewModel(application) {
-    private val songRepository: SongRepository = SongRepository(application)
+    private val songRepository = SongRepository()
 
     fun processMove(playlistId: Int, moves: List<Pair<Int, Int>>) {
         viewModelScope.launch {

@@ -54,7 +54,7 @@ class EditArtistDialog : AppCompatDialogFragment() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository(requireContext()).updateArtist(artist.copy(name = name))
+            SongRepository().updateArtist(artist.copy(name = name))
         }
         dismiss()
     }

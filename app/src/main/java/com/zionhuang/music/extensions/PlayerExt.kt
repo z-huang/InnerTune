@@ -3,6 +3,7 @@ package com.zionhuang.music.extensions
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.zionhuang.music.models.MediaData
+import com.zionhuang.music.playback.queues.Queue
 import org.schabi.newpipe.extractor.Page
 
 fun Player.findMediaItemById(mediaId: String): MediaItem? {
@@ -29,11 +30,27 @@ fun Player.mediaItemIndexOf(mediaId: String?): Int? {
 val Player.currentMetadata: MediaData?
     get() = currentMediaItem?.metadata
 
+suspend fun Player.loadQueue(queue: Queue, mediaId: String?) {
+    setMediaItems(queue.items)
+    if (mediaId == null) return
+    var idx = queue.items.indexOfFirst { it.mediaId == mediaId }
+    while (idx != -1 && queue.hasNextPage()) {
+        val lastItemCount = mediaItemCount
+        val newItems = queue.nextPage().also {
+            addMediaItems(it)
+        }
+        idx = newItems.indexOfFirst { it.mediaId == mediaId }
+        if (idx != -1) idx += lastItemCount
+    }
+    if (idx != -1) seekToDefaultPosition(idx)
+
+}
+
 suspend fun Player.loadItems(
     targetId: String,
     initialItems: List<MediaItem>,
     page: Page?,
-    get: suspend (Page) -> Pair<List<MediaItem>, Page>
+    get: suspend (Page) -> Pair<List<MediaItem>, Page>,
 ): Pair<Boolean, Page?> {
     var info = Pair(initialItems, page)
     var idx: Int

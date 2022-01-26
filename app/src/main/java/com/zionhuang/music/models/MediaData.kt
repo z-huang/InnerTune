@@ -8,16 +8,17 @@ import android.support.v4.media.MediaMetadataCompat.*
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.zionhuang.music.constants.Constants.EMPTY_SONG_ID
-import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.constants.MediaConstants.ArtworkType
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTWORK_TYPE
 import com.zionhuang.music.constants.MediaConstants.EXTRA_DURATION
+import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
 import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.models.MediaData.Companion.EMPTY_MEDIA_DESCRIPTION
-import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
 import kotlinx.parcelize.Parcelize
+import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 @Parcelize
@@ -45,12 +46,10 @@ data class MediaData(
         .setSubtitle(artist)
         .setDescription(artist)
         .setIconUri(artwork?.toUri())
-        .setExtras(
-            bundleOf(
-                EXTRA_ARTWORK_TYPE to artworkType.toLong(),
-                EXTRA_DURATION to duration
-            )
-        )
+        .setExtras(bundleOf(
+            EXTRA_ARTWORK_TYPE to artworkType.toLong(),
+            EXTRA_DURATION to duration
+        ))
         .build()
 
     companion object {
@@ -65,8 +64,10 @@ data class MediaData(
 
 fun Song.toMediaData(context: Context) = MediaData(songId, title, artistName, duration, context.getArtworkFile(songId).canonicalPath, artworkType)
 
+fun StreamInfo.toMediaData() = MediaData(id, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else TYPE_RECTANGLE)
+
 fun StreamInfoItem.toMediaData() =
-    MediaData(ExtractorHelper.extractVideoId(url)!!, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else MediaConstants.TYPE_RECTANGLE)
+    MediaData(NewPipeYouTubeHelper.extractVideoId(url)!!, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else TYPE_RECTANGLE)
 
 fun MediaDescriptionCompat.toMediaData() =
     MediaData(mediaId!!, title.toString(), subtitle.toString(), extras?.getInt(EXTRA_DURATION), iconUri.toString(), extras!!.getInt(EXTRA_ARTWORK_TYPE))

@@ -7,7 +7,7 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 
 class ArtistAutoCompleteAdapter(context: Context) : ArrayAdapter<ArtistEntity>(context, android.R.layout.simple_list_item_1) {
-    private val songRepository = SongRepository(context)
+    private val songRepository = SongRepository()
 
     private val filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {

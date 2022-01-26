@@ -15,7 +15,7 @@ import com.zionhuang.music.ui.listeners.PlaylistPopupMenuListener
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(application: Application) : AndroidViewModel(application) {
-    private val songRepository: SongRepository = SongRepository(application)
+    private val songRepository = SongRepository()
 
     val popupMenuListener = object : PlaylistPopupMenuListener {
         override fun editPlaylist(playlist: PlaylistEntity, context: Context) {

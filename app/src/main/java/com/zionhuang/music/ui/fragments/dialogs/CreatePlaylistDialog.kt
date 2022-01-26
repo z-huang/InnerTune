@@ -45,7 +45,7 @@ class CreatePlaylistDialog : AppCompatDialogFragment() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository(requireContext()).insertPlaylist(name)
+            SongRepository().insertPlaylist(name)
         }
         dismiss()
     }

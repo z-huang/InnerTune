@@ -42,7 +42,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import kotlin.collections.set
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
-    val songRepository: SongRepository = SongRepository(application)
+    val songRepository = SongRepository()
     val mediaSessionConnection = MediaSessionConnection
 
     var sortType by preference(R.string.pref_sort_type, ORDER_NAME)

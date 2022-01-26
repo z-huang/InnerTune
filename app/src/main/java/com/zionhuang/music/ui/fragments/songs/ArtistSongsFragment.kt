@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
@@ -21,6 +21,7 @@ import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
+import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
@@ -68,10 +69,11 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(
                     requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
-                        EXTRA_ARTIST_ID to artistId,
-                        EXTRA_QUEUE_TYPE to QUEUE_ARTIST,
-                        EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
-                        EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
+                        EXTRA_QUEUE_DATA to QueueData(QUEUE_ARTIST, extras = bundleOf(
+                            EXTRA_QUEUE_TYPE to QUEUE_ARTIST,
+                            EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
+                            EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
+                        ))
                     )
                 )
             }

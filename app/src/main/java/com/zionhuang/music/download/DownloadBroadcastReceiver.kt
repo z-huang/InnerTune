@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class DownloadBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val downloadManager = context.getSystemService<DownloadManager>()!!
-        val songRepository = SongRepository(context)
+        val songRepository = SongRepository()
 
         when (intent.action) {
             ACTION_DOWNLOAD_COMPLETE -> {

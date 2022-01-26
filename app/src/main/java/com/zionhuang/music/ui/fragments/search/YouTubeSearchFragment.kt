@@ -21,10 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_LINK_HANDLER
-import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
+import com.zionhuang.music.constants.MediaConstants.EXTRA_SEARCH_FILTER
+import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SEARCH
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.NewPipeSearchResultAdapter
@@ -33,9 +35,11 @@ import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper.extractChannelId
+import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper.extractPlaylistId
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -92,12 +96,13 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, view ->
                 if (pos == 0) return@addOnClickListener
-                when (val item = searchResultAdapter.getItemByPosition(pos)!!) {
+                when (val item: InfoItem = searchResultAdapter.getItemByPosition(pos)!!) {
                     is StreamInfoItem -> {
-                        playbackViewModel.playFromSearch(
+                        playbackViewModel.playMedia(
                             requireActivity(), query, bundleOf(
-                                EXTRA_SONG_ID to ExtractorHelper.extractVideoId(item.url),
-                                EXTRA_LINK_HANDLER to ExtractorHelper.getSearchQueryHandler(query, listOf(searchFilterListener.filter))
+                                EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SEARCH, query, extras = bundleOf(
+                                    EXTRA_SEARCH_FILTER to searchFilterListener.filter
+                                ))
                             )
                         )
                     }
@@ -106,7 +111,7 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                         reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
                         val transitionName = getString(R.string.youtube_playlist_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
-                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(item.url)
+                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(extractPlaylistId(item.url)!!)
                         findNavController().navigate(directions, extras)
                     }
                     is ChannelInfoItem -> {
@@ -114,7 +119,7 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                         reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
                         val transitionName = getString(R.string.youtube_channel_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
-                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(item.url)
+                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(extractChannelId(item.url)!!)
                         findNavController().navigate(directions, extras)
                     }
                 }

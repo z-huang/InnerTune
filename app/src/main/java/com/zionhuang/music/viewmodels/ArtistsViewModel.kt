@@ -15,7 +15,7 @@ import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 import kotlinx.coroutines.launch
 
 class ArtistsViewModel(application: Application) : AndroidViewModel(application) {
-    private val songRepository: SongRepository = SongRepository(application)
+    private val songRepository = SongRepository()
 
     val popupMenuListener = object : ArtistPopupMenuListener {
         override fun editArtist(artist: ArtistEntity, context: Context) {

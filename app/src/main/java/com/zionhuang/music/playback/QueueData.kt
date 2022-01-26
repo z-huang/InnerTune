@@ -6,7 +6,7 @@ import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.Page.isValid
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler
 
-data class PlaylistData(
+data class QueueData(
         @QueueType
         var queueType: Int = QUEUE_NONE,
         var nextPage: Page? = null,

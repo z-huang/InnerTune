@@ -1,11 +1,11 @@
 package com.zionhuang.music.db
 
-import android.content.Context
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
+import com.zionhuang.music.App
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.DownloadDao
@@ -15,12 +15,13 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.OkHttpDownloader.requestOf
-import com.zionhuang.music.youtube.newpipe.ExtractorHelper
+import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
-class SongRepository(private val context: Context) {
-    private val musicDatabase = MusicDatabase.getInstance(context)
+class SongRepository {
+    private val context = App.INSTANCE
+    private val musicDatabase = MusicDatabase.getInstance()
     private val songDao: SongDao = musicDatabase.songDao
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val playlistDao: PlaylistDao = musicDatabase.playlistDao
@@ -82,7 +83,7 @@ class SongRepository(private val context: Context) {
 
     suspend fun insert(songs: List<Song>) = withContext(IO) {
         songs.forEach { song ->
-            val stream = ExtractorHelper.getStreamInfo(song.songId)
+            val stream = NewPipeYouTubeHelper.getStreamInfo(song.songId)
             OkHttpDownloader.downloadFile(
                 requestOf(stream.thumbnailUrl),
                 context.getArtworkFile(song.songId)
