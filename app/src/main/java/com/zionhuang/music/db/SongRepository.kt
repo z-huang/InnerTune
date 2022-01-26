@@ -15,7 +15,7 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.OkHttpDownloader.requestOf
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 

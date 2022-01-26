@@ -11,7 +11,7 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.APP_URL
 import com.zionhuang.music.constants.Constants.NEWPIPE_EXTRACTOR_URL
-import com.zionhuang.music.youtube.newpipe.InfoCache
+import com.zionhuang.music.youtube.InfoCache
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.localization.ContentCountry
 import org.schabi.newpipe.extractor.localization.Localization

@@ -1,4 +1,4 @@
-package com.zionhuang.music.youtube.newpipe
+package com.zionhuang.music.youtube
 
 import androidx.collection.LruCache
 import java.util.concurrent.TimeUnit.HOURS

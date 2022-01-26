@@ -1,4 +1,4 @@
-package com.zionhuang.music.youtube.newpipe
+package com.zionhuang.music.youtube
 
 import com.zionhuang.music.extensions.tryOrNull
 import kotlinx.coroutines.Dispatchers.IO
@@ -9,8 +9,6 @@ import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.channel.ChannelInfo
-import org.schabi.newpipe.extractor.linkhandler.ListLinkHandler
-import org.schabi.newpipe.extractor.linkhandler.SearchQueryHandler
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
 import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.services.youtube.YoutubeService

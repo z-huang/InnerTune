@@ -10,7 +10,7 @@ import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.extensions.audioDir
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getArtworkFile
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 
 suspend fun Context.downloadSong(mediaId: String, songRepository: SongRepository) {
     if (songRepository.getSongById(mediaId)!!.downloadState == STATE_DOWNLOADED) return

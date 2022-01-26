@@ -24,7 +24,7 @@ import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.YouTubePlaylistViewModel
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.stream.StreamInfoItem

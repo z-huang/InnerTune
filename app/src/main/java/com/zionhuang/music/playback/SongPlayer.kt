@@ -52,7 +52,7 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.downloadSong
 import com.zionhuang.music.utils.logTimeMillis
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

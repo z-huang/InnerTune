@@ -1,4 +1,4 @@
-package com.zionhuang.music.youtube.newpipe
+package com.zionhuang.music.youtube
 
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody

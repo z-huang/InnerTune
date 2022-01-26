@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.zionhuang.music.extensions.toPage
 import com.zionhuang.music.repos.base.RemoteRepository
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.Page
 

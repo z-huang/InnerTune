@@ -35,8 +35,8 @@ import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper.extractChannelId
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper.extractPlaylistId
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractChannelId
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractPlaylistId
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.InfoItem

@@ -1,10 +1,9 @@
 package com.zionhuang.music
 
 import android.app.Application
-import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.utils.getPreferredContentCountry
 import com.zionhuang.music.utils.getPreferredLocalization
-import com.zionhuang.music.youtube.newpipe.NewPipeDownloader
+import com.zionhuang.music.youtube.NewPipeDownloader
 import org.schabi.newpipe.extractor.NewPipe
 
 class App : Application() {

@@ -5,7 +5,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_SEARCH_FILTER
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SEARCH
 import com.zionhuang.music.extensions.toMediaItems
 import com.zionhuang.music.models.QueueData
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.Page.isValid
 

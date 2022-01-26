@@ -2,7 +2,7 @@ package com.zionhuang.music.extensions
 
 import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 fun StreamInfoItem.toSong(): Song = Song(

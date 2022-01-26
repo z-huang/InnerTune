@@ -16,7 +16,7 @@ import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.models.MediaData.Companion.EMPTY_MEDIA_DESCRIPTION
-import com.zionhuang.music.youtube.newpipe.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.parcelize.Parcelize
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
