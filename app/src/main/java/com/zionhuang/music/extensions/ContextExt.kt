@@ -12,6 +12,7 @@ import androidx.core.content.res.use
 import androidx.lifecycle.LifecycleOwner
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.zionhuang.music.utils.preference.Preference
+import com.zionhuang.music.utils.preference.PreferenceLiveData
 import java.io.File
 
 fun Context.getDensity(): Float = resources.displayMetrics.density
@@ -35,6 +36,7 @@ fun Context.getAnimatedVectorDrawable(@DrawableRes id: Int): AnimatedVectorDrawa
     AnimatedVectorDrawableCompat.create(this, id)!!
 
 fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference({ this }, keyId, defaultValue)
+fun <T : Any> Context.preferenceLiveData(@StringRes keyId: Int, defaultValue: T) = PreferenceLiveData(this, keyId, defaultValue)
 
 val Context.externalFilesDir: File get() = getExternalFilesDir(null)!!
 val Context.artworkDir get() = externalFilesDir / "artwork"

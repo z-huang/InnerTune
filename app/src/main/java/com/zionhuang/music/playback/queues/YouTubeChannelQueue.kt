@@ -21,10 +21,10 @@ class YouTubeChannelQueue(
 
     companion object {
         const val TYPE = QUEUE_YT_CHANNEL
-        val fromParcel: suspend (QueueData) -> Queue = { queueParcel ->
-            val initialInfo = NewPipeYouTubeHelper.getChannel(queueParcel.queueId)
+        val fromParcel: suspend (QueueData) -> Queue = {
+            val initialInfo = NewPipeYouTubeHelper.getChannel(it.queueId)
             YouTubeChannelQueue(
-                queueParcel.queueId,
+                it.queueId,
                 initialInfo.relatedItems.toMediaItems(),
                 initialInfo.nextPage
             )

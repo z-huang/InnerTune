@@ -5,10 +5,7 @@ import android.app.DownloadManager
 import android.content.Context
 import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.*
 import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -18,7 +15,8 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
-import com.zionhuang.music.constants.ORDER_NAME
+import com.zionhuang.music.models.base.IMutableSortInfo
+import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
@@ -45,8 +43,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songRepository = SongRepository()
     val mediaSessionConnection = MediaSessionConnection
 
-    var sortType by preference(R.string.pref_sort_type, ORDER_NAME)
-    var sortDescending by preference(R.string.pref_sort_descending, true)
+    val sortInfo: IMutableSortInfo = PreferenceSortInfo
 
     var query: String? = null
 
@@ -55,7 +52,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             if (!query.isNullOrBlank()) {
                 songRepository.searchSongs(query!!)
             } else {
-                songRepository.getAllSongsPagingSource(sortType, sortDescending)
+                songRepository.getAllSongsPagingSource(sortInfo)
             }
         }.flow.map { pagingData ->
             if (query.isNullOrBlank()) pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
@@ -76,7 +73,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getArtistSongsAsPagingSource(artistId, sortType, sortDescending)
+        songRepository.getArtistSongsAsPagingSource(artistId, sortInfo)
     }.flow.map { pagingData ->
         pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)

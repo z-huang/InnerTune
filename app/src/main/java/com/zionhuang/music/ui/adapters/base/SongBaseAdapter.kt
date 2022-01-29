@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
+import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
-import com.zionhuang.music.ui.listeners.SortMenuListener
 import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
@@ -20,7 +20,7 @@ import java.text.DateFormat
 
 class SongsBaseAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
     var popupMenuListener: SongPopupMenuListener? = null
-    var sortMenuListener: SortMenuListener? = null
+    var sortInfo: IMutableSortInfo? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null
     var tracker: SelectionTracker<String>? = null
 
@@ -62,7 +62,7 @@ class SongsBaseAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongIt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            Constants.TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortMenuListener!!)
+            Constants.TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortInfo!!)
             Constants.TYPE_ITEM -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), popupMenuListener)
             else -> throw IllegalArgumentException("Unexpected view type.")
         }
@@ -82,7 +82,7 @@ class SongsBaseAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongIt
 
     override fun getPopupText(position: Int): String =
         if (getItemViewType(position) == Constants.TYPE_HEADER) "#"
-        else when (sortMenuListener?.sortType()) {
+        else when (sortInfo?.type) {
             ORDER_CREATE_DATE -> dateFormat.format(getItem(position)!!.createDate)
             ORDER_NAME -> getItem(position)!!.title?.get(0).toString()
             ORDER_ARTIST -> getItem(position)!!.artistName

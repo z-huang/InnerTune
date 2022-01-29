@@ -11,16 +11,16 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.Constants.TYPE_HEADER
 import com.zionhuang.music.constants.Constants.TYPE_ITEM
+import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
-import com.zionhuang.music.ui.listeners.SortMenuListener
 import com.zionhuang.music.ui.viewholders.DraggableSongViewHolder
 import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 
 class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()) {
-    var sortMenuListener: SortMenuListener? = null
+    var sortInfo: IMutableSortInfo? = null
     var itemTouchHelper: ItemTouchHelper? = null
 
     private val moves: MutableList<Pair<Int, Int>> = mutableListOf()
@@ -45,11 +45,7 @@ class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(Song
         }
     }
 
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-        payloads: List<Any>
-    ) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         when (holder) {
             is SongViewHolder -> {
                 if (payloads.isEmpty()) {
@@ -66,7 +62,7 @@ class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(Song
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortMenuListener!!)
+            TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortInfo!!)
             TYPE_ITEM -> DraggableSongViewHolder(parent.inflateWithBinding(R.layout.item_song)).apply {
                 binding.dragHandle.setOnTouchListener { _, event ->
                     if (event.actionMasked == MotionEvent.ACTION_DOWN) {

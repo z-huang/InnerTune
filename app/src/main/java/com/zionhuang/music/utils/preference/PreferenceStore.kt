@@ -27,6 +27,7 @@ class PreferenceStore private constructor(context: Context) : SharedPreferences.
         } as T).also { cache[key] = it }
 
     operator fun <T : Any> set(key: String, value: T) {
+        cache[key] = value
         sharedPreferences.edit().apply {
             when (value::class) {
                 Boolean::class -> putBoolean(key, value as Boolean)
@@ -41,8 +42,7 @@ class PreferenceStore private constructor(context: Context) : SharedPreferences.
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (key in cache) {
-            val old = cache[key]
-                ?: throw IllegalArgumentException("Preference $key shouldn't be null.")
+            val old = cache[key]!!
             cache[key] = when (old::class) {
                 Boolean::class -> sharedPreferences.getBoolean(key, old as Boolean)
                 Float::class -> sharedPreferences.getFloat(key, old as Float)

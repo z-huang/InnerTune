@@ -23,11 +23,11 @@ class YouTubeSearchQueue(
 
     companion object {
         const val TYPE = QUEUE_YT_SEARCH
-        val fromParcel: suspend (QueueData) -> Queue = { queueParcel ->
-            val initialInfo = NewPipeYouTubeHelper.search(queueParcel.queueId, listOf(queueParcel.extras.getString(EXTRA_SEARCH_FILTER)!!))
+        val fromParcel: suspend (QueueData) -> Queue = {
+            val initialInfo = NewPipeYouTubeHelper.search(it.queueId, listOf(it.extras.getString(EXTRA_SEARCH_FILTER)!!))
             YouTubeSearchQueue(
-                queueParcel.queueId,
-                queueParcel.extras.getString(EXTRA_SEARCH_FILTER)!!,
+                it.queueId,
+                it.extras.getString(EXTRA_SEARCH_FILTER)!!,
                 initialInfo.relatedItems.toMediaItems(),
                 initialInfo.nextPage
             )

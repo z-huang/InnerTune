@@ -4,9 +4,6 @@ import androidx.annotation.IntDef
 
 object MediaConstants {
     const val EXTRA_QUEUE_DATA = "queue_data"
-    const val EXTRA_QUEUE_TYPE = "queue_type"
-    const val EXTRA_QUEUE_ORDER = "queue_order"
-    const val EXTRA_QUEUE_DESC = "queue_desc"
     const val EXTRA_SONG_ID = "song_id"
     const val EXTRA_SONG = "song"
     const val EXTRA_SONGS = "songs"
@@ -14,8 +11,6 @@ object MediaConstants {
     const val EXTRA_ARTIST = "artist"
     const val EXTRA_PLAYLIST_ID = "playlist_id"
     const val EXTRA_PLAYLIST = "playlist"
-    const val EXTRA_LINK_HANDLER = "link_handler"
-    const val EXTRA_QUERY_STRING = "query_string"
     const val EXTRA_SEARCH_FILTER = "search_filter"
     const val EXTRA_ARTWORK_TYPE = "artwork_type"
     const val EXTRA_DURATION = "duration"

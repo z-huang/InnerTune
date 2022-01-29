@@ -5,6 +5,7 @@ import com.zionhuang.music.App
 import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
 import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
 import com.zionhuang.music.db.SongRepository
+import com.zionhuang.music.extensions.getApplication
 import com.zionhuang.music.extensions.toMediaItems
 import com.zionhuang.music.models.QueueData
 
@@ -16,10 +17,8 @@ class PlaylistQueue(
 
     companion object {
         const val TYPE = QUEUE_PLAYLIST
-        val fromParcel: suspend (QueueData) -> Queue = { queue ->
-            PlaylistQueue(SongRepository().getPlaylistSongsList(
-                queue.extras.getInt(EXTRA_PLAYLIST_ID)
-            ).toMediaItems(App.INSTANCE))
+        val fromParcel: suspend (QueueData) -> Queue = { it ->
+            PlaylistQueue(SongRepository().getPlaylistSongsList(it.extras.getInt(EXTRA_PLAYLIST_ID)).toMediaItems(getApplication()))
         }
     }
 }

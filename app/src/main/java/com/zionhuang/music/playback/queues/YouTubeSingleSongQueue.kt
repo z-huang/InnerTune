@@ -14,8 +14,8 @@ class YouTubeSingleSongQueue(
 
     companion object {
         const val TYPE = QUEUE_YT_SINGLE
-        val fromParcel: suspend (QueueData) -> Queue = { queue ->
-            YouTubeSingleSongQueue(listOf(NewPipeYouTubeHelper.getStreamInfo(queue.queueId).toMediaItem()))
+        val fromParcel: suspend (QueueData) -> Queue = {
+            YouTubeSingleSongQueue(listOf(NewPipeYouTubeHelper.getStreamInfo(it.queueId).toMediaItem()))
         }
     }
 }

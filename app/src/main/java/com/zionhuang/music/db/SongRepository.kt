@@ -5,8 +5,7 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
-import com.zionhuang.music.App
-import com.zionhuang.music.constants.SongSortType
+import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.daos.PlaylistDao
@@ -20,7 +19,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class SongRepository {
-    private val context = App.INSTANCE
+    private val context = getApplication()
     private val musicDatabase = MusicDatabase.getInstance()
     private val songDao: SongDao = musicDatabase.songDao
     private val artistDao: ArtistDao = musicDatabase.artistDao
@@ -33,22 +32,18 @@ class SongRepository {
     /**
      * All Songs
      */
-    fun getAllSongsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-        songDao.getAllSongsAsPagingSource(order, descending)
+    fun getAllSongsPagingSource(sortInfo: ISortInfo): PagingSource<Int, Song> = songDao.getAllSongsAsPagingSource(sortInfo)
 
     fun searchSongs(query: String) = songDao.searchSongs(query)
 
-    suspend fun getAllSongsList(@SongSortType order: Int, descending: Boolean): List<Song> =
-        withContext(IO) { songDao.getAllSongsAsList(order, descending) }
+    suspend fun getAllSongsList(sortInfo: ISortInfo): List<Song> = withContext(IO) { songDao.getAllSongsAsList(sortInfo) }
 
     /**
      * Artist Songs
      */
-    fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-        songDao.getArtistSongsAsPagingSource(artistId, order, descending)
+    fun getArtistSongsAsPagingSource(artistId: Int, sortInfo: ISortInfo): PagingSource<Int, Song> = songDao.getArtistSongsAsPagingSource(artistId, sortInfo)
 
-    suspend fun getArtistSongsList(artistId: Int, @SongSortType order: Int, descending: Boolean) =
-        withContext(IO) { songDao.getArtistSongsAsList(artistId, order, descending) }
+    suspend fun getArtistSongsList(artistId: Int, sortInfo: ISortInfo) = withContext(IO) { songDao.getArtistSongsAsList(artistId, sortInfo) }
 
     /**
      * Playlist Songs

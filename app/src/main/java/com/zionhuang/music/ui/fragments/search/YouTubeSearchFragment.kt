@@ -37,6 +37,7 @@ import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractChannelId
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractPlaylistId
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.InfoItem
@@ -99,7 +100,7 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 when (val item: InfoItem = searchResultAdapter.getItemByPosition(pos)!!) {
                     is StreamInfoItem -> {
                         playbackViewModel.playMedia(
-                            requireActivity(), query, bundleOf(
+                            requireActivity(), extractVideoId(item.url)!!, bundleOf(
                                 EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SEARCH, query, extras = bundleOf(
                                     EXTRA_SEARCH_FILTER to searchFilterListener.filter
                                 ))

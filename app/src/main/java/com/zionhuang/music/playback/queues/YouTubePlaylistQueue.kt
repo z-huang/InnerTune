@@ -21,10 +21,10 @@ class YouTubePlaylistQueue(
 
     companion object {
         const val TYPE = QUEUE_YT_PLAYLIST
-        val fromParcel: suspend (QueueData) -> Queue = { queueParcel ->
-            val initialInfo = NewPipeYouTubeHelper.getPlaylist(queueParcel.queueId)
+        val fromParcel: suspend (QueueData) -> Queue = {
+            val initialInfo = NewPipeYouTubeHelper.getPlaylist(it.queueId)
             YouTubePlaylistQueue(
-                queueParcel.queueId,
+                it.queueId,
                 initialInfo.relatedItems.toMediaItems(),
                 initialInfo.nextPage
             )

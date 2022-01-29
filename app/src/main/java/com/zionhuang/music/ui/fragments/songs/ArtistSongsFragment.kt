@@ -3,7 +3,6 @@ package com.zionhuang.music.ui.fragments.songs
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
@@ -12,11 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DESC
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_ORDER
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_TYPE
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
@@ -25,7 +20,6 @@ import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
-import com.zionhuang.music.ui.listeners.SortMenuListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -57,7 +51,7 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
         songsAdapter.apply {
             popupMenuListener = songsViewModel.songPopupMenuListener
-            sortMenuListener = this@ArtistSongsFragment.sortMenuListener
+            sortInfo = songsViewModel.sortInfo
             downloadInfo = songsViewModel.downloadInfoLiveData
         }
 
@@ -69,11 +63,7 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(
                     requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_ARTIST, extras = bundleOf(
-                            EXTRA_QUEUE_TYPE to QUEUE_ARTIST,
-                            EXTRA_QUEUE_ORDER to sortMenuListener.sortType(),
-                            EXTRA_QUEUE_DESC to sortMenuListener.sortDescending()
-                        ))
+                        EXTRA_QUEUE_DATA to QueueData(QUEUE_ARTIST, sortInfo = songsViewModel.sortInfo.parcelize())
                     )
                 )
             }
@@ -91,24 +81,6 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 songsAdapter.setProgress(key, value)
             }
         }
-    }
-
-    private val sortMenuListener = object : SortMenuListener {
-        @IdRes
-        override fun sortType(): Int = songsViewModel.sortType
-        override fun sortDescending(): Boolean = songsViewModel.sortDescending
-        override fun sortByCreateDate() = updateSortType(ORDER_CREATE_DATE)
-        override fun sortByName() = updateSortType(ORDER_NAME)
-        override fun sortByArtist() = updateSortType(ORDER_ARTIST)
-        override fun toggleSortOrder() {
-            songsViewModel.sortDescending = !songsViewModel.sortDescending
-            songsAdapter.refresh()
-        }
-    }
-
-    private fun updateSortType(@SongSortType sortType: Int) {
-        songsViewModel.sortType = sortType
-        songsAdapter.refresh()
     }
 
     companion object {

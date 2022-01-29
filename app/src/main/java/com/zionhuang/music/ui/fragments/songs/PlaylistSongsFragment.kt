@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
 import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
@@ -108,7 +107,7 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             addOnClickListener { pos, _ ->
                 playbackViewModel.playMedia(
                     requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_PLAYLIST, extras = bundleOf(
+                        EXTRA_QUEUE_DATA to QueueData(QUEUE_PLAYLIST, sortInfo = songsViewModel.sortInfo.parcelize(), extras = bundleOf(
                             EXTRA_PLAYLIST_ID to playlistId
                         ))
                     )

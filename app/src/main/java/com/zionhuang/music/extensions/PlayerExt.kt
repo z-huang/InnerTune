@@ -34,7 +34,7 @@ suspend fun Player.loadQueue(queue: Queue, mediaId: String?) {
     setMediaItems(queue.items)
     if (mediaId == null) return
     var idx = queue.items.indexOfFirst { it.mediaId == mediaId }
-    while (idx != -1 && queue.hasNextPage()) {
+    while (idx == -1 && queue.hasNextPage()) {
         val lastItemCount = mediaItemCount
         val newItems = queue.nextPage().also {
             addMediaItems(it)
@@ -44,25 +44,6 @@ suspend fun Player.loadQueue(queue: Queue, mediaId: String?) {
     }
     if (idx != -1) seekToDefaultPosition(idx)
 
-}
-
-suspend fun Player.loadItems(
-    targetId: String,
-    initialItems: List<MediaItem>,
-    page: Page?,
-    get: suspend (Page) -> Pair<List<MediaItem>, Page>,
-): Pair<Boolean, Page?> {
-    var info = Pair(initialItems, page)
-    var idx: Int
-    val update = suspend { info = get(info.second!!); true }
-    do {
-        val lastItemCount = mediaItemCount
-        addMediaItems(info.first)
-        idx = info.first.indexOfFirst { it.mediaId == targetId }
-        if (idx != -1) idx += lastItemCount
-    } while (idx == -1 && Page.isValid(info.second) && update())
-    seekToDefaultPosition(idx)
-    return Pair(idx == -1, info.second)
 }
 
 val Player.mediaItems: List<MediaItem>

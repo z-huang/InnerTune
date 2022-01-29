@@ -1,9 +1,11 @@
 package com.zionhuang.music.models
 
-import com.zionhuang.music.constants.ORDER_CREATE_DATE
-import com.zionhuang.music.constants.SongSortType
+import android.os.Parcelable
+import com.zionhuang.music.models.base.ISortInfo
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class SortInfo(
-    @SongSortType val order: Int = ORDER_CREATE_DATE,
-    val descending: Boolean = true,
-)
+    override val type: Int,
+    override val isDescending: Boolean,
+) : ISortInfo, Parcelable

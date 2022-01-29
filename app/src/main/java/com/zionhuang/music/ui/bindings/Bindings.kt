@@ -6,8 +6,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.google.api.client.util.DateTime
-import com.google.api.services.youtube.model.ThumbnailDetails
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.ArtworkType
 import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
@@ -81,25 +79,12 @@ fun setArtworkUri(view: ImageView, uri: Uri) {
     }
 }
 
-@BindingAdapter("thumbnail")
-fun setThumbnail(view: ImageView, thumbnail: ThumbnailDetails) {
-    view.load(thumbnail.maxResUrl) {
-        placeholder(R.drawable.ic_music_note)
-        roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
-    }
-}
-
-@BindingAdapter("publishDate")
-fun setPublishDate(view: TextView, date: DateTime) {
-    view.text = date.toString()
-}
-
 @BindingAdapter("srcUrl", "circleCrop", "fullResolution", requireAll = false)
 fun setUrl(
-        view: ImageView,
-        url: String? = null,
-        circleCrop: Boolean = false,
-        fullResolution: Boolean = false,
+    view: ImageView,
+    url: String? = null,
+    circleCrop: Boolean = false,
+    fullResolution: Boolean = false,
 ) {
     url?.let {
         view.load(it) {

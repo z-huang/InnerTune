@@ -6,7 +6,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
-import com.zionhuang.music.constants.SongSortType
+import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
@@ -32,11 +32,11 @@ interface SongDao {
     /**
      * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
      */
-    fun getAllSongsAsPagingSource(@SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-        getSongsAsPagingSource((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
+    fun getAllSongsAsPagingSource(sortInfo: ISortInfo): PagingSource<Int, Song> =
+        getSongsAsPagingSource((QUERY_ALL_SONG + getOrderQuery(sortInfo)).toSQLiteQuery())
 
-    suspend fun getAllSongsAsList(@SongSortType order: Int, descending: Boolean): List<Song> =
-        getSongsAsList((QUERY_ALL_SONG + getOrderQuery(order, descending)).toSQLiteQuery())
+    suspend fun getAllSongsAsList(sortInfo: ISortInfo): List<Song> =
+        getSongsAsList((QUERY_ALL_SONG + getOrderQuery(sortInfo)).toSQLiteQuery())
 
     /**
      * Artist songs count
@@ -47,21 +47,11 @@ interface SongDao {
     /**
      * Artist Songs [PagingSource]
      */
-    fun getArtistSongsAsPagingSource(artistId: Int, @SongSortType order: Int, descending: Boolean): PagingSource<Int, Song> =
-        getSongsAsPagingSource(
-            (QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(
-                order,
-                descending
-            )).toSQLiteQuery()
-        )
+    fun getArtistSongsAsPagingSource(artistId: Int, sortInfo: ISortInfo): PagingSource<Int, Song> =
+        getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(sortInfo)).toSQLiteQuery())
 
-    suspend fun getArtistSongsAsList(artistId: Int, @SongSortType order: Int, descending: Boolean) =
-        getSongsAsList(
-            (QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(
-                order,
-                descending
-            )).toSQLiteQuery()
-        )
+    suspend fun getArtistSongsAsList(artistId: Int, sortInfo: ISortInfo) =
+        getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(sortInfo)).toSQLiteQuery())
 
     /**
      * Playlist
@@ -124,13 +114,13 @@ interface SongDao {
     @Query("SELECT EXISTS (SELECT 1 FROM song WHERE songId=:songId)")
     suspend fun contains(songId: String): Boolean
 
-    fun getOrderQuery(@SongSortType order: Int, descending: Boolean) = QUERY_ORDER.format(
-        when (order) {
+    fun getOrderQuery(sortInfo: ISortInfo) = QUERY_ORDER.format(
+        when (sortInfo.type) {
             ORDER_CREATE_DATE -> "create_date"
             ORDER_NAME -> "title"
             ORDER_ARTIST -> "artistId"
             else -> throw IllegalArgumentException("Unexpected song sort type.")
         },
-        if (descending) "DESC" else "ASC"
+        if (sortInfo.isDescending) "DESC" else "ASC"
     )
 }

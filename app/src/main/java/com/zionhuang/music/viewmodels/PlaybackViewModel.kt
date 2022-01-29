@@ -12,8 +12,8 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.MediaData
-import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.models.MediaSessionQueueData
+import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity

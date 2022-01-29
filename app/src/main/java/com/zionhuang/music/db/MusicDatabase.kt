@@ -1,16 +1,15 @@
 package com.zionhuang.music.db
 
-import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.zionhuang.music.App
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.daos.PlaylistDao
 import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
+import com.zionhuang.music.extensions.getApplication
 
 @Database(entities = [
     SongEntity::class,
@@ -36,7 +35,7 @@ abstract class MusicDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 synchronized(MusicDatabase::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(App.INSTANCE, MusicDatabase::class.java, DBNAME).build()
+                        INSTANCE = Room.databaseBuilder(getApplication(), MusicDatabase::class.java, DBNAME).build()
                     }
                 }
             }

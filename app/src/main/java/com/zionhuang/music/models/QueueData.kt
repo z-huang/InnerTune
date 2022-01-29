@@ -10,7 +10,7 @@ data class QueueData(
     val type: Int,
     val queueId: String = "",
     val extras: Bundle = Bundle(),
-    val songId: String = "",
+    val sortInfo: SortInfo? = null,
 ) : Parcelable {
     suspend fun toQueue() = if (type in map) map[type]!!.invoke(this) else throw IllegalArgumentException("Unknown queue type")
 

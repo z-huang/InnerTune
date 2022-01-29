@@ -15,11 +15,11 @@ import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
+import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
-import com.zionhuang.music.ui.listeners.SortMenuListener
 import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
@@ -27,7 +27,7 @@ import java.text.DateFormat
 
 class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
     var popupMenuListener: SongPopupMenuListener? = null
-    var sortMenuListener: SortMenuListener? = null
+    var sortInfo: IMutableSortInfo? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null
     var tracker: SelectionTracker<String>? = null
 
@@ -45,11 +45,7 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
         }
     }
 
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-        payloads: List<Any>
-    ) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         when (holder) {
             is SongViewHolder -> {
                 if (payloads.isEmpty()) {
@@ -70,7 +66,7 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortMenuListener!!)
+            TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortInfo!!)
             TYPE_ITEM -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), popupMenuListener)
             else -> throw IllegalArgumentException("Unexpected view type.")
         }
@@ -90,7 +86,7 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
 
     override fun getPopupText(position: Int): String =
         if (getItemViewType(position) == TYPE_HEADER) "#"
-        else when (sortMenuListener?.sortType()) {
+        else when (sortInfo!!.type) {
             ORDER_CREATE_DATE -> dateFormat.format(getItem(position)!!.createDate)
             ORDER_NAME -> getItem(position)!!.title?.get(0).toString()
             ORDER_ARTIST -> getItem(position)!!.artistName

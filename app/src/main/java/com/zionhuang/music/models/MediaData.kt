@@ -58,7 +58,6 @@ data class MediaData(
         val EMPTY_MEDIA_DESCRIPTION: MediaDescriptionCompat = builder
             .setMediaId(EMPTY_SONG_ID)
             .build()
-
     }
 }
 
@@ -74,5 +73,4 @@ fun MediaDescriptionCompat.toMediaData() =
 
 fun MediaMetadataCompat.toMediaData(): MediaData = MediaData().pullMediaMetadata(this)
 
-fun MediaData?.toMediaDescription(): MediaDescriptionCompat = this?.toMediaDescription()
-    ?: EMPTY_MEDIA_DESCRIPTION
+fun MediaData?.toMediaDescription(): MediaDescriptionCompat = this?.toMediaDescription() ?: EMPTY_MEDIA_DESCRIPTION
