@@ -34,9 +34,9 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SongViewHolder -> getItem(position)?.let { song ->
-                holder.bind(song, tracker?.isSelected(song.songId))
+                holder.bind(song, tracker?.isSelected(song.id))
                 if (song.downloadState == STATE_DOWNLOADING) {
-                    downloadInfo?.value?.get(song.songId)?.let { info ->
+                    downloadInfo?.value?.get(song.id)?.let { info ->
                         holder.setProgress(info, false)
                     }
                 }
@@ -53,7 +53,7 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
                 } else when (val payload = payloads[0]) {
                     SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(
                         tracker?.isSelected(
-                            holder.binding.song?.songId
+                            holder.binding.song?.id
                         )
                     )
                     is Song -> holder.bind(payload)
@@ -74,13 +74,13 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
     fun getItemByPosition(position: Int): Song? = getItem(position)
 
     fun setProgress(id: String, progress: DownloadProgress) {
-        snapshot().indexOfFirst { it?.songId == id }.takeIf { it != -1 }?.let {
+        snapshot().indexOfFirst { it?.id == id }.takeIf { it != -1 }?.let {
             notifyItemChanged(it, progress)
         }
     }
 
     override fun getItemViewType(position: Int): Int =
-        if (getItem(position)?.songId == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM
+        if (getItem(position)?.id == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM
 
     private val dateFormat = DateFormat.getDateInstance()
 
@@ -88,13 +88,13 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
         if (getItemViewType(position) == TYPE_HEADER) "#"
         else when (sortInfo!!.type) {
             ORDER_CREATE_DATE -> dateFormat.format(getItem(position)!!.createDate)
-            ORDER_NAME -> getItem(position)!!.title?.get(0).toString()
+            ORDER_NAME -> getItem(position)!!.title[0].toString()
             ORDER_ARTIST -> getItem(position)!!.artistName
-            else -> getItem(position)!!.title?.get(0).toString()
+            else -> getItem(position)!!.title[0].toString()
         }
 
     class SongItemComparator : DiffUtil.ItemCallback<Song>() {
-        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.songId == newItem.songId
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem
     }

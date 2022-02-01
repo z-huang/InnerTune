@@ -106,7 +106,7 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             itemTouchHelper.attachToRecyclerView(this)
             addOnClickListener { pos, _ ->
                 playbackViewModel.playMedia(
-                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
+                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
                         EXTRA_QUEUE_DATA to QueueData(QUEUE_PLAYLIST, sortInfo = songsViewModel.sortInfo.parcelize(), extras = bundleOf(
                             EXTRA_PLAYLIST_ID to playlistId
                         ))

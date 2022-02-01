@@ -34,7 +34,6 @@ import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -72,7 +71,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(
-                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
+                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
                         EXTRA_QUEUE_DATA to QueueData(QUEUE_ALL_SONG, sortInfo = songsViewModel.sortInfo.parcelize())
                     )
                 )
@@ -92,8 +91,8 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         songsAdapter.tracker = tracker
         tracker.addActionModeObserver(requireActivity(), tracker, R.menu.song_contextual_action_bar) { item ->
             val selectedMap = songsAdapter.snapshot().items
-                .filter { tracker.selection.contains(it.songId) }
-                .associateBy { it.songId }
+                .filter { tracker.selection.contains(it.id) }
+                .associateBy { it.id }
             val songs = tracker.selection.toList().mapNotNull { selectedMap[it] }
             when (item.itemId) {
                 R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs, requireContext())

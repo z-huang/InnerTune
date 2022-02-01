@@ -62,7 +62,7 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(
-                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.songId, bundleOf(
+                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
                         EXTRA_QUEUE_DATA to QueueData(QUEUE_ARTIST, sortInfo = songsViewModel.sortInfo.parcelize())
                     )
                 )

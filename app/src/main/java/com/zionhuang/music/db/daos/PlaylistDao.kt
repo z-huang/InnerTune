@@ -18,7 +18,7 @@ interface PlaylistDao {
     suspend fun getPlaylist(id: Int): PlaylistEntity?
 
     @Query("SELECT * FROM playlist WHERE name LIKE '%' || :query || '%'")
-    fun searchPlaylists(query: String): List<PlaylistEntity>
+    suspend fun searchPlaylists(query: String): List<PlaylistEntity>
 
     @Insert
     suspend fun insertPlaylist(playlist: PlaylistEntity)

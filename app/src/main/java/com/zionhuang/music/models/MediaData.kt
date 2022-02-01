@@ -24,8 +24,8 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem
 @Parcelize
 data class MediaData(
     var id: String = EMPTY_SONG_ID,
-    var title: String? = null,
-    var artist: String? = null,
+    var title: String = "",
+    var artist: String = "",
     var duration: Int? = null,
     var artwork: String? = null,
     @ArtworkType
@@ -33,8 +33,8 @@ data class MediaData(
 ) : Parcelable {
     fun pullMediaMetadata(mediaMetadata: MediaMetadataCompat): MediaData = apply {
         id = mediaMetadata.getString(METADATA_KEY_MEDIA_ID) ?: EMPTY_SONG_ID
-        title = mediaMetadata.getString(METADATA_KEY_TITLE)
-        artist = mediaMetadata.getString(METADATA_KEY_DISPLAY_SUBTITLE)
+        title = mediaMetadata.getString(METADATA_KEY_TITLE).orEmpty()
+        artist = mediaMetadata.getString(METADATA_KEY_DISPLAY_SUBTITLE).orEmpty()
         artwork = mediaMetadata.getString(METADATA_KEY_DISPLAY_ICON_URI)
         duration = (mediaMetadata.getLong(METADATA_KEY_DURATION) / 1000).toInt()
         artworkType = mediaMetadata.getLong(EXTRA_ARTWORK_TYPE).toInt()
@@ -61,7 +61,7 @@ data class MediaData(
     }
 }
 
-fun Song.toMediaData(context: Context) = MediaData(songId, title, artistName, duration, context.getArtworkFile(songId).canonicalPath, artworkType)
+fun Song.toMediaData(context: Context) = MediaData(id, title, artistName, duration, context.getArtworkFile(id).canonicalPath, artworkType)
 
 fun StreamInfo.toMediaData() = MediaData(id, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else TYPE_RECTANGLE)
 

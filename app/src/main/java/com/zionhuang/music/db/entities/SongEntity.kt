@@ -8,7 +8,7 @@ import java.util.*
 @Entity(
     tableName = "song",
     indices = [
-        Index(value = ["songId"], unique = true),
+        Index(value = ["id"], unique = true),
         Index(value = ["artistId"])],
     foreignKeys = [
         ForeignKey(
@@ -19,13 +19,13 @@ import java.util.*
         )]
 )
 data class SongEntity(
-    @PrimaryKey val songId: String,
-    var title: String? = null,
-    var artistId: Int = 0,
-    var duration: Int = 0, // in seconds
-    var liked: Boolean = false,
-    @ArtworkType var artworkType: Int,
-    @ColumnInfo(name = "download_state") var downloadState: Int = STATE_NOT_DOWNLOADED,
-    @ColumnInfo(name = "create_date") var createDate: Date = Date(),
-    @ColumnInfo(name = "modify_date") var modifyDate: Date = Date(),
+    @PrimaryKey val id: String,
+    val title: String,
+    val artistId: Int = 0,
+    val duration: Int = 0, // in seconds
+    val liked: Boolean = false,
+    @ArtworkType val artworkType: Int,
+    @ColumnInfo(name = "download_state") val downloadState: Int = STATE_NOT_DOWNLOADED,
+    @ColumnInfo(name = "create_date") val createDate: Date = Date(),
+    @ColumnInfo(name = "modify_date") val modifyDate: Date = Date(),
 )

@@ -14,13 +14,14 @@ import com.zionhuang.music.extensions.toSQLiteQuery
 
 @Dao
 interface SongDao {
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
-    @Query("SELECT * FROM song WHERE songId = :songId")
+    @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSong(songId: String): Song?
 
     @Transaction
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%'")
-    fun searchSongs(query: String): PagingSource<Int, Song>
+    fun searchSongsAsPagingSource(query: String): PagingSource<Int, Song>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songs: List<SongEntity>)
@@ -28,10 +29,10 @@ interface SongDao {
     @Update
     suspend fun update(songs: List<SongEntity>)
 
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE songId=:songId)")
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
     suspend fun contains(songId: String): Boolean
 
-    @Query("DELETE FROM song WHERE songId IN (:songIds)")
+    @Query("DELETE FROM song WHERE id IN (:songIds)")
     suspend fun delete(songIds: List<String>)
 
 
@@ -57,7 +58,7 @@ interface SongDao {
     suspend fun getPlaylistSongsAsList(playlistId: Int): List<Song>
 
 
-    @Query("SELECT COUNT(songId) FROM song WHERE artistId = :artistId")
+    @Query("SELECT COUNT(id) FROM song WHERE artistId = :artistId")
     suspend fun artistSongsCount(artistId: Int): Int
 
     fun getSortQuery(sortInfo: ISortInfo) = QUERY_ORDER.format(
@@ -79,7 +80,7 @@ interface SongDao {
             SELECT song.*, playlist_song.idInPlaylist
               FROM playlist_song
                    JOIN song
-                     ON playlist_song.songId = song.songId
+                     ON playlist_song.songId = song.id
              WHERE playlistId = :playlistId
              ORDER BY playlist_song.idInPlaylist
             """

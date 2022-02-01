@@ -1,6 +1,7 @@
 package com.zionhuang.music.repos
 
 import android.app.DownloadManager
+import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
@@ -10,10 +11,7 @@ import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.daos.PlaylistDao
 import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.extensions.audioDir
-import com.zionhuang.music.extensions.div
-import com.zionhuang.music.extensions.getApplication
-import com.zionhuang.music.extensions.getArtworkFile
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
@@ -34,18 +32,24 @@ object SongRepository : LocalRepository {
 
     override suspend fun getSongById(songId: String): Song? = withContext(IO) { songDao.getSong(songId) }
     override fun searchSongs(query: String) = ListWrapper(
-        getPagingSource = { songDao.searchSongs(query) }
+        getPagingSource = { songDao.searchSongsAsPagingSource(query) }
     )
 
     override suspend fun addSongs(songs: List<Song>) = songs.forEach {
-        if (songDao.contains(it.songId)) return@forEach
-        val stream = NewPipeYouTubeHelper.getStreamInfo(it.songId)
-        OkHttpDownloader.downloadFile(
-            OkHttpDownloader.requestOf(stream.thumbnailUrl),
-            context.getArtworkFile(it.songId)
-        )
-        if (it.duration == -1) it.duration = stream.duration.toInt()
-        songDao.insert(listOf(it.toSongEntity()))
+        if (songDao.contains(it.id)) return@forEach
+        try {
+            val stream = NewPipeYouTubeHelper.getStreamInfo(it.id)
+            OkHttpDownloader.downloadFile(
+                OkHttpDownloader.requestOf(stream.thumbnailUrl),
+                context.getArtworkFile(it.id)
+            )
+            songDao.insert(listOf(it.toSongEntity().copy(
+                duration = if (it.duration == -1) stream.duration.toInt() else it.duration)
+            ))
+        } catch (e: Exception) {
+            // TODO: Handle error
+            Log.d(TAG, e.localizedMessage.orEmpty())
+        }
     }
 
     override suspend fun updateSongs(songs: List<Song>) = withContext(IO) { songDao.update(songs.map { it.toSongEntity() }) }
@@ -58,7 +62,7 @@ object SongRepository : LocalRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteSongs(songs: List<Song>) = withContext(IO) { songDao.delete(songs.map { it.songId }) }
+    override suspend fun deleteSongs(songs: List<Song>) = withContext(IO) { songDao.delete(songs.map { it.id }) }
 
     override suspend fun setLike(like: Boolean, songs: List<Song>) {
         TODO("Not yet implemented")
@@ -146,7 +150,7 @@ object SongRepository : LocalRepository {
         playlistDao.insertPlaylistSongEntities(songs.map {
             PlaylistSongEntity(
                 playlistId = playlistId,
-                songId = it.songId,
+                songId = it.id,
                 idInPlaylist = ++maxId
             )
         })
@@ -164,12 +168,10 @@ object SongRepository : LocalRepository {
     override suspend fun removeDownload(downloadId: Long) = withContext(IO) { downloadDao.delete(downloadId) }
 
 
-    private suspend fun getOrInsertArtist(name: String): Int = withContext(IO) { artistDao.getArtistId(name) ?: artistDao.insert(ArtistEntity(name = name)).toInt() }
-
     private suspend fun Song.toSongEntity() = SongEntity(
-        songId,
+        id,
         title,
-        getOrInsertArtist(artistName),
+        withContext(IO) { artistDao.getArtistId(artistName) ?: artistDao.insert(ArtistEntity(name = artistName)).toInt() },
         duration,
         liked,
         artworkType,

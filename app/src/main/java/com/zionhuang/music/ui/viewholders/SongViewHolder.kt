@@ -18,7 +18,7 @@ open class SongViewHolder(
     val itemDetails: ItemDetailsLookup.ItemDetails<String>
         get() = object : ItemDetailsLookup.ItemDetails<String>() {
             override fun getPosition(): Int = absoluteAdapterPosition
-            override fun getSelectionKey(): String? = binding.song?.songId
+            override fun getSelectionKey(): String? = binding.song?.id
         }
 
     fun bind(song: Song, selected: Boolean? = false) {
@@ -32,7 +32,7 @@ open class SongViewHolder(
                         R.id.action_play_next -> popupMenuListener?.playNext(song, binding.context)
                         R.id.action_add_to_queue -> popupMenuListener?.addToQueue(song, binding.context)
                         R.id.action_add_to_playlist -> popupMenuListener?.addToPlaylist(song, binding.context)
-                        R.id.action_download -> popupMenuListener?.downloadSongs(song.songId, binding.context)
+                        R.id.action_download -> popupMenuListener?.downloadSongs(song.id, binding.context)
                         R.id.action_delete -> popupMenuListener?.deleteSongs(song)
                     }
                     true

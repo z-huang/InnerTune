@@ -195,9 +195,9 @@ class SongPlayer(
             scope.launch {
                 player.currentMetadata?.let {
                     songRepository.addSong(Song(
-                        songId = it.id,
+                        id = it.id,
                         title = it.title,
-                        artistName = it.artist ?: "",
+                        artistName = it.artist,
                         duration = if (player.duration != C.TIME_UNSET) (player.duration / 1000).toInt() else -1,
                         artworkType = it.artworkType
                     ))

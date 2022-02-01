@@ -11,6 +11,7 @@ import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
+import com.zionhuang.music.constants.Constants.HEADER_PLACEHOLDER_SONG
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
@@ -55,7 +56,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                 songRepository.getAllSongs(sortInfo).pagingSource
             }
         }.flow.map { pagingData ->
-            if (query.isNullOrBlank()) pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
+            if (query.isNullOrBlank()) pagingData.insertHeaderItem(FULLY_COMPLETE, HEADER_PLACEHOLDER_SONG)
             else pagingData
         }.cachedIn(viewModelScope)
     }
@@ -75,7 +76,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getArtistSongs(artistId, sortInfo).pagingSource
     }.flow.map { pagingData ->
-        pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
+        pagingData.insertHeaderItem(FULLY_COMPLETE, HEADER_PLACEHOLDER_SONG)
     }.cachedIn(viewModelScope)
 
     fun getPlaylistSongsAsFlow(playlistId: Int) = Pager(PagingConfig(pageSize = 50)) {
@@ -178,7 +179,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             viewModelScope.launch {
                 songs.map(StreamInfoItem::toSong).let { s ->
                     songRepository.addSongs(s)
-                    songRepository.downloadSongs(s.map { it.songId })
+                    songRepository.downloadSongs(s.map { it.id })
                 }
             }
         }
