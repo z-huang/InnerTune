@@ -76,6 +76,10 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             }
         }
 
+        songsViewModel.sortInfo.liveData.observe(viewLifecycleOwner) {
+            songsAdapter.refresh()
+        }
+
         songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
             map.forEach { (key, value) ->
                 songsAdapter.setProgress(key, value)
