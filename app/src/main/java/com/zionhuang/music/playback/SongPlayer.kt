@@ -11,7 +11,6 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
-import android.util.Log
 import android.util.Pair
 import androidx.core.net.toUri
 import com.bumptech.glide.request.target.CustomTarget
@@ -42,7 +41,6 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
-import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.MediaData
@@ -50,9 +48,10 @@ import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.models.toMediaDescription
 import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.Queue
+import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
-import com.zionhuang.music.utils.downloadSong
 import com.zionhuang.music.utils.logTimeMillis
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.coroutines.CoroutineScope
@@ -68,8 +67,7 @@ class SongPlayer(
     private val scope: CoroutineScope,
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Player.Listener {
-
-    private val songRepository = SongRepository()
+    private val songRepository: LocalRepository = SongRepository
     private var currentQueue: Queue = EmptyQueue()
 
     private val _mediaSession =
@@ -85,7 +83,7 @@ class SongPlayer(
             ) { dataSpec ->
                 val mediaId = dataSpec.uri.host
                     ?: throw IllegalArgumentException("Cannot find media id from uri host")
-                if (runBlocking { songRepository.getSongEntityById(mediaId)?.downloadState == STATE_DOWNLOADED })
+                if (runBlocking { songRepository.getSongById(mediaId)?.downloadState == STATE_DOWNLOADED })
                     return@Factory dataSpec.withUri(context.getAudioFile(mediaId).toUri())
 
                 val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
@@ -196,18 +194,16 @@ class SongPlayer(
         setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.custom_action_add_to_library, R.drawable.ic_library_add) { _, _, _ ->
             scope.launch {
                 player.currentMetadata?.let {
-                    songRepository.insert(
-                        Song(
-                            songId = it.id,
-                            title = it.title,
-                            artistName = it.artist ?: "",
-                            duration = if (player.duration != C.TIME_UNSET) (player.duration / 1000).toInt() else -1,
-                            artworkType = it.artworkType
-                        )
-                    )
+                    songRepository.addSong(Song(
+                        songId = it.id,
+                        title = it.title,
+                        artistName = it.artist ?: "",
+                        duration = if (player.duration != C.TIME_UNSET) (player.duration / 1000).toInt() else -1,
+                        artworkType = it.artworkType
+                    ))
                     if (autoDownload) {
                         player.currentMetadata?.let { metadata ->
-                            context.downloadSong(metadata.id, songRepository)
+                            songRepository.downloadSong(metadata.id)
                         }
                     }
                 }
@@ -312,15 +308,16 @@ class SongPlayer(
 
     init {
         context.getLifeCycleOwner()?.let { lifeCycleOwner ->
-            songRepository.deletedSongs.observe(lifeCycleOwner) { deletedSongs ->
-                Log.d(TAG, deletedSongs.toString())
-                val deletedIds = deletedSongs.map { it.songId }
-                player.mediaItems.forEachIndexed { index, mediaItem ->
-                    if (mediaItem.mediaId in deletedIds) {
-                        player.removeMediaItem(index)
-                    }
-                }
-            }
+            // TODO
+//            oldSongRepository.deletedSongs.observe(lifeCycleOwner) { deletedSongs ->
+//                Log.d(TAG, deletedSongs.toString())
+//                val deletedIds = deletedSongs.map { it.songId }
+//                player.mediaItems.forEachIndexed { index, mediaItem ->
+//                    if (mediaItem.mediaId in deletedIds) {
+//                        player.removeMediaItem(index)
+//                    }
+//                }
+//            }
         }
     }
 

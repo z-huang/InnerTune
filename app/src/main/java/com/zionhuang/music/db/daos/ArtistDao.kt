@@ -7,13 +7,13 @@ import com.zionhuang.music.db.entities.ArtistEntity
 @Dao
 interface ArtistDao {
     @Query("SELECT * FROM artist")
-    fun getAllArtists(): List<ArtistEntity>
+    fun getAllArtistsAsList(): List<ArtistEntity>
 
     @Query("SELECT * FROM artist")
     fun getAllArtistsAsPagingSource(): PagingSource<Int, ArtistEntity>
 
     @Query("SELECT * FROM artist WHERE id = :id")
-    fun getArtist(id: Int): ArtistEntity?
+    suspend fun getArtist(id: Int): ArtistEntity?
 
     @Query("SELECT id FROM artist WHERE name = :name")
     fun getArtistId(name: String): Int?
@@ -26,9 +26,6 @@ interface ArtistDao {
 
     @Update
     fun update(artist: ArtistEntity)
-
-    @Query("DELETE FROM artist WHERE id = :artistId")
-    suspend fun delete(artistId: Int)
 
     @Delete
     suspend fun delete(artist: ArtistEntity)

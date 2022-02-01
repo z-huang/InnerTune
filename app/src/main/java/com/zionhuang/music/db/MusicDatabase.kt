@@ -1,5 +1,6 @@
 package com.zionhuang.music.db
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,7 +10,6 @@ import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.daos.PlaylistDao
 import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.extensions.getApplication
 
 @Database(entities = [
     SongEntity::class,
@@ -31,11 +31,11 @@ abstract class MusicDatabase : RoomDatabase() {
         @Volatile
         var INSTANCE: MusicDatabase? = null
 
-        fun getInstance(): MusicDatabase {
+        fun getInstance(context: Context): MusicDatabase {
             if (INSTANCE == null) {
                 synchronized(MusicDatabase::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(getApplication(), MusicDatabase::class.java, DBNAME).build()
+                        INSTANCE = Room.databaseBuilder(context, MusicDatabase::class.java, DBNAME).build()
                     }
                 }
             }

@@ -11,8 +11,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.databinding.EditSongDialogBinding
-import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.ArtistAutoCompleteAdapter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,17 +48,17 @@ class EditSongDialog : AppCompatDialogFragment() {
         setupUI()
 
         return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
-                .setView(binding.root)
-                .setTitle(R.string.dialog_edit_song_title)
-                .setPositiveButton(R.string.dialog_button_save, null)
-                .setNegativeButton(android.R.string.cancel, null)
-                .create()
-                .apply {
-                    window!!.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
-                    setOnShowListener {
-                        getButton(BUTTON_POSITIVE).setOnClickListener { onSave() }
-                    }
+            .setView(binding.root)
+            .setTitle(R.string.dialog_edit_song_title)
+            .setPositiveButton(R.string.dialog_button_save, null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .apply {
+                window!!.setSoftInputMode(SOFT_INPUT_STATE_VISIBLE)
+                setOnShowListener {
+                    getButton(BUTTON_POSITIVE).setOnClickListener { onSave() }
                 }
+            }
     }
 
     private fun onSave() {
@@ -68,10 +68,10 @@ class EditSongDialog : AppCompatDialogFragment() {
         val title = binding.songTitle.editText?.text.toString()
         val artistName = binding.songArtist.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository().updateSong(song.songId) {
-                this.title = title
-                this.artistName = artistName
-            }
+            SongRepository.updateSong(song.copy(
+                title = title,
+                artistName = artistName
+            ))
         }
         dismiss()
     }

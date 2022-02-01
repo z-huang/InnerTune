@@ -3,18 +3,21 @@ package com.zionhuang.music.utils
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.Filter
-import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
+import com.zionhuang.music.repos.SongRepository
+import kotlinx.coroutines.runBlocking
 
 class ArtistAutoCompleteAdapter(context: Context) : ArrayAdapter<ArtistEntity>(context, android.R.layout.simple_list_item_1) {
-    private val songRepository = SongRepository()
+    private val songRepository = SongRepository
 
     private val filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val resultsList = if (constraint.isNullOrEmpty()) {
-                songRepository.allArtists
-            } else {
-                songRepository.searchArtists(constraint)
+            val resultsList = runBlocking {
+                if (constraint.isNullOrEmpty()) {
+                    songRepository.getAllArtists().getList()
+                } else {
+                    songRepository.searchArtists(constraint.toString()).getList()
+                }
             }
             return FilterResults().apply {
                 values = resultsList

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.ui.adapters.PlaylistSongsEditAdapter
@@ -90,7 +89,7 @@ class PlaylistSongsEditFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
 
         lifecycleScope.launch {
-            songsAdapter.submitList(songsViewModel.songRepository.getPlaylistSongsList(playlistId))
+            songsAdapter.submitList(songsViewModel.songRepository.getPlaylistSongs(playlistId, songsViewModel.sortInfo).getList())
         }
     }
 

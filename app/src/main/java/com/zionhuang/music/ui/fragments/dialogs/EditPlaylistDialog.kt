@@ -9,8 +9,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
-import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.repos.SongRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -54,7 +54,7 @@ class EditPlaylistDialog : AppCompatDialogFragment() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository().updatePlaylist(playlist.copy(name = name))
+            SongRepository.updatePlaylist(playlist.copy(name = name))
         }
         dismiss()
     }

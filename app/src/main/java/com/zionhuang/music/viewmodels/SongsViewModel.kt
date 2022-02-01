@@ -17,7 +17,6 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.models.PreferenceSortInfo
-import com.zionhuang.music.db.SongRepository
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
@@ -25,11 +24,12 @@ import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
+import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import com.zionhuang.music.ui.listeners.StreamPopupMenuListener
-import com.zionhuang.music.utils.downloadSong
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -40,7 +40,7 @@ import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import kotlin.collections.set
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
-    val songRepository = SongRepository()
+    val songRepository: LocalRepository = SongRepository
     val mediaSessionConnection = MediaSessionConnection
 
     val sortInfo: IMutableSortInfo = PreferenceSortInfo
@@ -50,9 +50,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val allSongsFlow: Flow<PagingData<Song>> by lazy {
         Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
             if (!query.isNullOrBlank()) {
-                songRepository.searchSongs(query!!)
+                songRepository.searchSongs(query!!).pagingSource
             } else {
-                songRepository.getAllSongsPagingSource(sortInfo)
+                songRepository.getAllSongs(sortInfo).pagingSource
             }
         }.flow.map { pagingData ->
             if (query.isNullOrBlank()) pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
@@ -62,27 +62,25 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     val allArtistsFlow: Flow<PagingData<ArtistEntity>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
-            songRepository.allArtistsPagingSource
+            songRepository.getAllArtists().pagingSource
         }.flow.cachedIn(viewModelScope)
     }
 
     val allPlaylistsFlow: Flow<PagingData<PlaylistEntity>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
-            songRepository.allPlaylistsPagingSource
+            songRepository.getAllPlaylists().pagingSource
         }.flow.cachedIn(viewModelScope)
     }
 
     fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getArtistSongsAsPagingSource(artistId, sortInfo)
+        songRepository.getArtistSongs(artistId, sortInfo).pagingSource
     }.flow.map { pagingData ->
         pagingData.insertHeaderItem(FULLY_COMPLETE, Song(HEADER_ITEM_ID))
     }.cachedIn(viewModelScope)
 
     fun getPlaylistSongsAsFlow(playlistId: Int) = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getPlaylistSongsAsPagingSource(playlistId)
+        songRepository.getPlaylistSongs(playlistId, sortInfo).pagingSource
     }.flow.cachedIn(viewModelScope)
-
-    val deletedSongs: LiveData<List<Song>> get() = songRepository.deletedSongs
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(song: Song, context: Context) {
@@ -111,12 +109,12 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun addToPlaylist(songs: List<Song>, context: Context) {
             viewModelScope.launch {
-                val playlists = songRepository.getPlaylists()
+                val playlists = songRepository.getAllPlaylists().getList()
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.dialog_choose_playlist_title)
                     .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
                         viewModelScope.launch {
-                            songRepository.addToPlaylist(songs, playlists[i].playlistId)
+                            songRepository.addSongsToPlaylist(playlists[i].playlistId, songs)
                         }
                     }
                     .show()
@@ -125,9 +123,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun downloadSongs(songIds: List<String>, context: Context) {
             viewModelScope.launch {
-                songIds.forEach {
-                    context.downloadSong(it, songRepository)
-                }
+                songRepository.downloadSongs(songIds)
             }
         }
 
@@ -141,7 +137,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val streamPopupMenuListener = object : StreamPopupMenuListener {
         override fun addToLibrary(songs: List<StreamInfoItem>) {
             viewModelScope.launch {
-                songRepository.insert(songs.map(StreamInfoItem::toSong))
+                songRepository.addSongs(songs.map(StreamInfoItem::toSong))
             }
         }
 
@@ -163,14 +159,14 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun addToPlaylist(songs: List<StreamInfoItem>, context: Context) {
             viewModelScope.launch {
-                val playlists = songRepository.getPlaylists()
+                val playlists = songRepository.getAllPlaylists().getList()
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.dialog_choose_playlist_title)
                     .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
                         viewModelScope.launch {
                             songs.map(StreamInfoItem::toSong).let {
-                                songRepository.insert(it)
-                                songRepository.addToPlaylist(it, playlists[i].playlistId)
+                                songRepository.addSongs(it)
+                                songRepository.addSongsToPlaylist(playlists[i].playlistId, it)
                             }
                         }
                     }
@@ -180,18 +176,16 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
         override fun download(songs: List<StreamInfoItem>, context: Context) {
             viewModelScope.launch {
-                songs.map(StreamInfoItem::toSong).let {
-                    songRepository.insert(it)
-                    it.forEach { item ->
-                        context.downloadSong(item.songId, songRepository)
-                    }
+                songs.map(StreamInfoItem::toSong).let { s ->
+                    songRepository.addSongs(s)
+                    songRepository.downloadSongs(s.map { it.songId })
                 }
             }
         }
     }
 
     val downloadInfoLiveData = liveData(viewModelScope.coroutineContext + IO) {
-        songRepository.getAllDownloads().collectLatest { list ->
+        songRepository.getAllDownloads().flow.collectLatest { list ->
             list.associateBy { it.id }.let { map ->
                 while (true) {
                     emit(if (list.isEmpty()) emptyMap() else getDownloadInfo(*list.map { it.id }

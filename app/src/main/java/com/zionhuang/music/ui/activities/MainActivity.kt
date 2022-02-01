@@ -43,16 +43,17 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
-        songsViewModel.deletedSongs.observe(this) { songs ->
-            Snackbar.make(binding.root, resources.getQuantityString(R.plurals.snack_bar_delete_song, songs.size, songs.size), Snackbar.LENGTH_LONG)
-                .setAnchorView(binding.bottomNav)
-                .setAction(R.string.snack_bar_undo) {
-                    lifecycleScope.launch {
-                        songsViewModel.songRepository.restoreSongs(songs)
-                    }
-                }
-                .show()
-        }
+        // TODO
+//        songsViewModel.deletedSongs.observe(this) { songs ->
+//            Snackbar.make(binding.root, resources.getQuantityString(R.plurals.snack_bar_delete_song, songs.size, songs.size), Snackbar.LENGTH_LONG)
+//                .setAnchorView(binding.bottomNav)
+//                .setAction(R.string.snack_bar_undo) {
+//                    lifecycleScope.launch {
+//                        songsViewModel.songRepository.restoreSongs(songs)
+//                    }
+//                }
+//                .show()
+//        }
     }
 
     private fun setupUI() {

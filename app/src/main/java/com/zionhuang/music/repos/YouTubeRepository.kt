@@ -7,6 +7,7 @@ import com.zionhuang.music.repos.base.RemoteRepository
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.Page
+import org.schabi.newpipe.extractor.stream.StreamInfo
 
 object YouTubeRepository : RemoteRepository {
     override fun search(query: String, filter: String): PagingSource<Page, InfoItem> = object : PagingSource<Page, InfoItem>() {
@@ -22,6 +23,8 @@ object YouTubeRepository : RemoteRepository {
     }
 
     override suspend fun suggestionsFor(query: String): List<String> = NewPipeYouTubeHelper.suggestionsFor(query)
+
+    override suspend fun getStream(songId: String): StreamInfo = NewPipeYouTubeHelper.getStreamInfo(songId)
 
     override fun getChannel(channelId: String) = object : PagingSource<Page, InfoItem>() {
         override suspend fun load(params: LoadParams<Page>) = try {

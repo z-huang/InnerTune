@@ -9,11 +9,13 @@ import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.channel.ChannelInfo
+import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
 import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.services.youtube.YoutubeService
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
+import java.io.IOException
 
 @Suppress("BlockingMethodInNonBlockingContext")
 object NewPipeYouTubeHelper {
@@ -65,6 +67,7 @@ object NewPipeYouTubeHelper {
         ChannelInfo.getMoreItems(service, service.channelLHFactory.getUrl(id), page)
     }
 
+    @Throws(IOException::class, ExtractionException::class)
     suspend fun getStreamInfo(id: String): StreamInfo = checkCache("stream$$id") {
         StreamInfo.getInfo(service, service.streamLHFactory.getUrl(id))
     }

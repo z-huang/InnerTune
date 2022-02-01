@@ -70,7 +70,7 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
 
         lifecycleScope.launch {
-            (requireActivity() as MainActivity).title = songsViewModel.songRepository.getArtist(artistId)!!.name
+            (requireActivity() as MainActivity).title = songsViewModel.songRepository.getArtistById(artistId)!!.name
             songsViewModel.getArtistSongsAsFlow(artistId).collectLatest {
                 songsAdapter.submitData(it)
             }

@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DownloadDao {
     @Query("SELECT * FROM download")
-    fun getAll(): Flow<List<DownloadEntity>>
+    fun getAllDownloadEntities(): Flow<List<DownloadEntity>>
 
     @Query("SELECT * FROM download WHERE id = :downloadId")
-    suspend fun getDownloadEntity(downloadId: Long): DownloadEntity
+    suspend fun getDownloadEntity(downloadId: Long): DownloadEntity?
 
     @Insert
     suspend fun insert(entity: DownloadEntity)
 
-    @Delete
-    suspend fun delete(entity: DownloadEntity)
+    @Query("DELETE FROM download WHERE id = :downloadId")
+    suspend fun delete(downloadId: Long)
 }

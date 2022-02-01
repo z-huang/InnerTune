@@ -12,109 +12,55 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.extensions.toSQLiteQuery
 
-const val QUERY_ALL_SONG = "SELECT * FROM song"
-const val QUERY_ARTIST_SONG = "SELECT * FROM song WHERE artistId = %d"
-const val QUERY_ORDER = " ORDER BY %s %s"
-
 @Dao
 interface SongDao {
-    /**
-     * Methods for the UI
-     */
     @Transaction
-    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class])
-    fun getSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
+    @Query("SELECT * FROM song WHERE songId = :songId")
+    suspend fun getSong(songId: String): Song?
+
+    @Transaction
+    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%'")
+    fun searchSongs(query: String): PagingSource<Int, Song>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(songs: List<SongEntity>)
+
+    @Update
+    suspend fun update(songs: List<SongEntity>)
+
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE songId=:songId)")
+    suspend fun contains(songId: String): Boolean
+
+    @Query("DELETE FROM song WHERE songId IN (:songIds)")
+    suspend fun delete(songIds: List<String>)
+
 
     @Transaction
     @RawQuery
     suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
 
-    /**
-     * All Songs [PagingSource] with order [ORDER_CREATE_DATE], [ORDER_NAME], and [ORDER_ARTIST]
-     */
-    fun getAllSongsAsPagingSource(sortInfo: ISortInfo): PagingSource<Int, Song> =
-        getSongsAsPagingSource((QUERY_ALL_SONG + getOrderQuery(sortInfo)).toSQLiteQuery())
-
-    suspend fun getAllSongsAsList(sortInfo: ISortInfo): List<Song> =
-        getSongsAsList((QUERY_ALL_SONG + getOrderQuery(sortInfo)).toSQLiteQuery())
-
-    /**
-     * Artist songs count
-     */
-    @Query("SELECT COUNT(songId) FROM song WHERE artistId = :artistId")
-    suspend fun artistSongsCount(artistId: Int): Int
-
-    /**
-     * Artist Songs [PagingSource]
-     */
-    fun getArtistSongsAsPagingSource(artistId: Int, sortInfo: ISortInfo): PagingSource<Int, Song> =
-        getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(sortInfo)).toSQLiteQuery())
-
-    suspend fun getArtistSongsAsList(artistId: Int, sortInfo: ISortInfo) =
-        getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getOrderQuery(sortInfo)).toSQLiteQuery())
-
-    /**
-     * Playlist
-     */
     @Transaction
-    @Query(
-        """
-        SELECT song.*, playlist_song.idInPlaylist
-          FROM playlist_song
-               JOIN song
-                 ON playlist_song.songId = song.songId
-         WHERE playlistId = :playlistId
-         ORDER BY playlist_song.idInPlaylist
-        """
-    )
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class])
+    fun getSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
+
+    suspend fun getAllSongsAsList(sortInfo: ISortInfo): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getAllSongsAsPagingSource(sortInfo: ISortInfo): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+    suspend fun getArtistSongsAsList(artistId: Int, sortInfo: ISortInfo): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getArtistSongsAsPagingSource(artistId: Int, sortInfo: ISortInfo): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Transaction
+    @Query(QUERY_PLAYLIST_SONGS)
     fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, Song>
 
     @Transaction
-    @Query(
-        """
-        SELECT song.*, playlist_song.idInPlaylist
-          FROM playlist_song
-               JOIN song
-                 ON playlist_song.songId = song.songId
-         WHERE playlistId = :playlistId
-         ORDER BY playlist_song.idInPlaylist
-        """
-    )
+    @Query(QUERY_PLAYLIST_SONGS)
     suspend fun getPlaylistSongsAsList(playlistId: Int): List<Song>
 
-    /**
-     * Search
-     */
-    @Transaction
-    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%'")
-    fun searchSongs(query: String): PagingSource<Int, Song>
 
-    /**
-     * Internal methods
-     */
-    @Query("SELECT * FROM song WHERE songId = :songId")
-    suspend fun getSongEntityById(songId: String): SongEntity?
+    @Query("SELECT COUNT(songId) FROM song WHERE artistId = :artistId")
+    suspend fun artistSongsCount(artistId: Int): Int
 
-    @Transaction
-    @Query("SELECT * FROM song WHERE songId = :songId")
-    suspend fun getSongById(songId: String): Song?
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(vararg songs: SongEntity)
-
-    @Update
-    suspend fun update(vararg songs: SongEntity)
-
-    @Query("DELETE FROM song WHERE songId IN (:songsId)")
-    suspend fun delete(songsId: List<String>)
-
-    @Query("DELETE FROM song WHERE songId = :songId")
-    suspend fun delete(songId: String)
-
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE songId=:songId)")
-    suspend fun contains(songId: String): Boolean
-
-    fun getOrderQuery(sortInfo: ISortInfo) = QUERY_ORDER.format(
+    fun getSortQuery(sortInfo: ISortInfo) = QUERY_ORDER.format(
         when (sortInfo.type) {
             ORDER_CREATE_DATE -> "create_date"
             ORDER_NAME -> "title"
@@ -123,4 +69,19 @@ interface SongDao {
         },
         if (sortInfo.isDescending) "DESC" else "ASC"
     )
+
+    companion object {
+        private const val QUERY_ALL_SONG = "SELECT * FROM song"
+        private const val QUERY_ARTIST_SONG = "SELECT * FROM song WHERE artistId = %d"
+        private const val QUERY_ORDER = " ORDER BY %s %s"
+        private const val QUERY_PLAYLIST_SONGS =
+            """
+            SELECT song.*, playlist_song.idInPlaylist
+              FROM playlist_song
+                   JOIN song
+                     ON playlist_song.songId = song.songId
+             WHERE playlistId = :playlistId
+             ORDER BY playlist_song.idInPlaylist
+            """
+    }
 }
