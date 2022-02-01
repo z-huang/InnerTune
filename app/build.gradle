@@ -36,8 +36,9 @@ android {
         dataBinding true
     }
     packagingOptions {
-        exclude 'META-INF/proguard/androidx-annotations.pro'
-        exclude 'META-INF/DEPENDENCIES'
+        resources {
+            excludes += ['META-INF/proguard/androidx-annotations.pro', 'META-INF/DEPENDENCIES']
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
