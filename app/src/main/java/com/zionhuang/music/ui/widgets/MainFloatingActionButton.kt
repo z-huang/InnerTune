@@ -2,7 +2,7 @@ package com.zionhuang.music.ui.widgets
 
 import android.content.Context
 import android.util.AttributeSet
-import com.google.android.material.animation.AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.zionhuang.music.R
 
@@ -16,7 +16,7 @@ class MainFloatingActionButton : FloatingActionButton {
     fun onPlayerShow() {
         animate().apply {
             translationY(-bottomSheetHeight)
-            interpolator = FAST_OUT_SLOW_IN_INTERPOLATOR
+            interpolator = FastOutSlowInInterpolator()
             duration = 200
         }
     }
@@ -24,7 +24,7 @@ class MainFloatingActionButton : FloatingActionButton {
     fun onPlayerHide() {
         animate().apply {
             translationY(0f)
-            interpolator = FAST_OUT_SLOW_IN_INTERPOLATOR
+            interpolator = FastOutSlowInInterpolator()
             duration = 200
         }
     }
