@@ -25,29 +25,19 @@ class MusicService : LifecycleMediaBrowserService() {
 
     override fun onCreate() {
         super.onCreate()
-        songPlayer = SongPlayer(
-            this,
-            lifecycleScope,
-            object : PlayerNotificationManager.NotificationListener {
-                override fun onNotificationCancelled(
-                    notificationId: Int,
-                    dismissedByUser: Boolean
-                ) {
-                    stopForeground(true)
-                }
+        songPlayer = SongPlayer(this, lifecycleScope, object : PlayerNotificationManager.NotificationListener {
+            override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+                stopForeground(true)
+            }
 
-                override fun onNotificationPosted(
-                    notificationId: Int,
-                    notification: Notification,
-                    ongoing: Boolean
-                ) {
-                    if (ongoing) {
-                        startForeground(notificationId, notification)
-                    } else {
-                        stopForeground(false)
-                    }
+            override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
+                if (ongoing) {
+                    startForeground(notificationId, notification)
+                } else {
+                    stopForeground(false)
                 }
-            })
+            }
+        })
         sessionToken = songPlayer.mediaSession.sessionToken
     }
 
@@ -87,27 +77,16 @@ class MusicService : LifecycleMediaBrowserService() {
 
     private val ROOT_ID = "root"
 
-    override fun onGetRoot(
-        clientPackageName: String,
-        clientUid: Int,
-        rootHints: Bundle?
-    ): BrowserRoot = BrowserRoot(ROOT_ID, null)
+    override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot = BrowserRoot(ROOT_ID, null)
 
-    override fun onLoadChildren(
-        parentId: String,
-        result: Result<MutableList<MediaBrowserCompat.MediaItem>>
-    ) {
+    override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
         if (parentId == ROOT_ID) {
-            result.sendResult(
-                mutableListOf(
-                    MediaBrowserCompat.MediaItem(
-                        MediaDescriptionCompat.Builder()
-                            .setMediaId("id_all")
-                            .setTitle("All")
-                            .build(), FLAG_BROWSABLE
-                    )
-                )
-            )
+            result.sendResult(mutableListOf(MediaBrowserCompat.MediaItem(
+                MediaDescriptionCompat.Builder()
+                    .setMediaId("id_all")
+                    .setTitle("All")
+                    .build(),
+                FLAG_BROWSABLE)))
         } else {
             result.sendResult(mutableListOf())
         }
