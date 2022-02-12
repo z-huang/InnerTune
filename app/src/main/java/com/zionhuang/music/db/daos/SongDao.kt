@@ -21,7 +21,7 @@ interface SongDao {
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
-    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash")
     fun searchSongsAsPagingSource(query: String): PagingSource<Int, Song>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -73,8 +73,8 @@ interface SongDao {
     )
 
     companion object {
-        private const val QUERY_ALL_SONG = "SELECT * FROM song"
-        private const val QUERY_ARTIST_SONG = "SELECT * FROM song WHERE artistId = %d"
+        private const val QUERY_ALL_SONG = "SELECT * FROM song WHERE NOT isTrash"
+        private const val QUERY_ARTIST_SONG = "SELECT * FROM song WHERE artistId = %d AND NOT isTrash"
         private const val QUERY_ORDER = " ORDER BY %s %s"
         private const val QUERY_PLAYLIST_SONGS =
             """
@@ -82,7 +82,7 @@ interface SongDao {
               FROM playlist_song
                    JOIN song
                      ON playlist_song.songId = song.id
-             WHERE playlistId = :playlistId
+             WHERE playlistId = :playlistId AND NOT song.isTrash
              ORDER BY playlist_song.idInPlaylist
             """
     }
