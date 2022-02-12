@@ -3,6 +3,7 @@ package com.zionhuang.music.repos.base
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.models.ListWrapper
+import java.io.File
 
 interface LocalRepository {
     suspend fun getSongById(songId: String): Song?
@@ -14,9 +15,12 @@ interface LocalRepository {
     suspend fun moveSongsToTrash(songs: List<Song>)
     suspend fun restoreSongsFromTrash(songs: List<Song>)
     suspend fun deleteSongs(songs: List<Song>)
-    suspend fun setLike(like: Boolean, songs: List<Song>)
+    suspend fun setLiked(liked: Boolean, songs: List<Song>)
     suspend fun downloadSongs(songIds: List<String>)
     suspend fun downloadSong(songId: String) = downloadSongs(listOf(songId))
+    suspend fun deleteLocalMedia(songId: String)
+    fun getSongFile(songId: String): File
+    fun getSongArtworkFile(songId: String): File
 
     fun getAllSongs(sortInfo: ISortInfo): ListWrapper<Int, Song>
     fun getArtistSongs(artistId: Int, sortInfo: ISortInfo): ListWrapper<Int, Song>

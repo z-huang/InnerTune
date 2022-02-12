@@ -11,6 +11,7 @@ import com.zionhuang.music.constants.MediaConstants.ArtworkType
 import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
 import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.widgets.PlayPauseButton
 import com.zionhuang.music.ui.widgets.RepeatButton
 import com.zionhuang.music.ui.widgets.ShuffleButton
@@ -65,7 +66,7 @@ fun setRepeatMode(view: RepeatButton, @RepeatMode state: Int) {
 
 @BindingAdapter("artworkId")
 fun setArtworkId(view: ImageView, id: String) {
-    view.load(view.context.getArtworkFile(id)) {
+    view.load(SongRepository.getSongArtworkFile(id)) {
         placeholder(R.drawable.ic_music_note)
         roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
     }

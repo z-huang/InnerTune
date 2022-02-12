@@ -37,16 +37,3 @@ fun Context.getAnimatedVectorDrawable(@DrawableRes id: Int): AnimatedVectorDrawa
 
 fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference({ this }, keyId, defaultValue)
 fun <T : Any> Context.preferenceLiveData(@StringRes keyId: Int, defaultValue: T) = PreferenceLiveData(this, keyId, defaultValue)
-
-val Context.externalFilesDir: File get() = getExternalFilesDir(null)!!
-val Context.artworkDir get() = externalFilesDir / "artwork"
-val Context.audioDir get() = externalFilesDir / "audio"
-val Context.channelDir get() = externalFilesDir / "channel"
-val Context.recycleDir get() = externalFilesDir / "recycle"
-
-fun Context.getAudioFile(songId: String) = audioDir / songId
-fun Context.getRecycledAudioFile(songId: String) = recycleDir / "audio" / songId
-fun Context.getArtworkFile(songId: String) = artworkDir / songId
-fun Context.getRecycledArtworkFile(songId: String) = recycleDir / "artwork" / songId
-fun Context.getChannelBannerFile(channelId: String) = channelDir / "${channelId}_banner"
-fun Context.getChannelAvatarFile(channelId: String) = channelDir / "${channelId}_avatar"

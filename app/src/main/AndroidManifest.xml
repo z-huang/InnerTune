@@ -40,7 +40,7 @@
         <service
             android:name=".playback.MusicService"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
                 <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
@@ -50,7 +50,7 @@
         <receiver
             android:name=".download.DownloadBroadcastReceiver"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
                 <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />

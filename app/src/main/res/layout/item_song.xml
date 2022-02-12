@@ -133,14 +133,15 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADING ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{(song.downloadState == MediaConstants.STATE_PREPARING || song.downloadState == MediaConstants.STATE_DOWNLOADING) ? View.VISIBLE : View.GONE}">
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progress_bar"
                         style="@style/Widget.MaterialComponents.LinearProgressIndicator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:progress="50" />
+                        tools:progress="50"
+                        android:indeterminate="@{song.downloadState == MediaConstants.STATE_PREPARING}"/>
                 </LinearLayout>
             </LinearLayout>
 

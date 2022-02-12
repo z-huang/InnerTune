@@ -20,6 +20,7 @@ data class Song @JvmOverloads constructor(
     @ArtworkType val artworkType: Int = TYPE_RECTANGLE,
     val duration: Int = -1, // in seconds
     val liked: Boolean = false,
+    val isTrash: Boolean = false,
     @ColumnInfo(name = "download_state") val downloadState: Int = STATE_NOT_DOWNLOADED,
     @ColumnInfo(name = "create_date") val createDate: Date = Date(),
     @ColumnInfo(name = "modify_date") val modifyDate: Date = Date(),

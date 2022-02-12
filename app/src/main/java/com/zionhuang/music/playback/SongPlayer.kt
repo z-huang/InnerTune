@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.ResultReceiver
@@ -12,6 +13,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Pair
+import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -49,11 +51,14 @@ import com.zionhuang.music.models.toMediaDescription
 import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.repos.YouTubeRepository
 import com.zionhuang.music.repos.base.LocalRepository
+import com.zionhuang.music.repos.base.RemoteRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import com.zionhuang.music.utils.logTimeMillis
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.StreamHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -67,13 +72,13 @@ class SongPlayer(
     private val scope: CoroutineScope,
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Player.Listener {
-    private val songRepository: LocalRepository = SongRepository
+    private val localRepository: LocalRepository = SongRepository
+    private val remoteRepository: RemoteRepository = YouTubeRepository
     private var currentQueue: Queue = EmptyQueue()
 
-    private val _mediaSession =
-        MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
-            isActive = true
-        }
+    private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
+        isActive = true
+    }
     val mediaSession: MediaSessionCompat get() = _mediaSession
 
     val player: ExoPlayer = ExoPlayer.Builder(context)
@@ -81,24 +86,32 @@ class SongPlayer(
             DefaultMediaSourceFactory(ResolvingDataSource.Factory(
                 DefaultDataSource.Factory(context)
             ) { dataSpec ->
-                val mediaId = dataSpec.uri.host
-                    ?: throw IllegalArgumentException("Cannot find media id from uri host")
-                if (runBlocking { songRepository.getSongById(mediaId)?.downloadState == STATE_DOWNLOADED })
-                    return@Factory dataSpec.withUri(context.getAudioFile(mediaId).toUri())
-
-                val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
-                    runBlocking {
-                        NewPipeYouTubeHelper.getStreamInfo(mediaId)
+                runBlocking {
+                    // TODO Error handling
+                    val mediaId = dataSpec.uri.host ?: throw IllegalArgumentException("Cannot find media id from uri host")
+                    if (localRepository.getSongById(mediaId)?.downloadState == STATE_DOWNLOADED) {
+                        return@runBlocking dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
                     }
-                }
-                val uri = streamInfo.audioStreams.maxByOrNull { it.bitrate }?.url?.toUri()
-                updateMediadata(mediaId) {
-                    if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
-                        artwork = streamInfo.thumbnailUrl
-                        mediaSessionConnector.invalidateMediaSessionMetadata()
+                    val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
+                        runBlocking {
+                            remoteRepository.getStream(mediaId)
+                        }
                     }
+                    val connectivityManager = context.getSystemService<ConnectivityManager>()!!
+                    val stream = if (connectivityManager.isActiveNetworkMetered) {
+                        StreamHelper.getMostCompactAudioStream(streamInfo.audioStreams)
+                    } else {
+                        StreamHelper.getHighestQualityAudioStream(streamInfo.audioStreams)
+                    }
+                    val uri = stream?.url?.toUri()
+                    updateMediaData(mediaId) {
+                        if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
+                            artwork = streamInfo.thumbnailUrl
+                            mediaSessionConnector.invalidateMediaSessionMetadata()
+                        }
+                    }
+                    if (uri != null) dataSpec.withUri(uri) else dataSpec
                 }
-                if (uri != null) dataSpec.withUri(uri) else dataSpec
             })
         )
         .build()
@@ -114,10 +127,9 @@ class SongPlayer(
     private var autoDownload by context.preference(R.string.pref_auto_download, false)
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
-    private fun updateMediadata(mediaId: String, applier: MediaData.() -> Unit) {
+    private fun updateMediaData(mediaId: String, applier: MediaData.() -> Unit) {
         scope.launch(Dispatchers.Main) {
-            (player.currentMediaItem.takeIf { mediaId == mediaId }
-                ?: player.findMediaItemById(mediaId))?.metadata?.let {
+            (player.currentMediaItem.takeIf { mediaId == mediaId } ?: player.findMediaItemById(mediaId))?.metadata?.let {
                 applier(it)
             }
         }
@@ -194,7 +206,8 @@ class SongPlayer(
         setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.custom_action_add_to_library, R.drawable.ic_library_add) { _, _, _ ->
             scope.launch {
                 player.currentMetadata?.let {
-                    songRepository.addSong(Song(
+                    it.artwork
+                    localRepository.addSong(Song(
                         id = it.id,
                         title = it.title,
                         artistName = it.artist,
@@ -203,7 +216,7 @@ class SongPlayer(
                     ))
                     if (autoDownload) {
                         player.currentMetadata?.let { metadata ->
-                            songRepository.downloadSong(metadata.id)
+                            localRepository.downloadSong(metadata.id)
                         }
                     }
                 }

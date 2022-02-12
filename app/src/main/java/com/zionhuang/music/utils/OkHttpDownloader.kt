@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets
 object OkHttpDownloader {
     private const val TAG = "OkHttpDownloader"
     private const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101 Firefox/68.0"
-    val client = OkHttpClient()
+    private val client = OkHttpClient()
 
     fun requestOf(url: String, headers: Map<String, String>? = null, data: String? = null): Request =
             Request.Builder().apply {

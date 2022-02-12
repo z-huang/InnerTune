@@ -1,10 +1,14 @@
 package com.zionhuang.music.repos
 
 import android.app.DownloadManager
+import android.app.DownloadManager.Request.VISIBILITY_HIDDEN
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
+import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
+import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
+import com.zionhuang.music.constants.MediaConstants.STATE_PREPARING
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.daos.ArtistDao
 import com.zionhuang.music.db.daos.DownloadDao
@@ -17,9 +21,12 @@ import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.repos.base.RemoteRepository
 import com.zionhuang.music.utils.OkHttpDownloader
+import com.zionhuang.music.utils.md5
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper
+import com.zionhuang.music.youtube.StreamHelper
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object SongRepository : LocalRepository {
     private val context = getApplication()
@@ -41,7 +48,7 @@ object SongRepository : LocalRepository {
             val stream = NewPipeYouTubeHelper.getStreamInfo(it.id)
             OkHttpDownloader.downloadFile(
                 OkHttpDownloader.requestOf(stream.thumbnailUrl),
-                context.getArtworkFile(it.id)
+                getSongArtworkFile(it.id)
             )
             songDao.insert(listOf(it.toSongEntity().copy(
                 duration = if (it.duration == -1) stream.duration.toInt() else it.duration)
@@ -54,37 +61,56 @@ object SongRepository : LocalRepository {
 
     override suspend fun updateSongs(songs: List<Song>) = withContext(IO) { songDao.update(songs.map { it.toSongEntity() }) }
 
-    override suspend fun moveSongsToTrash(songs: List<Song>) {
-        TODO("Not yet implemented")
+    override suspend fun moveSongsToTrash(songs: List<Song>) = updateSongs(songs.map { it.copy(isTrash = true) })
+
+    override suspend fun restoreSongsFromTrash(songs: List<Song>) = updateSongs(songs.map { it.copy(isTrash = false) })
+
+    override suspend fun deleteSongs(songs: List<Song>) = withContext(IO) {
+        songDao.delete(songs.map { it.id })
+        songs.forEach {
+            getSongFile(it.id).delete()
+            getSongArtworkFile(it.id).delete()
+        }
     }
 
-    override suspend fun restoreSongsFromTrash(songs: List<Song>) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun setLiked(liked: Boolean, songs: List<Song>) = updateSongs(songs.map { it.copy(liked = liked) })
 
-    override suspend fun deleteSongs(songs: List<Song>) = withContext(IO) { songDao.delete(songs.map { it.id }) }
-
-    override suspend fun setLike(like: Boolean, songs: List<Song>) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun downloadSongs(songIds: List<String>) {
-        songIds.forEach { id ->
-            val song = getSongById(id) ?: return@forEach
-            if (song.downloadState == STATE_DOWNLOADED) return@forEach
+    override suspend fun downloadSongs(songIds: List<String>) = songIds.forEach { id ->
+        // the given songs should be already added to the local repository
+        val song = getSongById(id) ?: return@forEach
+        if (song.downloadState == STATE_DOWNLOADED) return@forEach
+        updateSong(song.copy(downloadState = STATE_PREPARING))
+        try {
             val streamInfo = remoteRepository.getStream(id)
-            OkHttpDownloader.downloadFile(
-                OkHttpDownloader.requestOf(streamInfo.thumbnailUrl),
-                context.getArtworkFile(id)
-            )
+            updateSong(song.copy(downloadState = STATE_DOWNLOADING))
+            // TODO Exception handling
+            val stream = StreamHelper.getHighestQualityAudioStream(streamInfo.audioStreams)!!
             val downloadManager = context.getSystemService<DownloadManager>()!!
-            val req = DownloadManager.Request(streamInfo.videoStreams.maxByOrNull { it.width }?.url?.toUri())
-                .setTitle(streamInfo.name)
-                .setDestinationUri((context.audioDir / streamInfo.id).toUri())
+            val req = DownloadManager.Request(stream.url.toUri())
+                .setTitle(song.title)
+                .setDestinationUri(getSongFile(id).toUri())
                 .setVisibleInDownloadsUi(false)
+                .setNotificationVisibility(VISIBILITY_HIDDEN)
             val did = downloadManager.enqueue(req)
             addDownload(DownloadEntity(did, id))
+        } catch (e: Exception) {
+            updateSong(song.copy(downloadState = STATE_NOT_DOWNLOADED))
         }
+    }
+
+    override suspend fun deleteLocalMedia(songId: String) {
+        val song = getSongById(songId) ?: return
+        if (getSongFile(songId).delete()) {
+            updateSong(song.copy(downloadState = STATE_NOT_DOWNLOADED))
+        }
+    }
+
+    override fun getSongFile(songId: String): File {
+        return context.getExternalFilesDir(null)!! / "media" / md5(songId)
+    }
+
+    override fun getSongArtworkFile(songId: String): File {
+        return context.getExternalFilesDir(null)!! / "artwork" / md5(songId)
     }
 
 
@@ -160,7 +186,7 @@ object SongRepository : LocalRepository {
 
 
     override fun getAllDownloads() = ListWrapper<Int, DownloadEntity>(
-        getFlow = { downloadDao.getAllDownloadEntities() }
+        getLiveData = { downloadDao.getAllDownloadEntitiesAsLiveData() }
     )
 
     override suspend fun getDownloadEntity(downloadId: Long): DownloadEntity? = withContext(IO) { downloadDao.getDownloadEntity(downloadId) }
@@ -175,6 +201,7 @@ object SongRepository : LocalRepository {
         duration,
         liked,
         artworkType,
+        isTrash,
         downloadState,
         createDate,
         modifyDate

@@ -19,13 +19,19 @@ import java.util.*
         )]
 )
 data class SongEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey
+    val id: String,
     val title: String,
     val artistId: Int = 0,
     val duration: Int = 0, // in seconds
     val liked: Boolean = false,
-    @ArtworkType val artworkType: Int,
-    @ColumnInfo(name = "download_state") val downloadState: Int = STATE_NOT_DOWNLOADED,
-    @ColumnInfo(name = "create_date") val createDate: Date = Date(),
-    @ColumnInfo(name = "modify_date") val modifyDate: Date = Date(),
+    @ArtworkType
+    val artworkType: Int,
+    val isTrash: Boolean = false,
+    @ColumnInfo(name = "download_state")
+    val downloadState: Int = STATE_NOT_DOWNLOADED,
+    @ColumnInfo(name = "create_date")
+    val createDate: Date = Date(),
+    @ColumnInfo(name = "modify_date")
+    val modifyDate: Date = Date(),
 )

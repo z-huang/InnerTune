@@ -14,8 +14,8 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_DURATION
 import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
 import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.extensions.getArtworkFile
 import com.zionhuang.music.models.MediaData.Companion.EMPTY_MEDIA_DESCRIPTION
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.parcelize.Parcelize
 import org.schabi.newpipe.extractor.stream.StreamInfo
@@ -61,7 +61,7 @@ data class MediaData(
     }
 }
 
-fun Song.toMediaData(context: Context) = MediaData(id, title, artistName, duration, context.getArtworkFile(id).canonicalPath, artworkType)
+fun Song.toMediaData(context: Context) = MediaData(id, title, artistName, duration, SongRepository.getSongArtworkFile(id).canonicalPath, artworkType)
 
 fun StreamInfo.toMediaData() = MediaData(id, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else TYPE_RECTANGLE)
 

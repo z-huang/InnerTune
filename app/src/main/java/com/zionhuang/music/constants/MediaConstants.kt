@@ -37,6 +37,7 @@ object MediaConstants {
     const val TYPE_RECTANGLE = 1
 
     const val STATE_NOT_DOWNLOADED = 0
-    const val STATE_DOWNLOADED = 1
+    const val STATE_PREPARING = 1
     const val STATE_DOWNLOADING = 2
+    const val STATE_DOWNLOADED = 3
 }

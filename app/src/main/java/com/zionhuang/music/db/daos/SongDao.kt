@@ -19,6 +19,7 @@ interface SongDao {
     @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSong(songId: String): Song?
 
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%'")
     fun searchSongsAsPagingSource(query: String): PagingSource<Int, Song>
