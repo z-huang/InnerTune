@@ -1,7 +1,6 @@
 package com.zionhuang.music.repos
 
 import android.app.DownloadManager
-import android.app.DownloadManager.Request.VISIBILITY_HIDDEN
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -15,7 +14,9 @@ import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.daos.PlaylistDao
 import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.extensions.*
+import com.zionhuang.music.extensions.TAG
+import com.zionhuang.music.extensions.div
+import com.zionhuang.music.extensions.getApplication
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
@@ -90,7 +91,6 @@ object SongRepository : LocalRepository {
                 .setTitle(song.title)
                 .setDestinationUri(getSongFile(id).toUri())
                 .setVisibleInDownloadsUi(false)
-                .setNotificationVisibility(VISIBILITY_HIDDEN)
             val did = downloadManager.enqueue(req)
             addDownload(DownloadEntity(did, id))
         } catch (e: Exception) {
