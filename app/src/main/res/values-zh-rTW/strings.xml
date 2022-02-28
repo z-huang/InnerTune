@@ -1,70 +1,105 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Music</string>
+
+    <!-- Title -->
     <string name="title_songs">歌曲</string>
     <string name="title_artists">演出者</string>
     <string name="title_channels">頻道</string>
     <string name="title_playlists">播放清單</string>
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
+    <string name="title_now_playing">現正播放</string>
+
+    <!-- Preference Title -->
+    <string name="pref_api_key_title">API 金鑰</string>
+    <string name="pref_content_language_title">預設內容語言</string>
+    <string name="pref_default_content_country_title">預設內容國家</string>
+    <string name="pref_auto_download_title">自動下載</string>
+    <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
+    <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
+    <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
+    <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
+    <string name="pref_about">關於</string>
+    <string name="pref_app_version_title">應用程式版本</string>
+    <string name="pref_newpipe_version_title">NewPipe Extractor 版本</string>
+    <string name="pref_check_for_updates_title">檢查更新</string>
+    <string name="pref_checking_for_updates">正在檢查…</string>
+    <string name="pref_up_to_date">已是最新版本</string>
+    <string name="pref_cant_check_for_updates">無法檢查更新</string>
+    <string name="pref_upgrade_title">已有新版本！</string>
+
+    <!-- Nav Menu -->
     <string name="menu_search_title">搜尋</string>
+
+    <!-- Popup Menu -->
     <string name="search_item_menu_add">加入媒體庫</string>
     <string name="search_item_menu_download">下載</string>
     <string name="menu_edit">編輯</string>
+    <string name="menu_song_play_next">接著播放</string>
+    <string name="menu_song_add_to_queue">加入待播清單</string>
+    <string name="menu_song_add_to_playlist">加入播放清單</string>
+    <string name="menu_song_download">下載</string>
     <string name="menu_song_delete">移除</string>
+
+    <!-- Dialog -->
+    <string name="dialog_edit_song_title">編輯歌曲</string>
     <string name="song_title">歌名</string>
     <string name="song_artist">演出者</string>
-    <string name="channel_name_playback">音樂播放器</string>
-    <string name="channel_name_download">下載</string>
-    <string name="btn_retry">重試</string>
-    <string name="pref_api_key_title">API 金鑰</string>
-    <string name="pref_about">關於</string>
-    <string name="menu_song_download">下載</string>
-    <string name="pref_auto_download_title">自動下載</string>
-    <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
     <string name="error_song_title_empty">歌名不能為空</string>
     <string name="error_song_artist_empty">作曲家不能為空</string>
+    <string name="dialog_button_save">儲存</string>
+
+    <string name="dialog_create_playlist_title">新增播放清單</string>
+    <string name="text_view_hint_playlist_name">名稱</string>
+    <string name="error_playlist_name_empty">播放清單名稱不能為空</string>
+
+    <string name="dialog_edit_artist_title">編輯作曲家</string>
+    <string name="text_view_hint_artist_name">演出者名稱</string>
+    <string name="error_artist_name_empty">演出者名稱不能為空</string>
+
+    <string name="dialog_choose_playlist_title">選擇播放清單</string>
+
+    <string name="dialog_edit_playlist_title">編輯播放清單</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">音樂播放器</string>
+    <string name="channel_name_download">下載</string>
+
+    <!-- Noun -->
     <plurals name="songs_count">
         <item quantity="other">%d 首歌曲</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">重試</string>
+    <string name="btn_play_all">全部播放</string>
+    <string name="btn_shuffle">隨機播放</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">曲名</string>
+    <string name="sort_by_artist">作曲家</string>
+    <string name="sort_by_create_date">新增時間</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="other">已刪除 %d 首歌曲</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="other">已選取 %d 個項目</item>
     </plurals>
-    <string name="btn_play_all">全部播放</string>
-    <string name="btn_shuffle">隨機播放</string>
-    <string name="sort_by_name">曲名</string>
-    <string name="sort_by_artist">作曲家</string>
-    <string name="sort_by_create_date">新增時間</string>
-    <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
-    <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
-    <plurals name="snack_bar_delete_song">
-        <item quantity="other">已刪除 %d 首歌曲</item>
-    </plurals>
     <string name="snack_bar_undo">復原</string>
-    <string name="dialog_edit_song_title">編輯歌曲</string>
-    <string name="dialog_create_playlist_title">新增播放清單</string>
-    <string name="dialog_button_save">儲存</string>
+
+    <!-- Custom Action -->
     <string name="custom_action_add_to_library">加入音樂庫</string>
-    <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
-    <string name="title_now_playing">現正播放</string>
+
+    <!-- Search Filter -->
     <string name="search_filter_all">全部</string>
     <string name="search_filter_songs">歌曲</string>
     <string name="search_filter_videos">影片</string>
     <string name="search_filter_playlists">播放清單</string>
     <string name="search_filter_channels">頻道</string>
-    <string name="text_view_hint_playlist_name">名稱</string>
-    <string name="menu_song_add_to_playlist">加入播放清單</string>
-    <string name="dialog_choose_playlist_title">選擇播放清單</string>
-    <string name="error_playlist_name_empty">播放清單名稱不能為空</string>
-    <string name="text_view_hint_artist_name">演出者名稱</string>
-    <string name="error_artist_name_empty">演出者名稱不能為空</string>
-    <string name="dialog_edit_artist_title">編輯作曲家</string>
-    <string name="menu_song_play_next">接著播放</string>
-    <string name="menu_song_add_to_queue">加入待播清單</string>
-    <string name="pref_app_version_title">應用程式版本</string>
-    <string name="pref_newpipe_version_title">NewPipe Extractor 版本</string>
-    <string name="pref_content_language_title">預設內容語言</string>
-    <string name="pref_default_content_country_title">預設內容國家</string>
+
     <string name="system_default">系統預設</string>
-    <string name="dialog_edit_playlist_title">編輯播放清單</string>
     <string name="explore_page_content">搜尋以尋找音樂</string>
 </resources>

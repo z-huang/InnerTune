@@ -28,7 +28,6 @@ android {
         debug {
             minifyEnabled false
             applicationIdSuffix = ".debug"
-            versionNameSuffix = " Debug"
         }
     }
     buildFeatures {

@@ -47,10 +47,7 @@ object SongRepository : LocalRepository {
         if (songDao.contains(it.id)) return@forEach
         try {
             val stream = NewPipeYouTubeHelper.getStreamInfo(it.id)
-            OkHttpDownloader.downloadFile(
-                OkHttpDownloader.requestOf(stream.thumbnailUrl),
-                getSongArtworkFile(it.id)
-            )
+            OkHttpDownloader.downloadFile(stream.thumbnailUrl, getSongArtworkFile(it.id))
             songDao.insert(listOf(it.toSongEntity().copy(
                 duration = if (it.duration == -1) stream.duration.toInt() else it.duration)
             ))

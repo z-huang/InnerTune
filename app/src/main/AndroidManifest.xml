@@ -37,6 +37,7 @@
             android:name=".utils.SuggestionProvider"
             android:authorities="${applicationId}.utils.SuggestionProvider"
             android:exported="false" />
+
         <service
             android:name=".playback.MusicService"
             android:enabled="true"
@@ -46,6 +47,10 @@
                 <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".update.UpdateService"
+            android:exported="false" />
 
         <receiver
             android:name=".download.DownloadBroadcastReceiver"

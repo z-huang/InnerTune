@@ -35,16 +35,28 @@
         android:icon="@drawable/ic_open_in_full"
         android:key="@string/pref_expand_on_play"
         android:title="@string/pref_expand_on_play_title" />
-    <PreferenceCategory android:title="@string/pref_about">
-        <PreferenceScreen
-            android:key="@string/pref_app_version"
-            android:summary="@string/app_version"
-            android:title="@string/pref_app_version_title"
-            app:icon="@drawable/ic_info" />
-        <PreferenceScreen
+    <PreferenceCategory
+        android:key="@string/pref_about_category"
+        android:title="@string/pref_about">
+        <Preference
             android:icon="@drawable/ic_newpipe"
             android:key="@string/pref_newpipe_version"
             android:summary="@string/newpipe_version"
             android:title="@string/pref_newpipe_version_title" />
+        <Preference
+            android:key="@string/pref_app_version"
+            android:summary="@string/app_version"
+            android:title="@string/pref_app_version_title"
+            app:icon="@drawable/ic_info" />
+        <Preference
+            android:icon="@drawable/ic_update"
+            android:key="@string/pref_check_for_updates"
+            android:title="@string/pref_check_for_updates_title"
+            app:isPreferenceVisible="false" />
+        <Preference
+            android:icon="@drawable/ic_upgrade"
+            android:key="@string/pref_upgrade"
+            android:title="@string/pref_upgrade_title"
+            app:isPreferenceVisible="false" />
     </PreferenceCategory>
 </PreferenceScreen>
