@@ -55,8 +55,8 @@
             app:isPreferenceVisible="false" />
         <Preference
             android:icon="@drawable/ic_upgrade"
-            android:key="@string/pref_upgrade"
-            android:title="@string/pref_upgrade_title"
+            android:key="@string/pref_update"
+            android:title="@string/pref_update_title"
             app:isPreferenceVisible="false" />
     </PreferenceCategory>
 </PreferenceScreen>

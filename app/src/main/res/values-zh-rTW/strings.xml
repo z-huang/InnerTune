@@ -27,7 +27,7 @@
     <string name="pref_checking_for_updates">正在檢查…</string>
     <string name="pref_up_to_date">已是最新版本</string>
     <string name="pref_cant_check_for_updates">無法檢查更新</string>
-    <string name="pref_upgrade_title">已有新版本！</string>
+    <string name="pref_update_title">已有新版本！</string>
 
     <!-- Nav Menu -->
     <string name="menu_search_title">搜尋</string>

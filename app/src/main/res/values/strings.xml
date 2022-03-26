@@ -27,7 +27,7 @@
     <string name="pref_checking_for_updates">Checking…</string>
     <string name="pref_up_to_date">You are up to date.</string>
     <string name="pref_cant_check_for_updates">Something went wrong.</string>
-    <string name="pref_upgrade_title">Update available!</string>
+    <string name="pref_update_title">Update available!</string>
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Search</string>

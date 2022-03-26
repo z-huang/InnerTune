@@ -26,7 +26,7 @@ import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private lateinit var checkForUpdatePreference: Preference
-    private lateinit var upgradePreference: Preference
+    private lateinit var updatePreference: Preference
 
     private var updateService: UpdateService? = null
     private val serviceConnection = object : ServiceConnection {
@@ -36,7 +36,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             with(binder.service) {
                 updateInfoLiveData.observe(viewLifecycleOwner) { info ->
                     checkForUpdatePreference.isVisible = info !is UpdateAvailable
-                    upgradePreference.isVisible = info is UpdateAvailable
+                    updatePreference.isVisible = info is UpdateAvailable
                     checkForUpdatePreference.summary = when (info) {
                         is Checking -> getString(R.string.pref_checking_for_updates)
                         is UpToDate -> getString(R.string.pref_up_to_date)
@@ -44,7 +44,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         is NotChecked, is UpdateAvailable -> ""
                     }
                     if (info is UpdateAvailable) {
-                        upgradePreference.summary = info.version.toString()
+                        updatePreference.summary = info.version.toString()
                     }
                 }
                 checkForUpdate()
@@ -88,10 +88,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         checkForUpdatePreference = findPreference(getString(R.string.pref_check_for_updates))!!
-        upgradePreference = findPreference(getString(R.string.pref_upgrade))!!
+        updatePreference = findPreference(getString(R.string.pref_update))!!
 
         checkForUpdatePreference.setOnPreferenceClickListener {
             updateService?.checkForUpdate(true)
+            true
+        }
+
+        updatePreference.setOnPreferenceClickListener {
+
             true
         }
 

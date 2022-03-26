@@ -13,7 +13,7 @@
     <string name="pref_app_version" translatable="false">APP_VERSION</string>
     <string name="pref_check_for_updates" translatable="false">CHECK_FOR_UPDATE</string>
     <string name="pref_last_check_time" translatable="false">LAST_CHECK_TIME</string>
-    <string name="pref_upgrade" translatable="false">UPGRADE</string>
+    <string name="pref_update" translatable="false">UPDATE</string>
 
     <!-- Localizations   -->
     <string name="default_localization_key" translatable="false">system</string>
