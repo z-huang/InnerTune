@@ -48,10 +48,6 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name=".update.UpdateService"
-            android:exported="false" />
-
         <receiver
             android:name=".download.DownloadBroadcastReceiver"
             android:enabled="true"

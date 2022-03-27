@@ -1,14 +1,11 @@
 package com.zionhuang.music.ui.fragments
 
-import android.content.ComponentName
-import android.content.Context.BIND_AUTO_CREATE
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
-import android.util.Log
+import android.view.View
 import androidx.core.net.toUri
+import androidx.fragment.app.activityViewModels
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -17,7 +14,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.APP_URL
 import com.zionhuang.music.constants.Constants.NEWPIPE_EXTRACTOR_URL
 import com.zionhuang.music.update.UpdateInfo.*
-import com.zionhuang.music.update.UpdateService
+import com.zionhuang.music.viewmodels.UpdateViewModel
 import com.zionhuang.music.youtube.InfoCache
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.localization.ContentCountry
@@ -25,37 +22,10 @@ import org.schabi.newpipe.extractor.localization.Localization
 import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat() {
+    private val viewModel by activityViewModels<UpdateViewModel>()
+
     private lateinit var checkForUpdatePreference: Preference
     private lateinit var updatePreference: Preference
-
-    private var updateService: UpdateService? = null
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-            Log.d(TAG, "Service connected")
-            if (binder !is UpdateService.UpdateBinder) return
-            with(binder.service) {
-                updateInfoLiveData.observe(viewLifecycleOwner) { info ->
-                    checkForUpdatePreference.isVisible = info !is UpdateAvailable
-                    updatePreference.isVisible = info is UpdateAvailable
-                    checkForUpdatePreference.summary = when (info) {
-                        is Checking -> getString(R.string.pref_checking_for_updates)
-                        is UpToDate -> getString(R.string.pref_up_to_date)
-                        is Exception -> getString(R.string.pref_cant_check_for_updates)
-                        is NotChecked, is UpdateAvailable -> ""
-                    }
-                    if (info is UpdateAvailable) {
-                        updatePreference.summary = info.version.toString()
-                    }
-                }
-                checkForUpdate()
-                updateService = this
-            }
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {
-            updateService = null
-        }
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
@@ -65,6 +35,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough().apply { duration = 300L }
         exitTransition = MaterialFadeThrough().apply { duration = 300L }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val systemDefault = getString(R.string.default_localization_key)
         findPreference<ListPreference>(getString(R.string.pref_content_language))?.setOnPreferenceChangeListener { _, newValue ->
             if (newValue !is String) return@setOnPreferenceChangeListener false
@@ -91,23 +65,30 @@ class SettingsFragment : PreferenceFragmentCompat() {
         updatePreference = findPreference(getString(R.string.pref_update))!!
 
         checkForUpdatePreference.setOnPreferenceClickListener {
-            updateService?.checkForUpdate(true)
+            viewModel.checkForUpdate(true)
             true
         }
 
         updatePreference.setOnPreferenceClickListener {
-
+            // TODO
             true
         }
 
-        val intent = Intent(context, UpdateService::class.java)
-        requireContext().startService(intent)
-        requireContext().bindService(intent, serviceConnection, BIND_AUTO_CREATE)
-    }
+        viewModel.updateInfo.observe(viewLifecycleOwner) { info ->
+            checkForUpdatePreference.isVisible = info !is UpdateAvailable
+            updatePreference.isVisible = info is UpdateAvailable
+            checkForUpdatePreference.summary = when (info) {
+                is Checking -> getString(R.string.pref_checking_for_updates)
+                is UpToDate -> getString(R.string.pref_up_to_date)
+                is Exception -> getString(R.string.pref_cant_check_for_updates)
+                is NotChecked, is UpdateAvailable -> ""
+            }
+            if (info is UpdateAvailable) {
+                updatePreference.summary = info.version.toString()
+            }
+        }
 
-    override fun onDestroy() {
-        requireContext().unbindService(serviceConnection)
-        super.onDestroy()
+        viewModel.checkForUpdate()
     }
 
     companion object {
