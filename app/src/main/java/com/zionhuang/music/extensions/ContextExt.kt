@@ -13,7 +13,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.zionhuang.music.utils.preference.Preference
 import com.zionhuang.music.utils.preference.PreferenceLiveData
-import java.io.File
 
 fun Context.getDensity(): Float = resources.displayMetrics.density
 

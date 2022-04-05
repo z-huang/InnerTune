@@ -10,6 +10,7 @@
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
     <string name="title_now_playing">現正播放</string>
+    <string name="title_update">更新</string>
 
     <!-- Preference Title -->
     <string name="pref_api_key_title">API 金鑰</string>
@@ -102,4 +103,11 @@
 
     <string name="system_default">系統預設</string>
     <string name="explore_page_content">搜尋以尋找音樂</string>
+
+    <!-- Update Fragment-->
+    <string name="whatsnew">What\'s new</string>
+    <string name="btn_update">更新</string>
+    <string name="update_status_preparing">正在準備…</string>
+    <string name="update_status_verifying">正在驗證…</string>
+    <string name="update_status_downloading">正在下載… (%1$s/%2$s)</string>
 </resources>

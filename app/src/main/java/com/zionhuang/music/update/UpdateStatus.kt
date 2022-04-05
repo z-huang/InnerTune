@@ -5,5 +5,4 @@ sealed class UpdateStatus {
     object Preparing : UpdateStatus()
     data class Downloading(val downloadId: Long) : UpdateStatus()
     object Verifying : UpdateStatus()
-    object Installing : UpdateStatus()
 }

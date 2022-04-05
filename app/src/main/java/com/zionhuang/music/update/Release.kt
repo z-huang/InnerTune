@@ -14,4 +14,6 @@ data class Release(
     val preRelease: Boolean,
     val body: String,
     val assets: List<Asset>,
-)
+) {
+    val version: Version get() = Version.parse(name)
+}

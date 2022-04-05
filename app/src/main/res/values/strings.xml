@@ -10,6 +10,7 @@
     <string name="title_explore">Explore</string>
     <string name="title_settings">Settings</string>
     <string name="title_now_playing">Now playing</string>
+    <string name="title_update">Update</string>
 
     <!-- Preference Title -->
     <string name="pref_api_key_title">API Key</string>
@@ -127,4 +128,11 @@
     <string name="bullet" translatable="false">•</string>
     <string name="system_default">System default</string>
     <string name="explore_page_content">Search to find some music</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">What\'s new</string>
+    <string name="btn_update">Update</string>
+    <string name="update_status_preparing">Preparing…</string>
+    <string name="update_status_verifying">Verifying…</string>
+    <string name="update_status_downloading">Downloading… (%1$s/%2$s)</string>
 </resources>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -70,7 +71,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         updatePreference.setOnPreferenceClickListener {
-            // TODO
+            findNavController().navigate(UpdateFragmentDirections.openUpdateFragment())
             true
         }
 
