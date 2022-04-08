@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
@@ -63,7 +64,9 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 if (pos == 0) return@addOnClickListener
                 playbackViewModel.playMedia(
                     requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_ARTIST, sortInfo = songsViewModel.sortInfo.parcelize())
+                        EXTRA_QUEUE_DATA to QueueData(QUEUE_ARTIST, sortInfo = songsViewModel.sortInfo.parcelize(), extras = bundleOf(
+                            EXTRA_ARTIST_ID to artistId
+                        ))
                     )
                 )
             }

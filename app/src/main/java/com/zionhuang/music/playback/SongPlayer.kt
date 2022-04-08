@@ -129,7 +129,7 @@ class SongPlayer(
 
     private fun updateMediaData(mediaId: String, applier: MediaData.() -> Unit) {
         scope.launch(Dispatchers.Main) {
-            (player.currentMediaItem.takeIf { mediaId == mediaId } ?: player.findMediaItemById(mediaId))?.metadata?.let {
+            (player.currentMediaItem.takeIf { it?.mediaId == mediaId } ?: player.findMediaItemById(mediaId))?.metadata?.let {
                 applier(it)
             }
         }

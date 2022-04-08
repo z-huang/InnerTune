@@ -139,4 +139,11 @@
     <action
         android:id="@+id/open_settingsFragment"
         app:destination="@id/settingsFragment" />
+    <fragment
+        android:id="@+id/updateFragment"
+        android:name="com.zionhuang.music.ui.fragments.UpdateFragment"
+        android:label="@string/title_update" />
+    <action
+        android:id="@+id/open_updateFragment"
+        app:destination="@id/updateFragment" />
 </navigation>

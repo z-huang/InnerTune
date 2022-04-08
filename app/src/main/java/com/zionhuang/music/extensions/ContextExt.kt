@@ -13,7 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.zionhuang.music.utils.preference.Preference
 import com.zionhuang.music.utils.preference.PreferenceLiveData
-import java.io.File
+import com.zionhuang.music.utils.preference.serializablePreference
 
 fun Context.getDensity(): Float = resources.displayMetrics.density
 
@@ -35,5 +35,7 @@ fun Context.themeColor(@AttrRes themeAttrId: Int): Int = obtainStyledAttributes(
 fun Context.getAnimatedVectorDrawable(@DrawableRes id: Int): AnimatedVectorDrawableCompat =
     AnimatedVectorDrawableCompat.create(this, id)!!
 
-fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference({ this }, keyId, defaultValue)
+fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference(this, keyId, defaultValue)
+inline fun <reified T : Any> Context.serializablePreference(keyId: Int, defaultValue: T): Preference<T> = serializablePreference(this, keyId, defaultValue)
+
 fun <T : Any> Context.preferenceLiveData(@StringRes keyId: Int, defaultValue: T) = PreferenceLiveData(this, keyId, defaultValue)
