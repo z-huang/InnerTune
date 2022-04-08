@@ -17,6 +17,7 @@ import com.zionhuang.music.BuildConfig
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.get
+import com.zionhuang.music.extensions.serializablePreference
 import com.zionhuang.music.extensions.set
 import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.preference.Preference
@@ -30,8 +31,9 @@ class UpdateManager(private val context: Context) {
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val currentVersion = Version.parse(BuildConfig.VERSION_NAME)
     private var lastCheckTime by Preference({ context }, R.string.pref_last_check_time, 0L)
+    private var lastCheckInfo: UpdateInfo by context.serializablePreference(R.string.pref_last_check_info, UpdateInfo.NotChecked)
 
-    private val _updateInfoLiveData = MutableLiveData(if (isLastCheckExpired) UpdateInfo.NotChecked else UpdateInfo.UpToDate)
+    private val _updateInfoLiveData = MutableLiveData(if (isLastCheckExpired) UpdateInfo.NotChecked else lastCheckInfo)
     val updateInfoLiveData: LiveData<UpdateInfo> = _updateInfoLiveData
 
     private val _updateStatusLiveData: MutableLiveData<UpdateStatus> = MutableLiveData(UpdateStatus.Idle)
@@ -50,7 +52,9 @@ class UpdateManager(private val context: Context) {
             val release = getLatestRelease()
             val latestVersion = release.version
             lastCheckTime = Instant.now().epochSecond
-            _updateInfoLiveData.postValue(if (currentVersion < latestVersion) UpdateInfo.UpdateAvailable(latestVersion) else UpdateInfo.UpToDate)
+            val updateInfo = if (currentVersion < latestVersion) UpdateInfo.UpdateAvailable(latestVersion) else UpdateInfo.UpToDate
+            _updateInfoLiveData.postValue(updateInfo)
+            lastCheckInfo = updateInfo
         } catch (e: Exception) {
             _updateInfoLiveData.postValue(UpdateInfo.Exception)
         }
