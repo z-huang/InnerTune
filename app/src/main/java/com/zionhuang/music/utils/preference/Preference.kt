@@ -7,39 +7,31 @@ import android.content.SharedPreferences
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import com.zionhuang.music.extensions.get
+import com.zionhuang.music.extensions.getSerializable
+import com.zionhuang.music.extensions.putSerializable
 import com.zionhuang.music.extensions.set
 import kotlin.reflect.KProperty
 
 open class Preference<T : Any>(
-    private val contextFactory: () -> Context,
+    context: Context,
     @StringRes private val keyId: Int,
     private val defaultValue: T,
 ) {
-    private var isInitialized = false
-
-    protected lateinit var key: String
-    protected lateinit var sharedPreferences: SharedPreferences
-
-    private fun init() {
-        contextFactory().let { context ->
-            key = context.getString(keyId)
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-        }
-        isInitialized = true
-    }
+    protected var key: String = context.getString(keyId)
+    protected var sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     protected open fun getPreferenceValue(): T = sharedPreferences.get(key, defaultValue)
     protected open fun setPreferenceValue(value: T) {
         sharedPreferences[key] = value
     }
 
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        if (!isInitialized) init()
-        return getPreferenceValue()
-    }
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = getPreferenceValue()
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = setPreferenceValue(value)
+}
 
-    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        if (!isInitialized) init()
-        setPreferenceValue(value)
+inline fun <reified T : Any> serializablePreference(context: Context, keyId: Int, defaultValue: T): Preference<T> = object : Preference<T>(context, keyId, defaultValue) {
+    override fun getPreferenceValue(): T = sharedPreferences.getSerializable(key, defaultValue)!!
+    override fun setPreferenceValue(value: T) {
+        sharedPreferences.putSerializable(key, value)
     }
 }
