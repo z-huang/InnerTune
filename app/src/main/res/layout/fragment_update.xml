@@ -45,14 +45,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:visibility="visible"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:id="@+id/update_status"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:maxLines="1"
                 tools:text="@string/update_status_preparing" />
 
@@ -60,6 +61,7 @@
                 android:id="@+id/progress_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                tools:indeterminate="false"
                 tools:progress="50" />
         </LinearLayout>
 
