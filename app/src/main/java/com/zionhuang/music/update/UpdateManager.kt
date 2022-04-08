@@ -11,13 +11,11 @@ import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.zionhuang.music.BuildConfig
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.get
-import com.zionhuang.music.extensions.set
 import com.zionhuang.music.utils.OkHttpDownloader
 import com.zionhuang.music.utils.preference.Preference
 import com.zionhuang.music.utils.preference.serializablePreference
@@ -28,7 +26,6 @@ import java.time.temporal.ChronoUnit
 
 class UpdateManager(private val context: Context) {
     private val downloadManager by lazy { context.getSystemService<DownloadManager>()!! }
-    private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private val currentVersion = Version.parse(BuildConfig.VERSION_NAME)
     private var lastCheckTime by Preference(context, R.string.pref_last_check_time, 0L)
     private var lastCheckInfo: UpdateInfo by serializablePreference(context, R.string.pref_last_check_info, UpdateInfo.NotChecked)
@@ -79,7 +76,6 @@ class UpdateManager(private val context: Context) {
             .setMimeType(APK_MIMETYPE)
             .setDestinationUri(dest.toUri())
         val id = downloadManager.enqueue(request)
-        sharedPreferences[KEY_APK_DOWNLOAD_ID] = id
         _updateStatusLiveData.postValue(UpdateStatus.Downloading(id))
         context.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -105,7 +101,5 @@ class UpdateManager(private val context: Context) {
         const val APK_MIMETYPE = "application/vnd.android.package-archive"
         const val CHECK_FREQUENCY_DAY = 1L
         const val APK_FILENAME = "update.apk"
-        const val KEY_APK_FILENAME = "update_apk_filename"
-        const val KEY_APK_DOWNLOAD_ID = "update_apk_download_id"
     }
 }
