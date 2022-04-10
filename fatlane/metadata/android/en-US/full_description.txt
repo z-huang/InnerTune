@@ -1,0 +1,16 @@
+<i>Music</i> uses <a href='https://github.com/TeamNewPipe/NewPipeExtractor' target='_blank' rel='nofollow'>NewPipe Extractor</a> to retrieve information and stream data from YouTube/YouTube Music. It's a music player as well, so you can create your own playlists and organize your songs by the artists you create. The aim of Music is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
+
+<br><b>Features:</b>
+
+* Material design player
+* Skip to next/previous song
+* Repeat/shuffle mode
+* Edit now-playing queue
+* Search songs/videos/playlists/channels from YouTube/YouTube Music
+* Play and save songs from YouTube/YouTube Music
+* Download music for offline playback
+* Media controls in notification
+* Lockscreen playback
+* Customize song properties
+* Create artists
+* Create playlists
