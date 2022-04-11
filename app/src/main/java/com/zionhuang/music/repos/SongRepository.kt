@@ -103,11 +103,15 @@ object SongRepository : LocalRepository {
     }
 
     override fun getSongFile(songId: String): File {
-        return context.getExternalFilesDir(null)!! / "media" / md5(songId)
+        val mediaDir = context.getExternalFilesDir(null)!! / "media"
+        if (!mediaDir.isDirectory) mediaDir.mkdirs()
+        return mediaDir / md5(songId)
     }
 
     override fun getSongArtworkFile(songId: String): File {
-        return context.getExternalFilesDir(null)!! / "artwork" / md5(songId)
+        val artworkDir = context.getExternalFilesDir(null)!! / "artwork"
+        if (!artworkDir.isDirectory) artworkDir.mkdirs()
+        return artworkDir / md5(songId)
     }
 
 
