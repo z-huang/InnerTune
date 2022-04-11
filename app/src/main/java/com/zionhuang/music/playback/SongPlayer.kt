@@ -1,6 +1,7 @@
 package com.zionhuang.music.playback
 
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -280,7 +281,7 @@ class SongPlayer(
             }
 
             override fun createCurrentContentIntent(player: Player): PendingIntent? =
-                PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0)
+                PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), FLAG_IMMUTABLE)
         })
         .setChannelNameResourceId(R.string.channel_name_playback)
         .setNotificationListener(notificationListener)
