@@ -19,6 +19,7 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
@@ -84,6 +85,8 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
 
         lifecycleScope.launch {
+            val channel = viewModel.getChannelInfo(channelId)
+            (requireActivity() as MainActivity).supportActionBar?.title = channel.name
             viewModel.getChannel(channelId).collectLatest {
                 infoItemAdapter.submitData(it)
             }
