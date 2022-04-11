@@ -26,6 +26,8 @@ object NewPipeYouTubeHelper {
      */
     fun extractVideoId(url: String): String? = tryOrNull { service.streamLHFactory.getId(url) }
 
+    fun videoIdToUrl(id: String): String? = tryOrNull { service.streamLHFactory.getUrl(id) }
+
     /**
      * Search
      */
