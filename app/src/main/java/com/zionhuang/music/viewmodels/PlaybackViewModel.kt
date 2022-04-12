@@ -33,7 +33,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     private val mediaMetadataObserver = Observer<MediaMetadataCompat?> { mediaMetadata ->
         if (mediaMetadata != null) {
             _mediaData.postValue(mediaData.value?.pullMediaMetadata(mediaMetadata)
-                    ?: mediaMetadata.toMediaData())
+                ?: mediaMetadata.toMediaData())
         }
     }
 
@@ -54,7 +54,9 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         queueData.observeForever(queueDataObserver)
     }
 
-    val mediaController: LiveData<MediaControllerCompat?> = mediaSessionConnection.isConnected.map { isConnected ->
+    val mediaSessionIsConnected = mediaSessionConnection.isConnected
+
+    val mediaController: LiveData<MediaControllerCompat?> = mediaSessionIsConnected.map { isConnected ->
         if (isConnected) mediaSessionConnection.mediaController else null
     }
 

@@ -11,6 +11,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.map
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -34,6 +35,8 @@ import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.getLinkType
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.StreamingService.LinkType
 
 class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
@@ -42,8 +45,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
-    private val songsViewModel by lazy { ViewModelProvider(this).get(SongsViewModel::class.java) }
-    private val playbackViewModel by lazy { ViewModelProvider(this).get(PlaybackViewModel::class.java) }
+    private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
+    private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
 
     val fab: MainFloatingActionButton get() = binding.fab
 
@@ -52,6 +55,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
+        handleIntent(intent)
         // TODO
 //        songsViewModel.deletedSongs.observe(this) { songs ->
 //            Snackbar.make(binding.root, resources.getQuantityString(R.plurals.snack_bar_delete_song, songs.size, songs.size), Snackbar.LENGTH_LONG)
@@ -67,15 +71,23 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        when (intent?.action) {
+        intent?.let { handleIntent(it) }
+    }
+
+    private fun handleIntent(intent: Intent) {
+        Log.d(TAG, "${intent.action} ${intent.data}")
+        when (intent.action) {
             ACTION_VIEW -> {
                 val url = intent.data.toString()
                 when (getLinkType(url)) {
                     LinkType.STREAM -> {
-                        val videoId = extractVideoId(url)!!
-                        playbackViewModel.playMedia(this, videoId, bundleOf(
-                            EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
-                        ))
+                        lifecycleScope.launch {
+                            while (playbackViewModel.mediaSessionIsConnected.value == false) delay(100)
+                            val videoId = extractVideoId(url)!!
+                            playbackViewModel.playMedia(this@MainActivity, videoId, bundleOf(
+                                EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
+                            ))
+                        }
                     }
                     LinkType.CHANNEL -> {}
                     LinkType.PLAYLIST -> {}
@@ -87,17 +99,14 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
 
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.songsFragment,
-                R.id.artistsFragment,
-                R.id.playlistsFragment,
-                R.id.explorationFragment
-            )
-        )
+        val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.songsFragment,
+            R.id.artistsFragment,
+            R.id.playlistsFragment,
+            R.id.explorationFragment
+        ))
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener(this)
@@ -129,10 +138,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight(
-            binding.bottomNav.height + (54 * getDensity()).toInt(),
-            true
-        )
+        bottomSheetBehavior.setPeekHeight(binding.bottomNav.height + (54 * getDensity()).toInt(), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {
