@@ -18,6 +18,7 @@ class SearchHeaderViewHolder(
                 R.id.chip_all -> ALL
                 R.id.chip_songs -> MUSIC_SONGS
                 R.id.chip_videos -> MUSIC_VIDEOS
+                R.id.chip_albums -> MUSIC_ALBUMS
                 R.id.chip_playlists -> PLAYLISTS
                 R.id.chip_channels -> CHANNELS
                 else -> throw IllegalArgumentException("Unexpected filter type.")
@@ -28,9 +29,10 @@ class SearchHeaderViewHolder(
 
     fun bind() {
         when (listener.filter) {
-            //ALL -> binding.chipAll
+            ALL -> binding.chipAll
             MUSIC_SONGS -> binding.chipSongs
-            VIDEOS -> binding.chipVideos
+            MUSIC_VIDEOS -> binding.chipVideos
+            MUSIC_ALBUMS -> binding.chipAlbums
             PLAYLISTS -> binding.chipPlaylists
             CHANNELS -> binding.chipChannels
             else -> null

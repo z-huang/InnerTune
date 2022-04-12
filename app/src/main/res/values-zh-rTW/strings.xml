@@ -98,6 +98,7 @@
     <string name="search_filter_all">全部</string>
     <string name="search_filter_songs">歌曲</string>
     <string name="search_filter_videos">影片</string>
+    <string name="search_filter_albums">專輯</string>
     <string name="search_filter_playlists">播放清單</string>
     <string name="search_filter_channels">頻道</string>
 
