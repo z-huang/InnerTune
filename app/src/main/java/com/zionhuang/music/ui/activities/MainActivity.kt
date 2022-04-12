@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.activities
 
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
+import android.content.Intent.EXTRA_TEXT
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
@@ -75,25 +76,22 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     }
 
     private fun handleIntent(intent: Intent) {
-        Log.d(TAG, "${intent.action} ${intent.data}")
-        when (intent.action) {
-            ACTION_VIEW -> {
-                val url = intent.data.toString()
-                when (getLinkType(url)) {
-                    LinkType.STREAM -> {
-                        lifecycleScope.launch {
-                            while (playbackViewModel.mediaSessionIsConnected.value == false) delay(100)
-                            val videoId = extractVideoId(url)!!
-                            playbackViewModel.playMedia(this@MainActivity, videoId, bundleOf(
-                                EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
-                            ))
-                        }
-                    }
-                    LinkType.CHANNEL -> {}
-                    LinkType.PLAYLIST -> {}
-                    LinkType.NONE -> {}
+        // Handle url
+        val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT)).toString()
+        Log.d(TAG, "${intent.action} ${url}")
+        when (getLinkType(url)) {
+            LinkType.STREAM -> {
+                lifecycleScope.launch {
+                    while (playbackViewModel.mediaSessionIsConnected.value == false) delay(100)
+                    val videoId = extractVideoId(url)!!
+                    playbackViewModel.playMedia(this@MainActivity, videoId, bundleOf(
+                        EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
+                    ))
                 }
             }
+            LinkType.CHANNEL -> {}
+            LinkType.PLAYLIST -> {}
+            LinkType.NONE -> {}
         }
     }
 
