@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
@@ -17,6 +18,7 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getApplication
+import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
@@ -38,6 +40,8 @@ object SongRepository : LocalRepository {
     private val downloadDao: DownloadDao = musicDatabase.downloadDao
     private val remoteRepository: RemoteRepository = YouTubeRepository
 
+    private var autoDownload by context.preference(R.string.pref_auto_download, false)
+
     override suspend fun getSongById(songId: String): Song? = withContext(IO) { songDao.getSong(songId) }
     override fun searchSongs(query: String) = ListWrapper(
         getPagingSource = { songDao.searchSongsAsPagingSource(query) }
@@ -51,6 +55,9 @@ object SongRepository : LocalRepository {
             songDao.insert(listOf(it.toSongEntity().copy(
                 duration = if (it.duration == -1) stream.duration.toInt() else it.duration)
             ))
+            if (autoDownload) {
+                downloadSong(it.id)
+            }
         } catch (e: Exception) {
             // TODO: Handle error
             Log.d(TAG, e.localizedMessage.orEmpty())

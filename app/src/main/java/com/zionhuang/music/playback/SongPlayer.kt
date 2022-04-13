@@ -13,6 +13,7 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
+import android.util.Log
 import android.util.Pair
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -22,8 +23,7 @@ import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT
-import com.google.android.exoplayer2.Player.STATE_IDLE
+import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
@@ -125,7 +125,6 @@ class SongPlayer(
             setAudioAttributes(audioAttributes, true)
         }
 
-    private var autoDownload by context.preference(R.string.pref_auto_download, false)
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
     private fun updateMediaData(mediaId: String, applier: MediaData.() -> Unit) {
@@ -205,22 +204,8 @@ class SongPlayer(
             }
         }
         setCustomActionProviders(context.createCustomAction(ACTION_ADD_TO_LIBRARY, R.string.custom_action_add_to_library, R.drawable.ic_library_add) { _, _, _ ->
-            scope.launch {
-                player.currentMetadata?.let {
-                    it.artwork
-                    localRepository.addSong(Song(
-                        id = it.id,
-                        title = it.title,
-                        artistName = it.artist,
-                        duration = if (player.duration != C.TIME_UNSET) (player.duration / 1000).toInt() else -1,
-                        artworkType = it.artworkType
-                    ))
-                    if (autoDownload) {
-                        player.currentMetadata?.let { metadata ->
-                            localRepository.downloadSong(metadata.id)
-                        }
-                    }
-                }
+            player.currentMetadata?.let {
+                addToLibrary(it)
             }
         })
         setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata.toMediaDescription() }
@@ -303,6 +288,34 @@ class SongPlayer(
         ) return
         scope.launch {
             player.addMediaItems(currentQueue.nextPage())
+        }
+    }
+
+    override fun onPositionDiscontinuity(oldPosition: PositionInfo, newPosition: PositionInfo, @Player.DiscontinuityReason reason: Int) {
+        if (reason == DISCONTINUITY_REASON_AUTO_TRANSITION && autoAddSong) {
+            oldPosition.mediaItem?.metadata?.let {
+                addToLibrary(it)
+            }
+        }
+    }
+
+    override fun onPlaybackStateChanged(@Player.State playbackState: Int) {
+        if (playbackState == STATE_ENDED && autoAddSong) {
+            player.currentMetadata?.let {
+                addToLibrary(it)
+            }
+        }
+    }
+
+    private fun addToLibrary(mediaData: MediaData) {
+        scope.launch {
+            localRepository.addSong(Song(
+                id = mediaData.id,
+                title = mediaData.title,
+                artistName = mediaData.artist,
+                duration = if (player.duration != C.TIME_UNSET) (player.duration / 1000).toInt() else -1,
+                artworkType = mediaData.artworkType
+            ))
         }
     }
 
