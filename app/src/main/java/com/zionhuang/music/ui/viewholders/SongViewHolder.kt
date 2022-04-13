@@ -4,6 +4,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.databinding.ItemSongBinding
 import com.zionhuang.music.db.entities.Song
@@ -32,12 +33,14 @@ open class SongViewHolder(
                         R.id.action_play_next -> popupMenuListener?.playNext(song, binding.context)
                         R.id.action_add_to_queue -> popupMenuListener?.addToQueue(song, binding.context)
                         R.id.action_add_to_playlist -> popupMenuListener?.addToPlaylist(song, binding.context)
-                        R.id.action_download -> popupMenuListener?.downloadSongs(song.id, binding.context)
+                        R.id.action_download -> popupMenuListener?.downloadSong(song.id, binding.context)
+                        R.id.action_remove_download -> popupMenuListener?.removeDownload(song.id, binding.context)
                         R.id.action_delete -> popupMenuListener?.deleteSongs(song)
                     }
                     true
                 }
                 menu.findItem(R.id.action_download).isVisible = song.downloadState == STATE_NOT_DOWNLOADED
+                menu.findItem(R.id.action_remove_download).isVisible = song.downloadState == STATE_DOWNLOADED
                 show()
             }
         }

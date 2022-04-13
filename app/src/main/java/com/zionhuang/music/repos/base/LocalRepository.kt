@@ -18,7 +18,8 @@ interface LocalRepository {
     suspend fun setLiked(liked: Boolean, songs: List<Song>)
     suspend fun downloadSongs(songIds: List<String>)
     suspend fun downloadSong(songId: String) = downloadSongs(listOf(songId))
-    suspend fun deleteLocalMedia(songId: String)
+    suspend fun removeDownloads(songIds: List<String>)
+    suspend fun removeDownload(songId: String) = removeDownloads(listOf(songId))
     fun getSongFile(songId: String): File
     fun getSongArtworkFile(songId: String): File
 
@@ -49,5 +50,5 @@ interface LocalRepository {
     fun getAllDownloads(): ListWrapper<Int, DownloadEntity>
     suspend fun getDownloadEntity(downloadId: Long): DownloadEntity?
     suspend fun addDownload(item: DownloadEntity)
-    suspend fun removeDownload(downloadId: Long)
+    suspend fun removeDownloadEntity(downloadId: Long)
 }

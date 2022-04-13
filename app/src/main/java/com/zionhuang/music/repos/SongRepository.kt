@@ -76,7 +76,7 @@ object SongRepository : LocalRepository {
     override suspend fun downloadSongs(songIds: List<String>) = songIds.forEach { id ->
         // the given songs should be already added to the local repository
         val song = getSongById(id) ?: return@forEach
-        if (song.downloadState == STATE_DOWNLOADED) return@forEach
+        if (song.downloadState != STATE_NOT_DOWNLOADED) return@forEach
         updateSong(song.copy(downloadState = STATE_PREPARING))
         try {
             val streamInfo = remoteRepository.getStream(id)
@@ -95,8 +95,9 @@ object SongRepository : LocalRepository {
         }
     }
 
-    override suspend fun deleteLocalMedia(songId: String) {
-        val song = getSongById(songId) ?: return
+    override suspend fun removeDownloads(songIds: List<String>) = songIds.forEach { songId ->
+        val song = getSongById(songId) ?: return@forEach
+        if (song.downloadState != STATE_DOWNLOADED) return@forEach
         if (getSongFile(songId).delete()) {
             updateSong(song.copy(downloadState = STATE_NOT_DOWNLOADED))
         }
@@ -192,7 +193,7 @@ object SongRepository : LocalRepository {
 
     override suspend fun getDownloadEntity(downloadId: Long): DownloadEntity? = withContext(IO) { downloadDao.getDownloadEntity(downloadId) }
     override suspend fun addDownload(item: DownloadEntity) = withContext(IO) { downloadDao.insert(item) }
-    override suspend fun removeDownload(downloadId: Long) = withContext(IO) { downloadDao.delete(downloadId) }
+    override suspend fun removeDownloadEntity(downloadId: Long) = withContext(IO) { downloadDao.delete(downloadId) }
 
 
     private suspend fun Song.toSongEntity() = SongEntity(

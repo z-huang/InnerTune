@@ -29,7 +29,7 @@ class DownloadBroadcastReceiver : BroadcastReceiver() {
                         val songId = songRepository.getDownloadEntity(id)?.songId ?: return@launch
                         val song = songRepository.getSongById(songId) ?: return@launch
                         songRepository.updateSong(song.copy(downloadState = if (isSuccess) STATE_DOWNLOADED else STATE_NOT_DOWNLOADED))
-                        songRepository.removeDownload(id)
+                        songRepository.removeDownloadEntity(id)
                     }
                 }
             }

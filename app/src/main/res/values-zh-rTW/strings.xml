@@ -41,6 +41,7 @@
     <string name="menu_song_add_to_queue">加入待播清單</string>
     <string name="menu_song_add_to_playlist">加入播放清單</string>
     <string name="menu_song_download">下載</string>
+    <string name="menu_song_remove_download">刪除下載</string>
     <string name="menu_song_delete">移除</string>
 
     <!-- Dialog -->
