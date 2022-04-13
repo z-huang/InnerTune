@@ -7,7 +7,7 @@ buildscript {
     }
     ext {
         kotlin_version = "1.6.10"
-        newpipe_version = "0.21.13"
+        newpipe_version = "0.21.14"
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.1.0"
