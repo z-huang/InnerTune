@@ -75,6 +75,7 @@
                 android:layout_margin="13dp"
                 android:padding="2dp"
                 android:src="@drawable/ic_more_vert"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -272,7 +273,8 @@
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:scaleType="center"
-                android:src="@drawable/ic_favorite_border" />
+                android:src="@drawable/ic_favorite_border"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/btn_share"

@@ -53,8 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/youtubeSearchFragment"
-        android:name="com.zionhuang.music.ui.fragments.search.YouTubeSearchFragment"
-        android:label="Search Result">
+        android:name="com.zionhuang.music.ui.fragments.search.YouTubeSearchFragment">
         <argument
             android:name="searchQuery"
             app:argType="string" />
@@ -110,16 +109,14 @@
     </fragment>
     <fragment
         android:id="@+id/youTubePlaylistFragment"
-        android:name="com.zionhuang.music.ui.fragments.YouTubePlaylistFragment"
-        android:label="YouTubePlaylistFragment">
+        android:name="com.zionhuang.music.ui.fragments.YouTubePlaylistFragment">
         <argument
             android:name="playlistId"
             app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/youTubeChannelFragment"
-        android:name="com.zionhuang.music.ui.fragments.YouTubeChannelFragment"
-        android:label="YouTubeChannelFragment">
+        android:name="com.zionhuang.music.ui.fragments.YouTubeChannelFragment">
         <argument
             android:name="channelId"
             app:argType="string" />

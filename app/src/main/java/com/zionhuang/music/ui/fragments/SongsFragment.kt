@@ -99,6 +99,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs, requireContext())
                 R.id.action_add_to_playlist -> songsViewModel.songPopupMenuListener.addToPlaylist(songs, requireContext())
                 R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(tracker.selection.toList(), requireContext())
+                R.id.action_remove_download -> songsViewModel.songPopupMenuListener.removeDownloads(tracker.selection.toList(), requireContext())
                 R.id.action_delete -> songsViewModel.songPopupMenuListener.deleteSongs(songs)
             }
             true

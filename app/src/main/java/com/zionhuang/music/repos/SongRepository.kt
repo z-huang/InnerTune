@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
@@ -17,6 +18,7 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getApplication
+import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
@@ -38,6 +40,8 @@ object SongRepository : LocalRepository {
     private val downloadDao: DownloadDao = musicDatabase.downloadDao
     private val remoteRepository: RemoteRepository = YouTubeRepository
 
+    private var autoDownload by context.preference(R.string.pref_auto_download, false)
+
     override suspend fun getSongById(songId: String): Song? = withContext(IO) { songDao.getSong(songId) }
     override fun searchSongs(query: String) = ListWrapper(
         getPagingSource = { songDao.searchSongsAsPagingSource(query) }
@@ -51,6 +55,9 @@ object SongRepository : LocalRepository {
             songDao.insert(listOf(it.toSongEntity().copy(
                 duration = if (it.duration == -1) stream.duration.toInt() else it.duration)
             ))
+            if (autoDownload) {
+                downloadSong(it.id)
+            }
         } catch (e: Exception) {
             // TODO: Handle error
             Log.d(TAG, e.localizedMessage.orEmpty())
@@ -76,7 +83,7 @@ object SongRepository : LocalRepository {
     override suspend fun downloadSongs(songIds: List<String>) = songIds.forEach { id ->
         // the given songs should be already added to the local repository
         val song = getSongById(id) ?: return@forEach
-        if (song.downloadState == STATE_DOWNLOADED) return@forEach
+        if (song.downloadState != STATE_NOT_DOWNLOADED) return@forEach
         updateSong(song.copy(downloadState = STATE_PREPARING))
         try {
             val streamInfo = remoteRepository.getStream(id)
@@ -95,19 +102,24 @@ object SongRepository : LocalRepository {
         }
     }
 
-    override suspend fun deleteLocalMedia(songId: String) {
-        val song = getSongById(songId) ?: return
+    override suspend fun removeDownloads(songIds: List<String>) = songIds.forEach { songId ->
+        val song = getSongById(songId) ?: return@forEach
+        if (song.downloadState != STATE_DOWNLOADED) return@forEach
         if (getSongFile(songId).delete()) {
             updateSong(song.copy(downloadState = STATE_NOT_DOWNLOADED))
         }
     }
 
     override fun getSongFile(songId: String): File {
-        return context.getExternalFilesDir(null)!! / "media" / md5(songId)
+        val mediaDir = context.getExternalFilesDir(null)!! / "media"
+        if (!mediaDir.isDirectory) mediaDir.mkdirs()
+        return mediaDir / md5(songId)
     }
 
     override fun getSongArtworkFile(songId: String): File {
-        return context.getExternalFilesDir(null)!! / "artwork" / md5(songId)
+        val artworkDir = context.getExternalFilesDir(null)!! / "artwork"
+        if (!artworkDir.isDirectory) artworkDir.mkdirs()
+        return artworkDir / md5(songId)
     }
 
 
@@ -188,7 +200,7 @@ object SongRepository : LocalRepository {
 
     override suspend fun getDownloadEntity(downloadId: Long): DownloadEntity? = withContext(IO) { downloadDao.getDownloadEntity(downloadId) }
     override suspend fun addDownload(item: DownloadEntity) = withContext(IO) { downloadDao.insert(item) }
-    override suspend fun removeDownload(downloadId: Long) = withContext(IO) { downloadDao.delete(downloadId) }
+    override suspend fun removeDownloadEntity(downloadId: Long) = withContext(IO) { downloadDao.delete(downloadId) }
 
 
     private suspend fun Song.toSongEntity() = SongEntity(

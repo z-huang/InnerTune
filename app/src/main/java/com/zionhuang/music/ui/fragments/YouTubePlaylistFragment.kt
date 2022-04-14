@@ -19,10 +19,12 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
+import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.viewmodels.YouTubePlaylistViewModel
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.coroutines.flow.collectLatest
@@ -36,6 +38,7 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val playlistId by lazy { args.playlistId }
 
     private val viewModel by viewModels<YouTubePlaylistViewModel>()
+    private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
     private val infoItemAdapter = InfoItemAdapter()
@@ -51,12 +54,15 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        infoItemAdapter.addLoadStateListener { loadState ->
-            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
-            binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-            binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
-            if (loadState.refresh is LoadState.Error) {
-                binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
+        infoItemAdapter.apply {
+            streamMenuListener = songsViewModel.streamPopupMenuListener
+            addLoadStateListener { loadState ->
+                binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
+                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
+                if (loadState.refresh is LoadState.Error) {
+                    binding.errorMsg.text = (loadState.refresh as LoadState.Error).error.localizedMessage
+                }
             }
         }
 
@@ -77,6 +83,8 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
 
         lifecycleScope.launch {
+            val playlist = viewModel.getPlaylistInfo(playlistId)
+            (requireActivity() as MainActivity).supportActionBar?.title = playlist.name
             viewModel.getPlaylist(playlistId).collectLatest {
                 infoItemAdapter.submitData(it)
             }

@@ -1,9 +1,15 @@
 package com.zionhuang.music.ui.activities
 
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.content.Intent.EXTRA_TEXT
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
+import android.util.Log
 import android.view.ActionMode
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -15,17 +21,24 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
-import com.google.android.material.snackbar.Snackbar
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
+import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SINGLE
 import com.zionhuang.music.databinding.ActivityMainBinding
+import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.getDensity
 import com.zionhuang.music.extensions.replaceFragment
+import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MainFloatingActionButton
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper.getLinkType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.schabi.newpipe.extractor.StreamingService.LinkType
 
 class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
@@ -33,8 +46,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
-    private val songsViewModel by lazy { ViewModelProvider(this).get(SongsViewModel::class.java) }
-    private val playbackViewModel by lazy { ViewModelProvider(this).get(PlaybackViewModel::class.java) }
+    private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
+    private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
 
     val fab: MainFloatingActionButton get() = binding.fab
 
@@ -43,6 +56,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
+        handleIntent(intent)
         // TODO
 //        songsViewModel.deletedSongs.observe(this) { songs ->
 //            Snackbar.make(binding.root, resources.getQuantityString(R.plurals.snack_bar_delete_song, songs.size, songs.size), Snackbar.LENGTH_LONG)
@@ -56,19 +70,41 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
 //        }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let { handleIntent(it) }
+    }
+
+    private fun handleIntent(intent: Intent) {
+        // Handle url
+        val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT)).toString()
+        Log.d(TAG, "${intent.action} ${url}")
+        when (getLinkType(url)) {
+            LinkType.STREAM -> {
+                lifecycleScope.launch {
+                    while (playbackViewModel.mediaSessionIsConnected.value == false) delay(100)
+                    val videoId = extractVideoId(url)!!
+                    playbackViewModel.playMedia(this@MainActivity, videoId, bundleOf(
+                        EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
+                    ))
+                }
+            }
+            LinkType.CHANNEL -> {}
+            LinkType.PLAYLIST -> {}
+            LinkType.NONE -> {}
+        }
+    }
+
     private fun setupUI() {
         setSupportActionBar(binding.toolbar)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.songsFragment,
-                R.id.artistsFragment,
-                R.id.playlistsFragment,
-                R.id.explorationFragment
-            )
-        )
+        val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.songsFragment,
+            R.id.artistsFragment,
+            R.id.playlistsFragment,
+            R.id.explorationFragment
+        ))
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener(this)
@@ -89,11 +125,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
         }
     }
 
-    override fun onDestinationChanged(
-        controller: NavController,
-        destination: NavDestination,
-        arguments: Bundle?
-    ) {
+    override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
         actionMode?.finish()
         if (destination.id == R.id.playlistsFragment) {
             binding.fab.show()
@@ -104,10 +136,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight(
-            binding.bottomNav.height + (54 * getDensity()).toInt(),
-            true
-        )
+        bottomSheetBehavior.setPeekHeight(binding.bottomNav.height + (54 * getDensity()).toInt(), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {

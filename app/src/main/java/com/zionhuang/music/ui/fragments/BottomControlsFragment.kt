@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -23,6 +25,7 @@ import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MediaWidgetsController
 import com.zionhuang.music.ui.widgets.PlayPauseBehavior
 import com.zionhuang.music.viewmodels.PlaybackViewModel
+import com.zionhuang.music.youtube.NewPipeYouTubeHelper.videoIdToUrl
 
 class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.TransitionListener {
     companion object {
@@ -83,6 +86,12 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
         binding.btnFavorite.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIKE, null)
+        }
+
+        binding.btnShare.setOnClickListener {
+            viewModel.mediaData.value?.id?.let { id ->
+                startActivity(Intent(Intent.ACTION_VIEW, videoIdToUrl(id)?.toUri()))
+            }
         }
 
         with(PlayPauseBehavior(requireContext())) {

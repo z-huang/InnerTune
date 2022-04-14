@@ -126,6 +126,12 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
+        override fun removeDownloads(songIds: List<String>, context: Context) {
+            viewModelScope.launch {
+                songRepository.removeDownloads(songIds)
+            }
+        }
+
         override fun deleteSongs(songs: List<Song>) {
             viewModelScope.launch {
                 songRepository.deleteSongs(songs)

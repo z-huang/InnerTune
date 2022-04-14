@@ -3,11 +3,8 @@ package com.zionhuang.music.youtube
 import com.zionhuang.music.extensions.tryOrNull
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
-import org.schabi.newpipe.extractor.InfoItem
+import org.schabi.newpipe.extractor.*
 import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
-import org.schabi.newpipe.extractor.NewPipe
-import org.schabi.newpipe.extractor.Page
-import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.channel.ChannelInfo
 import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
@@ -21,10 +18,14 @@ import java.io.IOException
 object NewPipeYouTubeHelper {
     private val service = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
 
+    fun getLinkType(url: String): StreamingService.LinkType = service.getLinkTypeByUrl(url)
+
     /**
      * Stream
      */
     fun extractVideoId(url: String): String? = tryOrNull { service.streamLHFactory.getId(url) }
+
+    fun videoIdToUrl(id: String): String? = tryOrNull { service.streamLHFactory.getUrl(id) }
 
     /**
      * Search

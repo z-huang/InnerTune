@@ -16,6 +16,9 @@
         android:id="@+id/action_download"
         android:title="@string/menu_song_download" />
     <item
+        android:id="@+id/action_remove_download"
+        android:title="@string/menu_song_remove_download"/>
+    <item
         android:id="@+id/action_delete"
         android:title="@string/menu_song_delete" />
 </menu>
