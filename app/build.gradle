@@ -88,8 +88,6 @@ dependencies {
     implementation "com.google.android.material:material:1.6.0-alpha02"
     // Gson
     implementation "com.google.code.gson:gson:2.8.9"
-    // nanojson
-    implementation "com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751"
     // ExoPlayer
     implementation "com.google.android.exoplayer:exoplayer:2.16.1"
     implementation "com.google.android.exoplayer:extension-mediasession:2.16.1"
@@ -105,7 +103,8 @@ dependencies {
     implementation "androidx.room:room-paging:2.4.1"
     testImplementation "androidx.room:room-testing:2.4.1"
     // NewPipe Extractor
-    implementation "com.github.TeamNewPipe:NewPipeExtractor:v$newpipe_version"
+    implementation "com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751"
+    implementation "com.github.TeamNewPipe:NewPipeExtractor:b77c72fb8826c3ffca0be5f96b066cca0a07b1c9"
     // Apache Utils
     implementation "org.apache.commons:commons-lang3:3.12.0"
     implementation "org.apache.commons:commons-text:1.9"
