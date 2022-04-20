@@ -24,14 +24,13 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SEARCH_FILTER
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SEARCH
-import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.databinding.FragmentSearchBinding
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.models.QueueData
-import com.zionhuang.music.ui.activities.MainActivity
+import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
-import com.zionhuang.music.ui.adapters.NewPipeSearchResultAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
-import com.zionhuang.music.ui.listeners.SearchFilterListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
@@ -39,14 +38,17 @@ import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractChannelId
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractPlaylistId
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
+import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.*
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
-class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
-    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
+    override fun getViewBinding() = FragmentSearchBinding.inflate(layoutInflater)
 
     private val args: YouTubeSearchFragmentArgs by navArgs()
     private val query by lazy { args.searchQuery }
@@ -55,16 +57,7 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
-    private val searchFilterListener = object : SearchFilterListener {
-        override var filter: String
-            get() = viewModel.filter
-            set(value) {
-                viewModel.filter = value
-                searchResultAdapter.refresh()
-            }
-    }
-
-    private val searchResultAdapter: NewPipeSearchResultAdapter = NewPipeSearchResultAdapter(searchFilterListener)
+    private val searchResultAdapter = InfoItemAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,10 +69,10 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-        (requireActivity() as MainActivity).supportActionBar?.title = query
+        requireAppCompatActivity().supportActionBar?.title = query
 
         searchResultAdapter.apply {
-            streamPopupMenuListener = songsViewModel.streamPopupMenuListener
+            streamMenuListener = songsViewModel.streamPopupMenuListener
             addLoadStateListener { loadState ->
                 binding.progressBar.isVisible = loadState.refresh is Loading
                 binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
@@ -102,7 +95,7 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                         playbackViewModel.playMedia(
                             requireActivity(), extractVideoId(item.url)!!, bundleOf(
                                 EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SEARCH, query, extras = bundleOf(
-                                    EXTRA_SEARCH_FILTER to searchFilterListener.filter
+                                    EXTRA_SEARCH_FILTER to viewModel.searchFilter.value
                                 ))
                             )
                         )
@@ -127,7 +120,45 @@ class YouTubeSearchFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             }
         }
 
+        binding.chipAll.isVisible = false
+        binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
+            val filter = when (checkedId) {
+                R.id.chip_all -> ALL
+                R.id.chip_songs -> MUSIC_SONGS
+                R.id.chip_videos -> MUSIC_VIDEOS
+                R.id.chip_albums -> MUSIC_ALBUMS
+                R.id.chip_playlists -> PLAYLISTS
+                R.id.chip_channels -> CHANNELS
+                else -> throw IllegalArgumentException("Unexpected filter type.")
+            }
+            viewModel.searchFilter.postValue(filter)
+        }
+
         lifecycleScope.launch {
+            // Always showing the first item when switching filters
+            searchResultAdapter.loadStateFlow
+                .distinctUntilChangedBy { it.refresh }
+                .filter { it.refresh is LoadState.NotLoading }
+                .collectLatest {
+                    binding.recyclerView.scrollToPosition(0)
+                }
+        }
+
+        lifecycleScope.launch {
+            viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+                when (filter) {
+                    ALL -> binding.chipAll
+                    MUSIC_SONGS -> binding.chipSongs
+                    MUSIC_VIDEOS -> binding.chipVideos
+                    MUSIC_ALBUMS -> binding.chipAlbums
+                    PLAYLISTS -> binding.chipPlaylists
+                    CHANNELS -> binding.chipChannels
+                    else -> null
+                }?.isChecked = true
+
+                searchResultAdapter.refresh()
+            }
+
             viewModel.search(query).collectLatest {
                 searchResultAdapter.submitData(it)
             }

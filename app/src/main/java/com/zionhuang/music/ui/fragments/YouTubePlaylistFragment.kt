@@ -17,9 +17,9 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_PLAYLIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.extensions.themeColor
 import com.zionhuang.music.models.QueueData
-import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
@@ -84,7 +84,7 @@ class YouTubePlaylistFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
         lifecycleScope.launch {
             val playlist = viewModel.getPlaylistInfo(playlistId)
-            (requireActivity() as MainActivity).supportActionBar?.title = playlist.name
+            requireAppCompatActivity().supportActionBar?.title = playlist.name
             viewModel.getPlaylist(playlistId).collectLatest {
                 infoItemAdapter.submitData(it)
             }
