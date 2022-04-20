@@ -41,7 +41,7 @@ Music uses [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) 
 - Edit song name and song artist
 - Create playlists in local database
 
-# Screenshots
+## Screenshots
 <p float="left">
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/main.jpg" width="170" />
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/artists.jpg" width="170" />
