@@ -89,7 +89,6 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
             addOnClickListener { pos, view ->
-                if (pos == 0) return@addOnClickListener
                 when (val item: InfoItem = searchResultAdapter.getItemByPosition(pos)!!) {
                     is StreamInfoItem -> {
                         playbackViewModel.playMedia(
