@@ -30,7 +30,7 @@ class UpdateManager(private val context: Context) {
     private var lastCheckTime by Preference(context, R.string.pref_last_check_time, 0L)
     private var lastCheckInfo: UpdateInfo by serializablePreference(context, R.string.pref_last_check_info, UpdateInfo.NotChecked)
 
-    private val _updateInfoLiveData = MutableLiveData(if (isLastCheckExpired) UpdateInfo.NotChecked else lastCheckInfo)
+    private val _updateInfoLiveData = MutableLiveData(if (isLastCheckExpired || (lastCheckInfo as? UpdateInfo.UpdateAvailable)?.version == currentVersion) UpdateInfo.NotChecked else lastCheckInfo)
     val updateInfoLiveData: LiveData<UpdateInfo> = _updateInfoLiveData
 
     private val _updateStatusLiveData: MutableLiveData<UpdateStatus> = MutableLiveData(UpdateStatus.Idle)
