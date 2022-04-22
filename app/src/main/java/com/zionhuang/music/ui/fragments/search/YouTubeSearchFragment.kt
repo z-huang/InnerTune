@@ -120,17 +120,34 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
         }
 
         binding.chipAll.isVisible = false
-        binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
-            val filter = when (checkedId) {
+        binding.chipArtists.isVisible = false
+        binding.chipGroup.setOnCheckedStateChangeListener { _, _ ->
+            val filter = when (binding.chipGroup.checkedChipId) {
                 R.id.chip_all -> ALL
                 R.id.chip_songs -> MUSIC_SONGS
                 R.id.chip_videos -> MUSIC_VIDEOS
                 R.id.chip_albums -> MUSIC_ALBUMS
+                R.id.chip_artists -> MUSIC_ARTISTS
                 R.id.chip_playlists -> PLAYLISTS
                 R.id.chip_channels -> CHANNELS
                 else -> throw IllegalArgumentException("Unexpected filter type.")
             }
             viewModel.searchFilter.postValue(filter)
+        }
+
+        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
+            when (filter) {
+                ALL -> binding.chipAll
+                MUSIC_SONGS -> binding.chipSongs
+                MUSIC_VIDEOS -> binding.chipVideos
+                MUSIC_ALBUMS -> binding.chipAlbums
+                MUSIC_ARTISTS -> binding.chipArtists
+                PLAYLISTS -> binding.chipPlaylists
+                CHANNELS -> binding.chipChannels
+                else -> null
+            }?.isChecked = true
+
+            searchResultAdapter.refresh()
         }
 
         lifecycleScope.launch {
@@ -144,20 +161,6 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
         }
 
         lifecycleScope.launch {
-            viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-                when (filter) {
-                    ALL -> binding.chipAll
-                    MUSIC_SONGS -> binding.chipSongs
-                    MUSIC_VIDEOS -> binding.chipVideos
-                    MUSIC_ALBUMS -> binding.chipAlbums
-                    PLAYLISTS -> binding.chipPlaylists
-                    CHANNELS -> binding.chipChannels
-                    else -> null
-                }?.isChecked = true
-
-                searchResultAdapter.refresh()
-            }
-
             viewModel.search(query).collectLatest {
                 searchResultAdapter.submitData(it)
             }

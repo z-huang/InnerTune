@@ -124,6 +124,7 @@
     <string name="search_filter_songs">Songs</string>
     <string name="search_filter_videos">Videos</string>
     <string name="search_filter_albums">Albums</string>
+    <string name="search_filter_artists">Artists</string>
     <string name="search_filter_playlists">Playlists</string>
     <string name="search_filter_channels">Channels</string>
 
