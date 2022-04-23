@@ -15,7 +15,7 @@ No ads, free, and simple.
 
 ## Description
 
-Music uses [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) to retrieve information and stream data from YouTube/YouTube Music. It's a music player as well, so you can create your own playlists and organize your songs by the artists you create. The aim of Music is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
+_Music_ uses [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) to retrieve information and stream data from YouTube/YouTube Music. It's a music player as well, so you can create your own playlists and organize your songs by the artists you create. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
 ## Features
 
@@ -42,6 +42,7 @@ Music uses [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) 
 - Create playlists in local database
 
 ## Screenshots
+
 <p float="left">
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/main.jpg" width="170" />
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/artists.jpg" width="170" />
@@ -58,3 +59,24 @@ Music uses [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) 
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/search results.jpg" width="170" />
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/settings.jpg" width="170" />
 </p>
+
+## Roadmap
+
+The overall plan for this project at current stage:
+1. Improve user interface and migrate to Material You
+2. Modify [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) to support more album and artist information and audio normalization
+
+## Installation
+
+You can install _Music_ using the following methods:
+
+1. Download the APK file from [GitHub Releases](https://github.com/z-huang/music/releases).
+2. Add [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music) to your F-Droid repos following the [instruction](https://apt.izzysoft.de/fdroid/index/info), and you can search for this app and receive updates.
+3. Go to [GitHub Action](https://github.com/z-huang/music/actions) and download the APK artifact of any workflow.
+4. Clone this repository and build a debug APK.
+
+How to get updates?
+
+1. If you install from [GitHub Releases](https://github.com/z-huang/music/releases), the app already has a built-in updater.
+2. If you install from method 2, you can check for updates using the F-Droid application.
+3. Or else, visit [GitHub](https://github.com/z-huang/music) and checkout the releases, issues, PRs, or anything new.
