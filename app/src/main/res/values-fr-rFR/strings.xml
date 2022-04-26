@@ -116,6 +116,7 @@
         <item quantity="many">%d chansons ont été supprimées.</item>
     </plurals>
     <plurals name="n_selected">
+        <item quantity="one">%d sélectionné</item>
         <item quantity="other">%d sélectionné</item>
         <item quantity="many">%d sélectionné</item>
     </plurals>
