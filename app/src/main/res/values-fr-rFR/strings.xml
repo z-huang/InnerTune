@@ -17,17 +17,17 @@
     <string name="pref_content_language_title">Langue du contenu par défaut</string>
     <string name="pref_default_content_country_title">Pays du contenu par défaut</string>
     <string name="pref_auto_download_title">Téléchargement automatique</string>
-    <string name="pref_auto_download_summary">Télécharger la chanson lorsqu'elle est ajoutée à la bibliothèque</string>
+    <string name="pref_auto_download_summary">Télécharger la chanson lorsqu\'elle est ajoutée à la bibliothèque</string>
     <string name="pref_auto_add_song_title">Ajout automatique de chansons à la bibliothèque</string>
     <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
-    <string name="pref_expand_on_play_title">Ajouter la chanson à votre bibliothèque lorsqu'elle est terminée.</string>
+    <string name="pref_expand_on_play_title">Ajouter la chanson à votre bibliothèque lorsqu\'elle est terminée.</string>
     <string name="pref_about">À propos</string>
-    <string name="pref_app_version_title">Version de l'application</string>
+    <string name="pref_app_version_title">Version de l\'application</string>
     <string name="pref_newpipe_version_title">Version de NewPipe Extractor</string>
     <string name="pref_check_for_updates_title">Vérifier les mises à jour</string>
     <string name="pref_checking_for_updates">Vérification…</string>
     <string name="pref_up_to_date">Vous êtes à jour.</string>
-    <string name="pref_cant_check_for_updates">Quelque chose s'est mal passé.</string>
+    <string name="pref_cant_check_for_updates">Quelque chose s\'est mal passé.</string>
     <string name="pref_update_title">Mise à jour disponible</string>
 
     <!-- Nav Menu -->
@@ -38,7 +38,7 @@
     <string name="search_item_menu_download">Télécharger</string>
     <string name="menu_edit">Modifier</string>
     <string name="menu_song_play_next">Jouer à la suite</string>
-    <string name="menu_song_add_to_queue">Ajouter à la file d'attente</string>
+    <string name="menu_song_add_to_queue">Ajouter à la file d\'attente</string>
     <string name="menu_song_add_to_playlist">Ajouter à la liste de lecture</string>
     <string name="menu_song_download">Télécharger</string>
     <string name="menu_song_remove_download">Supprimer le téléchargement</string>
@@ -49,7 +49,7 @@
     <string name="song_title">Titre de la chanson</string>
     <string name="song_artist">Artiste de la chanson</string>
     <string name="error_song_title_empty">Le titre de la chanson ne peut pas être vide.</string>
-    <string name="error_song_artist_empty">L'artiste de la chanson ne peut pas être vide.</string>
+    <string name="error_song_artist_empty">L\'artiste de la chanson ne peut pas être vide.</string>
     <string name="dialog_button_save">Sauvegarder</string>
 
     <string name="dialog_create_playlist_title">Créer une liste de lecture</string>
