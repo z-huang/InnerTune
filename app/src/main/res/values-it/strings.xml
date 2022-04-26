@@ -1,0 +1,141 @@
+<resources>
+    <!-- Nome app -->
+    <string name="app_name">Musica</string>
+
+    <!-- Titolo -->
+    <string name="title_songs">Brani</string>
+    <string name="title_artists">Artisti</string>
+    <string name="title_channels">Canali</string>
+    <string name="title_playlists">Playlist</string>
+    <string name="title_explore">Esplora</string>
+    <string name="title_settings">Impostazioni</string>
+    <string name="title_now_playing">In ascolto ora</string>
+    <string name="title_update">Aggiorna</string>
+
+    <!-- Preferenze -->
+    <string name="pref_api_key_title">Chiave API</string>
+    <string name="pref_content_language_title">Lingua predefinita dei contenuti</string>
+    <string name="pref_default_content_country_title">Paese predefinito dei contenuti</string>
+    <string name="pref_auto_download_title">Scaricamento automatico</string>
+    <string name="pref_auto_download_summary">Scarica la canzone quando viene aggiunta alla libreria</string>
+    <string name="pref_auto_add_song_title">Agguiunta automatica nella libreria</string>
+    <string name="pref_auto_add_song_summary">Aggiungi la canzone nella tua libreria quando viene terminato l\'ascolto</string>
+    <string name="pref_expand_on_play_title">Espandi il riproduttore in basso quando inizia un ascolto</string>
+    <string name="pref_about">Informazioni</string>
+    <string name="pref_app_version_title">Versione dell\'app</string>
+    <string name="pref_newpipe_version_title">Versione di NewPipe Extractor</string>
+    <string name="pref_check_for_updates_title">Controlla aggiornamenti</string>
+    <string name="pref_checking_for_updates">Controllo in corso…</string>
+    <string name="pref_up_to_date">Stai usando l\'ultima versione.</string>
+    <string name="pref_cant_check_for_updates">Qualcosa è andato storto.</string>
+    <string name="pref_update_title">Un aggiornamento è disponibile</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">Cerca</string>
+
+    <!-- Popup Menu -->
+    <string name="search_item_menu_add">Aggiungi alla libreria</string>
+    <string name="search_item_menu_download">Scarica</string>
+    <string name="menu_edit">Modifica</string>
+    <string name="menu_song_play_next">Riproduci come successiva</string>
+    <string name="menu_song_add_to_queue">Aggiungi alla coda</string>
+    <string name="menu_song_add_to_playlist">Aggiungi alla playlist</string>
+    <string name="menu_song_download">Scarica</string>
+    <string name="menu_song_remove_download">Rimuovi scaricamento</string>
+    <string name="menu_song_delete">Elimina</string>
+
+    <!-- Dialog -->
+    <string name="dialog_edit_song_title">Modifica brano</string>
+    <string name="song_title">Titolo</string>
+    <string name="song_artist">Artista</string>
+    <string name="error_song_title_empty">Il titolo del brano non può essere vuoto.</string>
+    <string name="error_song_artist_empty">L\'artista del brano non può essere vuoto.</string>
+    <string name="dialog_button_save">Salva</string>
+
+    <string name="dialog_create_playlist_title">Crea playlist</string>
+    <string name="text_view_hint_playlist_name">Nome dela playlist</string>
+    <string name="error_playlist_name_empty">Il nome della playlist non può essere vuoto.</string>
+
+    <string name="dialog_edit_artist_title">Modifica artista</string>
+    <string name="text_view_hint_artist_name">Nome dell\'artista</string>
+    <string name="error_artist_name_empty">Il nome dell\'artista non può essere vuoto.</string>
+
+    <string name="dialog_choose_playlist_title">Scegli una playlist</string>
+
+    <string name="dialog_edit_playlist_title">Modifica playlist</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Riproduttore</string>
+    <string name="channel_name_download">Scarica</string>
+
+    <!-- Transition Name -->
+    <string name="youtube_playlist_item_transition_name" translatable="false">playlist_%1$s</string>
+    <string name="youtube_playlist_transition_name" translatable="false">youtube_playlist</string>
+    <string name="youtube_channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="youtube_channel_transition_name" translatable="false">youtube_channel</string>
+    <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
+    <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
+    <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="channel_songs_transition_name" translatable="false">channel_songs</string>
+    <string name="playlist_item_transition_name" translatable="false">playlist_%1$d</string>
+    <string name="playlist_songs_transition_name" translatable="false">playlist_songs</string>
+
+    <!-- Noun -->
+    <plurals name="songs_count">
+        <item quantity="zero">%d brani</item>
+        <item quantity="one">%d brano</item>
+        <item quantity="other">%d brani</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="zero">%d iscritti</item>
+        <item quantity="one">%d iscritto</item>
+        <item quantity="other">%d iscritti</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d video</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Riprova</string>
+    <string name="btn_play_all">Riproduci tutti</string>
+    <string name="btn_shuffle">Mischia</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">Nome</string>
+    <string name="sort_by_artist">Artista</string>
+    <string name="sort_by_create_date">Data di aggiunta</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d brano è stato eliminato.</item>
+        <item quantity="other">%d brani sono stati eliminati.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">%d selezionati</item>
+    </plurals>
+    <string name="snack_bar_undo">Annulla</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">Aggiungi alla libreria</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Tutto</string>
+    <string name="search_filter_songs">Brani</string>
+    <string name="search_filter_videos">Video</string>
+    <string name="search_filter_albums">Album</string>
+    <string name="search_filter_artists">Artisti</string>
+    <string name="search_filter_playlists">Playlist</string>
+    <string name="search_filter_channels">Canali</string>
+
+    <string name="bullet" translatable="false">•</string>
+    <string name="system_default">Predefinito di sistema</string>
+    <string name="explore_page_content">Cerca per trovare della musica</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">Novità</string>
+    <string name="btn_update">Aggiorna</string>
+    <string name="update_status_preparing">Preparazione in corso…</string>
+    <string name="update_status_verifying">Verifica in corso…</string>
+    <string name="update_status_downloading">Scaricamento in corso… (%1$s/%2$s)</string>
+</resources>
