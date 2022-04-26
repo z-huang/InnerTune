@@ -11,7 +11,7 @@ No ads, free, and simple.
 [![License](https://img.shields.io/github/license/z-huang/music)](https://www.gnu.org/licenses/gpl-3.0)
 [![Downloads](https://img.shields.io/github/downloads/z-huang/music/total)](https://github.com/z-huang/music/releases)
 
-> **Note:** The project is currently in an unstable stage. If you encounter bugs, please report by opening an issue.
+> **Note:** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
 
 ## Description
 
@@ -80,3 +80,14 @@ How to get updates?
 1. If you install from [GitHub Releases](https://github.com/z-huang/music/releases), the app already has a built-in updater.
 2. If you install from method 2, you can check for updates using the F-Droid application.
 3. Or else, visit [GitHub](https://github.com/z-huang/music) and checkout the releases, issues, PRs, or anything new.
+
+## Contribution
+
+### Contributing Translations
+
+1. Have a fork of this project.
+2. If you have Android Studio, right click on the `app/src/main/res/values` folder, select "New"->"Values Resource File". Input `strings.xml` as file name. Select "Locale", click ">>", choose your language and region, and click "OK".
+3. If not, create a folder named `values-<language code>-r<region code>` under `app/src/main/res`. Copy `app/src/main/res/values/strings.xml` to the created folder.
+4. Replace each English string with the equivalent translation. Note that lines with `translatable="false"` should be ignored.
+5. (Recommended) Build the app to see if something is wrong.
+6. Make a pull request with your changes. If you have done step 5, the process of accepting your PR will be faster.
