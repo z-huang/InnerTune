@@ -85,6 +85,7 @@
         <item quantity="zero">%d chanson</item>
         <item quantity="one">%d chanson</item>
         <item quantity="other">%d chansons</item>
+        <item quantity="many">%d chansons</item>
     </plurals>
     <plurals name="subscribers">
         <item quantity="zero">%d abonné</item>
