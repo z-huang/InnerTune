@@ -91,10 +91,12 @@
         <item quantity="zero">%d abonné</item>
         <item quantity="one">%d abonné</item>
         <item quantity="other">%d abonnés</item>
+        <item quantity="many">%d abonnés</item>
     </plurals>
     <plurals name="videos">
         <item quantity="one">%d vidéo</item>
         <item quantity="other">%d vidéos</item>
+        <item quantity="many">%d vidéos</item>
     </plurals>
 
     <!-- Button -->
@@ -111,9 +113,11 @@
     <plurals name="snack_bar_delete_song">
         <item quantity="one">%d chanson a été supprimée.</item>
         <item quantity="other">%d chansons ont été supprimées.</item>
+        <item quantity="many">%d chansons ont été supprimées.</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="other">%d sélectionné</item>
+        <item quantity="many">%d sélectionné</item>
     </plurals>
     <string name="snack_bar_undo">Annuler</string>
 
