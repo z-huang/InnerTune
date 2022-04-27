@@ -1,0 +1,141 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Music</string>
+
+    <!-- Title -->
+    <string name="title_songs">노래</string>
+    <string name="title_artists">아티스트</string>
+    <string name="title_channels">채널</string>
+    <string name="title_playlists">플레이리스트</string>
+    <string name="title_explore">탐색</string>
+    <string name="title_settings">설정</string>
+    <string name="title_now_playing">재생 중</string>
+    <string name="title_update">업데이트</string>
+
+    <!-- Preference Title -->
+    <string name="pref_api_key_title">API Key</string>
+    <string name="pref_content_language_title">기본 콘텐츠 언어</string>
+    <string name="pref_default_content_country_title">기본 콘텐츠 국가</string>
+    <string name="pref_auto_download_title">자동 다운로드</string>
+    <string name="pref_auto_download_summary">라이브러리에 추가할 때 노래 다운로드</string>
+    <string name="pref_auto_add_song_title">라이브러리에 노래 자동 추가</string>
+    <string name="pref_auto_add_song_summary">재생이 완료되면 라이브러리에 노래 추가</string>
+    <string name="pref_expand_on_play_title">플레이 시 하단 플레이어 확장</string>
+    <string name="pref_about">정보</string>
+    <string name="pref_app_version_title">앱 버전</string>
+    <string name="pref_newpipe_version_title">NewPipe Extractor 버전</string>
+    <string name="pref_check_for_updates_title">업데이트 확인</string>
+    <string name="pref_checking_for_updates">확인 중…</string>
+    <string name="pref_up_to_date">최신입니다.</string>
+    <string name="pref_cant_check_for_updates">문제가 발생했습니다.</string>
+    <string name="pref_update_title">업데이트가 가능합니다.</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">검색</string>
+
+    <!-- Popup Menu -->
+    <string name="search_item_menu_add">라이브러리에 추가</string>
+    <string name="search_item_menu_download">다운로드</string>
+    <string name="menu_edit">수정</string>
+    <string name="menu_song_play_next">다음 노래 재생</string>
+    <string name="menu_song_add_to_queue">목록에 추가</string>
+    <string name="menu_song_add_to_playlist">플레이리스트에 추가</string>
+    <string name="menu_song_download">다운로드</string>
+    <string name="menu_song_remove_download">다운로드 제거</string>
+    <string name="menu_song_delete">삭제</string>
+
+    <!-- Dialog -->
+    <string name="dialog_edit_song_title">노래 편집</string>
+    <string name="song_title">노래 제목</string>
+    <string name="song_artist">노래 아티스트</string>
+    <string name="error_song_title_empty">노래 제목은 비워둘 수 없습니다.</string>
+    <string name="error_song_artist_empty">노래 아티스트는 비워둘 수 없습니다.</string>
+    <string name="dialog_button_save">저장</string>
+
+    <string name="dialog_create_playlist_title">플레이리스트 만들기</string>
+    <string name="text_view_hint_playlist_name">플레이리스트 이름</string>
+    <string name="error_playlist_name_empty">플레이리스트 이름은 비워둘 수 없습니다.</string>
+
+    <string name="dialog_edit_artist_title">아티스트 수정</string>
+    <string name="text_view_hint_artist_name">아티스트 이름</string>
+    <string name="error_artist_name_empty">아티스트 이름은 비워둘 수 없습니다.</string>
+
+    <string name="dialog_choose_playlist_title">플레이리스트 선택</string>
+
+    <string name="dialog_edit_playlist_title">플레이리스트 수정</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">음악 플레이어</string>
+    <string name="channel_name_download">다운로드</string>
+
+    <!-- Transition Name -->
+    <string name="youtube_playlist_item_transition_name" translatable="false">playlist_%1$s</string>
+    <string name="youtube_playlist_transition_name" translatable="false">youtube_playlist</string>
+    <string name="youtube_channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="youtube_channel_transition_name" translatable="false">youtube_channel</string>
+    <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
+    <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
+    <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="channel_songs_transition_name" translatable="false">channel_songs</string>
+    <string name="playlist_item_transition_name" translatable="false">playlist_%1$d</string>
+    <string name="playlist_songs_transition_name" translatable="false">playlist_songs</string>
+
+    <!-- Noun -->
+    <plurals name="songs_count">
+        <item quantity="zero">%d 노래</item>
+        <item quantity="one">%d 노래</item>
+        <item quantity="other">%d 노래</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="zero">%d 구독자</item>
+        <item quantity="one">%d 구독자</item>
+        <item quantity="other">%d 구독자</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d 동영상</item>
+        <item quantity="other">%d 동영상</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">다시</string>
+    <string name="btn_play_all">모두 재생</string>
+    <string name="btn_shuffle">셔플</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">이름</string>
+    <string name="sort_by_artist">아티스트</string>
+    <string name="sort_by_create_date">추가된 날짜</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d 노래가 삭제되었습니다.</item>
+        <item quantity="other">%d 노래가 삭제되었습니다.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">%d 선택됨</item>
+    </plurals>
+    <string name="snack_bar_undo">되돌리기</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">라이브러리에 추가</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">모두</string>
+    <string name="search_filter_songs">노래</string>
+    <string name="search_filter_videos">비디오</string>
+    <string name="search_filter_albums">앨범</string>
+    <string name="search_filter_artists">아티스트</string>
+    <string name="search_filter_playlists">플레이리스트</string>
+    <string name="search_filter_channels">채널</string>
+
+    <string name="bullet" translatable="false">•</string>
+    <string name="system_default">시스템 기본값</string>
+    <string name="explore_page_content">노래을 찾으려면 검색</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">최신 소식</string>
+    <string name="btn_update">업데이트</string>
+    <string name="update_status_preparing">준비 중…</string>
+    <string name="update_status_verifying">확인 중…</string>
+    <string name="update_status_downloading">다운로드 중… (%1$s/%2$s)</string>
+</resources>
