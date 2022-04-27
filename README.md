@@ -85,9 +85,15 @@ How to get updates?
 
 ### Contributing Translations
 
+#### App
+
 1. Have a fork of this project.
 2. If you have Android Studio, right click on the `app/src/main/res/values` folder, select "New"->"Values Resource File". Input `strings.xml` as file name. Select "Locale", click ">>", choose your language and region, and click "OK".
 3. If not, create a folder named `values-<language code>-r<region code>` under `app/src/main/res`. Copy `app/src/main/res/values/strings.xml` to the created folder.
 4. Replace each English string with the equivalent translation. Note that lines with `translatable="false"` should be ignored.
 5. (Recommended) Build the app to see if something is wrong.
 6. Make a pull request with your changes. If you have done step 5, the process of accepting your PR will be faster.
+
+#### Fastlane (App Description and Changelogs)
+
+Follow the [fastlane instruction](https://gitlab.com/-/snippets/1895688) to add your language and create a pull request.
