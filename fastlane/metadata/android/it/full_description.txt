@@ -1,0 +1,21 @@
+<i>Musica</i> usa <a href='https://github.com/TeamNewPipe/NewPipeExtractor' target='_blank' rel='nofollow'>NewPipe Extractor</a> per ottenere le informazioni e riprodurre musica da YouTube/YouTube Music. È un riproduttore di musica, quindi puoi creare le tue playlist e organizzare i tuoi brani per artista. L'obiettivo dell'app è permettere a chiunque di ascoltare musica senza costi e con un'app priva di pubblicità, gratis, pratica e facile da usare .
+
+<br><b>Note:</b>
+
+Il progetto è attualmente in una fase instabile. Se trovi degli errori, per favore segnalali facendolo su <a href='https://github.com/z-huang/music'>GitHub</a>.
+
+<br><b>Caratteristiche:</b>
+
+* Nessuna pubblicità
+* Cerca brani, video, playlist e canali da YouTube/YouTube Music
+* Carica automaticamente altri brani quando ascolti le ultime cinque canzoni in coda da YouTube
+* Riproduttore in Material Design
+* Riproduzione anche con lo schermo bloccato
+* Controlli in notifica
+* Passa al prossimo brano o a quello precedente
+* Modalità a ripetizione o casuale
+* Modifica la coda dei brani in riproduzione
+* Riproduci e salva brani da YouTube/YouTube Music
+* Scarica musica per un ascolto offline
+* Crea playlist in un database locale
+* Modifica il titolo o il nome dell'artista dei brani
