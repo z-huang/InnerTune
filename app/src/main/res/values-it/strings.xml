@@ -112,6 +112,7 @@
         <item quantity="other">%d brani sono stati eliminati.</item>
     </plurals>
     <plurals name="n_selected">
+        <item quantity="one">%d selezionato</item>
         <item quantity="other">%d selezionati</item>
     </plurals>
     <string name="snack_bar_undo">Annulla</string>
