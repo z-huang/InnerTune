@@ -26,7 +26,10 @@ class SuggestionViewModel(application: Application) : AndroidViewModel(applicati
             return
         }
         viewModelScope.launch {
-            suggestions.postValue(YouTubeRepository.suggestionsFor(query))
+            try {
+                suggestions.postValue(YouTubeRepository.suggestionsFor(query))
+            } catch (e: Exception) {
+            }
         }
     }
 }
