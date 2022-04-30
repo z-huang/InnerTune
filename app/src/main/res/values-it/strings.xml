@@ -53,7 +53,7 @@
     <string name="dialog_button_save">Salva</string>
 
     <string name="dialog_create_playlist_title">Crea playlist</string>
-    <string name="text_view_hint_playlist_name">Nome dela playlist</string>
+    <string name="text_view_hint_playlist_name">Nome della playlist</string>
     <string name="error_playlist_name_empty">Il nome della playlist non può essere vuoto.</string>
 
     <string name="dialog_edit_artist_title">Modifica artista</string>
