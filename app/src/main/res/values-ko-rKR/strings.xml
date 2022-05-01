@@ -116,7 +116,6 @@
     <string name="search_filter_playlists">플레이리스트</string>
     <string name="search_filter_channels">채널</string>
 
-    <string name="bullet" translatable="false">•</string>
     <string name="system_default">시스템 기본값</string>
     <string name="explore_page_content">노래을 찾으려면 검색</string>
 
