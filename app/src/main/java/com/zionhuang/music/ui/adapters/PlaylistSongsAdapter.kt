@@ -107,12 +107,14 @@ class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(So
 
     override fun getPopupText(position: Int): String =
         if (getItemViewType(position) == TYPE_HEADER) "#"
-        else when (sortInfo?.type) {
-            ORDER_CREATE_DATE -> dateFormat.format(getItem(position)!!.createDate)
-            ORDER_NAME -> getItem(position)!!.title[0].toString()
-            ORDER_ARTIST -> getItem(position)!!.artistName
-            else -> getItem(position)!!.title[0].toString()
-        }
+        else getItem(position)?.let {
+            when (sortInfo!!.type) {
+                ORDER_CREATE_DATE -> dateFormat.format(it.createDate)
+                ORDER_NAME -> it.title[0].toString()
+                ORDER_ARTIST -> it.artistName
+                else -> it.title[0].toString()
+            }
+        } ?: ""
 
     class SongItemComparator : DiffUtil.ItemCallback<Song>() {
         override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
