@@ -123,6 +123,7 @@ class SongPlayer(
                 .setContentType(C.CONTENT_TYPE_MUSIC)
                 .build()
             setAudioAttributes(audioAttributes, true)
+            setHandleAudioBecomingNoisy(true)
         }
 
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
