@@ -1,0 +1,24 @@
+name: Feature request
+about: Suggest an idea for Music
+title: "[FEATURE] <description of feature>"
+labels: [enhancement]
+body:
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Describe your suggested feature
+      description: A short description of the feature, and what it would accomplish.
+      placeholder: |
+        Example:
+          "It should work like this..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: other-details
+    attributes:
+      label: Other details
+      description: Add any other context or screenshots about the feature request here.
+      placeholder: |
+        Additional details and attachments.
