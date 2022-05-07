@@ -1,9 +1,8 @@
 name: Feature request
-about: Suggest an idea for Music
+description: Suggest an idea for Music
 title: "[FEATURE] <description of feature>"
 labels: [enhancement]
 body:
-
   - type: textarea
     id: feature-description
     attributes:
