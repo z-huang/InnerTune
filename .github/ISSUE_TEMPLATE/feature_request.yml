@@ -1,23 +1,39 @@
 name: Feature request
 description: Suggest an idea for Music
-title: "[FEATURE] <description of feature>"
 labels: [enhancement]
 body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I've checked that there is no other issue about this feature request.
+          required: true
+        - label: This issue contains only one feature request.
+          required: true
+        - label: The title of this issue accurately describes the feature request.
+          required: true
+
   - type: textarea
     id: feature-description
     attributes:
-      label: Describe your suggested feature
-      description: A short description of the feature, and what it would accomplish.
-      placeholder: |
-        Example:
-          "It should work like this..."
+      label: Feature description
+      description: What feature you want the app to have? Provide detailed description about what it should look like or where it should be added.
     validations:
       required: true
 
   - type: textarea
-    id: other-details
+    id: why-is-the-feature-requested
     attributes:
-      label: Other details
+      label: Why do you want this feature?
+      description: Describe the problem or limitation that motivates you to want this feature to be added.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-information
+    attributes:
+      label: Additional information
       description: Add any other context or screenshots about the feature request here.
       placeholder: |
         Additional details and attachments.
