@@ -1,18 +1,32 @@
 name: Bug report
 description: Create a bug report to help us improve
-title: "[BUG] <brief bug description>"
 labels: [bug]
 body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I am able to reproduce the bug with the [latest version](https://github.com/z-huang/music/releases/latest).
+          required: true
+        - label: I've checked that there is no issue about this bug.
+          required: true
+        - label: This issue contains only one bug.
+          required: true
+        - label: The title of this issue accurately describes the bug.
+          required: true
+
   - type: textarea
     id: reproduce-steps
     attributes:
-      label: Steps to reproduce
-      description: Provide an example of the issue.
+      label: Steps to reproduce the bug
+      description: What did you do for the bug to show up?
       placeholder: |
         Example:
-          1. First step
-          2. Second step
-          3. Issue here
+          1. Go to '...'
+          2. Click on '....'
+          3. Scroll down to '....'
+          4. See error
     validations:
       required: true
 
@@ -36,6 +50,22 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: sreen-media
+    attributes:
+      label: Screenshots/Screen recordings
+      description: |
+        A picture or video helps us understand the bug more.
+
+        You can upload them directly in the text box.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        If your bug includes a crash, please use `adb logcat` or other ways to provide logs.
+  
   - type: input
     id: music-version
     attributes:
@@ -59,8 +89,8 @@ body:
       required: true
 
   - type: textarea
-    id: other-details
+    id: additional-information
     attributes:
-      label: Other details
+      label: Additional information
       placeholder: |
         Additional details and attachments.
