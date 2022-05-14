@@ -1,6 +1,6 @@
 # Music
 
-![Icon](app/src/main/res/mipmap-hdpi/ic_launcher_round.png)
+<img src="https://raw.githubusercontent.com/z-huang/music/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" height="72">
 
 Make your own music library with any song on YouTube/YouTube Music.  
 No ads, free, and simple.
@@ -11,7 +11,9 @@ No ads, free, and simple.
 [![License](https://img.shields.io/github/license/z-huang/music)](https://www.gnu.org/licenses/gpl-3.0)
 [![Downloads](https://img.shields.io/github/downloads/z-huang/music/total)](https://github.com/z-huang/music/releases)
 
-> **Note:** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
+> **Note 1:** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
+
+> **Note 2:** The name of this app is temporary. It will be changed in the future.
 
 ## Description
 
