@@ -188,7 +188,7 @@
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/load_indicator"
-                style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+                style="@style/Widget.Material3.CircularProgressIndicator.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -220,7 +220,7 @@
 
             <TextView
                 android:id="@+id/song_title"
-                style="@style/TextAppearance.MaterialComponents.Headline5"
+                style="@style/TextAppearance.Material3.HeadlineMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -234,7 +234,7 @@
 
             <TextView
                 android:id="@+id/song_artist"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/TextAppearance.Material3.BodyLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"

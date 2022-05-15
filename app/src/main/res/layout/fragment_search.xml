@@ -27,49 +27,49 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_all"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_filter_all" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_songs"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_filter_songs" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_videos"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_filter_videos" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_albums"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_filter_albums" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_artists"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_filter_artists" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_playlists"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_filter_playlists" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_channels"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Suggestion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/search_filter_channels" />

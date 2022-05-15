@@ -23,7 +23,7 @@
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:text="@{@plurals/songs_count(songsCount, songsCount)}"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
             tools:text="100 songs" />
 
         <LinearLayout
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 tools:text="Name" />
 
             <com.zionhuang.music.ui.widgets.SortOrderImageView

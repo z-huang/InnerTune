@@ -137,7 +137,7 @@
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progress_bar"
-                        style="@style/Widget.MaterialComponents.LinearProgressIndicator"
+                        style="@style/Widget.Material3.LinearProgressIndicator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:progress="50"
