@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="54dp" />
+            app:layout_constraintGuide_begin="@dimen/bottom_controls_sheet_peek_height" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/action_bar"

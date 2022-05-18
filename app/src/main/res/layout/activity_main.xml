@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
-<!--    <com.zionhuang.music.ui.widgets.StatusBarView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="?colorPrimaryVariant"-->
-<!--        android:visibility="gone"-->
-<!--        tools:layout_height="36dp" />-->
+    <!--<com.zionhuang.music.ui.widgets.StatusBarView-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content"-->
+    <!--    android:background="?colorPrimaryVariant"-->
+    <!--    android:visibility="gone"-->
+    <!--    tools:layout_height="36dp" />-->
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_content"
@@ -64,6 +64,7 @@
         style="@style/Widget.Material3.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="0dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior">

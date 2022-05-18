@@ -25,7 +25,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SINGLE
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.TAG
-import com.zionhuang.music.extensions.getDensity
+import com.zionhuang.music.extensions.dip
 import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
@@ -135,7 +135,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDes
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight(binding.bottomNav.height + (54 * getDensity()).toInt(), true)
+        bottomSheetBehavior.setPeekHeight(dip(R.dimen.m3_bottom_nav_min_height) + dip(R.dimen.bottom_controls_sheet_peek_height), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {
