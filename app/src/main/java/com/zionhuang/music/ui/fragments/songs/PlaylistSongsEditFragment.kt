@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
-import com.zionhuang.music.extensions.themeColor
+import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.ui.adapters.PlaylistSongsEditAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaylistSongsViewModel
@@ -66,7 +66,7 @@ class PlaylistSongsEditFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             drawingViewId = R.id.nav_host_fragment
             duration = 300L
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+            setAllContainerColors(requireContext().resolveColor(R.attr.colorSurface))
         }
     }
 

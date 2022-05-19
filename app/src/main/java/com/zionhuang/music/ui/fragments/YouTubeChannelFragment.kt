@@ -18,9 +18,8 @@ import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_CHANNEL
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.requireAppCompatActivity
-import com.zionhuang.music.extensions.themeColor
+import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.models.QueueData
-import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
@@ -50,7 +49,7 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             drawingViewId = R.id.nav_host_fragment
             duration = 300L
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+            setAllContainerColors(requireContext().resolveColor(R.attr.colorSurface))
         }
     }
 

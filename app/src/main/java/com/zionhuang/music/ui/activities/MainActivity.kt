@@ -2,7 +2,6 @@ package com.zionhuang.music.ui.activities
 
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
-import android.content.res.Resources
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import android.util.Log

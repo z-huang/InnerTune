@@ -28,7 +28,7 @@ tailrec fun Context?.getLifeCycleOwner(): LifecycleOwner? = when (this) {
 }
 
 @ColorInt
-fun Context.themeColor(@AttrRes themeAttrId: Int): Int = obtainStyledAttributes(intArrayOf(themeAttrId)).use {
+fun Context.resolveColor(@AttrRes attr: Int): Int = obtainStyledAttributes(intArrayOf(attr)).use {
     it.getColor(0, Color.MAGENTA)
 }
 

@@ -25,7 +25,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.themeColor
+import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.PlaylistSongsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
@@ -82,7 +82,7 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             drawingViewId = R.id.nav_host_fragment
             duration = 300L
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+            setAllContainerColors(requireContext().resolveColor(R.attr.colorSurface))
         }
     }
 

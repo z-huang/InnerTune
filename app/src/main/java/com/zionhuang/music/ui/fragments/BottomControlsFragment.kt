@@ -121,9 +121,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        var progress: Float = slideOffset
-        if (progress < 0) progress = 0f
-        else if (progress > 1) progress = 1f
+        val progress = slideOffset.coerceIn(0f, 1f)
         binding.motionLayout.progress = progress
     }
 
