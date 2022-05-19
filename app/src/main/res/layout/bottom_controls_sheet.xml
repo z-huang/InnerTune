@@ -200,10 +200,11 @@
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:translationY="1dp"
             app:layout_constraintBottom_toTopOf="@id/bottom_bar_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:trackThickness="2dp"
+            app:trackThickness="3dp"
             tools:progress="50" />
 
         <LinearLayout
