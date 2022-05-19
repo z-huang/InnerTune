@@ -1,0 +1,129 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Music</string>
+
+    <!-- Title -->
+    <string name="title_songs">Kappaleet</string>
+    <string name="title_artists">Artistit</string>
+    <string name="title_channels">Kanavat</string>
+    <string name="title_playlists">Soittolistat</string>
+    <string name="title_explore">Tutustu</string>
+    <string name="title_settings">Asetukset</string>
+    <string name="title_now_playing">Nyt soi</string>
+    <string name="title_update">Päivitä</string>
+
+    <!-- Preference Title -->
+    <string name="pref_api_key_title">API-avain</string>
+    <string name="pref_content_language_title">Sisällön oletuskieli</string>
+    <string name="pref_default_content_country_title">Sisällön oletusmaa</string>
+    <string name="pref_auto_download_title">Automaattinen lataus</string>
+    <string name="pref_auto_download_summary">Lataa kirjastoon lisätyt kappaleet automaattisesti</string>
+    <string name="pref_auto_add_song_title">Automaattinen vienti kirjastoon</string>
+    <string name="pref_auto_add_song_summary">Lisää kappale kirjastoon automaattisesti, kun se on soitettu</string>
+    <string name="pref_expand_on_play_title">Laajenna alapalkki toistaessa</string>
+    <string name="pref_about">Tietoa</string>
+    <string name="pref_app_version_title">Sovelluksen versio</string>
+    <string name="pref_newpipe_version_title">NewPipe Extractor-versio</string>
+    <string name="pref_check_for_updates_title">Tarkista päivitykset</string>
+    <string name="pref_checking_for_updates">Tarkistetaan…</string>
+    <string name="pref_up_to_date">Sovellus on ajan tasalla.</string>
+    <string name="pref_cant_check_for_updates">Jotain meni pieleen.</string>
+    <string name="pref_update_title">Päivitys saatavilla</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">Etsi</string>
+
+    <!-- Popup Menu -->
+    <string name="search_item_menu_add">Lisää kirjastoon</string>
+    <string name="search_item_menu_download">Lataa</string>
+    <string name="menu_edit">Muokkaa</string>
+    <string name="menu_song_play_next">Toista seuraavaksi</string>
+    <string name="menu_song_add_to_queue">Lisää jonoon</string>
+    <string name="menu_song_add_to_playlist">Lisää soittolistaan</string>
+    <string name="menu_song_download">Lataa</string>
+    <string name="menu_song_remove_download">Poista lataus</string>
+    <string name="menu_song_delete">Poista</string>
+
+    <!-- Dialog -->
+    <string name="dialog_edit_song_title">Muokkaa kappaletta</string>
+    <string name="song_title">Kappaleen nimi</string>
+    <string name="song_artist">Artisti</string>
+    <string name="error_song_title_empty">Kappaleen nimi ei voi olla tyhjä.</string>
+    <string name="error_song_artist_empty">Artistin nimi ei voi olla tyhjä.</string>
+    <string name="dialog_button_save">Tallenna</string>
+
+    <string name="dialog_create_playlist_title">Luo soittolista</string>
+    <string name="text_view_hint_playlist_name">Soittolistan nimi</string>
+    <string name="error_playlist_name_empty">Soittolistan nimi ei voi olla tyhjä.</string>
+
+    <string name="dialog_edit_artist_title">Muokkaa artistia</string>
+    <string name="text_view_hint_artist_name">Artistin nimi</string>
+    <string name="error_artist_name_empty">Artistin nimi ei voi olla tyhjä.</string>
+
+    <string name="dialog_choose_playlist_title">Valitse soittolista</string>
+
+    <string name="dialog_edit_playlist_title">Muokkaa soittolistaa</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Soitin</string>
+    <string name="channel_name_download">Lataa</string>
+
+    <!-- Noun -->
+    <plurals name="songs_count">
+        <item quantity="zero">%d kappaletta</item>
+        <item quantity="one">%d kappale</item>
+        <item quantity="other">%d kappaletta</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="zero">%d tilaajaa</item>
+        <item quantity="one">%d tilaaja</item>
+        <item quantity="other">%d tilaajaa</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videota</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Toisto</string>
+    <string name="btn_play_all">Toista kaikki</string>
+    <string name="btn_shuffle">Sekoita</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">Nimi</string>
+    <string name="sort_by_artist">Artisti</string>
+    <string name="sort_by_create_date">Lisäyspäivä</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d kappale poistettu.</item>
+        <item quantity="other">%d kappaletta poistettu.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="one">%d valittu</item>
+        <item quantity="other">%d kappaletta valittu</item>
+    </plurals>
+    <string name="snack_bar_undo">Kumoa</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">Lisää kirjastoon</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Kaikki</string>
+    <string name="search_filter_songs">Kappaleet</string>
+    <string name="search_filter_videos">Videot</string>
+    <string name="search_filter_albums">Albumit</string>
+    <string name="search_filter_artists">Artistit</string>
+    <string name="search_filter_playlists">Soittolistat</string>
+    <string name="search_filter_channels">Kanavat</string>
+
+    <string name="system_default">Järjestelmän oletus</string>
+    <string name="explore_page_content">Hae musiikkia</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">Muutokset</string>
+    <string name="btn_update">Päivitä</string>
+    <string name="update_status_preparing">Valmistellaan…</string>
+    <string name="update_status_verifying">Vahvistetaan…</string>
+    <string name="update_status_downloading">Ladataan… (%1$s/%2$s)</string>
+</resources>
