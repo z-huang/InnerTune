@@ -100,7 +100,8 @@
         <item quantity="other">%d kappaletta poistettu.</item>
     </plurals>
     <plurals name="n_selected">
-        <item quantity="other">%d valittu</item>
+        <item quantity="one">%d valittu</item>
+        <item quantity="other">%d kappaletta valittu</item>
     </plurals>
     <string name="snack_bar_undo">Kumoa</string>
 
