@@ -1,0 +1,128 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Music</string>
+
+    <!-- Title -->
+    <string name="title_songs">曲</string>
+    <string name="title_artists">アーティスト</string>
+    <string name="title_channels">チャンネル</string>
+    <string name="title_playlists">プレイリスト</string>
+    <string name="title_explore">探索</string>
+    <string name="title_settings">設定</string>
+    <string name="title_now_playing">再生中</string>
+    <string name="title_update">アップデート</string>
+
+    <!-- Preference Title -->
+    <string name="pref_api_key_title">APIキー</string>
+    <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>
+    <string name="pref_default_content_country_title">デフォルトのコンテンツの国</string>
+    <string name="pref_auto_download_title">自動ダウンロード</string>
+    <string name="pref_auto_download_summary">ライブラリに追加したら曲をダウンロードする</string>
+    <string name="pref_auto_add_song_title">曲を自動でライブラリに追加</string>
+    <string name="pref_auto_add_song_summary">再生が終了したら曲をライブラリに追加する</string>
+    <string name="pref_expand_on_play_title">再生時にボトムプレイヤーを展開する</string>
+    <string name="pref_about">アプリについて</string>
+    <string name="pref_app_version_title">アプリのバージョン</string>
+    <string name="pref_newpipe_version_title">NewPipe Extractorのバージョン</string>
+    <string name="pref_check_for_updates_title">アップデートを確認</string>
+    <string name="pref_checking_for_updates">確認中…</string>
+    <string name="pref_up_to_date">最新版を使用しています。</string>
+    <string name="pref_cant_check_for_updates">問題が発生しました。</string>
+    <string name="pref_update_title">アップデートが利用可能</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">検索</string>
+
+    <!-- Popup Menu -->
+    <string name="search_item_menu_add">ライブラリに追加</string>
+    <string name="search_item_menu_download">ダウンロード</string>
+    <string name="menu_edit">編集</string>
+    <string name="menu_song_play_next">次に再生</string>
+    <string name="menu_song_add_to_queue">キューに追加</string>
+    <string name="menu_song_add_to_playlist">プレイリストに追加</string>
+    <string name="menu_song_download">ダウンロード</string>
+    <string name="menu_song_remove_download">ダウンロードを削除</string>
+    <string name="menu_song_delete">削除</string>
+
+    <!-- Dialog -->
+    <string name="dialog_edit_song_title">曲を編集</string>
+    <string name="song_title">曲名</string>
+    <string name="song_artist">曲のアーティスト</string>
+    <string name="error_song_title_empty">曲名は空白にできません。</string>
+    <string name="error_song_artist_empty">曲のアーティストは空白にできません。</string>
+    <string name="dialog_button_save">保存</string>
+
+    <string name="dialog_create_playlist_title">プレイリストを作成</string>
+    <string name="text_view_hint_playlist_name">プレイリスト名</string>
+    <string name="error_playlist_name_empty">プレイリスト名は空白にできません。</string>
+
+    <string name="dialog_edit_artist_title">アーティストを編集</string>
+    <string name="text_view_hint_artist_name">アーティスト名</string>
+    <string name="error_artist_name_empty">アーティスト名は空白にできません。</string>
+
+    <string name="dialog_choose_playlist_title">プレイリストを選択</string>
+
+    <string name="dialog_edit_playlist_title">プレイリストを編集</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">音楽プレイヤー</string>
+    <string name="channel_name_download">ダウンロード</string>
+
+    <!-- Noun -->
+    <plurals name="songs_count">
+        <item quantity="zero">%d曲</item>
+        <item quantity="one">%d曲</item>
+        <item quantity="other">%d曲</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="zero">登録者 %d人</item>
+        <item quantity="one">登録者 %d人</item>
+        <item quantity="other">登録者 %d人</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d 動画</item>
+        <item quantity="other">%d 動画</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">再試行</string>
+    <string name="btn_play_all">すべて再生</string>
+    <string name="btn_shuffle">シャッフル</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">曲名</string>
+    <string name="sort_by_artist">アーティスト</string>
+    <string name="sort_by_create_date">追加日時</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d曲が削除されました。</item>
+        <item quantity="other">%d曲が削除されました。</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">%dを選択済み</item>
+    </plurals>
+    <string name="snack_bar_undo">元に戻す</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">ライブラリに追加</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">すべて</string>
+    <string name="search_filter_songs">曲</string>
+    <string name="search_filter_videos">動画</string>
+    <string name="search_filter_albums">アルバム</string>
+    <string name="search_filter_artists">アーティスト</string>
+    <string name="search_filter_playlists">プレイリスト</string>
+    <string name="search_filter_channels">チャンネル</string>
+
+    <string name="system_default">システムに従う</string>
+    <string name="explore_page_content">検索して音楽を発見</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">新着情報</string>
+    <string name="btn_update">アップデート</string>
+    <string name="update_status_preparing">準備中…</string>
+    <string name="update_status_verifying">確認中…</string>
+    <string name="update_status_downloading">ダウンロード中… (%1$s/%2$s)</string>
+</resources>
