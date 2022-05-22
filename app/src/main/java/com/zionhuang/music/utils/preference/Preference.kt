@@ -5,11 +5,7 @@ package com.zionhuang.music.utils.preference
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
-import com.zionhuang.music.extensions.get
-import com.zionhuang.music.extensions.getSerializable
-import com.zionhuang.music.extensions.putSerializable
-import com.zionhuang.music.extensions.set
+import com.zionhuang.music.extensions.*
 import kotlin.reflect.KProperty
 
 open class Preference<T : Any>(
@@ -18,7 +14,7 @@ open class Preference<T : Any>(
     private val defaultValue: T,
 ) {
     protected var key: String = context.getString(keyId)
-    protected var sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    protected var sharedPreferences: SharedPreferences = context.sharedPreferences
 
     protected open fun getPreferenceValue(): T = sharedPreferences.get(key, defaultValue)
     protected open fun setPreferenceValue(value: T) {

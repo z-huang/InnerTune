@@ -14,6 +14,14 @@
 
     <!-- Preference Title -->
     <string name="pref_api_key_title">API 金鑰</string>
+    <string name="pref_appearance">外觀</string>
+    <string name="pref_follow_system_accent_title">跟隨系統主題</string>
+    <string name="pref_theme_color_title">主題顏色</string>
+    <string name="pref_dark_theme_title">深色主題</string>
+    <string name="dark_theme_on">開</string>
+    <string name="dark_theme_off">關</string>
+    <string name="dark_theme_follow_system">跟隨系統</string>
+    <string name="pref_content">內容</string>
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="pref_auto_download_title">自動下載</string>
@@ -29,6 +37,27 @@
     <string name="pref_up_to_date">已是最新版本</string>
     <string name="pref_cant_check_for_updates">無法檢查更新</string>
     <string name="pref_update_title">已有新版本</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">櫻花</string>
+    <string name="color_red">紅色</string>
+    <string name="color_pink">粉色</string>
+    <string name="color_purple">紫色</string>
+    <string name="color_deep_purple">深紫</string>
+    <string name="color_indigo">靛青</string>
+    <string name="color_blue">藍色</string>
+    <string name="color_light_blue">淺藍</string>
+    <string name="color_cyan">青色</string>
+    <string name="color_teal">青綠</string>
+    <string name="color_green">綠色</string>
+    <string name="color_light_green">淺綠</string>
+    <string name="color_lime">萊姆綠</string>
+    <string name="color_yellow">黃色</string>
+    <string name="color_amber">琥珀</string>
+    <string name="color_orange">橙色</string>
+    <string name="color_deep_orange">深橙</string>
+    <string name="color_brown">棕色</string>
+    <string name="color_blue_grey">藍灰</string>
 
     <!-- Nav Menu -->
     <string name="menu_search_title">搜尋</string>

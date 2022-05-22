@@ -4,12 +4,15 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate.*
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.APP_URL
@@ -30,16 +33,31 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough().apply { duration = 300L }
-        exitTransition = MaterialFadeThrough().apply { duration = 300L }
-    }
+        val prefFollowSystemAccent = findPreference<SwitchPreferenceCompat>(getString(R.string.pref_follow_system_accent))!!.apply {
+            isVisible = DynamicColors.isDynamicColorAvailable()
+            setOnPreferenceChangeListener { _, _ ->
+                requireActivity().recreate()
+                true
+            }
+        }
+        findPreference<ListPreference>(getString(R.string.pref_theme_color))?.apply {
+            isVisible = !DynamicColors.isDynamicColorAvailable() || (DynamicColors.isDynamicColorAvailable() && !prefFollowSystemAccent.isChecked)
+            setOnPreferenceChangeListener { _, _ ->
+                requireActivity().recreate()
+                true
+            }
+        }
+        findPreference<ListPreference>(getString(R.string.pref_dark_theme))?.setOnPreferenceChangeListener { _, newValue ->
+            setDefaultNightMode(when (newValue) {
+                getString(R.string.mode_night_no) -> MODE_NIGHT_NO
+                getString(R.string.mode_night_yes) -> MODE_NIGHT_YES
+                getString(R.string.mode_night_follow_system) -> MODE_NIGHT_FOLLOW_SYSTEM
+                else -> throw IllegalArgumentException()
+            })
+            true
+        }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         val systemDefault = getString(R.string.default_localization_key)
         findPreference<ListPreference>(getString(R.string.pref_content_language))?.setOnPreferenceChangeListener { _, newValue ->
             if (newValue !is String) return@setOnPreferenceChangeListener false
@@ -74,7 +92,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
             findNavController().navigate(UpdateFragmentDirections.openUpdateFragment())
             true
         }
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough().apply { duration = 300L }
+        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel.updateInfo.observe(viewLifecycleOwner) { info ->
             checkForUpdatePreference.isVisible = info !is UpdateAvailable
             updatePreference.isVisible = info is UpdateAvailable

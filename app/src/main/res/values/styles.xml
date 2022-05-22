@@ -1,7 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="windowActionModeOverlay">true</item>
@@ -16,6 +18,12 @@
         <!-- Material You Dialog -->
         <item name="alertDialogTheme">@style/ThemeOverlay.Material3.MaterialAlertDialog</item>
         <item name="dialogCornerRadius">28dp</item>
+        <!-- Preference title -->
+        <item name="android:textAppearanceListItem">?textAppearanceSubtitle1</item>
+        <!-- Preference category title -->
+        <item name="android:colorAccent">?colorPrimary</item>
+        <!-- Preference switch -->
+        <item name="android:colorControlActivated">?colorPrimary</item>
     </style>
 
     <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">

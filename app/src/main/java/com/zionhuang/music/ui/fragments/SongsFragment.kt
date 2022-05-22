@@ -47,7 +47,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val songsAdapter = SongsAdapter()
-    private lateinit var tracker: SelectionTracker<String>
+    private var tracker: SelectionTracker<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,22 +87,23 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectAnything()
-        ).build()
-        songsAdapter.tracker = tracker
-        tracker.addActionModeObserver(requireActivity(), tracker, R.menu.song_contextual_action_bar) { item ->
-            val selectedMap = songsAdapter.snapshot().items
-                .filter { tracker.selection.contains(it.id) }
-                .associateBy { it.id }
-            val songs = tracker.selection.toList().mapNotNull { selectedMap[it] }
-            when (item.itemId) {
-                R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs, requireContext())
-                R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs, requireContext())
-                R.id.action_add_to_playlist -> songsViewModel.songPopupMenuListener.addToPlaylist(songs, requireContext())
-                R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(tracker.selection.toList(), requireContext())
-                R.id.action_remove_download -> songsViewModel.songPopupMenuListener.removeDownloads(tracker.selection.toList(), requireContext())
-                R.id.action_delete -> songsViewModel.songPopupMenuListener.deleteSongs(songs)
+        ).build().apply {
+            songsAdapter.tracker = this
+            addActionModeObserver(requireActivity(), this, R.menu.song_contextual_action_bar) { item ->
+                val selectedMap = songsAdapter.snapshot().items
+                    .filter { selection.contains(it.id) }
+                    .associateBy { it.id }
+                val songs = selection.toList().mapNotNull { selectedMap[it] }
+                when (item.itemId) {
+                    R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs, requireContext())
+                    R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs, requireContext())
+                    R.id.action_add_to_playlist -> songsViewModel.songPopupMenuListener.addToPlaylist(songs, requireContext())
+                    R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(selection.toList(), requireContext())
+                    R.id.action_remove_download -> songsViewModel.songPopupMenuListener.removeDownloads(selection.toList(), requireContext())
+                    R.id.action_delete -> songsViewModel.songPopupMenuListener.deleteSongs(songs)
+                }
+                true
             }
-            true
         }
 
         lifecycleScope.launch {
@@ -149,11 +150,11 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        tracker.onRestoreInstanceState(savedInstanceState)
+        tracker?.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        tracker.onSaveInstanceState(outState)
+        tracker?.onSaveInstanceState(outState)
     }
 }

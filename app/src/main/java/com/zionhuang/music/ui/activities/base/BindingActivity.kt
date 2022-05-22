@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.activities
+package com.zionhuang.music.ui.activities.base
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
@@ -16,5 +16,4 @@ abstract class BindingActivity<T : ViewBinding> : AppCompatActivity() {
         binding = getViewBinding()
         setContentView(binding.root)
     }
-
 }

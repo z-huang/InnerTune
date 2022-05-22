@@ -27,6 +27,7 @@ import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.dip
 import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MainFloatingActionButton
@@ -38,7 +39,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.StreamingService.LinkType
 
-class MainActivity : BindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
+class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
     private var bottomSheetCallback: BottomSheetListener? = null

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
 import com.zionhuang.music.extensions.get
+import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.utils.livedata.SafeLiveData
 
 open class PreferenceLiveData<T : Any>(
@@ -13,7 +13,7 @@ open class PreferenceLiveData<T : Any>(
     @StringRes private val keyId: Int,
     private val defValue: T,
 ) : SafeLiveData<T>(defValue) {
-    protected val sharedPreferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    protected val sharedPreferences: SharedPreferences = context.sharedPreferences
     protected val key = context.getString(keyId)
 
     protected fun getPreferenceValue() = sharedPreferences.get(key, defValue)
