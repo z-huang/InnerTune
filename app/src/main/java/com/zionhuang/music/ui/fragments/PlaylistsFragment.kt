@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.FragmentPlaylistsBinding
+import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.PlaylistsAdapter
@@ -27,8 +27,8 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistsFragment : BindingFragment<FragmentPlaylistsBinding>() {
-    override fun getViewBinding() = FragmentPlaylistsBinding.inflate(layoutInflater)
+class PlaylistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
 
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playlistsViewModel by viewModels<PlaylistsViewModel>()
