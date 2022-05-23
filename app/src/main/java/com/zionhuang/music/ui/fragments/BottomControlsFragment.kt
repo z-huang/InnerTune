@@ -51,6 +51,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     }
 
     private fun setupUI() {
+        binding.motionLayout.background = mainActivity.binding.bottomNav.background
         viewModel.setPlayerView(binding.player)
         // Marquee
         binding.btmSongTitle.isSelected = true

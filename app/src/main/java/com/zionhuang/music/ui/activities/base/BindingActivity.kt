@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 
 abstract class BindingActivity<T : ViewBinding> : AppCompatActivity() {
-    protected lateinit var binding: T
+    lateinit var binding: T
 
     abstract fun getViewBinding(): T
 
