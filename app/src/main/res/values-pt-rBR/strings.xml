@@ -13,7 +13,14 @@
     <string name="title_update">Atualizar</string>
 
     <!-- Preference Title -->
-    <string name="pref_api_key_title">Chave de API</string>
+    <string name="pref_appearance">Appearance</string>
+    <string name="pref_follow_system_accent_title">Follow system theme</string>
+    <string name="pref_theme_color_title">Theme color</string>
+    <string name="pref_dark_theme_title">Dark theme</string>
+    <string name="dark_theme_on">On</string>
+    <string name="dark_theme_off">Off</string>
+    <string name="dark_theme_follow_system">Follow system</string>
+    <string name="pref_content">Content</string>
     <string name="pref_content_language_title">Idioma padrão do conteúdo</string>
     <string name="pref_default_content_country_title">País padrão do conteúdo</string>
     <string name="pref_auto_download_title">Fazer download automaticamente</string>
@@ -29,6 +36,27 @@
     <string name="pref_up_to_date">Você está utilizando a versão mais recente.</string>
     <string name="pref_cant_check_for_updates">Algo deu errado.</string>
     <string name="pref_update_title">Atualização disponível</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Vermelho</string>
+    <string name="color_pink">Rosa</string>
+    <string name="color_purple">Roxo</string>
+    <string name="color_deep_purple">Roxo Escuro</string>
+    <string name="color_indigo">Azul-anil</string>
+    <string name="color_blue">Azul</string>
+    <string name="color_light_blue">Azul Claro</string>
+    <string name="color_cyan">Ciano</string>
+    <string name="color_teal">Verde-azulado</string>
+    <string name="color_green">Verde</string>
+    <string name="color_light_green">Verde Claro</string>
+    <string name="color_lime">Verde-limão</string>
+    <string name="color_yellow">Amarelo</string>
+    <string name="color_amber">Âmbar</string>
+    <string name="color_orange">Laranja</string>
+    <string name="color_deep_orange">Laranja Escuro</string>
+    <string name="color_brown">Marrom</string>
+    <string name="color_blue_grey">Azul-acinzentado</string>
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Pesquisar</string>
@@ -70,12 +98,10 @@
 
     <!-- Noun -->
     <plurals name="songs_count">
-        <item quantity="zero">%d músicas</item>
         <item quantity="one">%d música</item>
         <item quantity="other">%d músicas</item>
     </plurals>
     <plurals name="subscribers">
-        <item quantity="zero">%d inscritos</item>
         <item quantity="one">%d inscrito</item>
         <item quantity="other">%d inscritos</item>
     </plurals>

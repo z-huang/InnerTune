@@ -13,7 +13,14 @@
     <string name="title_update">업데이트</string>
 
     <!-- Preference Title -->
-    <string name="pref_api_key_title">API Key</string>
+    <string name="pref_appearance">Appearance</string>
+    <string name="pref_follow_system_accent_title">Follow system theme</string>
+    <string name="pref_theme_color_title">Theme color</string>
+    <string name="pref_dark_theme_title">Dark theme</string>
+    <string name="dark_theme_on">On</string>
+    <string name="dark_theme_off">Off</string>
+    <string name="dark_theme_follow_system">Follow system</string>
+    <string name="pref_content">Content</string>
     <string name="pref_content_language_title">기본 콘텐츠 언어</string>
     <string name="pref_default_content_country_title">기본 콘텐츠 국가</string>
     <string name="pref_auto_download_title">자동 다운로드</string>
@@ -29,6 +36,27 @@
     <string name="pref_up_to_date">최신입니다.</string>
     <string name="pref_cant_check_for_updates">문제가 발생했습니다.</string>
     <string name="pref_update_title">업데이트가 가능합니다.</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">사쿠라</string>
+    <string name="color_red">빨강</string>
+    <string name="color_pink">핑크</string>
+    <string name="color_purple">보라</string>
+    <string name="color_deep_purple">짙은 보라</string>
+    <string name="color_indigo">남색</string>
+    <string name="color_blue">파랑</string>
+    <string name="color_light_blue">라이트 블루</string>
+    <string name="color_cyan">청록색</string>
+    <string name="color_teal">암청색</string>
+    <string name="color_green">초록</string>
+    <string name="color_light_green">연두</string>
+    <string name="color_lime">라임</string>
+    <string name="color_yellow">노랑</string>
+    <string name="color_amber">호박색</string>
+    <string name="color_orange">주황색</string>
+    <string name="color_deep_orange">딥 오렌지</string>
+    <string name="color_brown">갈색</string>
+    <string name="color_blue_grey">블루 그레이</string>
 
     <!-- Nav Menu -->
     <string name="menu_search_title">검색</string>
@@ -70,17 +98,12 @@
 
     <!-- Noun -->
     <plurals name="songs_count">
-        <item quantity="zero">%d 노래</item>
-        <item quantity="one">%d 노래</item>
         <item quantity="other">%d 노래</item>
     </plurals>
     <plurals name="subscribers">
-        <item quantity="zero">%d 구독자</item>
-        <item quantity="one">%d 구독자</item>
         <item quantity="other">%d 구독자</item>
     </plurals>
     <plurals name="videos">
-        <item quantity="one">%d 동영상</item>
         <item quantity="other">%d 동영상</item>
     </plurals>
 
@@ -96,7 +119,6 @@
 
     <!-- Snackbar -->
     <plurals name="snack_bar_delete_song">
-        <item quantity="one">%d 노래가 삭제되었습니다.</item>
         <item quantity="other">%d 노래가 삭제되었습니다.</item>
     </plurals>
     <plurals name="n_selected">

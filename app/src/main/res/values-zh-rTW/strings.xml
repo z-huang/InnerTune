@@ -13,7 +13,6 @@
     <string name="title_update">更新</string>
 
     <!-- Preference Title -->
-    <string name="pref_api_key_title">API 金鑰</string>
     <string name="pref_appearance">外觀</string>
     <string name="pref_follow_system_accent_title">跟隨系統主題</string>
     <string name="pref_theme_color_title">主題顏色</string>
@@ -100,6 +99,12 @@
     <!-- Noun -->
     <plurals name="songs_count">
         <item quantity="other">%d 首歌曲</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="other">%d 位訂閱者</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="other">%d 部影片</item>
     </plurals>
 
     <!-- Button -->

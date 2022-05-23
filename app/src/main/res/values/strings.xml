@@ -13,7 +13,6 @@
     <string name="title_update">Update</string>
 
     <!-- Preference Title -->
-    <string name="pref_api_key_title">API Key</string>
     <string name="pref_appearance">Appearance</string>
     <string name="pref_follow_system_accent_title">Follow system theme</string>
     <string name="pref_theme_color_title">Theme color</string>

@@ -13,7 +13,14 @@
     <string name="title_update">Päivitä</string>
 
     <!-- Preference Title -->
-    <string name="pref_api_key_title">API-avain</string>
+    <string name="pref_appearance">Appearance</string>
+    <string name="pref_follow_system_accent_title">Follow system theme</string>
+    <string name="pref_theme_color_title">Theme color</string>
+    <string name="pref_dark_theme_title">Dark theme</string>
+    <string name="dark_theme_on">On</string>
+    <string name="dark_theme_off">Off</string>
+    <string name="dark_theme_follow_system">Follow system</string>
+    <string name="pref_content">Content</string>
     <string name="pref_content_language_title">Sisällön oletuskieli</string>
     <string name="pref_default_content_country_title">Sisällön oletusmaa</string>
     <string name="pref_auto_download_title">Automaattinen lataus</string>
@@ -29,6 +36,27 @@
     <string name="pref_up_to_date">Sovellus on ajan tasalla.</string>
     <string name="pref_cant_check_for_updates">Jotain meni pieleen.</string>
     <string name="pref_update_title">Päivitys saatavilla</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Punainen</string>
+    <string name="color_pink">Pinkki</string>
+    <string name="color_purple">Violetti</string>
+    <string name="color_deep_purple">Syvä violetti</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_blue">Sininen</string>
+    <string name="color_light_blue">Vaalea sininen</string>
+    <string name="color_cyan">Syaani</string>
+    <string name="color_teal">Sinappi</string>
+    <string name="color_green">Vihreä</string>
+    <string name="color_light_green">Vaalea vihreä</string>
+    <string name="color_lime">Limea</string>
+    <string name="color_yellow">Keltainen</string>
+    <string name="color_amber">Meripihka</string>
+    <string name="color_orange">Oranssi</string>
+    <string name="color_deep_orange">Syvä oranssi</string>
+    <string name="color_brown">Ruskea</string>
+    <string name="color_blue_grey">Sininen harmaa</string>
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Etsi</string>
@@ -70,12 +98,10 @@
 
     <!-- Noun -->
     <plurals name="songs_count">
-        <item quantity="zero">%d kappaletta</item>
         <item quantity="one">%d kappale</item>
         <item quantity="other">%d kappaletta</item>
     </plurals>
     <plurals name="subscribers">
-        <item quantity="zero">%d tilaajaa</item>
         <item quantity="one">%d tilaaja</item>
         <item quantity="other">%d tilaajaa</item>
     </plurals>
