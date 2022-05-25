@@ -17,10 +17,10 @@ class LoadStateViewHolder(
 
     fun bind(loadState: LoadState) {
         if (loadState is LoadState.Error) {
-            binding.tvErrorMsg.text = loadState.error.localizedMessage
+            binding.errorMsg.text = loadState.error.localizedMessage
         }
         binding.progressBar.isVisible = loadState is Loading
         binding.btnRetry.isVisible = loadState !is Loading
-        binding.tvErrorMsg.isVisible = loadState !is Loading
+        binding.errorMsg.isVisible = loadState !is Loading
     }
 }

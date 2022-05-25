@@ -4,12 +4,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
@@ -23,6 +21,7 @@ import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.utils.bindLoadStateLayout
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.viewmodels.YouTubeChannelViewModel
@@ -56,15 +55,7 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         infoItemAdapter.apply {
             streamMenuListener = songsViewModel.streamPopupMenuListener
-            addLoadStateListener { loadState ->
-                binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
-                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
-                if (loadState.refresh is LoadState.Error) {
-                    binding.errorMsg.text =
-                        (loadState.refresh as LoadState.Error).error.localizedMessage
-                }
-            }
+            bindLoadStateLayout(binding.layoutLoadState)
         }
 
         binding.recyclerView.apply {

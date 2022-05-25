@@ -9,7 +9,7 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/tv_error_msg"
+            android:id="@+id/error_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

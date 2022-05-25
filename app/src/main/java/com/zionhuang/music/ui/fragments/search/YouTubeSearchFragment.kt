@@ -16,7 +16,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
-import androidx.paging.LoadState.Loading
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialFadeThrough
@@ -31,6 +30,7 @@ import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.utils.bindLoadStateLayout
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
@@ -73,17 +73,8 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
 
         searchResultAdapter.apply {
             streamMenuListener = songsViewModel.streamPopupMenuListener
-            addLoadStateListener { loadState ->
-                binding.progressBar.isVisible = loadState.refresh is Loading
-                binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
-                binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
-                if (loadState.refresh is LoadState.Error) {
-                    binding.errorMsg.text =
-                        (loadState.refresh as LoadState.Error).error.localizedMessage
-                }
-            }
+            bindLoadStateLayout(binding.layoutLoadState)
         }
-        binding.btnRetry.setOnClickListener { searchResultAdapter.retry() }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
