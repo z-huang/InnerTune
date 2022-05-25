@@ -69,7 +69,7 @@
 
                     <TextView
                         android:id="@+id/song_title"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ellipsize="end"
@@ -82,21 +82,21 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_chainStyle="packed"
                         tools:text="Song Title" />
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="end"
-                        android:layout_weight="0"
-                        android:padding="2dp"
-                        android:src="@drawable/ic_offline_pin"
-                        android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="16dp"
                     android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="2dp"
+                        android:src="@drawable/ic_offline_pin"
+                        android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
 
                     <TextView
                         android:id="@+id/song_artist"
@@ -140,8 +140,8 @@
                         style="@style/Widget.Material3.LinearProgressIndicator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:progress="50"
-                        android:indeterminate="@{song.downloadState == MediaConstants.STATE_PREPARING}"/>
+                        android:indeterminate="@{song.downloadState == MediaConstants.STATE_PREPARING}"
+                        tools:progress="50" />
                 </LinearLayout>
             </LinearLayout>
 
