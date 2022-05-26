@@ -17,10 +17,10 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getQueryTextChangeFlow
+import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.ui.adapters.SearchSuggestionAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.SuggestionViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlin.time.DurationUnit
@@ -72,24 +72,29 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         val searchManager: SearchManager = requireContext().getSystemService()!!
         searchView.apply {
             isIconified = false
-            findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.setPadding(0, 2, 0, 2)
+            findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.apply {
+                setPadding(0, 2, 0, 2)
+                setTextColor(requireContext().resolveColor(R.attr.colorOnSurface))
+                setHintTextColor(requireContext().resolveColor(R.attr.colorOnSurfaceVariant))
+            }
             setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
             isSubmitButtonEnabled = false
             maxWidth = Int.MAX_VALUE
             setOnCloseListener { true }
             viewLifecycleOwner.lifecycleScope.launch {
                 getQueryTextChangeFlow()
-                        .debounce(100.toDuration(DurationUnit.MILLISECONDS))
-                        .collect { e ->
-                            if (e.isSubmitted) {
-                                search(e.query.orEmpty())
-                            } else {
-                                viewModel.setQuery(e.query)
-                            }
+                    .debounce(100.toDuration(DurationUnit.MILLISECONDS))
+                    .collect { e ->
+                        if (e.isSubmitted) {
+                            search(e.query.orEmpty())
+                        } else {
+                            viewModel.setQuery(e.query)
                         }
+                    }
             }
             setQuery(viewModel.query.value, false)
         }
+
     }
 
     private fun search(query: String) {

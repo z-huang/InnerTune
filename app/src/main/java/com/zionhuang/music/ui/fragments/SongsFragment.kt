@@ -26,6 +26,7 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getQueryTextChangeFlow
+import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.adapters.selection.SongItemDetailsLookup
@@ -135,7 +136,11 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         inflater.inflate(R.menu.search_and_settings, menu)
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
         searchView.apply {
-            findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.setPadding(0, 2, 0, 2)
+            findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.apply {
+                setPadding(0, 2, 0, 2)
+                setTextColor(requireContext().resolveColor(R.attr.colorOnSurface))
+                setHintTextColor(requireContext().resolveColor(R.attr.colorOnSurfaceVariant))
+            }
             setSearchableInfo(requireContext().getSystemService<SearchManager>()?.getSearchableInfo(requireActivity().componentName))
             viewLifecycleOwner.lifecycleScope.launch {
                 getQueryTextChangeFlow()
