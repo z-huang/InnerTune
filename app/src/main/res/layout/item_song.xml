@@ -94,7 +94,8 @@
                         android:layout_height="match_parent"
                         android:paddingStart="0dp"
                         android:paddingEnd="4dp"
-                        android:src="@drawable/ic_offline_pin" />
+                        android:src="@drawable/ic_offline_pin"
+                        android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
 
                     <TextView
                         android:id="@+id/song_artist"
