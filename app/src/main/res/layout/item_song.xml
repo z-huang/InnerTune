@@ -86,17 +86,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="16dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <androidx.appcompat.widget.AppCompatImageView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
                         android:paddingStart="0dp"
-                        android:paddingEnd="2dp"
-                        android:src="@drawable/ic_offline_pin"
-                        android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
+                        android:paddingEnd="4dp"
+                        android:src="@drawable/ic_offline_pin" />
 
                     <TextView
                         android:id="@+id/song_artist"
