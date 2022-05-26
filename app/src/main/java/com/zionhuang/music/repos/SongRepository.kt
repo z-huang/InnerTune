@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import androidx.lifecycle.distinctUntilChanged
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
@@ -19,6 +20,7 @@ import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getApplication
 import com.zionhuang.music.extensions.preference
+import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
@@ -47,8 +49,13 @@ object SongRepository : LocalRepository {
         getPagingSource = { songDao.searchSongsAsPagingSource(query) }
     )
 
+    override fun hasSong(songId: String): DataWrapper<Boolean> = DataWrapper(
+        getValueAsync = { songDao.hasSong(songId) },
+        getLiveData = { songDao.hasSongLiveData(songId).distinctUntilChanged() }
+    )
+
     override suspend fun addSongs(songs: List<Song>) = songs.forEach {
-        if (songDao.contains(it.id)) return@forEach
+        if (songDao.hasSong(it.id)) return@forEach
         try {
             val stream = NewPipeYouTubeHelper.getStreamInfo(it.id)
             OkHttpDownloader.downloadFile(stream.thumbnailUrl, getSongArtworkFile(it.id))

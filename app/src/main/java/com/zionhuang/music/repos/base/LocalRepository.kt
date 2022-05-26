@@ -1,13 +1,15 @@
 package com.zionhuang.music.repos.base
 
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.models.base.ISortInfo
+import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
+import com.zionhuang.music.models.base.ISortInfo
 import java.io.File
 
 interface LocalRepository {
     suspend fun getSongById(songId: String): Song?
     fun searchSongs(query: String): ListWrapper<Int, Song>
+    fun hasSong(songId: String): DataWrapper<Boolean>
     suspend fun addSongs(songs: List<Song>)
     suspend fun addSong(song: Song) = addSongs(listOf(song))
     suspend fun updateSongs(songs: List<Song>)

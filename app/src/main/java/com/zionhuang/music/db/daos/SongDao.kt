@@ -1,16 +1,17 @@
 package com.zionhuang.music.db.daos
 
+import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
-import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.extensions.toSQLiteQuery
+import com.zionhuang.music.models.base.ISortInfo
 
 @Dao
 interface SongDao {
@@ -31,7 +32,10 @@ interface SongDao {
     suspend fun update(songs: List<SongEntity>)
 
     @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
-    suspend fun contains(songId: String): Boolean
+    suspend fun hasSong(songId: String): Boolean
+
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
+    fun hasSongLiveData(songId: String): LiveData<Boolean>
 
     @Query("DELETE FROM song WHERE id IN (:songIds)")
     suspend fun delete(songIds: List<String>)

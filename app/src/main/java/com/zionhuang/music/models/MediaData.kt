@@ -14,9 +14,9 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_DURATION
 import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
 import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.id
 import com.zionhuang.music.models.MediaData.Companion.EMPTY_MEDIA_DESCRIPTION
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.parcelize.Parcelize
 import org.schabi.newpipe.extractor.stream.StreamInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -66,7 +66,7 @@ fun Song.toMediaData(context: Context) = MediaData(id, title, artistName, durati
 fun StreamInfo.toMediaData() = MediaData(id, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else TYPE_RECTANGLE)
 
 fun StreamInfoItem.toMediaData() =
-    MediaData(NewPipeYouTubeHelper.extractVideoId(url)!!, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else TYPE_RECTANGLE)
+    MediaData(id, name, uploaderName, duration.toInt(), thumbnailUrl, if ("music.youtube.com" in url) TYPE_SQUARE else TYPE_RECTANGLE)
 
 fun MediaDescriptionCompat.toMediaData() =
     MediaData(mediaId!!, title.toString(), subtitle.toString(), extras?.getInt(EXTRA_DURATION), iconUri.toString(), extras!!.getInt(EXTRA_ARTWORK_TYPE))

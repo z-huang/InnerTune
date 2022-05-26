@@ -15,6 +15,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_CHANNEL
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.id
 import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.models.QueueData
@@ -25,7 +26,6 @@ import com.zionhuang.music.utils.bindLoadStateLayout
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.viewmodels.YouTubeChannelViewModel
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -67,7 +67,7 @@ class YouTubeChannelFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 val item = infoItemAdapter.getItemByPosition(pos)
                 if (item is StreamInfoItem) {
                     playbackViewModel.playMedia(
-                        requireActivity(), NewPipeYouTubeHelper.extractVideoId(item.url)!!, bundleOf(
+                        requireActivity(), item.id, bundleOf(
                             EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_CHANNEL, channelId)
                         )
                     )

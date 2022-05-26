@@ -25,6 +25,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_SEARCH_FILTER
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SEARCH
 import com.zionhuang.music.databinding.FragmentSearchBinding
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.id
 import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
@@ -36,7 +37,6 @@ import com.zionhuang.music.viewmodels.SearchViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractChannelId
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractPlaylistId
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
@@ -83,7 +83,7 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
                 when (val item: InfoItem = searchResultAdapter.getItemByPosition(pos)!!) {
                     is StreamInfoItem -> {
                         playbackViewModel.playMedia(
-                            requireActivity(), extractVideoId(item.url)!!, bundleOf(
+                            requireActivity(), item.id, bundleOf(
                                 EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SEARCH, query, extras = bundleOf(
                                     EXTRA_SEARCH_FILTER to viewModel.searchFilter.value
                                 ))
