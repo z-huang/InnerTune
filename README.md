@@ -17,15 +17,24 @@ No ads, free, and simple.
 
 ## Description
 
-_Music_ uses [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) to retrieve information and stream data from YouTube/YouTube Music. It's a music player as well, so you can create your own playlists and organize your songs by the artists you create. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
+With this app, you're like getting a free music streaming service. You can listen to music from YouTube/YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. The metadata of songs and artists are fully editable. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
+
+The ability to retrieve information and stream data from YouTube/YouTube Music is provided by [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor).
 
 ## Features
 
 ### YouTube
 
 - No ads
-- Search songs, videos, playlists and channels from YouTube/YouTube Music
-- auto load more songs when playing the last 5 songs in queues from YouTube
+- Search songs, albums, videos, playlists and channels from YouTube/YouTube Music
+- Auto load more songs when playing the last 5 songs in queues from YouTube
+
+### Library
+
+- Play and save songs from YouTube/YouTube Music
+- Download music for offline playback
+- Edit song and artist metadata
+- Create playlists in local database
 
 ### Player
 
@@ -35,13 +44,6 @@ _Music_ uses [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor
 - Skip to next/previous song
 - Repeat/shuffle mode
 - Edit now-playing queue
-
-### Library
-
-- Play and save songs from YouTube/YouTube Music
-- Download music for offline playback
-- Edit song name and song artist
-- Create playlists in local database
 
 ## Screenshots
 
@@ -94,7 +96,7 @@ How to get updates?
 3. If not, create a folder named `values-<language code>-r<region code>` under `app/src/main/res`. Copy `app/src/main/res/values/strings.xml` to the created folder.
 4. Replace each English string with the equivalent translation. Note that lines with `translatable="false"` should be ignored.
 5. (Recommended) Build the app to see if something is wrong.
-6. Make a pull request with your changes. If you have done step 5, the process of accepting your PR will be faster.
+6. Make a pull request with your changes. If you do step 5, the process of accepting your PR will be faster.
 
 #### Fastlane (App Description and Changelogs)
 
