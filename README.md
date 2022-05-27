@@ -76,7 +76,7 @@ You can install _Music_ using the following methods:
 
 1. Download the APK file from [GitHub Releases](https://github.com/z-huang/music/releases).
 2. Add [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music) to your F-Droid repos following the [instruction](https://apt.izzysoft.de/fdroid/index/info), and you can search for this app and receive updates.
-3. Go to [GitHub Action](https://github.com/z-huang/music/actions) and download the APK artifact of any workflow.
+3. To get a dev build, go to [GitHub Action](https://github.com/z-huang/music/actions) and download the APK artifact of any workflow.
 4. Clone this repository and build a debug APK.
 
 How to get updates?
