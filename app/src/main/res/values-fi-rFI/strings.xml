@@ -73,24 +73,27 @@
     <string name="menu_song_delete">Poista</string>
 
     <!-- Dialog -->
-    <string name="dialog_edit_song_title">Muokkaa kappaletta</string>
+    <string name="dialog_title_edit_song">Muokkaa kappaletta</string>
     <string name="song_title">Kappaleen nimi</string>
     <string name="song_artist">Artisti</string>
     <string name="error_song_title_empty">Kappaleen nimi ei voi olla tyhjä.</string>
     <string name="error_song_artist_empty">Artistin nimi ei voi olla tyhjä.</string>
     <string name="dialog_button_save">Tallenna</string>
 
-    <string name="dialog_create_playlist_title">Luo soittolista</string>
+    <string name="dialog_title_create_playlist">Luo soittolista</string>
     <string name="text_view_hint_playlist_name">Soittolistan nimi</string>
     <string name="error_playlist_name_empty">Soittolistan nimi ei voi olla tyhjä.</string>
 
-    <string name="dialog_edit_artist_title">Muokkaa artistia</string>
+    <string name="dialog_title_edit_artist">Muokkaa artistia</string>
     <string name="text_view_hint_artist_name">Artistin nimi</string>
     <string name="error_artist_name_empty">Artistin nimi ei voi olla tyhjä.</string>
 
-    <string name="dialog_choose_playlist_title">Valitse soittolista</string>
+    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
 
-    <string name="dialog_edit_playlist_title">Muokkaa soittolistaa</string>
+    <string name="dialog_title_choose_playlist">Valitse soittolista</string>
+
+    <string name="dialog_title_edit_playlist">Muokkaa soittolistaa</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">Soitin</string>

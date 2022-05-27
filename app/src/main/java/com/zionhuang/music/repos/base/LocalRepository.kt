@@ -31,10 +31,12 @@ interface LocalRepository {
 
     fun getAllArtists(): ListWrapper<Int, ArtistEntity>
     suspend fun getArtistById(artistId: Int): ArtistEntity?
+    suspend fun getArtistByName(name: String): ArtistEntity?
     fun searchArtists(query: String): ListWrapper<Int, ArtistEntity>
     suspend fun addArtist(artist: ArtistEntity)
     suspend fun updateArtist(artist: ArtistEntity)
     suspend fun deleteArtist(artist: ArtistEntity)
+    suspend fun mergeArtists(from: Int, to: Int)
 
     fun getAllPlaylists(): ListWrapper<Int, PlaylistEntity>
     suspend fun getPlaylistById(playlistId: Int): PlaylistEntity?

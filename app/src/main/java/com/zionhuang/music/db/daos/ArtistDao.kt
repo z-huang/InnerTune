@@ -13,7 +13,10 @@ interface ArtistDao {
     fun getAllArtistsAsPagingSource(): PagingSource<Int, ArtistEntity>
 
     @Query("SELECT * FROM artist WHERE id = :id")
-    suspend fun getArtist(id: Int): ArtistEntity?
+    suspend fun getArtistById(id: Int): ArtistEntity?
+
+    @Query("SELECT * FROM artist WHERE name = :name")
+    suspend fun getArtistByName(name: String): ArtistEntity?
 
     @Query("SELECT id FROM artist WHERE name = :name")
     suspend fun getArtistId(name: String): Int?

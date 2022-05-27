@@ -73,24 +73,27 @@
     <string name="menu_song_delete">삭제</string>
 
     <!-- Dialog -->
-    <string name="dialog_edit_song_title">노래 편집</string>
+    <string name="dialog_title_edit_song">노래 편집</string>
     <string name="song_title">노래 제목</string>
     <string name="song_artist">노래 아티스트</string>
     <string name="error_song_title_empty">노래 제목은 비워둘 수 없습니다.</string>
     <string name="error_song_artist_empty">노래 아티스트는 비워둘 수 없습니다.</string>
     <string name="dialog_button_save">저장</string>
 
-    <string name="dialog_create_playlist_title">플레이리스트 만들기</string>
+    <string name="dialog_title_create_playlist">플레이리스트 만들기</string>
     <string name="text_view_hint_playlist_name">플레이리스트 이름</string>
     <string name="error_playlist_name_empty">플레이리스트 이름은 비워둘 수 없습니다.</string>
 
-    <string name="dialog_edit_artist_title">아티스트 수정</string>
+    <string name="dialog_title_edit_artist">아티스트 수정</string>
     <string name="text_view_hint_artist_name">아티스트 이름</string>
     <string name="error_artist_name_empty">아티스트 이름은 비워둘 수 없습니다.</string>
 
-    <string name="dialog_choose_playlist_title">플레이리스트 선택</string>
+    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
 
-    <string name="dialog_edit_playlist_title">플레이리스트 수정</string>
+    <string name="dialog_title_choose_playlist">플레이리스트 선택</string>
+
+    <string name="dialog_title_edit_playlist">플레이리스트 수정</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">음악 플레이어</string>

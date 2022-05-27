@@ -22,6 +22,7 @@ import com.zionhuang.music.extensions.getApplication
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
+import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.repos.base.RemoteRepository
@@ -151,7 +152,8 @@ object SongRepository : LocalRepository {
         getPagingSource = { artistDao.getAllArtistsAsPagingSource() }
     )
 
-    override suspend fun getArtistById(artistId: Int): ArtistEntity? = withContext(IO) { artistDao.getArtist(artistId) }
+    override suspend fun getArtistById(artistId: Int): ArtistEntity? = withContext(IO) { artistDao.getArtistById(artistId) }
+    override suspend fun getArtistByName(name: String): ArtistEntity? = withContext(IO) { artistDao.getArtistByName(name) }
     override fun searchArtists(query: String) = ListWrapper<Int, ArtistEntity>(
         getList = { withContext(IO) { artistDao.searchArtists(query) } }
     )
@@ -164,6 +166,13 @@ object SongRepository : LocalRepository {
 
     override suspend fun updateArtist(artist: ArtistEntity) = withContext(IO) { artistDao.update(artist) }
     override suspend fun deleteArtist(artist: ArtistEntity) = withContext(IO) { artistDao.delete(artist) }
+    override suspend fun mergeArtists(from: Int, to: Int): Unit = withContext(IO) {
+        val destArtist = getArtistById(to) ?: return@withContext
+        updateSongs(getArtistSongs(from, PreferenceSortInfo).getList().map {
+            it.copy(artistName = destArtist.name)
+        })
+        getArtistById(from)?.let { deleteArtist(it) }
+    }
 
 
     override fun getAllPlaylists() = ListWrapper(

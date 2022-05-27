@@ -73,24 +73,27 @@
     <string name="menu_song_delete">Elimina</string>
 
     <!-- Dialog -->
-    <string name="dialog_edit_song_title">Modifica brano</string>
+    <string name="dialog_title_edit_song">Modifica brano</string>
     <string name="song_title">Titolo</string>
     <string name="song_artist">Artista</string>
     <string name="error_song_title_empty">Il titolo del brano non può essere vuoto.</string>
     <string name="error_song_artist_empty">L\'artista del brano non può essere vuoto.</string>
     <string name="dialog_button_save">Salva</string>
 
-    <string name="dialog_create_playlist_title">Crea playlist</string>
+    <string name="dialog_title_create_playlist">Crea playlist</string>
     <string name="text_view_hint_playlist_name">Nome della playlist</string>
     <string name="error_playlist_name_empty">Il nome della playlist non può essere vuoto.</string>
 
-    <string name="dialog_edit_artist_title">Modifica artista</string>
+    <string name="dialog_title_edit_artist">Modifica artista</string>
     <string name="text_view_hint_artist_name">Nome dell\'artista</string>
     <string name="error_artist_name_empty">Il nome dell\'artista non può essere vuoto.</string>
 
-    <string name="dialog_choose_playlist_title">Scegli una playlist</string>
+    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
 
-    <string name="dialog_edit_playlist_title">Modifica playlist</string>
+    <string name="dialog_title_choose_playlist">Scegli una playlist</string>
+
+    <string name="dialog_title_edit_playlist">Modifica playlist</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">Riproduttore</string>

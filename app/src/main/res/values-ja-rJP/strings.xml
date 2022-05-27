@@ -73,24 +73,27 @@
     <string name="menu_song_delete">削除</string>
 
     <!-- Dialog -->
-    <string name="dialog_edit_song_title">曲を編集</string>
+    <string name="dialog_title_edit_song">曲を編集</string>
     <string name="song_title">曲名</string>
     <string name="song_artist">曲のアーティスト</string>
     <string name="error_song_title_empty">曲名は空白にできません。</string>
     <string name="error_song_artist_empty">曲のアーティストは空白にできません。</string>
     <string name="dialog_button_save">保存</string>
 
-    <string name="dialog_create_playlist_title">プレイリストを作成</string>
+    <string name="dialog_title_create_playlist">プレイリストを作成</string>
     <string name="text_view_hint_playlist_name">プレイリスト名</string>
     <string name="error_playlist_name_empty">プレイリスト名は空白にできません。</string>
 
-    <string name="dialog_edit_artist_title">アーティストを編集</string>
+    <string name="dialog_title_edit_artist">アーティストを編集</string>
     <string name="text_view_hint_artist_name">アーティスト名</string>
     <string name="error_artist_name_empty">アーティスト名は空白にできません。</string>
 
-    <string name="dialog_choose_playlist_title">プレイリストを選択</string>
+    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
 
-    <string name="dialog_edit_playlist_title">プレイリストを編集</string>
+    <string name="dialog_title_choose_playlist">プレイリストを選択</string>
+
+    <string name="dialog_title_edit_playlist">プレイリストを編集</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">音楽プレイヤー</string>

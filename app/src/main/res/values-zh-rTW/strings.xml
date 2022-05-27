@@ -73,24 +73,27 @@
     <string name="menu_song_delete">移除</string>
 
     <!-- Dialog -->
-    <string name="dialog_edit_song_title">編輯歌曲</string>
+    <string name="dialog_title_edit_song">編輯歌曲</string>
     <string name="song_title">歌名</string>
     <string name="song_artist">演出者</string>
     <string name="error_song_title_empty">歌名不能為空</string>
     <string name="error_song_artist_empty">演出者不能為空</string>
     <string name="dialog_button_save">儲存</string>
 
-    <string name="dialog_create_playlist_title">新增播放清單</string>
+    <string name="dialog_title_create_playlist">新增播放清單</string>
     <string name="text_view_hint_playlist_name">名稱</string>
     <string name="error_playlist_name_empty">播放清單名稱不能為空</string>
 
-    <string name="dialog_edit_artist_title">編輯演出者</string>
+    <string name="dialog_title_edit_artist">編輯演出者</string>
     <string name="text_view_hint_artist_name">演出者名稱</string>
     <string name="error_artist_name_empty">演出者名稱不能為空</string>
 
-    <string name="dialog_choose_playlist_title">選擇播放清單</string>
+    <string name="dialog_title_duplicate_artist">重複的作曲家</string>
+    <string name="dialog_msg_duplicate_artist">作曲家「%1$s」已存在。合併兩個作曲家？</string>
 
-    <string name="dialog_edit_playlist_title">編輯播放清單</string>
+    <string name="dialog_title_choose_playlist">選擇播放清單</string>
+
+    <string name="dialog_title_edit_playlist">編輯播放清單</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">音樂播放器</string>

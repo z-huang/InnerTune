@@ -11,8 +11,10 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.repos.SongRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EditArtistDialog : AppCompatDialogFragment() {
     private lateinit var binding: DialogSingleTextInputBinding
@@ -38,24 +40,42 @@ class EditArtistDialog : AppCompatDialogFragment() {
         setupUI()
 
         return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
-                .setTitle(R.string.dialog_edit_artist_title)
-                .setView(binding.root)
-                .setPositiveButton(R.string.dialog_button_save, null)
-                .setNegativeButton(android.R.string.cancel, null)
-                .create()
-                .apply {
-                    setOnShowListener {
-                        getButton(BUTTON_POSITIVE).setOnClickListener { onOK() }
-                    }
+            .setTitle(R.string.dialog_title_edit_artist)
+            .setView(binding.root)
+            .setPositiveButton(R.string.dialog_button_save, null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+            .apply {
+                setOnShowListener {
+                    getButton(BUTTON_POSITIVE).setOnClickListener { onOK() }
                 }
+            }
     }
 
     private fun onOK() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository.updateArtist(artist.copy(name = name))
+            val existedArtist = SongRepository.getArtistByName(name)
+            if (existedArtist != null) {
+                // name exists
+                withContext(Dispatchers.Main) {
+                    MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
+                        .setTitle(getString(R.string.dialog_title_duplicate_artist))
+                        .setMessage(getString(R.string.dialog_msg_duplicate_artist, existedArtist.name))
+                        .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
+                            GlobalScope.launch {
+                                SongRepository.mergeArtists(artist.id!!, existedArtist.id!!)
+                            }
+                            dismiss()
+                        }
+                        .setNegativeButton(resources.getString(android.R.string.cancel), null)
+                        .show()
+                }
+            } else {
+                SongRepository.updateArtist(artist.copy(name = name))
+                dismiss()
+            }
         }
-        dismiss()
     }
 }

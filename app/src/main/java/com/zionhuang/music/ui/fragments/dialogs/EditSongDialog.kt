@@ -49,7 +49,7 @@ class EditSongDialog : AppCompatDialogFragment() {
 
         return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
             .setView(binding.root)
-            .setTitle(R.string.dialog_edit_song_title)
+            .setTitle(R.string.dialog_title_edit_song)
             .setPositiveButton(R.string.dialog_button_save, null)
             .setNegativeButton(android.R.string.cancel, null)
             .create()
