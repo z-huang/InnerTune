@@ -9,11 +9,11 @@ import androidx.annotation.MenuRes
 import androidx.recyclerview.selection.SelectionTracker
 import com.zionhuang.music.R
 
-class ActionModeSelectionObserver<T>(
+class ActionModeSelectionObserver<T : Any>(
     private val activity: Activity,
     private val tracker: SelectionTracker<T>,
     @MenuRes private val menuRes: Int,
-    val onActionItemClicked: (MenuItem) -> Boolean
+    val onActionItemClicked: (MenuItem) -> Boolean,
 ) : SelectionTracker.SelectionObserver<T>() {
     private var actionMode: ActionMode? = null
 
@@ -24,23 +24,14 @@ class ActionModeSelectionObserver<T>(
         }
         if (actionMode == null) {
             actionMode = activity.startActionMode(object : ActionMode.Callback {
-                override fun onCreateActionMode(
-                    mode: ActionMode?,
-                    menu: Menu?
-                ): Boolean {
+                override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
                     MenuInflater(activity).inflate(menuRes, menu)
                     return true
                 }
 
-                override fun onPrepareActionMode(
-                    mode: ActionMode?,
-                    menu: Menu?
-                ): Boolean = false
+                override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean = false
 
-                override fun onActionItemClicked(
-                    mode: ActionMode?,
-                    item: MenuItem
-                ): Boolean {
+                override fun onActionItemClicked(mode: ActionMode?, item: MenuItem): Boolean {
                     val res = onActionItemClicked(item)
                     mode?.finish()
                     return res
@@ -60,11 +51,11 @@ class ActionModeSelectionObserver<T>(
     }
 }
 
-fun <T> SelectionTracker<T>.addActionModeObserver(
+fun <T : Any> SelectionTracker<T>.addActionModeObserver(
     activity: Activity,
     tracker: SelectionTracker<T>,
     @MenuRes menuRes: Int,
-    onActionItemClicked: (MenuItem) -> Boolean
+    onActionItemClicked: (MenuItem) -> Boolean,
 ) = addObserver(
     ActionModeSelectionObserver(
         activity,
