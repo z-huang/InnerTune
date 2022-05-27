@@ -7,7 +7,8 @@
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
+        <item name="actionModeTheme">@style/Widget.Material3.ActionBar.Solid</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
 
         <item name="invertedColor">@color/colorInverted</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
