@@ -112,7 +112,7 @@ object SongRepository : LocalRepository {
     override suspend fun removeDownloads(songIds: List<String>) = songIds.forEach { songId ->
         val song = getSongById(songId) ?: return@forEach
         if (song.downloadState != STATE_DOWNLOADED) return@forEach
-        if (getSongFile(songId).delete()) {
+        if (!getSongFile(songId).exists() || getSongFile(songId).delete()) {
             updateSong(song.copy(downloadState = STATE_NOT_DOWNLOADED))
         }
     }
