@@ -5,6 +5,7 @@
             android:name="repeat_hide"
             android:width="24dp"
             android:height="24dp"
+            android:tint="?invertedColor"
             android:viewportWidth="24"
             android:viewportHeight="24">
             <path
