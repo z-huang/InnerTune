@@ -9,6 +9,7 @@ import android.view.ActionMode
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.map
@@ -155,6 +156,11 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     private inner class BottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, @State newState: Int) {
             bottomSheetCallback?.onStateChanged(bottomSheet, newState)
+            if (newState == STATE_COLLAPSED) {
+                binding.mainContent.updatePadding(bottom = dip(R.dimen.bottom_controls_sheet_peek_height))
+            } else if (newState == STATE_HIDDEN) {
+                binding.mainContent.updatePadding(bottom = 0)
+            }
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
