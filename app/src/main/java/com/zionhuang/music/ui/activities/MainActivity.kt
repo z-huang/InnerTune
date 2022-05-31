@@ -1,18 +1,18 @@
 package com.zionhuang.music.ui.activities
 
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import android.util.Log
 import android.view.ActionMode
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.map
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -20,6 +20,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SINGLE
@@ -31,7 +32,6 @@ import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
-import com.zionhuang.music.ui.widgets.MainFloatingActionButton
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
@@ -49,7 +49,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
     private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
 
-    val fab: MainFloatingActionButton get() = binding.fab
+    val fab: FloatingActionButton get() = binding.fab
 
     private var actionMode: ActionMode? = null
 
@@ -109,14 +109,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         binding.bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener(this)
 
-        playbackViewModel.playbackState.map { it.state != STATE_NONE }.observe(this) { show ->
-            if (show) {
-                fab.onPlayerShow()
-            } else {
-                fab.onPlayerHide()
-            }
-        }
-
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
             isHideable = true
@@ -157,9 +149,21 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         override fun onStateChanged(bottomSheet: View, @State newState: Int) {
             bottomSheetCallback?.onStateChanged(bottomSheet, newState)
             if (newState == STATE_COLLAPSED) {
-                binding.mainContent.updatePadding(bottom = dip(R.dimen.bottom_controls_sheet_peek_height))
+                ValueAnimator.ofInt(0, dip(R.dimen.bottom_controls_sheet_peek_height)).apply {
+                    duration = 300L
+                    interpolator = FastOutSlowInInterpolator()
+                    addUpdateListener {
+                        binding.mainContent.updatePadding(bottom = it.animatedValue as Int)
+                    }
+                }.start()
             } else if (newState == STATE_HIDDEN) {
-                binding.mainContent.updatePadding(bottom = 0)
+                ValueAnimator.ofInt(dip(R.dimen.bottom_controls_sheet_peek_height), 0).apply {
+                    duration = 300L
+                    interpolator = FastOutSlowInInterpolator()
+                    addUpdateListener {
+                        binding.mainContent.updatePadding(bottom = it.animatedValue as Int)
+                    }
+                }.start()
             }
         }
 
