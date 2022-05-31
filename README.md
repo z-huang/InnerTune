@@ -62,7 +62,7 @@ The ability to retrieve information and stream data from YouTube/YouTube Music i
 ## Roadmap
 
 The overall plan for this project at current stage:
-1. Improve user interface and migrate to Material You
+1. Improve user interface
 2. Modify [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) to support more album and artist information and audio normalization
 
 ## Installation
