@@ -1,26 +1,30 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorOnPrimary">@color/primaryTextColor</item>
-        <item name="colorSecondary">@color/secondaryColor</item>
-        <item name="colorOnSecondary">@color/secondaryTextColor</item>
-        <item name="colorAccent">@color/primaryDarkColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-
-        <item name="android:windowTranslucentStatus">false</item>
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">?android:colorBackground</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
         <item name="android:windowTranslucentNavigation">true</item>
+
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
+        <item name="actionModeTheme">@style/Widget.Material3.ActionBar.Solid</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
+
         <item name="invertedColor">@color/colorInverted</item>
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
         <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteTextView</item>
-        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
-        <item name="android:contextPopupMenuStyle">
-            @style/Widget.MaterialComponents.PopupMenu.ContextMenu
-        </item>
-        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow
-        </item>
+        <item name="popupMenuStyle">@style/Widget.Material3.PopupMenu</item>
+        <item name="android:contextPopupMenuStyle">@style/Widget.Material3.PopupMenu.ContextMenu</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.Material3.PopupMenu.Overflow</item>
+        <!-- Material You Dialog -->
+        <item name="alertDialogTheme">@style/ThemeOverlay.Material3.MaterialAlertDialog</item>
+        <item name="dialogCornerRadius">28dp</item>
+        <!-- Preference title -->
+        <item name="android:textAppearanceListItem">?textAppearanceSubtitle1</item>
+        <!-- Preference category title -->
+        <item name="android:colorAccent">?colorPrimary</item>
+        <!-- Preference switch -->
+        <item name="android:colorControlActivated">?colorPrimary</item>
     </style>
 
     <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">
@@ -40,12 +44,8 @@
         <item name="android:textColorHint">?attr/colorOnPrimary</item>
     </style>
 
-    <style name="Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+    <style name="Dialog" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="android:windowTranslucentNavigation">false</item>
-    </style>
-
-    <style name="Widget.App.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Chip.Choice</item>
     </style>
 
     <style name="ThemeOverlay.App.Chip.Choice" parent="">

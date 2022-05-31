@@ -110,7 +110,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             viewModelScope.launch {
                 val playlists = songRepository.getAllPlaylists().getList()
                 MaterialAlertDialogBuilder(context)
-                    .setTitle(R.string.dialog_choose_playlist_title)
+                    .setTitle(R.string.dialog_title_choose_playlist)
                     .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
                         viewModelScope.launch {
                             songRepository.addSongsToPlaylist(playlists[i].playlistId, songs)
@@ -166,7 +166,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
             viewModelScope.launch {
                 val playlists = songRepository.getAllPlaylists().getList()
                 MaterialAlertDialogBuilder(context)
-                    .setTitle(R.string.dialog_choose_playlist_title)
+                    .setTitle(R.string.dialog_title_choose_playlist)
                     .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
                         viewModelScope.launch {
                             songs.map(StreamInfoItem::toSong).let {

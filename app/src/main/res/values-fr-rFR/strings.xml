@@ -1,0 +1,163 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Music</string>
+
+    <!-- Title -->
+    <string name="title_songs">Chansons</string>
+    <string name="title_artists">Artistes</string>
+    <string name="title_channels">Chaînes</string>
+    <string name="title_playlists">Listes de lecture</string>
+    <string name="title_explore">Explore</string>
+    <string name="title_settings">Paramètres</string>
+    <string name="title_now_playing">Lecture en cours</string>
+    <string name="title_update">Mise à jour</string>
+
+    <!-- Preference Title -->
+    <string name="pref_appearance">Appearance</string>
+    <string name="pref_follow_system_accent_title">Follow system theme</string>
+    <string name="pref_theme_color_title">Theme color</string>
+    <string name="pref_dark_theme_title">Dark theme</string>
+    <string name="dark_theme_on">On</string>
+    <string name="dark_theme_off">Off</string>
+    <string name="dark_theme_follow_system">Follow system</string>
+    <string name="pref_content">Content</string>
+    <string name="pref_content_language_title">Langue du contenu par défaut</string>
+    <string name="pref_default_content_country_title">Pays du contenu par défaut</string>
+    <string name="pref_auto_download_title">Téléchargement automatique</string>
+    <string name="pref_auto_download_summary">Télécharger la chanson lorsqu\'elle est ajoutée à la bibliothèque</string>
+    <string name="pref_auto_add_song_title">Ajout automatique de chansons à la bibliothèque</string>
+    <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
+    <string name="pref_expand_on_play_title">Ajouter la chanson à votre bibliothèque lorsqu\'elle est terminée.</string>
+    <string name="pref_about">À propos</string>
+    <string name="pref_app_version_title">Version de l\'application</string>
+    <string name="pref_newpipe_version_title">Version de NewPipe Extractor</string>
+    <string name="pref_check_for_updates_title">Vérifier les mises à jour</string>
+    <string name="pref_checking_for_updates">Vérification…</string>
+    <string name="pref_up_to_date">Vous êtes à jour.</string>
+    <string name="pref_cant_check_for_updates">Quelque chose s\'est mal passé.</string>
+    <string name="pref_update_title">Mise à jour disponible</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Rouge</string>
+    <string name="color_pink">Rose</string>
+    <string name="color_purple">Violet</string>
+    <string name="color_deep_purple">Violet foncé</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_blue">Bleu</string>
+    <string name="color_light_blue">Bleu clair</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_teal">Turquoise</string>
+    <string name="color_green">Vert</string>
+    <string name="color_light_green">Vert clair</string>
+    <string name="color_lime">Vert citron</string>
+    <string name="color_yellow">Jaune</string>
+    <string name="color_amber">Ambre</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_deep_orange">Orange foncé</string>
+    <string name="color_brown">Marron</string>
+    <string name="color_blue_grey">Bleu grisâtre</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">Recherche</string>
+
+    <!-- Popup Menu -->
+    <string name="search_item_menu_add">Ajouter à la bibliothèque</string>
+    <string name="search_item_menu_download">Télécharger</string>
+    <string name="menu_edit">Modifier</string>
+    <string name="menu_song_play_next">Jouer à la suite</string>
+    <string name="menu_song_add_to_queue">Ajouter à la file d\'attente</string>
+    <string name="menu_song_add_to_playlist">Ajouter à la liste de lecture</string>
+    <string name="menu_song_download">Télécharger</string>
+    <string name="menu_song_remove_download">Supprimer le téléchargement</string>
+    <string name="menu_song_delete">Effacer</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title_edit_song">Editer la chanson</string>
+    <string name="song_title">Titre de la chanson</string>
+    <string name="song_artist">Artiste de la chanson</string>
+    <string name="error_song_title_empty">Le titre de la chanson ne peut pas être vide.</string>
+    <string name="error_song_artist_empty">L\'artiste de la chanson ne peut pas être vide.</string>
+    <string name="dialog_button_save">Sauvegarder</string>
+
+    <string name="dialog_title_create_playlist">Créer une liste de lecture</string>
+    <string name="text_view_hint_playlist_name">Nom de la liste de lecture</string>
+    <string name="error_playlist_name_empty">Le nom de la liste de lecture ne peut pas être vide.</string>
+
+    <string name="dialog_title_edit_artist">Editer l\'artiste</string>
+    <string name="text_view_hint_artist_name">Nom de l\'artiste</string>
+    <string name="error_artist_name_empty">Le nom de l\'artiste ne peut être vide.</string>
+
+    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
+
+    <string name="dialog_title_choose_playlist">Choisir la liste de lecture</string>
+
+    <string name="dialog_title_edit_playlist">Editer la liste de lecture</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Lecteur de musique</string>
+    <string name="channel_name_download">Télécharger</string>
+
+    <!-- Noun -->
+    <plurals name="songs_count">
+        <item quantity="one">%d chanson</item>
+        <item quantity="other">%d chansons</item>
+        <item quantity="many">%d chansons</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="one">%d abonné</item>
+        <item quantity="other">%d abonnés</item>
+        <item quantity="many">%d abonnés</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d vidéo</item>
+        <item quantity="other">%d vidéos</item>
+        <item quantity="many">%d vidéos</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Réessayer</string>
+    <string name="btn_play_all">Tout jouer</string>
+    <string name="btn_shuffle">Lecture aléatoire</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">Nom</string>
+    <string name="sort_by_artist">Artiste</string>
+    <string name="sort_by_create_date">Date d\'ajout</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d chanson a été supprimée.</item>
+        <item quantity="other">%d chansons ont été supprimées.</item>
+        <item quantity="many">%d chansons ont été supprimées.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="one">%d sélectionné</item>
+        <item quantity="other">%d sélectionné</item>
+        <item quantity="many">%d sélectionné</item>
+    </plurals>
+    <string name="snack_bar_undo">Annuler</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">Ajouter à la bibliothèque</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Tout</string>
+    <string name="search_filter_songs">Chansons</string>
+    <string name="search_filter_videos">Vidéos</string>
+    <string name="search_filter_albums">Albums</string>
+    <string name="search_filter_artists">Artistes</string>
+    <string name="search_filter_playlists">Listes de lecture</string>
+    <string name="search_filter_channels">Chaînes</string>
+
+    <string name="system_default">Système par défaut</string>
+    <string name="explore_page_content">Rechercher pour trouver de la musique</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">Quoi de neuf ?</string>
+    <string name="btn_update">Mise à jour</string>
+    <string name="update_status_preparing">Préparation…</string>
+    <string name="update_status_verifying">Vérification…</string>
+    <string name="update_status_downloading">Téléchargement… (%1$s/%2$s)</string>
+</resources>

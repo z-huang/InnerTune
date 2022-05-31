@@ -33,7 +33,7 @@
 
         <TextView
             android:id="@+id/streams"
-            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            style="@style/TextAppearance.Material3.TitleSmall"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"

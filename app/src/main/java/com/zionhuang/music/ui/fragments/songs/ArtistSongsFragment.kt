@@ -16,9 +16,9 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.themeColor
+import com.zionhuang.music.extensions.requireAppCompatActivity
+import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.models.QueueData
-import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -42,7 +42,7 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             drawingViewId = R.id.nav_host_fragment
             duration = 300L
             scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+            setAllContainerColors(requireContext().resolveColor(R.attr.colorSurface))
         }
     }
 
@@ -73,7 +73,7 @@ class ArtistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
 
         lifecycleScope.launch {
-            (requireActivity() as MainActivity).title = songsViewModel.songRepository.getArtistById(artistId)!!.name
+            requireAppCompatActivity().title = songsViewModel.songRepository.getArtistById(artistId)!!.name
             songsViewModel.getArtistSongsAsFlow(artistId).collectLatest {
                 songsAdapter.submitData(it)
             }

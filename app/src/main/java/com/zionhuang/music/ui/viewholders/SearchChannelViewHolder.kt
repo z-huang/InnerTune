@@ -8,7 +8,7 @@ import com.zionhuang.music.extensions.load
 import com.zionhuang.music.ui.viewholders.base.SearchViewHolder
 import org.schabi.newpipe.extractor.channel.ChannelInfoItem
 
-class SearchChannelViewHolder(private val binding: ItemSearchChannelBinding) : SearchViewHolder(binding.root) {
+class SearchChannelViewHolder(override val binding: ItemSearchChannelBinding) : SearchViewHolder(binding) {
     private val context = binding.context
 
     fun bind(item: ChannelInfoItem) {

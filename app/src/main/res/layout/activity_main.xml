@@ -5,17 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
-    <com.zionhuang.music.ui.widgets.StatusBarView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?colorPrimaryVariant"
-        tools:layout_height="36dp" />
+    <!--<com.zionhuang.music.ui.widgets.StatusBarView-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content"-->
+    <!--    android:background="?colorPrimaryVariant"-->
+    <!--    android:visibility="gone"-->
+    <!--    tools:layout_height="36dp" />-->
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="54dp"
+        android:layout_marginBottom="@dimen/m3_bottom_nav_min_height"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -30,21 +31,11 @@
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
-                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                style="@style/Widget.Material3.Toolbar.Surface"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:contentInsetStartWithNavigation="0dp" />
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:tabContentStart="56dp"
-                app:tabIndicatorFullWidth="false"
-                app:tabMode="scrollable"
-                app:tabRippleColor="@null" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
@@ -56,7 +47,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:navGraph="@navigation/navigation_graph" />
 
-        <com.zionhuang.music.ui.widgets.MainFloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,9 +61,10 @@
 
     <FrameLayout
         android:id="@+id/bottom_controls_sheet"
-        style="@style/Widget.MaterialComponents.BottomSheet"
+        style="@style/Widget.Material3.BottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="0dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior">

@@ -9,29 +9,29 @@
             type="int" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
+        android:background="?attr/colorSurface"
         android:layout_height="@dimen/song_item_height"
         android:orientation="horizontal"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/all_songs_count"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="start"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:text="@{@plurals/songs_count(songsCount, songsCount)}"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
             tools:text="100 songs" />
 
         <LinearLayout
             android:id="@+id/sort_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
+            android:layout_gravity="end"
             android:background="?selectableItemBackgroundBorderless"
             android:orientation="horizontal">
 
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
                 tools:text="Name" />
 
             <com.zionhuang.music.ui.widgets.SortOrderImageView
@@ -51,5 +51,5 @@
                 android:src="@drawable/ic_arrow_downward" />
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

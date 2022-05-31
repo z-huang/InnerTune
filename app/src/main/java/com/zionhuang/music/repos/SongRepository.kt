@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.util.Log
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import androidx.lifecycle.distinctUntilChanged
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
@@ -19,7 +20,9 @@ import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.getApplication
 import com.zionhuang.music.extensions.preference
+import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
+import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.repos.base.RemoteRepository
@@ -47,8 +50,13 @@ object SongRepository : LocalRepository {
         getPagingSource = { songDao.searchSongsAsPagingSource(query) }
     )
 
+    override fun hasSong(songId: String): DataWrapper<Boolean> = DataWrapper(
+        getValueAsync = { songDao.hasSong(songId) },
+        getLiveData = { songDao.hasSongLiveData(songId).distinctUntilChanged() }
+    )
+
     override suspend fun addSongs(songs: List<Song>) = songs.forEach {
-        if (songDao.contains(it.id)) return@forEach
+        if (songDao.hasSong(it.id)) return@forEach
         try {
             val stream = NewPipeYouTubeHelper.getStreamInfo(it.id)
             OkHttpDownloader.downloadFile(stream.thumbnailUrl, getSongArtworkFile(it.id))
@@ -105,7 +113,7 @@ object SongRepository : LocalRepository {
     override suspend fun removeDownloads(songIds: List<String>) = songIds.forEach { songId ->
         val song = getSongById(songId) ?: return@forEach
         if (song.downloadState != STATE_DOWNLOADED) return@forEach
-        if (getSongFile(songId).delete()) {
+        if (!getSongFile(songId).exists() || getSongFile(songId).delete()) {
             updateSong(song.copy(downloadState = STATE_NOT_DOWNLOADED))
         }
     }
@@ -144,7 +152,8 @@ object SongRepository : LocalRepository {
         getPagingSource = { artistDao.getAllArtistsAsPagingSource() }
     )
 
-    override suspend fun getArtistById(artistId: Int): ArtistEntity? = withContext(IO) { artistDao.getArtist(artistId) }
+    override suspend fun getArtistById(artistId: Int): ArtistEntity? = withContext(IO) { artistDao.getArtistById(artistId) }
+    override suspend fun getArtistByName(name: String): ArtistEntity? = withContext(IO) { artistDao.getArtistByName(name) }
     override fun searchArtists(query: String) = ListWrapper<Int, ArtistEntity>(
         getList = { withContext(IO) { artistDao.searchArtists(query) } }
     )
@@ -157,6 +166,13 @@ object SongRepository : LocalRepository {
 
     override suspend fun updateArtist(artist: ArtistEntity) = withContext(IO) { artistDao.update(artist) }
     override suspend fun deleteArtist(artist: ArtistEntity) = withContext(IO) { artistDao.delete(artist) }
+    override suspend fun mergeArtists(from: Int, to: Int): Unit = withContext(IO) {
+        val destArtist = getArtistById(to) ?: return@withContext
+        updateSongs(getArtistSongs(from, PreferenceSortInfo).getList().map {
+            it.copy(artistName = destArtist.name)
+        })
+        getArtistById(from)?.let { deleteArtist(it) }
+    }
 
 
     override fun getAllPlaylists() = ListWrapper(

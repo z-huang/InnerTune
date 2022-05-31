@@ -12,14 +12,14 @@
 
         <TextView
             android:id="@+id/version"
-            style="@style/TextAppearance.MaterialComponents.Headline4"
+            style="@style/TextAppearance.Material3.HeadlineLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             tools:text="1.0.0" />
 
         <TextView
-            style="@style/TextAppearance.MaterialComponents.Headline6"
+            style="@style/TextAppearance.Material3.HeadlineSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/changelog"
-                style="@style/TextAppearance.MaterialComponents.Body2"
+                style="@style/TextAppearance.Material3.LabelLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="This is a new version." />
@@ -50,7 +50,7 @@
 
             <TextView
                 android:id="@+id/update_status"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/TextAppearance.Material3.BodyLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"

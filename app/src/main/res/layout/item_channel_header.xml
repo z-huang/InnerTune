@@ -41,21 +41,21 @@
                     android:id="@+id/channel_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                     tools:text="Channel Name" />
 
                 <TextView
                     android:id="@+id/songs_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     tools:text="50 songs" />
 
                 <TextView
                     android:id="@+id/total_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                     tools:text="1:20:45" />
             </LinearLayout>
         </LinearLayout>
@@ -70,7 +70,7 @@
 
             <Button
                 android:id="@+id/btn_shuffle"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -84,7 +84,7 @@
 
             <Button
                 android:id="@+id/btn_play_all"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
+                style="@style/Widget.Material3.Button.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -20,7 +20,6 @@
         android:id="@+id/motion_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?colorSurface"
         android:clickable="true"
         android:focusable="true"
         app:currentState="@id/collapsed"
@@ -36,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="54dp" />
+            app:layout_constraintGuide_begin="@dimen/bottom_controls_sheet_peek_height" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/action_bar"
@@ -188,7 +187,7 @@
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/load_indicator"
-                style="@style/Widget.MaterialComponents.CircularProgressIndicator.Small"
+                style="@style/Widget.Material3.CircularProgressIndicator.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -200,10 +199,11 @@
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:translationY="1dp"
             app:layout_constraintBottom_toTopOf="@id/bottom_bar_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:trackThickness="2dp"
+            app:trackThickness="3dp"
             tools:progress="50" />
 
         <LinearLayout
@@ -220,7 +220,7 @@
 
             <TextView
                 android:id="@+id/song_title"
-                style="@style/TextAppearance.MaterialComponents.Headline5"
+                style="@style/TextAppearance.Material3.HeadlineMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
@@ -234,7 +234,7 @@
 
             <TextView
                 android:id="@+id/song_artist"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="@style/TextAppearance.Material3.BodyLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="marquee"
@@ -321,9 +321,9 @@
 
             <TextView
                 android:id="@+id/duration_text"
+                duration="@{viewModel.mediaData.duration}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:duration="@{viewModel.mediaData.duration}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/slider"
                 tools:text="4:00" />

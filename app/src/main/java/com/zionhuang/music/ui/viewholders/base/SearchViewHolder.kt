@@ -1,6 +1,5 @@
 package com.zionhuang.music.ui.viewholders.base
 
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
+import androidx.databinding.ViewDataBinding
 
-open class SearchViewHolder(view: View) : RecyclerView.ViewHolder(view)
+open class SearchViewHolder(open val binding: ViewDataBinding) : LifecycleViewHolder(binding.root)

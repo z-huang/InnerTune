@@ -13,7 +13,14 @@
     <string name="title_update">Update</string>
 
     <!-- Preference Title -->
-    <string name="pref_api_key_title">API Key</string>
+    <string name="pref_appearance">Appearance</string>
+    <string name="pref_follow_system_accent_title">Follow system theme</string>
+    <string name="pref_theme_color_title">Theme color</string>
+    <string name="pref_dark_theme_title">Dark theme</string>
+    <string name="dark_theme_on">On</string>
+    <string name="dark_theme_off">Off</string>
+    <string name="dark_theme_follow_system">Follow system</string>
+    <string name="pref_content">Content</string>
     <string name="pref_content_language_title">Default content language</string>
     <string name="pref_default_content_country_title">Default content country</string>
     <string name="pref_auto_download_title">Auto download</string>
@@ -30,6 +37,27 @@
     <string name="pref_cant_check_for_updates">Something went wrong.</string>
     <string name="pref_update_title">Update available</string>
 
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Red</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_deep_purple">Deep purple</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_light_blue">Light blue</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_teal">Teal</string>
+    <string name="color_green">Green</string>
+    <string name="color_light_green">Light green</string>
+    <string name="color_lime">Lime</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_amber">Amber</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_deep_orange">Deep orange</string>
+    <string name="color_brown">Brown</string>
+    <string name="color_blue_grey">Blue grey</string>
+
     <!-- Nav Menu -->
     <string name="menu_search_title">Search</string>
 
@@ -45,40 +73,31 @@
     <string name="menu_song_delete">Delete</string>
 
     <!-- Dialog -->
-    <string name="dialog_edit_song_title">Edit song</string>
+    <string name="dialog_title_edit_song">Edit song</string>
     <string name="song_title">Song Title</string>
     <string name="song_artist">Song Artist</string>
     <string name="error_song_title_empty">Song title cannot be empty.</string>
     <string name="error_song_artist_empty">Song artist cannot be empty.</string>
     <string name="dialog_button_save">Save</string>
 
-    <string name="dialog_create_playlist_title">Create playlist</string>
+    <string name="dialog_title_create_playlist">Create playlist</string>
     <string name="text_view_hint_playlist_name">Playlist name</string>
     <string name="error_playlist_name_empty">Playlist name cannot be empty.</string>
 
-    <string name="dialog_edit_artist_title">Edit artist</string>
+    <string name="dialog_title_edit_artist">Edit artist</string>
     <string name="text_view_hint_artist_name">Artist name</string>
     <string name="error_artist_name_empty">Artist name cannot be empty.</string>
 
-    <string name="dialog_choose_playlist_title">Choose playlist</string>
+    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
 
-    <string name="dialog_edit_playlist_title">Edit playlist</string>
+    <string name="dialog_title_choose_playlist">Choose playlist</string>
+
+    <string name="dialog_title_edit_playlist">Edit playlist</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">Music Player</string>
     <string name="channel_name_download">Download</string>
-
-    <!-- Transition Name -->
-    <string name="youtube_playlist_item_transition_name" translatable="false">playlist_%1$s</string>
-    <string name="youtube_playlist_transition_name" translatable="false">youtube_playlist</string>
-    <string name="youtube_channel_item_transition_name" translatable="false">channel_%1$s</string>
-    <string name="youtube_channel_transition_name" translatable="false">youtube_channel</string>
-    <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
-    <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
-    <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>
-    <string name="channel_songs_transition_name" translatable="false">channel_songs</string>
-    <string name="playlist_item_transition_name" translatable="false">playlist_%1$d</string>
-    <string name="playlist_songs_transition_name" translatable="false">playlist_songs</string>
 
     <!-- Noun -->
     <plurals name="songs_count">
@@ -124,10 +143,10 @@
     <string name="search_filter_songs">Songs</string>
     <string name="search_filter_videos">Videos</string>
     <string name="search_filter_albums">Albums</string>
+    <string name="search_filter_artists">Artists</string>
     <string name="search_filter_playlists">Playlists</string>
     <string name="search_filter_channels">Channels</string>
 
-    <string name="bullet" translatable="false">•</string>
     <string name="system_default">System default</string>
     <string name="explore_page_content">Search to find some music</string>
 

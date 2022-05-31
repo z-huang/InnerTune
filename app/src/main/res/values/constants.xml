@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pref_api_key" translatable="false">API_KEY</string>
+    <string name="pref_follow_system_accent" translatable="false">FOLLOW_SYSTEM_ACCENT</string>
+    <string name="pref_theme_color" translatable="false">THEME_COLOR</string>
+    <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
@@ -15,6 +18,80 @@
     <string name="pref_last_check_time" translatable="false">LAST_CHECK_TIME</string>
     <string name="pref_last_check_info" translatable="false">LAST_CHECK_INFO</string>
     <string name="pref_update" translatable="false">UPDATE</string>
+
+    <string name="bullet" translatable="false">•</string>
+
+    <!-- Transition Name -->
+    <string name="youtube_playlist_item_transition_name" translatable="false">playlist_%1$s</string>
+    <string name="youtube_playlist_transition_name" translatable="false">youtube_playlist</string>
+    <string name="youtube_channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="youtube_channel_transition_name" translatable="false">youtube_channel</string>
+    <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
+    <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
+    <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>
+    <string name="channel_songs_transition_name" translatable="false">channel_songs</string>
+    <string name="playlist_item_transition_name" translatable="false">playlist_%1$d</string>
+    <string name="playlist_songs_transition_name" translatable="false">playlist_songs</string>
+
+    <string-array name="dark_theme_texts" translatable="false">
+        <item>@string/dark_theme_off</item>
+        <item>@string/dark_theme_on</item>
+        <item>@string/dark_theme_follow_system</item>
+    </string-array>
+
+    <string name="mode_night_no" translatable="false">MODE_NIGHT_NO</string>
+    <string name="mode_night_yes" translatable="false">MODE_NIGHT_YES</string>
+    <string name="mode_night_follow_system" translatable="false">MODE_NIGHT_FOLLOW_SYSTEM</string>
+
+    <string-array name="dark_theme_values" translatable="false">
+        <item>@string/mode_night_no</item>
+        <item>@string/mode_night_yes</item>
+        <item>@string/mode_night_follow_system</item>
+    </string-array>
+
+    <string-array name="color_values" translatable="false">
+        <item>SAKURA</item>
+        <item>MATERIAL_RED</item>
+        <item>MATERIAL_PINK</item>
+        <item>MATERIAL_PURPLE</item>
+        <item>MATERIAL_DEEP_PURPLE</item>
+        <item>MATERIAL_INDIGO</item>
+        <item>MATERIAL_BLUE</item>
+        <item>MATERIAL_LIGHT_BLUE</item>
+        <item>MATERIAL_CYAN</item>
+        <item>MATERIAL_TEAL</item>
+        <item>MATERIAL_GREEN</item>
+        <item>MATERIAL_LIGHT_GREEN</item>
+        <item>MATERIAL_LIME</item>
+        <item>MATERIAL_YELLOW</item>
+        <item>MATERIAL_AMBER</item>
+        <item>MATERIAL_ORANGE</item>
+        <item>MATERIAL_DEEP_ORANGE</item>
+        <item>MATERIAL_BROWN</item>
+        <item>MATERIAL_BLUE_GREY</item>
+    </string-array>
+
+    <string-array name="color_texts" translatable="false">
+        <item>@string/color_sakura</item>
+        <item>@string/color_red</item>
+        <item>@string/color_pink</item>
+        <item>@string/color_purple</item>
+        <item>@string/color_deep_purple</item>
+        <item>@string/color_indigo</item>
+        <item>@string/color_blue</item>
+        <item>@string/color_light_blue</item>
+        <item>@string/color_cyan</item>
+        <item>@string/color_teal</item>
+        <item>@string/color_green</item>
+        <item>@string/color_light_green</item>
+        <item>@string/color_lime</item>
+        <item>@string/color_yellow</item>
+        <item>@string/color_amber</item>
+        <item>@string/color_orange</item>
+        <item>@string/color_deep_orange</item>
+        <item>@string/color_brown</item>
+        <item>@string/color_blue_grey</item>
+    </string-array>
 
     <!-- Localizations   -->
     <string name="default_localization_key" translatable="false">system</string>
