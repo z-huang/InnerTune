@@ -49,14 +49,9 @@ The ability to retrieve information and stream data from YouTube/YouTube Music i
 
 <p float="left">
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/main.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/artists.jpg" width="170" />
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/playlists.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/explore.jpg" width="170" />
-</p>
-<p float="left">
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/player.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/notification.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/now playing queue.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/now playing.jpg" width="170" />
 </p>
 <p float="left">
   <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/search.jpg" width="170" />
