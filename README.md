@@ -48,15 +48,15 @@ The ability to retrieve information and stream data from YouTube/YouTube Music i
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/main.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/playlists.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/player.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/now playing.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/main.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/playlists.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/player.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/now_playing.jpg" width="170" />
 </p>
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/search.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/search results.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/master/screenshots/settings.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/search.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/search results.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/settings.jpg" width="170" />
 </p>
 
 ## Roadmap
