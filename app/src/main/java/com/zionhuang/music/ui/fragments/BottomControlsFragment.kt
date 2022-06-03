@@ -2,7 +2,6 @@ package com.zionhuang.music.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import android.view.LayoutInflater
@@ -105,7 +104,9 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
     override fun onResume() {
         super.onResume()
-        viewModel.mediaController.observe(viewLifecycleOwner, { mediaController: MediaControllerCompat? -> mediaWidgetsController.setMediaController(mediaController) })
+        viewModel.mediaController.observe(viewLifecycleOwner) {
+            mediaWidgetsController.setMediaController(it)
+        }
     }
 
     override fun onStop() {
