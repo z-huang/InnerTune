@@ -33,8 +33,8 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough().apply { duration = 300L }
-        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+        enterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+        exitTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,8 +47,8 @@ class ArtistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = artistsAdapter
             addOnClickListener { position, view ->
-                exitTransition = MaterialElevationScale(false).apply { duration = 300L }
-                reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
+                exitTransition = MaterialElevationScale(false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+                reenterTransition = MaterialElevationScale(true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
                 val transitionName = getString(R.string.artist_songs_transition_name)
                 val extras = FragmentNavigatorExtras(view to transitionName)
                 val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(artistsAdapter.getItemByPosition(position)!!.id!!)

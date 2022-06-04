@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Motion-->
+    <integer name="motion_duration_large">300</integer>
+    <integer name="motion_duration_medium">225</integer>
+    <integer name="motion_duration_small">175</integer>
+
+    <!-- Preference Keys -->
     <string name="pref_api_key" translatable="false">API_KEY</string>
     <string name="pref_follow_system_accent" translatable="false">FOLLOW_SYSTEM_ACCENT</string>
     <string name="pref_theme_color" translatable="false">THEME_COLOR</string>

@@ -80,7 +80,7 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
             drawingViewId = R.id.nav_host_fragment
-            duration = 300L
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().resolveColor(R.attr.colorSurface))
         }
