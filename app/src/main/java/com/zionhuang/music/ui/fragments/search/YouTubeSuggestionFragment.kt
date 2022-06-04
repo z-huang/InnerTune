@@ -53,9 +53,15 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             }
         }
         viewModel.apply {
-            onFillQuery.observe(viewLifecycleOwner, { query -> searchView.setQuery(query, false) })
-            query.observe(viewLifecycleOwner, { query -> viewModel.fetchSuggestions(query) })
-            suggestions.observe(viewLifecycleOwner, { dataSet -> suggestionAdapter.setDataSet(dataSet) })
+            onFillQuery.observe(viewLifecycleOwner) { query ->
+                searchView.setQuery(query, false)
+            }
+            query.observe(viewLifecycleOwner) { query ->
+                viewModel.fetchSuggestions(query)
+            }
+            suggestions.observe(viewLifecycleOwner) { dataSet ->
+                suggestionAdapter.setDataSet(dataSet)
+            }
         }
     }
 
