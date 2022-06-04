@@ -4,7 +4,7 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatDelegate.*
+import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -49,12 +49,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
         findPreference<ListPreference>(getString(R.string.pref_dark_theme))?.setOnPreferenceChangeListener { _, newValue ->
-            setDefaultNightMode(when (newValue) {
-                getString(R.string.mode_night_no) -> MODE_NIGHT_NO
-                getString(R.string.mode_night_yes) -> MODE_NIGHT_YES
-                getString(R.string.mode_night_follow_system) -> MODE_NIGHT_FOLLOW_SYSTEM
-                else -> throw IllegalArgumentException()
-            })
+            setDefaultNightMode((newValue as String).toInt())
             true
         }
 
@@ -96,8 +91,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough().apply { duration = 300L }
-        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+        enterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+        exitTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

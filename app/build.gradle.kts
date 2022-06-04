@@ -89,7 +89,9 @@ materialThemeBuilder {
         )) {
             create("Material$name") {
                 lightThemeFormat = "ThemeOverlay.Light.%s"
+                lightThemeParent = "AppTheme"
                 darkThemeFormat = "ThemeOverlay.Dark.%s"
+                darkThemeParent = "AppTheme"
                 primaryColor = "#$color"
             }
         }

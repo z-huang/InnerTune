@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Base.AppTheme.V29" />
+
+    <style name="Base.AppTheme.V29" parent="Base.AppTheme">
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
+</resources>

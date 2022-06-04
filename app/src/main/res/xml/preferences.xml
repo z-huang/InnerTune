@@ -14,7 +14,7 @@
             android:summary="%s"
             android:title="@string/pref_theme_color_title" />
         <ListPreference
-            android:defaultValue="@string/mode_night_follow_system"
+            android:defaultValue="-1"
             android:entries="@array/dark_theme_texts"
             android:entryValues="@array/dark_theme_values"
             android:key="@string/pref_dark_theme"

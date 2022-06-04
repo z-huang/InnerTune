@@ -45,14 +45,10 @@
         <item>@string/dark_theme_follow_system</item>
     </string-array>
 
-    <string name="mode_night_no" translatable="false">MODE_NIGHT_NO</string>
-    <string name="mode_night_yes" translatable="false">MODE_NIGHT_YES</string>
-    <string name="mode_night_follow_system" translatable="false">MODE_NIGHT_FOLLOW_SYSTEM</string>
-
     <string-array name="dark_theme_values" translatable="false">
-        <item>@string/mode_night_no</item>
-        <item>@string/mode_night_yes</item>
-        <item>@string/mode_night_follow_system</item>
+        <item>1</item>
+        <item>2</item>
+        <item>-1</item>
     </string-array>
 
     <string-array name="color_values" translatable="false">
