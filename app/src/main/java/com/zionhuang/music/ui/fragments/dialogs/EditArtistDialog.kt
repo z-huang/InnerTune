@@ -57,7 +57,7 @@ class EditArtistDialog : AppCompatDialogFragment() {
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
             val existedArtist = SongRepository.getArtistByName(name)
-            if (existedArtist != null) {
+            if (existedArtist != null && existedArtist.id != artist.id) {
                 // name exists
                 withContext(Dispatchers.Main) {
                     MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
