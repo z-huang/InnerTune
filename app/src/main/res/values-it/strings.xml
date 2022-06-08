@@ -1,7 +1,4 @@
 <resources>
-    <!-- Nome app -->
-    <string name="app_name">Musica</string>
-
     <!-- Titolo -->
     <string name="title_songs">Brani</string>
     <string name="title_artists">Artisti</string>
