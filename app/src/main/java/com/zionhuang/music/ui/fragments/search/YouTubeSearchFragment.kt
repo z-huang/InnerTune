@@ -61,8 +61,8 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough().apply { duration = 300L }
-        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+        enterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+        exitTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,16 +91,16 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
                         )
                     }
                     is PlaylistInfoItem -> {
-                        exitTransition = MaterialElevationScale(false).apply { duration = 300L }
-                        reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
+                        exitTransition = MaterialElevationScale(false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+                        reenterTransition = MaterialElevationScale(true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
                         val transitionName = getString(R.string.youtube_playlist_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
                         val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(extractPlaylistId(item.url)!!)
                         findNavController().navigate(directions, extras)
                     }
                     is ChannelInfoItem -> {
-                        exitTransition = MaterialElevationScale(false).apply { duration = 300L }
-                        reenterTransition = MaterialElevationScale(true).apply { duration = 300L }
+                        exitTransition = MaterialElevationScale(false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+                        reenterTransition = MaterialElevationScale(true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
                         val transitionName = getString(R.string.youtube_channel_transition_name)
                         val extras = FragmentNavigatorExtras(view to transitionName)
                         val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(extractChannelId(item.url)!!)

@@ -17,8 +17,8 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 26
         targetSdk = 31
-        versionCode = 7
-        versionName = "0.3.0"
+        versionCode = 8
+        versionName = "0.3.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     applicationVariants.all {
@@ -89,7 +89,9 @@ materialThemeBuilder {
         )) {
             create("Material$name") {
                 lightThemeFormat = "ThemeOverlay.Light.%s"
+                lightThemeParent = "AppTheme"
                 darkThemeFormat = "ThemeOverlay.Dark.%s"
+                darkThemeParent = "AppTheme"
                 primaryColor = "#$color"
             }
         }

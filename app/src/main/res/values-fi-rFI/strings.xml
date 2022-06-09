@@ -1,7 +1,4 @@
 <resources>
-    <!-- App Name -->
-    <string name="app_name">Music</string>
-
     <!-- Title -->
     <string name="title_songs">Kappaleet</string>
     <string name="title_artists">Artistit</string>
@@ -13,14 +10,14 @@
     <string name="title_update">Päivitä</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">Appearance</string>
-    <string name="pref_follow_system_accent_title">Follow system theme</string>
-    <string name="pref_theme_color_title">Theme color</string>
-    <string name="pref_dark_theme_title">Dark theme</string>
-    <string name="dark_theme_on">On</string>
-    <string name="dark_theme_off">Off</string>
-    <string name="dark_theme_follow_system">Follow system</string>
-    <string name="pref_content">Content</string>
+    <string name="pref_appearance">Ulkoasu</string>
+    <string name="pref_follow_system_accent_title">Järjestelmän teeman mukainen</string>
+    <string name="pref_theme_color_title">Teeman väri</string>
+    <string name="pref_dark_theme_title">Tumma teema</string>
+    <string name="dark_theme_on">Käytössä</string>
+    <string name="dark_theme_off">Pois käytöstä</string>
+    <string name="dark_theme_follow_system">Järjestelmän teeman mukainen</string>
+    <string name="pref_content">Sisältö</string>
     <string name="pref_content_language_title">Sisällön oletuskieli</string>
     <string name="pref_default_content_country_title">Sisällön oletusmaa</string>
     <string name="pref_auto_download_title">Automaattinen lataus</string>
@@ -45,18 +42,18 @@
     <string name="color_deep_purple">Syvä violetti</string>
     <string name="color_indigo">Indigo</string>
     <string name="color_blue">Sininen</string>
-    <string name="color_light_blue">Vaalea sininen</string>
+    <string name="color_light_blue">Vaaleansininen</string>
     <string name="color_cyan">Syaani</string>
     <string name="color_teal">Sinappi</string>
     <string name="color_green">Vihreä</string>
-    <string name="color_light_green">Vaalea vihreä</string>
-    <string name="color_lime">Limea</string>
+    <string name="color_light_green">Vaalean vihreä</string>
+    <string name="color_lime">Lime</string>
     <string name="color_yellow">Keltainen</string>
     <string name="color_amber">Meripihka</string>
     <string name="color_orange">Oranssi</string>
     <string name="color_deep_orange">Syvä oranssi</string>
     <string name="color_brown">Ruskea</string>
-    <string name="color_blue_grey">Sininen harmaa</string>
+    <string name="color_blue_grey">Sinharmaa</string>
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Etsi</string>
@@ -88,8 +85,8 @@
     <string name="text_view_hint_artist_name">Artistin nimi</string>
     <string name="error_artist_name_empty">Artistin nimi ei voi olla tyhjä.</string>
 
-    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
-    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
+    <string name="dialog_title_duplicate_artist">Artistin kaksoiskappale</string>
+    <string name="dialog_msg_duplicate_artist">Artisti %1$s on jo olemassa. Yhdistetäänkö artistit?</string>
 
     <string name="dialog_title_choose_playlist">Valitse soittolista</string>
 

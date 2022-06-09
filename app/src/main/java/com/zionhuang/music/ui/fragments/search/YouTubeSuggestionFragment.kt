@@ -35,8 +35,8 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough().apply { duration = 300L }
-        exitTransition = MaterialFadeThrough().apply { duration = 300L }
+        enterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+        exitTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,9 +53,15 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             }
         }
         viewModel.apply {
-            onFillQuery.observe(viewLifecycleOwner, { query -> searchView.setQuery(query, false) })
-            query.observe(viewLifecycleOwner, { query -> viewModel.fetchSuggestions(query) })
-            suggestions.observe(viewLifecycleOwner, { dataSet -> suggestionAdapter.setDataSet(dataSet) })
+            onFillQuery.observe(viewLifecycleOwner) { query ->
+                searchView.setQuery(query, false)
+            }
+            query.observe(viewLifecycleOwner) { query ->
+                viewModel.fetchSuggestions(query)
+            }
+            suggestions.observe(viewLifecycleOwner) { dataSet ->
+                suggestionAdapter.setDataSet(dataSet)
+            }
         }
     }
 

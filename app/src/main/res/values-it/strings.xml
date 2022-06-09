@@ -1,7 +1,4 @@
 <resources>
-    <!-- Nome app -->
-    <string name="app_name">Musica</string>
-
     <!-- Titolo -->
     <string name="title_songs">Brani</string>
     <string name="title_artists">Artisti</string>
@@ -13,19 +10,19 @@
     <string name="title_update">Aggiorna</string>
 
     <!-- Preferenze -->
-    <string name="pref_appearance">Appearance</string>
-    <string name="pref_follow_system_accent_title">Follow system theme</string>
-    <string name="pref_theme_color_title">Theme color</string>
-    <string name="pref_dark_theme_title">Dark theme</string>
-    <string name="dark_theme_on">On</string>
-    <string name="dark_theme_off">Off</string>
-    <string name="dark_theme_follow_system">Follow system</string>
-    <string name="pref_content">Content</string>
+    <string name="pref_appearance">Aspetto</string>
+    <string name="pref_follow_system_accent_title">Segui tema di sistema</string>
+    <string name="pref_theme_color_title">Colore del tema</string>
+    <string name="pref_dark_theme_title">Tema scuro</string>
+    <string name="dark_theme_on">Attivato</string>
+    <string name="dark_theme_off">Disattivato</string>
+    <string name="dark_theme_follow_system">Segui sistema</string>
+    <string name="pref_content">Contenuti</string>
     <string name="pref_content_language_title">Lingua predefinita dei contenuti</string>
     <string name="pref_default_content_country_title">Paese predefinito dei contenuti</string>
     <string name="pref_auto_download_title">Scaricamento automatico</string>
     <string name="pref_auto_download_summary">Scarica la canzone quando viene aggiunta alla libreria</string>
-    <string name="pref_auto_add_song_title">Agguiunta automatica nella libreria</string>
+    <string name="pref_auto_add_song_title">Aggiunta automatica nella libreria</string>
     <string name="pref_auto_add_song_summary">Aggiungi la canzone nella tua libreria quando viene terminato l\'ascolto</string>
     <string name="pref_expand_on_play_title">Espandi il riproduttore in basso quando inizia un ascolto</string>
     <string name="pref_about">Informazioni</string>
@@ -37,7 +34,7 @@
     <string name="pref_cant_check_for_updates">Qualcosa è andato storto.</string>
     <string name="pref_update_title">Un aggiornamento è disponibile</string>
 
-    <!-- Colors -->
+    <!-- Colori -->
     <string name="color_sakura">Sakura</string>
     <string name="color_red">Rosso</string>
     <string name="color_pink">Rosa</string>
@@ -72,7 +69,7 @@
     <string name="menu_song_remove_download">Rimuovi scaricamento</string>
     <string name="menu_song_delete">Elimina</string>
 
-    <!-- Dialog -->
+    <!-- Dialoghi -->
     <string name="dialog_title_edit_song">Modifica brano</string>
     <string name="song_title">Titolo</string>
     <string name="song_artist">Artista</string>
@@ -88,8 +85,8 @@
     <string name="text_view_hint_artist_name">Nome dell\'artista</string>
     <string name="error_artist_name_empty">Il nome dell\'artista non può essere vuoto.</string>
 
-    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
-    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
+    <string name="dialog_title_duplicate_artist">Artisti duplicati</string>
+    <string name="dialog_msg_duplicate_artist">L\'artista %1$s esiste già. Unire i due artisti?</string>
 
     <string name="dialog_title_choose_playlist">Scegli una playlist</string>
 
@@ -137,7 +134,7 @@
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Aggiungi alla libreria</string>
 
-    <!-- Search Filter -->
+    <!-- Ricerca -->
     <string name="search_filter_all">Tutto</string>
     <string name="search_filter_songs">Brani</string>
     <string name="search_filter_videos">Video</string>
@@ -149,7 +146,7 @@
     <string name="system_default">Predefinito di sistema</string>
     <string name="explore_page_content">Cerca per trovare della musica</string>
 
-    <!-- Update Fragment -->
+    <!-- Aggiornamento -->
     <string name="whatsnew">Novità</string>
     <string name="btn_update">Aggiorna</string>
     <string name="update_status_preparing">Preparazione in corso…</string>

@@ -148,17 +148,17 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     private inner class BottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, @State newState: Int) {
             bottomSheetCallback?.onStateChanged(bottomSheet, newState)
-            if (newState == STATE_COLLAPSED) {
+            if (newState == STATE_COLLAPSED && binding.mainContent.paddingBottom != dip(R.dimen.bottom_controls_sheet_peek_height)) {
                 ValueAnimator.ofInt(0, dip(R.dimen.bottom_controls_sheet_peek_height)).apply {
-                    duration = 300L
+                    duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
                     interpolator = FastOutSlowInInterpolator()
                     addUpdateListener {
                         binding.mainContent.updatePadding(bottom = it.animatedValue as Int)
                     }
                 }.start()
-            } else if (newState == STATE_HIDDEN) {
+            } else if (newState == STATE_HIDDEN && binding.mainContent.paddingBottom != 0) {
                 ValueAnimator.ofInt(dip(R.dimen.bottom_controls_sheet_peek_height), 0).apply {
-                    duration = 300L
+                    duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
                     interpolator = FastOutSlowInInterpolator()
                     addUpdateListener {
                         binding.mainContent.updatePadding(bottom = it.animatedValue as Int)

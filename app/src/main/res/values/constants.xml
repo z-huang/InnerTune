@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Name -->
+    <string name="app_name" translatable="false">Music</string>
+
+    <!--Motion-->
+    <integer name="motion_duration_large">300</integer>
+    <integer name="motion_duration_medium">225</integer>
+    <integer name="motion_duration_small">175</integer>
+
+    <!-- Preference Keys -->
     <string name="pref_api_key" translatable="false">API_KEY</string>
     <string name="pref_follow_system_accent" translatable="false">FOLLOW_SYSTEM_ACCENT</string>
     <string name="pref_theme_color" translatable="false">THEME_COLOR</string>
@@ -39,14 +48,10 @@
         <item>@string/dark_theme_follow_system</item>
     </string-array>
 
-    <string name="mode_night_no" translatable="false">MODE_NIGHT_NO</string>
-    <string name="mode_night_yes" translatable="false">MODE_NIGHT_YES</string>
-    <string name="mode_night_follow_system" translatable="false">MODE_NIGHT_FOLLOW_SYSTEM</string>
-
     <string-array name="dark_theme_values" translatable="false">
-        <item>@string/mode_night_no</item>
-        <item>@string/mode_night_yes</item>
-        <item>@string/mode_night_follow_system</item>
+        <item>1</item>
+        <item>2</item>
+        <item>-1</item>
     </string-array>
 
     <string-array name="color_values" translatable="false">
