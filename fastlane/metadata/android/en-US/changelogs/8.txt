@@ -1,8 +1,8 @@
 <br><b>Fixed</b>
 
 * Fix main content resize animation
-* Fix dark theme malfunction
-* Fix renaming an artist can lead to lose songs
+* Fix dark theme malfunction #69
+* Fix renaming an artist can lead to lose songs #75
 
 <br><b>Translation updates</b>
 
