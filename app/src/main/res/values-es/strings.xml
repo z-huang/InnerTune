@@ -1,0 +1,156 @@
+<resources>
+    <!-- Title -->
+    <string name="title_songs">Canciones</string>
+    <string name="title_artists">Artistas</string>
+    <string name="title_channels">Canales</string>
+    <string name="title_playlists">Listas de reproducción</string>
+    <string name="title_explore">Explorar</string>
+    <string name="title_settings">Ajustes</string>
+    <string name="title_now_playing">Reproduciendo</string>
+    <string name="title_update">Actualizar</string>
+
+    <!-- Preference Title -->
+    <string name="pref_appearance">Apariencia</string>
+    <string name="pref_follow_system_accent_title">Seguir el tema del sistema</string>
+    <string name="pref_theme_color_title">Color del tema</string>
+    <string name="pref_dark_theme_title">Tema oscuro</string>
+    <string name="dark_theme_on">Encendido</string>
+    <string name="dark_theme_off">Apagado</string>
+    <string name="dark_theme_follow_system">Seguir el sistema</string>
+    <string name="pref_content">Contenido</string>
+    <string name="pref_content_language_title">Idioma de contenido predeterminado</string>
+    <string name="pref_default_content_country_title">País de contenido predeterminado</string>
+    <string name="pref_auto_download_title">Descarga automatica</string>
+    <string name="pref_auto_download_summary">Descargar canción cuando se agrega a la biblioteca</string>
+    <string name="pref_auto_add_song_title">Agregar canción automáticamente a la biblioteca</string>
+    <string name="pref_auto_add_song_summary">Agregue una canción a su biblioteca cuando termine de reproducirse</string>
+    <string name="pref_expand_on_play_title">Expandir reproductor inferior al reproducir</string>
+    <string name="pref_about">Acerca de</string>
+    <string name="pref_app_version_title">Version de la app</string>
+    <string name="pref_newpipe_version_title">NewPipe Extractor version</string>
+    <string name="pref_check_for_updates_title">Buscar actualizaciones</string>
+    <string name="pref_checking_for_updates">Buscando…</string>
+    <string name="pref_up_to_date">Estas actualizado.</string>
+    <string name="pref_cant_check_for_updates">Algo salió mal.</string>
+    <string name="pref_update_title">Actualización disponible</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Rojo</string>
+    <string name="color_pink">Rosa</string>
+    <string name="color_purple">Morado</string>
+    <string name="color_deep_purple">Morado oscuro</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_blue">Azul</string>
+    <string name="color_light_blue">Azul claro</string>
+    <string name="color_cyan">Cian</string>
+    <string name="color_teal">Verde azulado</string>
+    <string name="color_green">Verde</string>
+    <string name="color_light_green">Verde claro</string>
+    <string name="color_lime">Lima</string>
+    <string name="color_yellow">Amarillo</string>
+    <string name="color_amber">Ambar</string>
+    <string name="color_orange">Naranjo</string>
+    <string name="color_deep_orange">Naranjo oscuro</string>
+    <string name="color_brown">Cafe</string>
+    <string name="color_blue_grey">Gris azulado</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">Buscar</string>
+
+    <!-- Popup Menu -->
+    <string name="search_item_menu_add">Agregar a la biblioteca</string>
+    <string name="search_item_menu_download">Descargar</string>
+    <string name="menu_edit">Editar</string>
+    <string name="menu_song_play_next">Reproducir siguiente</string>
+    <string name="menu_song_add_to_queue">Añadir a la cola</string>
+    <string name="menu_song_add_to_playlist">Agregar a la lista de reproducción</string>
+    <string name="menu_song_download">Descargar</string>
+    <string name="menu_song_remove_download">Quitar descarga</string>
+    <string name="menu_song_delete">Borrar</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title_edit_song">Editar cancion</string>
+    <string name="song_title">Título de la canción</string>
+    <string name="song_artist">Artista de la canción</string>
+    <string name="error_song_title_empty">El título de la canción no puede estar vacío.</string>
+    <string name="error_song_artist_empty">El artista de la canción no puede estar vacío.</string>
+    <string name="dialog_button_save">Guardar</string>
+
+    <string name="dialog_title_create_playlist">Crear lista de reproducción</string>
+    <string name="text_view_hint_playlist_name">Nombre de la lista de reproducción</string>
+    <string name="error_playlist_name_empty">El nombre de la lista de reproducción no puede estar vacío.</string>
+
+    <string name="dialog_title_edit_artist">Editar artista</string>
+    <string name="text_view_hint_artist_name">Nombre del artista</string>
+    <string name="error_artist_name_empty">El nombre del artista no puede estar vacío.</string>
+
+    <string name="dialog_title_duplicate_artist">Artistas duplicados</string>
+    <string name="dialog_msg_duplicate_artist">El artista %1$s ya existe. ¿Fusionar artistas?</string>
+
+    <string name="dialog_title_choose_playlist">Elegir lista de reproducción</string>
+
+    <string name="dialog_title_edit_playlist">Editar lista de reproducción</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Reproductor de música</string>
+    <string name="channel_name_download">Descargar</string>
+
+    <!-- Noun -->
+    <plurals name="songs_count">
+        <item quantity="zero">%d cancion</item>
+        <item quantity="one">%d cancion</item>
+        <item quantity="other">%d canciones</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="zero">%d suscriptor</item>
+        <item quantity="one">%d suscriptor</item>
+        <item quantity="other">%d suscriptores</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videos</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Volver a intentar</string>
+    <string name="btn_play_all">Reproducir todo</string>
+    <string name="btn_shuffle">Shuffle</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">Nombre</string>
+    <string name="sort_by_artist">Artista</string>
+    <string name="sort_by_create_date">Fecha Agregada</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d canción ha sido eliminada.</item>
+        <item quantity="other">%d canciónes han sido eliminadas.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">%d seleccionadas</item>
+    </plurals>
+    <string name="snack_bar_undo">Deshacer</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">Agregar a la biblioteca</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Todo</string>
+    <string name="search_filter_songs">Canciones</string>
+    <string name="search_filter_videos">Videos</string>
+    <string name="search_filter_albums">Albums</string>
+    <string name="search_filter_artists">Artistas</string>
+    <string name="search_filter_playlists">Listas de reproducción</string>
+    <string name="search_filter_channels">Canales</string>
+
+    <string name="system_default">Sistema por defecto</string>
+    <string name="explore_page_content">Buscar para encontrar algo de música</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">Que hay de nuevo</string>
+    <string name="btn_update">Actualizar</string>
+    <string name="update_status_preparing">Preparando…</string>
+    <string name="update_status_verifying">Verificando…</string>
+    <string name="update_status_downloading">Descargando… (%1$s/%2$s)</string>
+</resources>
