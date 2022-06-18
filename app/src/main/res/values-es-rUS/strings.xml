@@ -127,9 +127,12 @@
     <plurals name="snack_bar_delete_song">
         <item quantity="one">%d canción fue eliminada.</item>
         <item quantity="other">%d canciones fueron eliminadas.</item>
+        <item quantity="many">%d canciones fueron eliminadas.</item>
     </plurals>
     <plurals name="n_selected">
+        <item quantity="one">%d seleccionada</item>
         <item quantity="other">%d seleccionadas</item>
+        <item quantity="many">%d seleccionadas</item>
     </plurals>
     <string name="snack_bar_undo">Deshacer</string>
 
