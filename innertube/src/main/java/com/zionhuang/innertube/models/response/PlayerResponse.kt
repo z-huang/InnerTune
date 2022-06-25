@@ -59,7 +59,10 @@ data class PlayerResponse(
             val approxDurationMs: Long,
             val audioSampleRate: Int?,
             val audioChannels: Int?,
-        )
+        ) {
+            val isAudio: Boolean
+                get() = width == null
+        }
     }
 
     @Serializable

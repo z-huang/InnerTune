@@ -1,3 +1,4 @@
+
 import com.zionhuang.innertube.InnerTube.Companion.ALBUM_PARAM
 import com.zionhuang.innertube.InnerTube.Companion.ARTIST_PARAM
 import com.zionhuang.innertube.InnerTube.Companion.COMMUNITY_PLAYLIST_PARAM
@@ -5,7 +6,6 @@ import com.zionhuang.innertube.InnerTube.Companion.FEATURED_PLAYLIST_PARAM
 import com.zionhuang.innertube.InnerTube.Companion.SONG_PARAM
 import com.zionhuang.innertube.InnerTube.Companion.VIDEO_PARAM
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.Locale
 import com.zionhuang.innertube.models.toAlbumInfo
 import com.zionhuang.innertube.models.toArtistInfo
 import com.zionhuang.innertube.models.toPlaylistInfo
@@ -19,7 +19,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class YouTubeTest {
-    private val youTube = YouTube(locale = Locale("US", "en"))
+    private val youTube = YouTube
 
     @Test
     fun `Check 'player' endpoint`() = VIDEO_IDS.forEach { videoId ->

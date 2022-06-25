@@ -1,8 +1,8 @@
 package com.zionhuang.innertube
 
 import com.zionhuang.innertube.encoder.brotli
-import com.zionhuang.innertube.models.Locale
 import com.zionhuang.innertube.models.YouTubeClient
+import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.innertube.models.body.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -14,14 +14,18 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import java.util.*
 
 /**
  * Provide access to InnerTube endpoints.
  * For making HTTP requests, not parsing response.
  */
-class InnerTube(
-    private val locale: Locale,
-) {
+class InnerTube {
+    var locale = YouTubeLocale(
+        gl = Locale.getDefault().country,
+        hl = Locale.getDefault().toLanguageTag()
+    )
+
     @OptIn(ExperimentalSerializationApi::class)
     val httpClient = HttpClient(CIO) {
         expectSuccess = true

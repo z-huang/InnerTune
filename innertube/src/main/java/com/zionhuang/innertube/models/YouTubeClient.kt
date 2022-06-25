@@ -10,7 +10,7 @@ data class YouTubeClient(
     val userAgent: String,
     val referer: String? = null,
 ) {
-    fun toContext(locale: Locale) = Context(
+    fun toContext(locale: YouTubeLocale) = Context(
         client = Context.Client(
             clientName = clientName,
             clientVersion = clientVersion,

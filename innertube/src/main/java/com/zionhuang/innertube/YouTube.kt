@@ -9,8 +9,14 @@ import io.ktor.client.call.*
 /**
  * Parse useful data with [InnerTube] sending requests.
  */
-class YouTube(locale: Locale) {
-    private val innerTube = InnerTube(locale)
+object YouTube {
+    private val innerTube = InnerTube()
+
+    var locale: YouTubeLocale
+        get() = innerTube.locale
+        set(value) {
+            innerTube.locale = value
+        }
 
     suspend fun getSearchSuggestions(query: String): List<SuggestionItem> =
         innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>()
