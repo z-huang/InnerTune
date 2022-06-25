@@ -13,7 +13,6 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
-import android.util.Log
 import android.util.Pair
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -88,11 +87,25 @@ class SongPlayer(
                 DefaultDataSource.Factory(context)
             ) { dataSpec ->
                 runBlocking {
-                    // TODO Error handling
                     val mediaId = dataSpec.uri.host ?: throw IllegalArgumentException("Cannot find media id from uri host")
                     if (localRepository.getSongById(mediaId)?.downloadState == STATE_DOWNLOADED) {
                         return@runBlocking dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
                     }
+//                    val uri = kotlin.runCatching {
+//                        runBlocking(Dispatchers.IO) {
+//                            YouTube.player(mediaId)
+//                        }
+//                    }.mapCatching { playerResponse ->
+//                        if (playerResponse.playabilityStatus.status != "OK") {
+//                            throw PlaybackException(playerResponse.playabilityStatus.status, null, ERROR_CODE_REMOTE_ERROR)
+//                        }
+//                        playerResponse.streamingData?.adaptiveFormats
+//                            ?.filter { it.isAudio }
+//                            ?.maxByOrNull { it.bitrate }
+//                            ?.url
+//                            ?.toUri()
+//                            ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
+//                    }.getOrThrow()
                     val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
                         runBlocking {
                             remoteRepository.getStream(mediaId)
@@ -353,5 +366,7 @@ class SongPlayer(
         const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
         const val NOTIFICATION_ID = 888
+
+        const val ERROR_CODE_NO_STREAM = 1000001
     }
 }
