@@ -1,2 +1,3 @@
-include(":app")
 rootProject.name = "Music"
+include(":app")
+include(":innertube")

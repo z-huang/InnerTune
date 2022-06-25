@@ -141,6 +141,8 @@ dependencies {
     implementation("androidx.room:room-ktx:2.4.2")
     implementation("androidx.room:room-paging:2.4.2")
     testImplementation("androidx.room:room-testing:2.4.2")
+    // YouTube API
+    implementation(project(mapOf("path" to ":innertube")))
     // NewPipe Extractor
     implementation("com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751")
     implementation("com.github.TeamNewPipe:NewPipeExtractor:v$newpipeVersion")
