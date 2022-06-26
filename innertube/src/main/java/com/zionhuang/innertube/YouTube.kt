@@ -35,8 +35,8 @@ object YouTube {
         )
     }
 
-    suspend fun search(query: String, params: String): SearchResult {
-        val response = innerTube.search(WEB_REMIX, query, params).body<SearchResponse>()
+    suspend fun search(query: String, filter: SearchFilter): SearchResult {
+        val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
         return SearchResult(
             items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents
                 .map { it.toItem() },
@@ -111,5 +111,17 @@ object YouTube {
             .queueDatas.map {
                 it.content.playlistPanelVideoRenderer.toSongItem()
             }
+    }
+
+    @JvmInline
+    value class SearchFilter(val value: String) {
+        companion object {
+            val FILTER_SONG = SearchFilter("EgWKAQIIAWoMEAMQDhAEEAkQChAF")
+            val FILTER_VIDEO = SearchFilter("EgWKAQIQAWoMEAMQDhAEEAkQChAF")
+            val FILTER_ALBUM = SearchFilter("EgWKAQIYAWoMEAMQDhAEEAkQChAF")
+            val FILTER_ARTIST = SearchFilter("EgWKAQIgAWoMEAMQDhAEEAkQChAF")
+            val FILTER_FEATURED_PLAYLIST = SearchFilter("EgeKAQQoADgBagwQAxAOEAQQCRAKEAU%3D")
+            val FILTER_COMMUNITY_PLAYLIST = SearchFilter("EgeKAQQoAEABagwQAxAOEAQQCRAKEAU%3D")
+        }
     }
 }

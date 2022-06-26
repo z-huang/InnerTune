@@ -1,11 +1,11 @@
 
-import com.zionhuang.innertube.InnerTube.Companion.ALBUM_PARAM
-import com.zionhuang.innertube.InnerTube.Companion.ARTIST_PARAM
-import com.zionhuang.innertube.InnerTube.Companion.COMMUNITY_PLAYLIST_PARAM
-import com.zionhuang.innertube.InnerTube.Companion.FEATURED_PLAYLIST_PARAM
-import com.zionhuang.innertube.InnerTube.Companion.SONG_PARAM
-import com.zionhuang.innertube.InnerTube.Companion.VIDEO_PARAM
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_PLAYLIST
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
 import com.zionhuang.innertube.models.toAlbumInfo
 import com.zionhuang.innertube.models.toArtistInfo
 import com.zionhuang.innertube.models.toPlaylistInfo
@@ -49,22 +49,22 @@ class YouTubeTest {
     fun `Check 'search' endpoint`() = runBlocking {
         val searchAllTypeResult = youTube.searchAllType(SEARCH_QUERY)
         assertTrue(searchAllTypeResult.sections.size > 1)
-        for (params in listOf(
-            SONG_PARAM,
-            FEATURED_PLAYLIST_PARAM,
-            VIDEO_PARAM,
-            ALBUM_PARAM,
-            COMMUNITY_PLAYLIST_PARAM,
-            ARTIST_PARAM
+        for (filter in listOf(
+            FILTER_SONG,
+            FILTER_FEATURED_PLAYLIST,
+            FILTER_VIDEO,
+            FILTER_ALBUM,
+            FILTER_COMMUNITY_PLAYLIST,
+            FILTER_ARTIST
         )) {
-            val searchResult = youTube.search(SEARCH_QUERY, params = params)
+            val searchResult = youTube.search(SEARCH_QUERY, filter)
             assertTrue(searchResult.items.isNotEmpty())
         }
     }
 
     @Test
     fun `Check search continuation`() = runBlocking {
-        var searchResult = youTube.search(SEARCH_QUERY, params = SONG_PARAM)
+        var searchResult = youTube.search(SEARCH_QUERY, FILTER_SONG)
         while (searchResult.continuation != null) {
             searchResult.items.forEach {
                 println(it.title)
