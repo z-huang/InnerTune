@@ -51,7 +51,7 @@ import com.zionhuang.music.models.toMediaDescription
 import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.repos.YouTubeRepository
+import com.zionhuang.music.repos.NewPipeRepository
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.repos.base.RemoteRepository
 import com.zionhuang.music.ui.activities.MainActivity
@@ -73,7 +73,7 @@ class SongPlayer(
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Player.Listener {
     private val localRepository: LocalRepository = SongRepository
-    private val remoteRepository: RemoteRepository = YouTubeRepository
+    private val remoteRepository: RemoteRepository = NewPipeRepository
     private var currentQueue: Queue = EmptyQueue()
 
     private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {

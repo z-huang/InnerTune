@@ -9,7 +9,7 @@ import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.stream.StreamInfo
 
-object YouTubeRepository : RemoteRepository {
+object NewPipeRepository : RemoteRepository {
     override fun search(query: String, filter: String): PagingSource<Page, InfoItem> = object : PagingSource<Page, InfoItem>() {
         @Suppress("BlockingMethodInNonBlockingContext")
         override suspend fun load(params: LoadParams<Page>) = try {

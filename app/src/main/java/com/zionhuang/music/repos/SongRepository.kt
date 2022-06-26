@@ -41,7 +41,7 @@ object SongRepository : LocalRepository {
     private val artistDao: ArtistDao = musicDatabase.artistDao
     private val playlistDao: PlaylistDao = musicDatabase.playlistDao
     private val downloadDao: DownloadDao = musicDatabase.downloadDao
-    private val remoteRepository: RemoteRepository = YouTubeRepository
+    private val remoteRepository: RemoteRepository = NewPipeRepository
 
     private var autoDownload by context.preference(R.string.pref_auto_download, false)
 

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.zionhuang.music.repos.YouTubeRepository
+import com.zionhuang.music.repos.NewPipeRepository
 import kotlinx.coroutines.launch
 
 class SuggestionViewModel(application: Application) : AndroidViewModel(application) {
@@ -27,7 +27,7 @@ class SuggestionViewModel(application: Application) : AndroidViewModel(applicati
         }
         viewModelScope.launch {
             try {
-                suggestions.postValue(YouTubeRepository.suggestionsFor(query))
+                suggestions.postValue(NewPipeRepository.suggestionsFor(query))
             } catch (e: Exception) {
             }
         }
