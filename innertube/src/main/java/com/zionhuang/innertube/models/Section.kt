@@ -7,6 +7,10 @@ import kotlinx.serialization.Serializable
 sealed class Section {
     abstract val header: Header?
 
+    enum class ViewType {
+        LIST, BLOCK
+    }
+
     @Serializable
     data class Header(
         val title: String,
@@ -16,16 +20,19 @@ sealed class Section {
 }
 
 @Serializable
-data class ItemSection(
+data class ListSection(
     override val header: Header? = null,
     val items: List<Item>,
     val continuation: String? = null,
+    val itemViewType: ViewType,
 ) : Section()
 
 @Serializable
 data class CarouselSection(
     override val header: Header? = null,
     val items: List<Item>,
+    val numItemsPerColumn: Int = 1,
+    val itemViewType: ViewType,
 ) : Section()
 
 @Serializable

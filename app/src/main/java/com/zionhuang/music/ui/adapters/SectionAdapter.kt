@@ -25,7 +25,7 @@ class SectionAdapter : PagingDataAdapter<Section, SectionViewHolder>(SectionComp
     }
 
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
-        is ItemSection -> SECTION_ITEM
+        is ListSection -> SECTION_ITEM
         is CarouselSection -> SECTION_CAROUSEL
         is GridSection -> SECTION_GRID
         is DescriptionSection -> SECTION_DESCRIPTION

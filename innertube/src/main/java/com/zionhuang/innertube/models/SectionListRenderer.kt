@@ -56,7 +56,9 @@ data class SectionListRenderer(
                 header = Section.Header(
                     title = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
                 ),
-                items = musicCarouselShelfRenderer.contents.map { it.toItem() }
+                items = musicCarouselShelfRenderer.contents.map { it.toItem() },
+                numItemsPerColumn = musicCarouselShelfRenderer.numItemsPerColumn ?: 1,
+                itemViewType = musicCarouselShelfRenderer.getViewType()
             )
             musicShelfRenderer != null -> toItemSection()
             musicDescriptionShelfRenderer != null -> DescriptionSection(
@@ -77,13 +79,14 @@ data class SectionListRenderer(
             else -> null
         }
 
-        fun toItemSection() = ItemSection(
+        fun toItemSection() = ListSection(
             header = Section.Header(
                 title = musicShelfRenderer!!.title.toString(),
                 moreNavigationEndpoint = musicShelfRenderer.bottomEndpoint,
             ),
             items = musicShelfRenderer.contents.map { it.toItem() },
-            continuation = musicShelfRenderer.continuations?.getContinuation()
+            continuation = musicShelfRenderer.continuations?.getContinuation(),
+            itemViewType = musicShelfRenderer.getViewType()
         )
     }
 }

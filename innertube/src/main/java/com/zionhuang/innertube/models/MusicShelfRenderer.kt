@@ -11,6 +11,8 @@ data class MusicShelfRenderer(
     val moreContentButton: MoreContentButton?,
     val continuations: List<Continuation>?,
 ) {
+    fun getViewType() = Section.ViewType.LIST
+
     @Serializable
     data class Content(
         val musicResponsiveListItemRenderer: MusicResponsiveListItemRenderer,
