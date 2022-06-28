@@ -98,12 +98,10 @@
 
     <!-- Noun -->
     <plurals name="songs_count">
-        <item quantity="zero">%d cancion</item>
         <item quantity="one">%d cancion</item>
         <item quantity="other">%d canciones</item>
     </plurals>
     <plurals name="subscribers">
-        <item quantity="zero">%d suscriptor</item>
         <item quantity="one">%d suscriptor</item>
         <item quantity="other">%d suscriptores</item>
     </plurals>
@@ -128,6 +126,7 @@
         <item quantity="other">%d canciónes han sido eliminadas.</item>
     </plurals>
     <plurals name="n_selected">
+        <item quantity="one">%d seleccionada</item>
         <item quantity="other">%d seleccionadas</item>
     </plurals>
     <string name="snack_bar_undo">Deshacer</string>
