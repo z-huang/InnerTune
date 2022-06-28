@@ -51,7 +51,7 @@ class ExploreFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_search -> findNavController().navigate(R.id.action_explorationFragment_to_searchSuggestionFragment)
+            R.id.action_search -> findNavController().navigate(R.id.action_exploreFragment_to_searchSuggestionFragment)
             R.id.action_settings -> findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
         }
         return true

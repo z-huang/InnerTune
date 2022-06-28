@@ -100,10 +100,10 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.exploreFragment,
             R.id.songsFragment,
             R.id.artistsFragment,
-            R.id.playlistsFragment,
-            R.id.explorationFragment
+            R.id.playlistsFragment
         ))
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
