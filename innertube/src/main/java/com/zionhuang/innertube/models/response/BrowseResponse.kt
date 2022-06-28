@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BrowseResponse(
     val contents: Contents,
+    val continuationContents: ContinuationContents?,
     val header: Header?,
     val microformat: Microformat?,
 ) {
@@ -13,16 +14,34 @@ data class BrowseResponse(
         it.toSection()
     }
 
-    fun toBrowseResult() = BrowseResult(
-        sections = toSectionList(),
-        continuation = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
-    )
+    fun toBrowseResult() =
+        if (continuationContents == null)
+            BrowseResult(
+                sections = toSectionList(),
+                continuation = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
+            )
+        else
+            BrowseResult(
+                sections = continuationContents.sectionListContinuation.contents.mapNotNull { it.toSection() },
+                continuation = continuationContents.sectionListContinuation.continuations?.getContinuation()
+            )
 
     @Serializable
     data class Contents(
         val singleColumnBrowseResultsRenderer: Tabs?,
         val sectionListRenderer: SectionListRenderer?,
     )
+
+    @Serializable
+    data class ContinuationContents(
+        val sectionListContinuation: SectionListContinuation,
+    ) {
+        @Serializable
+        data class SectionListContinuation(
+            val contents: List<SectionListRenderer.Content>,
+            val continuations: List<Continuation>?,
+        )
+    }
 
     @Serializable
     data class Header(

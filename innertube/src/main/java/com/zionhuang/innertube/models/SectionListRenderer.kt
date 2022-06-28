@@ -51,30 +51,39 @@ data class SectionListRenderer(
         val musicDescriptionShelfRenderer: MusicDescriptionShelfRenderer?,
         val gridRenderer: GridRenderer?,
     ) {
-        fun toSection(): Section? {
-            return when {
-                musicCarouselShelfRenderer != null -> ItemSection(
+        fun toSection(): Section? = when {
+            musicCarouselShelfRenderer != null -> CarouselSection(
+                header = Section.Header(
                     title = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
-                    items = musicCarouselShelfRenderer.contents.map { it.toItem() }
-                )
-                musicShelfRenderer != null -> toItemSection()
-                musicDescriptionShelfRenderer != null -> DescriptionSection(
+                ),
+                items = musicCarouselShelfRenderer.contents.map { it.toItem() }
+            )
+            musicShelfRenderer != null -> toItemSection()
+            musicDescriptionShelfRenderer != null -> DescriptionSection(
+                header = Section.Header(
                     title = musicDescriptionShelfRenderer.header.toString(),
                     subtitle = musicDescriptionShelfRenderer.subheader.toString(),
-                    description = musicDescriptionShelfRenderer.description.toString()
-                )
-                gridRenderer != null -> ItemSection(
-                    items = gridRenderer.items.map { it.toItem() }
-                )
-                else -> null
-            }
+                ),
+                description = musicDescriptionShelfRenderer.description.toString()
+            )
+            gridRenderer != null -> GridSection(
+                header = gridRenderer.header?.gridHeaderRenderer?.title?.toString()?.let {
+                    Section.Header(
+                        title = it
+                    )
+                },
+                items = gridRenderer.items.map { it.toItem() }
+            )
+            else -> null
         }
 
         fun toItemSection() = ItemSection(
-            title = musicShelfRenderer!!.title.toString(),
+            header = Section.Header(
+                title = musicShelfRenderer!!.title.toString(),
+                moreNavigationEndpoint = musicShelfRenderer.bottomEndpoint,
+            ),
             items = musicShelfRenderer.contents.map { it.toItem() },
-            continuation = musicShelfRenderer.continuations?.getContinuation(),
-            bottomEndpoint = musicShelfRenderer.bottomEndpoint?.searchEndpoint
+            continuation = musicShelfRenderer.continuations?.getContinuation()
         )
     }
 }

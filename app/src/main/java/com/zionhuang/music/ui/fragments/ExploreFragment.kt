@@ -6,17 +6,24 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
+import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.FragmentExploreBinding
+import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.ui.adapters.SectionAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.ExploreViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class ExploreFragment : BindingFragment<FragmentExploreBinding>() {
-    override fun getViewBinding() = FragmentExploreBinding.inflate(layoutInflater)
+class ExploreFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
 
     private val exploreViewModel by viewModels<ExploreViewModel>()
+    private val sectionAdapter = SectionAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +32,15 @@ class ExploreFragment : BindingFragment<FragmentExploreBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = sectionAdapter
+        }
+        lifecycleScope.launch {
+            exploreViewModel.browse(HOME_BROWSE_ID).collectLatest {
+                sectionAdapter.submitData(it)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

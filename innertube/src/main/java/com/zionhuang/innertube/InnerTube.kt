@@ -97,9 +97,9 @@ class InnerTube {
 
     suspend fun browse(
         client: YouTubeClient,
-        browseId: String,
-        params: String?,
-        continuation: String?,
+        browseId: String? = null,
+        params: String? = null,
+        continuation: String? = null,
     ) = httpClient.post("browse") {
         configYTClient(client)
         setBody(BrowseBody(
@@ -107,6 +107,11 @@ class InnerTube {
             browseId = browseId,
             params = params
         ))
+        parameter("continuation", continuation)
+        parameter("ctoken", continuation)
+        if (continuation != null) {
+            parameter("type", "next")
+        }
     }
 
     suspend fun next(
@@ -152,17 +157,5 @@ class InnerTube {
             videoIds = videoIds,
             playlistId = playlistId
         ))
-    }
-
-    companion object {
-        const val SONG_PARAM = "EgWKAQIIAWoMEAMQDhAEEAkQChAF"
-        const val FEATURED_PLAYLIST_PARAM = "EgeKAQQoADgBagwQAxAOEAQQCRAKEAU%3D"
-        const val VIDEO_PARAM = "EgWKAQIQAWoMEAMQDhAEEAkQChAF"
-        const val ALBUM_PARAM = "EgWKAQIYAWoMEAMQDhAEEAkQChAF"
-        const val COMMUNITY_PLAYLIST_PARAM = "EgeKAQQoAEABagwQAxAOEAQQCRAKEAU%3D"
-        const val ARTIST_PARAM = "EgWKAQIgAWoMEAMQDhAEEAkQChAF"
-
-        const val HOME_BROWSE_ID = "FEmusic_home"
-        const val EXPLORE_BROWSE_ID = "FEmusic_explore"
     }
 }

@@ -1,5 +1,6 @@
-
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
+import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_PLAYLIST
@@ -14,8 +15,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 class YouTubeTest {
@@ -64,12 +64,14 @@ class YouTubeTest {
 
     @Test
     fun `Check search continuation`() = runBlocking {
+        var count = 5
         var searchResult = youTube.search(SEARCH_QUERY, FILTER_SONG)
-        while (searchResult.continuation != null) {
+        while (searchResult.continuation != null && count > 0) {
             searchResult.items.forEach {
                 println(it.title)
             }
-            searchResult = youTube.search(searchResult.continuation!!)
+            searchResult = youTube.search(YouTube.Continuation(searchResult.continuation!!))
+            count -= 1
         }
         searchResult.items.forEach {
             println(it.title)
@@ -90,9 +92,17 @@ class YouTubeTest {
         assertTrue(albumInfo.items.isNotEmpty())
         val playlistInfo = youTube.browse("VLRDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo").toPlaylistInfo()
         assertTrue(playlistInfo.subtitle.isNotEmpty())
-        listOf("FEmusic_home", "FEmusic_explore").forEach { browseId ->
+        listOf(HOME_BROWSE_ID, EXPLORE_BROWSE_ID).forEach { browseId ->
             val result = youTube.browse(browseId).toBrowseResult()
             assertTrue(result.sections.isNotEmpty())
+        }
+    }
+
+    @Test
+    fun `Check 'browse' continuation`() = runBlocking {
+        var result = youTube.browse(HOME_BROWSE_ID).toBrowseResult()
+        while (result.continuation != null) {
+            result = youTube.browse(YouTube.Continuation(result.continuation!!)).toBrowseResult()
         }
     }
 
@@ -103,6 +113,7 @@ class YouTubeTest {
         val nextResult = youTube.getPlaylistItems(videoId = videoId, playlistId = playlistId)
         assertTrue(nextResult.items.isNotEmpty())
         val playlistSongInfo = youTube.getPlaylistSongInfo(videoId = VIDEO_IDS.random())
+        assertNotNull(playlistSongInfo.lyricsEndpoint)
     }
 
     @Test

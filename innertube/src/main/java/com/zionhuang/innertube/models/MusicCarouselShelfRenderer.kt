@@ -14,7 +14,9 @@ data class MusicCarouselShelfRenderer(
     ) {
         @Serializable
         data class MusicCarouselShelfBasicHeaderRenderer(
+            val strapline: Runs?,
             val title: Runs,
+            val thumbnail: ThumbnailRenderer?,
             val moreContentButton: Button?,
         )
     }

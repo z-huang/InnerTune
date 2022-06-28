@@ -1,6 +1,8 @@
 package com.zionhuang.music.extensions
 
 import androidx.paging.PagingSource.LoadResult
+import com.zionhuang.innertube.models.BrowseResult
+import com.zionhuang.innertube.models.SearchResult
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
 import org.schabi.newpipe.extractor.ListInfo
@@ -15,5 +17,17 @@ fun <T : InfoItem> ListInfo<T>.toPage() = LoadResult.Page<Page, InfoItem>(
 fun <T : InfoItem> InfoItemsPage<T>.toPage() = LoadResult.Page<Page, InfoItem>(
     data = items,
     nextKey = nextPage,
+    prevKey = null
+)
+
+fun SearchResult.toPage() = LoadResult.Page(
+    data = items,
+    nextKey = continuation,
+    prevKey = null
+)
+
+fun BrowseResult.toPage() = LoadResult.Page(
+    data = sections,
+    nextKey = continuation,
     prevKey = null
 )

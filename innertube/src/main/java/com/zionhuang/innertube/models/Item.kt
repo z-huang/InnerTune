@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Item {
     abstract val title: String
+    abstract val subtitle: String?
+    abstract val thumbnails: List<Thumbnail>
     abstract val navigationEndpoint: NavigationEndpoint
 
     interface FromContent<out T : Item> {
@@ -18,25 +20,23 @@ sealed class Item {
 @Serializable
 data class SongItem(
     override val title: String,
-    val subtitle: String,
+    override val subtitle: String,
     val index: String? = null,
     val artistEndpoint: BrowseEndpoint?,
     val albumEndpoint: BrowseEndpoint?,
-    val thumbnails: List<Thumbnail>,
+    override val thumbnails: List<Thumbnail>,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<SongItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): SongItem {
-            return SongItem(
-                title = item.getTitle(),
-                subtitle = item.getSubtitle(),
-                index = item.index?.toString(),
-                artistEndpoint = item.menu.getArtistEndpoint(),
-                albumEndpoint = item.menu.getAlbumEndpoint(),
-                thumbnails = item.thumbnail?.getThumbnails().orEmpty(),
-                navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
-            )
-        }
+        override fun from(item: MusicResponsiveListItemRenderer): SongItem = SongItem(
+            title = item.getTitle(),
+            subtitle = item.getSubtitle(),
+            index = item.index?.toString(),
+            artistEndpoint = item.menu.getArtistEndpoint(),
+            albumEndpoint = item.menu.getAlbumEndpoint(),
+            thumbnails = item.thumbnail?.getThumbnails().orEmpty(),
+            navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
+        )
 
         override fun from(item: MusicTwoRowItemRenderer): SongItem = SongItem(
             title = item.title.toString(),
@@ -52,10 +52,10 @@ data class SongItem(
 @Serializable
 data class VideoItem(
     override val title: String,
-    val subtitle: String,
+    override val subtitle: String,
     val artistEndpoint: BrowseEndpoint?,
     val albumEndpoint: BrowseEndpoint?,
-    val thumbnails: List<Thumbnail>,
+    override val thumbnails: List<Thumbnail>,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<VideoItem> {
@@ -82,11 +82,11 @@ data class VideoItem(
 @Serializable
 data class AlbumItem(
     override val title: String,
-    val subtitle: String,
+    override val subtitle: String,
     val shuffleEndpoint: NavigationEndpoint,
     val radioEndpoint: NavigationEndpoint,
     val artistEndpoint: BrowseEndpoint?,
-    val thumbnails: List<Thumbnail>,
+    override val thumbnails: List<Thumbnail>,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<AlbumItem> {
@@ -115,10 +115,10 @@ data class AlbumItem(
 @Serializable
 data class PlaylistItem(
     override val title: String,
-    val subtitle: String,
+    override val subtitle: String,
     val shuffleEndpoint: NavigationEndpoint,
     val radioEndpoint: NavigationEndpoint,
-    val thumbnails: List<Thumbnail>,
+    override val thumbnails: List<Thumbnail>,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<PlaylistItem> {
@@ -145,10 +145,10 @@ data class PlaylistItem(
 @Serializable
 data class ArtistItem(
     override val title: String,
-    val subtitle: String,
+    override val subtitle: String,
     val shuffleEndpoint: NavigationEndpoint,
     val radioEndpoint: NavigationEndpoint,
-    val thumbnails: List<Thumbnail>,
+    override val thumbnails: List<Thumbnail>,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<ArtistItem> {
@@ -161,23 +161,23 @@ data class ArtistItem(
             navigationEndpoint = item.navigationEndpoint!!
         )
 
-        override fun from(item: MusicTwoRowItemRenderer): ArtistItem {
-            return ArtistItem(
-                title = item.title.toString(),
-                subtitle = item.subtitle.toString(),
-                shuffleEndpoint = item.menu.getShuffleEndpoint()!!,
-                radioEndpoint = item.menu.getRadioEndpoint()!!,
-                thumbnails = item.thumbnailRenderer.getThumbnails(),
-                navigationEndpoint = item.navigationEndpoint
-            )
-        }
+        override fun from(item: MusicTwoRowItemRenderer): ArtistItem = ArtistItem(
+            title = item.title.toString(),
+            subtitle = item.subtitle.toString(),
+            shuffleEndpoint = item.menu.getShuffleEndpoint()!!,
+            radioEndpoint = item.menu.getRadioEndpoint()!!,
+            thumbnails = item.thumbnailRenderer.getThumbnails(),
+            navigationEndpoint = item.navigationEndpoint
+        )
     }
 }
 
 @Serializable
 data class NavigationItem(
     override val title: String,
+    override val subtitle: String? = null,
     val icon: String?,
     val stripeColor: Long?,
     override val navigationEndpoint: NavigationEndpoint,
+    override val thumbnails: List<Thumbnail> = emptyList(),
 ) : Item()

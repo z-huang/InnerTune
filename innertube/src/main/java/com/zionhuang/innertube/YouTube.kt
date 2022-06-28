@@ -44,8 +44,8 @@ object YouTube {
         )
     }
 
-    suspend fun search(continuation: String): SearchResult {
-        val response = innerTube.search(WEB_REMIX, continuation = continuation).body<SearchResponse>()
+    suspend fun search(continuation: Continuation): SearchResult {
+        val response = innerTube.search(WEB_REMIX, continuation = continuation.value).body<SearchResponse>()
         return SearchResult(
             items = response.continuationContents?.musicShelfContinuation?.contents?.map { it.toItem() }.orEmpty(),
             continuation = response.continuationContents?.musicShelfContinuation?.continuations?.getContinuation()
@@ -55,9 +55,11 @@ object YouTube {
     suspend fun player(videoId: String, playlistId: String? = null): PlayerResponse =
         innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
 
-    suspend fun browse(browseId: String, params: String? = null, continuation: String? = null): BrowseResponse =
-        innerTube.browse(WEB_REMIX, browseId, params, continuation).body()
+    suspend fun browse(browseId: String, params: String? = null): BrowseResponse =
+        innerTube.browse(WEB_REMIX, browseId, params, null).body()
 
+    suspend fun browse(continuation: Continuation): BrowseResponse =
+        innerTube.browse(WEB_REMIX, continuation = continuation.value).body()
 
     /**
      * Calling "next" endpoint without continuation
@@ -124,4 +126,10 @@ object YouTube {
             val FILTER_COMMUNITY_PLAYLIST = SearchFilter("EgeKAQQoAEABagwQAxAOEAQQCRAKEAU%3D")
         }
     }
+
+    @JvmInline
+    value class Continuation(val value: String)
+
+    const val HOME_BROWSE_ID = "FEmusic_home"
+    const val EXPLORE_BROWSE_ID = "FEmusic_explore"
 }

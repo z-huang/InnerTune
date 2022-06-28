@@ -12,5 +12,6 @@ data class Context(
         val clientVersion: String,
         val gl: String,
         val hl: String,
+        val visitorData: String?,
     )
 }

@@ -4,7 +4,7 @@ import com.zionhuang.innertube.models.endpoints.NavigationEndpoint
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class SuggestionItem()
+sealed class SuggestionItem
 
 @Serializable
 data class Text(

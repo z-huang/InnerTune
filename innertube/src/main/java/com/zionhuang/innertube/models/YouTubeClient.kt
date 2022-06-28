@@ -9,13 +9,15 @@ data class YouTubeClient(
     val api_key: String,
     val userAgent: String,
     val referer: String? = null,
+    val visitorData: String? = null, // TODO better management
 ) {
     fun toContext(locale: YouTubeLocale) = Context(
         client = Context.Client(
             clientName = clientName,
             clientVersion = clientVersion,
             gl = locale.gl,
-            hl = locale.hl
+            hl = locale.hl,
+            visitorData = visitorData
         )
     )
 
@@ -45,6 +47,7 @@ data class YouTubeClient(
             api_key = "AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30",
             userAgent = USER_AGENT_WEB,
             referer = REFERER_YOUTUBE_MUSIC,
+            visitorData = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
         )
     }
 }

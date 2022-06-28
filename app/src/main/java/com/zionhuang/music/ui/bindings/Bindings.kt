@@ -6,11 +6,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.zionhuang.innertube.models.Thumbnail
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.ArtworkType
 import com.zionhuang.music.constants.MediaConstants.TYPE_RECTANGLE
 import com.zionhuang.music.constants.MediaConstants.TYPE_SQUARE
-import com.zionhuang.music.extensions.*
+import com.zionhuang.music.extensions.circle
+import com.zionhuang.music.extensions.fullResolution
+import com.zionhuang.music.extensions.load
+import com.zionhuang.music.extensions.roundCorner
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.widgets.PlayPauseButton
 import com.zionhuang.music.ui.widgets.RepeatButton
@@ -91,6 +95,16 @@ fun setUrl(
         view.load(it) {
             if (circleCrop) circle()
             if (fullResolution) fullResolution()
+        }
+    }
+}
+
+@BindingAdapter("thumbnails")
+fun setThumbnails(view: ImageView, thumbnails: List<Thumbnail>) {
+    thumbnails.lastOrNull()?.let {
+        view.load(it.url) {
+            placeholder(R.drawable.ic_music_note)
+            roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
         }
     }
 }

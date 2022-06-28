@@ -1,35 +1,42 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoints.BrowseEndpoint
-import com.zionhuang.innertube.models.endpoints.SearchEndpoint
+import com.zionhuang.innertube.models.endpoints.NavigationEndpoint
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Section
+sealed class Section {
+    abstract val header: Header?
+
+    @Serializable
+    data class Header(
+        val title: String,
+        val subtitle: String? = null,
+        val moreNavigationEndpoint: NavigationEndpoint? = null,
+    )
+}
 
 @Serializable
 data class ItemSection(
-    val title: String? = null,
+    override val header: Header? = null,
     val items: List<Item>,
     val continuation: String? = null,
-    val bottomEndpoint: SearchEndpoint? = null,
 ) : Section()
 
 @Serializable
-data class DescriptionSection(
-    val title: String,
-    val subtitle: String,
-    val description: String,
-) : Section()
-
-@Serializable
-data class LinkSection(
-    val navigationButtons: List<MusicNavigationButtonRenderer>,
+data class CarouselSection(
+    override val header: Header? = null,
+    val items: List<Item>,
 ) : Section()
 
 @Serializable
 data class GridSection(
-    val title: String,
-    val navigationButtons: List<MusicNavigationButtonRenderer>,
-    val moreNavigationEndpoint: BrowseEndpoint,
+    override val header: Header? = null,
+    val items: List<Item>,
+//    val moreNavigationEndpoint: BrowseEndpoint,
+) : Section()
+
+@Serializable
+data class DescriptionSection(
+    override val header: Header? = null,
+    val description: String,
 ) : Section()
