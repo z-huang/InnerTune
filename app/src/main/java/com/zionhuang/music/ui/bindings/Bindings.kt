@@ -6,6 +6,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.zionhuang.innertube.models.Thumbnail
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.ArtworkType
@@ -104,7 +107,7 @@ fun setThumbnails(view: ImageView, thumbnails: List<Thumbnail>) {
     thumbnails.lastOrNull()?.let {
         view.load(it.url) {
             placeholder(R.drawable.ic_music_note)
-            roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))
+            transform(MultiTransformation(FitCenter(), RoundedCorners(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))))
         }
     }
 }

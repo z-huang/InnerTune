@@ -24,7 +24,7 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginBottom="4dp"
-            android:scaleType="centerInside" />
+            tools:src="@drawable/ic_music_note" />
 
         <TextView
             android:id="@+id/title"
