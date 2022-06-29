@@ -106,7 +106,6 @@ fun setUrl(
 fun setThumbnails(view: ImageView, thumbnails: List<Thumbnail>) {
     thumbnails.lastOrNull()?.let {
         view.load(it.url) {
-            placeholder(R.drawable.ic_music_note)
             transform(MultiTransformation(FitCenter(), RoundedCorners(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))))
         }
     }
