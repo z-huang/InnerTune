@@ -10,11 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
-import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
+import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.SectionAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.utils.bindLoadStateLayout
 import com.zionhuang.music.viewmodels.ExploreViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,12 +34,13 @@ class ExploreFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        sectionAdapter.bindLoadStateLayout(binding.layoutLoadState)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = sectionAdapter
+            adapter = sectionAdapter.withLoadStateFooter(LoadStateAdapter { sectionAdapter.retry() })
         }
         lifecycleScope.launch {
-            exploreViewModel.browse(EXPLORE_BROWSE_ID).collectLatest {
+            exploreViewModel.browse(HOME_BROWSE_ID).collectLatest {
                 sectionAdapter.submitData(it)
             }
         }
