@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
-import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
+import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.ui.adapters.SectionAdapter
@@ -37,7 +37,7 @@ class ExploreFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             adapter = sectionAdapter
         }
         lifecycleScope.launch {
-            exploreViewModel.browse(HOME_BROWSE_ID).collectLatest {
+            exploreViewModel.browse(EXPLORE_BROWSE_ID).collectLatest {
                 sectionAdapter.submitData(it)
             }
         }

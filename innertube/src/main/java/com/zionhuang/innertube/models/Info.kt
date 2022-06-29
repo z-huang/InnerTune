@@ -2,16 +2,13 @@ package com.zionhuang.innertube.models
 
 import com.zionhuang.innertube.models.endpoints.WatchEndpoint
 import com.zionhuang.innertube.models.response.BrowseResponse
-import kotlinx.serialization.Serializable
 
-@Serializable
 sealed class Info {
     interface FromBrowseResponse<out T : Info> {
         fun from(response: BrowseResponse): T
     }
 }
 
-@Serializable
 data class ArtistInfo(
     val name: String,
     val description: String,
@@ -32,7 +29,6 @@ data class ArtistInfo(
     }
 }
 
-@Serializable
 data class AlbumInfo(
     val name: String,
     val subtitle: String,
@@ -55,7 +51,6 @@ data class AlbumInfo(
     }
 }
 
-@Serializable
 data class PlaylistInfo(
     val name: String,
     val subtitle: String,

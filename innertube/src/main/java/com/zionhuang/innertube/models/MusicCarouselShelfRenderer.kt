@@ -12,7 +12,7 @@ data class MusicCarouselShelfRenderer(
     fun getViewType() = when {
         contents[0].musicTwoRowItemRenderer != null -> Section.ViewType.BLOCK
         contents[0].musicResponsiveListItemRenderer != null -> Section.ViewType.LIST
-        contents[0].musicNavigationButtonRenderer != null -> Section.ViewType.LIST
+        contents[0].musicNavigationButtonRenderer != null -> Section.ViewType.BLOCK
         else -> Section.ViewType.LIST
     }
 

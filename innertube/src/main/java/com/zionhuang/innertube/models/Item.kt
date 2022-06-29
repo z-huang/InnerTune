@@ -2,9 +2,7 @@ package com.zionhuang.innertube.models
 
 import com.zionhuang.innertube.models.endpoints.BrowseEndpoint
 import com.zionhuang.innertube.models.endpoints.NavigationEndpoint
-import kotlinx.serialization.Serializable
 
-@Serializable
 sealed class Item {
     abstract val title: String
     abstract val subtitle: String?
@@ -17,7 +15,6 @@ sealed class Item {
     }
 }
 
-@Serializable
 data class SongItem(
     override val title: String,
     override val subtitle: String,
@@ -49,7 +46,6 @@ data class SongItem(
     }
 }
 
-@Serializable
 data class VideoItem(
     override val title: String,
     override val subtitle: String,
@@ -79,7 +75,6 @@ data class VideoItem(
     }
 }
 
-@Serializable
 data class AlbumItem(
     override val title: String,
     override val subtitle: String,
@@ -112,7 +107,6 @@ data class AlbumItem(
     }
 }
 
-@Serializable
 data class PlaylistItem(
     override val title: String,
     override val subtitle: String,
@@ -142,7 +136,6 @@ data class PlaylistItem(
     }
 }
 
-@Serializable
 data class ArtistItem(
     override val title: String,
     override val subtitle: String,
@@ -172,7 +165,6 @@ data class ArtistItem(
     }
 }
 
-@Serializable
 data class NavigationItem(
     override val title: String,
     override val subtitle: String? = null,

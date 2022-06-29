@@ -12,13 +12,8 @@ import com.zionhuang.music.ui.viewholders.SectionViewHolder
 class SectionAdapter : PagingDataAdapter<Section, SectionViewHolder>(SectionComparator()) {
     private val viewPool = RecyclerView.RecycledViewPool()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder = when (viewType) {
-        SECTION_ITEM -> SectionViewHolder(parent.inflateWithBinding(R.layout.item_section))
-        SECTION_CAROUSEL -> SectionViewHolder(parent.inflateWithBinding(R.layout.item_section))
-        SECTION_GRID -> SectionViewHolder(parent.inflateWithBinding(R.layout.item_section))
-        SECTION_DESCRIPTION -> SectionViewHolder(parent.inflateWithBinding(R.layout.item_section))
-        else -> throw IllegalArgumentException("Unexpected item type.")
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionViewHolder =
+        SectionViewHolder(parent.inflateWithBinding(R.layout.item_section))
 
     override fun onBindViewHolder(holder: SectionViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }
@@ -35,8 +30,8 @@ class SectionAdapter : PagingDataAdapter<Section, SectionViewHolder>(SectionComp
     fun getItemByPosition(position: Int) = getItem(position)
 
     class SectionComparator : DiffUtil.ItemCallback<Section>() {
-        override fun areItemsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem == newItem
-        override fun areContentsTheSame(oldItem: Section, newItem: Section): Boolean = false
+        override fun areItemsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem.header?.title == newItem.header?.title
+        override fun areContentsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem == newItem
     }
 
     companion object {

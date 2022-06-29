@@ -37,8 +37,11 @@ class SectionViewHolder(val binding: ItemSectionBinding) : RecyclerView.ViewHold
                 itemAdapter.submitList(section.items)
             }
             is GridSection -> {
-                val itemAdapter = YouTubeItemAdapter(Section.ViewType.BLOCK)
-                binding.recyclerView.layoutManager = GridLayoutManager(binding.context, 2) // TODO spanCount for bigger screen
+                val itemAdapter = YouTubeItemAdapter(
+                    if (section.items[0] is NavigationItem) Section.ViewType.LIST // [New releases, Charts, Moods & genres] in Explore tab
+                    else Section.ViewType.BLOCK
+                )
+                binding.recyclerView.layoutManager = GridLayoutManager(binding.context, if (section.items[0] is NavigationItem) 1 else 2) // TODO spanCount for bigger screen
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }

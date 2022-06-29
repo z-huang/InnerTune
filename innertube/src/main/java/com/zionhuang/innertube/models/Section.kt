@@ -1,9 +1,7 @@
 package com.zionhuang.innertube.models
 
 import com.zionhuang.innertube.models.endpoints.NavigationEndpoint
-import kotlinx.serialization.Serializable
 
-@Serializable
 sealed class Section {
     abstract val header: Header?
 
@@ -11,7 +9,6 @@ sealed class Section {
         LIST, BLOCK
     }
 
-    @Serializable
     data class Header(
         val title: String,
         val subtitle: String? = null,
@@ -19,7 +16,6 @@ sealed class Section {
     )
 }
 
-@Serializable
 data class ListSection(
     override val header: Header? = null,
     val items: List<Item>,
@@ -27,7 +23,6 @@ data class ListSection(
     val itemViewType: ViewType,
 ) : Section()
 
-@Serializable
 data class CarouselSection(
     override val header: Header? = null,
     val items: List<Item>,
@@ -35,14 +30,12 @@ data class CarouselSection(
     val itemViewType: ViewType,
 ) : Section()
 
-@Serializable
 data class GridSection(
     override val header: Header? = null,
     val items: List<Item>,
 //    val moreNavigationEndpoint: BrowseEndpoint,
 ) : Section()
 
-@Serializable
 data class DescriptionSection(
     override val header: Header? = null,
     val description: String,
