@@ -3,7 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.zionhuang.innertube.models.NavigationItem" />
+
+        <import type="android.view.View" />
+    </data>
+
     <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:background="?android:selectableItemBackground"
@@ -17,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"
+            android:visibility="@{item.icon != null ? View.VISIBLE : View.GONE}"
             tools:src="@drawable/ic_new_releases" />
 
         <TextView
@@ -27,6 +38,7 @@
             android:layout_weight="@integer/material_motion_duration_long_1"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{item.title}"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
             tools:text="Title" />
 

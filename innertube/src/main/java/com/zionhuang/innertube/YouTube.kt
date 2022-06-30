@@ -3,6 +3,7 @@ package com.zionhuang.innertube
 import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.YouTubeClient.Companion.ANDROID_MUSIC
 import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
 import com.zionhuang.innertube.models.response.*
 import io.ktor.client.call.*
 
@@ -55,8 +56,8 @@ object YouTube {
     suspend fun player(videoId: String, playlistId: String? = null): PlayerResponse =
         innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
 
-    suspend fun browse(browseId: String, params: String? = null): BrowseResponse =
-        innerTube.browse(WEB_REMIX, browseId, params, null).body()
+    suspend fun browse(endpoint: BrowseEndpoint): BrowseResponse =
+        innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body()
 
     suspend fun browse(continuation: Continuation): BrowseResponse =
         innerTube.browse(WEB_REMIX, continuation = continuation.value).body()

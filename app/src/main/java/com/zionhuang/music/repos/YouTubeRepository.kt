@@ -6,6 +6,7 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.Item
 import com.zionhuang.innertube.models.Section
 import com.zionhuang.innertube.models.SuggestionItem
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
 import com.zionhuang.music.extensions.toPage
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -24,10 +25,10 @@ object YouTubeRepository {
         override fun getRefreshKey(state: PagingState<String, Item>): String? = null
     }
 
-    fun browse(browseId: String): PagingSource<String, Section> = object : PagingSource<String, Section>() {
+    fun browse(endpoint: BrowseEndpoint): PagingSource<String, Section> = object : PagingSource<String, Section>() {
         override suspend fun load(params: LoadParams<String>): LoadResult<String, Section> = withContext(IO) {
             try {
-                if (params.key == null) YouTube.browse(browseId).toBrowseResult().toPage()
+                if (params.key == null) YouTube.browse(endpoint).toBrowseResult().toPage()
                 else YouTube.browse(YouTube.Continuation(params.key!!)).toBrowseResult().toPage()
             } catch (e: Exception) {
                 LoadResult.Error(e)

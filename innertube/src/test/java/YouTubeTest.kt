@@ -7,6 +7,7 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_P
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
 import com.zionhuang.innertube.models.toAlbumInfo
 import com.zionhuang.innertube.models.toArtistInfo
 import com.zionhuang.innertube.models.toPlaylistInfo
@@ -86,21 +87,21 @@ class YouTubeTest {
 
     @Test
     fun `Check 'browse' endpoint`() = runBlocking {
-        val artistInfo = youTube.browse("UCI6B8NkZKqlFWoiC_xE-hzA").toArtistInfo()
+        val artistInfo = youTube.browse(BrowseEndpoint("UCI6B8NkZKqlFWoiC_xE-hzA")).toArtistInfo()
         assertTrue(artistInfo.contents.isNotEmpty())
-        val albumInfo = youTube.browse("MPREb_oNAdr9eUOfS").toAlbumInfo()
+        val albumInfo = youTube.browse(BrowseEndpoint("MPREb_oNAdr9eUOfS")).toAlbumInfo()
         assertTrue(albumInfo.items.isNotEmpty())
-        val playlistInfo = youTube.browse("VLRDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo").toPlaylistInfo()
+        val playlistInfo = youTube.browse(BrowseEndpoint("VLRDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo")).toPlaylistInfo()
         assertTrue(playlistInfo.subtitle.isNotEmpty())
         listOf(HOME_BROWSE_ID, EXPLORE_BROWSE_ID).forEach { browseId ->
-            val result = youTube.browse(browseId).toBrowseResult()
+            val result = youTube.browse(BrowseEndpoint(browseId)).toBrowseResult()
             assertTrue(result.sections.isNotEmpty())
         }
     }
 
     @Test
     fun `Check 'browse' continuation`() = runBlocking {
-        var result = youTube.browse(HOME_BROWSE_ID).toBrowseResult()
+        var result = youTube.browse(BrowseEndpoint(HOME_BROWSE_ID)).toBrowseResult()
         while (result.continuation != null) {
             result = youTube.browse(YouTube.Continuation(result.continuation!!)).toBrowseResult()
         }

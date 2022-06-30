@@ -1,4 +1,4 @@
-package com.zionhuang.innertube.models.endpoints
+package com.zionhuang.innertube.models.endpoint
 
 import kotlinx.serialization.Serializable
 

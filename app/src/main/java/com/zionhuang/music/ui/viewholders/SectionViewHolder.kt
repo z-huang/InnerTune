@@ -8,8 +8,12 @@ import com.zionhuang.innertube.models.*
 import com.zionhuang.music.databinding.ItemSectionBinding
 import com.zionhuang.music.extensions.context
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
+import com.zionhuang.music.utils.NavigationEndpointHandler
 
-class SectionViewHolder(val binding: ItemSectionBinding) : RecyclerView.ViewHolder(binding.root) {
+class SectionViewHolder(
+    val binding: ItemSectionBinding,
+    val navigationEndpointHandler: NavigationEndpointHandler,
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(section: Section) {
         binding.header.isVisible = section.header != null
         section.header?.let {
@@ -25,13 +29,13 @@ class SectionViewHolder(val binding: ItemSectionBinding) : RecyclerView.ViewHold
                 binding.description.text = section.description
             }
             is ListSection -> {
-                val itemAdapter = YouTubeItemAdapter(section.itemViewType)
+                val itemAdapter = YouTubeItemAdapter(section.itemViewType, navigationEndpointHandler)
                 binding.recyclerView.layoutManager = LinearLayoutManager(binding.context)
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }
             is CarouselSection -> {
-                val itemAdapter = YouTubeItemAdapter(section.itemViewType)
+                val itemAdapter = YouTubeItemAdapter(section.itemViewType, navigationEndpointHandler)
                 binding.recyclerView.layoutManager = GridLayoutManager(binding.context, section.numItemsPerColumn, RecyclerView.HORIZONTAL, false)
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
@@ -39,7 +43,8 @@ class SectionViewHolder(val binding: ItemSectionBinding) : RecyclerView.ViewHold
             is GridSection -> {
                 val itemAdapter = YouTubeItemAdapter(
                     if (section.items[0] is NavigationItem) Section.ViewType.LIST // [New releases, Charts, Moods & genres] in Explore tab
-                    else Section.ViewType.BLOCK
+                    else Section.ViewType.BLOCK,
+                    navigationEndpointHandler
                 )
                 binding.recyclerView.layoutManager = GridLayoutManager(binding.context, if (section.items[0] is NavigationItem) 1 else 2) // TODO spanCount for bigger screen
                 binding.recyclerView.adapter = itemAdapter

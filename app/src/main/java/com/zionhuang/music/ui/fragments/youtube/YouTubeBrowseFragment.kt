@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.fragments
+package com.zionhuang.music.ui.fragments.youtube
 
 import android.os.Bundle
 import android.view.Menu
@@ -8,15 +8,14 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
-import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
-import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
-import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
 import com.zionhuang.music.ui.adapters.SectionAdapter
+import com.zionhuang.music.ui.fragments.SettingsFragmentDirections
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.bindLoadStateLayout
@@ -24,7 +23,9 @@ import com.zionhuang.music.viewmodels.YouTubeViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ExploreFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+class YouTubeBrowseFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+    private val args: YouTubeBrowseFragmentArgs by navArgs()
+
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
 
     private val youTubeViewModel by activityViewModels<YouTubeViewModel>()
@@ -43,7 +44,7 @@ class ExploreFragment : BindingFragment<LayoutRecyclerviewBinding>() {
             adapter = sectionAdapter.withLoadStateFooter(LoadStateAdapter { sectionAdapter.retry() })
         }
         lifecycleScope.launch {
-            youTubeViewModel.browse(BrowseEndpoint(EXPLORE_BROWSE_ID)).collectLatest {
+            youTubeViewModel.browse(args.endpoint).collectLatest {
                 sectionAdapter.submitData(it)
             }
         }

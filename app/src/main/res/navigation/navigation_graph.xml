@@ -76,6 +76,13 @@
         </action>
     </fragment>
     <fragment
+        android:id="@+id/youTubeBrowseFragment"
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragment">
+        <argument
+            android:name="endpoint"
+            app:argType="com.zionhuang.innertube.models.endpoint.BrowseEndpoint" />
+    </fragment>
+    <fragment
         android:id="@+id/songDetailsFragment"
         android:name="com.zionhuang.music.ui.fragments.dialogs.EditSongDialog"
         android:label="SongDetailsFragment">
@@ -143,4 +150,7 @@
     <action
         android:id="@+id/open_updateFragment"
         app:destination="@id/updateFragment" />
+    <action
+        android:id="@+id/open_youTubeBrowseFragment"
+        app:destination="@id/youTubeBrowseFragment" />
 </navigation>

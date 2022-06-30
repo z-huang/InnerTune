@@ -1,6 +1,6 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoints.WatchEndpoint
+import com.zionhuang.innertube.models.endpoint.WatchEndpoint
 import com.zionhuang.innertube.models.response.BrowseResponse
 
 sealed class Info {

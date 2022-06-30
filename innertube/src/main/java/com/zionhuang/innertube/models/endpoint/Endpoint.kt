@@ -1,4 +1,4 @@
-package com.zionhuang.innertube.models.endpoints
+package com.zionhuang.innertube.models.endpoint
 
 import kotlinx.serialization.Serializable
 
@@ -13,7 +13,7 @@ data class WatchEndpoint(
     val params: String?,
     val index: Int?,
     val watchEndpointMusicSupportedConfigs: WatchEndpointMusicSupportedConfigs? = null,
-) : Endpoint() {
+) : Endpoint(), java.io.Serializable {
     @Serializable
     data class WatchEndpointMusicSupportedConfigs(
         val watchEndpointMusicConfig: WatchEndpointMusicConfig,
@@ -28,9 +28,9 @@ data class WatchEndpoint(
 @Serializable
 data class BrowseEndpoint(
     val browseId: String,
-    val params: String?,
-    val browseEndpointContextSupportedConfigs: BrowseEndpointContextSupportedConfigs?,
-) : Endpoint() {
+    val params: String? = null,
+    val browseEndpointContextSupportedConfigs: BrowseEndpointContextSupportedConfigs? = null,
+) : Endpoint(), java.io.Serializable {
     @Serializable
     data class BrowseEndpointContextSupportedConfigs(
         val browseEndpointContextMusicConfig: BrowseEndpointContextMusicConfig,
@@ -46,15 +46,15 @@ data class BrowseEndpoint(
 data class WatchPlaylistEndpoint(
     val params: String?,
     val playlistId: String,
-) : Endpoint()
+) : Endpoint(), java.io.Serializable
 
 @Serializable
 data class SearchEndpoint(
     val params: String?,
     val query: String,
-) : Endpoint()
+) : Endpoint(), java.io.Serializable
 
 @Serializable
 data class ShareEntityEndpoint(
     val serializedShareEntity: String,
-) : Endpoint()
+) : Endpoint(), java.io.Serializable

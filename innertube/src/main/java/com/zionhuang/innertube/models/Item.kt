@@ -1,8 +1,8 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoints.BrowseEndpoint
-import com.zionhuang.innertube.models.endpoints.NavigationEndpoint
-import com.zionhuang.innertube.models.endpoints.ShareEntityEndpoint
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
+import com.zionhuang.innertube.models.endpoint.NavigationEndpoint
+import com.zionhuang.innertube.models.endpoint.ShareEntityEndpoint
 
 sealed class BaseItem{
     abstract val title: String

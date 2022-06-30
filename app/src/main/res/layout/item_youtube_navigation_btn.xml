@@ -3,12 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.zionhuang.innertube.models.NavigationItem" />
+
+        <import type="android.view.View" />
+    </data>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
         android:layout_margin="8dp"
-        android:clickable="true">
+        android:clickable="true"
+        app:strokeColor="@{item.stripeColor.intValue()}">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -19,7 +29,8 @@
                 android:id="@+id/stripe"
                 android:layout_width="6dp"
                 android:layout_height="match_parent"
-                android:background="?colorOnSurface" />
+                android:background="@{item.stripeColor.intValue()}"
+                android:visibility="@{item.stripeColor != null ? View.VISIBLE : View.GONE}" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -33,6 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:text="@{item.title}"
                     tools:text="Title" />
             </LinearLayout>
         </LinearLayout>

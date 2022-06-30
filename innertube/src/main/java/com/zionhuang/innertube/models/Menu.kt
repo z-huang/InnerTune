@@ -1,7 +1,7 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoints.BrowseEndpoint
-import com.zionhuang.innertube.models.endpoints.NavigationEndpoint
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
+import com.zionhuang.innertube.models.endpoint.NavigationEndpoint
 import kotlinx.serialization.Serializable
 
 @Serializable
