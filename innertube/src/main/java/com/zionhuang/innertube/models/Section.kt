@@ -18,21 +18,21 @@ sealed class Section {
 
 data class ListSection(
     override val header: Header? = null,
-    val items: List<Item>,
+    val items: List<BaseItem>,
     val continuation: String? = null,
     val itemViewType: ViewType,
 ) : Section()
 
 data class CarouselSection(
     override val header: Header? = null,
-    val items: List<Item>,
+    val items: List<BaseItem>,
     val numItemsPerColumn: Int = 1,
     val itemViewType: ViewType,
 ) : Section()
 
 data class GridSection(
     override val header: Header? = null,
-    val items: List<Item>,
+    val items: List<BaseItem>,
 //    val moreNavigationEndpoint: BrowseEndpoint,
 ) : Section()
 

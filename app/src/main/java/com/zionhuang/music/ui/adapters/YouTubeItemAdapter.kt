@@ -3,6 +3,7 @@ package com.zionhuang.music.ui.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import com.zionhuang.innertube.models.BaseItem
 import com.zionhuang.innertube.models.Item
 import com.zionhuang.innertube.models.NavigationItem
 import com.zionhuang.innertube.models.Section
@@ -10,7 +11,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.viewholders.*
 
-class YouTubeItemAdapter(private val itemViewType: Section.ViewType) : ListAdapter<Item, YouTubeItemViewHolder>(ItemComparator()) {
+class YouTubeItemAdapter(private val itemViewType: Section.ViewType) : ListAdapter<BaseItem, YouTubeItemViewHolder>(ItemComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YouTubeItemViewHolder = when (viewType) {
         ITEM_NAVIGATION -> when (itemViewType) {
@@ -25,7 +26,13 @@ class YouTubeItemAdapter(private val itemViewType: Section.ViewType) : ListAdapt
     }
 
     override fun onBindViewHolder(holder: YouTubeItemViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        val item = getItem(position)
+        when (holder) {
+            is YouTubeNavigationItemViewHolder -> holder.bind(item as NavigationItem)
+            is YouTubeNavigationButtonViewHolder -> holder.bind(item as NavigationItem)
+            is YouTubeListItemViewHolder -> holder.bind(item as Item)
+            is YouTubeSquareItemViewHolder -> holder.bind(item as Item)
+        }
     }
 
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
@@ -34,9 +41,9 @@ class YouTubeItemAdapter(private val itemViewType: Section.ViewType) : ListAdapt
     }
 
 
-    class ItemComparator : DiffUtil.ItemCallback<Item>() {
-        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean = oldItem === newItem
-        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean = oldItem == newItem
+    class ItemComparator : DiffUtil.ItemCallback<BaseItem>() {
+        override fun areItemsTheSame(oldItem: BaseItem, newItem: BaseItem): Boolean = oldItem::class == newItem::class && oldItem.title == newItem.title
+        override fun areContentsTheSame(oldItem: BaseItem, newItem: BaseItem): Boolean = oldItem == newItem
     }
 
     companion object {

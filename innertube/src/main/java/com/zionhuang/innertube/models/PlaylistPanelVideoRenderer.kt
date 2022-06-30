@@ -19,9 +19,8 @@ data class PlaylistPanelVideoRenderer(
     fun toSongItem(): SongItem = SongItem(
         title = title.toString(),
         subtitle = longBylineText.toString(),
-        artistEndpoint = menu.getArtistEndpoint(),
-        albumEndpoint = menu.getAlbumEndpoint(),
         thumbnails = thumbnail.thumbnails,
+        menu = menu.toItemMenu(),
         navigationEndpoint = navigationEndpoint
     )
 }

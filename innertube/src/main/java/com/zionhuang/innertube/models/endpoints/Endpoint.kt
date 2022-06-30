@@ -53,3 +53,8 @@ data class SearchEndpoint(
     val params: String?,
     val query: String,
 ) : Endpoint()
+
+@Serializable
+data class ShareEntityEndpoint(
+    val serializedShareEntity: String,
+) : Endpoint()

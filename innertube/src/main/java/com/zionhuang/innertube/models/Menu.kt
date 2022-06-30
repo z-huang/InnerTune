@@ -17,6 +17,14 @@ data class Menu(
         it.menuNavigationItemRenderer?.icon?.iconType == iconType
     }?.menuNavigationItemRenderer?.navigationEndpoint
 
+    fun toItemMenu() = Item.Menu(
+        shuffleEndpoint = findEndpointByIcon(ICON_SHUFFLE),
+        radioEndpoint = findEndpointByIcon(ICON_MIX),
+        artistEndpoint = findEndpointByIcon(ICON_ARTIST)?.browseEndpoint,
+        albumEndpoint = findEndpointByIcon(ICON_ALBUM)?.browseEndpoint,
+        shareEndpoint = findEndpointByIcon(ICON_SHARE)?.shareEntityEndpoint
+    )
+
     @Serializable
     data class MenuRenderer(
         val items: List<Item>,
@@ -39,5 +47,6 @@ data class Menu(
         const val ICON_MIX = "MIX"
         const val ICON_ALBUM = "ALBUM"
         const val ICON_ARTIST = "ARTIST"
+        const val ICON_SHARE = "SHARE"
     }
 }

@@ -11,25 +11,22 @@ import com.zionhuang.music.databinding.ItemYoutubeNavigationBinding
 import com.zionhuang.music.databinding.ItemYoutubeNavigationBtnBinding
 import com.zionhuang.music.databinding.ItemYoutubeSquareBinding
 
-sealed class YouTubeItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-    abstract fun bind(item: Item)
-}
+sealed class YouTubeItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
 class YouTubeListItemViewHolder(override val binding: ItemYoutubeListBinding) : YouTubeItemViewHolder(binding) {
-    override fun bind(item: Item) {
+    fun bind(item: Item) {
         binding.item = item
     }
 }
 
 class YouTubeSquareItemViewHolder(override val binding: ItemYoutubeSquareBinding) : YouTubeItemViewHolder(binding) {
-    override fun bind(item: Item) {
+    fun bind(item: Item) {
         binding.item = item
     }
 }
 
 class YouTubeNavigationItemViewHolder(override val binding: ItemYoutubeNavigationBinding) : YouTubeItemViewHolder(binding) {
-    override fun bind(item: Item) {
-        if (item !is NavigationItem) error("Argument should be NavigationItem")
+    fun bind(item: NavigationItem) {
         binding.title.text = item.title
         val iconRes = when (item.icon) {
             "MUSIC_NEW_RELEASE" -> R.drawable.ic_new_releases
@@ -45,8 +42,7 @@ class YouTubeNavigationItemViewHolder(override val binding: ItemYoutubeNavigatio
 }
 
 class YouTubeNavigationButtonViewHolder(override val binding: ItemYoutubeNavigationBtnBinding) : YouTubeItemViewHolder(binding) {
-    override fun bind(item: Item) {
-        if (item !is NavigationItem) error("Argument should be NavigationItem")
+    fun bind(item: NavigationItem) {
         binding.title.text = item.title
         binding.stripe.isVisible = item.stripeColor != null
         item.stripeColor?.let {
