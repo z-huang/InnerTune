@@ -30,7 +30,7 @@ class SectionAdapter : PagingDataAdapter<Section, SectionViewHolder>(SectionComp
     fun getItemByPosition(position: Int) = getItem(position)
 
     class SectionComparator : DiffUtil.ItemCallback<Section>() {
-        override fun areItemsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem.header?.title == newItem.header?.title
+        override fun areItemsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem::class == newItem::class && oldItem.header?.title == newItem.header?.title
         override fun areContentsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem == newItem
     }
 
