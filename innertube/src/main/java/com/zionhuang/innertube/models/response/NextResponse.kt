@@ -2,7 +2,7 @@ package com.zionhuang.innertube.models.response
 
 import com.zionhuang.innertube.models.PlaylistPanelRenderer
 import com.zionhuang.innertube.models.Tabs
-import com.zionhuang.innertube.models.endpoint.NavigationEndpoint
+import com.zionhuang.innertube.models.NavigationEndpoint
 import kotlinx.serialization.Serializable
 
 @Serializable

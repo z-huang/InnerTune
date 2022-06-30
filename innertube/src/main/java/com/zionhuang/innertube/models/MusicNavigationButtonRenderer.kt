@@ -1,6 +1,5 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoint.NavigationEndpoint
 import kotlinx.serialization.Serializable
 import java.awt.Color
 

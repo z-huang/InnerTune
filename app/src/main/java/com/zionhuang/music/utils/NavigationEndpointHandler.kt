@@ -2,6 +2,7 @@ package com.zionhuang.music.utils
 
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.innertube.models.endpoint.*
 import com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragmentDirections
 

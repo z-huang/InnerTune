@@ -1,7 +1,6 @@
 package com.zionhuang.innertube.models
 
 import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
-import com.zionhuang.innertube.models.endpoint.NavigationEndpoint
 import com.zionhuang.innertube.models.endpoint.ShareEntityEndpoint
 
 sealed class BaseItem{

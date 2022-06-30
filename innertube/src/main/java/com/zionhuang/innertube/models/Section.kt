@@ -1,7 +1,5 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoint.NavigationEndpoint
-
 sealed class Section {
     abstract val header: Header?
 
