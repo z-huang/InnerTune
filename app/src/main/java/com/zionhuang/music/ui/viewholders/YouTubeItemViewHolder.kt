@@ -19,6 +19,9 @@ class YouTubeListItemViewHolder(
 ) : YouTubeItemViewHolder(binding) {
     fun bind(item: Item) {
         binding.item = item
+        binding.root.setOnClickListener {
+            navigationEndpointHandler.handle(item.navigationEndpoint)
+        }
     }
 }
 
@@ -28,6 +31,9 @@ class YouTubeSquareItemViewHolder(
 ) : YouTubeItemViewHolder(binding) {
     fun bind(item: Item) {
         binding.item = item
+        binding.root.setOnClickListener {
+            navigationEndpointHandler.handle(item.navigationEndpoint)
+        }
     }
 }
 

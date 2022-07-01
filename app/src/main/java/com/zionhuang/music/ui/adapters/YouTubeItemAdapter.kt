@@ -1,7 +1,10 @@
 package com.zionhuang.music.ui.adapters
 
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import com.zionhuang.innertube.models.BaseItem
 import com.zionhuang.innertube.models.Item
@@ -14,6 +17,7 @@ import com.zionhuang.music.utils.NavigationEndpointHandler
 
 class YouTubeItemAdapter(
     private val itemViewType: Section.ViewType,
+    private val matchParent: Boolean,
     private val navigationEndpointHandler: NavigationEndpointHandler,
 ) : ListAdapter<BaseItem, YouTubeItemViewHolder>(ItemComparator()) {
 
@@ -27,6 +31,12 @@ class YouTubeItemAdapter(
             Section.ViewType.BLOCK -> YouTubeSquareItemViewHolder(parent.inflateWithBinding(R.layout.item_youtube_square), navigationEndpointHandler)
         }
         else -> throw IllegalArgumentException("Unknown view type")
+    }.apply {
+        if (matchParent) {
+            binding.root.updateLayoutParams<GridLayoutManager.LayoutParams> {
+                width = MATCH_PARENT
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: YouTubeItemViewHolder, position: Int) {

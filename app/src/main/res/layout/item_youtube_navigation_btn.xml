@@ -18,7 +18,8 @@
         android:layout_height="54dp"
         android:layout_margin="8dp"
         android:clickable="true"
-        app:strokeColor="@{item.stripeColor.intValue()}">
+        app:strokeColor="@{item.stripeColor.intValue()}"
+        tools:strokeColor="?colorOnSurface">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -30,7 +31,8 @@
                 android:layout_width="6dp"
                 android:layout_height="match_parent"
                 android:background="@{item.stripeColor.intValue()}"
-                android:visibility="@{item.stripeColor != null ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{item.stripeColor != null ? View.VISIBLE : View.GONE}"
+                tools:background="?colorOnSurface" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -44,6 +46,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="@{item.title}"
                     tools:text="Title" />
             </LinearLayout>

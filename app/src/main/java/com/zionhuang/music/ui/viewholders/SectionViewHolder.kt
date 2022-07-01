@@ -12,7 +12,7 @@ import com.zionhuang.music.utils.NavigationEndpointHandler
 
 class SectionViewHolder(
     val binding: ItemSectionBinding,
-    val navigationEndpointHandler: NavigationEndpointHandler,
+    private val navigationEndpointHandler: NavigationEndpointHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(section: Section) {
         binding.header.isVisible = section.header != null
@@ -29,24 +29,25 @@ class SectionViewHolder(
                 binding.description.text = section.description
             }
             is ListSection -> {
-                val itemAdapter = YouTubeItemAdapter(section.itemViewType, navigationEndpointHandler)
+                val itemAdapter = YouTubeItemAdapter(section.itemViewType, false, navigationEndpointHandler)
                 binding.recyclerView.layoutManager = LinearLayoutManager(binding.context)
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }
             is CarouselSection -> {
-                val itemAdapter = YouTubeItemAdapter(section.itemViewType, navigationEndpointHandler)
+                val itemAdapter = YouTubeItemAdapter(section.itemViewType, false, navigationEndpointHandler)
                 binding.recyclerView.layoutManager = GridLayoutManager(binding.context, section.numItemsPerColumn, RecyclerView.HORIZONTAL, false)
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }
             is GridSection -> {
                 val itemAdapter = YouTubeItemAdapter(
-                    if (section.items[0] is NavigationItem) Section.ViewType.LIST // [New releases, Charts, Moods & genres] in Explore tab
+                    if (section.items[0].let { it is NavigationItem && it.stripeColor == null }) Section.ViewType.LIST // [New releases, Charts, Moods & genres] in Explore tab
                     else Section.ViewType.BLOCK,
+                    true,
                     navigationEndpointHandler
                 )
-                binding.recyclerView.layoutManager = GridLayoutManager(binding.context, if (section.items[0] is NavigationItem) 1 else 2) // TODO spanCount for bigger screen
+                binding.recyclerView.layoutManager = GridLayoutManager(binding.context, if (section.items[0].let { it is NavigationItem && it.stripeColor == null }) 1 else 2) // TODO spanCount for bigger screen
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }
