@@ -103,8 +103,8 @@ fun setUrl(
 }
 
 @BindingAdapter("thumbnails")
-fun setThumbnails(view: ImageView, thumbnails: List<Thumbnail>) {
-    thumbnails.lastOrNull()?.let {
+fun setThumbnails(view: ImageView, thumbnails: List<Thumbnail>?) {
+    thumbnails?.lastOrNull()?.let {
         view.load(it.url) {
             transform(MultiTransformation(FitCenter(), RoundedCorners(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))))
         }

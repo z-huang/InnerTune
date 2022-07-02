@@ -1,22 +1,19 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Menu(
     val menuRenderer: MenuRenderer,
 ) {
-    fun getShuffleEndpoint(): NavigationEndpoint? = findEndpointByIcon(ICON_SHUFFLE)
-    fun getRadioEndpoint(): NavigationEndpoint? = findEndpointByIcon(ICON_MIX)
-    fun getAlbumEndpoint(): BrowseEndpoint? = findEndpointByIcon(ICON_ALBUM)?.browseEndpoint
-    fun getArtistEndpoint(): BrowseEndpoint? = findEndpointByIcon(ICON_ARTIST)?.browseEndpoint
-
     private fun findEndpointByIcon(iconType: String): NavigationEndpoint? = menuRenderer.items.find {
         it.menuNavigationItemRenderer?.icon?.iconType == iconType
-    }?.menuNavigationItemRenderer?.navigationEndpoint
+    }?.menuNavigationItemRenderer?.navigationEndpoint ?: menuRenderer.topLevelButtons?.find {
+        it.buttonRenderer?.icon?.iconType == iconType
+    }?.buttonRenderer?.navigationEndpoint
 
-    fun toItemMenu() = Item.Menu(
+    fun toItemMenu() = ItemMenu(
+        playEndpoint = findEndpointByIcon(ICON_PLAY_ARROW),
         shuffleEndpoint = findEndpointByIcon(ICON_SHUFFLE),
         radioEndpoint = findEndpointByIcon(ICON_MIX),
         artistEndpoint = findEndpointByIcon(ICON_ARTIST)?.browseEndpoint,
@@ -27,6 +24,7 @@ data class Menu(
     @Serializable
     data class MenuRenderer(
         val items: List<Item>,
+        val topLevelButtons: List<TopLevelButton>?,
     ) {
         @Serializable
         data class Item(
@@ -39,9 +37,21 @@ data class Menu(
                 val navigationEndpoint: NavigationEndpoint,
             )
         }
+
+        @Serializable
+        data class TopLevelButton(
+            val buttonRenderer: ButtonRenderer?,
+        ) {
+            @Serializable
+            data class ButtonRenderer(
+                val icon: Icon,
+                val navigationEndpoint: NavigationEndpoint,
+            )
+        }
     }
 
     companion object {
+        const val ICON_PLAY_ARROW = "PLAY_ARROW"
         const val ICON_SHUFFLE = "MUSIC_SHUFFLE"
         const val ICON_MIX = "MIX"
         const val ICON_ALBUM = "ALBUM"

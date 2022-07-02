@@ -109,6 +109,7 @@
 
     <!-- Button -->
     <string name="btn_retry">再試行</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">すべて再生</string>
     <string name="btn_shuffle">シャッフル</string>
 

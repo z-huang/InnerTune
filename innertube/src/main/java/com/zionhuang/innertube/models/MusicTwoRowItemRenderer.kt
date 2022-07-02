@@ -1,5 +1,8 @@
 package com.zionhuang.innertube.models
 
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ARTIST
+import com.zionhuang.innertube.models.endpoint.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_PLAYLIST
 import com.zionhuang.innertube.models.endpoint.WatchEndpoint
 import kotlinx.serialization.Serializable
 

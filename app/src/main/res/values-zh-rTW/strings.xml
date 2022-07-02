@@ -109,6 +109,7 @@
 
     <!-- Button -->
     <string name="btn_retry">重試</string>
+    <string name="btn_play">播放</string>
     <string name="btn_play_all">全部播放</string>
     <string name="btn_shuffle">隨機播放</string>
 

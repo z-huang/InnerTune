@@ -4,6 +4,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.innertube.models.Item
 import com.zionhuang.innertube.models.NavigationItem
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemYoutubeListBinding
 import com.zionhuang.music.databinding.ItemYoutubeNavigationBinding
@@ -19,9 +20,13 @@ class YouTubeListItemViewHolder(
 ) : YouTubeItemViewHolder(binding) {
     fun bind(item: Item) {
         binding.item = item
+        if (item is SongItem && item.index != null) {
+            binding.index.text = item.index
+        }
         binding.root.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint)
         }
+        binding.executePendingBindings()
     }
 }
 
@@ -34,6 +39,7 @@ class YouTubeSquareItemViewHolder(
         binding.root.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint)
         }
+        binding.executePendingBindings()
     }
 }
 
@@ -54,6 +60,7 @@ class YouTubeNavigationItemViewHolder(
         binding.container.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint)
         }
+        binding.executePendingBindings()
     }
 }
 
@@ -66,5 +73,6 @@ class YouTubeNavigationButtonViewHolder(
         binding.card.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint)
         }
+        binding.executePendingBindings()
     }
 }

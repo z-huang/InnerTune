@@ -115,6 +115,7 @@
 
     <!-- Button -->
     <string name="btn_retry">Réessayer</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">Tout jouer</string>
     <string name="btn_shuffle">Lecture aléatoire</string>
 

@@ -8,6 +8,8 @@
         <variable
             name="item"
             type="com.zionhuang.innertube.models.Item" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,10 +37,25 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/background_song_cover"
                 android:scaleType="center"
+                android:visibility="@{item.thumbnails.empty ? View.GONE : View.VISIBLE}"
                 tools:src="@drawable/ic_music_note" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/index"
+            style="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{item.thumbnails.empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@id/content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
         <LinearLayout
+            android:id="@+id/content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"

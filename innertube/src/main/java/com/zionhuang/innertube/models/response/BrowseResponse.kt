@@ -62,7 +62,7 @@ data class BrowseResponse(
             val title: Runs,
             val subtitle: Runs,
             val secondSubtitle: Runs,
-            val description: Runs,
+            val description: Runs?,
             val thumbnail: ThumbnailRenderer,
             val menu: Menu,
         )

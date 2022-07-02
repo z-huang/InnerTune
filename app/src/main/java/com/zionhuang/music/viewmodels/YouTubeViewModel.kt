@@ -13,4 +13,6 @@ class YouTubeViewModel(application: Application) : AndroidViewModel(application)
     fun browse(endpoint: BrowseEndpoint) = Pager(PagingConfig(pageSize = 20)) {
         YouTubeRepository.browse(endpoint)
     }.flow.cachedIn(viewModelScope)
+
+    suspend fun getAlbumInfo(endpoint: BrowseEndpoint) = YouTubeRepository.getAlbumInfo(endpoint)
 }

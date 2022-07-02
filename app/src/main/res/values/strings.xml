@@ -114,6 +114,7 @@
 
     <!-- Button -->
     <string name="btn_retry">Retry</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">Play All</string>
     <string name="btn_shuffle">Shuffle</string>
 

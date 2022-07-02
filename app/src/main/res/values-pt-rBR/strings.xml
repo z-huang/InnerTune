@@ -112,6 +112,7 @@
 
     <!-- Button -->
     <string name="btn_retry">Tentar novamente</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">Tocar tudo</string>
     <string name="btn_shuffle">Aleatório</string>
 

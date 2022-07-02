@@ -33,20 +33,22 @@ data class AlbumInfo(
     val name: String,
     val subtitle: String,
     val secondSubtitle: String,
-    val description: String,
+    val description: String?,
     val items: List<SongItem>,
     val thumbnail: List<Thumbnail>,
+    val menu: ItemMenu,
 ) : Info() {
     companion object : FromBrowseResponse<AlbumInfo> {
         override fun from(response: BrowseResponse): AlbumInfo = AlbumInfo(
             name = response.header!!.musicDetailHeaderRenderer!!.title.toString(),
             subtitle = response.header.musicDetailHeaderRenderer!!.subtitle.toString(),
             secondSubtitle = response.header.musicDetailHeaderRenderer.secondSubtitle.toString(),
-            description = response.header.musicDetailHeaderRenderer.description.toString(),
+            description = response.header.musicDetailHeaderRenderer.description?.toString(),
             items = response.contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents.map {
                 SongItem.from(it.musicResponsiveListItemRenderer)
             },
-            thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.getThumbnails()
+            thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.getThumbnails(),
+            menu = response.header.musicDetailHeaderRenderer.menu.toItemMenu()
         )
     }
 }

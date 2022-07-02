@@ -83,6 +83,13 @@
             app:argType="com.zionhuang.innertube.models.endpoint.BrowseEndpoint" />
     </fragment>
     <fragment
+        android:id="@+id/youTubeAlbumFragment"
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeAlbumFragment">
+        <argument
+            android:name="endpoint"
+            app:argType="com.zionhuang.innertube.models.endpoint.BrowseEndpoint" />
+    </fragment>
+    <fragment
         android:id="@+id/songDetailsFragment"
         android:name="com.zionhuang.music.ui.fragments.dialogs.EditSongDialog"
         android:label="SongDetailsFragment">
@@ -153,4 +160,7 @@
     <action
         android:id="@+id/open_youTubeBrowseFragment"
         app:destination="@id/youTubeBrowseFragment" />
+    <action
+        android:id="@+id/open_youTubeAlbumFragment"
+        app:destination="@id/youTubeAlbumFragment" />
 </navigation>

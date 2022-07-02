@@ -112,6 +112,7 @@
 
     <!-- Button -->
     <string name="btn_retry">Toisto</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">Toista kaikki</string>
     <string name="btn_shuffle">Sekoita</string>
 

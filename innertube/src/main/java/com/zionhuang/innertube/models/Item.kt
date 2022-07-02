@@ -1,9 +1,6 @@
 package com.zionhuang.innertube.models
 
-import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
-import com.zionhuang.innertube.models.endpoint.ShareEntityEndpoint
-
-sealed class BaseItem{
+sealed class BaseItem {
     abstract val title: String
 }
 
@@ -11,16 +8,8 @@ sealed class Item : BaseItem() {
     abstract override val title: String
     abstract val subtitle: String?
     abstract val thumbnails: List<Thumbnail>
-    abstract val menu: Menu
+    abstract val menu: ItemMenu
     abstract val navigationEndpoint: NavigationEndpoint
-
-    data class Menu(
-        val shuffleEndpoint: NavigationEndpoint?,
-        val radioEndpoint: NavigationEndpoint?,
-        val artistEndpoint: BrowseEndpoint?,
-        val albumEndpoint: BrowseEndpoint?,
-        val shareEndpoint: ShareEntityEndpoint?,
-    )
 
     interface FromContent<out T : Item> {
         fun from(item: MusicResponsiveListItemRenderer): T
@@ -33,7 +22,7 @@ data class SongItem(
     override val subtitle: String,
     val index: String? = null,
     override val thumbnails: List<Thumbnail>,
-    override val menu: Menu,
+    override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<SongItem> {
@@ -60,7 +49,7 @@ data class VideoItem(
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
-    override val menu: Menu,
+    override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<VideoItem> {
@@ -86,7 +75,7 @@ data class AlbumItem(
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
-    override val menu: Menu,
+    override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<AlbumItem> {
@@ -112,7 +101,7 @@ data class PlaylistItem(
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
-    override val menu: Menu,
+    override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<PlaylistItem> {
@@ -138,7 +127,7 @@ data class ArtistItem(
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
-    override val menu: Menu,
+    override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<ArtistItem> {

@@ -7,6 +7,7 @@ import com.zionhuang.innertube.models.Item
 import com.zionhuang.innertube.models.Section
 import com.zionhuang.innertube.models.SuggestionItem
 import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
+import com.zionhuang.innertube.models.toAlbumInfo
 import com.zionhuang.music.extensions.toPage
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -40,5 +41,9 @@ object YouTubeRepository {
 
     suspend fun getSuggestions(query: String): List<SuggestionItem> = withContext(IO) {
         YouTube.getSearchSuggestions(query)
+    }
+
+    suspend fun getAlbumInfo(endpoint: BrowseEndpoint) = withContext(IO) {
+        YouTube.browse(endpoint).toAlbumInfo()
     }
 }
