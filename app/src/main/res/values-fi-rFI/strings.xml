@@ -59,15 +59,18 @@
     <string name="menu_search_title">Etsi</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">Lisää kirjastoon</string>
-    <string name="search_item_menu_download">Lataa</string>
     <string name="menu_edit">Muokkaa</string>
+    <string name="menu_start_radio">Start radio</string>
     <string name="menu_song_play_next">Toista seuraavaksi</string>
     <string name="menu_song_add_to_queue">Lisää jonoon</string>
     <string name="menu_song_add_to_playlist">Lisää soittolistaan</string>
     <string name="menu_song_download">Lataa</string>
     <string name="menu_song_remove_download">Poista lataus</string>
+    <string name="menu_add_to_library">Lisää kirjastoon</string>
+    <string name="menu_view_artist">View artist</string>
+    <string name="menu_view_album">View album</string>
     <string name="menu_song_delete">Poista</string>
+    <string name="menu_share">Share</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Muokkaa kappaletta</string>

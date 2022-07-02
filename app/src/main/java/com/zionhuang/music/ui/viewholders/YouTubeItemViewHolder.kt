@@ -10,6 +10,9 @@ import com.zionhuang.music.databinding.ItemYoutubeListBinding
 import com.zionhuang.music.databinding.ItemYoutubeNavigationBinding
 import com.zionhuang.music.databinding.ItemYoutubeNavigationBtnBinding
 import com.zionhuang.music.databinding.ItemYoutubeSquareBinding
+import com.zionhuang.music.extensions.context
+import com.zionhuang.music.extensions.show
+import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
 
 sealed class YouTubeItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
@@ -26,6 +29,19 @@ class YouTubeListItemViewHolder(
         binding.root.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint)
         }
+        binding.btnMoreAction.setOnClickListener {
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.youtube_item)
+                .setMenuModifier {
+                    findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
+                    findItem(R.id.action_view_artist)?.isVisible = item.menu.artistEndpoint != null
+                    findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
+                }
+                .setOnMenuItemClickListener {
+
+                }
+                .show(binding.context)
+        }
         binding.executePendingBindings()
     }
 }
@@ -38,6 +54,20 @@ class YouTubeSquareItemViewHolder(
         binding.item = item
         binding.root.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint)
+        }
+        binding.root.setOnLongClickListener {
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.youtube_item)
+                .setMenuModifier {
+                    findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
+                    findItem(R.id.action_view_artist)?.isVisible = item.menu.artistEndpoint != null
+                    findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
+                }
+                .setOnMenuItemClickListener {
+
+                }
+                .show(binding.context)
+            true
         }
         binding.executePendingBindings()
     }

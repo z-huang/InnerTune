@@ -59,15 +59,18 @@
     <string name="menu_search_title">Buscar</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">Añadir a la biblioteca</string>
-    <string name="search_item_menu_download">Descargar</string>
     <string name="menu_edit">Editar</string>
+    <string name="menu_start_radio">Start radio</string>
     <string name="menu_song_play_next">Reproducir luego</string>
     <string name="menu_song_add_to_queue">Añadir a la cola</string>
-    <string name="menu_song_add_to_playlist">Añadir a una playlist</string>
+    <string name="menu_add_to_library">Añadir a la biblioteca</string>
     <string name="menu_song_download">Descargar</string>
     <string name="menu_song_remove_download">Remover archivo descargado</string>
+    <string name="menu_song_add_to_playlist">Añadir a una playlist</string>
+    <string name="menu_view_artist">View artist</string>
+    <string name="menu_view_album">View album</string>
     <string name="menu_song_delete">Eliminar</string>
+    <string name="menu_share">Share</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Editar canción</string>
