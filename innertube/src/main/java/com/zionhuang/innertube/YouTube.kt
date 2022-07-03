@@ -32,7 +32,7 @@ object YouTube {
                 ?.filter { it.chipCloudChipRenderer.text != null }
                 ?.map { it.toFilter() },
             sections = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
-                .map { it.toItemSection() }
+                .flatMap { it.toSections() }
         )
     }
 

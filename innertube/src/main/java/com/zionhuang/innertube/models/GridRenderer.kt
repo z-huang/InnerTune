@@ -11,6 +11,10 @@ data class GridRenderer(
     data class Header(
         val gridHeaderRenderer: GridHeaderRenderer,
     ) {
+        fun toSectionHeader() = Header(
+            title = gridHeaderRenderer.title.toString()
+        )
+
         @Serializable
         data class GridHeaderRenderer(
             val title: Runs,

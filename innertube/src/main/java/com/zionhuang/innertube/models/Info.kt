@@ -24,7 +24,7 @@ data class ArtistInfo(
             bannerThumbnail = response.header.musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
             shuffleEndpoint = response.header.musicImmersiveHeaderRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint!!,
             radioEndpoint = response.header.musicImmersiveHeaderRenderer.startRadioButton.buttonRenderer.navigationEndpoint.watchEndpoint!!,
-            contents = response.toSectionList()
+            contents = response.contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() }
         )
     }
 }
@@ -57,16 +57,18 @@ data class PlaylistInfo(
     val name: String,
     val subtitle: String,
     val secondSubtitle: String,
-    val description: String,
+    val description: String?,
     val thumbnail: List<Thumbnail>,
+    val menu: ItemMenu,
 ) : Info() {
     companion object : FromBrowseResponse<PlaylistInfo> {
         override fun from(response: BrowseResponse): PlaylistInfo = PlaylistInfo(
             name = response.header!!.musicDetailHeaderRenderer!!.title.toString(),
             subtitle = response.header.musicDetailHeaderRenderer!!.subtitle.toString(),
             secondSubtitle = response.header.musicDetailHeaderRenderer.secondSubtitle.toString(),
-            description = response.header.musicDetailHeaderRenderer.description.toString(),
-            thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.getThumbnails()
+            description = response.header.musicDetailHeaderRenderer.description?.toString(),
+            thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.getThumbnails(),
+            menu = response.header.musicDetailHeaderRenderer.menu.toItemMenu()
         )
     }
 }

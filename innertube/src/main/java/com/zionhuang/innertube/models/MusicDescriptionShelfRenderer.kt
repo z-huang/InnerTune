@@ -8,4 +8,11 @@ data class MusicDescriptionShelfRenderer(
     val subheader: Runs?,
     val description: Runs,
     val footer: Runs?,
-)
+) {
+    fun toSectionHeader() = header?.let {
+        Header(
+            title = it.toString(),
+            subtitle = subheader?.toString()
+        )
+    }
+}

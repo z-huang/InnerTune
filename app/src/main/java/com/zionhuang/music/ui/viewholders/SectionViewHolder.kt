@@ -1,33 +1,42 @@
 package com.zionhuang.music.ui.viewholders
 
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.zionhuang.innertube.models.*
-import com.zionhuang.music.databinding.ItemSectionBinding
+import com.zionhuang.music.databinding.ItemSectionDescriptionBinding
+import com.zionhuang.music.databinding.ItemSectionHeaderBinding
+import com.zionhuang.music.databinding.ItemSectionItemBinding
 import com.zionhuang.music.extensions.context
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.utils.NavigationEndpointHandler
 
-class SectionViewHolder(
-    val binding: ItemSectionBinding,
+sealed class SectionViewHolder(open val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root)
+
+class SectionHeaderViewHolder(
+    override val binding: ItemSectionHeaderBinding,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : RecyclerView.ViewHolder(binding.root) {
+) : SectionViewHolder(binding) {
+    fun bind(header: Header) {
+        binding.header = header
+    }
+}
+
+class SectionDescriptionViewHolder(
+    override val binding: ItemSectionDescriptionBinding,
+) : SectionViewHolder(binding) {
+    fun bind(section: DescriptionSection) {
+        binding.section = section
+    }
+}
+
+class SectionItemViewHolder(
+    override val binding: ItemSectionItemBinding,
+    private val navigationEndpointHandler: NavigationEndpointHandler,
+) : SectionViewHolder(binding) {
     fun bind(section: Section) {
-        binding.header.isVisible = section.header != null
-        section.header?.let {
-            binding.title.text = it.title
-            binding.subtitle.isVisible = !it.subtitle.isNullOrEmpty()
-            binding.subtitle.text = it.subtitle
-            binding.btnMore.isVisible = it.moreNavigationEndpoint != null
-        }
-        binding.description.isVisible = section is DescriptionSection
-        binding.recyclerView.isVisible = section !is DescriptionSection
         when (section) {
-            is DescriptionSection -> {
-                binding.description.text = section.description
-            }
             is ListSection -> {
                 val itemAdapter = YouTubeItemAdapter(section.itemViewType, false, navigationEndpointHandler)
                 binding.recyclerView.layoutManager = LinearLayoutManager(binding.context)
@@ -51,6 +60,7 @@ class SectionViewHolder(
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }
+            else -> {}
         }
     }
 }
