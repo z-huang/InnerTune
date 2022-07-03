@@ -28,9 +28,9 @@ data class MusicResponsiveListItemRenderer(
         }
 
     private val isSong: Boolean
-        get() = navigationEndpoint == null && thumbnail!!.isSquare
+        get() = navigationEndpoint == null && (index != null || thumbnail?.isSquare == true)
     private val isVideo: Boolean
-        get() = navigationEndpoint == null && !thumbnail!!.isSquare
+        get() = navigationEndpoint == null && (index == null && thumbnail?.isSquare == false)
     private val isPlaylist: Boolean
         get() = navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_PLAYLIST
     private val isAlbum: Boolean
