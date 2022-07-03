@@ -24,7 +24,7 @@ data class ArtistInfo(
             bannerThumbnail = response.header.musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
             shuffleEndpoint = response.header.musicImmersiveHeaderRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint!!,
             radioEndpoint = response.header.musicImmersiveHeaderRenderer.startRadioButton.buttonRenderer.navigationEndpoint.watchEndpoint!!,
-            contents = response.contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() }
+            contents = response.contents!!.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() }
         )
     }
 }
@@ -34,9 +34,9 @@ data class AlbumInfo(
     val subtitle: String,
     val secondSubtitle: String,
     val description: String?,
-    val items: List<SongItem>,
     val thumbnail: List<Thumbnail>,
     val menu: ItemMenu,
+    val items: List<SongItem>,
 ) : Info() {
     companion object : FromBrowseResponse<AlbumInfo> {
         override fun from(response: BrowseResponse): AlbumInfo = AlbumInfo(
@@ -44,11 +44,11 @@ data class AlbumInfo(
             subtitle = response.header.musicDetailHeaderRenderer!!.subtitle.toString(),
             secondSubtitle = response.header.musicDetailHeaderRenderer.secondSubtitle.toString(),
             description = response.header.musicDetailHeaderRenderer.description?.toString(),
-            items = response.contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents.map {
-                SongItem.from(it.musicResponsiveListItemRenderer)
-            },
             thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.getThumbnails(),
-            menu = response.header.musicDetailHeaderRenderer.menu.toItemMenu()
+            menu = response.header.musicDetailHeaderRenderer.menu.toItemMenu(),
+            items = response.contents!!.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents.map {
+                SongItem.from(it.musicResponsiveListItemRenderer)
+            }
         )
     }
 }

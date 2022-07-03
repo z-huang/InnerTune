@@ -60,7 +60,8 @@ data class SectionListRenderer(
                     items = musicCarouselShelfRenderer.contents.map { it.toItem() },
                     numItemsPerColumn = musicCarouselShelfRenderer.numItemsPerColumn ?: 1,
                     itemViewType = musicCarouselShelfRenderer.getViewType()
-                ))
+                )
+            )
             musicShelfRenderer != null -> listOfNotNull(
                 musicShelfRenderer.toSectionHeader(),
                 ListSection(
@@ -68,12 +69,21 @@ data class SectionListRenderer(
                     items = musicShelfRenderer.contents.map { it.toItem() },
                     continuation = musicShelfRenderer.continuations?.getContinuation(),
                     itemViewType = musicShelfRenderer.getViewType()
-                ))
+                )
+            )
+            musicPlaylistShelfRenderer != null -> listOfNotNull(
+                ListSection(
+                    id = musicPlaylistShelfRenderer.playlistId,
+                    items = musicPlaylistShelfRenderer.contents.map { it.toItem() },
+                    itemViewType = Section.ViewType.LIST
+                )
+            )
             musicDescriptionShelfRenderer != null -> listOfNotNull(
                 musicDescriptionShelfRenderer.toSectionHeader(),
                 DescriptionSection(
                     description = musicDescriptionShelfRenderer.description.toString()
-                ))
+                )
+            )
             gridRenderer != null -> listOfNotNull(
                 gridRenderer.header?.toSectionHeader(),
                 GridSection(

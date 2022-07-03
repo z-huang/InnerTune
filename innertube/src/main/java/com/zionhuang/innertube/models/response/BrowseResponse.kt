@@ -5,18 +5,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class BrowseResponse(
-    val contents: Contents,
+    val contents: Contents?,
     val continuationContents: ContinuationContents?,
     val header: Header?,
     val microformat: Microformat?,
 ) {
-    fun toBrowseResult() =
-        if (continuationContents == null) {
-            BrowseResult(
-                sections = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() },
-                continuation = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
-            )
-        } else when {
+    fun toBrowseResult() = when {
+        contents != null -> BrowseResult(
+            sections = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() },
+            continuation = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
+        )
+        continuationContents != null -> when {
             continuationContents.sectionListContinuation != null -> BrowseResult(
                 sections = continuationContents.sectionListContinuation.contents.flatMap { it.toSections() },
                 continuation = continuationContents.sectionListContinuation.continuations?.getContinuation()
@@ -34,6 +33,8 @@ data class BrowseResponse(
             )
             else -> throw UnsupportedOperationException("Unknown continuation type")
         }
+        else -> throw UnsupportedOperationException("Unknown response")
+    }
 
     @Serializable
     data class Contents(
