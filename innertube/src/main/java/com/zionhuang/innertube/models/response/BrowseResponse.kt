@@ -9,12 +9,9 @@ data class BrowseResponse(
     val continuationContents: ContinuationContents?,
     val header: Header?,
     val microformat: Microformat?,
+    val responseContext: ResponseContext,
 ) {
     fun toBrowseResult() = when {
-        contents != null -> BrowseResult(
-            sections = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() },
-            continuation = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
-        )
         continuationContents != null -> when {
             continuationContents.sectionListContinuation != null -> BrowseResult(
                 sections = continuationContents.sectionListContinuation.contents.flatMap { it.toSections() },
@@ -33,6 +30,10 @@ data class BrowseResponse(
             )
             else -> throw UnsupportedOperationException("Unknown continuation type")
         }
+        contents != null -> BrowseResult(
+            sections = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() },
+            continuation = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
+        )
         else -> throw UnsupportedOperationException("Unknown response")
     }
 

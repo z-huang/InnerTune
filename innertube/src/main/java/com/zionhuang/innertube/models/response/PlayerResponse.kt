@@ -1,5 +1,6 @@
 package com.zionhuang.innertube.models.response
 
+import com.zionhuang.innertube.models.ResponseContext
 import com.zionhuang.innertube.models.Thumbnails
 import kotlinx.serialization.Serializable
 
@@ -14,11 +15,6 @@ data class PlayerResponse(
     val streamingData: StreamingData?,
     val videoDetails: VideoDetails,
 ) {
-    @Serializable
-    data class ResponseContext(
-        val visitorData: String,
-    )
-
     @Serializable
     data class PlayabilityStatus(
         val status: String,
