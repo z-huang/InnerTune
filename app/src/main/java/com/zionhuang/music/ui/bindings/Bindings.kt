@@ -102,11 +102,17 @@ fun setUrl(
     }
 }
 
-@BindingAdapter("thumbnails")
-fun setThumbnails(view: ImageView, thumbnails: List<Thumbnail>?) {
+@BindingAdapter("thumbnails", "roundedCorner", requireAll = false)
+fun setThumbnails(
+    view: ImageView,
+    thumbnails: List<Thumbnail>?,
+    roundedCorner: Boolean?,
+) {
     thumbnails?.lastOrNull()?.let {
         view.load(it.url) {
-            transform(MultiTransformation(FitCenter(), RoundedCorners(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))))
+            if (roundedCorner == null || roundedCorner) {
+                transform(MultiTransformation(FitCenter(), RoundedCorners(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))))
+            }
         }
     }
 }

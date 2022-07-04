@@ -114,6 +114,7 @@
     <string name="btn_retry">다시</string>
     <string name="btn_play">Play</string>
     <string name="btn_play_all">모두 재생</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">셔플</string>
 
     <!-- Sort Menu -->

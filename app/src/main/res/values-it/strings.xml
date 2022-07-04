@@ -117,6 +117,7 @@
     <string name="btn_retry">Riprova</string>
     <string name="btn_play">Play</string>
     <string name="btn_play_all">Riproduci tutti</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Mischia</string>
 
     <!-- Sort Menu -->

@@ -62,7 +62,7 @@
             app:destination="@id/youtubeSuggestionFragment" />
         <action
             android:id="@+id/action_searchResultFragment_to_youTubePlaylistFragment"
-            app:destination="@id/youTubePlaylistFragment">
+            app:destination="@id/newpipePlaylistFragment">
             <argument
                 android:name="playlistId"
                 app:argType="string" />
@@ -78,13 +78,6 @@
     <fragment
         android:id="@+id/youTubeBrowseFragment"
         android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragment">
-        <argument
-            android:name="endpoint"
-            app:argType="com.zionhuang.innertube.models.endpoint.BrowseEndpoint" />
-    </fragment>
-    <fragment
-        android:id="@+id/youTubeAlbumFragment"
-        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeAlbumFragment">
         <argument
             android:name="endpoint"
             app:argType="com.zionhuang.innertube.models.endpoint.BrowseEndpoint" />
@@ -122,7 +115,7 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/youTubePlaylistFragment"
+        android:id="@+id/newpipePlaylistFragment"
         android:name="com.zionhuang.music.ui.fragments.YouTubePlaylistFragment">
         <argument
             android:name="playlistId"
@@ -160,7 +153,4 @@
     <action
         android:id="@+id/open_youTubeBrowseFragment"
         app:destination="@id/youTubeBrowseFragment" />
-    <action
-        android:id="@+id/open_youTubeAlbumFragment"
-        app:destination="@id/youTubeAlbumFragment" />
 </navigation>

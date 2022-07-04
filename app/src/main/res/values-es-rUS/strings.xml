@@ -120,6 +120,7 @@
     <string name="btn_retry">Reintentar</string>
     <string name="btn_play">Play</string>
     <string name="btn_play_all">Reproducir todo</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Aleatorio</string>
 
     <!-- Sort Menu -->

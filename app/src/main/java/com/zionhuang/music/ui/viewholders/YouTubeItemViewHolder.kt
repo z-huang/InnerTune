@@ -38,7 +38,14 @@ class YouTubeListItemViewHolder(
                     findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
                 }
                 .setOnMenuItemClickListener {
-
+                    when (it.itemId) {
+                        R.id.action_view_artist -> item.menu.artistEndpoint?.let { endpoint ->
+                            navigationEndpointHandler.handle(endpoint)
+                        }
+                        R.id.action_view_album -> item.menu.albumEndpoint?.let { endpoint ->
+                            navigationEndpointHandler.handle(endpoint)
+                        }
+                    }
                 }
                 .show(binding.context)
         }
@@ -64,7 +71,14 @@ class YouTubeSquareItemViewHolder(
                     findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
                 }
                 .setOnMenuItemClickListener {
-
+                    when (it.itemId) {
+                        R.id.action_view_artist -> item.menu.artistEndpoint?.let { endpoint ->
+                            navigationEndpointHandler.handle(endpoint)
+                        }
+                        R.id.action_view_album -> item.menu.albumEndpoint?.let { endpoint ->
+                            navigationEndpointHandler.handle(endpoint)
+                        }
+                    }
                 }
                 .show(binding.context)
             true

@@ -16,9 +16,9 @@ data class Menu(
         playEndpoint = findEndpointByIcon(ICON_PLAY_ARROW),
         shuffleEndpoint = findEndpointByIcon(ICON_SHUFFLE),
         radioEndpoint = findEndpointByIcon(ICON_MIX),
-        artistEndpoint = findEndpointByIcon(ICON_ARTIST)?.browseEndpoint,
-        albumEndpoint = findEndpointByIcon(ICON_ALBUM)?.browseEndpoint,
-        shareEndpoint = findEndpointByIcon(ICON_SHARE)?.shareEntityEndpoint
+        artistEndpoint = findEndpointByIcon(ICON_ARTIST),
+        albumEndpoint = findEndpointByIcon(ICON_ALBUM),
+        shareEndpoint = findEndpointByIcon(ICON_SHARE)
     )
 
     @Serializable

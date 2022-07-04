@@ -15,4 +15,5 @@ class YouTubeViewModel(application: Application) : AndroidViewModel(application)
     }.flow.cachedIn(viewModelScope)
 
     suspend fun getAlbumInfo(endpoint: BrowseEndpoint) = YouTubeRepository.getAlbumInfo(endpoint)
+    suspend fun getPlaylistInfo(endpoint: BrowseEndpoint) = YouTubeRepository.getPlaylistInfo(endpoint)
 }

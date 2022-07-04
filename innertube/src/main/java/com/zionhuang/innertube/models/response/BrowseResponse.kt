@@ -11,7 +11,7 @@ data class BrowseResponse(
     val microformat: Microformat?,
     val responseContext: ResponseContext,
 ) {
-    fun toBrowseResult() = when {
+    fun toBrowseResult(): BrowseResult = when {
         continuationContents != null -> when {
             continuationContents.sectionListContinuation != null -> BrowseResult(
                 sections = continuationContents.sectionListContinuation.contents.flatMap { it.toSections() },
@@ -35,7 +35,7 @@ data class BrowseResponse(
             continuation = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
         )
         else -> throw UnsupportedOperationException("Unknown response")
-    }
+    }.addHeader(header?.toSectionHeader())
 
     @Serializable
     data class Contents(
@@ -66,13 +66,35 @@ data class BrowseResponse(
         val musicImmersiveHeaderRenderer: MusicImmersiveHeaderRenderer?,
         val musicDetailHeaderRenderer: MusicDetailHeaderRenderer?,
     ) {
+        fun toSectionHeader(): Section? = when {
+            musicImmersiveHeaderRenderer != null -> ArtistHeader(
+                id = musicImmersiveHeaderRenderer.title.toString(),
+                name = musicImmersiveHeaderRenderer.title.toString(),
+                description = musicImmersiveHeaderRenderer.description?.toString(),
+                bannerThumbnail = musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
+                shuffleEndpoint = musicImmersiveHeaderRenderer.playButton.buttonRenderer.navigationEndpoint,
+                radioEndpoint = musicImmersiveHeaderRenderer.startRadioButton.buttonRenderer.navigationEndpoint,
+            )
+            musicDetailHeaderRenderer != null -> AlbumOrPlaylistHeader(
+                id = musicDetailHeaderRenderer.title.toString(),
+                name = musicDetailHeaderRenderer.title.toString(),
+                subtitle = musicDetailHeaderRenderer.subtitle.toString(),
+                secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),
+                description = musicDetailHeaderRenderer.description?.toString(),
+                thumbnail = musicDetailHeaderRenderer.thumbnail.getThumbnails(),
+                menu = musicDetailHeaderRenderer.menu.toItemMenu()
+            )
+            else -> null
+        }
+
         @Serializable
         data class MusicImmersiveHeaderRenderer(
             val title: Runs,
-            val description: Runs,
+            val description: Runs?,
             val thumbnail: ThumbnailRenderer,
             val playButton: Button,
             val startRadioButton: Button,
+            val menu: Menu,
         )
 
         @Serializable

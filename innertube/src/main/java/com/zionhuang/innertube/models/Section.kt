@@ -15,6 +15,25 @@ data class Header(
     override val id: String = title,
 ) : Section()
 
+data class ArtistHeader(
+    override val id: String,
+    val name: String,
+    val description: String?,
+    val bannerThumbnail: List<Thumbnail>,
+    val shuffleEndpoint: NavigationEndpoint,
+    val radioEndpoint: NavigationEndpoint,
+) : Section()
+
+data class AlbumOrPlaylistHeader(
+    override val id: String,
+    val name: String,
+    val subtitle: String,
+    val secondSubtitle: String,
+    val description: String?,
+    val thumbnail: List<Thumbnail>,
+    val menu: ItemMenu,
+) : Section()
+
 data class ListSection(
     override val id: String,
     val items: List<BaseItem>,
