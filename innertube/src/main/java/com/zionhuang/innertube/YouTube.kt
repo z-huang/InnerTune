@@ -39,7 +39,7 @@ object YouTube {
     suspend fun search(query: String, filter: SearchFilter): SearchResult {
         val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
         return SearchResult(
-            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents
+            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!
                 .map { it.toItem() },
             continuation = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuation()
         )

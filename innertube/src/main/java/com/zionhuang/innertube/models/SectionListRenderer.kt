@@ -64,12 +64,14 @@ data class SectionListRenderer(
             )
             musicShelfRenderer != null -> listOfNotNull(
                 musicShelfRenderer.toSectionHeader(),
-                ListSection(
-                    id = musicShelfRenderer.title.toString(),
-                    items = musicShelfRenderer.contents.map { it.toItem() },
-                    continuation = musicShelfRenderer.continuations?.getContinuation(),
-                    itemViewType = musicShelfRenderer.getViewType()
-                )
+                musicShelfRenderer.contents?.let {
+                    ListSection(
+                        id = musicShelfRenderer.title.toString(),
+                        items = musicShelfRenderer.contents.map { it.toItem() },
+                        continuation = musicShelfRenderer.continuations?.getContinuation(),
+                        itemViewType = musicShelfRenderer.getViewType()
+                    )
+                }
             )
             musicPlaylistShelfRenderer != null -> listOfNotNull(
                 ListSection(

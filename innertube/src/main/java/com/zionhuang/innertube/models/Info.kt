@@ -46,7 +46,7 @@ data class AlbumInfo(
             description = response.header.musicDetailHeaderRenderer.description?.toString(),
             thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.getThumbnails(),
             menu = response.header.musicDetailHeaderRenderer.menu.toItemMenu(),
-            items = response.contents!!.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents.map {
+            items = response.contents!!.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.map {
                 SongItem.from(it.musicResponsiveListItemRenderer)
             }
         )
