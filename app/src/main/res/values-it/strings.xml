@@ -55,19 +55,22 @@
     <string name="color_brown">Marrone</string>
     <string name="color_blue_grey">Blu grigio</string>
 
-    <!-- Nav Menu -->
+    <!-- Navigazione -->
     <string name="menu_search_title">Cerca</string>
 
-    <!-- Popup Menu -->
-    <string name="search_item_menu_add">Aggiungi alla libreria</string>
-    <string name="search_item_menu_download">Scarica</string>
+    <!-- Popup -->
     <string name="menu_edit">Modifica</string>
+    <string name="menu_start_radio">Apri la radio</string>
     <string name="menu_song_play_next">Riproduci come successiva</string>
     <string name="menu_song_add_to_queue">Aggiungi alla coda</string>
-    <string name="menu_song_add_to_playlist">Aggiungi alla playlist</string>
+    <string name="menu_add_to_playlist">Aggiungi alla playlist</string>
     <string name="menu_song_download">Scarica</string>
     <string name="menu_song_remove_download">Rimuovi scaricamento</string>
+    <string name="menu_song_add_to_playlist">Aggiungi alla playlist</string>
+    <string name="menu_view_artist">Mostra artista</string>
+    <string name="menu_view_album">Mostra album</string>
     <string name="menu_song_delete">Elimina</string>
+    <string name="menu_share">Condividi</string>
 
     <!-- Dialoghi -->
     <string name="dialog_title_edit_song">Modifica brano</string>
@@ -92,16 +95,18 @@
 
     <string name="dialog_title_edit_playlist">Modifica playlist</string>
 
-    <!-- Notification -->
+    <!-- Notifica -->
     <string name="channel_name_playback">Riproduttore</string>
     <string name="channel_name_download">Scarica</string>
 
-    <!-- Noun -->
+    <!-- Testi -->
     <plurals name="songs_count">
+        <item quantity="zero">%d brani</item>
         <item quantity="one">%d brano</item>
         <item quantity="other">%d brani</item>
     </plurals>
     <plurals name="subscribers">
+        <item quantity="zero">%d iscritti</item>
         <item quantity="one">%d iscritto</item>
         <item quantity="other">%d iscritti</item>
     </plurals>
@@ -110,12 +115,14 @@
         <item quantity="other">%d video</item>
     </plurals>
 
-    <!-- Button -->
+    <!-- Bottoni -->
     <string name="btn_retry">Riprova</string>
+    <string name="btn_play">Riproduci</string>
     <string name="btn_play_all">Riproduci tutti</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Mischia</string>
 
-    <!-- Sort Menu -->
+    <!-- Ordina per -->
     <string name="sort_by_name">Nome</string>
     <string name="sort_by_artist">Artista</string>
     <string name="sort_by_create_date">Data di aggiunta</string>
@@ -134,7 +141,7 @@
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Aggiungi alla libreria</string>
 
-    <!-- Ricerca -->
+    <!-- Filtri di ricerca -->
     <string name="search_filter_all">Tutto</string>
     <string name="search_filter_songs">Brani</string>
     <string name="search_filter_videos">Video</string>
