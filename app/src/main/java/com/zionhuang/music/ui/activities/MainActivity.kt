@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
 import android.os.Bundle
-import android.util.Log
 import android.view.ActionMode
 import android.view.View
 import androidx.core.os.bundleOf
@@ -16,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
@@ -25,7 +23,6 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SINGLE
 import com.zionhuang.music.databinding.ActivityMainBinding
-import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.extensions.dip
 import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.models.QueueData
@@ -33,7 +30,6 @@ import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
-import com.zionhuang.music.viewmodels.SongsViewModel
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.getLinkType
 import kotlinx.coroutines.delay
@@ -43,11 +39,12 @@ import org.schabi.newpipe.extractor.StreamingService.LinkType
 class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
+    private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
+
+    private lateinit var navHostFragment: NavHostFragment
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
-    private val songsViewModel by lazy { ViewModelProvider(this)[SongsViewModel::class.java] }
-    private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
 
     val fab: FloatingActionButton get() = binding.fab
 
@@ -78,7 +75,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     private fun handleIntent(intent: Intent) {
         // Handle url
         val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT)).toString()
-        Log.d(TAG, "${intent.action} ${url}")
         when (getLinkType(url)) {
             LinkType.STREAM -> {
                 lifecycleScope.launch {
@@ -96,18 +92,10 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     }
 
     private fun setupUI() {
-        setSupportActionBar(binding.toolbar)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.exploreFragment,
-            R.id.songsFragment,
-            R.id.artistsFragment,
-            R.id.playlistsFragment
-        ))
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-        binding.bottomNav.setupWithNavController(navController)
         navController.addOnDestinationChangedListener(this)
+        binding.bottomNav.setupWithNavController(navController)
 
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {

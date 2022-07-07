@@ -57,6 +57,7 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">検索</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">編集</string>

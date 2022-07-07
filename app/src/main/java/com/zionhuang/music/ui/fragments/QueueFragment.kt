@@ -13,19 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.moveQueueItem
 import com.zionhuang.music.extensions.seekToQueueItem
 import com.zionhuang.music.ui.adapters.MediaQueueAdapter
-import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
-    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
-
+class QueueFragment : RecyclerViewFragment<MediaQueueAdapter>() {
     private val viewModel by activityViewModels<PlaybackViewModel>()
 
     private val dragEventManager = DragEventManager()
@@ -57,16 +54,16 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
             val from = viewHolder.absoluteAdapterPosition
             val to = target.absoluteAdapterPosition
-            queueAdapter.moveItem(from, to)
+            adapter.moveItem(from, to)
             return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.mediaController.value?.removeQueueItem(queueAdapter.getItem(viewHolder.absoluteAdapterPosition).description)
+            viewModel.mediaController.value?.removeQueueItem(adapter.getItem(viewHolder.absoluteAdapterPosition).description)
         }
     })
 
-    private val queueAdapter: MediaQueueAdapter = MediaQueueAdapter(itemTouchHelper)
+    override val adapter: MediaQueueAdapter = MediaQueueAdapter(itemTouchHelper)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,12 +72,12 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = queueAdapter
             itemTouchHelper.attachToRecyclerView(this)
             addOnClickListener { pos, _ ->
-                queueAdapter.getItem(pos).description.mediaId?.let {
+                this@QueueFragment.adapter.getItem(pos).description.mediaId?.let {
                     viewModel.mediaController.value?.seekToQueueItem(it)
                 }
             }
@@ -88,7 +85,7 @@ class QueueFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
         lifecycleScope.launch {
             viewModel.queueData.asFlow().collectLatest {
-                queueAdapter.submitData(it.items)
+                adapter.submitData(it.items)
             }
         }
 

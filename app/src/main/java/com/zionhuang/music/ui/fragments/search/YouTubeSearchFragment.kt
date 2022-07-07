@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
@@ -30,7 +31,7 @@ import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
-import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.ui.fragments.base.NavigationFragment
 import com.zionhuang.music.utils.bindLoadStateLayout
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
@@ -47,8 +48,9 @@ import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.*
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
-class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
+class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
     override fun getViewBinding() = FragmentSearchBinding.inflate(layoutInflater)
+    override fun getToolbar(): Toolbar = binding.toolbar
 
     private val args: YouTubeSearchFragmentArgs by navArgs()
     private val query by lazy { args.searchQuery }
@@ -59,13 +61,10 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
 
     private val searchResultAdapter = InfoItemAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-        exitTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        enterTransition = MaterialFadeThrough().addTarget(binding.content).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+        exitTransition = MaterialFadeThrough().addTarget(binding.content).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
@@ -91,20 +90,12 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
                         )
                     }
                     is PlaylistInfoItem -> {
-                        exitTransition = MaterialElevationScale(false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-                        reenterTransition = MaterialElevationScale(true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-                        val transitionName = getString(R.string.youtube_playlist_transition_name)
-                        val extras = FragmentNavigatorExtras(view to transitionName)
                         val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(extractPlaylistId(item.url)!!)
-                        findNavController().navigate(directions, extras)
+                        findNavController().navigate(directions)
                     }
                     is ChannelInfoItem -> {
-                        exitTransition = MaterialElevationScale(false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-                        reenterTransition = MaterialElevationScale(true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-                        val transitionName = getString(R.string.youtube_channel_transition_name)
-                        val extras = FragmentNavigatorExtras(view to transitionName)
                         val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(extractChannelId(item.url)!!)
-                        findNavController().navigate(directions, extras)
+                        findNavController().navigate(directions)
                     }
                 }
             }
@@ -168,9 +159,5 @@ class YouTubeSearchFragment : BindingFragment<FragmentSearchBinding>() {
             NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
         }
         return true
-    }
-
-    companion object {
-        private const val TAG = "SearchResultFragment"
     }
 }

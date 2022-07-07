@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
     app:startDestination="@id/exploreFragment">
     <fragment
@@ -136,21 +137,11 @@
     <action
         android:id="@+id/open_queueFragment"
         app:destination="@id/queueFragment" />
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
-        android:label="@string/title_settings" />
-    <action
-        android:id="@+id/open_settingsFragment"
-        app:destination="@id/settingsFragment" />
-    <fragment
-        android:id="@+id/updateFragment"
-        android:name="com.zionhuang.music.ui.fragments.UpdateFragment"
-        android:label="@string/title_update" />
-    <action
-        android:id="@+id/open_updateFragment"
-        app:destination="@id/updateFragment" />
     <action
         android:id="@+id/open_youTubeBrowseFragment"
         app:destination="@id/youTubeBrowseFragment" />
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.zionhuang.music.ui.activities.SettingsActivity"
+        tools:layout="@layout/activity_settings" />
 </navigation>

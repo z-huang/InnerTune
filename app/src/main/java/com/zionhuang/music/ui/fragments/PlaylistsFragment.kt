@@ -5,83 +5,63 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.view.doOnPreDraw
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.MaterialElevationScale
-import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.PlaylistsAdapter
-import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
 import com.zionhuang.music.viewmodels.PlaylistsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
+class PlaylistsFragment : PagingRecyclerViewFragment<PlaylistsAdapter>() {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+    override fun getToolbar(): Toolbar = binding.toolbar
 
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playlistsViewModel by viewModels<PlaylistsViewModel>()
-    private val playlistsAdapter = PlaylistsAdapter()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-        exitTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-    }
+    override val adapter = PlaylistsAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
-
-        playlistsAdapter.popupMenuListener = playlistsViewModel.popupMenuListener
-
+        super.onViewCreated(view, savedInstanceState)
+        adapter.popupMenuListener = playlistsViewModel.popupMenuListener
         (requireActivity() as MainActivity).fab.setOnClickListener {
             CreatePlaylistDialog().show(childFragmentManager, null)
         }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = playlistsAdapter
-            addOnClickListener { position, view ->
-                exitTransition = MaterialElevationScale(false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-                reenterTransition = MaterialElevationScale(true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-                val transitionName = getString(R.string.playlist_songs_transition_name)
-                val extras = FragmentNavigatorExtras(view to transitionName)
-                val directions = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(playlistsAdapter.getItemByPosition(position)!!.playlistId)
-                findNavController().navigate(directions, extras)
+            addOnClickListener { position, _ ->
+                val directions = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(this@PlaylistsFragment.adapter.getItemByPosition(position)!!.playlistId)
+                findNavController().navigate(directions)
             }
         }
 
         lifecycleScope.launch {
             songsViewModel.allPlaylistsFlow.collectLatest {
-                playlistsAdapter.submitData(it)
+                adapter.submitData(it)
             }
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> findNavController().navigate(SettingsFragmentDirections.openSettingsFragment())
+            R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
         }
         return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.settings, menu)
-    }
-
-    companion object {
-        const val TAG = "PlaylistsFragment"
     }
 }

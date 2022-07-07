@@ -19,6 +19,7 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
         <activity
             android:name=".ui.activities.MainActivity"
             android:exported="true"
@@ -181,7 +182,9 @@
             <!-- Share filter -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
 
@@ -189,6 +192,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
+        <activity
+            android:name=".ui.activities.SettingsActivity"
+            android:parentActivityName=".ui.activities.MainActivity" />
 
         <provider
             android:name=".utils.SuggestionProvider"
@@ -238,4 +245,5 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
     </application>
+
 </manifest>

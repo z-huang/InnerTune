@@ -1,7 +1,6 @@
 package com.zionhuang.music.ui.fragments.songs
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,33 +16,28 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.MaterialContainerTransform
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
-import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.adapters.PlaylistSongsAdapter
-import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.PlaylistSongsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
-    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
-
+class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>() {
     private val args: PlaylistSongsFragmentArgs by navArgs()
     private val playlistId by lazy { args.playlistId }
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val viewModel by viewModels<PlaylistSongsViewModel>()
-    private val songsAdapter = PlaylistSongsAdapter()
+    override val adapter = PlaylistSongsAdapter()
 
     private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
         private val elevation by lazy { requireContext().resources.getDimension(R.dimen.drag_item_elevation) }
@@ -61,36 +54,24 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             ViewCompat.setElevation(viewHolder.itemView, 0f)
-            songsAdapter.processMove()
+            adapter.processMove()
         }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
             val from = viewHolder.absoluteAdapterPosition
             val to = target.absoluteAdapterPosition
-            songsAdapter.moveItem(from, to)
+            adapter.moveItem(from, to)
             return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.removeFromPlaylist(playlistId, songsAdapter.getItemByPosition(viewHolder.absoluteAdapterPosition)!!.idInPlaylist!!)
+            viewModel.removeFromPlaylist(playlistId, adapter.getItemByPosition(viewHolder.absoluteAdapterPosition)!!.idInPlaylist!!)
         }
     })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.nav_host_fragment
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().resolveColor(R.attr.colorSurface))
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
-
-        songsAdapter.apply {
+        super.onViewCreated(view, savedInstanceState)
+        adapter.apply {
             popupMenuListener = songsViewModel.songPopupMenuListener
             downloadInfo = songsViewModel.downloadInfoLiveData
             itemTouchHelper = this@PlaylistSongsFragment.itemTouchHelper
@@ -100,13 +81,11 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
 
         binding.recyclerView.apply {
-            transitionName = getString(R.string.playlist_songs_transition_name)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = songsAdapter
             itemTouchHelper.attachToRecyclerView(this)
             addOnClickListener { pos, _ ->
                 playbackViewModel.playMedia(
-                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
+                    requireActivity(), this@PlaylistSongsFragment.adapter.getItemByPosition(pos)!!.id, bundleOf(
                         EXTRA_QUEUE_DATA to QueueData(QUEUE_PLAYLIST, sortInfo = songsViewModel.sortInfo.parcelize(), extras = bundleOf(
                             EXTRA_PLAYLIST_ID to playlistId
                         ))
@@ -117,13 +96,13 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
 
         lifecycleScope.launch {
             songsViewModel.getPlaylistSongsAsFlow(playlistId).collectLatest {
-                songsAdapter.submitData(it)
+                adapter.submitData(it)
             }
         }
 
         songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
             map.forEach { (key, value) ->
-                songsAdapter.setProgress(key, value)
+                adapter.setProgress(key, value)
             }
         }
     }

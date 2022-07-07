@@ -1,37 +1,35 @@
 package com.zionhuang.music.ui.fragments.search
 
-import android.app.SearchManager
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
+import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.View
-import android.widget.EditText
-import androidx.appcompat.widget.SearchView
-import androidx.core.content.getSystemService
+import android.view.inputmethod.EditorInfo.IME_ACTION_PREVIOUS
+import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.databinding.FragmentYoutubeSuggestionBinding
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.getQueryTextChangeFlow
-import com.zionhuang.music.extensions.resolveColor
+import com.zionhuang.music.extensions.getTextChangeFlow
 import com.zionhuang.music.ui.adapters.SearchSuggestionAdapter
-import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.ui.fragments.base.NavigationFragment
+import com.zionhuang.music.utils.KeyboardUtil.hideKeyboard
+import com.zionhuang.music.utils.KeyboardUtil.showKeyboard
 import com.zionhuang.music.viewmodels.SuggestionViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import kotlin.time.DurationUnit
-import kotlin.time.ExperimentalTime
-import kotlin.time.toDuration
 
-class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
-    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
+class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBinding>() {
+    override fun getViewBinding() = FragmentYoutubeSuggestionBinding.inflate(layoutInflater)
+    override fun getToolbar(): Toolbar = binding.toolbar
 
     private val viewModel by viewModels<SuggestionViewModel>()
-    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +40,7 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val suggestionAdapter = SearchSuggestionAdapter { query ->
-            viewModel.fillQuery(query)
+            binding.searchView.setText(query)
         }
         binding.recyclerView.apply {
             setHasFixedSize(true)
@@ -52,60 +50,50 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
                 search(suggestionAdapter.getQueryByPosition(pos))
             }
         }
-        viewModel.apply {
-            onFillQuery.observe(viewLifecycleOwner) { query ->
-                searchView.setQuery(query, false)
-            }
-            query.observe(viewLifecycleOwner) { query ->
-                viewModel.fetchSuggestions(query)
-            }
-            suggestions.observe(viewLifecycleOwner) { dataSet ->
-                suggestionAdapter.setDataSet(dataSet)
-            }
-        }
-    }
-
-    @OptIn(ExperimentalTime::class)
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.search_view, menu)
-        searchView = menu.findItem(R.id.search_view).actionView as SearchView
         setupSearchView()
+        showKeyboard()
+        viewModel.suggestions.observe(viewLifecycleOwner) { dataSet ->
+            suggestionAdapter.setDataSet(dataSet)
+        }
     }
 
-    @OptIn(ExperimentalTime::class)
+    @OptIn(FlowPreview::class)
     private fun setupSearchView() {
-        val searchManager: SearchManager = requireContext().getSystemService()!!
-        searchView.apply {
-            isIconified = false
-            findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.apply {
-                setPadding(0, 2, 0, 2)
-                setTextColor(requireContext().resolveColor(R.attr.colorOnSurface))
-                setHintTextColor(requireContext().resolveColor(R.attr.colorOnSurfaceVariant))
-            }
-            setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
-            isSubmitButtonEnabled = false
-            maxWidth = Int.MAX_VALUE
-            setOnCloseListener { true }
-            viewLifecycleOwner.lifecycleScope.launch {
-                getQueryTextChangeFlow()
-                    .debounce(100.toDuration(DurationUnit.MILLISECONDS))
-                    .collect { e ->
-                        if (e.isSubmitted) {
-                            search(e.query.orEmpty())
-                        } else {
-                            viewModel.setQuery(e.query)
-                        }
-                    }
-            }
-            setQuery(viewModel.query.value, false)
+        lifecycleScope.launch {
+            binding.searchView
+                .getTextChangeFlow()
+                .debounce(100L)
+                .collectLatest {
+                    viewModel.fetchSuggestions(it)
+                }
         }
-
+        binding.searchView.setOnEditorActionListener { view, actionId, event ->
+            if (actionId == IME_ACTION_PREVIOUS) {
+                hideKeyboard()
+                true
+            } else if (event?.keyCode == KEYCODE_ENTER || event?.action == IME_ACTION_SEARCH) {
+                hideKeyboard()
+                search(view.text.toString())
+                true
+            } else {
+                false
+            }
+        }
+        binding.btnClear.setOnClickListener {
+            binding.searchView.text.clear()
+        }
     }
 
     private fun search(query: String) {
-        searchView.clearFocus()
         val action = YouTubeSuggestionFragmentDirections.actionSuggestionFragmentToSearchResultFragment(query)
         NavHostFragment.findNavController(this).navigate(action)
     }
+
+    override fun onPause() {
+        super.onPause()
+        hideKeyboard()
+    }
+
+    private fun showKeyboard() = showKeyboard(requireActivity(), binding.searchView)
+    private fun hideKeyboard() = hideKeyboard(requireActivity(), binding.searchView)
 }

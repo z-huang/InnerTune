@@ -6,9 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="18dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="120dp">
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/version"

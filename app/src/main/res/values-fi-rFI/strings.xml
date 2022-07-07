@@ -57,6 +57,7 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Etsi</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">Muokkaa</string>

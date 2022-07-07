@@ -57,6 +57,7 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Buscar</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">Editar</string>
@@ -103,17 +104,14 @@
     <plurals name="songs_count">
         <item quantity="one">%d canción</item>
         <item quantity="other">%d canciones</item>
-        <item quantity="many">%d canciones</item>
     </plurals>
     <plurals name="subscribers">
         <item quantity="one">%d suscriptor</item>
         <item quantity="other">%d suscriptores</item>
-        <item quantity="many">%d suscriptores</item>
     </plurals>
     <plurals name="videos">
         <item quantity="one">%d vídeo</item>
         <item quantity="other">%d vídeos</item>
-        <item quantity="many">%d Vídeos</item>
     </plurals>
 
     <!-- Button -->
@@ -132,12 +130,10 @@
     <plurals name="snack_bar_delete_song">
         <item quantity="one">%d canción fue eliminada.</item>
         <item quantity="other">%d canciones fueron eliminadas.</item>
-        <item quantity="many">%d canciones fueron eliminadas.</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="one">%d seleccionada</item>
         <item quantity="other">%d seleccionadas</item>
-        <item quantity="many">%d seleccionadas</item>
     </plurals>
     <string name="snack_bar_undo">Deshacer</string>
 

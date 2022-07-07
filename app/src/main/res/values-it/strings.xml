@@ -57,6 +57,7 @@
 
     <!-- Navigazione -->
     <string name="menu_search_title">Cerca</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
 
     <!-- Popup -->
     <string name="menu_edit">Modifica</string>
