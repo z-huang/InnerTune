@@ -1,4 +1,4 @@
-package com.zionhuang.innertube.models.endpoint
+package com.zionhuang.innertube.models
 
 import kotlinx.serialization.Serializable
 
@@ -21,7 +21,13 @@ data class WatchEndpoint(
         @Serializable
         data class WatchEndpointMusicConfig(
             val musicVideoType: String,
-        )
+        ) {
+            companion object {
+                const val MUSIC_VIDEO_TYPE_OMV = "MUSIC_VIDEO_TYPE_OMV"
+                const val MUSIC_VIDEO_TYPE_UGC = "MUSIC_VIDEO_TYPE_UGC"
+                const val MUSIC_VIDEO_TYPE_ATV = "MUSIC_VIDEO_TYPE_ATV"
+            }
+        }
     }
 }
 

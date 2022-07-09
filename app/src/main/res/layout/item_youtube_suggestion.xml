@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/suggestion_item_height"
-        android:background="?android:attr/selectableItemBackground">
+        android:background="?android:selectableItemBackground"
+        android:clickable="true">
 
         <ImageView
             android:id="@+id/suggestion_type_icon"
@@ -55,11 +56,12 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="56dp" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/fill_text_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline_right"

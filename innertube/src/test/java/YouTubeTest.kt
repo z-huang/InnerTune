@@ -7,7 +7,7 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_P
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
-import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.toAlbumInfo
 import com.zionhuang.innertube.models.toArtistInfo
 import com.zionhuang.innertube.models.toPlaylistInfo

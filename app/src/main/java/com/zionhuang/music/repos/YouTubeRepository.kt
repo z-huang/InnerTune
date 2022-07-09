@@ -3,8 +3,10 @@ package com.zionhuang.music.repos
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.*
-import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
+import com.zionhuang.innertube.models.BaseItem
+import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.Item
+import com.zionhuang.innertube.models.Section
 import com.zionhuang.music.extensions.toPage
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -36,15 +38,7 @@ object YouTubeRepository {
         override fun getRefreshKey(state: PagingState<String, Section>): String? = null
     }
 
-    suspend fun getSuggestions(query: String): List<SuggestionItem> = withContext(IO) {
+    suspend fun getSuggestions(query: String): List<BaseItem> = withContext(IO) {
         YouTube.getSearchSuggestions(query)
-    }
-
-    suspend fun getAlbumInfo(endpoint: BrowseEndpoint) = withContext(IO) {
-        YouTube.browse(endpoint).toAlbumInfo()
-    }
-
-    suspend fun getPlaylistInfo(endpoint: BrowseEndpoint) = withContext(IO) {
-        YouTube.browse(endpoint).toPlaylistInfo()
     }
 }

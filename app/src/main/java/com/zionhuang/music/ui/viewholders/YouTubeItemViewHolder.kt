@@ -1,15 +1,14 @@
 package com.zionhuang.music.ui.viewholders
 
+import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.innertube.models.Item
 import com.zionhuang.innertube.models.NavigationItem
 import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.SuggestionTextItem
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.ItemYoutubeListBinding
-import com.zionhuang.music.databinding.ItemYoutubeNavigationBinding
-import com.zionhuang.music.databinding.ItemYoutubeNavigationBtnBinding
-import com.zionhuang.music.databinding.ItemYoutubeSquareBinding
+import com.zionhuang.music.databinding.*
 import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
@@ -26,6 +25,7 @@ class YouTubeListItemViewHolder(
         if (item is SongItem && item.index != null) {
             binding.index.text = item.index
         }
+        binding.secondaryLine.isVisible = !item.subtitle.isNullOrEmpty()
         binding.root.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint)
         }
@@ -120,3 +120,20 @@ class YouTubeNavigationButtonViewHolder(
         binding.executePendingBindings()
     }
 }
+
+class YouTubeSuggestionViewHolder(
+    override val binding: ItemYoutubeSuggestionBinding,
+    private val onFillQuery: (String) -> Unit,
+    private val onSearch: (String) -> Unit,
+) : YouTubeItemViewHolder(binding) {
+    fun bind(item: SuggestionTextItem) {
+        binding.query = item.title
+        binding.executePendingBindings()
+        binding.root.setOnClickListener { onSearch(item.title) }
+        binding.fillTextButton.setOnClickListener { onFillQuery(item.title) }
+    }
+}
+
+class YouTubeSeparatorViewHolder(
+    override val binding: ItemSeparatorBinding,
+) : YouTubeItemViewHolder(binding)

@@ -6,14 +6,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.repos.YouTubeRepository
 
 class YouTubeViewModel(application: Application) : AndroidViewModel(application) {
     fun browse(endpoint: BrowseEndpoint) = Pager(PagingConfig(pageSize = 20)) {
         YouTubeRepository.browse(endpoint)
     }.flow.cachedIn(viewModelScope)
-
-    suspend fun getAlbumInfo(endpoint: BrowseEndpoint) = YouTubeRepository.getAlbumInfo(endpoint)
-    suspend fun getPlaylistInfo(endpoint: BrowseEndpoint) = YouTubeRepository.getPlaylistInfo(endpoint)
 }

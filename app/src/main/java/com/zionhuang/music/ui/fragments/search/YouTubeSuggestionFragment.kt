@@ -11,14 +11,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
+import com.zionhuang.innertube.models.Section
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentYoutubeSuggestionBinding
-import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getTextChangeFlow
-import com.zionhuang.music.ui.adapters.SearchSuggestionAdapter
+import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
 import com.zionhuang.music.utils.KeyboardUtil.hideKeyboard
 import com.zionhuang.music.utils.KeyboardUtil.showKeyboard
+import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.SuggestionViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -30,6 +31,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
     override fun getToolbar(): Toolbar = binding.toolbar
 
     private val viewModel by viewModels<SuggestionViewModel>()
+    private val adapter = YouTubeItemAdapter(Section.ViewType.LIST, false, NavigationEndpointHandler(this))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,21 +41,20 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val suggestionAdapter = SearchSuggestionAdapter { query ->
+        adapter.onFillQuery = { query ->
             binding.searchView.setText(query)
+            binding.searchView.setSelection(query.length)
         }
+        adapter.onSearch = this::search
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = suggestionAdapter
-            addOnClickListener { pos, _ ->
-                search(suggestionAdapter.getQueryByPosition(pos))
-            }
+            adapter = this@YouTubeSuggestionFragment.adapter
         }
         setupSearchView()
         showKeyboard()
         viewModel.suggestions.observe(viewLifecycleOwner) { dataSet ->
-            suggestionAdapter.setDataSet(dataSet)
+            adapter.submitList(dataSet)
         }
     }
 

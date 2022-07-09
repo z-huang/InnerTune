@@ -11,16 +11,47 @@ data class SearchSuggestionsSectionRenderer(
         val searchSuggestionRenderer: SearchSuggestionRenderer?,
         val musicTwoColumnItemRenderer: MusicTwoColumnItemRenderer?,
     ) {
-        fun toSuggestionItem() = when {
-            searchSuggestionRenderer != null -> Text(searchSuggestionRenderer.suggestion.toString())
-            musicTwoColumnItemRenderer != null -> Navigation(
-                title = musicTwoColumnItemRenderer.title.toString(),
-                subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
-                thumbnail = musicTwoColumnItemRenderer.thumbnail.musicThumbnailRenderer!!.thumbnail.thumbnails,
-                thumbnailCrop = musicTwoColumnItemRenderer.thumbnail.musicThumbnailRenderer.thumbnailCrop!!,
-                navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
-            )
-            else -> throw UnsupportedOperationException("Unknown suggestion item type")
+        fun toItem(): BaseItem? = when {
+            searchSuggestionRenderer != null -> SuggestionTextItem(searchSuggestionRenderer.suggestion.toString())
+            musicTwoColumnItemRenderer != null -> when (musicTwoColumnItemRenderer.navigationEndpoint.getItemType()) {
+                ITEM_SONG -> SongItem(
+                    title = musicTwoColumnItemRenderer.title.toString(),
+                    subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
+                    thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
+                    menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
+                    navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
+                )
+                ITEM_VIDEO -> VideoItem(
+                    title = musicTwoColumnItemRenderer.title.toString(),
+                    subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
+                    thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
+                    menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
+                    navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
+                )
+                ITEM_ALBUM -> AlbumItem(
+                    title = musicTwoColumnItemRenderer.title.toString(),
+                    subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
+                    thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
+                    menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
+                    navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
+                )
+                ITEM_PLAYLIST -> PlaylistItem(
+                    title = musicTwoColumnItemRenderer.title.toString(),
+                    subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
+                    thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
+                    menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
+                    navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
+                )
+                ITEM_ARTIST -> ArtistItem(
+                    title = musicTwoColumnItemRenderer.title.toString(),
+                    subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
+                    thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
+                    menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
+                    navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
+                )
+                else -> null
+            }
+            else -> null
         }
 
         @Serializable
@@ -34,6 +65,7 @@ data class SearchSuggestionsSectionRenderer(
             val title: Runs,
             val subtitle: Runs,
             val thumbnail: ThumbnailRenderer,
+            val menu: Menu,
             val navigationEndpoint: NavigationEndpoint,
         )
     }

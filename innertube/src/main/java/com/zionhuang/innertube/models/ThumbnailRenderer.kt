@@ -34,6 +34,7 @@ data class ThumbnailRenderer(
         companion object {
             const val MUSIC_THUMBNAIL_CROP_UNSPECIFIED = "MUSIC_THUMBNAIL_CROP_UNSPECIFIED"
             const val MUSIC_THUMBNAIL_SCALE_ASPECT_FIT = "MUSIC_THUMBNAIL_SCALE_ASPECT_FIT"
+            const val MUSIC_THUMBNAIL_CROP_CIRCLE = "MUSIC_THUMBNAIL_CROP_CIRCLE"
         }
     }
 

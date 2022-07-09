@@ -59,7 +59,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/item_suggestion" />
+            tools:listitem="@layout/item_youtube_suggestion" />
 
         <include
             android:id="@+id/layout_load_state"

@@ -3,8 +3,8 @@ package com.zionhuang.innertube
 import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.YouTubeClient.Companion.ANDROID_MUSIC
 import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
-import com.zionhuang.innertube.models.endpoint.BrowseEndpoint
 import com.zionhuang.innertube.models.response.*
+import com.zionhuang.innertube.utils.insertSeparator
 import io.ktor.client.call.*
 
 /**
@@ -19,10 +19,13 @@ object YouTube {
             innerTube.locale = value
         }
 
-    suspend fun getSearchSuggestions(query: String): List<SuggestionItem> =
-        innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>()
-            .contents.flatMap { section ->
-                section.searchSuggestionsSectionRenderer.contents.map { it.toSuggestionItem() }
+    suspend fun getSearchSuggestions(query: String): List<BaseItem> =
+        innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents
+            .flatMap { section ->
+                section.searchSuggestionsSectionRenderer.contents.mapNotNull { it.toItem() }
+            }
+            .insertSeparator { before, after ->
+                if ((before is SuggestionTextItem && after !is SuggestionTextItem) || (before !is SuggestionTextItem && after is SuggestionTextItem)) Separator else null
             }
 
     suspend fun searchAllType(query: String): SearchAllTypeResult {

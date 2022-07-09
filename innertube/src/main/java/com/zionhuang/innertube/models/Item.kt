@@ -156,3 +156,18 @@ data class NavigationItem(
     val stripeColor: Long?,
     val navigationEndpoint: NavigationEndpoint,
 ) : BaseItem()
+
+data class SuggestionTextItem(
+    override val title: String,
+) : BaseItem()
+
+object Separator : BaseItem() {
+    override val title: String = ""
+}
+
+const val ITEM_UNKNOWN = -1
+const val ITEM_SONG = 0
+const val ITEM_VIDEO = 1
+const val ITEM_ALBUM = 2
+const val ITEM_PLAYLIST = 3
+const val ITEM_ARTIST = 4

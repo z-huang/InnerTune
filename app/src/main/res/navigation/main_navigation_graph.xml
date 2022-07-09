@@ -81,7 +81,7 @@
         android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragment">
         <argument
             android:name="endpoint"
-            app:argType="com.zionhuang.innertube.models.endpoint.BrowseEndpoint" />
+            app:argType="com.zionhuang.innertube.models.BrowseEndpoint" />
     </fragment>
     <fragment
         android:id="@+id/songDetailsFragment"
