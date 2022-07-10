@@ -81,18 +81,19 @@
                     android:text="@string/search_filter_artists" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_playlists"
+                    android:id="@+id/chip_community_playlists"
                     style="@style/Widget.Material3.Chip.Suggestion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/search_filter_playlists" />
+                    android:text="@string/search_filter_community_playlists" />
 
                 <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_channels"
+                    android:id="@+id/chip_featured_playlists"
                     style="@style/Widget.Material3.Chip.Suggestion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/search_filter_channels" />
+                    android:text="@string/search_filter_featured_playlists" />
+
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 

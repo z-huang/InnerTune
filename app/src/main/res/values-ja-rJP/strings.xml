@@ -142,6 +142,8 @@
     <string name="search_filter_albums">アルバム</string>
     <string name="search_filter_artists">アーティスト</string>
     <string name="search_filter_playlists">プレイリスト</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">チャンネル</string>
 
     <string name="system_default">システムに従う</string>

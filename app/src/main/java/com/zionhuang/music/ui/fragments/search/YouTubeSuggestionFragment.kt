@@ -15,7 +15,7 @@ import com.zionhuang.innertube.models.Section
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentYoutubeSuggestionBinding
 import com.zionhuang.music.extensions.getTextChangeFlow
-import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
+import com.zionhuang.music.ui.adapters.YouTubeBaseItemAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
 import com.zionhuang.music.utils.KeyboardUtil.hideKeyboard
 import com.zionhuang.music.utils.KeyboardUtil.showKeyboard
@@ -31,7 +31,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
     override fun getToolbar(): Toolbar = binding.toolbar
 
     private val viewModel by viewModels<SuggestionViewModel>()
-    private val adapter = YouTubeItemAdapter(Section.ViewType.LIST, false, NavigationEndpointHandler(this))
+    private val adapter = YouTubeBaseItemAdapter(Section.ViewType.LIST, false, NavigationEndpointHandler(this))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

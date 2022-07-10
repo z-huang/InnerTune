@@ -147,6 +147,8 @@
     <string name="search_filter_albums">Albumit</string>
     <string name="search_filter_artists">Artistit</string>
     <string name="search_filter_playlists">Soittolistat</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">Kanavat</string>
 
     <string name="system_default">Järjestelmän oletus</string>

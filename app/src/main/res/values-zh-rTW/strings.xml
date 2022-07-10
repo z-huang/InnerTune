@@ -142,6 +142,8 @@
     <string name="search_filter_albums">專輯</string>
     <string name="search_filter_artists">演出者</string>
     <string name="search_filter_playlists">播放清單</string>
+    <string name="search_filter_community_playlists">社群播放清單</string>
+    <string name="search_filter_featured_playlists">精選播放清單</string>
     <string name="search_filter_channels">頻道</string>
 
     <string name="system_default">系統預設</string>

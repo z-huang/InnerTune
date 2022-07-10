@@ -152,6 +152,8 @@
     <string name="search_filter_albums">Albums</string>
     <string name="search_filter_artists">Artistes</string>
     <string name="search_filter_playlists">Listes de lecture</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">Chaînes</string>
 
     <string name="system_default">Système par défaut</string>

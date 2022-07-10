@@ -6,47 +6,37 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
-import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.MaterialElevationScale
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialFadeThrough
+import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_PLAYLIST
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
+import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
+import com.zionhuang.innertube.models.NavigationEndpoint
+import com.zionhuang.innertube.models.SearchEndpoint
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
-import com.zionhuang.music.constants.MediaConstants.EXTRA_SEARCH_FILTER
-import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SEARCH
 import com.zionhuang.music.databinding.FragmentSearchBinding
-import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.id
 import com.zionhuang.music.extensions.requireAppCompatActivity
-import com.zionhuang.music.models.QueueData
-import com.zionhuang.music.ui.adapters.InfoItemAdapter
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
+import com.zionhuang.music.ui.adapters.SectionAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
+import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.bindLoadStateLayout
-import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SearchViewModel
-import com.zionhuang.music.viewmodels.SongsViewModel
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractChannelId
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractPlaylistId
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
-import org.schabi.newpipe.extractor.InfoItem
-import org.schabi.newpipe.extractor.channel.ChannelInfoItem
-import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
-import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeSearchQueryHandlerFactory.*
-import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
     override fun getViewBinding() = FragmentSearchBinding.inflate(layoutInflater)
@@ -56,10 +46,20 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
     private val query by lazy { args.searchQuery }
 
     private val viewModel by viewModels<SearchViewModel>()
-    private val songsViewModel by activityViewModels<SongsViewModel>()
-    private val playbackViewModel by activityViewModels<PlaybackViewModel>()
 
-    private val searchResultAdapter = InfoItemAdapter()
+    private val navigationEndpointHandler = object : NavigationEndpointHandler(this) {
+        override fun handle(navigationEndpoint: NavigationEndpoint) {
+            when (val endpoint = navigationEndpoint.endpoint) {
+                is SearchEndpoint -> when (endpoint.params) {
+                    FILTER_SONG.value, FILTER_VIDEO.value, FILTER_ALBUM.value, FILTER_ARTIST.value, FILTER_COMMUNITY_PLAYLIST.value, FILTER_FEATURED_PLAYLIST.value -> {
+                        viewModel.filter.postValue(YouTube.SearchFilter(endpoint.params!!))
+                    }
+                }
+                else -> super.handle(navigationEndpoint)
+            }
+        }
+    }
+    private val adapter = SectionAdapter(navigationEndpointHandler)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,74 +67,48 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
         exitTransition = MaterialFadeThrough().addTarget(binding.content).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
+        adapter.bindLoadStateLayout(binding.layoutLoadState)
 
         requireAppCompatActivity().supportActionBar?.title = query
 
-        searchResultAdapter.apply {
-            streamMenuListener = songsViewModel.streamPopupMenuListener
-            bindLoadStateLayout(binding.layoutLoadState)
-        }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = searchResultAdapter.withLoadStateFooter(LoadStateAdapter { searchResultAdapter.retry() })
-            addOnClickListener { pos, view ->
-                when (val item: InfoItem = searchResultAdapter.getItemByPosition(pos)!!) {
-                    is StreamInfoItem -> {
-                        playbackViewModel.playMedia(
-                            requireActivity(), item.id, bundleOf(
-                                EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SEARCH, query, extras = bundleOf(
-                                    EXTRA_SEARCH_FILTER to viewModel.searchFilter.value
-                                ))
-                            )
-                        )
-                    }
-                    is PlaylistInfoItem -> {
-                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubePlaylistFragment(extractPlaylistId(item.url)!!)
-                        findNavController().navigate(directions)
-                    }
-                    is ChannelInfoItem -> {
-                        val directions = YouTubeSearchFragmentDirections.actionSearchResultFragmentToYouTubeChannelFragment(extractChannelId(item.url)!!)
-                        findNavController().navigate(directions)
-                    }
-                }
-            }
+            adapter = this@YouTubeSearchFragment.adapter.withLoadStateFooter(LoadStateAdapter { this@YouTubeSearchFragment.adapter.retry() })
         }
 
-        binding.chipAll.isVisible = false
-        binding.chipArtists.isVisible = false
-        binding.chipGroup.setOnCheckedStateChangeListener { _, _ ->
-            val filter = when (binding.chipGroup.checkedChipId) {
-                R.id.chip_all -> ALL
-                R.id.chip_songs -> MUSIC_SONGS
-                R.id.chip_videos -> MUSIC_VIDEOS
-                R.id.chip_albums -> MUSIC_ALBUMS
-                R.id.chip_artists -> MUSIC_ARTISTS
-                R.id.chip_playlists -> PLAYLISTS
-                R.id.chip_channels -> CHANNELS
-                else -> throw IllegalArgumentException("Unexpected filter type.")
-            }
-            viewModel.searchFilter.postValue(filter)
-        }
-
-        viewModel.searchFilter.observe(viewLifecycleOwner) { filter ->
-            when (filter) {
-                ALL -> binding.chipAll
-                MUSIC_SONGS -> binding.chipSongs
-                MUSIC_VIDEOS -> binding.chipVideos
-                MUSIC_ALBUMS -> binding.chipAlbums
-                MUSIC_ARTISTS -> binding.chipArtists
-                PLAYLISTS -> binding.chipPlaylists
-                CHANNELS -> binding.chipChannels
+        binding.chipGroup.setOnCheckedStateChangeListener { group, _ ->
+            viewModel.filter.postValue(when (group.checkedChipId) {
+                R.id.chip_all -> null
+                R.id.chip_songs -> FILTER_SONG
+                R.id.chip_videos -> FILTER_VIDEO
+                R.id.chip_albums -> FILTER_ALBUM
+                R.id.chip_artists -> FILTER_ARTIST
+                R.id.chip_community_playlists -> FILTER_COMMUNITY_PLAYLIST
+                R.id.chip_featured_playlists -> FILTER_FEATURED_PLAYLIST
                 else -> null
-            }?.isChecked = true
+            })
+        }
 
-            searchResultAdapter.refresh()
+        viewModel.filter.observe(viewLifecycleOwner) { filter ->
+            when (filter) {
+                null -> binding.chipAll
+                FILTER_SONG -> binding.chipSongs
+                FILTER_VIDEO -> binding.chipVideos
+                FILTER_ALBUM -> binding.chipAlbums
+                FILTER_ARTIST -> binding.chipArtists
+                FILTER_COMMUNITY_PLAYLIST -> binding.chipCommunityPlaylists
+                FILTER_FEATURED_PLAYLIST -> binding.chipFeaturedPlaylists
+                else -> null
+            }?.apply {
+                isChecked = true
+            }
+            adapter.refresh()
         }
 
         lifecycleScope.launch {
-            // Always showing the first item when switching filters
-            searchResultAdapter.loadStateFlow
+            // Always show the first item when switching filters
+            adapter.loadStateFlow
                 .distinctUntilChangedBy { it.refresh }
                 .filter { it.refresh is LoadState.NotLoading }
                 .collectLatest {
@@ -144,7 +118,7 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
 
         lifecycleScope.launch {
             viewModel.search(query).collectLatest {
-                searchResultAdapter.submitData(it)
+                adapter.submitData(it)
             }
         }
     }
@@ -159,5 +133,11 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
             NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
         }
         return true
+    }
+
+    private fun swapAdapter(adapter: RecyclerView.Adapter<*>) {
+        if (binding.recyclerView.adapter != adapter) {
+            binding.recyclerView.swapAdapter(adapter, false)
+        }
     }
 }

@@ -12,7 +12,7 @@ import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.viewholders.*
 import com.zionhuang.music.utils.NavigationEndpointHandler
 
-class YouTubeItemAdapter(
+class YouTubeBaseItemAdapter(
     private val itemViewType: Section.ViewType,
     private val forceMatchParent: Boolean,
     private val navigationEndpointHandler: NavigationEndpointHandler,

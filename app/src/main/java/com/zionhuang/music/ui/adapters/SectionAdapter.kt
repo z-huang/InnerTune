@@ -43,8 +43,6 @@ class SectionAdapter(
         else -> throw IllegalArgumentException("Unknown item type")
     }
 
-    fun getItemByPosition(position: Int) = getItem(position)
-
     class SectionComparator : DiffUtil.ItemCallback<Section>() {
         override fun areItemsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem::class == newItem::class && oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: Section, newItem: Section): Boolean = oldItem == newItem

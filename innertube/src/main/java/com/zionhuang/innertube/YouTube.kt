@@ -28,30 +28,45 @@ object YouTube {
                 if ((before is SuggestionTextItem && after !is SuggestionTextItem) || (before !is SuggestionTextItem && after is SuggestionTextItem)) Separator else null
             }
 
-    suspend fun searchAllType(query: String): SearchAllTypeResult {
+    suspend fun searchAllType(query: String): BrowseResult {
         val response = innerTube.search(WEB_REMIX, query).body<SearchResponse>()
-        return SearchAllTypeResult(
-            filters = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.header?.chipCloudRenderer?.chips
-                ?.filter { it.chipCloudChipRenderer.text != null }
-                ?.map { it.toFilter() },
-            sections = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
+//        val filters = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.header?.chipCloudRenderer?.chips
+//            ?.filter { it.chipCloudChipRenderer.text != null }
+//            ?.map { it.toFilter() }
+        return BrowseResult(
+            sections = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
                 .flatMap { it.toSections() }
+                .map { if (it is Header) it.copy(moreNavigationEndpoint = null) else it },
+            continuation = null
         )
     }
 
-    suspend fun search(query: String, filter: SearchFilter): SearchResult {
+    suspend fun search(query: String, filter: SearchFilter): BrowseResult {
         val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
-        return SearchResult(
-            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!
-                .map { it.toItem() },
+        return BrowseResult(
+            sections = listOf(
+                ListSection(
+                    id = filter.value,
+                    items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.map { it.toItem() },
+                    continuation = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuation(),
+                    itemViewType = Section.ViewType.LIST
+                )
+            ),
             continuation = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuation()
         )
     }
 
-    suspend fun search(continuation: Continuation): SearchResult {
+    suspend fun search(continuation: Continuation): BrowseResult {
         val response = innerTube.search(WEB_REMIX, continuation = continuation.value).body<SearchResponse>()
-        return SearchResult(
-            items = response.continuationContents?.musicShelfContinuation?.contents?.map { it.toItem() }.orEmpty(),
+        return BrowseResult(
+            sections = listOf(
+                ListSection(
+                    id = continuation.value,
+                    items = response.continuationContents?.musicShelfContinuation?.contents?.map { it.toItem() }.orEmpty(),
+                    continuation = response.continuationContents?.musicShelfContinuation?.continuations?.getContinuation(),
+                    itemViewType = Section.ViewType.LIST
+                )
+            ),
             continuation = response.continuationContents?.musicShelfContinuation?.continuations?.getContinuation()
         )
     }

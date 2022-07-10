@@ -7,7 +7,7 @@ import androidx.viewbinding.ViewBinding
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.extensions.context
-import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
+import com.zionhuang.music.ui.adapters.YouTubeBaseItemAdapter
 import com.zionhuang.music.utils.NavigationEndpointHandler
 
 sealed class SectionViewHolder(open val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root)
@@ -76,19 +76,19 @@ class SectionItemViewHolder(
     fun bind(section: Section) {
         when (section) {
             is ListSection -> {
-                val itemAdapter = YouTubeItemAdapter(section.itemViewType, false, navigationEndpointHandler)
+                val itemAdapter = YouTubeBaseItemAdapter(section.itemViewType, false, navigationEndpointHandler)
                 binding.recyclerView.layoutManager = LinearLayoutManager(binding.context)
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }
             is CarouselSection -> {
-                val itemAdapter = YouTubeItemAdapter(section.itemViewType, false, navigationEndpointHandler)
+                val itemAdapter = YouTubeBaseItemAdapter(section.itemViewType, false, navigationEndpointHandler)
                 binding.recyclerView.layoutManager = GridLayoutManager(binding.context, section.numItemsPerColumn, RecyclerView.HORIZONTAL, false)
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
             }
             is GridSection -> {
-                val itemAdapter = YouTubeItemAdapter(
+                val itemAdapter = YouTubeBaseItemAdapter(
                     if (section.items[0].let { it is NavigationItem && it.stripeColor == null }) Section.ViewType.LIST // [New releases, Charts, Moods & genres] in Explore tab
                     else Section.ViewType.BLOCK,
                     true,

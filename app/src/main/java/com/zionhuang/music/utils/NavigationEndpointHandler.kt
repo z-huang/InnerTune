@@ -5,8 +5,8 @@ import androidx.navigation.fragment.findNavController
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragmentDirections.openYouTubeBrowseFragment
 
-class NavigationEndpointHandler(private val fragment: Fragment) {
-    fun handle(navigationEndpoint: NavigationEndpoint) = when (val endpoint = navigationEndpoint.endpoint) {
+open class NavigationEndpointHandler(private val fragment: Fragment) {
+    open fun handle(navigationEndpoint: NavigationEndpoint) = when (val endpoint = navigationEndpoint.endpoint) {
         is WatchEndpoint -> {}
         is BrowseEndpoint -> fragment.findNavController().navigate(openYouTubeBrowseFragment(endpoint))
         is SearchEndpoint -> {}

@@ -142,6 +142,8 @@
     <string name="search_filter_albums">앨범</string>
     <string name="search_filter_artists">아티스트</string>
     <string name="search_filter_playlists">플레이리스트</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">채널</string>
 
     <string name="system_default">시스템 기본값</string>
