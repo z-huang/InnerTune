@@ -16,6 +16,7 @@ data class PlaylistPanelVideoRenderer(
     val navigationEndpoint: NavigationEndpoint,
 ) {
     fun toSongItem(): SongItem = SongItem(
+        id = videoId,
         title = title.toString(),
         subtitle = longBylineText.toString(),
         thumbnails = thumbnail.thumbnails,

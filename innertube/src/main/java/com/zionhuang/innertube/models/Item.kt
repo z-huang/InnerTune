@@ -5,6 +5,7 @@ sealed class BaseItem {
 }
 
 sealed class Item : BaseItem() {
+    abstract val id: String
     abstract override val title: String
     abstract val subtitle: String?
     abstract val thumbnails: List<Thumbnail>
@@ -18,6 +19,7 @@ sealed class Item : BaseItem() {
 }
 
 data class SongItem(
+    override val id: String,
     override val title: String,
     override val subtitle: String,
     val index: String? = null,
@@ -26,26 +28,38 @@ data class SongItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<SongItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): SongItem = SongItem(
-            title = item.getTitle(),
-            subtitle = item.getSubtitle(),
-            index = item.index?.toString(),
-            thumbnails = item.thumbnail?.getThumbnails().orEmpty(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
-        )
+        override fun from(item: MusicResponsiveListItemRenderer): SongItem {
+            val menu = item.menu.toItemMenu()
+            return SongItem(
+                id = item.playlistItemData?.videoId
+                    ?: item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint?.watchEndpoint?.videoId
+                    ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
+                title = item.getTitle(),
+                subtitle = item.getSubtitle(),
+                index = item.index?.toString(),
+                thumbnails = item.thumbnail?.getThumbnails().orEmpty(),
+                menu = menu,
+                navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
+            )
+        }
 
-        override fun from(item: MusicTwoRowItemRenderer): SongItem = SongItem(
-            title = item.title.toString(),
-            subtitle = item.subtitle.toString(),
-            thumbnails = item.thumbnailRenderer.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint
-        )
+        override fun from(item: MusicTwoRowItemRenderer): SongItem {
+            val menu = item.menu.toItemMenu()
+            return SongItem(
+                id = item.navigationEndpoint.watchEndpoint?.videoId
+                    ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
+                title = item.title.toString(),
+                subtitle = item.subtitle.toString(),
+                thumbnails = item.thumbnailRenderer.getThumbnails(),
+                menu = menu,
+                navigationEndpoint = item.navigationEndpoint
+            )
+        }
     }
 }
 
 data class VideoItem(
+    override val id: String,
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
@@ -53,25 +67,37 @@ data class VideoItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<VideoItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): VideoItem = VideoItem(
-            title = item.getTitle(),
-            subtitle = item.getSubtitle(),
-            thumbnails = item.thumbnail!!.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
-        )
+        override fun from(item: MusicResponsiveListItemRenderer): VideoItem {
+            val menu = item.menu.toItemMenu()
+            return VideoItem(
+                id = item.playlistItemData?.videoId
+                    ?: item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint?.watchEndpoint?.videoId
+                    ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
+                title = item.getTitle(),
+                subtitle = item.getSubtitle(),
+                thumbnails = item.thumbnail!!.getThumbnails(),
+                menu = menu,
+                navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
+            )
+        }
 
-        override fun from(item: MusicTwoRowItemRenderer): VideoItem = VideoItem(
-            title = item.title.toString(),
-            subtitle = item.subtitle.toString(),
-            thumbnails = item.thumbnailRenderer.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint
-        )
+        override fun from(item: MusicTwoRowItemRenderer): VideoItem {
+            val menu = item.menu.toItemMenu()
+            return VideoItem(
+                id = item.navigationEndpoint.watchEndpoint?.videoId
+                    ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
+                title = item.title.toString(),
+                subtitle = item.subtitle.toString(),
+                thumbnails = item.thumbnailRenderer.getThumbnails(),
+                menu = menu,
+                navigationEndpoint = item.navigationEndpoint
+            )
+        }
     }
 }
 
 data class AlbumItem(
+    override val id: String,
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
@@ -79,25 +105,36 @@ data class AlbumItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<AlbumItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): AlbumItem = AlbumItem(
-            title = item.getTitle(),
-            subtitle = item.getSubtitle(),
-            thumbnails = item.thumbnail!!.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint!!
-        )
+        override fun from(item: MusicResponsiveListItemRenderer): AlbumItem {
+            val menu = item.menu.toItemMenu()
+            return AlbumItem(
+                id = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                title = item.getTitle(),
+                subtitle = item.getSubtitle(),
+                thumbnails = item.thumbnail!!.getThumbnails(),
+                menu = menu,
+                navigationEndpoint = item.navigationEndpoint!!
+            )
+        }
 
-        override fun from(item: MusicTwoRowItemRenderer): AlbumItem = AlbumItem(
-            title = item.title.toString(),
-            subtitle = item.subtitle.toString(),
-            thumbnails = item.thumbnailRenderer.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint
-        )
+        override fun from(item: MusicTwoRowItemRenderer): AlbumItem {
+            val menu = item.menu.toItemMenu()
+            return AlbumItem(
+                id = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                title = item.title.toString(),
+                subtitle = item.subtitle.toString(),
+                thumbnails = item.thumbnailRenderer.getThumbnails(),
+                menu = menu,
+                navigationEndpoint = item.navigationEndpoint
+            )
+        }
     }
 }
 
 data class PlaylistItem(
+    override val id: String,
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
@@ -105,25 +142,39 @@ data class PlaylistItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<PlaylistItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): PlaylistItem = PlaylistItem(
-            title = item.getTitle(),
-            subtitle = item.getSubtitle(),
-            thumbnails = item.thumbnail!!.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint!!
-        )
+        override fun from(item: MusicResponsiveListItemRenderer): PlaylistItem {
+            val menu = item.menu.toItemMenu()
+            return PlaylistItem(
+                id = item.navigationEndpoint?.browseEndpoint?.browseId?.removePrefix("VL")
+                    ?: menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                title = item.getTitle(),
+                subtitle = item.getSubtitle(),
+                thumbnails = item.thumbnail!!.getThumbnails(),
+                menu = menu,
+                navigationEndpoint = item.navigationEndpoint!!
+            )
+        }
 
-        override fun from(item: MusicTwoRowItemRenderer): PlaylistItem = PlaylistItem(
-            title = item.title.toString(),
-            subtitle = item.subtitle.toString(),
-            thumbnails = item.thumbnailRenderer.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint
-        )
+        override fun from(item: MusicTwoRowItemRenderer): PlaylistItem {
+            val menu = item.menu.toItemMenu()
+            return PlaylistItem(
+                id = item.navigationEndpoint.browseEndpoint?.browseId?.removePrefix("VL")
+                    ?: item.title.runs.getOrNull(0)?.navigationEndpoint?.browseEndpoint?.browseId?.removePrefix("VL")
+                    ?: menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                title = item.title.toString(),
+                subtitle = item.subtitle.toString(),
+                thumbnails = item.thumbnailRenderer.getThumbnails(),
+                menu = menu,
+                navigationEndpoint = item.navigationEndpoint
+            )
+        }
     }
 }
 
 data class ArtistItem(
+    override val id: String,
     override val title: String,
     override val subtitle: String,
     override val thumbnails: List<Thumbnail>,
@@ -132,14 +183,16 @@ data class ArtistItem(
 ) : Item() {
     companion object : FromContent<ArtistItem> {
         override fun from(item: MusicResponsiveListItemRenderer): ArtistItem = ArtistItem(
+            id = item.navigationEndpoint?.browseEndpoint?.browseId!!,
             title = item.getTitle(),
             subtitle = item.getSubtitle(),
             thumbnails = item.thumbnail!!.getThumbnails(),
             menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint!!
+            navigationEndpoint = item.navigationEndpoint
         )
 
         override fun from(item: MusicTwoRowItemRenderer): ArtistItem = ArtistItem(
+            id = item.navigationEndpoint.browseEndpoint?.browseId!!,
             title = item.title.toString(),
             subtitle = item.subtitle.toString(),
             thumbnails = item.thumbnailRenderer.getThumbnails(),

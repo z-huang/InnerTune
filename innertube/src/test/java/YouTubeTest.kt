@@ -7,10 +7,7 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_P
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
-import com.zionhuang.innertube.models.BrowseEndpoint
-import com.zionhuang.innertube.models.toAlbumInfo
-import com.zionhuang.innertube.models.toArtistInfo
-import com.zionhuang.innertube.models.toPlaylistInfo
+import com.zionhuang.innertube.models.*
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -52,14 +49,14 @@ class YouTubeTest {
         assertTrue(searchAllTypeResult.sections.size > 1)
         for (filter in listOf(
             FILTER_SONG,
-            FILTER_FEATURED_PLAYLIST,
             FILTER_VIDEO,
             FILTER_ALBUM,
-            FILTER_COMMUNITY_PLAYLIST,
-            FILTER_ARTIST
+            FILTER_ARTIST,
+            FILTER_FEATURED_PLAYLIST,
+            FILTER_COMMUNITY_PLAYLIST
         )) {
             val searchResult = youTube.search(SEARCH_QUERY, filter)
-            assertTrue(searchResult.items.isNotEmpty())
+            assertTrue(searchResult.sections.isNotEmpty())
         }
     }
 
@@ -68,13 +65,13 @@ class YouTubeTest {
         var count = 5
         var searchResult = youTube.search(SEARCH_QUERY, FILTER_SONG)
         while (searchResult.continuation != null && count > 0) {
-            searchResult.items.forEach {
+            (searchResult.sections[0] as ListSection).items.forEach {
                 println(it.title)
             }
             searchResult = youTube.search(YouTube.Continuation(searchResult.continuation!!))
             count -= 1
         }
-        searchResult.items.forEach {
+        (searchResult.sections[0] as ListSection).items.forEach {
             println(it.title)
         }
     }
