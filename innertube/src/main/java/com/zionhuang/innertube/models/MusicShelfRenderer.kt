@@ -10,9 +10,7 @@ data class MusicShelfRenderer(
     val moreContentButton: Button?,
     val continuations: List<Continuation>?,
 ) {
-    fun getViewType() = Section.ViewType.LIST
-
-    fun toSectionHeader() = title?.let {
+    fun toHeader(): Header? = title?.let {
         Header(
             title = it.toString(),
             moreNavigationEndpoint = bottomEndpoint ?: moreContentButton?.buttonRenderer?.navigationEndpoint

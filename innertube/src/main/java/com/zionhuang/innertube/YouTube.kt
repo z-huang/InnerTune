@@ -34,8 +34,8 @@ object YouTube {
 //            ?.filter { it.chipCloudChipRenderer.text != null }
 //            ?.map { it.toFilter() }
         return BrowseResult(
-            sections = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
-                .flatMap { it.toSections() }
+            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
+                .flatMap { it.toBaseItems() }
                 .map { if (it is Header) it.copy(moreNavigationEndpoint = null) else it },
             continuation = null
         )
@@ -44,14 +44,7 @@ object YouTube {
     suspend fun search(query: String, filter: SearchFilter): BrowseResult {
         val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
         return BrowseResult(
-            sections = listOf(
-                ListSection(
-                    id = filter.value,
-                    items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.map { it.toItem() },
-                    continuation = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuation(),
-                    itemViewType = Section.ViewType.LIST
-                )
-            ),
+            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.map { it.toItem() },
             continuation = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuation()
         )
     }
@@ -59,14 +52,7 @@ object YouTube {
     suspend fun search(continuation: Continuation): BrowseResult {
         val response = innerTube.search(WEB_REMIX, continuation = continuation.value).body<SearchResponse>()
         return BrowseResult(
-            sections = listOf(
-                ListSection(
-                    id = continuation.value,
-                    items = response.continuationContents?.musicShelfContinuation?.contents?.map { it.toItem() }.orEmpty(),
-                    continuation = response.continuationContents?.musicShelfContinuation?.continuations?.getContinuation(),
-                    itemViewType = Section.ViewType.LIST
-                )
-            ),
+            items = response.continuationContents?.musicShelfContinuation?.contents?.map { it.toItem() }.orEmpty(),
             continuation = response.continuationContents?.musicShelfContinuation?.continuations?.getContinuation()
         )
     }

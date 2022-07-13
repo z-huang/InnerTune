@@ -14,7 +14,7 @@ data class ArtistInfo(
     val bannerThumbnail: List<Thumbnail>,
     val shuffleEndpoint: WatchEndpoint,
     val radioEndpoint: WatchEndpoint,
-    val contents: List<Section>,
+    val contents: List<BaseItem>,
 ) : Info() {
     companion object : FromBrowseResponse<ArtistInfo> {
         override fun from(response: BrowseResponse): ArtistInfo = ArtistInfo(
@@ -23,7 +23,7 @@ data class ArtistInfo(
             bannerThumbnail = response.header.musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
             shuffleEndpoint = response.header.musicImmersiveHeaderRenderer.playButton.buttonRenderer.navigationEndpoint.watchEndpoint!!,
             radioEndpoint = response.header.musicImmersiveHeaderRenderer.startRadioButton.buttonRenderer.navigationEndpoint.watchEndpoint!!,
-            contents = response.contents!!.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() }
+            contents = response.contents!!.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toBaseItems() }
         )
     }
 }

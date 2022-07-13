@@ -1,19 +1,11 @@
 package com.zionhuang.innertube.models
 
-sealed class Section {
-    abstract val id: String
-
-    enum class ViewType {
-        LIST, BLOCK
-    }
-}
-
 data class Header(
     val title: String,
     val subtitle: String? = null,
     val moreNavigationEndpoint: NavigationEndpoint? = null,
     override val id: String = title,
-) : Section()
+) : BaseItem()
 
 data class ArtistHeader(
     override val id: String,
@@ -22,7 +14,7 @@ data class ArtistHeader(
     val bannerThumbnail: List<Thumbnail>,
     val shuffleEndpoint: NavigationEndpoint,
     val radioEndpoint: NavigationEndpoint,
-) : Section()
+) : BaseItem()
 
 data class AlbumOrPlaylistHeader(
     override val id: String,
@@ -32,29 +24,22 @@ data class AlbumOrPlaylistHeader(
     val description: String?,
     val thumbnail: List<Thumbnail>,
     val menu: ItemMenu,
-) : Section()
-
-data class ListSection(
-    override val id: String,
-    val items: List<BaseItem>,
-    val continuation: String? = null,
-    val itemViewType: ViewType,
-) : Section()
+) : BaseItem()
 
 data class CarouselSection(
     override val id: String,
     val items: List<BaseItem>,
     val numItemsPerColumn: Int = 1,
     val itemViewType: ViewType,
-) : Section()
+) : BaseItem()
 
 data class GridSection(
     override val id: String,
     val items: List<BaseItem>,
 //    val moreNavigationEndpoint: BrowseEndpoint,
-) : Section()
+) : BaseItem()
 
 data class DescriptionSection(
     override val id: String = "DESCRIPTION",
     val description: String,
-) : Section()
+) : BaseItem()

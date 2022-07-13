@@ -46,7 +46,7 @@ class YouTubeTest {
     @Test
     fun `Check 'search' endpoint`() = runBlocking {
         val searchAllTypeResult = youTube.searchAllType(SEARCH_QUERY)
-        assertTrue(searchAllTypeResult.sections.size > 1)
+        assertTrue(searchAllTypeResult.items.size > 1)
         for (filter in listOf(
             FILTER_SONG,
             FILTER_VIDEO,
@@ -56,7 +56,7 @@ class YouTubeTest {
             FILTER_COMMUNITY_PLAYLIST
         )) {
             val searchResult = youTube.search(SEARCH_QUERY, filter)
-            assertTrue(searchResult.sections.isNotEmpty())
+            assertTrue(searchResult.items.isNotEmpty())
         }
     }
 
@@ -65,14 +65,14 @@ class YouTubeTest {
         var count = 5
         var searchResult = youTube.search(SEARCH_QUERY, FILTER_SONG)
         while (searchResult.continuation != null && count > 0) {
-            (searchResult.sections[0] as ListSection).items.forEach {
-                println(it.title)
+            searchResult.items.forEach {
+                if (it is Item) println(it.title)
             }
             searchResult = youTube.search(YouTube.Continuation(searchResult.continuation!!))
             count -= 1
         }
-        (searchResult.sections[0] as ListSection).items.forEach {
-            println(it.title)
+        searchResult.items.forEach {
+            if (it is Item) println(it.title)
         }
     }
 
@@ -92,7 +92,7 @@ class YouTubeTest {
         assertTrue(playlistInfo.subtitle.isNotEmpty())
         listOf(HOME_BROWSE_ID, EXPLORE_BROWSE_ID).forEach { browseId ->
             val result = youTube.browse(BrowseEndpoint(browseId)).toBrowseResult()
-            assertTrue(result.sections.isNotEmpty())
+            assertTrue(result.items.isNotEmpty())
         }
     }
 

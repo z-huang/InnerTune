@@ -14,28 +14,21 @@ data class BrowseResponse(
     fun toBrowseResult(): BrowseResult = when {
         continuationContents != null -> when {
             continuationContents.sectionListContinuation != null -> BrowseResult(
-                sections = continuationContents.sectionListContinuation.contents.flatMap { it.toSections() },
+                items = continuationContents.sectionListContinuation.contents.flatMap { it.toBaseItems() },
                 continuation = continuationContents.sectionListContinuation.continuations?.getContinuation()
             )
             continuationContents.musicPlaylistShelfContinuation != null -> BrowseResult(
-                sections = listOf(
-                    ListSection(
-                        id = continuationContents.musicPlaylistShelfContinuation.continuation.getContinuation(),
-                        items = continuationContents.musicPlaylistShelfContinuation.contents.map { it.toItem() },
-                        continuation = continuationContents.musicPlaylistShelfContinuation.continuation.getContinuation(),
-                        itemViewType = Section.ViewType.LIST
-                    )
-                ),
+                items = continuationContents.musicPlaylistShelfContinuation.contents.map { it.toItem() },
                 continuation = continuationContents.musicPlaylistShelfContinuation.continuation.getContinuation()
             )
             else -> throw UnsupportedOperationException("Unknown continuation type")
         }
         contents != null -> BrowseResult(
-            sections = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toSections() },
+            items = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toBaseItems() },
             continuation = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
         )
         else -> throw UnsupportedOperationException("Unknown response")
-    }.addHeader(header?.toSectionHeader())
+    }.addHeader(header?.toHeader())
 
     @Serializable
     data class Contents(
@@ -66,7 +59,7 @@ data class BrowseResponse(
         val musicImmersiveHeaderRenderer: MusicImmersiveHeaderRenderer?,
         val musicDetailHeaderRenderer: MusicDetailHeaderRenderer?,
     ) {
-        fun toSectionHeader(): Section? = when {
+        fun toHeader(): BaseItem? = when {
             musicImmersiveHeaderRenderer != null -> ArtistHeader(
                 id = musicImmersiveHeaderRenderer.title.toString(),
                 name = musicImmersiveHeaderRenderer.title.toString(),

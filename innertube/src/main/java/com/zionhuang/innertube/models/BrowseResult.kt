@@ -1,11 +1,11 @@
 package com.zionhuang.innertube.models
 
 data class BrowseResult(
-    val sections: List<Section>,
+    val items: List<BaseItem>,
     val continuation: String?,
 ) {
-    fun addHeader(section: Section?) = if (section == null) this else BrowseResult(
-        sections = listOf(section) + sections,
+    fun addHeader(header: BaseItem?) = if (header == null) this else BrowseResult(
+        items = listOf(header) + items,
         continuation = continuation
     )
 }

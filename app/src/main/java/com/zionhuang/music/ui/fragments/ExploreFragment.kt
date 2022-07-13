@@ -14,19 +14,19 @@ import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
-import com.zionhuang.music.ui.adapters.SectionAdapter
+import com.zionhuang.music.ui.adapters.YouTubeItemPagingAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.YouTubeViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ExploreFragment : PagingRecyclerViewFragment<SectionAdapter>() {
+class ExploreFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>() {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
 
     private val youTubeViewModel by activityViewModels<YouTubeViewModel>()
-    override val adapter = SectionAdapter(NavigationEndpointHandler(this))
+    override val adapter = YouTubeItemPagingAdapter(NavigationEndpointHandler(this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,12 +1,16 @@
 package com.zionhuang.innertube.models
 
 sealed class BaseItem {
-    abstract val title: String
+    abstract val id: String
+
+    enum class ViewType {
+        LIST, BLOCK
+    }
 }
 
 sealed class Item : BaseItem() {
-    abstract val id: String
-    abstract override val title: String
+    abstract override val id: String
+    abstract  val title: String
     abstract val subtitle: String?
     abstract val thumbnails: List<Thumbnail>
     abstract val menu: ItemMenu
@@ -203,7 +207,8 @@ data class ArtistItem(
 }
 
 data class NavigationItem(
-    override val title: String,
+    val title: String,
+    override val id: String = title,
     val subtitle: String? = null,
     val icon: String?,
     val stripeColor: Long?,
@@ -211,11 +216,12 @@ data class NavigationItem(
 ) : BaseItem()
 
 data class SuggestionTextItem(
-    override val title: String,
+    val query: String,
+    override val id: String = query,
 ) : BaseItem()
 
 object Separator : BaseItem() {
-    override val title: String = ""
+    override val id: String = "SEPARATOR"
 }
 
 const val ITEM_UNKNOWN = -1

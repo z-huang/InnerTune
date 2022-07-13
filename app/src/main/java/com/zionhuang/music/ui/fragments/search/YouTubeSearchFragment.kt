@@ -13,7 +13,6 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
@@ -28,7 +27,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentSearchBinding
 import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.ui.adapters.LoadStateAdapter
-import com.zionhuang.music.ui.adapters.SectionAdapter
+import com.zionhuang.music.ui.adapters.YouTubeItemPagingAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.bindLoadStateLayout
@@ -59,7 +58,7 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
             }
         }
     }
-    private val adapter = SectionAdapter(navigationEndpointHandler)
+    private val adapter = YouTubeItemPagingAdapter(navigationEndpointHandler)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -133,11 +132,5 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
             NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
         }
         return true
-    }
-
-    private fun swapAdapter(adapter: RecyclerView.Adapter<*>) {
-        if (binding.recyclerView.adapter != adapter) {
-            binding.recyclerView.swapAdapter(adapter, false)
-        }
     }
 }

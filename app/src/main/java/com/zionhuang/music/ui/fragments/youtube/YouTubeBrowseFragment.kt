@@ -11,18 +11,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.adapters.SectionAdapter
+import com.zionhuang.music.ui.adapters.YouTubeItemPagingAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.YouTubeViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class YouTubeBrowseFragment : PagingRecyclerViewFragment<SectionAdapter>() {
+class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>() {
     private val args: YouTubeBrowseFragmentArgs by navArgs()
 
     private val youTubeViewModel by activityViewModels<YouTubeViewModel>()
-    override val adapter = SectionAdapter(NavigationEndpointHandler(this))
+    override val adapter = YouTubeItemPagingAdapter(NavigationEndpointHandler(this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

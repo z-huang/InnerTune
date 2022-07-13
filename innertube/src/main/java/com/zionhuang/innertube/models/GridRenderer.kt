@@ -26,6 +26,6 @@ data class GridRenderer(
         val musicNavigationButtonRenderer: MusicNavigationButtonRenderer?,
         val musicTwoRowItemRenderer: MusicTwoRowItemRenderer?,
     ) {
-        fun toItem() = musicNavigationButtonRenderer?.toItem() ?: musicTwoRowItemRenderer?.toItem()!!
+        fun toBaseItem(): BaseItem = musicNavigationButtonRenderer?.toItem() ?: musicTwoRowItemRenderer?.toItem()!!
     }
 }

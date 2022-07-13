@@ -10,10 +10,10 @@ data class MusicCarouselShelfRenderer(
     val numItemsPerColumn: Int?,
 ) {
     fun getViewType() = when {
-        contents[0].musicTwoRowItemRenderer != null -> Section.ViewType.BLOCK
-        contents[0].musicResponsiveListItemRenderer != null -> Section.ViewType.LIST
-        contents[0].musicNavigationButtonRenderer != null -> Section.ViewType.BLOCK
-        else -> Section.ViewType.LIST
+        contents[0].musicTwoRowItemRenderer != null -> BaseItem.ViewType.BLOCK
+        contents[0].musicResponsiveListItemRenderer != null -> BaseItem.ViewType.LIST
+        contents[0].musicNavigationButtonRenderer != null -> BaseItem.ViewType.BLOCK
+        else -> BaseItem.ViewType.LIST
     }
 
     @Serializable
@@ -35,7 +35,7 @@ data class MusicCarouselShelfRenderer(
         val musicResponsiveListItemRenderer: MusicResponsiveListItemRenderer?,
         val musicNavigationButtonRenderer: MusicNavigationButtonRenderer?, // navigation button in explore tab
     ) {
-        fun toItem() = musicTwoRowItemRenderer?.toItem()
+        fun toBaseItem(): BaseItem = musicTwoRowItemRenderer?.toItem()
             ?: musicResponsiveListItemRenderer?.toItem()
             ?: musicNavigationButtonRenderer?.toItem()!!
     }

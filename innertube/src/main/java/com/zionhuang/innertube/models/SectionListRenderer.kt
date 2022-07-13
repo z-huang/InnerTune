@@ -50,49 +50,41 @@ data class SectionListRenderer(
         val musicDescriptionShelfRenderer: MusicDescriptionShelfRenderer?,
         val gridRenderer: GridRenderer?,
     ) {
-        fun toSections(): List<Section> = when {
+        fun toBaseItems(): List<BaseItem> = when {
             musicCarouselShelfRenderer != null -> listOf(
                 Header(
                     title = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString()
                 ),
                 CarouselSection(
                     id = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
-                    items = musicCarouselShelfRenderer.contents.map { it.toItem() },
+                    items = musicCarouselShelfRenderer.contents.map { it.toBaseItem() },
                     numItemsPerColumn = musicCarouselShelfRenderer.numItemsPerColumn ?: 1,
                     itemViewType = musicCarouselShelfRenderer.getViewType()
                 )
             )
             musicShelfRenderer != null -> listOfNotNull(
-                musicShelfRenderer.toSectionHeader(),
-                musicShelfRenderer.contents?.let {
-                    ListSection(
-                        id = musicShelfRenderer.title.toString(),
-                        items = musicShelfRenderer.contents.map { it.toItem() },
-                        continuation = musicShelfRenderer.continuations?.getContinuation(),
-                        itemViewType = musicShelfRenderer.getViewType()
-                    )
-                }
-            )
-            musicPlaylistShelfRenderer != null -> listOfNotNull(
-                ListSection(
-                    id = musicPlaylistShelfRenderer.playlistId,
-                    items = musicPlaylistShelfRenderer.contents.map { it.toItem() },
-                    itemViewType = Section.ViewType.LIST
-                )
-            )
+                musicShelfRenderer.toHeader()
+            ) + musicShelfRenderer.contents?.map { it.toItem() }.orEmpty<BaseItem>()
+            musicPlaylistShelfRenderer != null -> musicPlaylistShelfRenderer.contents.map { it.toItem() }
             musicDescriptionShelfRenderer != null -> listOfNotNull(
                 musicDescriptionShelfRenderer.toSectionHeader(),
                 DescriptionSection(
                     description = musicDescriptionShelfRenderer.description.toString()
                 )
             )
-            gridRenderer != null -> listOfNotNull(
-                gridRenderer.header?.toSectionHeader(),
-                GridSection(
-                    id = gridRenderer.header?.gridHeaderRenderer?.title.toString(),
-                    items = gridRenderer.items.map { it.toItem() }
+            gridRenderer != null -> if (gridRenderer.items[0].toBaseItem().let { it is NavigationItem && it.stripeColor == null }) {
+                // bring NavigationItems out to separate items
+                listOfNotNull(gridRenderer.header?.toSectionHeader()) +
+                        gridRenderer.items.map { it.toBaseItem() }
+            } else {
+                listOfNotNull(
+                    gridRenderer.header?.toSectionHeader(),
+                    GridSection(
+                        id = gridRenderer.header?.gridHeaderRenderer?.title.toString(),
+                        items = gridRenderer.items.map { it.toBaseItem() }
+                    )
                 )
-            )
+            }
             else -> emptyList()
         }
     }
