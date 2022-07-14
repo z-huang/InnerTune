@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/youtubeSuggestionFragment"
-        android:name="com.zionhuang.music.ui.fragments.search.YouTubeSuggestionFragment">
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragment">
         <action
             android:id="@+id/action_suggestionFragment_to_searchResultFragment"
             app:destination="@id/youtubeSearchFragment"
@@ -54,27 +54,13 @@
     </fragment>
     <fragment
         android:id="@+id/youtubeSearchFragment"
-        android:name="com.zionhuang.music.ui.fragments.search.YouTubeSearchFragment">
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSearchFragment">
         <argument
             android:name="searchQuery"
             app:argType="string" />
         <action
             android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
             app:destination="@id/youtubeSuggestionFragment" />
-        <action
-            android:id="@+id/action_searchResultFragment_to_youTubePlaylistFragment"
-            app:destination="@id/newpipePlaylistFragment">
-            <argument
-                android:name="playlistId"
-                app:argType="string" />
-        </action>
-        <action
-            android:id="@+id/action_searchResultFragment_to_youTubeChannelFragment"
-            app:destination="@id/youTubeChannelFragment">
-            <argument
-                android:name="channelId"
-                app:argType="string" />
-        </action>
     </fragment>
     <fragment
         android:id="@+id/youTubeBrowseFragment"
@@ -114,20 +100,6 @@
         <argument
             android:name="playlistId"
             app:argType="integer" />
-    </fragment>
-    <fragment
-        android:id="@+id/newpipePlaylistFragment"
-        android:name="com.zionhuang.music.ui.fragments.YouTubePlaylistFragment">
-        <argument
-            android:name="playlistId"
-            app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/youTubeChannelFragment"
-        android:name="com.zionhuang.music.ui.fragments.YouTubeChannelFragment">
-        <argument
-            android:name="channelId"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/queueFragment"

@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.fragments.search
+package com.zionhuang.music.ui.fragments.youtube
 
 import android.os.Bundle
 import android.view.KeyEvent.KEYCODE_ENTER
