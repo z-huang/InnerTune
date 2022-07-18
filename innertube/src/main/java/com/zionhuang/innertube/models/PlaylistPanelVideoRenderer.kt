@@ -19,9 +19,7 @@ data class PlaylistPanelVideoRenderer(
         id = videoId,
         title = title.toString(),
         subtitle = longBylineText.toString(),
-        artists = longBylineText.runs
-            .filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
-            .mapNotNull { it.toLink() },
+        artists = listOf(longBylineText.runs[0]),
         album = longBylineText.runs
             .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
             ?.toLink(),

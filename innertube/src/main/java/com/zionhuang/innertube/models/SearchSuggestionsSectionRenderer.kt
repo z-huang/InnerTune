@@ -20,9 +20,9 @@ data class SearchSuggestionsSectionRenderer(
                         id = musicTwoColumnItemRenderer.navigationEndpoint.watchEndpoint?.videoId!!,
                         title = musicTwoColumnItemRenderer.title.toString(),
                         subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
-                        artists = listOf(Link(
+                        artists = listOf(Run(
                             text = musicTwoColumnItemRenderer.subtitle.runs.last().text,
-                            navigationEndpoint = menu.artistEndpoint?.browseEndpoint!!
+                            navigationEndpoint = menu.artistEndpoint
                         )),
                         album = null,
                         thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),

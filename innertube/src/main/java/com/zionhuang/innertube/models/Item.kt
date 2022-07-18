@@ -27,7 +27,7 @@ data class SongItem(
     override val title: String,
     override val subtitle: String,
     val index: String? = null,
-    val artists: List<Link<BrowseEndpoint>>,
+    val artists: List<Run>,
     val album: Link<BrowseEndpoint>?,
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
@@ -45,8 +45,7 @@ data class SongItem(
                 subtitle = item.getSubtitle(),
                 index = item.index?.toString(),
                 artists = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
-                    .filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
-                    .mapNotNull { it.toLink() },
+                    .filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST },
                 album = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
                     .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
                     ?.toLink(),
