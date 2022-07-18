@@ -123,33 +123,14 @@ class SongPlayer(
         currentQueue = queue
         player.clearMediaItems()
 
-        queue.initialIndex?.let { index ->
-            player.setMediaItems(queue.initialMediaItems)
-            player.seekToDefaultPosition(index)
+        scope.launch {
+            val initialStatus = queue.getInitialStatus()
+            player.setMediaItems(initialStatus.items)
+            if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
             player.prepare()
             player.playWhenReady = true
         }
-        if (queue.hasNextPage()) {
-            queueJob = scope.launch {
-                val items = queue.nextPage()
-                player.addMediaItems(if (queue.initialIndex == null) items else items.drop(1))
-                if (queue.initialIndex == null) {
-                    player.seekToDefaultPosition(0)
-                    player.prepare()
-                    player.playWhenReady = true
-                }
-            }
-        }
     }
-//
-//    private fun playMedia(mediaId: String?, playWhenReady: Boolean, queueData: QueueData) {
-//        scope.launch {
-//            currentQueue = queueData.toQueue()
-//            //player.loadQueue(currentQueue, mediaId)
-//            player.prepare()
-//            player.playWhenReady = playWhenReady
-//        }
-//    }
 
     private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
         setPlayer(player)
@@ -166,20 +147,15 @@ class SongPlayer(
             }
 
             override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
-//                playMedia(mediaId, playWhenReady, extras!!.getParcelable(EXTRA_QUEUE_DATA)!!)
+                // TODO
             }
 
             override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-//                val mediaId = extras?.getString(EXTRA_SONG_ID)
-//                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SEARCH, query))
+                // TODO
             }
 
             override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
-//                val mediaId = NewPipeYouTubeHelper.extractVideoId(uri.toString()) ?: return setCustomErrorMessage(
-//                    "Can't extract video id from the url.",
-//                    ERROR_CODE_UNKNOWN_ERROR
-//                )
-//                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SINGLE, mediaId))
+                // TODO
             }
         })
         registerCustomCommandReceiver { player, command, extras, _ ->
@@ -339,21 +315,6 @@ class SongPlayer(
 
     fun setPlayerView(playerView: PlayerView?) {
         playerView?.player = player
-    }
-
-    init {
-        context.getLifeCycleOwner()?.let { lifeCycleOwner ->
-            // TODO
-//            oldSongRepository.deletedSongs.observe(lifeCycleOwner) { deletedSongs ->
-//                Log.d(TAG, deletedSongs.toString())
-//                val deletedIds = deletedSongs.map { it.songId }
-//                player.mediaItems.forEachIndexed { index, mediaItem ->
-//                    if (mediaItem.mediaId in deletedIds) {
-//                        player.removeMediaItem(index)
-//                    }
-//                }
-//            }
-        }
     }
 
     companion object {

@@ -4,11 +4,10 @@ import com.google.android.exoplayer2.MediaItem
 
 class ListQueue(
     override val title: String?,
-    items: List<MediaItem>,
-    startIndex: Int,
+    val items: List<MediaItem>,
+    val startIndex: Int,
 ) : Queue {
-    override val initialMediaItems = items
-    override val initialIndex = startIndex
+    override suspend fun getInitialStatus() = Queue.Status(items, startIndex)
 
     override fun hasNextPage(): Boolean = false
 
