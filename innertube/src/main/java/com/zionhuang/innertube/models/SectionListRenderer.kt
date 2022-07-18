@@ -2,6 +2,7 @@
 
 package com.zionhuang.innertube.models
 
+import com.zionhuang.innertube.utils.plus
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
@@ -62,10 +63,8 @@ data class SectionListRenderer(
                     itemViewType = musicCarouselShelfRenderer.getViewType()
                 )
             )
-            musicShelfRenderer != null -> listOfNotNull(
-                musicShelfRenderer.toHeader()
-            ) + musicShelfRenderer.contents?.map { it.toItem() }.orEmpty<BaseItem>()
-            musicPlaylistShelfRenderer != null -> musicPlaylistShelfRenderer.contents.map { it.toItem() }
+            musicShelfRenderer != null -> musicShelfRenderer.toHeader() + musicShelfRenderer.contents?.mapNotNull { it.toItem() }.orEmpty()
+            musicPlaylistShelfRenderer != null -> musicPlaylistShelfRenderer.contents.mapNotNull { it.toItem() }
             musicDescriptionShelfRenderer != null -> listOfNotNull(
                 musicDescriptionShelfRenderer.toSectionHeader(),
                 DescriptionSection(
@@ -74,8 +73,7 @@ data class SectionListRenderer(
             )
             gridRenderer != null -> if (gridRenderer.items[0].toBaseItem().let { it is NavigationItem && it.stripeColor == null }) {
                 // bring NavigationItems out to separate items
-                listOfNotNull(gridRenderer.header?.toSectionHeader()) +
-                        gridRenderer.items.map { it.toBaseItem() }
+                gridRenderer.header?.toSectionHeader() + gridRenderer.items.map { it.toBaseItem() }
             } else {
                 listOfNotNull(
                     gridRenderer.header?.toSectionHeader(),

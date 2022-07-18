@@ -19,3 +19,8 @@ data class Continuation(
 
 fun List<Continuation>.getContinuation() =
     get(0).nextContinuationData.continuation
+
+
+fun List<Continuation>.getContinuations() =
+    map { it.nextContinuationData.continuation }
+        .ifEmpty { null }

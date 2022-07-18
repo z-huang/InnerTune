@@ -36,6 +36,6 @@ fun SearchResult.toPage() = LoadResult.Page(
 
 fun BrowseResult.toPage() = LoadResult.Page(
     data = items,
-    nextKey = continuation,
+    nextKey = continuations,
     prevKey = null
 )

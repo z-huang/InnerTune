@@ -1,6 +1,7 @@
 package com.zionhuang.innertube.models.response
 
 import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.utils.plus
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,19 +16,23 @@ data class BrowseResponse(
         continuationContents != null -> when {
             continuationContents.sectionListContinuation != null -> BrowseResult(
                 items = continuationContents.sectionListContinuation.contents.flatMap { it.toBaseItems() },
-                continuation = continuationContents.sectionListContinuation.continuations?.getContinuation()
+                continuations = continuationContents.sectionListContinuation.continuations?.getContinuations()
             )
             continuationContents.musicPlaylistShelfContinuation != null -> BrowseResult(
-                items = continuationContents.musicPlaylistShelfContinuation.contents.map { it.toItem() },
-                continuation = continuationContents.musicPlaylistShelfContinuation.continuation.getContinuation()
+                items = continuationContents.musicPlaylistShelfContinuation.contents.mapNotNull { it.toItem() },
+                continuations = continuationContents.musicPlaylistShelfContinuation.continuations?.getContinuations()
             )
             else -> throw UnsupportedOperationException("Unknown continuation type")
         }
         contents != null -> BrowseResult(
             items = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toBaseItems() },
-            continuation = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuation()
+            continuations = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicPlaylistShelfRenderer?.continuations?.getContinuations()
+                    + contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuations()
         )
-        else -> throw UnsupportedOperationException("Unknown response")
+        else -> BrowseResult(
+            items = emptyList(),
+            continuations = null
+        )
     }.addHeader(header?.toHeader())
 
     @Serializable
@@ -50,7 +55,7 @@ data class BrowseResponse(
         @Serializable
         data class MusicPlaylistShelfContinuation(
             val contents: List<MusicShelfRenderer.Content>,
-            val continuation: List<Continuation>,
+            val continuations: List<Continuation>?,
         )
     }
 

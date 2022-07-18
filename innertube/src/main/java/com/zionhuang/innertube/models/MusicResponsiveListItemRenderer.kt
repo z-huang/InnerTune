@@ -14,7 +14,7 @@ data class MusicResponsiveListItemRenderer(
     val fixedColumns: List<FlexColumn>?,
     val flexColumns: List<FlexColumn>,
     val thumbnail: ThumbnailRenderer?,
-    val menu: Menu,
+    val menu: Menu?,
     val playlistItemData: PlaylistItemData?,
     val index: Runs?,
     val navigationEndpoint: NavigationEndpoint?,
@@ -38,7 +38,7 @@ data class MusicResponsiveListItemRenderer(
     private val isArtist: Boolean
         get() = navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_ARTIST
 
-    fun toItem(): Item = when {
+    fun toItem(): Item? = when {
         isSong -> SongItem.from(this)
         isVideo -> VideoItem.from(this)
         isPlaylist -> PlaylistItem.from(this)

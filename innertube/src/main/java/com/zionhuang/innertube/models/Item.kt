@@ -17,7 +17,7 @@ sealed class Item : BaseItem() {
     abstract val navigationEndpoint: NavigationEndpoint
 
     interface FromContent<out T : Item> {
-        fun from(item: MusicResponsiveListItemRenderer): T
+        fun from(item: MusicResponsiveListItemRenderer): T?
         fun from(item: MusicTwoRowItemRenderer): T
     }
 }
@@ -34,7 +34,8 @@ data class SongItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<SongItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): SongItem {
+        override fun from(item: MusicResponsiveListItemRenderer): SongItem? {
+            if (item.menu == null) return null
             val menu = item.menu.toItemMenu()
             return SongItem(
                 id = item.playlistItemData?.videoId
@@ -91,7 +92,8 @@ data class VideoItem(
          *
          * Note that artist [Run] may have [navigationEndpoint] null
          */
-        override fun from(item: MusicResponsiveListItemRenderer): VideoItem {
+        override fun from(item: MusicResponsiveListItemRenderer): VideoItem? {
+            if (item.menu == null) return null
             val menu = item.menu.toItemMenu()
             return VideoItem(
                 id = item.playlistItemData?.videoId
@@ -141,7 +143,8 @@ data class AlbumItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<AlbumItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): AlbumItem {
+        override fun from(item: MusicResponsiveListItemRenderer): AlbumItem? {
+            if (item.menu == null) return null
             val menu = item.menu.toItemMenu()
             return AlbumItem(
                 id = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
@@ -178,7 +181,8 @@ data class PlaylistItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<PlaylistItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): PlaylistItem {
+        override fun from(item: MusicResponsiveListItemRenderer): PlaylistItem? {
+            if (item.menu == null) return null
             val menu = item.menu.toItemMenu()
             return PlaylistItem(
                 id = item.navigationEndpoint?.browseEndpoint?.browseId?.removePrefix("VL")
@@ -218,14 +222,17 @@ data class ArtistItem(
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<ArtistItem> {
-        override fun from(item: MusicResponsiveListItemRenderer): ArtistItem = ArtistItem(
-            id = item.navigationEndpoint?.browseEndpoint?.browseId!!,
-            title = item.getTitle(),
-            subtitle = item.getSubtitle(),
-            thumbnails = item.thumbnail!!.getThumbnails(),
-            menu = item.menu.toItemMenu(),
-            navigationEndpoint = item.navigationEndpoint
-        )
+        override fun from(item: MusicResponsiveListItemRenderer): ArtistItem? {
+            if (item.menu == null) return null
+            return ArtistItem(
+                id = item.navigationEndpoint?.browseEndpoint?.browseId!!,
+                title = item.getTitle(),
+                subtitle = item.getSubtitle(),
+                thumbnails = item.thumbnail!!.getThumbnails(),
+                menu = item.menu.toItemMenu(),
+                navigationEndpoint = item.navigationEndpoint
+            )
+        }
 
         override fun from(item: MusicTwoRowItemRenderer): ArtistItem = ArtistItem(
             id = item.navigationEndpoint.browseEndpoint?.browseId!!,

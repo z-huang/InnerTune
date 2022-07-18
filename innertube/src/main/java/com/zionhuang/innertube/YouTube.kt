@@ -5,6 +5,7 @@ import com.zionhuang.innertube.models.YouTubeClient.Companion.ANDROID_MUSIC
 import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
 import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
+import com.zionhuang.innertube.utils.plus
 import io.ktor.client.call.*
 
 /**
@@ -37,34 +38,39 @@ object YouTube {
             items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
                 .flatMap { it.toBaseItems() }
                 .map { if (it is Header) it.copy(moreNavigationEndpoint = null) else it },
-            continuation = null
+            continuations = null
         )
     }
 
     suspend fun search(query: String, filter: SearchFilter): BrowseResult {
         val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
         return BrowseResult(
-            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.map { it.toItem() },
-            continuation = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuation()
+            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.mapNotNull { it.toItem() },
+            continuations = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuations()
         )
     }
 
-    suspend fun search(continuation: Continuation): BrowseResult {
-        val response = innerTube.search(WEB_REMIX, continuation = continuation.value).body<SearchResponse>()
+    suspend fun search(continuation: String): BrowseResult {
+        val response = innerTube.search(WEB_REMIX, continuation = continuation).body<SearchResponse>()
         return BrowseResult(
-            items = response.continuationContents?.musicShelfContinuation?.contents?.map { it.toItem() }.orEmpty(),
-            continuation = response.continuationContents?.musicShelfContinuation?.continuations?.getContinuation()
+            items = response.continuationContents?.musicShelfContinuation?.contents?.mapNotNull { it.toItem() }.orEmpty(),
+            continuations = response.continuationContents?.musicShelfContinuation?.continuations?.getContinuations()
         )
     }
 
     suspend fun player(videoId: String, playlistId: String? = null): PlayerResponse =
         innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
 
-    suspend fun browse(endpoint: BrowseEndpoint): BrowseResponse =
-        innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body()
+    suspend fun browse(endpoint: BrowseEndpoint): BrowseResult {
+        return innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
+    }
 
-    suspend fun browse(continuation: Continuation): BrowseResponse =
-        innerTube.browse(WEB_REMIX, continuation = continuation.value).body()
+    suspend fun browse(continuations: List<String>): BrowseResult {
+        val result =  innerTube.browse(WEB_REMIX, continuation = continuations[0]).body<BrowseResponse>().toBrowseResult()
+        return result.copy(
+            continuations = result.continuations + continuations.drop(1)
+        )
+    }
 
     /**
      * Calling "next" endpoint without continuation
@@ -121,9 +127,6 @@ object YouTube {
             val FILTER_COMMUNITY_PLAYLIST = SearchFilter("EgeKAQQoAEABagwQAxAOEAQQCRAKEAU%3D")
         }
     }
-
-    @JvmInline
-    value class Continuation(val value: String)
 
     const val HOME_BROWSE_ID = "FEmusic_home"
     const val EXPLORE_BROWSE_ID = "FEmusic_explore"

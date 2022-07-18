@@ -29,7 +29,7 @@ data class SearchResponse(
             data class Content(
                 val musicResponsiveListItemRenderer: MusicResponsiveListItemRenderer,
             ) {
-                fun toItem(): Item = musicResponsiveListItemRenderer.toItem()
+                fun toItem(): Item? = musicResponsiveListItemRenderer.toItem()
             }
         }
     }
