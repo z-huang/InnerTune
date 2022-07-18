@@ -35,11 +35,7 @@
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.zionhuang.music.ui.fragments.ExploreFragment"
-        android:label="@string/title_explore">
-        <action
-            android:id="@+id/action_exploreFragment_to_searchSuggestionFragment"
-            app:destination="@id/youtubeSuggestionFragment" />
-    </fragment>
+        android:label="@string/title_explore" />
     <fragment
         android:id="@+id/youtubeSuggestionFragment"
         android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragment">
@@ -109,6 +105,9 @@
     <action
         android:id="@+id/open_queueFragment"
         app:destination="@id/queueFragment" />
+    <action
+        android:id="@+id/open_youTubeSuggestionFragment"
+        app:destination="@id/youtubeSuggestionFragment" />
     <action
         android:id="@+id/open_youTubeBrowseFragment"
         app:destination="@id/youTubeBrowseFragment" />

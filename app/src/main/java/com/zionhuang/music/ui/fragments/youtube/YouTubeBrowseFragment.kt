@@ -42,7 +42,7 @@ class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapte
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_search -> findNavController().navigate(R.id.action_exploreFragment_to_searchSuggestionFragment)
+            R.id.action_search -> findNavController().navigate(R.id.youtubeSuggestionFragment)
             R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
         }
         return true
