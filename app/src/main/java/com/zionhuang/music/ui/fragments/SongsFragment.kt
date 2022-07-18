@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,13 +17,8 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
-import com.zionhuang.music.constants.MediaConstants.QUEUE_ALL_SONG
-import com.zionhuang.music.extensions.addFastScroller
-import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.getQueryTextChangeFlow
-import com.zionhuang.music.extensions.resolveColor
-import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.extensions.*
+import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.adapters.selection.SongItemDetailsLookup
 import com.zionhuang.music.ui.adapters.selection.SongItemKeyProvider
@@ -58,9 +52,11 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.playMedia(
-                    requireActivity(), this@SongsFragment.adapter.getItemByPosition(pos)!!.id, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_ALL_SONG, sortInfo = songsViewModel.sortInfo.parcelize())
+                playbackViewModel.playQueue(requireActivity(),
+                    ListQueue(
+                        title = null,
+                        items = this@SongsFragment.adapter.snapshot().items.map { it.toMediaItem(context) }.drop(1),
+                        startIndex = pos - 1
                     )
                 )
             }

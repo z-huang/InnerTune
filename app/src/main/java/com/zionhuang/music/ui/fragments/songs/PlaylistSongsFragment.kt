@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -17,11 +16,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
-import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.PlaylistSongsAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -84,11 +81,11 @@ class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>()
             layoutManager = LinearLayoutManager(requireContext())
             itemTouchHelper.attachToRecyclerView(this)
             addOnClickListener { pos, _ ->
-                playbackViewModel.playMedia(
-                    requireActivity(), this@PlaylistSongsFragment.adapter.getItemByPosition(pos)!!.id, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_PLAYLIST, sortInfo = songsViewModel.sortInfo.parcelize(), extras = bundleOf(
-                            EXTRA_PLAYLIST_ID to playlistId
-                        ))
+                playbackViewModel.playQueue(requireActivity(),
+                    ListQueue(
+                        title = null,
+                        items = this@PlaylistSongsFragment.adapter.snapshot().items.map { it.toMediaItem(context) },
+                        startIndex = pos
                     )
                 )
             }

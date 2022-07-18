@@ -84,40 +84,30 @@ object YouTube {
         )
     }
 
-    /**
-     * Calling "next" endpoint, either ([index] == 0) or ([continuation] != null)
-     */
-    suspend fun getPlaylistItems(
-        videoId: String,
-        playlistId: String? = null,
-        playlistSetVideoId: String? = null,
-        index: Int? = null,
-        params: String? = null,
-        continuation: String? = null,
-    ): NextResult {
-        val response = innerTube.next(WEB_REMIX, videoId, playlistId, playlistSetVideoId, index, params, continuation).body<NextResponse>()
+    suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): NextResult {
+        val response = innerTube.next(WEB_REMIX, endpoint.videoId, endpoint.playlistId, endpoint.playlistSetVideoId, endpoint.index, endpoint.params, continuation).body<NextResponse>()
         return when {
             response.continuationContents != null -> NextResult(
                 items = response.continuationContents.playlistPanelContinuation.contents
-                    .map { it.playlistPanelVideoRenderer.toSongItem() },
-                continuation = response.continuationContents.playlistPanelContinuation.continuations.getContinuation()
+                    .mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() },
+                continuation = response.continuationContents.playlistPanelContinuation.continuations?.getContinuation()
             )
             else -> NextResult(
                 items = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.contents
-                    ?.map { it.playlistPanelVideoRenderer.toSongItem() } ?: emptyList(),
+                    ?.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } ?: emptyList(),
+                currentIndex = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.currentIndex,
                 continuation = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.continuations?.getContinuation()
             )
         }
     }
 
+
     suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): List<SongItem> {
         if (videoIds != null) {
             assert(videoIds.size <= 1000) // Max video limit
         }
-        return innerTube.getQueue(WEB_REMIX, videoIds, playlistId).body<GetQueueResponse>()
-            .queueDatas.map {
-                it.content.playlistPanelVideoRenderer.toSongItem()
-            }
+        return innerTube.getQueue(WEB_REMIX, videoIds, playlistId).body<GetQueueResponse>().queueDatas
+            .mapNotNull { it.content.playlistPanelVideoRenderer?.toSongItem() }
     }
 
     @JvmInline

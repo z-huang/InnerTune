@@ -10,12 +10,13 @@ data class PlaylistPanelRenderer(
     val contents: List<Content>,
     val currentIndex: Int?,
     val isInfinite: Boolean,
-    val numItemsToShow: Int,
+    val numItemsToShow: Int?,
     val playlistId: String,
-    val continuations: List<Continuation>,
+    val continuations: List<Continuation>?,
 ) {
     @Serializable
     data class Content(
-        val playlistPanelVideoRenderer: PlaylistPanelVideoRenderer,
+        val playlistPanelVideoRenderer: PlaylistPanelVideoRenderer?,
+        val automixPreviewVideoRenderer: AutomixPreviewVideoRenderer?,
     )
 }

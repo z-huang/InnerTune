@@ -80,7 +80,7 @@ fun setArtworkId(view: ImageView, id: String) {
 }
 
 @BindingAdapter("artworkUri")
-fun setArtworkUri(view: ImageView, uri: Uri) {
+fun setArtworkUri(view: ImageView, uri: Uri?) {
     view.load(uri) {
         placeholder(R.drawable.ic_music_note)
         roundCorner(view.context.resources.getDimensionPixelSize(R.dimen.song_cover_radius))

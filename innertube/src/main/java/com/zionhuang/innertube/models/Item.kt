@@ -10,7 +10,7 @@ sealed class BaseItem {
 
 sealed class Item : BaseItem() {
     abstract override val id: String
-    abstract  val title: String
+    abstract val title: String
     abstract val subtitle: String?
     abstract val thumbnails: List<Thumbnail>
     abstract val menu: ItemMenu
@@ -27,6 +27,8 @@ data class SongItem(
     override val title: String,
     override val subtitle: String,
     val index: String? = null,
+    val artists: List<Link<BrowseEndpoint>>,
+    val album: Link<BrowseEndpoint>?,
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
@@ -41,6 +43,12 @@ data class SongItem(
                 title = item.getTitle(),
                 subtitle = item.getSubtitle(),
                 index = item.index?.toString(),
+                artists = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
+                    .filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
+                    .mapNotNull { it.toLink() },
+                album = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
+                    .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
+                    ?.toLink(),
                 thumbnails = item.thumbnail?.getThumbnails().orEmpty(),
                 menu = menu,
                 navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
@@ -54,6 +62,8 @@ data class SongItem(
                     ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
                 title = item.title.toString(),
                 subtitle = item.subtitle.toString(),
+                artists = emptyList(),
+                album = null,
                 thumbnails = item.thumbnailRenderer.getThumbnails(),
                 menu = menu,
                 navigationEndpoint = item.navigationEndpoint
@@ -66,11 +76,21 @@ data class VideoItem(
     override val id: String,
     override val title: String,
     override val subtitle: String,
+    val artist: Run,
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
     companion object : FromContent<VideoItem> {
+        /**
+         * Subtitle configurations:
+         * Video • artist • view count • length
+         * artist • view count • length
+         * artist • view count
+         * artist • (empty)
+         *
+         * Note that artist [Run] may have [navigationEndpoint] null
+         */
         override fun from(item: MusicResponsiveListItemRenderer): VideoItem {
             val menu = item.menu.toItemMenu()
             return VideoItem(
@@ -79,6 +99,17 @@ data class VideoItem(
                     ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
                 title = item.getTitle(),
                 subtitle = item.getSubtitle(),
+                artist = item.flexColumns.drop(1).flatMap { it.musicResponsiveListItemFlexColumnRenderer.text.runs }
+                    .find { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
+                    ?: if (item.fixedColumns != null) {
+                        // Table style
+                        item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs[0]
+                    } else {
+                        // From search
+                        item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.let {
+                            it.getOrNull(it.lastIndex - 4) ?: it[it.lastIndex - 2]
+                        }
+                    },
                 thumbnails = item.thumbnail!!.getThumbnails(),
                 menu = menu,
                 navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
@@ -92,6 +123,7 @@ data class VideoItem(
                     ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
                 title = item.title.toString(),
                 subtitle = item.subtitle.toString(),
+                artist = item.subtitle.runs[0],
                 thumbnails = item.thumbnailRenderer.getThumbnails(),
                 menu = menu,
                 navigationEndpoint = item.navigationEndpoint

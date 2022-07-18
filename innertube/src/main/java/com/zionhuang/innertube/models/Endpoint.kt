@@ -7,21 +7,21 @@ sealed class Endpoint
 
 @Serializable
 data class WatchEndpoint(
-    val videoId: String,
-    val playlistId: String?,
-    val playlistSetVideoId: String?,
-    val params: String?,
-    val index: Int?,
+    val videoId: String? = null,
+    val playlistId: String? = null,
+    val playlistSetVideoId: String? = null,
+    val params: String? = null,
+    val index: Int? = null,
     val watchEndpointMusicSupportedConfigs: WatchEndpointMusicSupportedConfigs? = null,
 ) : Endpoint(), java.io.Serializable {
     @Serializable
     data class WatchEndpointMusicSupportedConfigs(
         val watchEndpointMusicConfig: WatchEndpointMusicConfig,
-    ) {
+    ) : java.io.Serializable {
         @Serializable
         data class WatchEndpointMusicConfig(
             val musicVideoType: String,
-        ) {
+        ) : java.io.Serializable {
             companion object {
                 const val MUSIC_VIDEO_TYPE_OMV = "MUSIC_VIDEO_TYPE_OMV"
                 const val MUSIC_VIDEO_TYPE_UGC = "MUSIC_VIDEO_TYPE_UGC"
@@ -29,6 +29,21 @@ data class WatchEndpoint(
             }
         }
     }
+}
+
+@Serializable
+data class WatchPlaylistEndpoint(
+    val params: String?,
+    val playlistId: String,
+) : Endpoint(), java.io.Serializable {
+    fun toWatchEndpoint() = WatchEndpoint(
+        videoId = null,
+        playlistId = playlistId,
+        playlistSetVideoId = null,
+        params = params,
+        index = null,
+        watchEndpointMusicSupportedConfigs = null
+    )
 }
 
 @Serializable
@@ -40,26 +55,21 @@ data class BrowseEndpoint(
     @Serializable
     data class BrowseEndpointContextSupportedConfigs(
         val browseEndpointContextMusicConfig: BrowseEndpointContextMusicConfig,
-    ) {
+    ) : java.io.Serializable {
         @Serializable
         data class BrowseEndpointContextMusicConfig(
             val pageType: String,
-        ) {
+        ) : java.io.Serializable {
             companion object {
                 const val MUSIC_PAGE_TYPE_ALBUM = "MUSIC_PAGE_TYPE_ALBUM"
                 const val MUSIC_PAGE_TYPE_PLAYLIST = "MUSIC_PAGE_TYPE_PLAYLIST"
                 const val MUSIC_PAGE_TYPE_ARTIST = "MUSIC_PAGE_TYPE_ARTIST"
+                const val MUSIC_PAGE_TYPE_USER_CHANNEL = "MUSIC_PAGE_TYPE_USER_CHANNEL"
                 const val MUSIC_PAGE_TYPE_TRACK_LYRICS = "MUSIC_PAGE_TYPE_TRACK_LYRICS"
             }
         }
     }
 }
-
-@Serializable
-data class WatchPlaylistEndpoint(
-    val params: String?,
-    val playlistId: String,
-) : Endpoint(), java.io.Serializable
 
 @Serializable
 data class SearchEndpoint(

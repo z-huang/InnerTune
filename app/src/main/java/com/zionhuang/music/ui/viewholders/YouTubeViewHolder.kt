@@ -111,7 +111,7 @@ class YouTubeListItemViewHolder(
         }
         binding.secondaryLine.isVisible = !item.subtitle.isNullOrEmpty()
         binding.root.setOnClickListener {
-            navigationEndpointHandler.handle(item.navigationEndpoint)
+            navigationEndpointHandler.handle(item.navigationEndpoint, item)
         }
         binding.btnMoreAction.setOnClickListener {
             MenuBottomSheetDialogFragment
@@ -144,7 +144,7 @@ class YouTubeSquareItemViewHolder(
     override fun bind(item: Item) {
         binding.item = item
         binding.root.setOnClickListener {
-            navigationEndpointHandler.handle(item.navigationEndpoint)
+            navigationEndpointHandler.handle(item.navigationEndpoint, item)
         }
         binding.root.setOnLongClickListener {
             MenuBottomSheetDialogFragment

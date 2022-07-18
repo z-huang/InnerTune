@@ -2,17 +2,14 @@ package com.zionhuang.music.ui.fragments.songs
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
-import com.zionhuang.music.constants.MediaConstants.QUEUE_ARTIST
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.requireAppCompatActivity
-import com.zionhuang.music.models.QueueData
+import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.SongsAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -40,11 +37,11 @@ class ArtistSongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { pos, _ ->
                 if (pos == 0) return@addOnClickListener
-                playbackViewModel.playMedia(
-                    requireActivity(), this@ArtistSongsFragment.adapter.getItemByPosition(pos)!!.id, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_ARTIST, sortInfo = songsViewModel.sortInfo.parcelize(), extras = bundleOf(
-                            EXTRA_ARTIST_ID to artistId
-                        ))
+                playbackViewModel.playQueue(requireActivity(),
+                    ListQueue(
+                        title = null,
+                        items = this@ArtistSongsFragment.adapter.snapshot().items.map { it.toMediaItem(context) }.drop(1),
+                        startIndex = pos - 1
                     )
                 )
             }

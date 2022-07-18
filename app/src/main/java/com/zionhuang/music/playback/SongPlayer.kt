@@ -18,10 +18,8 @@ import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.PlaybackException.ERROR_CODE_REMOTE_ERROR
 import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -31,12 +29,9 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
+import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
-import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG_ID
-import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SEARCH
-import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SINGLE
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
@@ -46,21 +41,16 @@ import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.MediaData
-import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.models.toMediaDescription
 import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.repos.NewPipeRepository
 import com.zionhuang.music.repos.base.LocalRepository
-import com.zionhuang.music.repos.base.RemoteRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
-import com.zionhuang.music.utils.logTimeMillis
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper
-import com.zionhuang.music.youtube.StreamHelper
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -73,8 +63,11 @@ class SongPlayer(
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Player.Listener {
     private val localRepository: LocalRepository = SongRepository
-    private val remoteRepository: RemoteRepository = NewPipeRepository
+
+    private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
+
     private var currentQueue: Queue = EmptyQueue()
+    private var queueJob: Job? = null
 
     private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
@@ -86,45 +79,29 @@ class SongPlayer(
             DefaultMediaSourceFactory(ResolvingDataSource.Factory(
                 DefaultDataSource.Factory(context)
             ) { dataSpec ->
-                runBlocking {
-                    val mediaId = dataSpec.uri.host ?: throw IllegalArgumentException("Cannot find media id from uri host")
-                    if (localRepository.getSongById(mediaId)?.downloadState == STATE_DOWNLOADED) {
-                        return@runBlocking dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
+                val mediaId = dataSpec.key ?: error("No media id")
+                val localSong = runBlocking(IO) {
+                    localRepository.getSongById(mediaId)
+                }
+                if (localSong?.downloadState == STATE_DOWNLOADED) {
+                    return@Factory dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
+                }
+                kotlin.runCatching {
+                    runBlocking(IO) {
+                        YouTube.player(mediaId)
                     }
-//                    val uri = kotlin.runCatching {
-//                        runBlocking(Dispatchers.IO) {
-//                            YouTube.player(mediaId)
-//                        }
-//                    }.mapCatching { playerResponse ->
-//                        if (playerResponse.playabilityStatus.status != "OK") {
-//                            throw PlaybackException(playerResponse.playabilityStatus.status, null, ERROR_CODE_REMOTE_ERROR)
-//                        }
-//                        playerResponse.streamingData?.adaptiveFormats
-//                            ?.filter { it.isAudio }
-//                            ?.maxByOrNull { it.bitrate }
-//                            ?.url
-//                            ?.toUri()
-//                            ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
-//                    }.getOrThrow()
-                    val streamInfo = logTimeMillis(TAG, "Extractor duration: %d") {
-                        runBlocking {
-                            remoteRepository.getStream(mediaId)
-                        }
+                }.mapCatching { playerResponse ->
+                    if (playerResponse.playabilityStatus.status != "OK") {
+                        throw PlaybackException(playerResponse.playabilityStatus.status, null, ERROR_CODE_REMOTE_ERROR)
                     }
-                    val connectivityManager = context.getSystemService<ConnectivityManager>()!!
-                    val stream = if (connectivityManager.isActiveNetworkMetered) {
-                        StreamHelper.getMostCompactAudioStream(streamInfo.audioStreams)
-                    } else {
-                        StreamHelper.getHighestQualityAudioStream(streamInfo.audioStreams)
-                    }
-                    val uri = stream?.url?.toUri()
-                    updateMediaData(mediaId) {
-                        if (artwork == null || (artwork!!.startsWith("http") && artwork != streamInfo.thumbnailUrl)) {
-                            artwork = streamInfo.thumbnailUrl
-                            mediaSessionConnector.invalidateMediaSessionMetadata()
-                        }
-                    }
-                    if (uri != null) dataSpec.withUri(uri) else dataSpec
+                    playerResponse.streamingData?.adaptiveFormats
+                        ?.filter { it.isAudio }
+                        ?.maxByOrNull { it.bitrate * (if (connectivityManager.isActiveNetworkMetered) -1 else 1) }
+                        ?.url
+                        ?.toUri()
+                        ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
+                }.getOrThrow().let { uri ->
+                    dataSpec.withUri(uri)
                 }
             })
         )
@@ -141,22 +118,38 @@ class SongPlayer(
 
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
-    private fun updateMediaData(mediaId: String, applier: MediaData.() -> Unit) {
-        scope.launch(Dispatchers.Main) {
-            (player.currentMediaItem.takeIf { it?.mediaId == mediaId } ?: player.findMediaItemById(mediaId))?.metadata?.let {
-                applier(it)
+    fun playQueue(queue: Queue) {
+        queueJob?.cancel()
+        currentQueue = queue
+        player.clearMediaItems()
+
+        queue.initialIndex?.let { index ->
+            player.setMediaItems(queue.initialMediaItems)
+            player.seekToDefaultPosition(index)
+            player.prepare()
+            player.playWhenReady = true
+        }
+        if (queue.hasNextPage()) {
+            queueJob = scope.launch {
+                val items = queue.nextPage()
+                player.addMediaItems(if (queue.initialIndex == null) items else items.drop(1))
+                if (queue.initialIndex == null) {
+                    player.seekToDefaultPosition(0)
+                    player.prepare()
+                    player.playWhenReady = true
+                }
             }
         }
     }
-
-    private fun playMedia(mediaId: String?, playWhenReady: Boolean, queueData: QueueData) {
-        scope.launch {
-            currentQueue = queueData.toQueue()
-            player.loadQueue(currentQueue, mediaId)
-            player.prepare()
-            player.playWhenReady = playWhenReady
-        }
-    }
+//
+//    private fun playMedia(mediaId: String?, playWhenReady: Boolean, queueData: QueueData) {
+//        scope.launch {
+//            currentQueue = queueData.toQueue()
+//            //player.loadQueue(currentQueue, mediaId)
+//            player.prepare()
+//            player.playWhenReady = playWhenReady
+//        }
+//    }
 
     private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
         setPlayer(player)
@@ -172,20 +165,21 @@ class SongPlayer(
                 player.prepare()
             }
 
-            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) =
-                playMedia(mediaId, playWhenReady, extras!!.getParcelable(EXTRA_QUEUE_DATA)!!)
+            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
+//                playMedia(mediaId, playWhenReady, extras!!.getParcelable(EXTRA_QUEUE_DATA)!!)
+            }
 
             override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-                val mediaId = extras?.getString(EXTRA_SONG_ID)
-                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SEARCH, query))
+//                val mediaId = extras?.getString(EXTRA_SONG_ID)
+//                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SEARCH, query))
             }
 
             override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
-                val mediaId = NewPipeYouTubeHelper.extractVideoId(uri.toString()) ?: return setCustomErrorMessage(
-                    "Can't extract video id from the url.",
-                    ERROR_CODE_UNKNOWN_ERROR
-                )
-                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SINGLE, mediaId))
+//                val mediaId = NewPipeYouTubeHelper.extractVideoId(uri.toString()) ?: return setCustomErrorMessage(
+//                    "Can't extract video id from the url.",
+//                    ERROR_CODE_UNKNOWN_ERROR
+//                )
+//                playMedia(mediaId, playWhenReady, QueueData(QUEUE_YT_SINGLE, mediaId))
             }
         })
         registerCustomCommandReceiver { player, command, extras, _ ->

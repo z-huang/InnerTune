@@ -14,13 +14,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerView
+import com.zionhuang.music.playback.queues.Queue
 
 class MusicService : LifecycleMediaBrowserService() {
     companion object {
         private const val TAG = "MusicService"
     }
 
-    private val binder = LocalBinder()
+    private val binder = MusicBinder()
     private lateinit var songPlayer: SongPlayer
 
     override fun onCreate() {
@@ -68,11 +69,15 @@ class MusicService : LifecycleMediaBrowserService() {
         songPlayer.setPlayerView(playerView)
     }
 
-    internal inner class LocalBinder : Binder() {
+    inner class MusicBinder : Binder() {
         val sessionToken: MediaSessionCompat.Token
             get() = songPlayer.mediaSession.sessionToken
 
         fun setPlayerView(playerView: PlayerView?) = songPlayer.setPlayerView(playerView)
+
+        fun playQueue(queue: Queue) {
+            songPlayer.playQueue(queue)
+        }
     }
 
     private val ROOT_ID = "root"

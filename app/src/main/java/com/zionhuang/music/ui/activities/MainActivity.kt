@@ -6,12 +6,10 @@ import android.content.Intent.EXTRA_TEXT
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -20,20 +18,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
-import com.zionhuang.music.constants.MediaConstants.QUEUE_YT_SINGLE
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.dip
 import com.zionhuang.music.extensions.replaceFragment
-import com.zionhuang.music.models.QueueData
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper.extractVideoId
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.getLinkType
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.schabi.newpipe.extractor.StreamingService.LinkType
 
 class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
@@ -77,13 +69,14 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT)).toString()
         when (getLinkType(url)) {
             LinkType.STREAM -> {
-                lifecycleScope.launch {
-                    while (playbackViewModel.mediaSessionIsConnected.value == false) delay(100)
-                    val videoId = extractVideoId(url)!!
-                    playbackViewModel.playMedia(this@MainActivity, videoId, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
-                    ))
-                }
+                // TODO
+//                lifecycleScope.launch {
+//                    while (playbackViewModel.mediaSessionIsConnected.value == false) delay(100)
+//                    val videoId = extractVideoId(url)!!
+//                    playbackViewModel.playMedia(this@MainActivity, videoId, bundleOf(
+//                        EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
+//                    ))
+//                }
             }
             LinkType.CHANNEL -> {}
             LinkType.PLAYLIST -> {}

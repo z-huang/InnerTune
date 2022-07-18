@@ -14,15 +14,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
-import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
-import com.zionhuang.innertube.models.NavigationEndpoint
-import com.zionhuang.innertube.models.SearchEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentSearchBinding
 import com.zionhuang.music.extensions.requireAppCompatActivity
@@ -46,18 +43,7 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
 
     private val viewModel by viewModels<SearchViewModel>()
 
-    private val navigationEndpointHandler = object : NavigationEndpointHandler(this) {
-        override fun handle(navigationEndpoint: NavigationEndpoint) {
-            when (val endpoint = navigationEndpoint.endpoint) {
-                is SearchEndpoint -> when (endpoint.params) {
-                    FILTER_SONG.value, FILTER_VIDEO.value, FILTER_ALBUM.value, FILTER_ARTIST.value, FILTER_COMMUNITY_PLAYLIST.value, FILTER_FEATURED_PLAYLIST.value -> {
-                        viewModel.filter.postValue(YouTube.SearchFilter(endpoint.params!!))
-                    }
-                }
-                else -> super.handle(navigationEndpoint)
-            }
-        }
-    }
+    private val navigationEndpointHandler = NavigationEndpointHandler(this)
     private val adapter = YouTubeItemPagingAdapter(navigationEndpointHandler)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

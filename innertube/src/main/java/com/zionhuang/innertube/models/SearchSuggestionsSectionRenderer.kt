@@ -13,19 +13,28 @@ data class SearchSuggestionsSectionRenderer(
     ) {
         fun toItem(): BaseItem? = when {
             searchSuggestionRenderer != null -> SuggestionTextItem(searchSuggestionRenderer.suggestion.toString())
-            musicTwoColumnItemRenderer != null -> when (musicTwoColumnItemRenderer.navigationEndpoint.getItemType()) {
-                ITEM_SONG -> SongItem(
-                    id = musicTwoColumnItemRenderer.navigationEndpoint.watchEndpoint!!.videoId,
-                    title = musicTwoColumnItemRenderer.title.toString(),
-                    subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
-                    thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
-                    menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
-                    navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
-                )
+            musicTwoColumnItemRenderer != null -> when (musicTwoColumnItemRenderer.navigationEndpoint.getEndpointType()) {
+                ITEM_SONG -> {
+                    val menu = musicTwoColumnItemRenderer.menu.toItemMenu()
+                    SongItem(
+                        id = musicTwoColumnItemRenderer.navigationEndpoint.watchEndpoint?.videoId!!,
+                        title = musicTwoColumnItemRenderer.title.toString(),
+                        subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
+                        artists = listOf(Link(
+                            text = musicTwoColumnItemRenderer.subtitle.runs.last().text,
+                            navigationEndpoint = menu.artistEndpoint?.browseEndpoint!!
+                        )),
+                        album = null,
+                        thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
+                        menu = menu,
+                        navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
+                    )
+                }
                 ITEM_VIDEO -> VideoItem(
-                    id = musicTwoColumnItemRenderer.navigationEndpoint.watchEndpoint!!.videoId,
+                    id = musicTwoColumnItemRenderer.navigationEndpoint.watchEndpoint?.videoId!!,
                     title = musicTwoColumnItemRenderer.title.toString(),
                     subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
+                    artist = musicTwoColumnItemRenderer.subtitle.runs[0],
                     thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
                     menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
                     navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint

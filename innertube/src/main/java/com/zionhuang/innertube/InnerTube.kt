@@ -116,7 +116,7 @@ class InnerTube {
 
     suspend fun next(
         client: YouTubeClient,
-        videoId: String,
+        videoId: String?,
         playlistId: String?,
         playlistSetVideoId: String?,
         index: Int?,

@@ -13,7 +13,12 @@ data class Runs(
 data class Run(
     val text: String,
     val navigationEndpoint: NavigationEndpoint?,
-)
+) {
+    inline fun <reified T : Endpoint> toLink(): Link<T>? =
+        (navigationEndpoint?.endpoint as? T)?.let {
+            Link(text, it)
+        }
+}
 
 fun List<Run>.splitBySeparator(): List<List<Run>> {
     val res = mutableListOf<List<Run>>()

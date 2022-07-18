@@ -54,27 +54,20 @@
                 app:layout_constraintStart_toEndOf="@id/artwork_container"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/song_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/song_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingBottom="3dp"
-                        android:text="@{item.description.title}"
-                        android:textColor="?android:textColorPrimary"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toTopOf="@+id/song_details"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_chainStyle="packed"
-                        tools:text="Song Title" />
-                </LinearLayout>
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="3dp"
+                    android:text="@{item.description.title}"
+                    android:textColor="?android:textColorPrimary"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/song_details"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="Song Title" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

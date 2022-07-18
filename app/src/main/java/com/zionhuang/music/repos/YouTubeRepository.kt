@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.BaseItem
 import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.extensions.toPage
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -41,6 +42,7 @@ object YouTubeRepository {
                 if (params.key == null) YouTube.browse(endpoint).toBrowseResult().toPage()
                 else YouTube.browse(YouTube.Continuation(params.key!!)).toBrowseResult().toPage()
             } catch (e: Exception) {
+                logd("$e")
                 LoadResult.Error(e)
             }
         }

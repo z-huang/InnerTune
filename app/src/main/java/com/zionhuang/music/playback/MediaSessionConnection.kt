@@ -13,7 +13,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.models.MediaSessionQueueData
-import com.zionhuang.music.playback.MusicService.LocalBinder
+import com.zionhuang.music.playback.MusicService.MusicBinder
 import java.lang.ref.WeakReference
 
 object MediaSessionConnection {
@@ -35,10 +35,15 @@ object MediaSessionConnection {
             weakPlayerView = WeakReference(value)
         }
 
+    private var _binder: MusicBinder? = null
+    val binder: MusicBinder?
+        get() = _binder
+
     fun connect(context: Context) {
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, iBinder: IBinder) {
-                if (iBinder !is LocalBinder) return
+                if (iBinder !is MusicBinder) return
+                _binder = iBinder
                 iBinder.setPlayerView(playerView)
                 try {
                     mediaController = MediaControllerCompat(context, iBinder.sessionToken).apply {

@@ -16,6 +16,7 @@ import com.zionhuang.music.models.MediaSessionQueueData
 import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
+import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.livedata.SafeLiveData
 import com.zionhuang.music.utils.livedata.SafeMutableLiveData
@@ -97,6 +98,13 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     fun playMedia(activity: Activity, mediaId: String, extras: Bundle) {
         transportControls?.playFromMediaId(mediaId, extras)
+        if (expandOnPlay) {
+            (activity as? MainActivity)?.expandBottomSheet()
+        }
+    }
+
+    fun playQueue(activity: Activity, queue: Queue) {
+        mediaSessionConnection.binder?.playQueue(queue)
         if (expandOnPlay) {
             (activity as? MainActivity)?.expandBottomSheet()
         }

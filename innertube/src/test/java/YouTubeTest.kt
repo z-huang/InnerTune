@@ -108,7 +108,7 @@ class YouTubeTest {
     fun `Check 'next' endpoint`() = runBlocking {
         val videoId = "qivRUhepWVA"
         val playlistId = "RDEMQWAKLFUHzBCn9nEsPHDYAw"
-        val nextResult = youTube.getPlaylistItems(videoId = videoId, playlistId = playlistId)
+        val nextResult = youTube.next(WatchEndpoint(videoId = videoId, playlistId = playlistId))
         assertTrue(nextResult.items.isNotEmpty())
         val playlistSongInfo = youTube.getPlaylistSongInfo(videoId = VIDEO_IDS.random())
         assertNotNull(playlistSongInfo.lyricsEndpoint)
@@ -119,12 +119,12 @@ class YouTubeTest {
         val videoId = "qivRUhepWVA"
         val playlistId = "RDEMQWAKLFUHzBCn9nEsPHDYAw"
         var count = 5
-        var nextResult = youTube.getPlaylistItems(videoId = videoId, playlistId = playlistId)
+        var nextResult = youTube.next(WatchEndpoint(videoId = videoId, playlistId = playlistId))
         while (nextResult.continuation != null && count > 0) {
             nextResult.items.forEach {
                 println(it.title)
             }
-            nextResult = youTube.getPlaylistItems(videoId = videoId, playlistId = playlistId, continuation = nextResult.continuation)
+            nextResult = youTube.next(WatchEndpoint(videoId = videoId, playlistId = playlistId), nextResult.continuation)
             count -= 1
         }
         nextResult.items.forEach {
