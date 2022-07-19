@@ -7,6 +7,8 @@
         <variable
             name="item"
             type="com.zionhuang.innertube.models.Item" />
+
+        <import type="com.zionhuang.innertube.models.ArtistItem" />
     </data>
 
     <LinearLayout
@@ -19,6 +21,8 @@
 
         <ImageView
             android:id="@+id/thumbnail"
+            circleCrop="@{item instanceof ArtistItem}"
+            roundedCorner="@{!(item instanceof ArtistItem)}"
             thumbnails="@{item.thumbnails}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
