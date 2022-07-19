@@ -15,10 +15,16 @@ data class NavigationEndpoint(
     val watchPlaylistEndpoint: WatchPlaylistEndpoint?,
     val browseEndpoint: BrowseEndpoint?,
     val searchEndpoint: SearchEndpoint?,
+    val queueAddEndpoint: QueueAddEndpoint?,
     val shareEntityEndpoint: ShareEntityEndpoint?,
 ) {
     val endpoint: Endpoint?
-        get() = watchEndpoint ?: watchPlaylistEndpoint ?: browseEndpoint ?: searchEndpoint ?: shareEntityEndpoint
+        get() = watchEndpoint
+            ?: watchPlaylistEndpoint
+            ?: browseEndpoint
+            ?: searchEndpoint
+            ?: queueAddEndpoint
+            ?: shareEntityEndpoint
 
     fun getEndpointType(): Int = when (val ep = endpoint) {
         is WatchEndpoint -> when (ep.watchEndpointMusicSupportedConfigs?.watchEndpointMusicConfig?.musicVideoType) {

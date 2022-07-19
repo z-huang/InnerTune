@@ -78,6 +78,23 @@ data class SearchEndpoint(
 ) : Endpoint()
 
 @Serializable
+data class QueueAddEndpoint(
+    val queueInsertPosition: String,
+    val queueTarget: QueueTarget,
+) : Endpoint() {
+    @Serializable
+    data class QueueTarget(
+        val videoId: String?,
+        val playlistId: String?,
+    ) : java.io.Serializable
+
+    companion object {
+        const val INSERT_AFTER_CURRENT_VIDEO = "INSERT_AFTER_CURRENT_VIDEO"
+        const val INSERT_AT_END = "INSERT_AT_END"
+    }
+}
+
+@Serializable
 data class ShareEntityEndpoint(
     val serializedShareEntity: String,
 ) : Endpoint()

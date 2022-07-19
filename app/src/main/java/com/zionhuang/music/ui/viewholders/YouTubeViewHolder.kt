@@ -115,22 +115,7 @@ class YouTubeListItemViewHolder(
         }
         binding.btnMoreAction.setOnClickListener {
             MenuBottomSheetDialogFragment
-                .newInstance(R.menu.youtube_item)
-                .setMenuModifier {
-                    findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
-                    findItem(R.id.action_view_artist)?.isVisible = item.menu.artistEndpoint != null
-                    findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
-                }
-                .setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.action_view_artist -> item.menu.artistEndpoint?.let { endpoint ->
-                            navigationEndpointHandler.handle(endpoint)
-                        }
-                        R.id.action_view_album -> item.menu.albumEndpoint?.let { endpoint ->
-                            navigationEndpointHandler.handle(endpoint)
-                        }
-                    }
-                }
+                .newInstance(item, navigationEndpointHandler)
                 .show(binding.context)
         }
         binding.executePendingBindings()
@@ -148,22 +133,7 @@ class YouTubeSquareItemViewHolder(
         }
         binding.root.setOnLongClickListener {
             MenuBottomSheetDialogFragment
-                .newInstance(R.menu.youtube_item)
-                .setMenuModifier {
-                    findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
-                    findItem(R.id.action_view_artist)?.isVisible = item.menu.artistEndpoint != null
-                    findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
-                }
-                .setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.action_view_artist -> item.menu.artistEndpoint?.let { endpoint ->
-                            navigationEndpointHandler.handle(endpoint)
-                        }
-                        R.id.action_view_album -> item.menu.albumEndpoint?.let { endpoint ->
-                            navigationEndpointHandler.handle(endpoint)
-                        }
-                    }
-                }
+                .newInstance(item, navigationEndpointHandler)
                 .show(binding.context)
             true
         }

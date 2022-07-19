@@ -95,12 +95,12 @@ object YouTube {
         return when {
             response.continuationContents != null -> NextResult(
                 items = response.continuationContents.playlistPanelContinuation.contents
-                    .mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() },
+                    .mapNotNull { it.playlistPanelVideoRenderer?.toItem() },
                 continuation = response.continuationContents.playlistPanelContinuation.continuations?.getContinuation()
             )
             else -> NextResult(
                 items = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.contents
-                    ?.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } ?: emptyList(),
+                    ?.mapNotNull { it.playlistPanelVideoRenderer?.toItem() } ?: emptyList(),
                 currentIndex = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.currentIndex,
                 continuation = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.continuations?.getContinuation()
             )
@@ -108,12 +108,12 @@ object YouTube {
     }
 
 
-    suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): List<SongItem> {
+    suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): List<Item> {
         if (videoIds != null) {
             assert(videoIds.size <= 1000) // Max video limit
         }
         return innerTube.getQueue(WEB_REMIX, videoIds, playlistId).body<GetQueueResponse>().queueDatas
-            .mapNotNull { it.content.playlistPanelVideoRenderer?.toSongItem() }
+            .mapNotNull { it.content.playlistPanelVideoRenderer?.toItem() }
     }
 
     @JvmInline

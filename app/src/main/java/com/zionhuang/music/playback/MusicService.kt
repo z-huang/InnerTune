@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerView
+import com.zionhuang.innertube.models.Item
+import com.zionhuang.innertube.models.QueueAddEndpoint
 import com.zionhuang.music.playback.queues.Queue
 
 class MusicService : LifecycleMediaBrowserService() {
@@ -77,6 +79,10 @@ class MusicService : LifecycleMediaBrowserService() {
 
         fun playQueue(queue: Queue) {
             songPlayer.playQueue(queue)
+        }
+
+        fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: Item) {
+            songPlayer.handleQueueAddEndpoint(endpoint, item)
         }
     }
 

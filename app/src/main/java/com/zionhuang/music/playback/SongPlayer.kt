@@ -30,6 +30,9 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
+import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
@@ -48,11 +51,8 @@ import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /**
  * A wrapper around [ExoPlayer]
@@ -129,6 +129,31 @@ class SongPlayer(
             if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
             player.prepare()
             player.playWhenReady = true
+        }
+    }
+
+    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: Item) {
+        scope.launch {
+            val items = when (item) {
+                is SongItem -> listOf(item.toMediaItem())
+                is VideoItem -> listOf(item.toMediaItem())
+                is AlbumItem, is PlaylistItem -> withContext(IO) {
+                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).mapNotNull {
+                        when (it) {
+                            is SongItem -> it.toMediaItem()
+                            is VideoItem -> it.toMediaItem()
+                            else -> null
+                        }
+                    }
+                }
+                is ArtistItem -> return@launch
+            }
+            when (endpoint.queueInsertPosition) {
+                INSERT_AFTER_CURRENT_VIDEO -> player.addMediaItems((if (player.mediaItemCount == 0) -1 else player.currentMediaItemIndex) + 1, items)
+                INSERT_AT_END -> player.addMediaItems(items)
+                else -> {}
+            }
+            player.prepare()
         }
     }
 

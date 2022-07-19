@@ -5,6 +5,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import androidx.core.net.toUri
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.MediaMetadata
+import com.zionhuang.innertube.models.Item
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.VideoItem
 import com.zionhuang.music.db.entities.Song
@@ -68,3 +69,9 @@ fun VideoItem.toMediaItem() = MediaItem.Builder()
         .setArtworkUri(thumbnails.lastOrNull()?.url?.toUri())
         .build())
     .build()
+
+fun Item.toMediaItem(): MediaItem? = when (this) {
+    is SongItem -> toMediaItem()
+    is VideoItem -> toMediaItem()
+    else -> null
+}

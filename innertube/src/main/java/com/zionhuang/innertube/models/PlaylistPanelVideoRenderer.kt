@@ -15,16 +15,28 @@ data class PlaylistPanelVideoRenderer(
     val menu: Menu,
     val navigationEndpoint: NavigationEndpoint,
 ) {
-    fun toSongItem(): SongItem = SongItem(
-        id = videoId,
-        title = title.toString(),
-        subtitle = longBylineText.toString(),
-        artists = listOf(longBylineText.runs[0]),
-        album = longBylineText.runs
-            .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
-            ?.toLink(),
-        thumbnails = thumbnail.thumbnails,
-        menu = menu.toItemMenu(),
-        navigationEndpoint = navigationEndpoint
-    )
+    fun toItem(): Item = if (thumbnail.thumbnails[0].isSquare) {
+        SongItem(
+            id = videoId,
+            title = title.toString(),
+            subtitle = longBylineText.toString(),
+            artists = listOf(longBylineText.runs[0]),
+            album = longBylineText.runs
+                .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
+                ?.toLink(),
+            thumbnails = thumbnail.thumbnails,
+            menu = menu.toItemMenu(),
+            navigationEndpoint = navigationEndpoint
+        )
+    } else {
+        VideoItem(
+            id = videoId,
+            title = title.toString(),
+            subtitle = longBylineText.toString(),
+            artist = longBylineText.runs[0],
+            thumbnails = thumbnail.thumbnails,
+            menu = menu.toItemMenu(),
+            navigationEndpoint = navigationEndpoint
+        )
+    }
 }
