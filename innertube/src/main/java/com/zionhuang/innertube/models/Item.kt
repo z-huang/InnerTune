@@ -16,6 +16,8 @@ sealed class Item : BaseItem() {
     abstract val menu: ItemMenu
     abstract val navigationEndpoint: NavigationEndpoint
 
+    abstract val shareLink: String
+
     interface FromContent<out T : Item> {
         fun from(item: MusicResponsiveListItemRenderer): T?
         fun from(item: MusicTwoRowItemRenderer): T
@@ -33,6 +35,8 @@ data class SongItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
+    override val shareLink: String = "https://music.youtube.com/watch?v=$id"
+
     companion object : FromContent<SongItem> {
         override fun from(item: MusicResponsiveListItemRenderer): SongItem? {
             if (item.menu == null) return null
@@ -81,6 +85,8 @@ data class VideoItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
+    override val shareLink: String = "https://music.youtube.com/watch?v=$id"
+
     companion object : FromContent<VideoItem> {
         /**
          * Subtitle configurations:
@@ -141,6 +147,8 @@ data class AlbumItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
+    override val shareLink: String = "https://music.youtube.com/playlist?list=$id"
+
     companion object : FromContent<AlbumItem> {
         override fun from(item: MusicResponsiveListItemRenderer): AlbumItem? {
             if (item.menu == null) return null
@@ -179,6 +187,8 @@ data class PlaylistItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
+    override val shareLink: String = "https://music.youtube.com/playlist?list=$id"
+
     companion object : FromContent<PlaylistItem> {
         override fun from(item: MusicResponsiveListItemRenderer): PlaylistItem? {
             if (item.menu == null) return null
@@ -220,6 +230,8 @@ data class ArtistItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : Item() {
+    override val shareLink: String = "https://music.youtube.com/channel/$id"
+
     companion object : FromContent<ArtistItem> {
         override fun from(item: MusicResponsiveListItemRenderer): ArtistItem? {
             if (item.menu == null) return null

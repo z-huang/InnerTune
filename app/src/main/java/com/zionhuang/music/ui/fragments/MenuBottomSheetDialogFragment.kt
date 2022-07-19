@@ -70,7 +70,6 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 findItem(R.id.action_add_to_queue)?.isVisible = item.menu.addToQueueEndpoint != null
                 findItem(R.id.action_view_artist)?.isVisible = item.menu.artistEndpoint != null
                 findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
-                findItem(R.id.action_share)?.isVisible = item.menu.shareEndpoint != null
             }
             .setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -82,7 +81,7 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     R.id.action_download -> {}
                     R.id.action_view_artist -> navigationEndpointHandler.handle(item.menu.artistEndpoint)
                     R.id.action_view_album -> navigationEndpointHandler.handle(item.menu.albumEndpoint)
-                    R.id.action_share -> {}
+                    R.id.action_share -> navigationEndpointHandler.share(item)
                 }
             }
     }
