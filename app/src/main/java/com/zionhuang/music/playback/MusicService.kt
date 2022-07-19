@@ -13,7 +13,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.zionhuang.innertube.models.Item
 import com.zionhuang.innertube.models.QueueAddEndpoint
 import com.zionhuang.music.playback.queues.Queue
@@ -67,15 +67,11 @@ class MusicService : LifecycleMediaBrowserService() {
         }
     }
 
-    fun setPlayerView(playerView: PlayerView?) {
-        songPlayer.setPlayerView(playerView)
-    }
-
     inner class MusicBinder : Binder() {
         val sessionToken: MediaSessionCompat.Token
             get() = songPlayer.mediaSession.sessionToken
 
-        fun setPlayerView(playerView: PlayerView?) = songPlayer.setPlayerView(playerView)
+        fun setPlayerView(playerView: StyledPlayerView) = songPlayer.setPlayerView(playerView)
 
         fun playQueue(queue: Queue) {
             songPlayer.playQueue(queue)

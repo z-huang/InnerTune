@@ -11,7 +11,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.zionhuang.music.models.MediaSessionQueueData
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import java.lang.ref.WeakReference
@@ -28,8 +28,8 @@ object MediaSessionConnection {
     val nowPlaying = MutableLiveData<MediaMetadataCompat?>(null)
     val queueData = MutableLiveData(MediaSessionQueueData())
 
-    private var weakPlayerView = WeakReference<PlayerView>(null)
-    var playerView: PlayerView?
+    private var weakPlayerView = WeakReference<StyledPlayerView>(null)
+    var playerView: StyledPlayerView?
         get() = weakPlayerView.get()
         set(value) {
             weakPlayerView = WeakReference(value)
@@ -44,7 +44,7 @@ object MediaSessionConnection {
             override fun onServiceConnected(name: ComponentName, iBinder: IBinder) {
                 if (iBinder !is MusicBinder) return
                 _binder = iBinder
-                iBinder.setPlayerView(playerView)
+                playerView?.let { iBinder.setPlayerView(it) }
                 try {
                     mediaController = MediaControllerCompat(context, iBinder.sessionToken).apply {
                         registerCallback(mediaControllerCallback)

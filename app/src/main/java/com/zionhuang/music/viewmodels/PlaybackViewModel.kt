@@ -8,7 +8,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.*
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.models.MediaData
@@ -65,7 +65,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     val expandOnPlay by preference(R.string.pref_expand_on_play, false)
 
-    fun setPlayerView(playerView: PlayerView) {
+    fun setPlayerView(playerView: StyledPlayerView) {
         mediaSessionConnection.playerView = playerView
     }
 

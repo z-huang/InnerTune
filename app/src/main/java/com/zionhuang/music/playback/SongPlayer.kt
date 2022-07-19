@@ -26,7 +26,7 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.innertube.YouTube
@@ -338,8 +338,8 @@ class SongPlayer(
         player.release()
     }
 
-    fun setPlayerView(playerView: PlayerView?) {
-        playerView?.player = player
+    fun setPlayerView(playerView: StyledPlayerView) {
+        playerView.player = player
     }
 
     companion object {
