@@ -10,14 +10,14 @@
     <string name="title_update">アップデート</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">Appearance</string>
-    <string name="pref_follow_system_accent_title">Follow system theme</string>
-    <string name="pref_theme_color_title">Theme color</string>
-    <string name="pref_dark_theme_title">Dark theme</string>
-    <string name="dark_theme_on">On</string>
-    <string name="dark_theme_off">Off</string>
-    <string name="dark_theme_follow_system">Follow system</string>
-    <string name="pref_content">Content</string>
+    <string name="pref_appearance">外観</string>
+    <string name="pref_follow_system_accent_title">システムのテーマに従う</string>
+    <string name="pref_theme_color_title">テーマカラー</string>
+    <string name="pref_dark_theme_title">ダークテーマ</string>
+    <string name="dark_theme_on">オン</string>
+    <string name="dark_theme_off">オフ</string>
+    <string name="dark_theme_follow_system">システムに従う</string>
+    <string name="pref_content">コンテンツ</string>
     <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>
     <string name="pref_default_content_country_title">デフォルトのコンテンツの国</string>
     <string name="pref_auto_download_title">自動ダウンロード</string>
@@ -36,23 +36,23 @@
 
     <!-- Colors -->
     <string name="color_sakura">桜色</string>
-    <string name="color_red">赤色</string>
-    <string name="color_pink">ピンク色</string>
-    <string name="color_purple">紫色</string>
-    <string name="color_deep_purple">深紫色</string>
-    <string name="color_indigo">藍色</string>
-    <string name="color_blue">青色</string>
-    <string name="color_light_blue">ライト ブルー</string>
-    <string name="color_cyan">水色</string>
-    <string name="color_teal">青緑色</string>
-    <string name="color_green">緑色</string>
+    <string name="color_red">赤</string>
+    <string name="color_pink">ピンク</string>
+    <string name="color_purple">紫</string>
+    <string name="color_deep_purple">深紫</string>
+    <string name="color_indigo">藍</string>
+    <string name="color_blue">青</string>
+    <string name="color_light_blue">ライトブルー</string>
+    <string name="color_cyan">シアン</string>
+    <string name="color_teal">青緑</string>
+    <string name="color_green">緑</string>
     <string name="color_light_green">ライトグリーン</string>
-    <string name="color_lime">黄緑色</string>
-    <string name="color_yellow">黄色</string>
-    <string name="color_amber">琥珀色</string>
-    <string name="color_orange">オレンジ色</string>
+    <string name="color_lime">黄緑</string>
+    <string name="color_yellow">黄</string>
+    <string name="color_amber">アンバー</string>
+    <string name="color_orange">オレンジ</string>
     <string name="color_deep_orange">深いオレンジ</string>
-    <string name="color_brown">茶色</string>
+    <string name="color_brown">茶</string>
     <string name="color_blue_grey">ブルーグレー</string>
 
     <!-- Nav Menu -->
@@ -85,8 +85,8 @@
     <string name="text_view_hint_artist_name">アーティスト名</string>
     <string name="error_artist_name_empty">アーティスト名は空白にできません。</string>
 
-    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
-    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
+    <string name="dialog_title_duplicate_artist">アーティスト名が重複しています</string>
+    <string name="dialog_msg_duplicate_artist">アーティスト %1$s は既に存在します。統合しますか？</string>
 
     <string name="dialog_title_choose_playlist">プレイリストを選択</string>
 
