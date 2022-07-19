@@ -303,10 +303,12 @@
                 android:layout_height="wrap_content"
                 android:valueFrom="0"
                 android:valueTo="100"
+                app:haloRadius="12dp"
                 app:labelBehavior="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:thumbRadius="6dp"
                 tools:value="50"
                 tools:valueFrom="0"
                 tools:valueTo="100" />
