@@ -8,6 +8,7 @@ import android.view.ActionMode
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -17,6 +18,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.dip
@@ -30,6 +33,9 @@ import org.schabi.newpipe.extractor.StreamingService.LinkType
 
 class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
+    val currentFragment: Fragment?
+        get() = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).childFragmentManager.fragments.firstOrNull()
+
 
     private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
 
@@ -99,11 +105,24 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     }
 
     override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
+        val topLevelDestinations = setOf(
+            R.id.exploreFragment,
+            R.id.songsFragment,
+            R.id.artistsFragment,
+            R.id.playlistsFragment
+        )
         actionMode?.finish()
         if (destination.id == R.id.playlistsFragment) {
             binding.fab.show()
         } else if (binding.fab.isVisible) {
             binding.fab.hide()
+        }
+        if (destination.id == R.id.youtubeSuggestionFragment) {
+            currentFragment?.exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
+            currentFragment?.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
+        }
+        if (destination.id in topLevelDestinations) {
+            currentFragment?.reenterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
         }
     }
 

@@ -13,7 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.transition.MaterialFadeThrough
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_PLAYLIST
@@ -48,8 +48,8 @@ class YouTubeSearchFragment : NavigationFragment<FragmentSearchBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        enterTransition = MaterialFadeThrough().addTarget(binding.content).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-        exitTransition = MaterialFadeThrough().addTarget(binding.content).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+        enterTransition = null
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content).addTarget(R.id.fragment_content)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         adapter.bindLoadStateLayout(binding.layoutLoadState)

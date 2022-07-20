@@ -18,8 +18,8 @@ abstract class RecyclerViewFragment<T : RecyclerView.Adapter<*>> : NavigationFra
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        enterTransition = MaterialFadeThrough().addTarget(binding.content).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
-        exitTransition = MaterialFadeThrough().addTarget(binding.content).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
+        enterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
+        exitTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         setupRecyclerView(binding.recyclerView)

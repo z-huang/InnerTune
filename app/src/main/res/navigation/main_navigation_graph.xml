@@ -60,7 +60,8 @@
     </fragment>
     <fragment
         android:id="@+id/youTubeBrowseFragment"
-        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragment">
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragment"
+        android:label="">
         <argument
             android:name="endpoint"
             app:argType="com.zionhuang.innertube.models.BrowseEndpoint" />
