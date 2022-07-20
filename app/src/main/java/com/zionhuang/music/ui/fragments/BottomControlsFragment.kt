@@ -22,7 +22,6 @@ import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MediaWidgetsController
-import com.zionhuang.music.ui.widgets.PlayPauseBehavior
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.youtube.NewPipeYouTubeHelper.videoIdToUrl
 
@@ -92,11 +91,6 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
             viewModel.mediaData.value?.id?.let { id ->
                 startActivity(Intent(Intent.ACTION_VIEW, videoIdToUrl(id)?.toUri()))
             }
-        }
-
-        with(PlayPauseBehavior(requireContext())) {
-            binding.btnBtmPlayPause.setBehavior(this)
-            binding.btnPlayPause.setBehavior(this)
         }
 
         mediaWidgetsController = MediaWidgetsController(requireContext(), binding.progressBar, binding.slider, binding.positionText)

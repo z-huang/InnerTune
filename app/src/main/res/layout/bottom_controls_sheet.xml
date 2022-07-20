@@ -139,11 +139,13 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:background="?selectableItemBackgroundBorderless"
                 android:onClick="@{()->viewModel.togglePlayPause()}"
                 android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_btm_skip_next"
                 app:layout_constraintTop_toTopOf="parent"
+                app:playPauseButtonTint="?invertedColor"
                 app:playState="@{viewModel.playbackState.state}"
                 tools:src="@drawable/ic_pause" />
 
@@ -357,13 +359,16 @@
 
             <com.zionhuang.music.ui.widgets.PlayPauseButton
                 android:id="@+id/btn_play_pause"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/btn_play_pause_background"
                 android:onClick="@{()->viewModel.togglePlayPause()}"
-                android:padding="6dp"
+                android:padding="16dp"
+                android:tint="?colorOnPrimary"
                 app:layout_constraintEnd_toStartOf="@id/btn_next"
                 app:layout_constraintStart_toEndOf="@id/btn_previous"
                 app:layout_constraintTop_toBottomOf="@id/duration_text"
+                app:playPauseButtonTint="?colorOnPrimary"
                 app:playState="@{viewModel.playbackState.state}"
                 tools:src="@drawable/ic_pause" />
 
