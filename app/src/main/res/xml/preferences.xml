@@ -10,6 +10,7 @@
             android:defaultValue="MATERIAL_BLUE"
             android:entries="@array/color_texts"
             android:entryValues="@array/color_values"
+            android:icon="@drawable/ic_palette"
             android:key="@string/pref_theme_color"
             android:summary="%s"
             android:title="@string/pref_theme_color_title" />
@@ -17,6 +18,7 @@
             android:defaultValue="-1"
             android:entries="@array/dark_theme_texts"
             android:entryValues="@array/dark_theme_values"
+            android:icon="@drawable/ic_dark_mode"
             android:key="@string/pref_dark_theme"
             android:summary="%s"
             android:title="@string/pref_dark_theme_title" />
