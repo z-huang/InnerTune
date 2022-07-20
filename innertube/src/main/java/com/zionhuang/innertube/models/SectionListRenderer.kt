@@ -54,7 +54,8 @@ data class SectionListRenderer(
         fun toBaseItems(): List<BaseItem> = when {
             musicCarouselShelfRenderer != null -> listOf(
                 Header(
-                    title = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString()
+                    title = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
+                    moreNavigationEndpoint = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.moreContentButton?.buttonRenderer?.navigationEndpoint
                 ),
                 CarouselSection(
                     id = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
