@@ -24,11 +24,11 @@ class YouTubeItemPagingAdapter(
     var onSearch: (String) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YouTubeViewHolder = when (viewType) {
-        BASE_ITEM_HEADER -> YouTubeHeaderViewHolder(parent.inflateWithBinding(R.layout.item_section_header), navigationEndpointHandler)
-        BASE_ITEM_HEADER_ARTIST -> YouTubeArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_section_header_artist), navigationEndpointHandler)
-        BASE_ITEM_HEADER_ALBUM_OR_PLAYLIST -> YouTubeAlbumOrPlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_section_header_album), navigationEndpointHandler)
-        BASE_ITEM_CAROUSEL, BASE_ITEM_GRID -> YouTubeItemContainerViewHolder(parent.inflateWithBinding(R.layout.item_section_item), navigationEndpointHandler)
-        BASE_ITEM_DESCRIPTION -> YouTubeDescriptionViewHolder(parent.inflateWithBinding(R.layout.item_section_description))
+        BASE_ITEM_HEADER -> YouTubeHeaderViewHolder(parent.inflateWithBinding(R.layout.item_youtube_header), navigationEndpointHandler)
+        BASE_ITEM_HEADER_ARTIST -> YouTubeArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_youtube_header_artist), navigationEndpointHandler)
+        BASE_ITEM_HEADER_ALBUM_OR_PLAYLIST -> YouTubeAlbumOrPlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_youtube_header_album), navigationEndpointHandler)
+        BASE_ITEM_CAROUSEL, BASE_ITEM_GRID -> YouTubeItemContainerViewHolder(parent.inflateWithBinding(R.layout.item_recyclerview), navigationEndpointHandler)
+        BASE_ITEM_DESCRIPTION -> YouTubeDescriptionViewHolder(parent.inflateWithBinding(R.layout.item_youtube_description))
         BASE_ITEM_SEPARATOR -> YouTubeSeparatorViewHolder(parent.inflateWithBinding(R.layout.item_separator))
         BASE_ITEM_NAVIGATION -> when (itemViewType) {
             BaseItem.ViewType.LIST -> YouTubeNavigationItemViewHolder(parent.inflateWithBinding(R.layout.item_youtube_navigation), navigationEndpointHandler)

@@ -17,7 +17,7 @@ sealed class YouTubeViewHolder(open val binding: ViewDataBinding) : RecyclerView
 
 
 class YouTubeHeaderViewHolder(
-    override val binding: ItemSectionHeaderBinding,
+    override val binding: ItemYoutubeHeaderBinding,
     private val navigationEndpointHandler: NavigationEndpointHandler,
 ) : YouTubeViewHolder(binding) {
     fun bind(header: Header) {
@@ -32,7 +32,7 @@ class YouTubeHeaderViewHolder(
 }
 
 class YouTubeArtistHeaderViewHolder(
-    override val binding: ItemSectionHeaderArtistBinding,
+    override val binding: ItemYoutubeHeaderArtistBinding,
     private val navigationEndpointHandler: NavigationEndpointHandler,
 ) : YouTubeViewHolder(binding) {
     fun bind(header: ArtistHeader) {
@@ -47,7 +47,7 @@ class YouTubeArtistHeaderViewHolder(
 }
 
 class YouTubeAlbumOrPlaylistHeaderViewHolder(
-    override val binding: ItemSectionHeaderAlbumBinding,
+    override val binding: ItemYoutubeHeaderAlbumBinding,
     private val navigationEndpointHandler: NavigationEndpointHandler,
 ) : YouTubeViewHolder(binding) {
     fun bind(header: AlbumOrPlaylistHeader) {
@@ -66,7 +66,7 @@ class YouTubeAlbumOrPlaylistHeaderViewHolder(
 }
 
 class YouTubeDescriptionViewHolder(
-    override val binding: ItemSectionDescriptionBinding,
+    override val binding: ItemYoutubeDescriptionBinding,
 ) : YouTubeViewHolder(binding) {
     fun bind(section: DescriptionSection) {
         binding.section = section
@@ -74,7 +74,7 @@ class YouTubeDescriptionViewHolder(
 }
 
 class YouTubeItemContainerViewHolder(
-    override val binding: ItemSectionItemBinding,
+    override val binding: ItemRecyclerviewBinding,
     private val navigationEndpointHandler: NavigationEndpointHandler,
 ) : YouTubeViewHolder(binding) {
     fun bind(section: BaseItem) {
