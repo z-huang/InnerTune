@@ -28,7 +28,9 @@ class PlayPauseButton : AppCompatImageView {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        val tintResId = context.obtainStyledAttributes(attrs, R.styleable.PlayPauseButton).getColor(R.styleable.PlayPauseButton_playPauseButtonTint, R.color.colorInverted)
+        val tintResId = context
+            .obtainStyledAttributes(attrs, R.styleable.PlayPauseButton)
+            .getColor(R.styleable.PlayPauseButton_playPauseButtonTint, resources.getColor(R.color.colorInverted, context.theme))
         playAnimation.setTint(tintResId)
         pauseAnimation.setTint(tintResId)
         playDrawable.setTint(tintResId)
