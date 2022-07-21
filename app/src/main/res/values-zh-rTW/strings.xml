@@ -131,6 +131,7 @@
         <item quantity="other">已選取 %d 個項目</item>
     </plurals>
     <string name="snack_bar_undo">復原</string>
+    <string name="snack_bar_url_error">無法辨識此連結</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">加入音樂庫</string>

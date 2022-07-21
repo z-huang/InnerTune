@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.zionhuang.music.models.MediaSessionQueueData
 import com.zionhuang.music.playback.MusicService.MusicBinder
+import com.zionhuang.music.utils.livedata.SafeMutableLiveData
 import java.lang.ref.WeakReference
 
 object MediaSessionConnection {
@@ -23,7 +24,7 @@ object MediaSessionConnection {
     private val mediaControllerCallback = MediaControllerCallback()
     private var serviceConnection: ServiceConnection? = null
 
-    val isConnected = MutableLiveData(false)
+    val isConnected = SafeMutableLiveData(false)
     val playbackState = MutableLiveData<PlaybackStateCompat?>(null)
     val nowPlaying = MutableLiveData<MediaMetadataCompat?>(null)
     val queueData = MutableLiveData(MediaSessionQueueData())

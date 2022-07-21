@@ -141,6 +141,7 @@
         <item quantity="many">%d sélectionné</item>
     </plurals>
     <string name="snack_bar_undo">Annuler</string>
+    <string name="snack_bar_url_error">Can\'t identify this url.</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Ajouter à la bibliothèque</string>

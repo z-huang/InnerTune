@@ -49,7 +49,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     }
 
     private val mediaSessionConnection = MediaSessionConnection.apply {
-        connect(application)
+        if (!isConnected.value) connect(application)
         playbackState.observeForever(playbackStateObserver)
         nowPlaying.observeForever(mediaMetadataObserver)
         queueData.observeForever(queueDataObserver)

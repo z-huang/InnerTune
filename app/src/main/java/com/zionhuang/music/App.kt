@@ -4,6 +4,7 @@ import android.app.Application
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.music.extensions.sharedPreferences
+import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.utils.getPreferredContentCountry
 import com.zionhuang.music.utils.getPreferredLocalization
 import com.zionhuang.music.youtube.NewPipeDownloader
@@ -25,6 +26,7 @@ class App : Application() {
             gl = sharedPreferences.getString(getString(R.string.pref_content_country), systemDefault).takeIf { it != systemDefault } ?: Locale.getDefault().country,
             hl = sharedPreferences.getString(getString(R.string.pref_content_language), systemDefault).takeIf { it != systemDefault } ?: Locale.getDefault().toLanguageTag()
         )
+        MediaSessionConnection.connect(this)
     }
 
     companion object {

@@ -137,6 +137,7 @@
         <item quantity="other">%d selected</item>
     </plurals>
     <string name="snack_bar_undo">Undo</string>
+    <string name="snack_bar_url_error">Can\'t identify this url.</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Add to library</string>

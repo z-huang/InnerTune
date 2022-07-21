@@ -131,6 +131,7 @@
         <item quantity="other">%dを選択済み</item>
     </plurals>
     <string name="snack_bar_undo">元に戻す</string>
+    <string name="snack_bar_url_error">Can\'t identify this url.</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">ライブラリに追加</string>

@@ -7,6 +7,7 @@ import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
 import com.zionhuang.innertube.utils.plus
 import io.ktor.client.call.*
+import kotlinx.serialization.json.JsonObject
 
 /**
  * Parse useful data with [InnerTube] sending requests.
@@ -61,12 +62,14 @@ object YouTube {
     suspend fun player(videoId: String, playlistId: String? = null): PlayerResponse =
         innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
 
-    suspend fun browse(endpoint: BrowseEndpoint): BrowseResult {
-        return innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
-    }
+    suspend fun browse(endpoint: BrowseEndpoint): BrowseResult =
+        innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
+
+    suspend fun browseJson(endpoint: BrowseEndpoint): JsonObject =
+        innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body()
 
     suspend fun browse(continuations: List<String>): BrowseResult {
-        val result =  innerTube.browse(WEB_REMIX, continuation = continuations[0]).body<BrowseResponse>().toBrowseResult()
+        val result = innerTube.browse(WEB_REMIX, continuation = continuations[0]).body<BrowseResponse>().toBrowseResult()
         return result.copy(
             continuations = result.continuations + continuations.drop(1)
         )
@@ -115,6 +118,7 @@ object YouTube {
         return innerTube.getQueue(WEB_REMIX, videoIds, playlistId).body<GetQueueResponse>().queueDatas
             .mapNotNull { it.content.playlistPanelVideoRenderer?.toItem() }
     }
+
 
     @JvmInline
     value class SearchFilter(val value: String) {

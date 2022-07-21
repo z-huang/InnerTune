@@ -11,6 +11,7 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -18,28 +19,38 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
+import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.NavigationEndpoint
+import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.innertube.utils.YouTubeLinkHandler
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.dip
 import com.zionhuang.music.extensions.replaceFragment
+import com.zionhuang.music.playback.MediaSessionConnection
+import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
+import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.PlaybackViewModel
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper.getLinkType
-import org.schabi.newpipe.extractor.StreamingService.LinkType
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
-    val currentFragment: Fragment?
-        get() = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).childFragmentManager.fragments.firstOrNull()
 
 
     private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
 
     private lateinit var navHostFragment: NavHostFragment
+    private val currentFragment: Fragment?
+        get() = navHostFragment.childFragmentManager.fragments.firstOrNull()
+
     private var bottomSheetCallback: BottomSheetListener? = null
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
@@ -52,17 +63,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         super.onCreate(savedInstanceState)
         setupUI()
         handleIntent(intent)
-        // TODO
-//        songsViewModel.deletedSongs.observe(this) { songs ->
-//            Snackbar.make(binding.root, resources.getQuantityString(R.plurals.snack_bar_delete_song, songs.size, songs.size), Snackbar.LENGTH_LONG)
-//                .setAnchorView(binding.bottomNav)
-//                .setAction(R.string.snack_bar_undo) {
-//                    lifecycleScope.launch {
-//                        songsViewModel.songRepository.restoreSongs(songs)
-//                    }
-//                }
-//                .show()
-//        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -71,23 +71,39 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     }
 
     private fun handleIntent(intent: Intent) {
-        // Handle url
-        val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT)).toString()
-        when (getLinkType(url)) {
-            LinkType.STREAM -> {
-                // TODO
-//                lifecycleScope.launch {
-//                    while (playbackViewModel.mediaSessionIsConnected.value == false) delay(100)
-//                    val videoId = extractVideoId(url)!!
-//                    playbackViewModel.playMedia(this@MainActivity, videoId, bundleOf(
-//                        EXTRA_QUEUE_DATA to QueueData(QUEUE_YT_SINGLE, queueId = videoId)
-//                    ))
-//                }
+        val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT))?.toString() ?: return
+        YouTubeLinkHandler.getVideoId(url)?.let { id ->
+            lifecycleScope.launch {
+                while (!MediaSessionConnection.isConnected.value) delay(300)
+                MediaSessionConnection.binder?.playQueue(YouTubeQueue(WatchEndpoint(videoId = id)))
             }
-            LinkType.CHANNEL -> {}
-            LinkType.PLAYLIST -> {}
-            LinkType.NONE -> {}
+            return
         }
+        YouTubeLinkHandler.getBrowseId(url)?.let { id ->
+            currentFragment?.let {
+                NavigationEndpointHandler(it).handle(NavigationEndpoint(
+                    browseEndpoint = BrowseEndpoint(browseId = id)
+                ))
+            }
+            return
+        }
+        YouTubeLinkHandler.getPlaylistId(url)?.let { id ->
+            currentFragment?.let {
+                NavigationEndpointHandler(it).handle(NavigationEndpoint(
+                    browseEndpoint = BrowseEndpoint(browseId = "VL$id")
+                ))
+            }
+            return
+        }
+        YouTubeLinkHandler.getChannelId(url)?.let { id ->
+            currentFragment?.let {
+                NavigationEndpointHandler(it).handle(NavigationEndpoint(
+                    browseEndpoint = BrowseEndpoint(browseId = id)
+                ))
+            }
+            return
+        }
+        Snackbar.make(binding.mainContent, getString(R.string.snack_bar_url_error), LENGTH_LONG).show()
     }
 
     private fun setupUI() {

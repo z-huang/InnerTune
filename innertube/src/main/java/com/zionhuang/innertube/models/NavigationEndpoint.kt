@@ -11,12 +11,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NavigationEndpoint(
-    val watchEndpoint: WatchEndpoint?,
-    val watchPlaylistEndpoint: WatchPlaylistEndpoint?,
-    val browseEndpoint: BrowseEndpoint?,
-    val searchEndpoint: SearchEndpoint?,
-    val queueAddEndpoint: QueueAddEndpoint?,
-    val shareEntityEndpoint: ShareEntityEndpoint?,
+    val watchEndpoint: WatchEndpoint? = null,
+    val watchPlaylistEndpoint: WatchPlaylistEndpoint? = null,
+    val browseEndpoint: BrowseEndpoint? = null,
+    val searchEndpoint: SearchEndpoint? = null,
+    val queueAddEndpoint: QueueAddEndpoint? = null,
+    val shareEntityEndpoint: ShareEntityEndpoint? = null,
 ) {
     val endpoint: Endpoint?
         get() = watchEndpoint
