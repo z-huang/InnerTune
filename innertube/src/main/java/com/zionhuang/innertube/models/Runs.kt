@@ -35,6 +35,10 @@ fun List<Run>.splitBySeparator(): List<List<Run>> {
     return res
 }
 
+fun List<Run>.oddElements() = filterIndexed { index: Int, _: Run ->
+    index % 2 == 0
+}
+
 fun List<Run>.removeSeparator(): List<Run> {
     val res = mutableListOf<Run>()
     for (i in 0..lastIndex step 2) {

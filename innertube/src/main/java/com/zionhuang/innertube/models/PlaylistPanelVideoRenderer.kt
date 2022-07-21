@@ -15,15 +15,18 @@ data class PlaylistPanelVideoRenderer(
     val menu: Menu,
     val navigationEndpoint: NavigationEndpoint,
 ) {
+    // Best way to get the most detailed song/video information
     fun toItem(): Item = if (thumbnail.thumbnails[0].isSquare) {
+        val longByLineRuns = longBylineText.runs.splitBySeparator()
         SongItem(
             id = videoId,
             title = title.toString(),
             subtitle = longBylineText.toString(),
-            artists = listOf(longBylineText.runs[0]),
+            artists = longByLineRuns[0].oddElements(),
             album = longBylineText.runs
                 .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
                 ?.toLink(),
+            albumYear = longByLineRuns.getOrNull(2)?.getOrNull(0)?.text?.toInt(),
             thumbnails = thumbnail.thumbnails,
             menu = menu.toItemMenu(),
             navigationEndpoint = navigationEndpoint

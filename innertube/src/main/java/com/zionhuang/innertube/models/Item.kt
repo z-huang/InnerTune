@@ -31,6 +31,7 @@ data class SongItem(
     val index: String? = null,
     val artists: List<Run>,
     val album: Link<BrowseEndpoint>?,
+    val albumYear: Int? = null,
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
