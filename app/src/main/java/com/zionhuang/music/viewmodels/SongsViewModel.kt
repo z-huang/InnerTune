@@ -20,7 +20,6 @@ import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.extensions.toSong
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.models.base.IMutableSortInfo
@@ -30,12 +29,10 @@ import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
-import com.zionhuang.music.ui.listeners.StreamPopupMenuListener
 import com.zionhuang.music.utils.DownloadProgressMapLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
     val songRepository: LocalRepository = SongRepository
@@ -132,56 +129,6 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun deleteSongs(songs: List<Song>) {
             viewModelScope.launch {
                 songRepository.deleteSongs(songs)
-            }
-        }
-    }
-
-    val streamPopupMenuListener = object : StreamPopupMenuListener {
-        override fun addToLibrary(songs: List<StreamInfoItem>) {
-            viewModelScope.launch {
-                songRepository.addSongs(songs.map(StreamInfoItem::toSong))
-            }
-        }
-
-        override fun playNext(songs: List<StreamInfoItem>) {
-            mediaSessionConnection.mediaController?.sendCommand(
-                COMMAND_PLAY_NEXT,
-                bundleOf(EXTRA_SONGS to songs.map(StreamInfoItem::toMediaData).toTypedArray()),
-                null
-            )
-        }
-
-        override fun addToQueue(songs: List<StreamInfoItem>) {
-            mediaSessionConnection.mediaController?.sendCommand(
-                COMMAND_ADD_TO_QUEUE,
-                bundleOf(EXTRA_SONGS to songs.map(StreamInfoItem::toMediaData).toTypedArray()),
-                null
-            )
-        }
-
-        override fun addToPlaylist(songs: List<StreamInfoItem>, context: Context) {
-            viewModelScope.launch {
-                val playlists = songRepository.getAllPlaylists().getList()
-                MaterialAlertDialogBuilder(context)
-                    .setTitle(R.string.dialog_title_choose_playlist)
-                    .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
-                        viewModelScope.launch {
-                            songs.map(StreamInfoItem::toSong).let {
-                                songRepository.addSongs(it)
-                                songRepository.addSongsToPlaylist(playlists[i].playlistId, it)
-                            }
-                        }
-                    }
-                    .show()
-            }
-        }
-
-        override fun download(songs: List<StreamInfoItem>, context: Context) {
-            viewModelScope.launch {
-                songs.map(StreamInfoItem::toSong).let { s ->
-                    songRepository.addSongs(s)
-                    songRepository.downloadSongs(s.map { it.id })
-                }
             }
         }
     }

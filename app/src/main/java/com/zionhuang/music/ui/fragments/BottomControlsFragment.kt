@@ -23,7 +23,6 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MediaWidgetsController
 import com.zionhuang.music.viewmodels.PlaybackViewModel
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper.videoIdToUrl
 
 class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.TransitionListener {
     companion object {
@@ -89,7 +88,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
         binding.btnShare.setOnClickListener {
             viewModel.mediaData.value?.id?.let { id ->
-                startActivity(Intent(Intent.ACTION_VIEW, videoIdToUrl(id)?.toUri()))
+                startActivity(Intent(Intent.ACTION_VIEW, "https://music.youtube.com/watch?v=$id".toUri()))
             }
         }
 

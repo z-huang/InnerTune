@@ -11,7 +11,6 @@ import com.zionhuang.innertube.models.VideoItem
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.toMediaData
-import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 val MediaItem.metadata: MediaData?
     get() = localConfiguration?.tag as? MediaData
@@ -27,11 +26,7 @@ fun MediaData.toMediaItem() = mediaItemBuilder
 
 fun Song.toMediaItem(context: Context) = toMediaData(context).toMediaItem()
 
-fun StreamInfoItem.toMediaItem() = toMediaData().toMediaItem()
-
 fun MediaDescriptionCompat.toMediaItem() = toMediaData().toMediaItem()
-
-fun List<Song>.toMediaItems(context: Context): List<MediaItem> = map { it.toMediaItem(context) }
 
 fun SongItem.toMediaItem() = MediaItem.Builder()
     .setMediaId(id)

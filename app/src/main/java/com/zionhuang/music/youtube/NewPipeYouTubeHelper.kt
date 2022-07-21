@@ -1,6 +1,5 @@
 package com.zionhuang.music.youtube
 
-import com.zionhuang.music.extensions.tryOrNull
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.InfoItem
@@ -20,13 +19,6 @@ import java.io.IOException
 @Suppress("BlockingMethodInNonBlockingContext")
 object NewPipeYouTubeHelper {
     private val service = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
-
-    /**
-     * Stream
-     */
-    fun extractVideoId(url: String): String? = tryOrNull { service.streamLHFactory.getId(url) }
-
-    fun videoIdToUrl(id: String): String? = tryOrNull { service.streamLHFactory.getUrl(id) }
 
     /**
      * Search
@@ -58,8 +50,6 @@ object NewPipeYouTubeHelper {
     /**
      * Channel
      */
-    fun extractChannelId(url: String): String? = tryOrNull { service.channelLHFactory.getId(url) }
-
     suspend fun getChannel(id: String): ChannelInfo = checkCache(id) {
         ChannelInfo.getInfo(service, service.channelLHFactory.getUrl(id))
     }
@@ -73,7 +63,7 @@ object NewPipeYouTubeHelper {
         StreamInfo.getInfo(service, service.streamLHFactory.getUrl(id))
     }
 
-    suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
+    private suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
         loadFromCache(id) ?: withContext(IO) {
             loadFromNetwork().also {
                 InfoCache.putInfo(id, it)
