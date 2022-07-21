@@ -1,6 +1,8 @@
 package com.zionhuang.music.youtube
 
 import androidx.collection.LruCache
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
@@ -33,8 +35,9 @@ object InfoCache {
         return data.info
     }
 
-    fun getFromKey(id: String): Any? =
-        synchronized(LRU_CACHE) { getInfo(keyOf(id)) }
+    fun getFromKey(id: String): Any? = synchronized(LRU_CACHE) {
+        getInfo(keyOf(id))
+    }
 
     fun putInfo(id: String, info: Any) {
         val expirationMillis = MILLISECONDS.convert(1, HOURS)
@@ -48,14 +51,29 @@ object InfoCache {
         synchronized(LRU_CACHE) { LRU_CACHE.remove(keyOf(id)) }
     }
 
-    fun clearCache() = synchronized(LRU_CACHE) { LRU_CACHE.evictAll() }
+    fun clearCache() = synchronized(LRU_CACHE) {
+        LRU_CACHE.evictAll()
+    }
 
     fun trimCache() = synchronized(LRU_CACHE) {
         removeStaleCache()
         LRU_CACHE.trimToSize(TRIM_CACHE_TO)
     }
 
-    val size: Int get() = synchronized(LRU_CACHE) { LRU_CACHE.size() }
+    val size: Int
+        get() = synchronized(LRU_CACHE) {
+            LRU_CACHE.size()
+        }
+
+    suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
+        loadFromCache(id) ?: withContext(IO) {
+            loadFromNetwork().also {
+                putInfo(id, it)
+            }
+        }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T : Any> loadFromCache(id: String): T? = getFromKey(id) as T?
 
     private class CacheData(val info: Any, timeoutMillis: Long) {
         private val expireTimestamp: Long = System.currentTimeMillis() + timeoutMillis

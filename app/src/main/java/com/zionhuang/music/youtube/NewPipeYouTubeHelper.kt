@@ -3,8 +3,11 @@ package com.zionhuang.music.youtube
 import com.zionhuang.music.extensions.tryOrNull
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
-import org.schabi.newpipe.extractor.*
+import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
+import org.schabi.newpipe.extractor.NewPipe
+import org.schabi.newpipe.extractor.Page
+import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.channel.ChannelInfo
 import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo
@@ -17,8 +20,6 @@ import java.io.IOException
 @Suppress("BlockingMethodInNonBlockingContext")
 object NewPipeYouTubeHelper {
     private val service = NewPipe.getService(ServiceList.YouTube.serviceId) as YoutubeService
-
-    fun getLinkType(url: String): StreamingService.LinkType = service.getLinkTypeByUrl(url)
 
     /**
      * Stream
@@ -45,7 +46,6 @@ object NewPipeYouTubeHelper {
     /**
      * Playlist
      */
-    fun extractPlaylistId(url: String): String? = tryOrNull { service.playlistLHFactory.getId(url) }
 
     suspend fun getPlaylist(id: String): PlaylistInfo = checkCache(id) {
         PlaylistInfo.getInfo(service, service.playlistLHFactory.getUrl(id))
@@ -73,7 +73,7 @@ object NewPipeYouTubeHelper {
         StreamInfo.getInfo(service, service.streamLHFactory.getUrl(id))
     }
 
-    private suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
+    suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
         loadFromCache(id) ?: withContext(IO) {
             loadFromNetwork().also {
                 InfoCache.putInfo(id, it)

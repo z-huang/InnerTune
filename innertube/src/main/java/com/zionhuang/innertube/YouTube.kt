@@ -7,7 +7,6 @@ import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
 import com.zionhuang.innertube.utils.plus
 import io.ktor.client.call.*
-import kotlinx.serialization.json.JsonObject
 
 /**
  * Parse useful data with [InnerTube] sending requests.
@@ -65,11 +64,11 @@ object YouTube {
     suspend fun browse(endpoint: BrowseEndpoint): BrowseResult =
         innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
 
-    suspend fun browseJson(endpoint: BrowseEndpoint): JsonObject =
-        innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body()
+    suspend fun browse(continuation: String): BrowseResult =
+        innerTube.browse(WEB_REMIX, continuation = continuation).body<BrowseResponse>().toBrowseResult()
 
     suspend fun browse(continuations: List<String>): BrowseResult {
-        val result = innerTube.browse(WEB_REMIX, continuation = continuations[0]).body<BrowseResponse>().toBrowseResult()
+        val result = browse(continuations[0])
         return result.copy(
             continuations = result.continuations + continuations.drop(1)
         )

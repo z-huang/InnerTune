@@ -6,6 +6,7 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.BaseItem
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.extensions.toPage
+import com.zionhuang.music.youtube.InfoCache.checkCache
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
@@ -13,7 +14,9 @@ object YouTubeRepository {
     fun searchAll(query: String) = object : PagingSource<List<String>, BaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
-                YouTube.searchAllType(query).toPage()
+                checkCache("SA$query") {
+                    YouTube.searchAllType(query).toPage()
+                }
             } catch (e: Exception) {
                 LoadResult.Error(e)
             }
@@ -25,8 +28,15 @@ object YouTubeRepository {
     fun search(query: String, filter: YouTube.SearchFilter): PagingSource<List<String>, BaseItem> = object : PagingSource<List<String>, BaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
-                if (params.key == null) YouTube.search(query, filter).toPage()
-                else YouTube.search(params.key!![0]).toPage()
+                if (params.key == null) {
+                    checkCache("S$query${filter.value}") {
+                        YouTube.search(query, filter)
+                    }
+                } else {
+                    checkCache("C${params.key!![0]}") {
+                        YouTube.search(params.key!![0])
+                    }
+                }.toPage()
             } catch (e: Exception) {
                 LoadResult.Error(e)
             }
@@ -38,8 +48,15 @@ object YouTubeRepository {
     fun browse(endpoint: BrowseEndpoint): PagingSource<List<String>, BaseItem> = object : PagingSource<List<String>, BaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
-                if (params.key == null) YouTube.browse(endpoint).toPage()
-                else YouTube.browse(params.key!!).toPage()
+                if (params.key == null) {
+                    checkCache("${endpoint.browseId}${endpoint.params.orEmpty()}") {
+                        YouTube.browse(endpoint)
+                    }
+                } else {
+                    checkCache(params.key!![0]) {
+                        YouTube.browse(params.key!!)
+                    }
+                }.toPage()
             } catch (e: Exception) {
                 LoadResult.Error(e)
             }
@@ -49,6 +66,8 @@ object YouTubeRepository {
     }
 
     suspend fun getSuggestions(query: String): List<BaseItem> = withContext(IO) {
-        YouTube.getSearchSuggestions(query)
+        checkCache("SU$query") {
+            YouTube.getSearchSuggestions(query)
+        }
     }
 }
