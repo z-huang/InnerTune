@@ -5,8 +5,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +21,7 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistsFragment : PagingRecyclerViewFragment<ArtistsAdapter>() {
+class ArtistsFragment : PagingRecyclerViewFragment<ArtistsAdapter>(),MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val artistsViewModel by viewModels<ArtistsViewModel>()
     override val adapter = ArtistsAdapter()
@@ -40,16 +42,18 @@ class ArtistsFragment : PagingRecyclerViewFragment<ArtistsAdapter>() {
                 adapter.submitData(it)
             }
         }
+
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.settings, menu)
+    }
+
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
         }
         return true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.settings, menu)
     }
 }

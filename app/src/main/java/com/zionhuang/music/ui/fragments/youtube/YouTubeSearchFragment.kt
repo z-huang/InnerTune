@@ -6,9 +6,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +35,7 @@ import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
-class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBinding, YouTubeItemPagingAdapter>() {
+class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBinding, YouTubeItemPagingAdapter>(), MenuProvider {
     override fun getViewBinding() = FragmentSearchBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
     override fun getRecyclerView(): RecyclerView = binding.recyclerView
@@ -96,16 +98,17 @@ class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBindin
                 adapter.submitData(it)
             }
         }
+
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_icon, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_search) {
-            NavHostFragment.findNavController(this).navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
+            findNavController().navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
         }
         return true
     }

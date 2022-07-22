@@ -9,7 +9,9 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.getSystemService
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionPredicates
@@ -26,14 +28,13 @@ import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
+class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>(), MenuProvider {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     override val adapter = SongsAdapter()
@@ -105,17 +106,11 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
                 adapter.setProgress(key, value)
             }
         }
+
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
-        }
-        return true
-    }
-
-    @OptIn(FlowPreview::class)
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
         searchView.apply {
@@ -134,6 +129,13 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
                     }
             }
         }
+    }
+
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
+        }
+        return true
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

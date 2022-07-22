@@ -6,9 +6,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -27,7 +29,7 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>() {
+class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>(), MenuProvider {
     private val args: PlaylistSongsFragmentArgs by navArgs()
     private val playlistId by lazy { args.playlistId }
 
@@ -102,14 +104,15 @@ class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>()
                 adapter.setProgress(key, value)
             }
         }
+
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.playlist_songs_fragment, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToPlaylistSongsEditFragment(playlistId))
         }

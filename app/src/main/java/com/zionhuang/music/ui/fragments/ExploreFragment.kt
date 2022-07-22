@@ -6,7 +6,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +24,7 @@ import com.zionhuang.music.viewmodels.YouTubeBrowseViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ExploreFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>() {
+class ExploreFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>(), MenuProvider {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
 
@@ -37,15 +39,16 @@ class ExploreFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>() {
                 adapter.submitData(it)
             }
         }
+
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
         menu.findItem(R.id.action_search).actionView = null
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> findNavController().navigate(R.id.youtubeSuggestionFragment)
             R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
