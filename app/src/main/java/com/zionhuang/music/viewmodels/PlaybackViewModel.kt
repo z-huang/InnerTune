@@ -105,9 +105,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     fun playQueue(activity: Activity, queue: Queue) {
         mediaSessionConnection.binder?.playQueue(queue)
-        if (expandOnPlay) {
-            (activity as? MainActivity)?.expandBottomSheet()
-        }
+        (activity as? MainActivity)?.expandBottomSheet()
     }
 
     override fun onCleared() {

@@ -2,8 +2,6 @@ package com.zionhuang.music.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
-import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
@@ -59,22 +56,22 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         binding.motionLayout.addTransitionListener(this)
         mainActivity.setBottomSheetListener(this)
 
-        viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
-            if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED && !viewModel.expandOnPlay) {
-                mainActivity.showBottomSheet()
-            }
-        }
+//        viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
+//            if (playbackState.state != PlaybackStateCompat.STATE_NONE && playbackState.state != PlaybackStateCompat.STATE_STOPPED) {
+//
+//            }
+//        }
 
         binding.bottomBar.setOnClickListener {
-            mainActivity.expandBottomSheet()
+            mainActivity.bottomSheetBehavior.state = STATE_EXPANDED
         }
 
         binding.btnHide.setOnClickListener {
-            mainActivity.showBottomSheet(true)
+            mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
         }
 
         binding.btnQueue.setOnClickListener {
-            mainActivity.showBottomSheet(true)
+            mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
             findNavController().navigate(QueueFragmentDirections.openQueueFragment())
         }
 
@@ -108,7 +105,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-        binding.progressBar.isVisible = newState == BottomSheetBehavior.STATE_COLLAPSED
+        binding.progressBar.isVisible = newState == STATE_COLLAPSED
         if (newState == STATE_HIDDEN) {
             viewModel.transportControls?.stop()
         }

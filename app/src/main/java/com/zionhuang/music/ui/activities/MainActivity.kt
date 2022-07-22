@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -30,6 +29,7 @@ import com.zionhuang.innertube.utils.YouTubeLinkHandler
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.dip
+import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
@@ -37,23 +37,18 @@ import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
-import com.zionhuang.music.viewmodels.PlaybackViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
-
-    private val playbackViewModel by lazy { ViewModelProvider(this)[PlaybackViewModel::class.java] }
-
     private lateinit var navHostFragment: NavHostFragment
     private val currentFragment: Fragment?
         get() = navHostFragment.childFragmentManager.fragments.firstOrNull()
 
     private var bottomSheetCallback: BottomSheetListener? = null
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
-
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     val fab: FloatingActionButton get() = binding.fab
 
@@ -155,9 +150,14 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         bottomSheetBehavior.state = STATE_EXPANDED
     }
 
-    fun showBottomSheet(force: Boolean = false) {
-        if (bottomSheetBehavior.state == STATE_HIDDEN || force) {
-            bottomSheetBehavior.state = STATE_COLLAPSED
+    fun showBottomSheet() {
+        val expandOnPlay by preference(R.string.pref_expand_on_play, false)
+        if (expandOnPlay) {
+            bottomSheetBehavior.state = STATE_EXPANDED
+        } else {
+            if (bottomSheetBehavior.state != STATE_EXPANDED) {
+                bottomSheetBehavior.state = STATE_COLLAPSED
+            }
         }
     }
 

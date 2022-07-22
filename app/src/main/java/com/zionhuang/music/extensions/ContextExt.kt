@@ -41,6 +41,7 @@ val Context.sharedPreferences: SharedPreferences
     get() = PreferenceManager.getDefaultSharedPreferences(this)
 
 fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference(this, keyId, defaultValue)
+
 inline fun <reified T : Any> Context.serializablePreference(keyId: Int, defaultValue: T): Preference<T> = serializablePreference(this, keyId, defaultValue)
 
 fun <T : Any> Context.preferenceLiveData(@StringRes keyId: Int, defaultValue: T) = PreferenceLiveData(this, keyId, defaultValue)
