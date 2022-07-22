@@ -14,9 +14,7 @@ object YouTubeRepository {
     fun searchAll(query: String) = object : PagingSource<List<String>, BaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
-                checkCache("SA$query") {
-                    YouTube.searchAllType(query).toPage()
-                }
+                YouTube.searchAllType(query).toPage()
             } catch (e: Exception) {
                 LoadResult.Error(e)
             }
@@ -29,13 +27,9 @@ object YouTubeRepository {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 if (params.key == null) {
-                    checkCache("S$query${filter.value}") {
-                        YouTube.search(query, filter)
-                    }
+                    YouTube.search(query, filter)
                 } else {
-                    checkCache("C${params.key!![0]}") {
-                        YouTube.search(params.key!![0])
-                    }
+                    YouTube.search(params.key!![0])
                 }.toPage()
             } catch (e: Exception) {
                 LoadResult.Error(e)
@@ -49,13 +43,9 @@ object YouTubeRepository {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 if (params.key == null) {
-                    checkCache("${endpoint.browseId}${endpoint.params.orEmpty()}") {
-                        YouTube.browse(endpoint)
-                    }
+                    YouTube.browse(endpoint)
                 } else {
-                    checkCache(params.key!![0]) {
-                        YouTube.browse(params.key!!)
-                    }
+                    YouTube.browse(params.key!!)
                 }.toPage()
             } catch (e: Exception) {
                 LoadResult.Error(e)

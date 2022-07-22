@@ -65,8 +65,12 @@ object InfoCache {
             LRU_CACHE.size()
         }
 
-    suspend fun <T : Any> checkCache(id: String, loadFromNetwork: suspend () -> T): T =
-        loadFromCache(id) ?: withContext(IO) {
+    suspend fun <T : Any> checkCache(id: String, forceReload: Boolean = false, loadFromNetwork: suspend () -> T): T =
+        if (!forceReload) {
+            loadFromCache<T>(id)
+        } else {
+            null
+        } ?: withContext(IO) {
             loadFromNetwork().also {
                 putInfo(id, it)
             }

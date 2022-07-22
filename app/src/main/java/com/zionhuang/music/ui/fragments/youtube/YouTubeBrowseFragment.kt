@@ -5,7 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,13 +16,14 @@ import com.zionhuang.music.ui.adapters.YouTubeItemPagingAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.YouTubeBrowseViewModel
+import com.zionhuang.music.viewmodels.YouTubeBrowseViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>() {
     private val args: YouTubeBrowseFragmentArgs by navArgs()
 
-    private val viewModel by activityViewModels<YouTubeBrowseViewModel>()
+    private val viewModel by viewModels<YouTubeBrowseViewModel> { YouTubeBrowseViewModelFactory(requireActivity().application, args.endpoint) }
     override val adapter = YouTubeItemPagingAdapter(NavigationEndpointHandler(this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapte
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         lifecycleScope.launch {
-            viewModel.browse(args.endpoint).collectLatest {
+            viewModel.pagingData.collectLatest {
                 adapter.submitData(it)
             }
         }

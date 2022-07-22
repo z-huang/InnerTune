@@ -44,7 +44,7 @@
             app:destination="@id/youtubeSearchFragment"
             app:popUpTo="@id/exploreFragment">
             <argument
-                android:name="searchQuery"
+                android:name="query"
                 app:argType="string" />
         </action>
     </fragment>
@@ -52,7 +52,7 @@
         android:id="@+id/youtubeSearchFragment"
         android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSearchFragment">
         <argument
-            android:name="searchQuery"
+            android:name="query"
             app:argType="string" />
         <action
             android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
