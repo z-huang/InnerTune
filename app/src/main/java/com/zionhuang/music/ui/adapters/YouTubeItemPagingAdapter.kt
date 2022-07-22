@@ -6,6 +6,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.inflateWithBinding
@@ -22,6 +23,8 @@ class YouTubeItemPagingAdapter(
 ) : PagingDataAdapter<BaseItem, YouTubeViewHolder>(ItemComparator()) {
     var onFillQuery: (String) -> Unit = {}
     var onSearch: (String) -> Unit = {}
+
+    private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YouTubeViewHolder = when (viewType) {
         BASE_ITEM_HEADER -> YouTubeHeaderViewHolder(parent.inflateWithBinding(R.layout.item_youtube_header), navigationEndpointHandler)
@@ -54,7 +57,10 @@ class YouTubeItemPagingAdapter(
                 is YouTubeHeaderViewHolder -> holder.bind(item as Header)
                 is YouTubeArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
                 is YouTubeAlbumOrPlaylistHeaderViewHolder -> holder.bind(item as AlbumOrPlaylistHeader)
-                is YouTubeItemContainerViewHolder -> holder.bind(item)
+                is YouTubeItemContainerViewHolder -> {
+                    holder.bind(item)
+                    holder.binding.recyclerView.setRecycledViewPool(viewPool)
+                }
                 is YouTubeDescriptionViewHolder -> holder.bind(item as DescriptionSection)
                 is YouTubeSeparatorViewHolder -> {}
                 is YouTubeNavigationItemViewHolder -> holder.bind(item as NavigationItem)
