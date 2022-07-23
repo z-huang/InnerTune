@@ -19,22 +19,24 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="196dp"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
             <ImageView
                 android:id="@+id/thumbnail"
                 thumbnails="@{header.thumbnail}"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="12dp" />
+                android:layout_width="172dp"
+                android:layout_height="172dp"
+                android:layout_marginEnd="6dp"
+                android:scaleType="centerCrop"
+                tools:src="@tools:sample/avatars" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="12dp"
+                android:layout_marginStart="6dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -67,6 +69,44 @@
                     android:text="@{header.secondSubtitle}"
                     android:textStyle="bold"
                     tools:text="second subtitle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/add_to_library"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="6dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_library_add" />
+
+                    <ImageButton
+                        android:id="@+id/remove_from_library"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="6dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_library_add_check"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/download"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="6dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_file_download" />
+
+                    <ImageButton
+                        android:id="@+id/more"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="6dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_more_vert" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

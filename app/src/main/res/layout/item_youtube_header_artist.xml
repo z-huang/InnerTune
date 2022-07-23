@@ -12,25 +12,32 @@
         <import type="android.view.View" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/banner"
             roundedCorner="@{false}"
             thumbnails="@{header.bannerThumbnail}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_constraintDimensionRatio="4:1" />
 
         <TextView
+            android:id="@+id/title"
             style="@style/TextAppearance.Material3.DisplayMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="12dp"
             android:text="@{header.name}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/banner"
             tools:text="Artist name" />
 
         <LinearLayout
@@ -40,7 +47,10 @@
             android:paddingStart="12dp"
             android:paddingTop="6dp"
             android:paddingEnd="12dp"
-            android:paddingBottom="6dp">
+            android:paddingBottom="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title">
 
             <Button
                 android:id="@+id/btn_shuffle"
@@ -66,5 +76,5 @@
                 app:icon="@drawable/ic_radio"
                 app:iconGravity="start" />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
