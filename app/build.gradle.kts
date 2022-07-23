@@ -132,8 +132,8 @@ dependencies {
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
     // ExoPlayer
-    implementation("com.google.android.exoplayer:exoplayer:2.17.1")
-    implementation("com.google.android.exoplayer:extension-mediasession:2.17.1")
+    implementation("com.google.android.exoplayer:exoplayer:2.18.0")
+    implementation("com.google.android.exoplayer:extension-mediasession:2.18.0")
     // Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     testImplementation("androidx.paging:paging-common-ktx:3.1.1")
