@@ -105,7 +105,6 @@ kapt {
 }
 
 dependencies {
-    implementation(fileTree("dir" to "libs", "include" to "*.jar"))
     // Kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
