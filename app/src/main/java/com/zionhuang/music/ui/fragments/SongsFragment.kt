@@ -28,6 +28,7 @@ import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -110,6 +111,7 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    @OptIn(FlowPreview::class)
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
