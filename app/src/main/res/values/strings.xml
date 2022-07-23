@@ -102,12 +102,10 @@
 
     <!-- Noun -->
     <plurals name="songs_count">
-        <item quantity="zero">%d song</item>
         <item quantity="one">%d song</item>
         <item quantity="other">%d songs</item>
     </plurals>
     <plurals name="subscribers">
-        <item quantity="zero">%d subscriber</item>
         <item quantity="one">%d subscriber</item>
         <item quantity="other">%d subscribers</item>
     </plurals>
