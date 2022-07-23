@@ -98,6 +98,12 @@ materialThemeBuilder {
     }
 }
 
+kapt {
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+}
+
 dependencies {
     implementation(fileTree("dir" to "libs", "include" to "*.jar"))
     // Kotlin

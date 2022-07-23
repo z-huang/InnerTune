@@ -11,13 +11,17 @@ import com.zionhuang.music.db.daos.PlaylistDao
 import com.zionhuang.music.db.daos.SongDao
 import com.zionhuang.music.db.entities.*
 
-@Database(entities = [
-    SongEntity::class,
-    ArtistEntity::class,
-    PlaylistEntity::class,
-    PlaylistSongEntity::class,
-    DownloadEntity::class
-], version = 1, exportSchema = false)
+@Database(
+    entities = [
+        SongEntity::class,
+        ArtistEntity::class,
+        PlaylistEntity::class,
+        PlaylistSongEntity::class,
+        DownloadEntity::class
+    ],
+    version = 1,
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 abstract class MusicDatabase : RoomDatabase() {
     abstract val songDao: SongDao
