@@ -1,5 +1,6 @@
 <resources>
     <!-- Titolo -->
+    <string name="title_home">Home</string>
     <string name="title_songs">Brani</string>
     <string name="title_artists">Artisti</string>
     <string name="title_channels">Canali</string>

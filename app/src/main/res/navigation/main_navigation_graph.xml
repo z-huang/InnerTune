@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/exploreFragment">
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.zionhuang.music.ui.fragments.HomeFragment"
+        android:label="@string/title_home" />
     <fragment
         android:id="@+id/songsFragment"
         android:name="com.zionhuang.music.ui.fragments.SongsFragment"
@@ -33,16 +37,12 @@
         </action>
     </fragment>
     <fragment
-        android:id="@+id/exploreFragment"
-        android:name="com.zionhuang.music.ui.fragments.ExploreFragment"
-        android:label="@string/title_explore" />
-    <fragment
         android:id="@+id/youtubeSuggestionFragment"
         android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragment">
         <action
             android:id="@+id/action_suggestionFragment_to_searchResultFragment"
             app:destination="@id/youtubeSearchFragment"
-            app:popUpTo="@id/exploreFragment">
+            app:popUpTo="@id/homeFragment">
             <argument
                 android:name="query"
                 app:argType="string" />

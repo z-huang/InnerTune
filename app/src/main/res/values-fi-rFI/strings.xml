@@ -1,5 +1,6 @@
 <resources>
     <!-- Title -->
+    <string name="title_home">Home</string>
     <string name="title_songs">Kappaleet</string>
     <string name="title_artists">Artistit</string>
     <string name="title_channels">Kanavat</string>

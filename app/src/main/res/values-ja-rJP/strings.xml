@@ -1,5 +1,6 @@
 <resources>
     <!-- Title -->
+    <string name="title_home">Home</string>
     <string name="title_songs">曲</string>
     <string name="title_artists">アーティスト</string>
     <string name="title_channels">チャンネル</string>

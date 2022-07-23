@@ -117,7 +117,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
 
     override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
         val topLevelDestinations = setOf(
-            R.id.exploreFragment,
+            R.id.homeFragment,
             R.id.songsFragment,
             R.id.artistsFragment,
             R.id.playlistsFragment

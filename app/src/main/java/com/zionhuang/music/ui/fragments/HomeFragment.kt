@@ -24,7 +24,7 @@ import com.zionhuang.music.viewmodels.YouTubeBrowseViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ExploreFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>(), MenuProvider {
+class HomeFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>(), MenuProvider {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
 

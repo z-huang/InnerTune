@@ -19,7 +19,7 @@ abstract class NavigationFragment<T : ViewBinding> : BindingFragment<T>() {
         super.onViewCreated(view, savedInstanceState)
         requireAppCompatActivity().setSupportActionBar(getToolbar())
         val appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.exploreFragment,
+            R.id.homeFragment,
             R.id.songsFragment,
             R.id.artistsFragment,
             R.id.playlistsFragment
