@@ -21,10 +21,10 @@ import com.zionhuang.music.extensions.resolveColor
 import com.zionhuang.music.ui.adapters.SearchSuggestionAdapter
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.viewmodels.SuggestionViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlin.time.DurationUnit
-import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
 class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
@@ -65,7 +65,6 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         }
     }
 
-    @OptIn(ExperimentalTime::class)
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.search_view, menu)
@@ -73,7 +72,7 @@ class YouTubeSuggestionFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         setupSearchView()
     }
 
-    @OptIn(ExperimentalTime::class)
+    @OptIn(FlowPreview::class)
     private fun setupSearchView() {
         val searchManager: SearchManager = requireContext().getSystemService()!!
         searchView.apply {

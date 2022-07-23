@@ -35,11 +35,11 @@ import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlin.time.DurationUnit
-import kotlin.time.ExperimentalTime
 import kotlin.time.toDuration
 
 class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
@@ -131,7 +131,7 @@ class SongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         return true
     }
 
-    @OptIn(ExperimentalTime::class)
+    @OptIn(FlowPreview::class)
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
