@@ -35,8 +35,8 @@ data class MusicCarouselShelfRenderer(
         val musicResponsiveListItemRenderer: MusicResponsiveListItemRenderer?,
         val musicNavigationButtonRenderer: MusicNavigationButtonRenderer?, // navigation button in explore tab
     ) {
-        fun toBaseItem(): BaseItem = musicTwoRowItemRenderer?.toItem()
+        fun toBaseItem(): BaseItem? = musicTwoRowItemRenderer?.toItem()
             ?: musicResponsiveListItemRenderer?.toItem()
-            ?: musicNavigationButtonRenderer?.toItem()!!
+            ?: musicNavigationButtonRenderer?.toItem()
     }
 }

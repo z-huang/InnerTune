@@ -59,7 +59,7 @@ data class SectionListRenderer(
                 ),
                 CarouselSection(
                     id = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
-                    items = musicCarouselShelfRenderer.contents.map { it.toBaseItem() },
+                    items = musicCarouselShelfRenderer.contents.mapNotNull { it.toBaseItem() },
                     numItemsPerColumn = musicCarouselShelfRenderer.numItemsPerColumn ?: 1,
                     itemViewType = musicCarouselShelfRenderer.getViewType()
                 )
