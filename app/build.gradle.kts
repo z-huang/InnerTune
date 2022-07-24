@@ -51,7 +51,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
     }
     configurations.all {
         resolutionStrategy {
@@ -105,7 +105,6 @@ kapt {
 }
 
 dependencies {
-    implementation(fileTree("dir" to "libs", "include" to "*.jar"))
     // Kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
