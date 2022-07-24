@@ -16,6 +16,7 @@ object YouTubeRepository {
             try {
                 YouTube.searchAllType(query).toPage()
             } catch (e: Exception) {
+                e.printStackTrace()
                 LoadResult.Error(e)
             }
         }
@@ -32,6 +33,7 @@ object YouTubeRepository {
                     YouTube.search(params.key!![0])
                 }.toPage()
             } catch (e: Exception) {
+                e.printStackTrace()
                 LoadResult.Error(e)
             }
         }
@@ -48,6 +50,7 @@ object YouTubeRepository {
                     YouTube.browse(params.key!!)
                 }.toPage()
             } catch (e: Exception) {
+                e.printStackTrace()
                 LoadResult.Error(e)
             }
         }
