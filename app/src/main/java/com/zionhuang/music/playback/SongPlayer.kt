@@ -61,7 +61,7 @@ class SongPlayer(
     private val context: Context,
     private val scope: CoroutineScope,
     notificationListener: PlayerNotificationManager.NotificationListener,
-) : Player.Listener {
+) : Listener {
     private val localRepository: LocalRepository = SongRepository
 
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
@@ -110,7 +110,7 @@ class SongPlayer(
             addListener(this@SongPlayer)
             val audioAttributes = AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.CONTENT_TYPE_MUSIC)
+                .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
                 .build()
             setAudioAttributes(audioAttributes, true)
             setHandleAudioBecomingNoisy(true)
