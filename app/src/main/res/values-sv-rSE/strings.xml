@@ -1,5 +1,6 @@
 <resources>
     <!-- Title -->
+    <string name="title_home">Home</string>
     <string name="title_songs">Låtar</string>
     <string name="title_artists">Artister</string>
     <string name="title_channels">Kanaler</string>
@@ -20,6 +21,8 @@
     <string name="pref_content">Innehåll</string>
     <string name="pref_content_language_title">Standard innehållsspråk</string>
     <string name="pref_default_content_country_title">Standard innehållsland</string>
+    <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">Automatisk nedladdning</string>
     <string name="pref_auto_download_summary">Ladda ner låt när det läggs till i biblioteket</string>
     <string name="pref_auto_add_song_title">Lägg till låt i biblioteket automatiskt</string>
@@ -57,17 +60,21 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Sök</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">Lägg till i biblioteket</string>
-    <string name="search_item_menu_download">Ladda ned</string>
     <string name="menu_edit">Redigera</string>
+    <string name="menu_start_radio">Start radio</string>
     <string name="menu_song_play_next">Spela upp nästa</string>
     <string name="menu_song_add_to_queue">Lägg till i kön</string>
-    <string name="menu_song_add_to_playlist">Lägg till i spellista</string>
+    <string name="menu_add_to_library">Add to library</string>
     <string name="menu_song_download">Ladda ned</string>
     <string name="menu_song_remove_download">Ta bort nedladdning</string>
+    <string name="menu_song_add_to_playlist">Lägg till i spellista</string>
+    <string name="menu_view_artist">View artist</string>
+    <string name="menu_view_album">View album</string>
     <string name="menu_song_delete">Ta bort</string>
+    <string name="menu_share">Share</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Redigera låten</string>
@@ -98,12 +105,10 @@
 
     <!-- Noun -->
     <plurals name="songs_count">
-        <item quantity="zero">%d låtar</item>
         <item quantity="one">%d låt</item>
         <item quantity="other">%d låtar</item>
     </plurals>
     <plurals name="subscribers">
-        <item quantity="zero">%d prenumeranter</item>
         <item quantity="one">%d prenumeranter</item>
         <item quantity="other">%d prenumeranter</item>
     </plurals>
@@ -114,7 +119,9 @@
 
     <!-- Button -->
     <string name="btn_retry">Försök igen</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">Spela upp alla</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Blanda</string>
 
     <!-- Sort Menu -->
@@ -132,6 +139,7 @@
         <item quantity="other">%d valda</item>
     </plurals>
     <string name="snack_bar_undo">Ångra</string>
+    <string name="snack_bar_url_error">Can\'t identify this url.</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Lägg till i biblioteket</string>
@@ -143,6 +151,8 @@
     <string name="search_filter_albums">Album</string>
     <string name="search_filter_artists">Artister</string>
     <string name="search_filter_playlists">Spellistor</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">Kanaler</string>
 
     <string name="system_default">Systemets standardinställning</string>
