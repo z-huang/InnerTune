@@ -128,7 +128,8 @@
         <item quantity="other">%d låtar har tagits bort.</item>
     </plurals>
     <plurals name="n_selected">
-        <item quantity="other">%d vald</item>
+        <item quantity="one">%d vald</item>
+        <item quantity="other">%d valda</item>
     </plurals>
     <string name="snack_bar_undo">Ångra</string>
 
