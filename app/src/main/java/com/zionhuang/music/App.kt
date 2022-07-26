@@ -26,6 +26,13 @@ class App : Application() {
             gl = sharedPreferences.getString(getString(R.string.pref_content_country), systemDefault).takeIf { it != systemDefault } ?: Locale.getDefault().country,
             hl = sharedPreferences.getString(getString(R.string.pref_content_language), systemDefault).takeIf { it != systemDefault } ?: Locale.getDefault().toLanguageTag()
         )
+        if (sharedPreferences.getBoolean(getString(R.string.pref_proxy_enabled), false)) {
+            try {
+                YouTube.setProxyUrl(sharedPreferences.getString(getString(R.string.pref_proxy_url), null) ?: "")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
         MediaSessionConnection.connect(this)
     }
 

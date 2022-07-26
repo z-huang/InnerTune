@@ -21,6 +21,8 @@
     <string name="pref_content">內容</string>
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
+    <string name="pref_enable_proxy_title">啟用 Proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">自動下載</string>
     <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>

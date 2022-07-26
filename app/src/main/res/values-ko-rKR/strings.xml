@@ -21,6 +21,8 @@
     <string name="pref_content">콘텐츠</string>
     <string name="pref_content_language_title">기본 콘텐츠 언어</string>
     <string name="pref_default_content_country_title">기본 콘텐츠 국가</string>
+    <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">자동 다운로드</string>
     <string name="pref_auto_download_summary">라이브러리에 추가할 때 노래 다운로드</string>
     <string name="pref_auto_add_song_title">라이브러리에 노래 자동 추가</string>

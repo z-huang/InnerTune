@@ -21,6 +21,8 @@
     <string name="pref_content">Contenuti</string>
     <string name="pref_content_language_title">Lingua predefinita dei contenuti</string>
     <string name="pref_default_content_country_title">Paese predefinito dei contenuti</string>
+    <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">Scaricamento automatico</string>
     <string name="pref_auto_download_summary">Scarica la canzone quando viene aggiunta alla libreria</string>
     <string name="pref_auto_add_song_title">Aggiunta automatica nella libreria</string>

@@ -43,6 +43,15 @@
             android:title="@string/pref_default_content_country_title" />
         <SwitchPreferenceCompat
             android:defaultValue="false"
+            android:key="@string/pref_proxy_enabled"
+            app:title="@string/pref_enable_proxy_title" />
+        <EditTextPreference
+            android:defaultValue="host:port"
+            android:key="@string/pref_proxy_url"
+            app:title="@string/pref_proxy_url_title"
+            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
             app:icon="@drawable/ic_save_alt"
             app:key="@string/pref_auto_download"
             app:summary="@string/pref_auto_download_summary"

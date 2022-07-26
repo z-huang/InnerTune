@@ -14,6 +14,8 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import java.net.InetSocketAddress.createUnresolved
+import java.net.Proxy
 import java.util.*
 
 /**
@@ -27,7 +29,7 @@ class InnerTube {
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    val httpClient = HttpClient(CIO) {
+    private fun createClient(proxyUrl: String? = null) = HttpClient(CIO) {
         expectSuccess = true
 
         install(ContentNegotiation) {
@@ -44,11 +46,23 @@ class InnerTube {
             deflate(0.8F)
         }
 
-        //install(Logging)
+        if (proxyUrl != null) {
+            val (host, port) = proxyUrl.split(":")
+            engine {
+                proxy = Proxy(Proxy.Type.HTTP, createUnresolved(host, port.toInt()))
+            }
+        }
 
         defaultRequest {
             url("https://music.youtube.com/youtubei/v1/")
         }
+    }
+
+    var httpClient = createClient()
+
+    fun setProxyUrl(url: String) {
+        httpClient.close()
+        httpClient = createClient(proxyUrl = url)
     }
 
     private fun HttpRequestBuilder.configYTClient(client: YouTubeClient) {

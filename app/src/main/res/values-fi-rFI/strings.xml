@@ -21,6 +21,8 @@
     <string name="pref_content">Sisältö</string>
     <string name="pref_content_language_title">Sisällön oletuskieli</string>
     <string name="pref_default_content_country_title">Sisällön oletusmaa</string>
+    <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">Automaattinen lataus</string>
     <string name="pref_auto_download_summary">Lataa kirjastoon lisätyt kappaleet automaattisesti</string>
     <string name="pref_auto_add_song_title">Automaattinen vienti kirjastoon</string>

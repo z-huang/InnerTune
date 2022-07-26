@@ -15,6 +15,8 @@
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
+    <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
+    <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>

@@ -8,15 +8,13 @@ import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.APP_URL
 import com.zionhuang.music.constants.Constants.NEWPIPE_EXTRACTOR_URL
+import com.zionhuang.music.extensions.preferenceLiveData
 import com.zionhuang.music.update.UpdateInfo.*
 import com.zionhuang.music.viewmodels.UpdateViewModel
 import com.zionhuang.music.youtube.InfoCache
@@ -66,6 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             InfoCache.clearCache()
             true
         }
+
         findPreference<Preference>(getString(R.string.pref_app_version))?.setOnPreferenceClickListener {
             startActivity(Intent(ACTION_VIEW, APP_URL.toUri()))
             true
@@ -97,6 +96,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val proxyUrlPreference = findPreference<EditTextPreference>(getString(R.string.pref_proxy_url))!!
+        requireContext().preferenceLiveData(R.string.pref_proxy_enabled, false).observe(viewLifecycleOwner) {
+            proxyUrlPreference.isEnabled = it
+        }
         viewModel.updateInfo.observe(viewLifecycleOwner) { info ->
             checkForUpdatePreference.isVisible = info !is UpdateAvailable
             updatePreference.isVisible = info is UpdateAvailable
