@@ -1,0 +1,157 @@
+<resources>
+    <!-- Title -->
+    <string name="title_songs">Låtar</string>
+    <string name="title_artists">Artister</string>
+    <string name="title_channels">Kanaler</string>
+    <string name="title_playlists">Spellistor</string>
+    <string name="title_explore">Utforska</string>
+    <string name="title_settings">Inställningar</string>
+    <string name="title_now_playing">Nu spelas</string>
+    <string name="title_update">Uppdatera</string>
+
+    <!-- Preference Title -->
+    <string name="pref_appearance">Utseende</string>
+    <string name="pref_follow_system_accent_title">Följ systemtema</string>
+    <string name="pref_theme_color_title">Tema</string>
+    <string name="pref_dark_theme_title">Mörkt tema</string>
+    <string name="dark_theme_on">På</string>
+    <string name="dark_theme_off">Av</string>
+    <string name="dark_theme_follow_system">Följ systemet</string>
+    <string name="pref_content">Innehåll</string>
+    <string name="pref_content_language_title">Standard innehållsspråk</string>
+    <string name="pref_default_content_country_title">Standard innehållsland</string>
+    <string name="pref_auto_download_title">Automatisk nedladdning</string>
+    <string name="pref_auto_download_summary">Ladda ner låt när det läggs till i biblioteket</string>
+    <string name="pref_auto_add_song_title">Lägg till låt i biblioteket automatiskt</string>
+    <string name="pref_auto_add_song_summary">Lägg till låten i biblioteket efter det spelats klart</string>
+    <string name="pref_expand_on_play_title">Utöka bottenspelaren vid låtspel</string>
+    <string name="pref_about">Om</string>
+    <string name="pref_app_version_title">App version</string>
+    <string name="pref_newpipe_version_title">NewPipe Extractor version</string>
+    <string name="pref_check_for_updates_title">Leta efter uppdateringar</string>
+    <string name="pref_checking_for_updates">Letar…</string>
+    <string name="pref_up_to_date">Du har de senaste uppdateringarna.</string>
+    <string name="pref_cant_check_for_updates">Något gick fel.</string>
+    <string name="pref_update_title">Uppdatering tillgänglig</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Röd</string>
+    <string name="color_pink">Rosa</string>
+    <string name="color_purple">Lila</string>
+    <string name="color_deep_purple">Djuplila</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_blue">Blå</string>
+    <string name="color_light_blue">Ljusblå</string>
+    <string name="color_cyan">Turkos</string>
+    <string name="color_teal">Blågrön</string>
+    <string name="color_green">Grön</string>
+    <string name="color_light_green">Ljusgrön</string>
+    <string name="color_lime">Lime</string>
+    <string name="color_yellow">Gul</string>
+    <string name="color_amber">Bärnsten</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_deep_orange">Djuporange</string>
+    <string name="color_brown">Brun</string>
+    <string name="color_blue_grey">Blågrå</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">Sök</string>
+
+    <!-- Popup Menu -->
+    <string name="search_item_menu_add">Lägg till i biblioteket</string>
+    <string name="search_item_menu_download">Ladda ned</string>
+    <string name="menu_edit">Redigera</string>
+    <string name="menu_song_play_next">Spela upp nästa</string>
+    <string name="menu_song_add_to_queue">Lägg till i kön</string>
+    <string name="menu_song_add_to_playlist">Lägg till i spellista</string>
+    <string name="menu_song_download">Ladda ned</string>
+    <string name="menu_song_remove_download">Ta bort nedladdning</string>
+    <string name="menu_song_delete">Ta bort</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title_edit_song">Redigera låten</string>
+    <string name="song_title">Låt titel</string>
+    <string name="song_artist">Låt artist</string>
+    <string name="error_song_title_empty">Låt titel kan inte vara tom.</string>
+    <string name="error_song_artist_empty">Låt artist kan inte vara tom.</string>
+    <string name="dialog_button_save">Spara</string>
+
+    <string name="dialog_title_create_playlist">Skapa spellista</string>
+    <string name="text_view_hint_playlist_name">Namn på spellista</string>
+    <string name="error_playlist_name_empty">Namnet på spellistan kan inte vara tom.</string>
+
+    <string name="dialog_title_edit_artist">Redigera artist</string>
+    <string name="text_view_hint_artist_name">Artist namn</string>
+    <string name="error_artist_name_empty">Artist namn kan inte vara tom.</string>
+
+    <string name="dialog_title_duplicate_artist">Duplicerat artist</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s finns redan. Slå samman två artister?</string>
+
+    <string name="dialog_title_choose_playlist">Välj spellista</string>
+
+    <string name="dialog_title_edit_playlist">Redigera spellista</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Music Spelare</string>
+    <string name="channel_name_download">Nedladdning</string>
+
+    <!-- Noun -->
+    <plurals name="songs_count">
+        <item quantity="zero">%d låtar</item>
+        <item quantity="one">%d låt</item>
+        <item quantity="other">%d låtar</item>
+    </plurals>
+    <plurals name="subscribers">
+        <item quantity="zero">%d prenumeranter</item>
+        <item quantity="one">%d prenumeranter</item>
+        <item quantity="other">%d prenumeranter</item>
+    </plurals>
+    <plurals name="videos">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videor</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Försök igen</string>
+    <string name="btn_play_all">Spela upp alla</string>
+    <string name="btn_shuffle">Blanda</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_name">Namn</string>
+    <string name="sort_by_artist">Artist</string>
+    <string name="sort_by_create_date">Datum tillagd</string>
+
+    <!-- Snackbar -->
+    <plurals name="snack_bar_delete_song">
+        <item quantity="one">%d låt har tagits bort.</item>
+        <item quantity="other">%d låtar har tagits bort.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="one">%d vald</item>
+        <item quantity="other">%d valda</item>
+    </plurals>
+    <string name="snack_bar_undo">Ångra</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">Lägg till i biblioteket</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Alla</string>
+    <string name="search_filter_songs">Låtar</string>
+    <string name="search_filter_videos">Videor</string>
+    <string name="search_filter_albums">Album</string>
+    <string name="search_filter_artists">Artister</string>
+    <string name="search_filter_playlists">Spellistor</string>
+    <string name="search_filter_channels">Kanaler</string>
+
+    <string name="system_default">Systemets standardinställning</string>
+    <string name="explore_page_content">Sök för att hitta låtar</string>
+
+    <!-- Update Fragment -->
+    <string name="whatsnew">Vad är nytt</string>
+    <string name="btn_update">Uppdatera</string>
+    <string name="update_status_preparing">Förbereder…</string>
+    <string name="update_status_verifying">Verifierar…</string>
+    <string name="update_status_downloading">Laddar ned… (%1$s/%2$s)</string>
+</resources>
