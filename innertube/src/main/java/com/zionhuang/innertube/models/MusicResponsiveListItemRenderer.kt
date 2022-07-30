@@ -9,6 +9,11 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
+/**
+ * Typical list item
+ * Used in [MusicCarouselShelfRenderer], [MusicShelfRenderer]
+ * Appear in quick picks, search results, table items, etc.
+ */
 @Serializable
 data class MusicResponsiveListItemRenderer(
     val fixedColumns: List<FlexColumn>?,
@@ -28,9 +33,7 @@ data class MusicResponsiveListItemRenderer(
         }
 
     private val isSong: Boolean
-        get() = navigationEndpoint == null && (index != null || thumbnail?.isSquare == true)
-    private val isVideo: Boolean
-        get() = navigationEndpoint == null && (index == null && thumbnail?.isSquare == false)
+        get() = navigationEndpoint == null
     private val isPlaylist: Boolean
         get() = navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_PLAYLIST
     private val isAlbum: Boolean
@@ -40,7 +43,6 @@ data class MusicResponsiveListItemRenderer(
 
     fun toItem(): Item? = when {
         isSong -> SongItem.from(this)
-        isVideo -> VideoItem.from(this)
         isPlaylist -> PlaylistItem.from(this)
         isAlbum -> AlbumItem.from(this)
         isArtist -> ArtistItem.from(this)

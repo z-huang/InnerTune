@@ -30,7 +30,7 @@ data class SongItem(
     override val subtitle: String,
     val index: String? = null,
     val artists: List<Run>,
-    val album: Link<BrowseEndpoint>?,
+    val album: Link<BrowseEndpoint>? = null,
     val albumYear: Int? = null,
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
@@ -39,6 +39,15 @@ data class SongItem(
     override val shareLink: String = "https://music.youtube.com/watch?v=$id"
 
     companion object : FromContent<SongItem> {
+        /**
+         * Subtitle configurations:
+         * Video • artist • view count • length
+         * artist • view count • length
+         * artist • view count
+         * artist • (empty)
+         *
+         * Note that artist's [Run] may have [navigationEndpoint] null
+         */
         override fun from(item: MusicResponsiveListItemRenderer): SongItem? {
             if (item.menu == null) return null
             val menu = item.menu.toItemMenu()
@@ -50,7 +59,20 @@ data class SongItem(
                 subtitle = item.getSubtitle(),
                 index = item.index?.toString(),
                 artists = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
-                    .filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST },
+                    .filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
+                    .ifEmpty {
+                        listOfNotNull(
+                            if (item.fixedColumns != null) {
+                                // Table style
+                                item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.getOrNull(0)
+                            } else {
+                                // From search
+                                item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.let {
+                                    it.getOrNull(it.lastIndex - 4) ?: it[it.lastIndex - 2]
+                                }
+                            }
+                        )
+                    },
                 album = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
                     .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
                     ?.toLink(),
@@ -68,70 +90,6 @@ data class SongItem(
                 title = item.title.toString(),
                 subtitle = item.subtitle.toString(),
                 artists = emptyList(),
-                album = null,
-                thumbnails = item.thumbnailRenderer.getThumbnails(),
-                menu = menu,
-                navigationEndpoint = item.navigationEndpoint
-            )
-        }
-    }
-}
-
-data class VideoItem(
-    override val id: String,
-    override val title: String,
-    override val subtitle: String,
-    val artist: Run,
-    override val thumbnails: List<Thumbnail>,
-    override val menu: ItemMenu,
-    override val navigationEndpoint: NavigationEndpoint,
-) : Item() {
-    override val shareLink: String = "https://music.youtube.com/watch?v=$id"
-
-    companion object : FromContent<VideoItem> {
-        /**
-         * Subtitle configurations:
-         * Video • artist • view count • length
-         * artist • view count • length
-         * artist • view count
-         * artist • (empty)
-         *
-         * Note that artist [Run] may have [navigationEndpoint] null
-         */
-        override fun from(item: MusicResponsiveListItemRenderer): VideoItem? {
-            if (item.menu == null) return null
-            val menu = item.menu.toItemMenu()
-            return VideoItem(
-                id = item.playlistItemData?.videoId
-                    ?: item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint?.watchEndpoint?.videoId
-                    ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
-                title = item.getTitle(),
-                subtitle = item.getSubtitle(),
-                artist = item.flexColumns.drop(1).flatMap { it.musicResponsiveListItemFlexColumnRenderer.text.runs }
-                    .find { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
-                    ?: if (item.fixedColumns != null) {
-                        // Table style
-                        item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs[0]
-                    } else {
-                        // From search
-                        item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.let {
-                            it.getOrNull(it.lastIndex - 4) ?: it[it.lastIndex - 2]
-                        }
-                    },
-                thumbnails = item.thumbnail!!.getThumbnails(),
-                menu = menu,
-                navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
-            )
-        }
-
-        override fun from(item: MusicTwoRowItemRenderer): VideoItem {
-            val menu = item.menu.toItemMenu()
-            return VideoItem(
-                id = item.navigationEndpoint.watchEndpoint?.videoId
-                    ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
-                title = item.title.toString(),
-                subtitle = item.subtitle.toString(),
-                artist = item.subtitle.runs[0],
                 thumbnails = item.thumbnailRenderer.getThumbnails(),
                 menu = menu,
                 navigationEndpoint = item.navigationEndpoint

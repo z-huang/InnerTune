@@ -24,17 +24,16 @@ data class SearchSuggestionsSectionRenderer(
                             text = musicTwoColumnItemRenderer.subtitle.runs.last().text,
                             navigationEndpoint = menu.artistEndpoint
                         )),
-                        album = null,
                         thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
                         menu = menu,
                         navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint
                     )
                 }
-                ITEM_VIDEO -> VideoItem(
+                ITEM_VIDEO -> SongItem(
                     id = musicTwoColumnItemRenderer.navigationEndpoint.watchEndpoint?.videoId!!,
                     title = musicTwoColumnItemRenderer.title.toString(),
                     subtitle = musicTwoColumnItemRenderer.subtitle.toString(),
-                    artist = musicTwoColumnItemRenderer.subtitle.runs[0],
+                    artists = listOf(musicTwoColumnItemRenderer.subtitle.runs[0]),
                     thumbnails = musicTwoColumnItemRenderer.thumbnail.getThumbnails(),
                     menu = musicTwoColumnItemRenderer.menu.toItemMenu(),
                     navigationEndpoint = musicTwoColumnItemRenderer.navigationEndpoint

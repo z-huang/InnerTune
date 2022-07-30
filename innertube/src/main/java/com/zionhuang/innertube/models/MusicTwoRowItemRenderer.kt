@@ -5,6 +5,11 @@ import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSuppor
 import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_PLAYLIST
 import kotlinx.serialization.Serializable
 
+/**
+ * Two row: a big thumbnail, a title, and a subtitle
+ * Used in [GridRenderer] and [MusicCarouselShelfRenderer]
+ * Item type: video, album, playlist, artist
+ */
 @Serializable
 data class MusicTwoRowItemRenderer(
     val title: Runs,
@@ -15,9 +20,7 @@ data class MusicTwoRowItemRenderer(
     // val thumbnailOverlay: ThumbnailOverlay, (for playing the album directly)
 ) {
     private val isSong: Boolean
-        get() = navigationEndpoint.endpoint is WatchEndpoint && thumbnailRenderer.isSquare
-    private val isVideo: Boolean
-        get() = navigationEndpoint.endpoint is WatchEndpoint && !thumbnailRenderer.isSquare
+        get() = navigationEndpoint.endpoint is WatchEndpoint
     private val isPlaylist: Boolean
         get() = navigationEndpoint.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_PLAYLIST
     private val isAlbum: Boolean
@@ -27,7 +30,6 @@ data class MusicTwoRowItemRenderer(
 
     fun toItem(): Item = when {
         isSong -> SongItem.from(this)
-        isVideo -> VideoItem.from(this)
         isPlaylist -> PlaylistItem.from(this)
         isAlbum -> AlbumItem.from(this)
         isArtist -> ArtistItem.from(this)

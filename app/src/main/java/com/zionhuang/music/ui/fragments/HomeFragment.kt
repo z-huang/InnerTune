@@ -28,7 +28,12 @@ class HomeFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>(), Men
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
 
-    private val viewModel by viewModels<YouTubeBrowseViewModel> { YouTubeBrowseViewModelFactory(requireActivity().application, BrowseEndpoint(browseId = EXPLORE_BROWSE_ID)) }
+    private val viewModel by viewModels<YouTubeBrowseViewModel> {
+        YouTubeBrowseViewModelFactory(
+            requireActivity().application,
+            BrowseEndpoint(browseId = EXPLORE_BROWSE_ID)
+        )
+    }
     override val adapter = YouTubeItemPagingAdapter(NavigationEndpointHandler(this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -136,14 +136,9 @@ class SongPlayer(
         scope.launch {
             val items = when (item) {
                 is SongItem -> listOf(item.toMediaItem())
-                is VideoItem -> listOf(item.toMediaItem())
                 is AlbumItem, is PlaylistItem -> withContext(IO) {
                     YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).mapNotNull {
-                        when (it) {
-                            is SongItem -> it.toMediaItem()
-                            is VideoItem -> it.toMediaItem()
-                            else -> null
-                        }
+                        (it as? SongItem)?.toMediaItem()
                     }
                 }
                 is ArtistItem -> return@launch

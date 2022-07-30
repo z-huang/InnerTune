@@ -20,7 +20,7 @@ class YouTubeQueue(
         val nextResult = withContext(IO) { YouTube.next(endpoint, continuation) }
         continuation = nextResult.continuation
         return Queue.Status(
-            items = nextResult.items.mapNotNull { it.toMediaItem() },
+            items = nextResult.items.map { it.toMediaItem() },
             index = nextResult.currentIndex ?: 0
         )
     }
@@ -30,6 +30,6 @@ class YouTubeQueue(
     override suspend fun nextPage(): List<MediaItem> {
         val nextResult = withContext(IO) { YouTube.next(endpoint, continuation) }
         continuation = nextResult.continuation
-        return nextResult.items.mapNotNull { it.toMediaItem() }
+        return nextResult.items.map { it.toMediaItem() }
     }
 }
