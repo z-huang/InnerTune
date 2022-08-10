@@ -55,7 +55,7 @@
     <string name="color_amber">Ambar</string>
     <string name="color_orange">Naranjo</string>
     <string name="color_deep_orange">Naranjo oscuro</string>
-    <string name="color_brown">Cafe</string>
+    <string name="color_brown">Café</string>
     <string name="color_blue_grey">Gris azulado</string>
 
     <!-- Nav Menu -->
@@ -77,7 +77,7 @@
     <string name="menu_share">Share</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_edit_song">Editar cancion</string>
+    <string name="dialog_title_edit_song">Editar canción</string>
     <string name="song_title">Título de la canción</string>
     <string name="song_artist">Artista de la canción</string>
     <string name="error_song_title_empty">El título de la canción no puede estar vacío.</string>
@@ -105,7 +105,7 @@
 
     <!-- Noun -->
     <plurals name="songs_count">
-        <item quantity="one">%d cancion</item>
+        <item quantity="one">%d canción</item>
         <item quantity="other">%d canciones</item>
     </plurals>
     <plurals name="subscribers">
