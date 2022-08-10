@@ -4,5 +4,5 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/tab_indicator_text" />
+        android:background="?colorSurfaceVariant" />
 </layout>
