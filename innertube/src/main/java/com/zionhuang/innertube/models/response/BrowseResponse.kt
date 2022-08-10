@@ -1,7 +1,6 @@
 package com.zionhuang.innertube.models.response
 
 import com.zionhuang.innertube.models.*
-import com.zionhuang.innertube.utils.plus
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,8 +25,8 @@ data class BrowseResponse(
         }
         contents != null -> BrowseResult(
             items = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toBaseItems() },
-            continuations = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicPlaylistShelfRenderer?.continuations?.getContinuations()
-                    + contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuations()
+            continuations = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicPlaylistShelfRenderer?.continuations?.getContinuations().orEmpty()
+                    + contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuations().orEmpty()
         )
         else -> BrowseResult(
             items = emptyList(),

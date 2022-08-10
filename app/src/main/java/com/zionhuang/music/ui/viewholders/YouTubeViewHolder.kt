@@ -138,6 +138,7 @@ class YouTubeSquareItemViewHolder(
         binding.thumbnail.updateLayoutParams<ConstraintLayout.LayoutParams> {
             dimensionRatio = "${thumbnail.width}:${thumbnail.height}"
         }
+        listOf(1) + listOf(1)
         binding.root.setOnClickListener {
             navigationEndpointHandler.handle(item.navigationEndpoint, item)
         }

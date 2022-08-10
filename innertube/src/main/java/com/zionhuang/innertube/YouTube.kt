@@ -5,7 +5,6 @@ import com.zionhuang.innertube.models.YouTubeClient.Companion.ANDROID_MUSIC
 import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
 import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
-import com.zionhuang.innertube.utils.plus
 import io.ktor.client.call.*
 
 /**
@@ -72,7 +71,7 @@ object YouTube {
     suspend fun browse(continuations: List<String>): BrowseResult {
         val result = browse(continuations[0])
         return result.copy(
-            continuations = result.continuations + continuations.drop(1)
+            continuations = result.continuations.orEmpty() + continuations.drop(1)
         )
     }
 
@@ -96,19 +95,17 @@ object YouTube {
 
     suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): NextResult {
         val response = innerTube.next(WEB_REMIX, endpoint.videoId, endpoint.playlistId, endpoint.playlistSetVideoId, endpoint.index, endpoint.params, continuation).body<NextResponse>()
-        return when {
-            response.continuationContents != null -> NextResult(
-                items = response.continuationContents.playlistPanelContinuation.contents
-                    .mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() },
-                continuation = response.continuationContents.playlistPanelContinuation.continuations?.getContinuation()
-            )
-            else -> NextResult(
-                items = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.contents
-                    ?.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } ?: emptyList(),
-                currentIndex = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.currentIndex,
-                continuation = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.continuations?.getContinuation()
-            )
+        val playlistPanelRenderer = response.continuationContents?.playlistPanelContinuation ?: response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content?.musicQueueRenderer?.content?.playlistPanelRenderer!!
+        playlistPanelRenderer.contents.lastOrNull()?.automixPreviewVideoRenderer?.content?.automixPlaylistVideoRenderer?.navigationEndpoint?.watchPlaylistEndpoint?.let { watchPlaylistEndpoint ->
+            return next(watchPlaylistEndpoint.toWatchEndpoint()).let { result ->
+                result.copy(items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } + result.items)
+            }
         }
+        return NextResult(
+            items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() },
+            currentIndex = playlistPanelRenderer.currentIndex,
+            continuation = playlistPanelRenderer.continuations?.getContinuation()
+        )
     }
 
 

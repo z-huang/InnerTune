@@ -3,6 +3,8 @@ package com.zionhuang.music.ui.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
+import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
+import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,11 +57,13 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         binding.motionLayout.addTransitionListener(this)
         mainActivity.setBottomSheetListener(this)
 
-//        viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
-//            if (playbackState.state != PlaybackStateCompat.STATE_NONE && playbackState.state != PlaybackStateCompat.STATE_STOPPED) {
-//
-//            }
-//        }
+        viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
+            if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED) {
+                if (mainActivity.bottomSheetBehavior.state == STATE_HIDDEN) {
+                    mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
+                }
+            }
+        }
 
         binding.bottomBar.setOnClickListener {
             mainActivity.bottomSheetBehavior.state = STATE_EXPANDED

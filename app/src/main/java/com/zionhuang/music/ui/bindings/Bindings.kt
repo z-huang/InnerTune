@@ -65,6 +65,7 @@ fun setImageUrl(
     val resizedUrl = resizeThumbnailUrl(url, thumbnailWidth?.let { (it * density).roundToInt() }, thumbnailHeight?.let { (it * density).roundToInt() })
     view.load(resizedUrl) {
         crossfade(true)
+        scale(Scale.FIT)
         // the order of the following two lines is important. If circleCrop, ignore cornerRadius
         if (cornerRadius != null) transformations(RoundedCornersTransformation(cornerRadius))
         if (circleCrop == true) transformations(CircleCropTransformation())
@@ -72,7 +73,6 @@ fun setImageUrl(
             placeholder(placeholder)
             error(placeholder)
         }
-        scale(Scale.FIT)
     }
 }
 

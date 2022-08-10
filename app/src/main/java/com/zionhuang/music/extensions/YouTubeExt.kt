@@ -48,6 +48,6 @@ fun <T : InfoItem> InfoItemsPage<T>.toPage() = LoadResult.Page<Page, InfoItem>(
 
 fun BrowseResult.toPage() = LoadResult.Page(
     data = items,
-    nextKey = continuations,
+    nextKey = continuations?.ifEmpty { null },
     prevKey = null
 )

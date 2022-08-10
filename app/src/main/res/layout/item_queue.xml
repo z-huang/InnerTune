@@ -10,124 +10,115 @@
             type="android.support.v4.media.session.MediaSessionCompat.QueueItem" />
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_item_height"
-        android:background="?colorSurface"
-        android:clickable="true">
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:selectableItemBackground"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/artwork"
+            cornerRadius="@{@dimen/thumbnail_radius}"
+            srcUrl="@{item.description.iconUri.toString()}"
+            thumbnailWidth="@{@dimen/list_thumbnail_size}"
+            android:layout_width="@dimen/list_thumbnail_size"
+            android:layout_height="@dimen/list_thumbnail_size"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@id/content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_music_note" />
 
-            <LinearLayout
-                android:id="@+id/artwork_container"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="6dp"
-                android:padding="6dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:id="@+id/content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/drag_handle"
+            app:layout_constraintStart_toEndOf="@id/artwork"
+            app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/artwork"
-                    cornerRadius="@{@dimen/thumbnail_radius}"
-                    srcUrl="@{item.description.iconUri.toString()}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/background_song_cover"
-                    android:scaleType="center"
-                    tools:src="@drawable/ic_music_note" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/song_title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/drag_handle"
-                app:layout_constraintStart_toEndOf="@id/artwork_container"
-                app:layout_constraintTop_toTopOf="parent">
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="3dp"
+                android:text="@{item.description.title}"
+                android:textColor="?android:textColorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/song_details"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Song Title" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/song_title"
-                    android:layout_width="match_parent"
+                    android:id="@+id/song_artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@{item.description.subtitle}"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="12sp"
+                    tools:text="Song Artist" />
+
+                <TextView
+                    android:id="@+id/tv_bullet"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="3dp"
-                    android:text="@{item.description.title}"
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toTopOf="@+id/song_details"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    tools:text="Song Title" />
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:singleLine="true"
+                    android:text="@string/bullet"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/duration"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/song_artist"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="@{item.description.subtitle}"
-                        android:textColor="?android:textColorSecondary"
-                        android:textSize="12sp"
-                        tools:text="Song Artist" />
-
-                    <TextView
-                        android:id="@+id/tv_bullet"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:singleLine="true"
-                        android:text="@string/bullet"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/duration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:textSize="12sp"
-                        android:visibility="gone"
-                        tools:text="3:00" />
-                </LinearLayout>
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:text="3:00" />
             </LinearLayout>
+        </LinearLayout>
 
-            <ImageView
-                android:id="@+id/drag_handle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="12dp"
-                android:padding="5dp"
-                android:scaleType="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_drag_handle" />
+        <ImageView
+            android:id="@+id/drag_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="6dp"
+            android:padding="5dp"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_drag_handle" />
 
-            <FrameLayout
-                android:id="@+id/overlay_selection"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0.25"
-                android:background="?colorAccent"
-                android:visibility="gone" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
+        <FrameLayout
+            android:id="@+id/overlay_selection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.25"
+            android:background="?colorAccent"
+            android:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
