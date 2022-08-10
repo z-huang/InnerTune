@@ -88,7 +88,7 @@ fun setThumbnails(
 ) = setImageUrl(view, thumbnails?.lastOrNull()?.url, cornerRadius, circleCrop, placeholder, thumbnailWidth, thumbnailHeight)
 
 fun resizeThumbnailUrl(url: String?, width: Int?, height: Int?): String? {
-    if (url == null) return null
+    if (url == null || (width == null && height == null)) return url
     "https://lh3\\.googleusercontent\\.com/.*=w(\\d+)-h(\\d+).*".toRegex().matchEntire(url)?.groupValues?.let { group ->
         val (W, H) = group.drop(1).map { it.toInt() }
         var w = width

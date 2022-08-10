@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlaylistPanelRenderer(
-    val title: String,
-    val titleText: Runs,
-    val shortBylineText: Runs,
+    val title: String?,
+    val titleText: Runs?,
+    val shortBylineText: Runs?,
     val contents: List<Content>,
     val currentIndex: Int?,
     val isInfinite: Boolean,
