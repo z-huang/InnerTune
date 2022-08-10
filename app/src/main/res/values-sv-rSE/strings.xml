@@ -93,7 +93,7 @@
     <string name="error_artist_name_empty">Artist namn kan inte vara tom.</string>
 
     <string name="dialog_title_duplicate_artist">Duplicerat artist</string>
-    <string name="dialog_msg_duplicate_artist">Artist %1$s finns redan. Slå samman två artister?</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s finns redan.</string>
 
     <string name="dialog_title_choose_playlist">Välj spellista</string>
 

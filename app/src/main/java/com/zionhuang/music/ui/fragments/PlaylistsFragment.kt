@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
@@ -44,7 +43,7 @@ class PlaylistsFragment : PagingRecyclerViewFragment<PlaylistsAdapter>(), MenuPr
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-                val directions = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(this@PlaylistsFragment.adapter.getItemByPosition(position)!!.playlistId)
+                val directions = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(this@PlaylistsFragment.adapter.getItemByPosition(position)!!.id)
                 findNavController().navigate(directions)
             }
         }

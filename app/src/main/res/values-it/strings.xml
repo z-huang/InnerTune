@@ -93,7 +93,7 @@
     <string name="error_artist_name_empty">Il nome dell\'artista non può essere vuoto.</string>
 
     <string name="dialog_title_duplicate_artist">Artisti duplicati</string>
-    <string name="dialog_msg_duplicate_artist">L\'artista %1$s esiste già. Unire i due artisti?</string>
+    <string name="dialog_msg_duplicate_artist">L\'artista %1$s esiste già.</string>
 
     <string name="dialog_title_choose_playlist">Scegli una playlist</string>
 

@@ -8,6 +8,10 @@
         <import type="android.view.View" />
 
         <import
+            alias="MediaMetadata"
+            type="android.support.v4.media.MediaMetadataCompat" />
+
+        <import
             alias="PlaybackState"
             type="android.support.v4.media.session.PlaybackStateCompat" />
 
@@ -113,7 +117,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@{viewModel.mediaData.title}"
+                    android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_TITLE)}"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
                     tools:text="Song Title" />
@@ -126,7 +130,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@{viewModel.mediaData.artist}"
+                    android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_ARTIST)}"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Song Artist" />
@@ -172,20 +176,9 @@
 
             <ImageView
                 android:id="@+id/artwork"
+                srcUrl="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString()}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_song_cover"
-                android:src="@drawable/ic_music_note"
-                app:artworkType="@{viewModel.mediaData.artworkType}"
-                app:fullResolution="@{true}"
-                app:srcUrl="@{viewModel.mediaData.artwork}" />
-
-            <com.google.android.exoplayer2.ui.StyledPlayerView
-                android:id="@+id/player"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                app:use_controller="false" />
+                android:layout_height="match_parent" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/load_indicator"
@@ -230,7 +223,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@{viewModel.mediaData.title}"
+                android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_TITLE)}"
                 android:textAlignment="center"
                 tools:text="Song Title" />
 
@@ -243,7 +236,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@{viewModel.mediaData.artist}"
+                android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_ARTIST)}"
                 android:textAlignment="center"
                 android:textColor="?android:textColorSecondary"
                 tools:text="Song Artist" />
@@ -325,7 +318,7 @@
 
             <TextView
                 android:id="@+id/duration_text"
-                duration="@{viewModel.mediaData.duration}"
+                duration="@{viewModel.mediaMetadata.getLong(MediaMetadata.METADATA_KEY_DURATION)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 
 class ArtistSongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
     private val args: ArtistSongsFragmentArgs by navArgs()
-    private val artistId by lazy { args.artistId }
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
@@ -30,7 +29,6 @@ class ArtistSongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
         adapter.apply {
             popupMenuListener = songsViewModel.songPopupMenuListener
             sortInfo = songsViewModel.sortInfo
-            downloadInfo = songsViewModel.downloadInfoLiveData
         }
 
         binding.recyclerView.apply {
@@ -40,7 +38,7 @@ class ArtistSongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
                 playbackViewModel.playQueue(requireActivity(),
                     ListQueue(
                         title = null,
-                        items = this@ArtistSongsFragment.adapter.snapshot().items.map { it.toMediaItem(context) }.drop(1),
+                        items = this@ArtistSongsFragment.adapter.snapshot().items.drop(1).map { it.toMediaItem() },
                         startIndex = pos - 1
                     )
                 )
@@ -48,20 +46,14 @@ class ArtistSongsFragment : PagingRecyclerViewFragment<SongsAdapter>() {
         }
 
         lifecycleScope.launch {
-            requireAppCompatActivity().title = songsViewModel.songRepository.getArtistById(artistId)!!.name
-            songsViewModel.getArtistSongsAsFlow(artistId).collectLatest {
+            requireAppCompatActivity().title = songsViewModel.songRepository.getArtistById(args.artistId)!!.name
+            songsViewModel.getArtistSongsAsFlow(args.artistId).collectLatest {
                 adapter.submitData(it)
             }
         }
 
         songsViewModel.sortInfo.liveData.observe(viewLifecycleOwner) {
             adapter.refresh()
-        }
-
-        songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
-            map.forEach { (key, value) ->
-                adapter.setProgress(key, value)
-            }
         }
     }
 }

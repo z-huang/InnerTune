@@ -1,5 +1,6 @@
 package com.zionhuang.innertube.models
 
+import com.zionhuang.innertube.utils.TimeParser
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,7 +17,7 @@ data class PlaylistPanelVideoRenderer(
     val navigationEndpoint: NavigationEndpoint,
 ) {
     // Best way to get the most detailed song information
-    fun toItem(): SongItem {
+    fun toSongItem(): SongItem {
         val longByLineRuns = longBylineText.runs.splitBySeparator()
         return SongItem(
             id = videoId,
@@ -27,6 +28,7 @@ data class PlaylistPanelVideoRenderer(
                 .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
                 ?.toLink(),
             albumYear = longByLineRuns.getOrNull(2)?.getOrNull(0)?.text?.toIntOrNull(),
+            duration = TimeParser.parse(lengthText.runs[0].text),
             thumbnails = thumbnail.thumbnails,
             menu = menu.toItemMenu(),
             navigationEndpoint = navigationEndpoint

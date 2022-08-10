@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
@@ -46,7 +46,6 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
     private fun setupUI() {
         binding.motionLayout.background = mainActivity.binding.bottomNav.background
-        viewModel.setPlayerView(binding.player)
         // Marquee
         binding.btmSongTitle.isSelected = true
         binding.btmSongArtist.isSelected = true
@@ -84,7 +83,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         }
 
         binding.btnShare.setOnClickListener {
-            viewModel.mediaData.value?.id?.let { id ->
+            viewModel.mediaMetadata.value?.getString(METADATA_KEY_MEDIA_ID)?.let { id ->
                 startActivity(Intent(Intent.ACTION_VIEW, "https://music.youtube.com/watch?v=$id".toUri()))
             }
         }

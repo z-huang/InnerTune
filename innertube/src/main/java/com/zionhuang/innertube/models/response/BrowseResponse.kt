@@ -69,7 +69,7 @@ data class BrowseResponse(
                 id = musicImmersiveHeaderRenderer.title.toString(),
                 name = musicImmersiveHeaderRenderer.title.toString(),
                 description = musicImmersiveHeaderRenderer.description?.toString(),
-                bannerThumbnail = musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
+                bannerThumbnails = musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
                 shuffleEndpoint = musicImmersiveHeaderRenderer.playButton.buttonRenderer.navigationEndpoint,
                 radioEndpoint = musicImmersiveHeaderRenderer.startRadioButton.buttonRenderer.navigationEndpoint,
             )
@@ -79,7 +79,7 @@ data class BrowseResponse(
                 subtitle = musicDetailHeaderRenderer.subtitle.toString(),
                 secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),
                 description = musicDetailHeaderRenderer.description?.toString(),
-                thumbnail = musicDetailHeaderRenderer.thumbnail.getThumbnails(),
+                thumbnails = musicDetailHeaderRenderer.thumbnail.getThumbnails(),
                 menu = musicDetailHeaderRenderer.menu.toItemMenu()
             )
             else -> null

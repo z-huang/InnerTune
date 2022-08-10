@@ -10,16 +10,17 @@ import androidx.core.widget.doOnTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
-import com.zionhuang.music.databinding.EditSongDialogBinding
+import com.zionhuang.music.databinding.DialogEditSongBinding
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.ArtistAutoCompleteAdapter
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
 class EditSongDialog : AppCompatDialogFragment() {
-    private lateinit var binding: EditSongDialogBinding
+    private lateinit var binding: DialogEditSongBinding
     private lateinit var song: Song
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,13 +39,13 @@ class EditSongDialog : AppCompatDialogFragment() {
             binding.songArtist.error = if (text.isNullOrEmpty()) getString(R.string.error_song_artist_empty) else null
         }
         with(binding) {
-            songTitle.editText?.setText(song.title)
-            songArtist.editText?.setText(song.artistName)
+            songTitle.editText?.setText(song.song.title)
+            songArtist.editText?.setText(song.artists.joinToString { it.name })
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = EditSongDialogBinding.inflate(requireActivity().layoutInflater)
+        binding = DialogEditSongBinding.inflate(requireActivity().layoutInflater)
         setupUI()
 
         return MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
@@ -61,22 +62,16 @@ class EditSongDialog : AppCompatDialogFragment() {
             }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun onSave() {
         if (binding.songTitle.error != null || binding.songArtist.error != null) {
             return
         }
         val title = binding.songTitle.editText?.text.toString()
-        val artistName = binding.songArtist.editText?.text.toString()
+        // TODO
         GlobalScope.launch {
-            SongRepository.updateSong(song.copy(
-                title = title,
-                artistName = artistName
-            ))
+            SongRepository.updateSongTitle(song, title)
         }
         dismiss()
-    }
-
-    companion object {
-        const val TAG = "SongDetailsFragment"
     }
 }

@@ -20,13 +20,13 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/song_item_height"
+        android:layout_height="@dimen/list_item_height"
         android:background="?colorSurface"
         android:clickable="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/song_item_height"
+            android:layout_height="@dimen/list_item_height"
             android:background="?android:selectableItemBackground"
             android:orientation="vertical">
 
@@ -43,11 +43,14 @@
 
                 <ImageView
                     android:id="@+id/artwork"
-                    artworkId="@{song.id}"
+                    cornerRadius="@{@dimen/thumbnail_radius}"
+                    placeholder="@{@drawable/background_song_cover}"
+                    srcUrl="@{song.song.thumbnailUrl}"
+                    thumbnailWidth="@{@dimen/list_thumbnail_size}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/background_song_cover"
-                    android:scaleType="center"
+                    android:scaleType="fitCenter"
+                    tools:background="@drawable/background_song_cover"
                     tools:src="@drawable/ic_music_note" />
             </LinearLayout>
 
@@ -63,15 +66,15 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/song_title"
+                    android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@{song.title}"
+                    android:maxLines="2"
+                    android:text="@{song.song.title}"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@+id/song_details"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_chainStyle="packed"
@@ -88,20 +91,18 @@
                         android:paddingStart="0dp"
                         android:paddingEnd="4dp"
                         android:src="@drawable/ic_offline_pin"
-                        android:visibility="@{song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
+                        android:visibility="@{song.song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
 
                     <TextView
-                        android:id="@+id/song_artist"
+                        android:id="@+id/artist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:text="@{song.artistName}"
                         android:textColor="?android:textColorSecondary"
                         android:textSize="12sp"
                         tools:text="Song Artist" />
 
                     <TextView
-                        android:id="@+id/tv_bullet"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
@@ -113,26 +114,26 @@
 
                     <TextView
                         android:id="@+id/duration"
+                        duration="@{(long) song.song.duration * 1000}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:textSize="12sp"
-                        app:duration="@{song.duration}"
                         tools:text="3:00" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{(song.downloadState == MediaConstants.STATE_PREPARING || song.downloadState == MediaConstants.STATE_DOWNLOADING) ? View.VISIBLE : View.GONE}">
+                    android:visibility="@{(song.song.downloadState == MediaConstants.STATE_PREPARING || song.song.downloadState == MediaConstants.STATE_DOWNLOADING) ? View.VISIBLE : View.GONE}">
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progress_bar"
                         style="@style/Widget.Material3.LinearProgressIndicator"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:indeterminate="@{song.downloadState == MediaConstants.STATE_PREPARING}"
+                        android:indeterminate="@{song.song.downloadState == MediaConstants.STATE_PREPARING}"
                         tools:progress="50" />
                 </LinearLayout>
             </LinearLayout>

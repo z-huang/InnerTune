@@ -9,9 +9,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
 import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
 import com.zionhuang.music.repos.SongRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.RandomStringUtils
 
 class CreatePlaylistDialog : AppCompatDialogFragment() {
     private lateinit var binding: DialogSingleTextInputBinding
@@ -42,11 +45,15 @@ class CreatePlaylistDialog : AppCompatDialogFragment() {
             }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun onOK() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository.addPlaylist(PlaylistEntity(name = name))
+            SongRepository.addPlaylist(PlaylistEntity(
+                id = generatePlaylistId(),
+                name = name
+            ))
         }
         dismiss()
     }

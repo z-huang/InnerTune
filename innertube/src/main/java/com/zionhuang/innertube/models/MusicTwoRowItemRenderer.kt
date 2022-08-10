@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 /**
  * Two row: a big thumbnail, a title, and a subtitle
  * Used in [GridRenderer] and [MusicCarouselShelfRenderer]
- * Item type: video, album, playlist, artist
+ * Item type: song, video, album, playlist, artist
  */
 @Serializable
 data class MusicTwoRowItemRenderer(

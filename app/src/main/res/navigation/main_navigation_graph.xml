@@ -21,7 +21,7 @@
             app:destination="@id/artistSongsFragment">
             <argument
                 android:name="artistId"
-                app:argType="integer" />
+                app:argType="string" />
         </action>
     </fragment>
     <fragment
@@ -33,7 +33,7 @@
             app:destination="@id/playlistSongsFragment">
             <argument
                 android:name="playlistId"
-                app:argType="integer" />
+                app:argType="string" />
         </action>
     </fragment>
     <fragment
@@ -79,14 +79,14 @@
         android:name="com.zionhuang.music.ui.fragments.songs.ArtistSongsFragment">
         <argument
             android:name="artistId"
-            app:argType="integer" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/playlistSongsFragment"
         android:name="com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragment">
         <argument
             android:name="playlistId"
-            app:argType="integer" />
+            app:argType="string" />
         <action
             android:id="@+id/action_playlistSongsFragment_to_playlistSongsEditFragment"
             app:destination="@id/playlistSongsEditFragment" />
@@ -96,7 +96,7 @@
         android:name="com.zionhuang.music.ui.fragments.songs.PlaylistSongsEditFragment">
         <argument
             android:name="playlistId"
-            app:argType="integer" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/queueFragment"

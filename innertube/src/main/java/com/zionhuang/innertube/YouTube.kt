@@ -99,12 +99,12 @@ object YouTube {
         return when {
             response.continuationContents != null -> NextResult(
                 items = response.continuationContents.playlistPanelContinuation.contents
-                    .mapNotNull { it.playlistPanelVideoRenderer?.toItem() },
+                    .mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() },
                 continuation = response.continuationContents.playlistPanelContinuation.continuations?.getContinuation()
             )
             else -> NextResult(
                 items = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.contents
-                    ?.mapNotNull { it.playlistPanelVideoRenderer?.toItem() } ?: emptyList(),
+                    ?.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } ?: emptyList(),
                 currentIndex = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.currentIndex,
                 continuation = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content!!.musicQueueRenderer?.content?.playlistPanelRenderer?.continuations?.getContinuation()
             )
@@ -112,12 +112,12 @@ object YouTube {
     }
 
 
-    suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): List<Item> {
+    suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): List<SongItem> {
         if (videoIds != null) {
-            assert(videoIds.size <= 1000) // Max video limit
+            assert(videoIds.size <= MAX_GET_QUEUE_SIZE) // Max video limit
         }
         return innerTube.getQueue(WEB_REMIX, videoIds, playlistId).body<GetQueueResponse>().queueDatas
-            .mapNotNull { it.content.playlistPanelVideoRenderer?.toItem() }
+            .mapNotNull { it.content.playlistPanelVideoRenderer?.toSongItem() }
     }
 
 
@@ -135,4 +135,6 @@ object YouTube {
 
     const val HOME_BROWSE_ID = "FEmusic_home"
     const val EXPLORE_BROWSE_ID = "FEmusic_explore"
+
+    const val MAX_GET_QUEUE_SIZE = 1000
 }

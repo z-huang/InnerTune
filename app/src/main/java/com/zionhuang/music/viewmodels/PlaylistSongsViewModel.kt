@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class PlaylistSongsViewModel(application: Application) : AndroidViewModel(application) {
     private val songRepository = SongRepository
 
-    fun processMove(playlistId: Int, moves: List<Pair<Int, Int>>) {
+    fun processMove(playlistId: String, moves: List<Pair<Int, Int>>) {
         viewModelScope.launch {
             val trackList = songRepository.getPlaylistSongEntities(playlistId).getList().toMutableList()
             moves.forEach { (from, to) ->
@@ -22,7 +22,7 @@ class PlaylistSongsViewModel(application: Application) : AndroidViewModel(applic
         }
     }
 
-    fun removeFromPlaylist(playlistId: Int, idInPlaylist: Int) {
+    fun removeFromPlaylist(playlistId: String, idInPlaylist: Int) {
         viewModelScope.launch {
             songRepository.removeSongFromPlaylist(playlistId, idInPlaylist)
         }

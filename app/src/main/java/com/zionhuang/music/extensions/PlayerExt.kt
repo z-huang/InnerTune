@@ -2,7 +2,7 @@ package com.zionhuang.music.extensions
 
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.zionhuang.music.models.MediaData
+import com.zionhuang.music.models.MediaMetadata
 
 fun Player.findMediaItemById(mediaId: String): MediaItem? {
     for (i in 0 until mediaItemCount) {
@@ -25,7 +25,7 @@ fun Player.mediaItemIndexOf(mediaId: String?): Int? {
     return null
 }
 
-val Player.currentMetadata: MediaData?
+val Player.currentMetadata: MediaMetadata?
     get() = currentMediaItem?.metadata
 
 val Player.mediaItems: List<MediaItem>

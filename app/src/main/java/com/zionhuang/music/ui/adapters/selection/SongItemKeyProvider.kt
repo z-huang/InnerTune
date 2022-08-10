@@ -7,9 +7,9 @@ class SongItemKeyProvider(
     private val adapter: SongsAdapter
 ) : ItemKeyProvider<String>(SCOPE_CACHED) {
     override fun getKey(position: Int): String? =
-        if (position == 0) null else adapter.snapshot()[position]?.id
+        if (position == 0) null else adapter.snapshot()[position]?.song?.id
 
     override fun getPosition(key: String): Int =
-        adapter.snapshot().items.indexOfFirst { it.id == key }
+        adapter.snapshot().items.indexOfFirst { it.song.id == key }
 
 }

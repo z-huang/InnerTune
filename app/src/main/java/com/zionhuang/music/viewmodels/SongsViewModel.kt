@@ -4,32 +4,28 @@ import android.app.Application
 import android.content.Context
 import androidx.core.os.bundleOf
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import androidx.paging.TerminalSeparatorType.FULLY_COMPLETE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_PLACEHOLDER_SONG
+import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
-import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.models.DownloadProgress
+import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.models.base.IMutableSortInfo
-import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
-import com.zionhuang.music.utils.DownloadProgressMapLiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -67,13 +63,13 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         }.flow.cachedIn(viewModelScope)
     }
 
-    fun getArtistSongsAsFlow(artistId: Int) = Pager(PagingConfig(pageSize = 50)) {
+    fun getArtistSongsAsFlow(artistId: String) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getArtistSongs(artistId, sortInfo).pagingSource
     }.flow.map { pagingData ->
         pagingData.insertHeaderItem(FULLY_COMPLETE, HEADER_PLACEHOLDER_SONG)
     }.cachedIn(viewModelScope)
 
-    fun getPlaylistSongsAsFlow(playlistId: Int) = Pager(PagingConfig(pageSize = 50)) {
+    fun getPlaylistSongsAsFlow(playlistId: String) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getPlaylistSongs(playlistId, sortInfo).pagingSource
     }.flow.cachedIn(viewModelScope)
 
@@ -87,7 +83,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun playNext(songs: List<Song>, context: Context) {
             mediaSessionConnection.mediaController?.sendCommand(
                 COMMAND_PLAY_NEXT,
-                bundleOf(EXTRA_SONGS to songs.map { it.toMediaData(context) }.toTypedArray()),
+                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaItem() }.toTypedArray()),
                 null
             )
         }
@@ -95,7 +91,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun addToQueue(songs: List<Song>, context: Context) {
             mediaSessionConnection.mediaController?.sendCommand(
                 COMMAND_ADD_TO_QUEUE,
-                bundleOf(EXTRA_SONGS to songs.map { it.toMediaData(context) }.toTypedArray()),
+                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaItem() }.toTypedArray()),
                 null
             )
         }
@@ -107,22 +103,22 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                     .setTitle(R.string.dialog_title_choose_playlist)
                     .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
                         viewModelScope.launch {
-                            songRepository.addSongsToPlaylist(playlists[i].playlistId, songs)
+                            songRepository.addSongsToPlaylist(playlists[i].id, songs)
                         }
                     }
                     .show()
             }
         }
 
-        override fun downloadSongs(songIds: List<String>, context: Context) {
+        override fun downloadSongs(songs: List<Song>, context: Context) {
             viewModelScope.launch {
-                songRepository.downloadSongs(songIds)
+                songRepository.downloadSongs(songs)
             }
         }
 
-        override fun removeDownloads(songIds: List<String>, context: Context) {
+        override fun removeDownloads(songs: List<Song>, context: Context) {
             viewModelScope.launch {
-                songRepository.removeDownloads(songIds)
+                songRepository.removeDownloads(songs)
             }
         }
 
@@ -131,9 +127,5 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                 songRepository.deleteSongs(songs)
             }
         }
-    }
-
-    val downloadInfoLiveData: LiveData<Map<String, DownloadProgress>> = songRepository.getAllDownloads().liveData.switchMap {
-        DownloadProgressMapLiveData(application, it)
     }
 }

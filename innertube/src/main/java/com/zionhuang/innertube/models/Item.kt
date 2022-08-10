@@ -32,6 +32,7 @@ data class SongItem(
     val artists: List<Run>,
     val album: Link<BrowseEndpoint>? = null,
     val albumYear: Int? = null,
+    val duration: Int? = null,
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
@@ -99,9 +100,11 @@ data class SongItem(
 }
 
 data class AlbumItem(
-    override val id: String,
+    override val id: String, // browseId
+    val playlistId: String,
     override val title: String,
     override val subtitle: String,
+    val year: Int? = null,
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
@@ -113,24 +116,28 @@ data class AlbumItem(
             if (item.menu == null) return null
             val menu = item.menu.toItemMenu()
             return AlbumItem(
-                id = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                id = item.navigationEndpoint!!.browseEndpoint!!.browseId,
+                playlistId = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
                     ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
                 title = item.getTitle(),
                 subtitle = item.getSubtitle(),
+                year = item.flexColumns.getOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.lastOrNull()?.text?.toIntOrNull(),
                 thumbnails = item.thumbnail!!.getThumbnails(),
                 menu = menu,
-                navigationEndpoint = item.navigationEndpoint!!
+                navigationEndpoint = item.navigationEndpoint
             )
         }
 
         override fun from(item: MusicTwoRowItemRenderer): AlbumItem {
             val menu = item.menu.toItemMenu()
             return AlbumItem(
-                id = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                id = item.navigationEndpoint.browseEndpoint!!.browseId,
+                playlistId = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
                     ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
                 title = item.title.toString(),
                 subtitle = item.subtitle.toString(),
                 thumbnails = item.thumbnailRenderer.getThumbnails(),
+                year = item.subtitle.runs.lastOrNull()?.text?.toIntOrNull(),
                 menu = menu,
                 navigationEndpoint = item.navigationEndpoint
             )

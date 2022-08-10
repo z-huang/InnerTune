@@ -93,7 +93,7 @@
     <string name="error_artist_name_empty">Artistin nimi ei voi olla tyhjä.</string>
 
     <string name="dialog_title_duplicate_artist">Artistin kaksoiskappale</string>
-    <string name="dialog_msg_duplicate_artist">Artisti %1$s on jo olemassa. Yhdistetäänkö artistit?</string>
+    <string name="dialog_msg_duplicate_artist">Artisti %1$s on jo olemassa.</string>
 
     <string name="dialog_title_choose_playlist">Valitse soittolista</string>
 

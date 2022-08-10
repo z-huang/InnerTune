@@ -8,14 +8,14 @@ interface SongPopupMenuListener {
     fun playNext(songs: List<Song>, context: Context)
     fun addToQueue(songs: List<Song>, context: Context)
     fun addToPlaylist(songs: List<Song>, context: Context)
-    fun downloadSongs(songIds: List<String>, context: Context)
-    fun removeDownloads(songIds: List<String>, context: Context)
+    fun downloadSongs(songs: List<Song>, context: Context)
+    fun removeDownloads(songs: List<Song>, context: Context)
     fun deleteSongs(songs: List<Song>)
 
     fun playNext(song: Song, context: Context) = playNext(listOf(song), context)
     fun addToQueue(song: Song, context: Context) = addToQueue(listOf(song), context)
     fun addToPlaylist(song: Song, context: Context) = addToPlaylist(listOf(song), context)
-    fun downloadSong(songId: String, context: Context) = downloadSongs(listOf(songId), context)
-    fun removeDownload(songId: String, context: Context) = removeDownloads(listOf(songId), context)
+    fun downloadSong(song: Song, context: Context) = downloadSongs(listOf(song), context)
+    fun removeDownload(song: Song, context: Context) = removeDownloads(listOf(song), context)
     fun deleteSongs(song: Song) = deleteSongs(listOf(song))
 }

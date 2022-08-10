@@ -26,7 +26,6 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.zionhuang.innertube.YouTube
@@ -34,21 +33,18 @@ import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_SONGS
+import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
-import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.MediaData
-import com.zionhuang.music.models.toMediaDescription
+import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.GlideApp
 import kotlinx.coroutines.*
@@ -62,7 +58,7 @@ class SongPlayer(
     private val scope: CoroutineScope,
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Listener {
-    private val localRepository: LocalRepository = SongRepository
+    private val localRepository = SongRepository
 
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
 
@@ -80,10 +76,8 @@ class SongPlayer(
                 DefaultDataSource.Factory(context)
             ) { dataSpec ->
                 val mediaId = dataSpec.key ?: error("No media id")
-                val localSong = runBlocking(IO) {
-                    localRepository.getSongById(mediaId)
-                }
-                if (localSong?.downloadState == STATE_DOWNLOADED) {
+                val song = runBlocking(IO) { localRepository.getSongById(mediaId) }
+                if (song?.song?.downloadState == STATE_DOWNLOADED) {
                     return@Factory dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
                 }
                 kotlin.runCatching {
@@ -94,15 +88,14 @@ class SongPlayer(
                     if (playerResponse.playabilityStatus.status != "OK") {
                         throw PlaybackException(playerResponse.playabilityStatus.status, null, ERROR_CODE_REMOTE_ERROR)
                     }
-                    playerResponse.streamingData?.adaptiveFormats
+                    val uri = playerResponse.streamingData?.adaptiveFormats
                         ?.filter { it.isAudio }
                         ?.maxByOrNull { it.bitrate * (if (connectivityManager.isActiveNetworkMetered) -1 else 1) }
                         ?.url
                         ?.toUri()
                         ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
-                }.getOrThrow().let { uri ->
                     dataSpec.withUri(uri)
-                }
+                }.getOrThrow()
             })
         )
         .build()
@@ -117,40 +110,6 @@ class SongPlayer(
         }
 
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
-
-    fun playQueue(queue: Queue) {
-        queueJob?.cancel()
-        currentQueue = queue
-        player.clearMediaItems()
-
-        scope.launch {
-            val initialStatus = queue.getInitialStatus()
-            player.setMediaItems(initialStatus.items)
-            if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
-            player.prepare()
-            player.playWhenReady = true
-        }
-    }
-
-    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: Item) {
-        scope.launch {
-            val items = when (item) {
-                is SongItem -> listOf(item.toMediaItem())
-                is AlbumItem, is PlaylistItem -> withContext(IO) {
-                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).mapNotNull {
-                        (it as? SongItem)?.toMediaItem()
-                    }
-                }
-                is ArtistItem -> return@launch
-            }
-            when (endpoint.queueInsertPosition) {
-                INSERT_AFTER_CURRENT_VIDEO -> player.addMediaItems((if (player.mediaItemCount == 0) -1 else player.currentMediaItemIndex) + 1, items)
-                INSERT_AT_END -> player.addMediaItems(items)
-                else -> {}
-            }
-            player.prepare()
-        }
-    }
 
     private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
         setPlayer(player)
@@ -190,17 +149,15 @@ class SongPlayer(
                     true
                 }
                 COMMAND_PLAY_NEXT -> {
-                    val songs = extras.getParcelableArray(EXTRA_SONGS)!!
                     player.addMediaItems(
-                        (if (player.mediaItemCount == 0) -1 else player.currentMediaItemIndex) + 1,
-                        songs.mapNotNull { (it as? MediaData)?.toMediaItem() }
+                        if (player.mediaItemCount == 0) 0 else player.currentMediaItemIndex + 1,
+                        extras.getParcelableArray(EXTRA_MEDIA_METADATA_ITEMS)!!.filterIsInstance<MediaMetadata>().map { it.toMediaItem() }
                     )
                     player.prepare()
                     true
                 }
                 COMMAND_ADD_TO_QUEUE -> {
-                    val songs = extras.getParcelableArray(EXTRA_SONGS)!!
-                    player.addMediaItems(songs.mapNotNull { (it as? MediaData)?.toMediaItem() })
+                    player.addMediaItems(extras.getParcelableArray(EXTRA_MEDIA_METADATA_ITEMS)!!.filterIsInstance<MediaMetadata>().map { it.toMediaItem() })
                     player.prepare()
                     true
                 }
@@ -212,7 +169,7 @@ class SongPlayer(
                 addToLibrary(it)
             }
         })
-        setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata.toMediaDescription() }
+        setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription() }
         setErrorMessageProvider { e ->
             return@setErrorMessageProvider Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage)
         }
@@ -247,10 +204,10 @@ class SongPlayer(
                 player.currentMetadata?.title.orEmpty()
 
             override fun getCurrentContentText(player: Player): CharSequence? =
-                player.currentMetadata?.artist
+                player.currentMetadata?.artists?.joinToString { it.name }
 
             override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
-                val url = player.currentMetadata?.artwork
+                val url = player.currentMetadata?.thumbnailUrl
                 val bitmap = GlideApp.with(context)
                     .asBitmap()
                     .load(url)
@@ -280,6 +237,41 @@ class SongPlayer(
             setMediaSessionToken(mediaSession.sessionToken)
             setSmallIcon(R.drawable.ic_notification)
         }
+
+
+    fun playQueue(queue: Queue) {
+        queueJob?.cancel()
+        currentQueue = queue
+        player.clearMediaItems()
+
+        scope.launch {
+            val initialStatus = queue.getInitialStatus()
+            player.setMediaItems(initialStatus.items)
+            if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
+            player.prepare()
+            player.playWhenReady = true
+        }
+    }
+
+    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: Item) {
+        scope.launch {
+            val items = when (item) {
+                is SongItem -> listOf(item.toMediaItem())
+                is AlbumItem, is PlaylistItem -> withContext(IO) {
+                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).mapNotNull {
+                        (it as? SongItem)?.toMediaItem()
+                    }
+                }
+                is ArtistItem -> return@launch
+            }
+            when (endpoint.queueInsertPosition) {
+                INSERT_AFTER_CURRENT_VIDEO -> player.addMediaItems((if (player.mediaItemCount == 0) -1 else player.currentMediaItemIndex) + 1, items)
+                INSERT_AT_END -> player.addMediaItems(items)
+                else -> {}
+            }
+            player.prepare()
+        }
+    }
 
     /**
      * Auto load more
@@ -311,15 +303,9 @@ class SongPlayer(
         }
     }
 
-    private fun addToLibrary(mediaData: MediaData) {
+    private fun addToLibrary(mediaMetadata: MediaMetadata) {
         scope.launch {
-            localRepository.addSong(Song(
-                id = mediaData.id,
-                title = mediaData.title,
-                artistName = mediaData.artist,
-                duration = if (player.duration != C.TIME_UNSET) (player.duration / 1000).toInt() else -1,
-                artworkType = mediaData.artworkType
-            ))
+            localRepository.addSong(mediaMetadata)
         }
     }
 
@@ -333,12 +319,7 @@ class SongPlayer(
         player.release()
     }
 
-    fun setPlayerView(playerView: StyledPlayerView) {
-        playerView.player = player
-    }
-
     companion object {
-        const val TAG = "SongPlayer"
         const val CHANNEL_ID = "music_channel_01"
         const val NOTIFICATION_ID = 888
 

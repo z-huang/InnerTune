@@ -93,7 +93,7 @@
     <string name="error_artist_name_empty">Artist name cannot be empty.</string>
 
     <string name="dialog_title_duplicate_artist">Duplicate artists</string>
-    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists.</string>
 
     <string name="dialog_title_choose_playlist">Choose playlist</string>
 

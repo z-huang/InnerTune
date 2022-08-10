@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 class ArtistsFragment : PagingRecyclerViewFragment<ArtistsAdapter>(),MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val artistsViewModel by viewModels<ArtistsViewModel>()
-    override val adapter = ArtistsAdapter()
+    override val adapter = ArtistsAdapter(lifecycleScope)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +32,7 @@ class ArtistsFragment : PagingRecyclerViewFragment<ArtistsAdapter>(),MenuProvide
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-                val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(this@ArtistsFragment.adapter.getItemByPosition(position)!!.id!!)
+                val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(this@ArtistsFragment.adapter.getItemByPosition(position)!!.id)
                 findNavController().navigate(directions)
             }
         }

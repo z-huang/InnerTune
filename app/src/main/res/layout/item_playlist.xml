@@ -12,11 +12,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/song_item_height"
+        android:layout_height="@dimen/list_item_height"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
-        android:orientation="vertical"
-        android:transitionName="@{@string/playlist_item_transition_name(playlist.playlistId)}">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/thumbnail_container"
@@ -33,7 +32,6 @@
                 android:id="@+id/imageView_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/background_song_cover"
                 android:scaleType="center"
                 android:src="@drawable/ic_queue_music" />
         </LinearLayout>

@@ -93,7 +93,7 @@
     <string name="error_artist_name_empty">아티스트 이름은 비워둘 수 없습니다.</string>
 
     <string name="dialog_title_duplicate_artist">중복 아티스트</string>
-    <string name="dialog_msg_duplicate_artist">아티스트 %1$s이(가) 이미 존재합니다. 두 아티스트를 병합하시겠습니까?</string>
+    <string name="dialog_msg_duplicate_artist">아티스트 %1$s이(가) 이미 존재합니다.</string>
 
     <string name="dialog_title_choose_playlist">플레이리스트 선택</string>
 

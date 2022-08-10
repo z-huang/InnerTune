@@ -93,7 +93,7 @@
     <string name="error_artist_name_empty">演出者名稱不能為空</string>
 
     <string name="dialog_title_duplicate_artist">重複的作曲家</string>
-    <string name="dialog_msg_duplicate_artist">作曲家「%1$s」已存在。合併兩個作曲家？</string>
+    <string name="dialog_msg_duplicate_artist">作曲家「%1$s」已存在。</string>
 
     <string name="dialog_title_choose_playlist">選擇播放清單</string>
 

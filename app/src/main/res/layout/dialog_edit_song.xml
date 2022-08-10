@@ -50,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:completionThreshold="1"
+                android:enabled="false"
                 android:singleLine="true"
                 tools:text="Song Artist" />
         </com.google.android.material.textfield.TextInputLayout>

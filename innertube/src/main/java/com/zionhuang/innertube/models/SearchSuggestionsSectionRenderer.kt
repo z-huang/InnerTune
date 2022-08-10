@@ -41,7 +41,8 @@ data class SearchSuggestionsSectionRenderer(
                 ITEM_ALBUM -> {
                     val menu = musicTwoColumnItemRenderer.menu.toItemMenu()
                     AlbumItem(
-                        id = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                        id = musicTwoColumnItemRenderer.navigationEndpoint.browseEndpoint!!.browseId,
+                        playlistId = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
                             ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
                         title = musicTwoColumnItemRenderer.title.toString(),
                         subtitle = musicTwoColumnItemRenderer.subtitle.toString(),

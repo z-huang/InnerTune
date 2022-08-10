@@ -11,7 +11,7 @@ data class ArtistHeader(
     override val id: String,
     val name: String,
     val description: String?,
-    val bannerThumbnail: List<Thumbnail>,
+    val bannerThumbnails: List<Thumbnail>,
     val shuffleEndpoint: NavigationEndpoint,
     val radioEndpoint: NavigationEndpoint,
 ) : BaseItem()
@@ -22,7 +22,7 @@ data class AlbumOrPlaylistHeader(
     val subtitle: String,
     val secondSubtitle: String,
     val description: String?,
-    val thumbnail: List<Thumbnail>,
+    val thumbnails: List<Thumbnail>,
     val menu: ItemMenu,
 ) : BaseItem()
 

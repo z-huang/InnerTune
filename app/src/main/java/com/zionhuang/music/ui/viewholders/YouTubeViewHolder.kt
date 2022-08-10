@@ -39,7 +39,7 @@ class YouTubeArtistHeaderViewHolder(
 ) : YouTubeViewHolder(binding) {
     fun bind(header: ArtistHeader) {
         binding.header = header
-        val bannerThumbnail = header.bannerThumbnail.last()
+        val bannerThumbnail = header.bannerThumbnails.last()
         binding.banner.updateLayoutParams<ConstraintLayout.LayoutParams> {
             dimensionRatio = "${bannerThumbnail.width}:${bannerThumbnail.height}"
         }

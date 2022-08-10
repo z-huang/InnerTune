@@ -47,7 +47,6 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>(), MenuProvider {
         adapter.apply {
             popupMenuListener = songsViewModel.songPopupMenuListener
             sortInfo = songsViewModel.sortInfo
-            downloadInfo = songsViewModel.downloadInfoLiveData
         }
 
         binding.recyclerView.apply {
@@ -57,7 +56,7 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>(), MenuProvider {
                 playbackViewModel.playQueue(requireActivity(),
                     ListQueue(
                         title = null,
-                        items = this@SongsFragment.adapter.snapshot().items.map { it.toMediaItem(context) }.drop(1),
+                        items = this@SongsFragment.adapter.snapshot().items.drop(1).map { it.toMediaItem() },
                         startIndex = pos - 1
                     )
                 )
@@ -77,15 +76,15 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>(), MenuProvider {
             adapter.tracker = this
             addActionModeObserver(requireActivity(), this, R.menu.song_contextual_action_bar) { item ->
                 val selectedMap = adapter.snapshot().items
-                    .filter { selection.contains(it.id) }
-                    .associateBy { it.id }
+                    .filter { selection.contains(it.song.id) }
+                    .associateBy { it.song.id }
                 val songs = selection.toList().mapNotNull { selectedMap[it] }
                 when (item.itemId) {
                     R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs, requireContext())
                     R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs, requireContext())
                     R.id.action_add_to_playlist -> songsViewModel.songPopupMenuListener.addToPlaylist(songs, requireContext())
-                    R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(selection.toList(), requireContext())
-                    R.id.action_remove_download -> songsViewModel.songPopupMenuListener.removeDownloads(selection.toList(), requireContext())
+                    R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(songs, requireContext())
+                    R.id.action_remove_download -> songsViewModel.songPopupMenuListener.removeDownloads(songs, requireContext())
                     R.id.action_delete -> songsViewModel.songPopupMenuListener.deleteSongs(songs)
                 }
                 true
@@ -100,12 +99,6 @@ class SongsFragment : PagingRecyclerViewFragment<SongsAdapter>(), MenuProvider {
 
         songsViewModel.sortInfo.liveData.observe(viewLifecycleOwner) {
             adapter.refresh()
-        }
-
-        songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
-            map.forEach { (key, value) ->
-                adapter.setProgress(key, value)
-            }
         }
 
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)

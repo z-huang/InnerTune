@@ -12,7 +12,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/song_item_height"
+        android:layout_height="@dimen/list_item_height"
         android:background="?colorSurface"
         android:clickable="true">
 
@@ -35,11 +35,12 @@
 
                 <ImageView
                     android:id="@+id/artwork"
+                    cornerRadius="@{@dimen/thumbnail_radius}"
+                    srcUrl="@{item.description.iconUri.toString()}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background_song_cover"
                     android:scaleType="center"
-                    app:artworkUri="@{item.description.iconUri}"
                     tools:src="@drawable/ic_music_note" />
             </LinearLayout>
 

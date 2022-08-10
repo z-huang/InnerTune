@@ -72,7 +72,6 @@ class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>()
         super.onViewCreated(view, savedInstanceState)
         adapter.apply {
             popupMenuListener = songsViewModel.songPopupMenuListener
-            downloadInfo = songsViewModel.downloadInfoLiveData
             itemTouchHelper = this@PlaylistSongsFragment.itemTouchHelper
             onProcessMove = {
                 viewModel.processMove(playlistId, it)
@@ -86,7 +85,7 @@ class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>()
                 playbackViewModel.playQueue(requireActivity(),
                     ListQueue(
                         title = null,
-                        items = this@PlaylistSongsFragment.adapter.snapshot().items.map { it.toMediaItem(context) },
+                        items = this@PlaylistSongsFragment.adapter.snapshot().items.map { it.toMediaItem() },
                         startIndex = pos
                     )
                 )
@@ -96,12 +95,6 @@ class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>()
         lifecycleScope.launch {
             songsViewModel.getPlaylistSongsAsFlow(playlistId).collectLatest {
                 adapter.submitData(it)
-            }
-        }
-
-        songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
-            map.forEach { (key, value) ->
-                adapter.setProgress(key, value)
             }
         }
 

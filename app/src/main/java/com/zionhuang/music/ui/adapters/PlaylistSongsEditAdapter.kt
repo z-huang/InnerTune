@@ -11,10 +11,10 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.Constants.TYPE_HEADER
 import com.zionhuang.music.constants.Constants.TYPE_ITEM
-import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
+import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.ui.viewholders.DraggableSongViewHolder
 import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
@@ -77,10 +77,10 @@ class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(Song
     fun getItemByPosition(position: Int): Song? = getItem(position)
 
     override fun getItemViewType(position: Int): Int =
-        if (getItem(position)?.id == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM
+        if (getItem(position)?.song?.id == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM
 
     class SongItemComparator : DiffUtil.ItemCallback<Song>() {
-        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.song.id == newItem.song.id
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem
     }

@@ -93,7 +93,7 @@
     <string name="error_artist_name_empty">アーティスト名は空白にできません。</string>
 
     <string name="dialog_title_duplicate_artist">アーティスト名が重複しています</string>
-    <string name="dialog_msg_duplicate_artist">アーティスト %1$s は既に存在します。統合しますか？</string>
+    <string name="dialog_msg_duplicate_artist">アーティスト %1$s は既に存在します。</string>
 
     <string name="dialog_title_choose_playlist">プレイリストを選択</string>
 

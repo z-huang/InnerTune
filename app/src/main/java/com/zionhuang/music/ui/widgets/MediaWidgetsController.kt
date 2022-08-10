@@ -14,10 +14,10 @@ import com.google.android.material.slider.Slider
 import com.zionhuang.music.utils.makeTimeString
 
 class MediaWidgetsController(
-        context: Context,
-        private val progressBar: ProgressBar,
-        private val slider: Slider,
-        private val progressTextView: TextView,
+    context: Context,
+    private val progressBar: ProgressBar,
+    private val slider: Slider,
+    private val progressTextView: TextView,
 ) {
     private var sliderIsTracking = false
     private var mediaController: MediaControllerCompat? = null
@@ -40,7 +40,7 @@ class MediaWidgetsController(
 
         })
         slider.addOnChangeListener { _, value, _ ->
-            progressTextView.text = makeTimeString((value / 1000).toLong())
+            progressTextView.text = makeTimeString((value).toLong())
         }
     }
 
@@ -81,7 +81,7 @@ class MediaWidgetsController(
             if (slider.isEnabled) {
                 slider.value = progress.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
             }
-            progressTextView.text = makeTimeString(progress.toLong() / 1000)
+            progressTextView.text = makeTimeString(progress.toLong())
             if (state.state == PlaybackStateCompat.STATE_PLAYING) {
                 val timeToEnd = ((duration - progress) / state.playbackSpeed).toInt()
                 if (timeToEnd > 0) {
@@ -119,7 +119,7 @@ class MediaWidgetsController(
             val animatedValue = animation.animatedValue as Int
             progressBar.progress = animatedValue
             slider.value = animatedValue.toFloat().coerceIn(slider.valueFrom, slider.valueTo)
-            progressTextView.text = makeTimeString((animatedValue / 1000).toLong())
+            progressTextView.text = makeTimeString(animatedValue.toLong())
         }
     }
 }

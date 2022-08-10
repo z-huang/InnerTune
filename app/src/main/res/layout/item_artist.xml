@@ -8,15 +8,18 @@
         <variable
             name="artist"
             type="com.zionhuang.music.db.entities.ArtistEntity" />
+
+        <variable
+            name="cornerRadius"
+            type="Float" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/song_item_height"
+        android:layout_height="@dimen/list_item_height"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
-        android:orientation="vertical"
-        android:transitionName="@{@string/artist_item_transition_name(artist.id)}">
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/thumbnail_container"
@@ -31,11 +34,15 @@
 
             <ImageView
                 android:id="@+id/imageView_thumbnail"
+                circleCrop="@{true}"
+                placeholder="@{@drawable/ic_artist}"
+                srcUrl="@{artist.thumbnailUrl}"
+                thumbnailHeight="@{@dimen/list_thumbnail_size}"
+                thumbnailWidth="@{@dimen/list_thumbnail_size}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/background_song_cover"
-                android:scaleType="center"
-                android:src="@drawable/ic_artist" />
+                android:scaleType="fitCenter"
+                tools:src="@drawable/ic_artist" />
         </LinearLayout>
 
         <LinearLayout

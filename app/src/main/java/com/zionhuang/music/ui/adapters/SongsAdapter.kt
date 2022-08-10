@@ -11,14 +11,13 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.Constants.TYPE_HEADER
 import com.zionhuang.music.constants.Constants.TYPE_ITEM
-import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
-import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
+import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
@@ -34,12 +33,7 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SongViewHolder -> getItem(position)?.let { song ->
-                holder.bind(song, tracker?.isSelected(song.id))
-                if (song.downloadState == STATE_DOWNLOADING) {
-                    downloadInfo?.value?.get(song.id)?.let { info ->
-                        holder.setProgress(info, false)
-                    }
-                }
+                holder.bind(song, tracker?.isSelected(song.song.id))
             }
             is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }
@@ -51,11 +45,7 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
                 if (payloads.isEmpty()) {
                     onBindViewHolder(holder, position)
                 } else when (val payload = payloads[0]) {
-                    SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(
-                        tracker?.isSelected(
-                            holder.binding.song?.id
-                        )
-                    )
+                    SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(tracker?.isSelected(holder.binding.song?.song?.id))
                     is Song -> holder.bind(payload)
                     is DownloadProgress -> holder.setProgress(payload)
                 }
@@ -71,16 +61,8 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
             else -> throw IllegalArgumentException("Unexpected view type.")
         }
 
-    fun getItemByPosition(position: Int): Song? = getItem(position)
-
-    fun setProgress(id: String, progress: DownloadProgress) {
-        snapshot().indexOfFirst { it?.id == id }.takeIf { it != -1 }?.let {
-            notifyItemChanged(it, progress)
-        }
-    }
-
     override fun getItemViewType(position: Int): Int =
-        if (getItem(position)?.id == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM
+        if (getItem(position)?.song?.id == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM
 
     private val dateFormat = DateFormat.getDateInstance()
 
@@ -88,15 +70,15 @@ class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemCo
         if (getItemViewType(position) == TYPE_HEADER) "#"
         else getItem(position)?.let {
             when (sortInfo!!.type) {
-                ORDER_CREATE_DATE -> dateFormat.format(it.createDate)
-                ORDER_NAME -> it.title[0].toString()
-                ORDER_ARTIST -> it.artistName
-                else -> it.title[0].toString()
+                ORDER_CREATE_DATE -> dateFormat.format(it.song.createDate)
+                ORDER_NAME -> it.song.title[0].toString()
+                ORDER_ARTIST -> it.artists.firstOrNull()?.name?.get(0)?.toString()
+                else -> it.song.title[0].toString()
             }
         } ?: ""
 
     class SongItemComparator : DiffUtil.ItemCallback<Song>() {
-        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem.song.id == newItem.song.id
         override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: Song, newItem: Song): Song = newItem
     }

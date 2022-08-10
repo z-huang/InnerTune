@@ -71,7 +71,8 @@ class MusicService : LifecycleMediaBrowserService() {
         val sessionToken: MediaSessionCompat.Token
             get() = songPlayer.mediaSession.sessionToken
 
-        fun setPlayerView(playerView: StyledPlayerView) = songPlayer.setPlayerView(playerView)
+        val songPlayer: SongPlayer
+            get() = this@MusicService.songPlayer
 
         fun playQueue(queue: Queue) {
             songPlayer.playQueue(queue)

@@ -13,7 +13,7 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragmentDirections.openYouTubeBrowseFragment
 
-open class NavigationEndpointHandler(private val fragment: Fragment) {
+open class NavigationEndpointHandler(val fragment: Fragment) {
     open fun handle(navigationEndpoint: NavigationEndpoint?, item: Item? = null) = when (val endpoint = navigationEndpoint?.endpoint) {
         is WatchEndpoint -> {
             MediaSessionConnection.binder?.playQueue(YouTubeQueue(endpoint, item))

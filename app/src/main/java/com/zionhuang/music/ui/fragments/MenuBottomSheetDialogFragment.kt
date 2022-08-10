@@ -4,11 +4,17 @@ import android.os.Bundle
 import android.view.*
 import androidx.annotation.MenuRes
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
+import com.zionhuang.innertube.models.AlbumItem
 import com.zionhuang.innertube.models.Item
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.R
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.NavigationEndpointHandler
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 typealias MenuModifier = Menu.() -> Unit
@@ -76,7 +82,14 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     R.id.action_radio -> navigationEndpointHandler.handle(item.menu.radioEndpoint)
                     R.id.action_play_next -> navigationEndpointHandler.handle(item.menu.playNextEndpoint, item)
                     R.id.action_add_to_queue -> navigationEndpointHandler.handle(item.menu.addToQueueEndpoint, item)
-                    R.id.action_add_to_library -> {}
+                    R.id.action_add_to_library -> navigationEndpointHandler.fragment.lifecycleScope.launch {
+                        when (item) {
+                            is SongItem -> SongRepository.addSong(item)
+                            is AlbumItem -> SongRepository.addAlbum(item)
+                            is PlaylistItem -> SongRepository.addPlaylist(item)
+                            else -> {}
+                        }
+                    }
                     R.id.action_add_to_playlist -> {}
                     R.id.action_download -> {}
                     R.id.action_view_artist -> navigationEndpointHandler.handle(item.menu.artistEndpoint)

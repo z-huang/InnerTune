@@ -7,14 +7,15 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.map
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.preference
-import com.zionhuang.music.models.MediaData
 import com.zionhuang.music.models.MediaSessionQueueData
 import com.zionhuang.music.models.PlaybackStateData
-import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.ui.activities.MainActivity
@@ -22,21 +23,13 @@ import com.zionhuang.music.utils.livedata.SafeLiveData
 import com.zionhuang.music.utils.livedata.SafeMutableLiveData
 
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
-    private val _mediaData = MutableLiveData<MediaData?>(null)
-    val mediaData: LiveData<MediaData?> get() = _mediaData
+    val mediaMetadata: LiveData<MediaMetadataCompat?> get() = MediaSessionConnection.nowPlaying
 
     private val _playbackState = SafeMutableLiveData(PlaybackStateData())
     val playbackState: SafeLiveData<PlaybackStateData> get() = _playbackState
 
     private val _queueData = SafeMutableLiveData(MediaSessionQueueData())
     val queueData: SafeLiveData<MediaSessionQueueData> get() = _queueData
-
-    private val mediaMetadataObserver = Observer<MediaMetadataCompat?> { mediaMetadata ->
-        if (mediaMetadata != null) {
-            _mediaData.postValue(mediaData.value?.pullMediaMetadata(mediaMetadata)
-                ?: mediaMetadata.toMediaData())
-        }
-    }
 
     private val playbackStateObserver = Observer<PlaybackStateCompat?> { playbackState ->
         if (playbackState != null) {
@@ -51,7 +44,6 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     private val mediaSessionConnection = MediaSessionConnection.apply {
         if (!isConnected.value) connect(application)
         playbackState.observeForever(playbackStateObserver)
-        nowPlaying.observeForever(mediaMetadataObserver)
         queueData.observeForever(queueDataObserver)
     }
 
@@ -64,10 +56,6 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     val transportControls: MediaControllerCompat.TransportControls? get() = mediaSessionConnection.transportControls
 
     val expandOnPlay by preference(R.string.pref_expand_on_play, false)
-
-    fun setPlayerView(playerView: StyledPlayerView) {
-        mediaSessionConnection.playerView = playerView
-    }
 
     fun togglePlayPause() {
         if (playbackState.value.state == STATE_PLAYING) {
@@ -112,7 +100,6 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         super.onCleared()
         mediaSessionConnection.apply {
             playbackState.removeObserver(playbackStateObserver)
-            nowPlaying.removeObserver(mediaMetadataObserver)
             queueData.removeObserver(queueDataObserver)
             disconnect(getApplication())
         }

@@ -13,7 +13,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="152dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
@@ -23,41 +23,43 @@
         <ImageView
             android:id="@+id/thumbnail"
             circleCrop="@{item instanceof ArtistItem}"
-            roundedCorner="@{!(item instanceof ArtistItem)}"
+            cornerRadius="@{@dimen/thumbnail_radius}"
+            thumbnailHeight="@{@dimen/square_thumbnail_size}"
             thumbnails="@{item.thumbnails}"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1:1"
+            android:layout_height="@dimen/square_thumbnail_size"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:layout_constraintDimensionRatio="1:1"
             tools:src="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/title"
             style="@style/TextAppearance.Material3.BodyLarge"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@{item.title}"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/thumbnail"
+            app:layout_constraintStart_toStartOf="@id/thumbnail"
             app:layout_constraintTop_toBottomOf="@id/thumbnail"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/subtitle"
             style="@style/TextAppearance.Material3.BodyMedium"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@{item.subtitle}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/thumbnail"
+            app:layout_constraintStart_toStartOf="@id/thumbnail"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="subtitle" />
 

@@ -159,6 +159,8 @@ dependencies {
     implementation("com.github.bumptech.glide:annotations:4.13.2")
     implementation("com.github.bumptech.glide:okhttp3-integration:4.13.1")
     kapt("com.github.bumptech.glide:compiler:4.13.1")
+    // Coil
+    implementation("io.coil-kt:coil:2.1.0")
     // Jsoup
     implementation("org.jsoup:jsoup:1.14.3")
     // Fast Scroll
