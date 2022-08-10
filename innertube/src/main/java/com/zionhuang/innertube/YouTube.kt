@@ -32,9 +32,6 @@ object YouTube {
 
     suspend fun searchAllType(query: String): BrowseResult {
         val response = innerTube.search(WEB_REMIX, query).body<SearchResponse>()
-//        val filters = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.header?.chipCloudRenderer?.chips
-//            ?.filter { it.chipCloudChipRenderer.text != null }
-//            ?.map { it.toFilter() }
         return BrowseResult(
             items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
                 .flatMap { it.toBaseItems() }
@@ -108,7 +105,6 @@ object YouTube {
         )
     }
 
-
     suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): List<SongItem> {
         if (videoIds != null) {
             assert(videoIds.size <= MAX_GET_QUEUE_SIZE) // Max video limit
@@ -116,7 +112,6 @@ object YouTube {
         return innerTube.getQueue(WEB_REMIX, videoIds, playlistId).body<GetQueueResponse>().queueDatas
             .mapNotNull { it.content.playlistPanelVideoRenderer?.toSongItem() }
     }
-
 
     @JvmInline
     value class SearchFilter(val value: String) {
