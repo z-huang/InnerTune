@@ -27,8 +27,6 @@ object MediaSessionConnection {
     val nowPlaying = MutableLiveData<MediaMetadataCompat?>(null)
     val queueData = MutableLiveData(MediaSessionQueueData())
 
-    val binderLiveData = MutableLiveData<MusicBinder>()
-
     private var _binder: MusicBinder? = null
     val binder: MusicBinder?
         get() = _binder
@@ -38,7 +36,6 @@ object MediaSessionConnection {
             override fun onServiceConnected(name: ComponentName, iBinder: IBinder) {
                 if (iBinder !is MusicBinder) return
                 _binder = iBinder
-                binderLiveData.postValue(iBinder)
                 try {
                     mediaController = MediaControllerCompat(context, iBinder.sessionToken).apply {
                         registerCallback(mediaControllerCallback)
@@ -50,7 +47,6 @@ object MediaSessionConnection {
 
             override fun onServiceDisconnected(name: ComponentName) {
                 _binder = null
-                binderLiveData.postValue(null)
                 mediaController?.unregisterCallback(mediaControllerCallback)
                 isConnected.postValue(false)
             }
