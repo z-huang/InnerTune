@@ -21,7 +21,7 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistsFragment : PagingRecyclerViewFragment<ArtistsAdapter>(),MenuProvider {
+class ArtistsFragment : PagingRecyclerViewFragment<ArtistsAdapter>(), MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val artistsViewModel by viewModels<ArtistsViewModel>()
     override val adapter = ArtistsAdapter(lifecycleScope)

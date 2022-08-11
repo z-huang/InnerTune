@@ -12,8 +12,8 @@ data class ArtistHeader(
     val name: String,
     val description: String?,
     val bannerThumbnails: List<Thumbnail>,
-    val shuffleEndpoint: NavigationEndpoint,
-    val radioEndpoint: NavigationEndpoint,
+    val shuffleEndpoint: NavigationEndpoint?,
+    val radioEndpoint: NavigationEndpoint?,
 ) : BaseItem()
 
 data class AlbumOrPlaylistHeader(

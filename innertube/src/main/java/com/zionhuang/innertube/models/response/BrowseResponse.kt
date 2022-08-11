@@ -69,8 +69,8 @@ data class BrowseResponse(
                 name = musicImmersiveHeaderRenderer.title.toString(),
                 description = musicImmersiveHeaderRenderer.description?.toString(),
                 bannerThumbnails = musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
-                shuffleEndpoint = musicImmersiveHeaderRenderer.playButton.buttonRenderer.navigationEndpoint,
-                radioEndpoint = musicImmersiveHeaderRenderer.startRadioButton.buttonRenderer.navigationEndpoint,
+                shuffleEndpoint = musicImmersiveHeaderRenderer.playButton?.buttonRenderer?.navigationEndpoint,
+                radioEndpoint = musicImmersiveHeaderRenderer.startRadioButton?.buttonRenderer?.navigationEndpoint,
             )
             musicDetailHeaderRenderer != null -> AlbumOrPlaylistHeader(
                 id = musicDetailHeaderRenderer.title.toString(),
@@ -89,8 +89,8 @@ data class BrowseResponse(
             val title: Runs,
             val description: Runs?,
             val thumbnail: ThumbnailRenderer,
-            val playButton: Button,
-            val startRadioButton: Button,
+            val playButton: Button?,
+            val startRadioButton: Button?,
             val menu: Menu,
         )
 
