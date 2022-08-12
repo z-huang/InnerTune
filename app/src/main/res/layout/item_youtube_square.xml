@@ -25,6 +25,7 @@
             circleCrop="@{item instanceof ArtistItem}"
             cornerRadius="@{@dimen/thumbnail_radius}"
             thumbnailHeight="@{@dimen/square_thumbnail_size}"
+            thumbnailWidth="@{item instanceof ArtistItem ? @dimen/square_thumbnail_size : 0f}"
             thumbnails="@{item.thumbnails}"
             android:layout_width="0dp"
             android:layout_height="@dimen/square_thumbnail_size"
