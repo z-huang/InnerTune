@@ -5,7 +5,11 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import com.google.android.exoplayer2.MediaItem
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA
+import com.zionhuang.music.db.entities.ArtistEntity
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import kotlinx.parcelize.Parcelize
 
@@ -54,3 +58,43 @@ data class MediaMetadata(
         private val builder = MediaDescriptionCompat.Builder()
     }
 }
+
+fun Song.toMediaMetadata() = MediaMetadata(
+    id = song.id,
+    title = song.title,
+    artists = artists.map {
+        MediaMetadata.Artist(
+            id = it.id,
+            name = it.name
+        )
+    },
+    duration = song.duration,
+    thumbnailUrl = song.thumbnailUrl,
+    album = album?.let {
+        MediaMetadata.Album(
+            id = it.id,
+            title = it.title,
+            year = it.year
+        )
+    }
+)
+
+fun SongItem.toMediaMetadata() = MediaMetadata(
+    id = id,
+    title = title,
+    artists = artists.map {
+        MediaMetadata.Artist(
+            id = it.navigationEndpoint?.browseEndpoint?.browseId ?: ArtistEntity.generateArtistId(),
+            name = it.text
+        )
+    },
+    duration = duration ?: -1,
+    thumbnailUrl = thumbnails.lastOrNull()?.url,
+    album = album?.let {
+        MediaMetadata.Album(
+            id = it.navigationEndpoint.browseId,
+            title = it.text,
+            year = albumYear
+        )
+    }
+)

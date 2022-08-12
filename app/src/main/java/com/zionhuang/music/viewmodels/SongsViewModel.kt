@@ -15,9 +15,9 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.LocalItem
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.models.base.IMutableSortInfo
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.base.LocalRepository
@@ -77,7 +77,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun playNext(songs: List<Song>, context: Context) {
             mediaSessionConnection.mediaController?.sendCommand(
                 COMMAND_PLAY_NEXT,
-                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaItem() }.toTypedArray()),
+                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
         }
@@ -85,7 +85,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
         override fun addToQueue(songs: List<Song>, context: Context) {
             mediaSessionConnection.mediaController?.sendCommand(
                 COMMAND_ADD_TO_QUEUE,
-                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaItem() }.toTypedArray()),
+                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
         }
