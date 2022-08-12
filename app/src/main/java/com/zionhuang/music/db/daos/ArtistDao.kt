@@ -2,16 +2,15 @@ package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.SongArtistMap
 
 @Dao
 interface ArtistDao {
-    @Query("SELECT * FROM artist")
-    suspend fun getAllArtistsAsList(): List<ArtistEntity>
-
-    @Query("SELECT * FROM artist")
-    fun getAllArtistsAsPagingSource(): PagingSource<Int, ArtistEntity>
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM song_artist_map WHERE artistId = artist.id) AS songCount FROM artist")
+    fun getAllArtistsAsPagingSource(): PagingSource<Int, Artist>
 
     @Query("SELECT * FROM artist WHERE id = :id")
     suspend fun getArtistById(id: String): ArtistEntity?

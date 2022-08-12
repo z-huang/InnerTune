@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_songs">曲</string>
     <string name="title_artists">アーティスト</string>
+    <string name="title_albums">Albums</string>
     <string name="title_channels">チャンネル</string>
     <string name="title_playlists">プレイリスト</string>
     <string name="title_explore">探索</string>

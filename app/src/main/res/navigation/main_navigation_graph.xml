@@ -25,6 +25,10 @@
         </action>
     </fragment>
     <fragment
+        android:id="@+id/albumsFragment"
+        android:name="com.zionhuang.music.ui.fragments.AlbumsFragment"
+        android:label="@string/title_albums" />
+    <fragment
         android:id="@+id/playlistsFragment"
         android:name="com.zionhuang.music.ui.fragments.PlaylistsFragment"
         android:label="@string/title_playlists">

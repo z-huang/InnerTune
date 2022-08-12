@@ -253,7 +253,7 @@ class SongPlayer(
         }
     }
 
-    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: Item) {
+    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: YTItem) {
         scope.launch {
             val items = when (item) {
                 is SongItem -> listOf(item.toMediaItem())

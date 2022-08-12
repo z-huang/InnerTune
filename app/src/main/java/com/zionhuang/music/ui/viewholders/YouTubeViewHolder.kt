@@ -1,5 +1,7 @@
 package com.zionhuang.music.ui.viewholders
 
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -13,15 +15,15 @@ import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
+import com.zionhuang.music.ui.viewholders.base.BindingViewHolder
 import com.zionhuang.music.utils.NavigationEndpointHandler
 
-sealed class YouTubeViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
-
+sealed class YouTubeViewHolder<T : ViewDataBinding>(viewGroup: ViewGroup, @LayoutRes layoutId: Int) : BindingViewHolder<T>(viewGroup, layoutId)
 
 class YouTubeHeaderViewHolder(
-    override val binding: ItemYoutubeHeaderBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeViewHolder(binding) {
+) : YouTubeViewHolder<ItemYoutubeHeaderBinding>(viewGroup, R.layout.item_youtube_header) {
     fun bind(header: Header) {
         binding.header = header
         header.moreNavigationEndpoint?.let { endpoint ->
@@ -34,9 +36,9 @@ class YouTubeHeaderViewHolder(
 }
 
 class YouTubeArtistHeaderViewHolder(
-    override val binding: ItemYoutubeHeaderArtistBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeViewHolder(binding) {
+) : YouTubeViewHolder<ItemYoutubeHeaderArtistBinding>(viewGroup, R.layout.item_youtube_header_artist) {
     fun bind(header: ArtistHeader) {
         binding.header = header
         val bannerThumbnail = header.bannerThumbnails.last()
@@ -53,9 +55,9 @@ class YouTubeArtistHeaderViewHolder(
 }
 
 class YouTubeAlbumOrPlaylistHeaderViewHolder(
-    override val binding: ItemYoutubeHeaderAlbumBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeViewHolder(binding) {
+) : YouTubeViewHolder<ItemYoutubeHeaderAlbumBinding>(viewGroup, R.layout.item_youtube_header_album) {
     fun bind(header: AlbumOrPlaylistHeader) {
         binding.header = header
         binding.btnPlay.setOnClickListener {
@@ -72,18 +74,18 @@ class YouTubeAlbumOrPlaylistHeaderViewHolder(
 }
 
 class YouTubeDescriptionViewHolder(
-    override val binding: ItemYoutubeDescriptionBinding,
-) : YouTubeViewHolder(binding) {
+    val viewGroup: ViewGroup,
+) : YouTubeViewHolder<ItemYoutubeDescriptionBinding>(viewGroup, R.layout.item_youtube_description) {
     fun bind(section: DescriptionSection) {
         binding.section = section
     }
 }
 
 class YouTubeItemContainerViewHolder(
-    override val binding: ItemRecyclerviewBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeViewHolder(binding) {
-    fun bind(section: BaseItem) {
+) : YouTubeViewHolder<ItemRecyclerviewBinding>(viewGroup, R.layout.item_recyclerview) {
+    fun bind(section: YTBaseItem) {
         when (section) {
             is CarouselSection -> {
                 val itemAdapter = YouTubeItemAdapter(navigationEndpointHandler, section.itemViewType, false)
@@ -92,7 +94,7 @@ class YouTubeItemContainerViewHolder(
                 itemAdapter.submitList(section.items)
             }
             is GridSection -> {
-                val itemAdapter = YouTubeItemAdapter(navigationEndpointHandler, BaseItem.ViewType.BLOCK, true)
+                val itemAdapter = YouTubeItemAdapter(navigationEndpointHandler, YTBaseItem.ViewType.BLOCK, true)
                 binding.recyclerView.layoutManager = GridLayoutManager(binding.context, 2) // TODO spanCount for landscape or bigger screen
                 binding.recyclerView.adapter = itemAdapter
                 itemAdapter.submitList(section.items)
@@ -102,15 +104,15 @@ class YouTubeItemContainerViewHolder(
     }
 }
 
-sealed class YouTubeItemViewHolder(override val binding: ViewDataBinding) : YouTubeViewHolder(binding) {
-    abstract fun bind(item: Item)
+sealed class YouTubeItemViewHolder<T : ViewDataBinding>(viewGroup: ViewGroup, @LayoutRes layoutId: Int) : YouTubeViewHolder<T>(viewGroup, layoutId) {
+    abstract fun bind(item: YTItem)
 }
 
 class YouTubeListItemViewHolder(
-    override val binding: ItemYoutubeListBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeItemViewHolder(binding) {
-    override fun bind(item: Item) {
+) : YouTubeItemViewHolder<ItemYoutubeListBinding>(viewGroup, R.layout.item_youtube_list) {
+    override fun bind(item: YTItem) {
         binding.item = item
         if (item is SongItem && item.index != null) {
             binding.index.text = item.index
@@ -129,10 +131,10 @@ class YouTubeListItemViewHolder(
 }
 
 class YouTubeSquareItemViewHolder(
-    override val binding: ItemYoutubeSquareBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeItemViewHolder(binding) {
-    override fun bind(item: Item) {
+) : YouTubeItemViewHolder<ItemYoutubeSquareBinding>(viewGroup, R.layout.item_youtube_square) {
+    override fun bind(item: YTItem) {
         binding.item = item
         val thumbnail = item.thumbnails.last()
         binding.thumbnail.updateLayoutParams<ConstraintLayout.LayoutParams> {
@@ -153,9 +155,9 @@ class YouTubeSquareItemViewHolder(
 }
 
 class YouTubeNavigationItemViewHolder(
-    override val binding: ItemYoutubeNavigationBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeViewHolder(binding) {
+) : YouTubeViewHolder<ItemYoutubeNavigationBinding>(viewGroup, R.layout.item_youtube_navigation) {
     fun bind(item: NavigationItem) {
         binding.item = item
         when (item.icon) {
@@ -174,9 +176,9 @@ class YouTubeNavigationItemViewHolder(
 }
 
 class YouTubeNavigationButtonViewHolder(
-    override val binding: ItemYoutubeNavigationBtnBinding,
+    val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeViewHolder(binding) {
+) : YouTubeViewHolder<ItemYoutubeNavigationBtnBinding>(viewGroup, R.layout.item_youtube_navigation_btn) {
     fun bind(item: NavigationItem) {
         binding.item = item
         binding.card.setOnClickListener {
@@ -187,10 +189,10 @@ class YouTubeNavigationButtonViewHolder(
 }
 
 class YouTubeSuggestionViewHolder(
-    override val binding: ItemYoutubeSuggestionBinding,
+    val viewGroup: ViewGroup,
     private val onFillQuery: (String) -> Unit,
     private val onSearch: (String) -> Unit,
-) : YouTubeViewHolder(binding) {
+) : YouTubeViewHolder<ItemYoutubeSuggestionBinding>(viewGroup, R.layout.item_youtube_suggestion) {
     fun bind(item: SuggestionTextItem) {
         binding.query = item.query
         binding.executePendingBindings()
@@ -200,5 +202,5 @@ class YouTubeSuggestionViewHolder(
 }
 
 class YouTubeSeparatorViewHolder(
-    override val binding: ItemSeparatorBinding,
-) : YouTubeViewHolder(binding)
+    val viewGroup: ViewGroup,
+) : YouTubeViewHolder<ItemSeparatorBinding>(viewGroup, R.layout.item_separator)

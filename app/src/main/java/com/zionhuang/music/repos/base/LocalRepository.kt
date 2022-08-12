@@ -25,7 +25,7 @@ interface LocalRepository {
     fun getArtistSongs(artistId: String, sortInfo: ISortInfo): ListWrapper<Int, Song>
     fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo): ListWrapper<Int, Song>
 
-    fun getAllArtists(): ListWrapper<Int, ArtistEntity>
+    fun getAllArtists(): ListWrapper<Int, Artist>
     suspend fun getArtistById(artistId: String): ArtistEntity?
     suspend fun getArtistByName(name: String): ArtistEntity?
     fun searchArtists(query: String): ListWrapper<Int, ArtistEntity>
@@ -33,7 +33,9 @@ interface LocalRepository {
     suspend fun updateArtist(artist: ArtistEntity)
     suspend fun deleteArtist(artist: ArtistEntity)
 
-    fun getAllPlaylists(): ListWrapper<Int, PlaylistEntity>
+    fun getAllAlbums(): ListWrapper<Int, Album>
+
+    fun getAllPlaylists(): ListWrapper<Int, Playlist>
     suspend fun getPlaylistById(playlistId: String): PlaylistEntity?
     fun searchPlaylists(query: String): ListWrapper<Int, PlaylistEntity>
     suspend fun addPlaylist(playlist: PlaylistEntity)

@@ -8,7 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import com.zionhuang.innertube.models.AlbumItem
-import com.zionhuang.innertube.models.Item
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.R
@@ -69,7 +69,7 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
             arguments = bundleOf(KEY_MENU_RES_ID to menuResId)
         }
 
-        fun newInstance(item: Item, navigationEndpointHandler: NavigationEndpointHandler) = newInstance(R.menu.youtube_item)
+        fun newInstance(item: YTItem, navigationEndpointHandler: NavigationEndpointHandler) = newInstance(R.menu.youtube_item)
             .setMenuModifier {
                 findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
                 findItem(R.id.action_play_next)?.isVisible = item.menu.playNextEndpoint != null

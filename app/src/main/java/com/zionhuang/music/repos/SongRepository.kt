@@ -269,7 +269,6 @@ object SongRepository : LocalRepository {
 
 
     override fun getAllArtists() = ListWrapper(
-        getList = { withContext(IO) { artistDao.getAllArtistsAsList() } },
         getPagingSource = { artistDao.getAllArtistsAsPagingSource() }
     )
 
@@ -314,12 +313,19 @@ object SongRepository : LocalRepository {
         artistDao.delete(artist)
     }
 
+    override fun getAllAlbums() = ListWrapper(
+        getPagingSource = { albumDao.getAllAlbumsAsPagingSource() }
+    )
+
     override fun getAllPlaylists() = ListWrapper(
         getList = { withContext(IO) { playlistDao.getAllPlaylistsAsList() } },
         getPagingSource = { playlistDao.getAllPlaylistsAsPagingSource() }
     )
 
-    override suspend fun getPlaylistById(playlistId: String): PlaylistEntity? = withContext(IO) { playlistDao.getPlaylist(playlistId) }
+    override suspend fun getPlaylistById(playlistId: String): PlaylistEntity? = withContext(IO) {
+        playlistDao.getPlaylist(playlistId)
+    }
+
     override fun searchPlaylists(query: String) = ListWrapper<Int, PlaylistEntity>(
         getList = { withContext(IO) { playlistDao.searchPlaylists(query) } }
     )

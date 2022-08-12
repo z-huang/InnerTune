@@ -21,7 +21,7 @@ object YouTube {
 
     fun setProxyUrl(url: String) = innerTube.setProxyUrl(url)
 
-    suspend fun getSearchSuggestions(query: String): List<BaseItem> =
+    suspend fun getSearchSuggestions(query: String): List<YTBaseItem> =
         innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents
             .flatMap { section ->
                 section.searchSuggestionsSectionRenderer.contents.mapNotNull { it.toItem() }

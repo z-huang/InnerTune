@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.zionhuang.innertube.models.Item" />
+            type="com.zionhuang.innertube.models.YTItem" />
 
         <import type="android.view.View" />
 
@@ -39,15 +39,14 @@
             app:layout_constraintEnd_toStartOf="@id/content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_music_note"
-            tools:visibility="gone" />
+            tools:src="@drawable/ic_music_note" />
 
         <TextView
             android:id="@+id/index"
             style="@style/TextAppearance.Material3.BodyMedium"
             android:layout_width="42dp"
-            android:layout_marginEnd="6dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
             android:gravity="center"
             android:visibility="@{item.thumbnails.empty ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -101,8 +100,9 @@
 
                 <TextView
                     android:id="@+id/subtitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:singleLine="true"
                     android:text="@{item.subtitle}"
                     android:textSize="12sp"

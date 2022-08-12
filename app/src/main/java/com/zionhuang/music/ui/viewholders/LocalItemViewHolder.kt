@@ -9,12 +9,10 @@ import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
-import com.zionhuang.music.databinding.ItemArtistBinding
-import com.zionhuang.music.databinding.ItemPlaylistBinding
-import com.zionhuang.music.databinding.ItemSongBinding
-import com.zionhuang.music.databinding.ItemSongHeaderBinding
-import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.databinding.*
+import com.zionhuang.music.db.entities.Album
+import com.zionhuang.music.db.entities.Artist
+import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.show
@@ -80,18 +78,37 @@ class ArtistViewHolder(
     override val binding: ItemArtistBinding,
     private val popupMenuListener: ArtistPopupMenuListener?,
 ) : LocalItemViewHolder(binding) {
-    fun bind(artist: ArtistEntity) {
+    fun bind(artist: Artist) {
         binding.artist = artist
         binding.btnMoreAction.setOnClickListener {
-            MenuBottomSheetDialogFragment
-                .newInstance(R.menu.artist)
-                .setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.context)
-                        R.id.action_delete -> popupMenuListener?.deleteArtist(artist)
-                    }
-                }
-                .show(binding.context)
+//            MenuBottomSheetDialogFragment
+//                .newInstance(R.menu.artist)
+//                .setOnMenuItemClickListener {
+//                    when (it.itemId) {
+//                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.context)
+//                        R.id.action_delete -> popupMenuListener?.deleteArtist(artist)
+//                    }
+//                }
+//                .show(binding.context)
+        }
+    }
+}
+
+class AlbumViewHolder(
+    override val binding: ItemAlbumBinding,
+) : LocalItemViewHolder(binding) {
+    fun bind(album: Album) {
+        binding.album = album
+        binding.btnMoreAction.setOnClickListener {
+//            MenuBottomSheetDialogFragment
+//                .newInstance(R.menu.artist)
+//                .setOnMenuItemClickListener {
+//                    when (it.itemId) {
+//                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.context)
+//                        R.id.action_delete -> popupMenuListener?.deleteArtist(artist)
+//                    }
+//                }
+//                .show(binding.context)
         }
     }
 }
@@ -100,18 +117,18 @@ class PlaylistViewHolder(
     override val binding: ItemPlaylistBinding,
     private val popupMenuListener: PlaylistPopupMenuListener?,
 ) : LocalItemViewHolder(binding) {
-    fun bind(playlist: PlaylistEntity) {
+    fun bind(playlist: Playlist) {
         binding.playlist = playlist
         binding.btnMoreAction.setOnClickListener {
-            MenuBottomSheetDialogFragment
-                .newInstance(R.menu.artist)
-                .setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener?.editPlaylist(playlist, binding.context)
-                        R.id.action_delete -> popupMenuListener?.deletePlaylist(playlist)
-                    }
-                }
-                .show(binding.context)
+//            MenuBottomSheetDialogFragment
+//                .newInstance(R.menu.artist)
+//                .setOnMenuItemClickListener {
+//                    when (it.itemId) {
+//                        R.id.action_edit -> popupMenuListener?.editPlaylist(playlist, binding.context)
+//                        R.id.action_delete -> popupMenuListener?.deletePlaylist(playlist)
+//                    }
+//                }
+//                .show(binding.context)
         }
     }
 }

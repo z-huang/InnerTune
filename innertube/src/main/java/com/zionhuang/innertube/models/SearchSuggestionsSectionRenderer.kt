@@ -11,7 +11,7 @@ data class SearchSuggestionsSectionRenderer(
         val searchSuggestionRenderer: SearchSuggestionRenderer?,
         val musicTwoColumnItemRenderer: MusicTwoColumnItemRenderer?,
     ) {
-        fun toItem(): BaseItem? = when {
+        fun toItem(): YTBaseItem? = when {
             searchSuggestionRenderer != null -> SuggestionTextItem(searchSuggestionRenderer.suggestion.toString())
             musicTwoColumnItemRenderer != null -> when (musicTwoColumnItemRenderer.navigationEndpoint.getEndpointType()) {
                 ITEM_SONG -> {

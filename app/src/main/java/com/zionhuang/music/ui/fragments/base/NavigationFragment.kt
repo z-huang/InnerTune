@@ -22,6 +22,7 @@ abstract class NavigationFragment<T : ViewBinding> : BindingFragment<T>() {
             R.id.homeFragment,
             R.id.songsFragment,
             R.id.artistsFragment,
+            R.id.albumsFragment,
             R.id.playlistsFragment
         ))
         getToolbar().setupWithNavController(findNavController(), appBarConfiguration)

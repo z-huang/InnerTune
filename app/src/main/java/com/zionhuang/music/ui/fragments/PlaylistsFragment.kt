@@ -17,7 +17,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.ui.adapters.PlaylistsAdapter
+import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
 import com.zionhuang.music.viewmodels.PlaylistsViewModel
@@ -25,17 +25,17 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistsFragment : PagingRecyclerViewFragment<PlaylistsAdapter>(), MenuProvider {
+class PlaylistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
 
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val playlistsViewModel by viewModels<PlaylistsViewModel>()
-    override val adapter = PlaylistsAdapter()
+    override val adapter = LocalItemAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter.popupMenuListener = playlistsViewModel.popupMenuListener
+//        adapter.popupMenuListener = playlistsViewModel.popupMenuListener
         (requireActivity() as MainActivity).fab.setOnClickListener {
             CreatePlaylistDialog().show(childFragmentManager, null)
         }
@@ -43,8 +43,8 @@ class PlaylistsFragment : PagingRecyclerViewFragment<PlaylistsAdapter>(), MenuPr
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-                val directions = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(this@PlaylistsFragment.adapter.getItemByPosition(position)!!.id)
-                findNavController().navigate(directions)
+//                val directions = PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(this@PlaylistsFragment.adapter.getItemByPosition(position)!!.id)
+//                findNavController().navigate(directions)
             }
         }
 

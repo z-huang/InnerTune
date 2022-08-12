@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.innertube.models.*
-import com.zionhuang.music.R
-import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.ui.viewholders.*
 import com.zionhuang.music.utils.NavigationEndpointHandler
 
@@ -18,29 +16,29 @@ import com.zionhuang.music.utils.NavigationEndpointHandler
  */
 class YouTubeItemPagingAdapter(
     private val navigationEndpointHandler: NavigationEndpointHandler,
-    private val itemViewType: BaseItem.ViewType = BaseItem.ViewType.LIST,
+    private val itemViewType: YTBaseItem.ViewType = YTBaseItem.ViewType.LIST,
     private val forceMatchParent: Boolean = false,
-) : PagingDataAdapter<BaseItem, YouTubeViewHolder>(ItemComparator()) {
+) : PagingDataAdapter<YTBaseItem, YouTubeViewHolder<*>>(ItemComparator()) {
     var onFillQuery: (String) -> Unit = {}
     var onSearch: (String) -> Unit = {}
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YouTubeViewHolder = when (viewType) {
-        BASE_ITEM_HEADER -> YouTubeHeaderViewHolder(parent.inflateWithBinding(R.layout.item_youtube_header), navigationEndpointHandler)
-        BASE_ITEM_HEADER_ARTIST -> YouTubeArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_youtube_header_artist), navigationEndpointHandler)
-        BASE_ITEM_HEADER_ALBUM_OR_PLAYLIST -> YouTubeAlbumOrPlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_youtube_header_album), navigationEndpointHandler)
-        BASE_ITEM_CAROUSEL, BASE_ITEM_GRID -> YouTubeItemContainerViewHolder(parent.inflateWithBinding(R.layout.item_recyclerview), navigationEndpointHandler)
-        BASE_ITEM_DESCRIPTION -> YouTubeDescriptionViewHolder(parent.inflateWithBinding(R.layout.item_youtube_description))
-        BASE_ITEM_SEPARATOR -> YouTubeSeparatorViewHolder(parent.inflateWithBinding(R.layout.item_separator))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YouTubeViewHolder<*> = when (viewType) {
+        BASE_ITEM_HEADER -> YouTubeHeaderViewHolder(parent, navigationEndpointHandler)
+        BASE_ITEM_HEADER_ARTIST -> YouTubeArtistHeaderViewHolder(parent, navigationEndpointHandler)
+        BASE_ITEM_HEADER_ALBUM_OR_PLAYLIST -> YouTubeAlbumOrPlaylistHeaderViewHolder(parent, navigationEndpointHandler)
+        BASE_ITEM_CAROUSEL, BASE_ITEM_GRID -> YouTubeItemContainerViewHolder(parent, navigationEndpointHandler)
+        BASE_ITEM_DESCRIPTION -> YouTubeDescriptionViewHolder(parent)
+        BASE_ITEM_SEPARATOR -> YouTubeSeparatorViewHolder(parent)
         BASE_ITEM_NAVIGATION -> when (itemViewType) {
-            BaseItem.ViewType.LIST -> YouTubeNavigationItemViewHolder(parent.inflateWithBinding(R.layout.item_youtube_navigation), navigationEndpointHandler)
-            BaseItem.ViewType.BLOCK -> YouTubeNavigationButtonViewHolder(parent.inflateWithBinding(R.layout.item_youtube_navigation_btn), navigationEndpointHandler)
+            YTBaseItem.ViewType.LIST -> YouTubeNavigationItemViewHolder(parent, navigationEndpointHandler)
+            YTBaseItem.ViewType.BLOCK -> YouTubeNavigationButtonViewHolder(parent, navigationEndpointHandler)
         }
-        BASE_ITEM_SUGGESTION -> YouTubeSuggestionViewHolder(parent.inflateWithBinding(R.layout.item_youtube_suggestion), onFillQuery, onSearch)
+        BASE_ITEM_SUGGESTION -> YouTubeSuggestionViewHolder(parent, onFillQuery, onSearch)
         ITEM -> when (itemViewType) {
-            BaseItem.ViewType.LIST -> YouTubeListItemViewHolder(parent.inflateWithBinding(R.layout.item_youtube_list), navigationEndpointHandler)
-            BaseItem.ViewType.BLOCK -> YouTubeSquareItemViewHolder(parent.inflateWithBinding(R.layout.item_youtube_square), navigationEndpointHandler)
+            YTBaseItem.ViewType.LIST -> YouTubeListItemViewHolder(parent, navigationEndpointHandler)
+            YTBaseItem.ViewType.BLOCK -> YouTubeSquareItemViewHolder(parent, navigationEndpointHandler)
         }
         else -> throw IllegalArgumentException("Unknown view type")
     }.apply {
@@ -51,7 +49,7 @@ class YouTubeItemPagingAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: YouTubeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: YouTubeViewHolder<*>, position: Int) {
         getItem(position)?.let { item ->
             when (holder) {
                 is YouTubeHeaderViewHolder -> holder.bind(item as Header)
@@ -66,8 +64,8 @@ class YouTubeItemPagingAdapter(
                 is YouTubeNavigationItemViewHolder -> holder.bind(item as NavigationItem)
                 is YouTubeNavigationButtonViewHolder -> holder.bind(item as NavigationItem)
                 is YouTubeSuggestionViewHolder -> holder.bind(item as SuggestionTextItem)
-                is YouTubeListItemViewHolder -> holder.bind(item as Item)
-                is YouTubeSquareItemViewHolder -> holder.bind(item as Item)
+                is YouTubeListItemViewHolder -> holder.bind(item as YTItem)
+                is YouTubeSquareItemViewHolder -> holder.bind(item as YTItem)
             }
         }
     }
@@ -86,9 +84,9 @@ class YouTubeItemPagingAdapter(
     }
 
 
-    class ItemComparator : DiffUtil.ItemCallback<BaseItem>() {
-        override fun areItemsTheSame(oldItem: BaseItem, newItem: BaseItem): Boolean = oldItem::class == newItem::class && oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: BaseItem, newItem: BaseItem): Boolean = oldItem == newItem
+    class ItemComparator : DiffUtil.ItemCallback<YTBaseItem>() {
+        override fun areItemsTheSame(oldItem: YTBaseItem, newItem: YTBaseItem): Boolean = oldItem::class == newItem::class && oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: YTBaseItem, newItem: YTBaseItem): Boolean = oldItem == newItem
     }
 
     companion object {

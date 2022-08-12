@@ -1,6 +1,6 @@
 package com.zionhuang.innertube.models
 
-sealed class BaseItem {
+sealed class YTBaseItem {
     abstract val id: String
 
     enum class ViewType {
@@ -8,7 +8,7 @@ sealed class BaseItem {
     }
 }
 
-sealed class Item : BaseItem() {
+sealed class YTItem : YTBaseItem() {
     abstract override val id: String
     abstract val title: String
     abstract val subtitle: String?
@@ -18,7 +18,7 @@ sealed class Item : BaseItem() {
 
     abstract val shareLink: String
 
-    interface FromContent<out T : Item> {
+    interface FromContent<out T : YTItem> {
         fun from(item: MusicResponsiveListItemRenderer): T?
         fun from(item: MusicTwoRowItemRenderer): T
     }
@@ -36,7 +36,7 @@ data class SongItem(
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
-) : Item() {
+) : YTItem() {
     override val shareLink: String = "https://music.youtube.com/watch?v=$id"
 
     companion object : FromContent<SongItem> {
@@ -108,7 +108,7 @@ data class AlbumItem(
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
-) : Item() {
+) : YTItem() {
     override val shareLink: String = "https://music.youtube.com/playlist?list=$id"
 
     companion object : FromContent<AlbumItem> {
@@ -152,7 +152,7 @@ data class PlaylistItem(
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
-) : Item() {
+) : YTItem() {
     override val shareLink: String = "https://music.youtube.com/playlist?list=$id"
 
     companion object : FromContent<PlaylistItem> {
@@ -195,7 +195,7 @@ data class ArtistItem(
     override val thumbnails: List<Thumbnail>,
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
-) : Item() {
+) : YTItem() {
     override val shareLink: String = "https://music.youtube.com/channel/$id"
 
     companion object : FromContent<ArtistItem> {
@@ -229,14 +229,14 @@ data class NavigationItem(
     val icon: String?,
     val stripeColor: Long?,
     val navigationEndpoint: NavigationEndpoint,
-) : BaseItem()
+) : YTBaseItem()
 
 data class SuggestionTextItem(
     val query: String,
     override val id: String = query,
-) : BaseItem()
+) : YTBaseItem()
 
-object Separator : BaseItem() {
+object Separator : YTBaseItem() {
     override val id: String = "SEPARATOR"
 }
 

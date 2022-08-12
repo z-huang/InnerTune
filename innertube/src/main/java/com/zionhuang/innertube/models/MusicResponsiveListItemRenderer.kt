@@ -41,7 +41,7 @@ data class MusicResponsiveListItemRenderer(
     private val isArtist: Boolean
         get() = navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_ARTIST
 
-    fun toItem(): Item? = when {
+    fun toItem(): YTItem? = when {
         isSong -> SongItem.from(this)
         isPlaylist -> PlaylistItem.from(this)
         isAlbum -> AlbumItem.from(this)

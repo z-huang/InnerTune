@@ -1,14 +1,17 @@
 package com.zionhuang.music.db.daos
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
+import androidx.paging.PagingSource
+import androidx.room.*
+import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.AlbumEntity
 import com.zionhuang.music.db.entities.SongAlbumMap
 
 @Dao
 interface AlbumDao {
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM song_album_map WHERE albumId = album.id) AS songCount FROM album")
+    fun getAllAlbumsAsPagingSource(): PagingSource<Int, Album>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(album: AlbumEntity): Long
 

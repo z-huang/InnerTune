@@ -21,6 +21,6 @@ data class MusicShelfRenderer(
     data class Content(
         val musicResponsiveListItemRenderer: MusicResponsiveListItemRenderer,
     ) {
-        fun toItem(): Item? = musicResponsiveListItemRenderer.toItem()
+        fun toItem(): YTItem? = musicResponsiveListItemRenderer.toItem()
     }
 }

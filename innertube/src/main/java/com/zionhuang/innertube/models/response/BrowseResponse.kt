@@ -63,7 +63,7 @@ data class BrowseResponse(
         val musicImmersiveHeaderRenderer: MusicImmersiveHeaderRenderer?,
         val musicDetailHeaderRenderer: MusicDetailHeaderRenderer?,
     ) {
-        fun toHeader(): BaseItem? = when {
+        fun toHeader(): YTBaseItem? = when {
             musicImmersiveHeaderRenderer != null -> ArtistHeader(
                 id = musicImmersiveHeaderRenderer.title.toString(),
                 name = musicImmersiveHeaderRenderer.title.toString(),

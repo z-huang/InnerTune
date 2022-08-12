@@ -3,7 +3,7 @@ package com.zionhuang.music.repos
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.BaseItem
+import com.zionhuang.innertube.models.YTBaseItem
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.extensions.toPage
 import com.zionhuang.music.youtube.InfoCache.checkCache
@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 object YouTubeRepository {
-    fun searchAll(query: String) = object : PagingSource<List<String>, BaseItem>() {
+    fun searchAll(query: String) = object : PagingSource<List<String>, YTBaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 YouTube.searchAllType(query).toPage()
@@ -21,10 +21,10 @@ object YouTubeRepository {
             }
         }
 
-        override fun getRefreshKey(state: PagingState<List<String>, BaseItem>): List<String>? = null
+        override fun getRefreshKey(state: PagingState<List<String>, YTBaseItem>): List<String>? = null
     }
 
-    fun search(query: String, filter: YouTube.SearchFilter): PagingSource<List<String>, BaseItem> = object : PagingSource<List<String>, BaseItem>() {
+    fun search(query: String, filter: YouTube.SearchFilter): PagingSource<List<String>, YTBaseItem> = object : PagingSource<List<String>, YTBaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 if (params.key == null) {
@@ -38,10 +38,10 @@ object YouTubeRepository {
             }
         }
 
-        override fun getRefreshKey(state: PagingState<List<String>, BaseItem>): List<String>? = null
+        override fun getRefreshKey(state: PagingState<List<String>, YTBaseItem>): List<String>? = null
     }
 
-    fun browse(endpoint: BrowseEndpoint): PagingSource<List<String>, BaseItem> = object : PagingSource<List<String>, BaseItem>() {
+    fun browse(endpoint: BrowseEndpoint): PagingSource<List<String>, YTBaseItem> = object : PagingSource<List<String>, YTBaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 if (params.key == null) {
@@ -55,10 +55,10 @@ object YouTubeRepository {
             }
         }
 
-        override fun getRefreshKey(state: PagingState<List<String>, BaseItem>): List<String>? = null
+        override fun getRefreshKey(state: PagingState<List<String>, YTBaseItem>): List<String>? = null
     }
 
-    suspend fun getSuggestions(query: String): List<BaseItem> = withContext(IO) {
+    suspend fun getSuggestions(query: String): List<YTBaseItem> = withContext(IO) {
         checkCache("SU$query") {
             YouTube.getSearchSuggestions(query)
         }

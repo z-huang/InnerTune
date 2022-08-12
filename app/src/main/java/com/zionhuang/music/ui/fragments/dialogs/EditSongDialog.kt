@@ -13,7 +13,6 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.databinding.DialogEditSongBinding
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.utils.ArtistAutoCompleteAdapter
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,7 +29,7 @@ class EditSongDialog : AppCompatDialogFragment() {
 
     private fun setupUI() {
         (binding.songArtist.editText as? AutoCompleteTextView)?.apply {
-            setAdapter(ArtistAutoCompleteAdapter(requireContext()))
+//            setAdapter(ArtistAutoCompleteAdapter(requireContext()))
         }
         binding.songTitle.editText?.doOnTextChanged { text, _, _, _ ->
             binding.songTitle.error = if (text.isNullOrEmpty()) getString(R.string.error_song_title_empty) else null

@@ -21,6 +21,9 @@ import com.zionhuang.music.db.entities.*
         DownloadEntity::class,
         SearchHistory::class
     ],
+    views = [
+        PlaylistSongMapPreview::class
+    ],
     version = 2,
     exportSchema = true
 )

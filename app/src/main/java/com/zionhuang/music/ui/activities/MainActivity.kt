@@ -120,6 +120,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             R.id.homeFragment,
             R.id.songsFragment,
             R.id.artistsFragment,
+            R.id.albumsFragment,
             R.id.playlistsFragment
         )
         actionMode?.finish()

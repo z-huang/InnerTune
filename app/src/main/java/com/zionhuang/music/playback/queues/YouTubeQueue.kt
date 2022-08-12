@@ -2,7 +2,7 @@ package com.zionhuang.music.playback.queues
 
 import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.Item
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.extensions.toMediaItem
 import kotlinx.coroutines.Dispatchers.IO
@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 
 class YouTubeQueue(
     private val endpoint: WatchEndpoint,
-    val item: Item? = null,
+    val item: YTItem? = null,
 ) : Queue {
     override val title: String? = null
 

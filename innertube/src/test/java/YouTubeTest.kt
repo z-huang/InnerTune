@@ -8,7 +8,7 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PL
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
 import com.zionhuang.innertube.models.BrowseEndpoint
-import com.zionhuang.innertube.models.Item
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.innertube.models.WatchEndpoint
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -68,13 +68,13 @@ class YouTubeTest {
         var searchResult = youTube.search(SEARCH_QUERY, FILTER_SONG)
         while (searchResult.continuations != null && count > 0) {
             searchResult.items.forEach {
-                if (it is Item) println(it.title)
+                if (it is YTItem) println(it.title)
             }
             searchResult = youTube.search(searchResult.continuations!![0])
             count -= 1
         }
         searchResult.items.forEach {
-            if (it is Item) println(it.title)
+            if (it is YTItem) println(it.title)
         }
     }
 

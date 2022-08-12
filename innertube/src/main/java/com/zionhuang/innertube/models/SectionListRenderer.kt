@@ -51,7 +51,7 @@ data class SectionListRenderer(
         val musicDescriptionShelfRenderer: MusicDescriptionShelfRenderer?,
         val gridRenderer: GridRenderer?,
     ) {
-        fun toBaseItems(): List<BaseItem> = when {
+        fun toBaseItems(): List<YTBaseItem> = when {
             musicCarouselShelfRenderer != null -> listOf(
                 Header(
                     title = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),

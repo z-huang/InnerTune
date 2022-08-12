@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="artist"
-            type="com.zionhuang.music.db.entities.Artist" />
+            name="album"
+            type="com.zionhuang.music.db.entities.Album" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,22 +21,19 @@
 
         <ImageView
             android:id="@+id/thumbnail"
-            circleCrop="@{true}"
-            placeholder="@{@drawable/ic_artist}"
-            srcUrl="@{artist.artist.thumbnailUrl}"
+            cornerRadius="@{@dimen/thumbnail_radius}"
+            srcUrl="@{album.album.thumbnailUrl}"
             thumbnailHeight="@{@dimen/list_thumbnail_size}"
             thumbnailWidth="@{@dimen/list_thumbnail_size}"
             android:layout_width="@dimen/list_thumbnail_size"
             android:layout_height="@dimen/list_thumbnail_size"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
-            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toStartOf="@id/content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_artist" />
+            tools:src="@drawable/ic_queue_music" />
 
         <LinearLayout
             android:id="@+id/content"
@@ -53,32 +50,26 @@
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:paddingBottom="3dp"
-                android:text="@{artist.artist.name}"
+                android:text="@{album.album.title}"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/song_details"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Artist" />
+                tools:text="Album" />
 
             <TextView
                 android:id="@+id/subtitle"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{@plurals/songs_count(artist.songCount, artist.songCount)}"
+                android:text="@{@plurals/songs_count(album.songCount, album.songCount)}"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toTopOf="@+id/song_details"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"
                 tools:text="100 songs" />
         </LinearLayout>
 

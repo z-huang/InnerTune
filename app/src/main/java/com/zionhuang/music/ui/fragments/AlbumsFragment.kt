@@ -21,7 +21,7 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
+class AlbumsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
     private val artistsViewModel by viewModels<ArtistsViewModel>()
     override val adapter = LocalItemAdapter()
@@ -32,13 +32,13 @@ class ArtistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProv
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-//                val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(this@ArtistsFragment.adapter.getItemByPosition(position)!!.id)
+//                val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(this@AlbumsFragment.adapter.getItemByPosition(position)!!.id)
 //                findNavController().navigate(directions)
             }
         }
 
         lifecycleScope.launch {
-            songsViewModel.allArtistsFlow.collectLatest {
+            songsViewModel.allAlbumsFlow.collectLatest {
                 adapter.submitData(it)
             }
         }

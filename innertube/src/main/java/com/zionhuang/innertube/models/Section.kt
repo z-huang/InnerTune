@@ -5,7 +5,7 @@ data class Header(
     val subtitle: String? = null,
     val moreNavigationEndpoint: NavigationEndpoint? = null,
     override val id: String = title,
-) : BaseItem()
+) : YTBaseItem()
 
 data class ArtistHeader(
     override val id: String,
@@ -14,7 +14,7 @@ data class ArtistHeader(
     val bannerThumbnails: List<Thumbnail>,
     val shuffleEndpoint: NavigationEndpoint?,
     val radioEndpoint: NavigationEndpoint?,
-) : BaseItem()
+) : YTBaseItem()
 
 data class AlbumOrPlaylistHeader(
     override val id: String,
@@ -24,22 +24,22 @@ data class AlbumOrPlaylistHeader(
     val description: String?,
     val thumbnails: List<Thumbnail>,
     val menu: ItemMenu,
-) : BaseItem()
+) : YTBaseItem()
 
 data class CarouselSection(
     override val id: String,
-    val items: List<BaseItem>,
+    val items: List<YTBaseItem>,
     val numItemsPerColumn: Int = 1,
     val itemViewType: ViewType,
-) : BaseItem()
+) : YTBaseItem()
 
 data class GridSection(
     override val id: String,
-    val items: List<BaseItem>,
+    val items: List<YTBaseItem>,
 //    val moreNavigationEndpoint: BrowseEndpoint,
-) : BaseItem()
+) : YTBaseItem()
 
 data class DescriptionSection(
     override val id: String = "DESCRIPTION",
     val description: String,
-) : BaseItem()
+) : YTBaseItem()

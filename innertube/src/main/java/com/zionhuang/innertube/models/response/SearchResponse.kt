@@ -1,7 +1,7 @@
 package com.zionhuang.innertube.models.response
 
 import com.zionhuang.innertube.models.Continuation
-import com.zionhuang.innertube.models.Item
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.innertube.models.MusicResponsiveListItemRenderer
 import com.zionhuang.innertube.models.Tabs
 import kotlinx.serialization.Serializable
@@ -29,7 +29,7 @@ data class SearchResponse(
             data class Content(
                 val musicResponsiveListItemRenderer: MusicResponsiveListItemRenderer,
             ) {
-                fun toItem(): Item? = musicResponsiveListItemRenderer.toItem()
+                fun toItem(): YTItem? = musicResponsiveListItemRenderer.toItem()
             }
         }
     }

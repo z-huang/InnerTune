@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.zionhuang.innertube.models.Item" />
+            type="com.zionhuang.innertube.models.YTItem" />
 
         <import type="com.zionhuang.innertube.models.ArtistItem" />
     </data>

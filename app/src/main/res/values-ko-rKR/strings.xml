@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_songs">노래</string>
     <string name="title_artists">아티스트</string>
+    <string name="title_albums">Albums</string>
     <string name="title_channels">채널</string>
     <string name="title_playlists">플레이리스트</string>
     <string name="title_explore">탐색</string>

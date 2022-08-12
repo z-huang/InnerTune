@@ -2,16 +2,19 @@ package com.zionhuang.music.db.daos
 
 import androidx.paging.PagingSource
 import androidx.room.*
+import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistSongMap
 
 @Dao
 interface PlaylistDao {
-    @Query("SELECT * FROM playlist")
-    suspend fun getAllPlaylistsAsList(): List<PlaylistEntity>
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist")
+    suspend fun getAllPlaylistsAsList(): List<Playlist>
 
-    @Query("SELECT * FROM playlist")
-    fun getAllPlaylistsAsPagingSource(): PagingSource<Int, PlaylistEntity>
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist")
+    fun getAllPlaylistsAsPagingSource(): PagingSource<Int, Playlist>
 
     @Query("SELECT * FROM playlist WHERE id = :playlistId")
     suspend fun getPlaylist(playlistId: String): PlaylistEntity?

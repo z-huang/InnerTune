@@ -14,8 +14,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
-import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.LocalItem
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.extensions.toMediaItem
@@ -38,28 +37,31 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     var query: String? = null
 
-    val allSongsFlow: Flow<PagingData<Song>> by lazy {
+    @Suppress("UNCHECKED_CAST")
+    val allSongsFlow: Flow<PagingData<LocalItem>> by lazy {
         Pager(PagingConfig(pageSize = 50, enablePlaceholders = true)) {
-            if (!query.isNullOrBlank()) {
-                songRepository.searchSongs(query!!).pagingSource
-            } else {
-                songRepository.getAllSongs(sortInfo).pagingSource
-            }
-        }.flow.map { pagingData ->
-            if (query.isNullOrBlank()) pagingData.insertHeaderItem(FULLY_COMPLETE, HEADER_PLACEHOLDER_SONG)
-            else pagingData
-        }.cachedIn(viewModelScope)
-    }
-
-    val allArtistsFlow: Flow<PagingData<ArtistEntity>> by lazy {
-        Pager(PagingConfig(pageSize = 50)) {
-            songRepository.getAllArtists().pagingSource
+            songRepository.getAllSongs(sortInfo).pagingSource as PagingSource<Int, LocalItem>
         }.flow.cachedIn(viewModelScope)
     }
 
-    val allPlaylistsFlow: Flow<PagingData<PlaylistEntity>> by lazy {
+    @Suppress("UNCHECKED_CAST")
+    val allArtistsFlow: Flow<PagingData<LocalItem>> by lazy {
         Pager(PagingConfig(pageSize = 50)) {
-            songRepository.getAllPlaylists().pagingSource
+            songRepository.getAllArtists().pagingSource as PagingSource<Int, LocalItem>
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    val allAlbumsFlow: Flow<PagingData<LocalItem>> by lazy {
+        Pager(PagingConfig(pageSize = 50)) {
+            songRepository.getAllAlbums().pagingSource as PagingSource<Int, LocalItem>
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    val allPlaylistsFlow: Flow<PagingData<LocalItem>> by lazy {
+        Pager(PagingConfig(pageSize = 50)) {
+            songRepository.getAllPlaylists().pagingSource as PagingSource<Int, LocalItem>
         }.flow.cachedIn(viewModelScope)
     }
 
@@ -101,7 +103,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                 val playlists = songRepository.getAllPlaylists().getList()
                 MaterialAlertDialogBuilder(context)
                     .setTitle(R.string.dialog_title_choose_playlist)
-                    .setItems(playlists.map { it.name }.toTypedArray()) { _, i ->
+                    .setItems(playlists.map { it.playlist.name }.toTypedArray()) { _, i ->
                         viewModelScope.launch {
                             songRepository.addSongsToPlaylist(playlists[i].id, songs)
                         }
