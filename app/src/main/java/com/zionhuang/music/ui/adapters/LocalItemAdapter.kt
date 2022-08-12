@@ -60,6 +60,8 @@ class LocalItemAdapter : PagingDataAdapter<LocalItem, LocalItemViewHolder>(ItemC
         is Playlist -> TYPE_PLAYLIST
     }
 
+    fun getItemAt(position: Int) = getItem(position)
+
     private val dateFormat = DateFormat.getDateInstance()
 
     override fun getPopupText(position: Int): String = ""

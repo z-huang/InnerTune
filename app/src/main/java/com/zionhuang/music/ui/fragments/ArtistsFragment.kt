@@ -12,9 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
+import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.fragments.ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.viewmodels.ArtistsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
@@ -32,8 +35,11 @@ class ArtistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProv
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-//                val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(this@ArtistsFragment.adapter.getItemByPosition(position)!!.id)
-//                findNavController().navigate(directions)
+                (this@ArtistsFragment.adapter.getItemAt(position) as? Artist)?.let { artist ->
+                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                    findNavController().navigate(actionArtistsFragmentToArtistSongsFragment(artist.id))
+                }
             }
         }
 
