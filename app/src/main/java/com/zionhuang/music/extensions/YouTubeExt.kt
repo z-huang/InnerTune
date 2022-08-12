@@ -1,10 +1,7 @@
 package com.zionhuang.music.extensions
 
 import androidx.paging.PagingSource.LoadResult
-import com.zionhuang.innertube.models.AlbumItem
-import com.zionhuang.innertube.models.BrowseResult
-import com.zionhuang.innertube.models.PlaylistItem
-import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.*
 import com.zionhuang.music.db.entities.AlbumEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.SongEntity

@@ -17,6 +17,7 @@ import com.zionhuang.music.db.entities.*
         StreamEntity::class,
         SongArtistMap::class,
         SongAlbumMap::class,
+        AlbumArtistMap::class,
         PlaylistSongMap::class,
         DownloadEntity::class,
         SearchHistory::class

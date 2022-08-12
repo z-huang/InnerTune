@@ -78,6 +78,7 @@ data class BrowseResponse(
                 subtitle = musicDetailHeaderRenderer.subtitle.toString(),
                 secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),
                 description = musicDetailHeaderRenderer.description?.toString(),
+                artists = musicDetailHeaderRenderer.subtitle.runs.splitBySeparator().getOrNull(1)?.oddElements(),
                 thumbnails = musicDetailHeaderRenderer.thumbnail.getThumbnails(),
                 menu = musicDetailHeaderRenderer.menu.toItemMenu()
             )

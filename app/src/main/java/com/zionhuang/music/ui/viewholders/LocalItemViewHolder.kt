@@ -99,6 +99,8 @@ class AlbumViewHolder(
 ) : LocalItemViewHolder(binding) {
     fun bind(album: Album) {
         binding.album = album
+        binding.subtitle.text = (if (album.artists.isNotEmpty()) album.artists.joinToString { it.name } + " • " else "") +
+                binding.context.resources.getQuantityString(R.plurals.songs_count, album.songCount, album.songCount)
         binding.btnMoreAction.setOnClickListener {
 //            MenuBottomSheetDialogFragment
 //                .newInstance(R.menu.artist)

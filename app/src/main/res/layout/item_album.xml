@@ -67,10 +67,9 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{@plurals/songs_count(album.songCount, album.songCount)}"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="12sp"
-                tools:text="100 songs" />
+                tools:text="artist • 100 songs" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatImageButton

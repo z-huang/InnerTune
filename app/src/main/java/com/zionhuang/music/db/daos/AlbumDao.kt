@@ -3,6 +3,7 @@ package com.zionhuang.music.db.daos
 import androidx.paging.PagingSource
 import androidx.room.*
 import com.zionhuang.music.db.entities.Album
+import com.zionhuang.music.db.entities.AlbumArtistMap
 import com.zionhuang.music.db.entities.AlbumEntity
 import com.zionhuang.music.db.entities.SongAlbumMap
 
@@ -17,6 +18,9 @@ interface AlbumDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songAlbumMap: SongAlbumMap): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(songAlbumMap: AlbumArtistMap): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songAlbumMaps: List<SongAlbumMap>): List<Long>
