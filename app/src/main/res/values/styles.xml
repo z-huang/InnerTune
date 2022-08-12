@@ -53,4 +53,12 @@
     <style name="ThemeOverlay.App.Chip.Choice" parent="">
         <item name="elevationOverlayEnabled">false</item>
     </style>
+
+    <style name="MenuBottomSheetDialogShapeAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">24dp</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
 </resources>
