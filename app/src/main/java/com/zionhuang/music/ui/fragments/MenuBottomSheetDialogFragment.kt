@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.*
 import androidx.annotation.MenuRes
 import androidx.core.os.bundleOf
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import com.zionhuang.innertube.models.AlbumItem
-import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.R
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.NavigationEndpointHandler
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.Serializable
 
@@ -69,6 +70,7 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
             arguments = bundleOf(KEY_MENU_RES_ID to menuResId)
         }
 
+        @OptIn(DelicateCoroutinesApi::class)
         fun newInstance(item: YTItem, navigationEndpointHandler: NavigationEndpointHandler) = newInstance(R.menu.youtube_item)
             .setMenuModifier {
                 findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
@@ -82,7 +84,7 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     R.id.action_radio -> navigationEndpointHandler.handle(item.menu.radioEndpoint)
                     R.id.action_play_next -> navigationEndpointHandler.handle(item.menu.playNextEndpoint, item)
                     R.id.action_add_to_queue -> navigationEndpointHandler.handle(item.menu.addToQueueEndpoint, item)
-                    R.id.action_add_to_library -> navigationEndpointHandler.fragment.lifecycleScope.launch {
+                    R.id.action_add_to_library -> GlobalScope.launch {
                         when (item) {
                             is SongItem -> SongRepository.addSong(item)
                             is AlbumItem -> SongRepository.addAlbum(item)
