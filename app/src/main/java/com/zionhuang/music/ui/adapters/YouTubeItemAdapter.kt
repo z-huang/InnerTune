@@ -17,6 +17,7 @@ class YouTubeItemAdapter(
 ) : ListAdapter<YTBaseItem, YouTubeViewHolder<*>>(ItemComparator()) {
     var onFillQuery: (String) -> Unit = {}
     var onSearch: (String) -> Unit = {}
+    var onRefreshSuggestions: () -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YouTubeViewHolder<*> = when (viewType) {
         BASE_ITEM_HEADER -> YouTubeHeaderViewHolder(parent, navigationEndpointHandler)
@@ -29,7 +30,7 @@ class YouTubeItemAdapter(
             YTBaseItem.ViewType.LIST -> YouTubeNavigationItemViewHolder(parent, navigationEndpointHandler)
             YTBaseItem.ViewType.BLOCK -> YouTubeNavigationButtonViewHolder(parent, navigationEndpointHandler)
         }
-        BASE_ITEM_SUGGESTION -> YouTubeSuggestionViewHolder(parent, onFillQuery, onSearch)
+        BASE_ITEM_SUGGESTION -> YouTubeSuggestionViewHolder(parent, onFillQuery, onSearch, onRefreshSuggestions)
         ITEM -> when (itemViewType) {
             YTBaseItem.ViewType.LIST -> YouTubeListItemViewHolder(parent, navigationEndpointHandler)
             YTBaseItem.ViewType.BLOCK -> YouTubeSquareItemViewHolder(parent, navigationEndpointHandler)

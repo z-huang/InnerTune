@@ -377,4 +377,19 @@ object SongRepository : LocalRepository {
     override suspend fun addDownload(item: DownloadEntity) = withContext(IO) { downloadDao.insert(item) }
     override suspend fun removeDownloadEntity(downloadId: Long) = withContext(IO) { downloadDao.delete(downloadId) }
 
+    override suspend fun getAllSearchHistory() = withContext(IO) {
+        database.searchHistoryDao.getAllHistory()
+    }
+
+    override suspend fun getSearchHistory(query: String) = withContext(IO) {
+        database.searchHistoryDao.getHistory(query)
+    }
+
+    override suspend fun insertSearchHistory(query: String) = withContext(IO) {
+        database.searchHistoryDao.insert(SearchHistory(query = query))
+    }
+
+    override suspend fun deleteSearchHistory(query: String) = withContext(IO) {
+        database.searchHistoryDao.delete(query)
+    }
 }

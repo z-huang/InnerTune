@@ -4,6 +4,9 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.base.ISortInfo
+import com.zionhuang.music.repos.SongRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 interface LocalRepository {
@@ -52,4 +55,9 @@ interface LocalRepository {
     suspend fun getDownloadEntity(downloadId: Long): DownloadEntity?
     suspend fun addDownload(item: DownloadEntity)
     suspend fun removeDownloadEntity(downloadId: Long)
+
+    suspend fun getAllSearchHistory(): List<SearchHistory>
+    suspend fun getSearchHistory(query: String): List<SearchHistory>
+    suspend fun insertSearchHistory(query: String)
+    suspend fun deleteSearchHistory(query: String)
 }

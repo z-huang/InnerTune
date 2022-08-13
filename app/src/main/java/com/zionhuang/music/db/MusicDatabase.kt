@@ -35,6 +35,7 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract val albumDao: AlbumDao
     abstract val playlistDao: PlaylistDao
     abstract val downloadDao: DownloadDao
+    abstract val searchHistoryDao: SearchHistoryDao
 
     companion object {
         private const val DBNAME = "song.db"

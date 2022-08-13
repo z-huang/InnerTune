@@ -21,6 +21,7 @@ class YouTubeItemPagingAdapter(
 ) : PagingDataAdapter<YTBaseItem, YouTubeViewHolder<*>>(ItemComparator()) {
     var onFillQuery: (String) -> Unit = {}
     var onSearch: (String) -> Unit = {}
+    var onRefreshSuggestions: () -> Unit = {}
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
@@ -35,7 +36,7 @@ class YouTubeItemPagingAdapter(
             YTBaseItem.ViewType.LIST -> YouTubeNavigationItemViewHolder(parent, navigationEndpointHandler)
             YTBaseItem.ViewType.BLOCK -> YouTubeNavigationButtonViewHolder(parent, navigationEndpointHandler)
         }
-        BASE_ITEM_SUGGESTION -> YouTubeSuggestionViewHolder(parent, onFillQuery, onSearch)
+        BASE_ITEM_SUGGESTION -> YouTubeSuggestionViewHolder(parent, onFillQuery, onSearch, onRefreshSuggestions)
         ITEM -> when (itemViewType) {
             YTBaseItem.ViewType.LIST -> YouTubeListItemViewHolder(parent, navigationEndpointHandler)
             YTBaseItem.ViewType.BLOCK -> YouTubeSquareItemViewHolder(parent, navigationEndpointHandler)

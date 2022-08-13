@@ -14,6 +14,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentYoutubeSuggestionBinding
 import com.zionhuang.music.extensions.getTextChangeFlow
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
 import com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragmentDirections.actionSuggestionFragmentToSearchResultFragment
@@ -21,7 +22,9 @@ import com.zionhuang.music.utils.KeyboardUtil.hideKeyboard
 import com.zionhuang.music.utils.KeyboardUtil.showKeyboard
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.SuggestionViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -46,6 +49,9 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
             binding.searchView.setSelection(query.length)
         }
         adapter.onSearch = this::search
+        adapter.onRefreshSuggestions = {
+            viewModel.fetchSuggestions(binding.searchView.text.toString())
+        }
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
@@ -85,7 +91,11 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun search(query: String) {
+        GlobalScope.launch {
+            SongRepository.insertSearchHistory(query)
+        }
         exitTransition = null
         val action = actionSuggestionFragmentToSearchResultFragment(query)
         NavHostFragment.findNavController(this).navigate(action)

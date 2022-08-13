@@ -6,8 +6,14 @@
     <data>
 
         <variable
-            name="query"
-            type="String" />
+            name="item"
+            type="com.zionhuang.innertube.models.SuggestionTextItem" />
+
+        <import
+            alias="Source"
+            type="com.zionhuang.innertube.models.SuggestionTextItem.SuggestionSource" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,54 +23,58 @@
         android:clickable="true">
 
         <ImageView
-            android:id="@+id/suggestion_type_icon"
+            android:id="@+id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@{(item.source == Source.YOUTUBE) ? @drawable/ic_search : @drawable/ic_history}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guideline_left"
+            app:layout_constraintEnd_toStartOf="@id/query"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_search"
-            app:tint="@android:color/tab_indicator_text" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="56dp" />
-
+            app:tint="@android:color/tab_indicator_text"
+            tools:src="@drawable/ic_search" />
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/query"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="@{query}"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:text="@{item.query}"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
+            app:layout_constraintEnd_toStartOf="@+id/delete_btn"
+            app:layout_constraintStart_toEndOf="@id/icon"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Suggestion" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_right"
+        <ImageButton
+            android:id="@+id/delete_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="56dp" />
+            android:layout_marginEnd="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            android:visibility="@{(item.source == Source.LOCAL) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/fill_text_btn"
+            app:layout_constraintStart_toEndOf="@id/query"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@android:color/tab_indicator_text" />
 
         <ImageButton
-            android:id="@+id/fill_text_button"
+            android:id="@+id/fill_text_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guideline_right"
+            app:layout_constraintStart_toEndOf="@id/delete_btn"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_top_left"
             app:tint="@android:color/tab_indicator_text" />

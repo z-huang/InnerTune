@@ -9,14 +9,19 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.SuggestionTextItem.SuggestionSource.LOCAL
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.show
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.viewholders.base.BindingViewHolder
 import com.zionhuang.music.utils.NavigationEndpointHandler
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 sealed class YouTubeViewHolder<T : ViewDataBinding>(viewGroup: ViewGroup, @LayoutRes layoutId: Int) : BindingViewHolder<T>(viewGroup, layoutId)
 
@@ -192,12 +197,22 @@ class YouTubeSuggestionViewHolder(
     val viewGroup: ViewGroup,
     private val onFillQuery: (String) -> Unit,
     private val onSearch: (String) -> Unit,
+    private val onRefreshSuggestions: () -> Unit,
 ) : YouTubeViewHolder<ItemYoutubeSuggestionBinding>(viewGroup, R.layout.item_youtube_suggestion) {
+    @OptIn(DelicateCoroutinesApi::class)
     fun bind(item: SuggestionTextItem) {
-        binding.query = item.query
+        binding.item = item
         binding.executePendingBindings()
         binding.root.setOnClickListener { onSearch(item.query) }
-        binding.fillTextButton.setOnClickListener { onFillQuery(item.query) }
+        binding.fillTextBtn.setOnClickListener { onFillQuery(item.query) }
+        if (item.source == LOCAL) {
+            binding.deleteBtn.setOnClickListener {
+                GlobalScope.launch {
+                    SongRepository.deleteSearchHistory(item.query)
+                    onRefreshSuggestions()
+                }
+            }
+        }
     }
 }
 

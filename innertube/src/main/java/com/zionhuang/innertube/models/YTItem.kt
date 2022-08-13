@@ -233,8 +233,13 @@ data class NavigationItem(
 
 data class SuggestionTextItem(
     val query: String,
+    val source: SuggestionSource = SuggestionSource.YOUTUBE,
     override val id: String = query,
-) : YTBaseItem()
+) : YTBaseItem() {
+    enum class SuggestionSource {
+        LOCAL, YOUTUBE
+    }
+}
 
 object Separator : YTBaseItem() {
     override val id: String = "SEPARATOR"
