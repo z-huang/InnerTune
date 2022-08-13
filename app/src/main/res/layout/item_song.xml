@@ -84,33 +84,14 @@
                     android:visibility="@{song.song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
 
                 <TextView
-                    android:id="@+id/artist"
+                    android:id="@+id/subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
-                    tools:text="Artists" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:singleLine="true"
-                    android:text="@string/bullet"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/duration"
-                    duration="@{(long) song.song.duration * 1000}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textSize="12sp"
-                    tools:text="3:00" />
+                    tools:text="Artists • album • 3:00" />
             </LinearLayout>
 
             <LinearLayout

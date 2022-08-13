@@ -22,6 +22,7 @@ import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 import com.zionhuang.music.ui.listeners.PlaylistPopupMenuListener
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import com.zionhuang.music.utils.makeTimeString
 
 sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -37,7 +38,10 @@ open class SongViewHolder(
 
     fun bind(song: Song, selected: Boolean? = false) {
         binding.song = song
-        binding.artist.text = song.artists.joinToString { it.name }
+        binding.subtitle.text = song.artists.joinToString { it.name } +
+                (if (song.album != null) " • " + song.album.title else "") +
+                " • " + makeTimeString(song.song.duration.toLong() * 1000)
+
         binding.btnMoreAction.setOnClickListener {
             MenuBottomSheetDialogFragment
                 .newInstance(R.menu.song)
