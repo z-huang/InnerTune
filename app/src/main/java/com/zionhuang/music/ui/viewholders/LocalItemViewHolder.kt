@@ -39,7 +39,7 @@ open class SongViewHolder(
     fun bind(song: Song, selected: Boolean? = false) {
         binding.song = song
         binding.subtitle.text = song.artists.joinToString { it.name } +
-                (if (song.album != null) " • " + song.album.title else "") +
+                (if (song.song.albumName != null) " • " + song.song.albumName else "") +
                 " • " + makeTimeString(song.song.duration.toLong() * 1000)
 
         binding.btnMoreAction.setOnClickListener {
@@ -104,7 +104,7 @@ class AlbumViewHolder(
     fun bind(album: Album) {
         binding.album = album
         binding.subtitle.text = (if (album.artists.isNotEmpty()) album.artists.joinToString { it.name } + " • " else "") +
-                binding.context.resources.getQuantityString(R.plurals.songs_count, album.songCount, album.songCount) +
+                binding.context.resources.getQuantityString(R.plurals.songs_count, album.album.songCount, album.album.songCount) +
                 (if (album.album.year != null) " • " + album.album.year.toString() else "")
         binding.btnMoreAction.setOnClickListener {
 //            MenuBottomSheetDialogFragment

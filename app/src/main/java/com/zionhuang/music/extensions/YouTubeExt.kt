@@ -1,8 +1,9 @@
 package com.zionhuang.music.extensions
 
 import androidx.paging.PagingSource.LoadResult
-import com.zionhuang.innertube.models.*
-import com.zionhuang.music.db.entities.AlbumEntity
+import com.zionhuang.innertube.models.BrowseResult
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.SongEntity
 import org.schabi.newpipe.extractor.InfoItem
@@ -15,14 +16,9 @@ fun SongItem.toSongEntity() = SongEntity(
     id = id,
     title = title,
     duration = duration!!,
-    thumbnailUrl = thumbnails.last().url
-)
-
-fun AlbumItem.toAlbumEntity() = AlbumEntity(
-    id = id,
-    title = title,
-    year = year,
-    thumbnailUrl = thumbnails.last().url
+    thumbnailUrl = thumbnails.last().url,
+    albumId = album?.navigationEndpoint?.browseId,
+    albumName = album?.text
 )
 
 fun PlaylistItem.toPlaylistEntity() = PlaylistEntity(

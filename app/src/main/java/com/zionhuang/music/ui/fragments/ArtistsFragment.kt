@@ -12,12 +12,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.fragments.ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.ArtistsViewModel
@@ -37,14 +39,17 @@ class ArtistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProv
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
                 (this@ArtistsFragment.adapter.getItemAt(position) as? Artist)?.let { artist ->
-                    NavigationEndpointHandler(this@ArtistsFragment).handle(NavigationEndpoint(
-                        browseEndpoint = BrowseEndpoint(
-                            browseId = artist.id
-                        )
-                    ))
-//                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
-//                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
-//                    findNavController().navigate(actionArtistsFragmentToArtistSongsFragment(artist.id))
+                    if (artist.artist.isYouTubeArtist) {
+                        NavigationEndpointHandler(this@ArtistsFragment).handle(NavigationEndpoint(
+                            browseEndpoint = BrowseEndpoint(
+                                browseId = artist.id
+                            )
+                        ))
+                    } else {
+                        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                        findNavController().navigate(actionArtistsFragmentToArtistSongsFragment(artist.id))
+                    }
                 }
             }
         }

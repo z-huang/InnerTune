@@ -15,10 +15,15 @@ data class SongEntity(
     val title: String,
     val duration: Int = 0, // in seconds
     val thumbnailUrl: String? = null,
+    val albumId: String?,
+    val albumName: String?,
     val liked: Boolean = false,
     val totalPlayTime: Long = 0, // in milliseconds
     val isTrash: Boolean = false,
-    @ColumnInfo(name = "download_state") val downloadState: Int = STATE_NOT_DOWNLOADED,
-    @ColumnInfo(name = "create_date") val createDate: LocalDateTime = LocalDateTime.now(),
-    @ColumnInfo(name = "modify_date") val modifyDate: LocalDateTime = LocalDateTime.now(),
+    @ColumnInfo(name = "download_state")
+    val downloadState: Int = STATE_NOT_DOWNLOADED,
+    @ColumnInfo(name = "create_date")
+    val createDate: LocalDateTime = LocalDateTime.now(),
+    @ColumnInfo(name = "modify_date")
+    val modifyDate: LocalDateTime = LocalDateTime.now(),
 ) : Parcelable

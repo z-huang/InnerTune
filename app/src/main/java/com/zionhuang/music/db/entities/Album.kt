@@ -18,7 +18,6 @@ data class Album(
         )
     )
     val artists: List<ArtistEntity>,
-    val songCount: Int,
 ) : LocalItem() {
     override val id: String
         get() = album.id

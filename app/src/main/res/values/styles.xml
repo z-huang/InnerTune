@@ -61,4 +61,12 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
+
+    <style name="ThumbnailShapeAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/thumbnail_radius</item>
+        <item name="cornerSizeTopLeft">@dimen/thumbnail_radius</item>
+        <item name="cornerSizeBottomRight">@dimen/thumbnail_radius</item>
+        <item name="cornerSizeBottomLeft">@dimen/thumbnail_radius</item>
+    </style>
 </resources>

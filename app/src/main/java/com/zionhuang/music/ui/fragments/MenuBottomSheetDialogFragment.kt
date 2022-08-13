@@ -86,7 +86,7 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     R.id.action_add_to_queue -> navigationEndpointHandler.handle(item.menu.addToQueueEndpoint, item)
                     R.id.action_add_to_library -> GlobalScope.launch {
                         when (item) {
-                            is SongItem -> SongRepository.addSong(item)
+                            is SongItem -> SongRepository.safeAddSong(item)
                             is AlbumItem -> SongRepository.addAlbum(item)
                             is PlaylistItem -> SongRepository.addPlaylist(item)
                             else -> {}

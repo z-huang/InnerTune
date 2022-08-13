@@ -65,55 +65,40 @@ object SongRepository : LocalRepository {
                 position = index
             ))
         }
-        mediaMetadata.album?.let { album ->
-            albumDao.insert(AlbumEntity(
-                id = album.id,
-                title = album.title,
-                year = album.year
-            ))
-            albumDao.insert(SongAlbumMap(
-                songId = mediaMetadata.id,
-                albumId = album.id
-            ))
-        }
         if (autoDownload) {
             getSongById(mediaMetadata.id)?.let { downloadSong(it) }
         }
     }
 
-    suspend fun addSong(song: SongItem) = addSongs(listOf(song))
-    suspend fun addSongs(songs: List<SongItem>) = withContext(IO) {
+    /**
+     * Safe add song: call [YouTube.getQueue] to ensure we get full information
+     */
+    suspend fun safeAddSong(song: SongItem) = safeAddSongs(listOf(song))
+    suspend fun safeAddSongs(songs: List<SongItem>) = withContext(IO) {
         songs.chunked(MAX_GET_QUEUE_SIZE).forEach { chunk ->
-            YouTube.getQueue(chunk.map { it.id }).forEach { item ->
-                songDao.insert(item.toSongEntity())
-                item.artists.forEachIndexed { index, run ->
-                    // for artists that can't browse or have no id, we treat them as local artists
-                    val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
-                        artistDao.insert(ArtistEntity(
-                            id = it,
-                            name = run.text
-                        ))
-                    }
-                    artistDao.insert(SongArtistMap(
-                        songId = item.id,
-                        artistId = artistId,
-                        position = index
+            addSongs(YouTube.getQueue(chunk.map { it.id }))
+        }
+    }
+
+    suspend fun addSongs(songs: List<SongItem>) = withContext(IO) {
+        songs.forEach { song ->
+            songDao.insert(song.toSongEntity())
+            song.artists.forEachIndexed { index, run ->
+                // for artists that can't browse or have no id, we treat them as local artists
+                val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
+                    artistDao.insert(ArtistEntity(
+                        id = it,
+                        name = run.text
                     ))
                 }
-                item.album?.let {
-                    albumDao.insert(AlbumEntity(
-                        id = it.navigationEndpoint.browseId,
-                        title = it.text,
-                        year = item.albumYear
-                    ))
-                    albumDao.insert(SongAlbumMap(
-                        songId = item.id,
-                        albumId = it.navigationEndpoint.browseId
-                    ))
-                }
-                if (autoDownload) {
-                    getSongById(item.id)?.let { downloadSong(it) }
-                }
+                artistDao.insert(SongArtistMap(
+                    songId = song.id,
+                    artistId = artistId,
+                    position = index
+                ))
+            }
+            if (autoDownload) {
+                getSongById(song.id)?.let { downloadSong(it) }
             }
         }
     }
@@ -121,31 +106,36 @@ object SongRepository : LocalRepository {
     suspend fun addAlbum(album: AlbumItem) = addAlbums(listOf(album))
     suspend fun addAlbums(albums: List<AlbumItem>) = withContext(IO) {
         albums.forEach { album ->
-            albumDao.insert(album.toAlbumEntity())
-            (YouTube.browse(BrowseEndpoint(browseId = album.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-                header.artists?.forEachIndexed { index, run ->
-                    val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
-                        artistDao.insert(ArtistEntity(
-                            id = it,
-                            name = run.text
-                        ))
-                    }
-                    albumDao.insert(AlbumArtistMap(
-                        albumId = album.id,
-                        artistId = artistId,
-                        order = index
-                    ))
-                }
-            }
-            YouTube.getQueue(playlistId = album.playlistId).let {
-                addSongs(it)
-                albumDao.upsert(it.mapIndexed { index, songItem ->
+            YouTube.getQueue(playlistId = album.playlistId).let { songs ->
+                albumDao.insert(AlbumEntity(
+                    id = album.id,
+                    title = album.title,
+                    year = album.year,
+                    thumbnailUrl = album.thumbnails.last().url,
+                    songCount = songs.size,
+                    duration = songs.sumOf { it.duration ?: 0 }
+                ))
+                addSongs(songs)
+                albumDao.upsert(songs.mapIndexed { index, songItem ->
                     SongAlbumMap(
                         songId = songItem.id,
                         albumId = album.id,
                         index = index
                     )
                 })
+            }
+            (YouTube.browse(BrowseEndpoint(browseId = album.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.artists?.forEachIndexed { index, run ->
+                val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
+                    artistDao.insert(ArtistEntity(
+                        id = it,
+                        name = run.text
+                    ))
+                }
+                albumDao.insert(AlbumArtistMap(
+                    albumId = album.id,
+                    artistId = artistId,
+                    order = index
+                ))
             }
         }
     }
@@ -163,7 +153,7 @@ object SongRepository : LocalRepository {
                     YouTube.browse(browseResult.continuations!!)
                 }
                 browseResult.items.filterIsInstance<SongItem>().let { items ->
-                    addSongs(items)
+                    safeAddSongs(items)
                     playlistDao.insert(items.map {
                         PlaylistSongMap(
                             playlistId = playlist.id,

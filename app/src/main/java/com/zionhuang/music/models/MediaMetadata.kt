@@ -5,7 +5,6 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA
 import com.zionhuang.music.db.entities.ArtistEntity
@@ -51,7 +50,9 @@ data class MediaMetadata(
         id = id,
         title = title,
         duration = duration,
-        thumbnailUrl = thumbnailUrl
+        thumbnailUrl = thumbnailUrl,
+        albumId = album?.id,
+        albumName = album?.title
     )
 
     companion object {

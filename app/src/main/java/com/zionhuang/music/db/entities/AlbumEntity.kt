@@ -12,4 +12,6 @@ data class AlbumEntity(
     val title: String,
     val year: Int? = null,
     val thumbnailUrl: String? = null,
+    val songCount: Int,
+    val duration: Int,
 ) : Parcelable

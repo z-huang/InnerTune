@@ -10,7 +10,7 @@ import com.zionhuang.music.db.entities.SongAlbumMap
 @Dao
 interface AlbumDao {
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM song_album_map WHERE albumId = album.id) AS songCount FROM album")
+    @Query("SELECT * FROM album")
     fun getAllAlbumsAsPagingSource(): PagingSource<Int, Album>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
