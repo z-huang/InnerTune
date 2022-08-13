@@ -7,33 +7,36 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
+import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
-import com.zionhuang.music.viewmodels.ArtistsViewModel
+import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class AlbumsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    private val artistsViewModel by viewModels<ArtistsViewModel>()
     override val adapter = LocalItemAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        adapter.popupMenuListener = artistsViewModel.popupMenuListener
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-//                val directions = ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment(this@AlbumsFragment.adapter.getItemByPosition(position)!!.id)
-//                findNavController().navigate(directions)
+                (this@AlbumsFragment.adapter.getItemAt(position) as? Album)?.let { album ->
+                    NavigationEndpointHandler(this@AlbumsFragment).handle(NavigationEndpoint(
+                        browseEndpoint = BrowseEndpoint(browseId = album.id)
+                    ))
+                }
             }
         }
 
