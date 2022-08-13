@@ -22,6 +22,7 @@ import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 import com.zionhuang.music.ui.listeners.PlaylistPopupMenuListener
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 
 sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
@@ -38,10 +39,7 @@ open class SongViewHolder(
 
     fun bind(song: Song, selected: Boolean? = false) {
         binding.song = song
-        binding.subtitle.text = song.artists.joinToString { it.name } +
-                (if (song.song.albumName != null) " • " + song.song.albumName else "") +
-                " • " + makeTimeString(song.song.duration.toLong() * 1000)
-
+        binding.subtitle.text = listOf(song.artists.joinToString { it.name }, song.song.albumName, makeTimeString(song.song.duration.toLong() * 1000)).joinByBullet()
         binding.btnMoreAction.setOnClickListener {
             MenuBottomSheetDialogFragment
                 .newInstance(R.menu.song)
@@ -103,9 +101,7 @@ class AlbumViewHolder(
 ) : LocalItemViewHolder(binding) {
     fun bind(album: Album) {
         binding.album = album
-        binding.subtitle.text = (if (album.artists.isNotEmpty()) album.artists.joinToString { it.name } + " • " else "") +
-                binding.context.resources.getQuantityString(R.plurals.songs_count, album.album.songCount, album.album.songCount) +
-                (if (album.album.year != null) " • " + album.album.year.toString() else "")
+        binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.songs_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
         binding.btnMoreAction.setOnClickListener {
 //            MenuBottomSheetDialogFragment
 //                .newInstance(R.menu.artist)
@@ -126,6 +122,11 @@ class PlaylistViewHolder(
 ) : LocalItemViewHolder(binding) {
     fun bind(playlist: Playlist) {
         binding.playlist = playlist
+        binding.subtitle.text = if (playlist.playlist.isYouTubePlaylist) {
+            listOf(playlist.playlist.name, playlist.playlist.year.toString()).joinByBullet()
+        } else {
+            binding.context.resources.getQuantityString(R.plurals.songs_count, playlist.songCount, playlist.songCount)
+        }
         binding.btnMoreAction.setOnClickListener {
 //            MenuBottomSheetDialogFragment
 //                .newInstance(R.menu.artist)

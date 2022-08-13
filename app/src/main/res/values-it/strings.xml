@@ -66,12 +66,13 @@
     <!-- Popup -->
     <string name="menu_edit">Modifica</string>
     <string name="menu_start_radio">Apri la radio</string>
-    <string name="menu_song_play_next">Riproduci come successiva</string>
-    <string name="menu_song_add_to_queue">Aggiungi alla coda</string>
+    <string name="menu_play_next">Riproduci come successiva</string>
+    <string name="menu_add_to_queue">Aggiungi alla coda</string>
     <string name="menu_add_to_library">Aggiungi alla libreria</string>
-    <string name="menu_song_download">Scarica</string>
+    <string name="menu_download">Scarica</string>
     <string name="menu_song_remove_download">Rimuovi scaricamento</string>
-    <string name="menu_song_add_to_playlist">Aggiungi alla playlist</string>
+    <string name="menu_import_playlist">Import playlist</string>
+    <string name="menu_add_to_playlist">Aggiungi alla playlist</string>
     <string name="menu_view_artist">Mostra artista</string>
     <string name="menu_view_album">Mostra album</string>
     <string name="menu_song_delete">Elimina</string>

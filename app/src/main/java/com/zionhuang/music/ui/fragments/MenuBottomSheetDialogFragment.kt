@@ -76,6 +76,7 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
                 findItem(R.id.action_play_next)?.isVisible = item.menu.playNextEndpoint != null
                 findItem(R.id.action_add_to_queue)?.isVisible = item.menu.addToQueueEndpoint != null
+                findItem(R.id.action_import_playlist)?.isVisible = item is PlaylistItem
                 findItem(R.id.action_view_artist)?.isVisible = item.menu.artistEndpoint != null
                 findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
             }
@@ -90,6 +91,11 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                             is AlbumItem -> SongRepository.addAlbum(item)
                             is PlaylistItem -> SongRepository.addPlaylist(item)
                             else -> {}
+                        }
+                    }
+                    R.id.action_import_playlist -> GlobalScope.launch {
+                        if (item is PlaylistItem) {
+                            SongRepository.importPlaylist(item)
                         }
                     }
                     R.id.action_add_to_playlist -> {}

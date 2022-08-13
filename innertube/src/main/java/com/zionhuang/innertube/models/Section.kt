@@ -23,6 +23,7 @@ data class AlbumOrPlaylistHeader(
     val secondSubtitle: String,
     val description: String?,
     val artists: List<Run>?,
+    val year: Int?,
     val thumbnails: List<Thumbnail>,
     val menu: ItemMenu,
 ) : YTBaseItem()

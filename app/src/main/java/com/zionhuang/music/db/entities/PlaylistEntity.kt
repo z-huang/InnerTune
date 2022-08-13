@@ -12,6 +12,9 @@ import java.time.LocalDateTime
 data class PlaylistEntity(
     @PrimaryKey val id: String,
     val name: String,
+    val author: String? = null,
+    val authorId: String? = null,
+    val year: Int? = null,
     val thumbnailUrl: String? = null,
     val timestamp: LocalDateTime = LocalDateTime.now(),
 ) : Parcelable {

@@ -16,6 +16,7 @@ import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
@@ -140,10 +141,24 @@ object SongRepository : LocalRepository {
         }
     }
 
-    suspend fun addPlaylist(playlist: PlaylistItem) = addPlaylists(listOf(playlist))
-    suspend fun addPlaylists(playlists: List<PlaylistItem>) = withContext(IO) {
+    suspend fun addPlaylist(playlist: PlaylistItem) = withContext(IO) {
+        (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
+            playlistDao.insert(PlaylistEntity(
+                id = playlist.id,
+                name = header.name,
+                author = header.artists?.firstOrNull()?.text,
+                authorId = header.artists?.firstOrNull()?.navigationEndpoint?.browseEndpoint?.browseId,
+                year = header.year,
+                thumbnailUrl = header.thumbnails.lastOrNull()?.url
+            ))
+        }
+    }
+
+    suspend fun importPlaylist(playlist: PlaylistItem) = importPlaylists(listOf(playlist))
+    suspend fun importPlaylists(playlists: List<PlaylistItem>) = withContext(IO) {
         playlists.forEach { playlist ->
-            playlistDao.insert(playlist.toPlaylistEntity())
+            val playlistId = generatePlaylistId()
+            playlistDao.insert(playlist.toPlaylistEntity().copy(id = playlistId))
             var index = 0
             var browseResult: BrowseResult? = null
             do {
@@ -156,7 +171,7 @@ object SongRepository : LocalRepository {
                     safeAddSongs(items)
                     playlistDao.insert(items.map {
                         PlaylistSongMap(
-                            playlistId = playlist.id,
+                            playlistId = playlistId,
                             songId = it.id,
                             idInPlaylist = index++
                         )

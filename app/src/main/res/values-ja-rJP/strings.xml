@@ -66,12 +66,13 @@
     <!-- Popup Menu -->
     <string name="menu_edit">編集</string>
     <string name="menu_start_radio">Start radio</string>
-    <string name="menu_song_play_next">次に再生</string>
-    <string name="menu_song_add_to_queue">キューに追加</string>
+    <string name="menu_play_next">次に再生</string>
+    <string name="menu_add_to_queue">キューに追加</string>
     <string name="menu_add_to_library">ライブラリに追加</string>
-    <string name="menu_song_download">ダウンロード</string>
+    <string name="menu_download">ダウンロード</string>
     <string name="menu_song_remove_download">ダウンロードを削除</string>
-    <string name="menu_song_add_to_playlist">プレイリストに追加</string>
+    <string name="menu_import_playlist">Import playlist</string>
+    <string name="menu_add_to_playlist">プレイリストに追加</string>
     <string name="menu_view_artist">View artist</string>
     <string name="menu_view_album">View album</string>
     <string name="menu_song_delete">削除</string>

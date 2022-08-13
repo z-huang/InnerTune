@@ -72,16 +72,20 @@ data class BrowseResponse(
                 shuffleEndpoint = musicImmersiveHeaderRenderer.playButton?.buttonRenderer?.navigationEndpoint,
                 radioEndpoint = musicImmersiveHeaderRenderer.startRadioButton?.buttonRenderer?.navigationEndpoint,
             )
-            musicDetailHeaderRenderer != null -> AlbumOrPlaylistHeader(
-                id = musicDetailHeaderRenderer.title.toString(),
-                name = musicDetailHeaderRenderer.title.toString(),
-                subtitle = musicDetailHeaderRenderer.subtitle.toString(),
-                secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),
-                description = musicDetailHeaderRenderer.description?.toString(),
-                artists = musicDetailHeaderRenderer.subtitle.runs.splitBySeparator().getOrNull(1)?.oddElements(),
-                thumbnails = musicDetailHeaderRenderer.thumbnail.getThumbnails(),
-                menu = musicDetailHeaderRenderer.menu.toItemMenu()
-            )
+            musicDetailHeaderRenderer != null -> {
+                val subtitle = musicDetailHeaderRenderer.subtitle.runs.splitBySeparator()
+                AlbumOrPlaylistHeader(
+                    id = musicDetailHeaderRenderer.title.toString(),
+                    name = musicDetailHeaderRenderer.title.toString(),
+                    subtitle = musicDetailHeaderRenderer.subtitle.toString(),
+                    secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),
+                    description = musicDetailHeaderRenderer.description?.toString(),
+                    artists = subtitle.getOrNull(1)?.oddElements(),
+                    year = subtitle.getOrNull(2)?.firstOrNull()?.text?.toIntOrNull(),
+                    thumbnails = musicDetailHeaderRenderer.thumbnail.getThumbnails(),
+                    menu = musicDetailHeaderRenderer.menu.toItemMenu()
+                )
+            }
             else -> null
         }
 

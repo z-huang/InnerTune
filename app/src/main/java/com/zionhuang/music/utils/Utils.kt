@@ -26,6 +26,8 @@ fun md5(str: String): String {
     return BigInteger(1, md.digest(str.toByteArray())).toString(16).padStart(32, '0')
 }
 
+fun List<String?>.joinByBullet() = filterNot { it.isNullOrEmpty() }.joinToString(separator = " • ")
+
 fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.bindLoadStateLayout(binding: LayoutLoadStateBinding, isSwipeRefreshing: () -> Boolean = { false }) {
     addLoadStateListener { loadState ->
         binding.progressBar.isVisible = loadState.refresh is LoadState.Loading && !isSwipeRefreshing()
