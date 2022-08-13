@@ -99,7 +99,7 @@ object SongRepository : LocalRepository {
             // TODO Exception handling
             val stream = StreamHelper.getHighestQualityAudioStream(streamInfo.audioStreams)!!
             val downloadManager = context.getSystemService<DownloadManager>()!!
-            val req = DownloadManager.Request(stream.url.toUri())
+            val req = DownloadManager.Request(stream.content.toUri())
                 .setTitle(song.title)
                 .setDestinationUri(getSongFile(id).toUri())
                 .setVisibleInDownloadsUi(false)
