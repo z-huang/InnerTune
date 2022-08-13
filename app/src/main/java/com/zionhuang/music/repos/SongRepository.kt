@@ -88,7 +88,7 @@ object SongRepository : LocalRepository {
                 songDao.insert(item.toSongEntity())
                 item.artists.forEachIndexed { index, run ->
                     // for artists that can't browse or have no id, we treat them as local artists
-                    val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
+                    val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
                         artistDao.insert(ArtistEntity(
                             id = it,
                             name = run.text
@@ -124,7 +124,7 @@ object SongRepository : LocalRepository {
             albumDao.insert(album.toAlbumEntity())
             (YouTube.browse(BrowseEndpoint(browseId = album.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
                 header.artists?.forEachIndexed { index, run ->
-                    val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
+                    val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
                         artistDao.insert(ArtistEntity(
                             id = it,
                             name = run.text
@@ -172,7 +172,7 @@ object SongRepository : LocalRepository {
                         )
                     })
                 }
-            } while (browseResult?.continuations != null)
+            } while (!browseResult?.continuations.isNullOrEmpty())
         }
     }
 
