@@ -29,7 +29,14 @@ class LocalItemAdapter : PagingDataAdapter<LocalItem, LocalItemViewHolder>(ItemC
         getItem(position)?.let { item ->
             when (holder) {
                 is SongViewHolder -> holder.bind(item as Song)
-                is AlbumViewHolder -> holder.bind(item as Album)
+                is AlbumViewHolder -> {
+                    holder.bind(item as Album)
+                    if (item.album.thumbnailUrl == null) {
+                        GlobalScope.launch {
+                            SongRepository.fetchAlbumThumbnail(item.album)
+                        }
+                    }
+                }
                 is ArtistViewHolder -> {
                     holder.bind(item as Artist)
                     if (item.artist.bannerUrl == null || Duration.between(item.artist.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)) {

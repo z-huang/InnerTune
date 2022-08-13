@@ -26,6 +26,9 @@ interface AlbumDao {
     suspend fun insert(songAlbumMaps: List<SongAlbumMap>): List<Long>
 
     @Update
+    fun update(album: AlbumEntity)
+
+    @Update
     fun update(songAlbumMaps: List<SongAlbumMap>)
 
     suspend fun upsert(songAlbumMaps: List<SongAlbumMap>) {
