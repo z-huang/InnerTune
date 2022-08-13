@@ -95,7 +95,10 @@ object YouTube {
         val playlistPanelRenderer = response.continuationContents?.playlistPanelContinuation ?: response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content?.musicQueueRenderer?.content?.playlistPanelRenderer!!
         playlistPanelRenderer.contents.lastOrNull()?.automixPreviewVideoRenderer?.content?.automixPlaylistVideoRenderer?.navigationEndpoint?.watchPlaylistEndpoint?.let { watchPlaylistEndpoint ->
             return next(watchPlaylistEndpoint.toWatchEndpoint()).let { result ->
-                result.copy(items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } + result.items)
+                result.copy(
+                    items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } + result.items,
+                    currentIndex = playlistPanelRenderer.currentIndex
+                )
             }
         }
         return NextResult(
