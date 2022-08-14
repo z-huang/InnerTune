@@ -104,7 +104,7 @@
                     style="@style/Widget.Material3.LinearProgressIndicator"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:indeterminate="@{song.song.downloadState == MediaConstants.STATE_PREPARING}"
+                    android:indeterminate="@{song.song.downloadState == MediaConstants.STATE_PREPARING || song.song.downloadState == MediaConstants.STATE_DOWNLOADING}"
                     tools:progress="50" />
             </LinearLayout>
         </LinearLayout>
