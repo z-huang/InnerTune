@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
@@ -107,6 +108,11 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         ))
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            onNavDestinationSelected(item, navController)
+            item.isChecked = true
+            true
+        }
         navController.addOnDestinationChangedListener(this)
 
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
