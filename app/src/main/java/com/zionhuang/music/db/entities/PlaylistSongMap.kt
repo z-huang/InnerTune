@@ -3,10 +3,10 @@ package com.zionhuang.music.db.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "playlist_song_map",
-    primaryKeys = ["playlistId", "songId"],
     foreignKeys = [
         ForeignKey(
             entity = PlaylistEntity::class,
@@ -22,7 +22,8 @@ import androidx.room.ForeignKey
     ]
 )
 data class PlaylistSongMap(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(index = true) val playlistId: String,
-    @ColumnInfo(index = true) val songId: String,
+    val songId: String,
     val idInPlaylist: Int = 0,
 )

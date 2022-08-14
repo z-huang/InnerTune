@@ -1,6 +1,11 @@
 package com.zionhuang.innertube.models
 
-sealed class YTBaseItem {
+import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+sealed class YTBaseItem : Parcelable {
     abstract val id: String
 
     enum class ViewType {
@@ -8,6 +13,7 @@ sealed class YTBaseItem {
     }
 }
 
+@Parcelize
 sealed class YTItem : YTBaseItem() {
     abstract override val id: String
     abstract val title: String
@@ -37,6 +43,7 @@ data class SongItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : YTItem() {
+    @IgnoredOnParcel
     override val shareLink: String = "https://music.youtube.com/watch?v=$id"
 
     companion object : FromContent<SongItem> {
@@ -109,6 +116,7 @@ data class AlbumItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : YTItem() {
+    @IgnoredOnParcel
     override val shareLink: String = "https://music.youtube.com/playlist?list=$id"
 
     companion object : FromContent<AlbumItem> {
@@ -153,6 +161,7 @@ data class PlaylistItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : YTItem() {
+    @IgnoredOnParcel
     override val shareLink: String = "https://music.youtube.com/playlist?list=$id"
 
     companion object : FromContent<PlaylistItem> {
@@ -196,6 +205,7 @@ data class ArtistItem(
     override val menu: ItemMenu,
     override val navigationEndpoint: NavigationEndpoint,
 ) : YTItem() {
+    @IgnoredOnParcel
     override val shareLink: String = "https://music.youtube.com/channel/$id"
 
     companion object : FromContent<ArtistItem> {
@@ -242,6 +252,7 @@ data class SuggestionTextItem(
 }
 
 object Separator : YTBaseItem() {
+    @IgnoredOnParcel
     override val id: String = "SEPARATOR"
 }
 

@@ -47,7 +47,7 @@ interface LocalRepository {
 
     suspend fun getPlaylistSongEntities(playlistId: String): ListWrapper<Int, PlaylistSongMap>
     suspend fun updatePlaylistSongEntities(playlistSongEntities: List<PlaylistSongMap>)
-    suspend fun addSongsToPlaylist(playlistId: String, songs: List<Song>)
+    suspend fun addSongsToPlaylist(playlistId: String, songIds: List<String>)
     suspend fun removeSongsFromPlaylist(playlistId: String, idInPlaylist: List<Int>)
     suspend fun removeSongFromPlaylist(playlistId: String, idInPlaylist: Int) = removeSongsFromPlaylist(playlistId, listOf(idInPlaylist))
 

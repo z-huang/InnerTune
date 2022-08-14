@@ -23,6 +23,7 @@ class LocalItemAdapter : PagingDataAdapter<LocalItem, LocalItemViewHolder>(ItemC
     var popupMenuListener: SongPopupMenuListener? = null
     var sortInfo: IMutableSortInfo? = null
     var tracker: SelectionTracker<String>? = null
+    var allowMoreAction: Boolean = true
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: LocalItemViewHolder, position: Int) {
@@ -56,7 +57,7 @@ class LocalItemAdapter : PagingDataAdapter<LocalItem, LocalItemViewHolder>(ItemC
         TYPE_SONG -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), popupMenuListener)
         TYPE_ARTIST -> ArtistViewHolder(parent.inflateWithBinding(R.layout.item_artist), null)
         TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album))
-        TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), null)
+        TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), null, allowMoreAction)
         else -> error("Unknown view type")
     }
 

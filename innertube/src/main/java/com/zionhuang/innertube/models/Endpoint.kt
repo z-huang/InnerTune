@@ -1,10 +1,14 @@
 package com.zionhuang.innertube.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
+@Parcelize
 @Serializable
-sealed class Endpoint : java.io.Serializable
+sealed class Endpoint : Parcelable
 
+@Parcelize
 @Serializable
 data class WatchEndpoint(
     val videoId: String? = null,
@@ -31,6 +35,7 @@ data class WatchEndpoint(
     }
 }
 
+@Parcelize
 @Serializable
 data class WatchPlaylistEndpoint(
     val params: String?,
@@ -46,20 +51,23 @@ data class WatchPlaylistEndpoint(
     )
 }
 
+@Parcelize
 @Serializable
 data class BrowseEndpoint(
     val browseId: String,
     val params: String? = null,
     val browseEndpointContextSupportedConfigs: BrowseEndpointContextSupportedConfigs? = null,
 ) : Endpoint() {
+    @Parcelize
     @Serializable
     data class BrowseEndpointContextSupportedConfigs(
         val browseEndpointContextMusicConfig: BrowseEndpointContextMusicConfig,
-    ) : java.io.Serializable {
+    ) : Parcelable {
+        @Parcelize
         @Serializable
         data class BrowseEndpointContextMusicConfig(
             val pageType: String,
-        ) : java.io.Serializable {
+        ) : Parcelable {
             companion object {
                 const val MUSIC_PAGE_TYPE_ALBUM = "MUSIC_PAGE_TYPE_ALBUM"
                 const val MUSIC_PAGE_TYPE_PLAYLIST = "MUSIC_PAGE_TYPE_PLAYLIST"
@@ -71,12 +79,14 @@ data class BrowseEndpoint(
     }
 }
 
+@Parcelize
 @Serializable
 data class SearchEndpoint(
     val params: String?,
     val query: String,
 ) : Endpoint()
 
+@Parcelize
 @Serializable
 data class QueueAddEndpoint(
     val queueInsertPosition: String,
@@ -94,6 +104,7 @@ data class QueueAddEndpoint(
     }
 }
 
+@Parcelize
 @Serializable
 data class ShareEntityEndpoint(
     val serializedShareEntity: String,

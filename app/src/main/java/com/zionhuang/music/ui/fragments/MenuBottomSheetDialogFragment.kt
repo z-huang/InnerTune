@@ -2,16 +2,16 @@ package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.view.Menu
 import androidx.annotation.MenuRes
 import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
-import com.zionhuang.innertube.models.AlbumItem
-import com.zionhuang.innertube.models.PlaylistItem
-import com.zionhuang.innertube.models.SongItem
-import com.zionhuang.innertube.models.YTItem
+import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_YT_ITEM
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -77,11 +77,12 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 findItem(R.id.action_play_next)?.isVisible = item.menu.playNextEndpoint != null
                 findItem(R.id.action_add_to_queue)?.isVisible = item.menu.addToQueueEndpoint != null
                 findItem(R.id.action_import_playlist)?.isVisible = item is PlaylistItem
+                findItem(R.id.action_add_to_playlist)?.isVisible = item !is ArtistItem
                 findItem(R.id.action_view_artist)?.isVisible = item.menu.artistEndpoint != null
                 findItem(R.id.action_view_album)?.isVisible = item.menu.albumEndpoint != null
             }
-            .setOnMenuItemClickListener {
-                when (it.itemId) {
+            .setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
                     R.id.action_radio -> navigationEndpointHandler.handle(item.menu.radioEndpoint)
                     R.id.action_play_next -> navigationEndpointHandler.handle(item.menu.playNextEndpoint, item)
                     R.id.action_add_to_queue -> navigationEndpointHandler.handle(item.menu.addToQueueEndpoint, item)
@@ -98,7 +99,11 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                             SongRepository.importPlaylist(item)
                         }
                     }
-                    R.id.action_add_to_playlist -> {}
+                    R.id.action_add_to_playlist -> ChoosePlaylistDialog()
+                        .apply {
+                            arguments = bundleOf(EXTRA_YT_ITEM to item)
+                        }
+                        .show(navigationEndpointHandler.fragment.childFragmentManager, null)
                     R.id.action_download -> {}
                     R.id.action_view_artist -> navigationEndpointHandler.handle(item.menu.artistEndpoint)
                     R.id.action_view_album -> navigationEndpointHandler.handle(item.menu.albumEndpoint)

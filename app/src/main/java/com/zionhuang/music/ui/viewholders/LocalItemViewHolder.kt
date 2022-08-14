@@ -1,6 +1,7 @@
 package com.zionhuang.music.ui.viewholders
 
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
@@ -119,6 +120,7 @@ class AlbumViewHolder(
 class PlaylistViewHolder(
     override val binding: ItemPlaylistBinding,
     private val popupMenuListener: PlaylistPopupMenuListener?,
+    private val allowMoreAction: Boolean,
 ) : LocalItemViewHolder(binding) {
     fun bind(playlist: Playlist) {
         binding.playlist = playlist
@@ -127,6 +129,7 @@ class PlaylistViewHolder(
         } else {
             binding.context.resources.getQuantityString(R.plurals.songs_count, playlist.songCount, playlist.songCount)
         }
+        binding.btnMoreAction.isVisible = allowMoreAction
         binding.btnMoreAction.setOnClickListener {
 //            MenuBottomSheetDialogFragment
 //                .newInstance(R.menu.artist)

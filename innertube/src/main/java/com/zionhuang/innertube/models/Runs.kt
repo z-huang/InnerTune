@@ -1,5 +1,7 @@
 package com.zionhuang.innertube.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,11 +11,12 @@ data class Runs(
     override fun toString() = runs.joinToString(separator = "") { it.text }
 }
 
+@Parcelize
 @Serializable
 data class Run(
     val text: String,
     val navigationEndpoint: NavigationEndpoint?,
-) {
+) : Parcelable {
     inline fun <reified T : Endpoint> toLink(): Link<T>? =
         (navigationEndpoint?.endpoint as? T)?.let {
             Link(text, it)

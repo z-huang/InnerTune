@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.MediaConstants.EXTRA_BLOCK
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
@@ -14,10 +15,20 @@ import com.zionhuang.music.repos.SongRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.apache.commons.lang3.RandomStringUtils
+
+typealias OnPlaylistCreated = (PlaylistEntity) -> Unit
 
 class CreatePlaylistDialog : AppCompatDialogFragment() {
     private lateinit var binding: DialogSingleTextInputBinding
+    private var onPlaylistCreated: OnPlaylistCreated = {}
+
+    @Suppress("UNCHECKED_CAST")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getSerializable(EXTRA_BLOCK)?.let {
+            onPlaylistCreated = it as OnPlaylistCreated
+        }
+    }
 
     private fun setupUI() {
         binding.textInput.apply {
@@ -49,11 +60,13 @@ class CreatePlaylistDialog : AppCompatDialogFragment() {
     private fun onOK() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
+        val playlist = PlaylistEntity(
+            id = generatePlaylistId(),
+            name = name
+        )
         GlobalScope.launch {
-            SongRepository.addPlaylist(PlaylistEntity(
-                id = generatePlaylistId(),
-                name = name
-            ))
+            SongRepository.addPlaylist(playlist)
+            onPlaylistCreated(playlist)
         }
         dismiss()
     }

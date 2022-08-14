@@ -81,6 +81,7 @@ object SongRepository : LocalRepository {
         }
     }
 
+    suspend fun addSong(song: SongItem) = addSongs(listOf(song))
     suspend fun addSongs(songs: List<SongItem>) = withContext(IO) {
         songs.forEach { song ->
             songDao.insert(song.toSongEntity())
@@ -160,16 +161,10 @@ object SongRepository : LocalRepository {
             val playlistId = generatePlaylistId()
             playlistDao.insert(playlist.toPlaylistEntity().copy(id = playlistId))
             var index = 0
-            var browseResult: BrowseResult? = null
-            do {
-                browseResult = if (browseResult == null) {
-                    YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id))
-                } else {
-                    YouTube.browse(browseResult.continuations!!)
-                }
-                browseResult.items.filterIsInstance<SongItem>().let { items ->
-                    safeAddSongs(items)
-                    playlistDao.insert(items.map {
+            YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)) { items ->
+                items.filterIsInstance<SongItem>().let { songs ->
+                    safeAddSongs(songs)
+                    playlistDao.insert(songs.map {
                         PlaylistSongMap(
                             playlistId = playlistId,
                             songId = it.id,
@@ -177,7 +172,7 @@ object SongRepository : LocalRepository {
                         )
                     })
                 }
-            } while (!browseResult?.continuations.isNullOrEmpty())
+            }
         }
     }
 
@@ -365,17 +360,42 @@ object SongRepository : LocalRepository {
         getList = { withContext(IO) { playlistDao.getPlaylistSongEntities(playlistId) } }
     )
 
-    override suspend fun updatePlaylistSongEntities(playlistSongEntities: List<PlaylistSongMap>) = withContext(IO) { playlistDao.updatePlaylistSongEntities(playlistSongEntities) }
+    override suspend fun updatePlaylistSongEntities(playlistSongEntities: List<PlaylistSongMap>) = withContext(IO) {
+        playlistDao.updatePlaylistSongEntities(playlistSongEntities)
+    }
 
-    override suspend fun addSongsToPlaylist(playlistId: String, songs: List<Song>) {
+    override suspend fun addSongsToPlaylist(playlistId: String, songIds: List<String>) {
         var maxId = playlistDao.getPlaylistMaxId(playlistId) ?: -1
-        playlistDao.insertPlaylistSongEntities(songs.map {
+        playlistDao.insertPlaylistSongEntities(songIds.map { songId ->
             PlaylistSongMap(
                 playlistId = playlistId,
-                songId = it.song.id,
+                songId = songId,
                 idInPlaylist = ++maxId
             )
         })
+    }
+
+    suspend fun addToPlaylist(item: YTItem, playlist: PlaylistEntity) = withContext(IO) {
+        if (playlist.isYouTubePlaylist) return@withContext
+        when (item) {
+            is ArtistItem -> return@withContext
+            is SongItem -> {
+                val song = YouTube.getQueue(videoIds = listOf(item.id))[0]
+                addSong(song)
+                addSongsToPlaylist(playlist.id, listOf(song.id))
+            }
+            is AlbumItem -> {
+                val songs = YouTube.getQueue(playlistId = item.playlistId)
+                addSongs(songs)
+                addSongsToPlaylist(playlist.id, songs.map { it.id })
+            }
+            is PlaylistItem -> YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)) { items ->
+                items.filterIsInstance<SongItem>().let { songs ->
+                    addSongs(songs)
+                    addSongsToPlaylist(playlist.id, songs.map { it.id })
+                }
+            }
+        }
     }
 
     override suspend fun removeSongsFromPlaylist(playlistId: String, idInPlaylist: List<Int>) = withContext(IO) { playlistDao.deletePlaylistSongEntities(playlistId, idInPlaylist) }

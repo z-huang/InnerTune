@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "5d0f3a7d7161063950e54494ffc7ddb1",
+    "identityHash": "5b5765b1018a585eadc6b5c7a60b18af",
     "entities": [
       {
         "tableName": "song",
@@ -529,8 +529,14 @@
       },
       {
         "tableName": "playlist_song_map",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`playlistId` TEXT NOT NULL, `songId` TEXT NOT NULL, `idInPlaylist` INTEGER NOT NULL, PRIMARY KEY(`playlistId`, `songId`), FOREIGN KEY(`playlistId`) REFERENCES `playlist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`songId`) REFERENCES `song`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `playlistId` TEXT NOT NULL, `songId` TEXT NOT NULL, `idInPlaylist` INTEGER NOT NULL, FOREIGN KEY(`playlistId`) REFERENCES `playlist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`songId`) REFERENCES `song`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "playlistId",
             "columnName": "playlistId",
@@ -552,10 +558,9 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "playlistId",
-            "songId"
+            "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [
           {
@@ -566,15 +571,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_playlist_song_map_playlistId` ON `${TABLE_NAME}` (`playlistId`)"
-          },
-          {
-            "name": "index_playlist_song_map_songId",
-            "unique": false,
-            "columnNames": [
-              "songId"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_playlist_song_map_songId` ON `${TABLE_NAME}` (`songId`)"
           }
         ],
         "foreignKeys": [
@@ -673,7 +669,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5d0f3a7d7161063950e54494ffc7ddb1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5b5765b1018a585eadc6b5c7a60b18af')"
     ]
   }
 }

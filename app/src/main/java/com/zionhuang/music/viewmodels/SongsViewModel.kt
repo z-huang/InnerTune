@@ -97,7 +97,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
                     .setTitle(R.string.dialog_title_choose_playlist)
                     .setItems(playlists.map { it.playlist.name }.toTypedArray()) { _, i ->
                         viewModelScope.launch {
-                            songRepository.addSongsToPlaylist(playlists[i].id, songs)
+                            songRepository.addSongsToPlaylist(playlists[i].id, songs.map { it.id })
                         }
                     }
                     .show()
