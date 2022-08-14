@@ -15,6 +15,7 @@ No ads, free, and simple.
 
 > **Note 2:** The name of this app is temporary. It will be changed in the future.
 
+> **Note 3:** We are currently making a change about the YouTube library. The development is in `feature/innertube` branch. Issues are put on hold until `feature/innertube` gets merged into `dev` branch.
 ## Description
 
 With this app, you're like getting a free music streaming service. You can listen to music from YouTube/YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. The metadata of songs and artists are fully editable. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
@@ -58,12 +59,6 @@ The ability to retrieve information and stream data from YouTube/YouTube Music i
   <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/search results.jpg" width="170" />
   <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/settings.jpg" width="170" />
 </p>
-
-## Roadmap
-
-The overall plan for this project at current stage:
-1. Improve user interface
-2. Modify [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) to support more album and artist information and audio normalization
 
 ## Installation
 

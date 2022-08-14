@@ -1,16 +1,13 @@
 package com.zionhuang.music.ui.viewholders
 
-import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ItemSearchStreamBinding
-import com.zionhuang.music.extensions.context
-import com.zionhuang.music.extensions.id
-import com.zionhuang.music.extensions.load
-import com.zionhuang.music.extensions.roundCorner
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.StreamPopupMenuListener
 import com.zionhuang.music.ui.viewholders.base.SearchViewHolder
 import com.zionhuang.music.utils.makeTimeString
@@ -46,10 +43,10 @@ class SearchStreamViewHolder(
     }
 
     private fun setupMenu(item: StreamInfoItem) {
-        binding.btnMoreAction.setOnClickListener { view ->
-            PopupMenu(view.context, view).apply {
-                inflate(R.menu.search_item)
-                setOnMenuItemClickListener {
+        binding.btnMoreAction.setOnClickListener {
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.stream)
+                .setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.action_add_to_library -> listener?.addToLibrary(item)
                         R.id.action_play_next -> listener?.playNext(item)
@@ -57,10 +54,8 @@ class SearchStreamViewHolder(
                         R.id.action_add_to_playlist -> listener?.addToPlaylist(item, binding.context)
                         R.id.action_download -> listener?.download(item, binding.context)
                     }
-                    true
                 }
-                show()
-            }
+                .show(binding.context)
         }
     }
 

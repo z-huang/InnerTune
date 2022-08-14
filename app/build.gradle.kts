@@ -17,8 +17,8 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 26
         targetSdk = 31
-        versionCode = 8
-        versionName = "0.3.1"
+        versionCode = 9
+        versionName = "0.3.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     applicationVariants.all {
@@ -101,14 +101,14 @@ materialThemeBuilder {
 dependencies {
     implementation(fileTree("dir" to "libs", "include" to "*.jar"))
     // Kotlin
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     // AndroidX
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.fragment:fragment-ktx:1.4.1")
     implementation("androidx.preference:preference-ktx:1.2.0")
     implementation("androidx.vectordrawable:vectordrawable:1.1.0")
@@ -124,12 +124,12 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation("androidx.transition:transition-ktx:1.4.1")
-    implementation("com.google.android.material:material:1.6.0")
+    implementation("com.google.android.material:material:1.6.1")
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
     // ExoPlayer
-    implementation("com.google.android.exoplayer:exoplayer:2.16.1")
-    implementation("com.google.android.exoplayer:extension-mediasession:2.16.1")
+    implementation("com.google.android.exoplayer:exoplayer:2.17.1")
+    implementation("com.google.android.exoplayer:extension-mediasession:2.17.1")
     // Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     testImplementation("androidx.paging:paging-common-ktx:3.1.1")
@@ -143,17 +143,17 @@ dependencies {
     testImplementation("androidx.room:room-testing:2.4.2")
     // NewPipe Extractor
     implementation("com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751")
-    implementation("com.github.TeamNewPipe:NewPipeExtractor:v$newpipeVersion")
+    implementation("com.github.TeamNewPipe:NewPipeExtractor:76aad92fa54524f20c3338ab568c9cd6b50c9d33")
     // Apache Utils
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")
     // OkHttp
-    implementation("com.squareup.okhttp3:okhttp:4.9.2")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
     // Glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
-    implementation("com.github.bumptech.glide:annotations:4.12.0")
-    implementation("com.github.bumptech.glide:okhttp3-integration:4.12.0")
-    kapt("com.github.bumptech.glide:compiler:4.12.0")
+    implementation("com.github.bumptech.glide:glide:4.13.2")
+    implementation("com.github.bumptech.glide:annotations:4.13.2")
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.13.1")
+    kapt("com.github.bumptech.glide:compiler:4.13.1")
     // Jsoup
     implementation("org.jsoup:jsoup:1.14.3")
     // Fast Scroll

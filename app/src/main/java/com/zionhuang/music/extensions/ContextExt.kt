@@ -1,6 +1,5 @@
 package com.zionhuang.music.extensions
 
-import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.SharedPreferences
@@ -9,6 +8,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.use
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceManager
@@ -19,8 +19,8 @@ import com.zionhuang.music.utils.preference.serializablePreference
 
 fun Context.getDensity(): Float = resources.displayMetrics.density
 
-tailrec fun Context?.getActivity(): Activity? = when (this) {
-    is Activity -> this
+tailrec fun Context?.getActivity(): AppCompatActivity? = when (this) {
+    is AppCompatActivity -> this
     else -> (this as? ContextWrapper)?.baseContext?.getActivity()
 }
 

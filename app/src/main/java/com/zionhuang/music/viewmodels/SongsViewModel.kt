@@ -19,7 +19,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.extensions.getActivity
+import com.zionhuang.music.extensions.show
 import com.zionhuang.music.extensions.toSong
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.PreferenceSortInfo
@@ -28,7 +28,6 @@ import com.zionhuang.music.models.toMediaData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.base.LocalRepository
-import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import com.zionhuang.music.ui.listeners.StreamPopupMenuListener
@@ -83,11 +82,9 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
     val songPopupMenuListener = object : SongPopupMenuListener {
         override fun editSong(song: Song, context: Context) {
-            (context.getActivity() as? MainActivity)?.let { activity ->
-                EditSongDialog().apply {
-                    arguments = bundleOf(EXTRA_SONG to song)
-                }.show(activity.supportFragmentManager, EditSongDialog.TAG)
-            }
+            EditSongDialog().apply {
+                arguments = bundleOf(EXTRA_SONG to song)
+            }.show(context)
         }
 
         override fun playNext(songs: List<Song>, context: Context) {

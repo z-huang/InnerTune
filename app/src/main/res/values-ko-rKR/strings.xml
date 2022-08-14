@@ -10,14 +10,14 @@
     <string name="title_update">업데이트</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">Appearance</string>
-    <string name="pref_follow_system_accent_title">Follow system theme</string>
-    <string name="pref_theme_color_title">Theme color</string>
-    <string name="pref_dark_theme_title">Dark theme</string>
-    <string name="dark_theme_on">On</string>
-    <string name="dark_theme_off">Off</string>
-    <string name="dark_theme_follow_system">Follow system</string>
-    <string name="pref_content">Content</string>
+    <string name="pref_appearance">모양</string>
+    <string name="pref_follow_system_accent_title">시스템 테마</string>
+    <string name="pref_theme_color_title">테마 색상</string>
+    <string name="pref_dark_theme_title">다크 테마</string>
+    <string name="dark_theme_on">켬</string>
+    <string name="dark_theme_off">끔</string>
+    <string name="dark_theme_follow_system">시스템</string>
+    <string name="pref_content">콘텐츠</string>
     <string name="pref_content_language_title">기본 콘텐츠 언어</string>
     <string name="pref_default_content_country_title">기본 콘텐츠 국가</string>
     <string name="pref_auto_download_title">자동 다운로드</string>
@@ -85,8 +85,8 @@
     <string name="text_view_hint_artist_name">아티스트 이름</string>
     <string name="error_artist_name_empty">아티스트 이름은 비워둘 수 없습니다.</string>
 
-    <string name="dialog_title_duplicate_artist">Duplicate artists</string>
-    <string name="dialog_msg_duplicate_artist">Artist %1$s already exists. Merge two artists?</string>
+    <string name="dialog_title_duplicate_artist">중복 아티스트</string>
+    <string name="dialog_msg_duplicate_artist">아티스트 %1$s이(가) 이미 존재합니다. 두 아티스트를 병합하시겠습니까?</string>
 
     <string name="dialog_title_choose_playlist">플레이리스트 선택</string>
 
