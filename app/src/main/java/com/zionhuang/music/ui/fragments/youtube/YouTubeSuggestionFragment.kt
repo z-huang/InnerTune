@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_PREVIOUS
 import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
@@ -72,6 +73,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
                 .debounce(100L)
                 .collectLatest {
                     viewModel.fetchSuggestions(it)
+                    binding.btnClear.isVisible = it.isNotEmpty()
                 }
         }
         binding.searchView.setOnEditorActionListener { view, actionId, event ->
