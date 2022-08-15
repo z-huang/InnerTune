@@ -8,8 +8,9 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PL
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
 import com.zionhuang.innertube.models.BrowseEndpoint
-import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.innertube.models.YTItem
+import com.zionhuang.innertube.utils.browse
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -100,9 +101,8 @@ class YouTubeTest {
 
     @Test
     fun `Check 'browse' continuation`() = runBlocking {
-        var result = youTube.browse(BrowseEndpoint(HOME_BROWSE_ID))
-        while (result.continuations != null) {
-            result = youTube.browse(result.continuations!!)
+        youTube.browse(BrowseEndpoint(HOME_BROWSE_ID)) { items ->
+            assertTrue(items.isNotEmpty())
         }
     }
 

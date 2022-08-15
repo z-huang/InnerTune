@@ -7,6 +7,7 @@ import androidx.lifecycle.distinctUntilChanged
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.YouTube.MAX_GET_QUEUE_SIZE
 import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.utils.browse
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
@@ -223,7 +224,6 @@ object SongRepository : LocalRepository {
                         val req = DownloadManager.Request(url.toUri())
                             .setTitle(song.song.title)
                             .setDestinationUri(getSongFile(song.song.id).toUri())
-                            .setVisibleInDownloadsUi(false)
                         val did = downloadManager.enqueue(req)
                         addDownload(DownloadEntity(did, song.song.id))
                     }
