@@ -47,6 +47,7 @@ open class SongViewHolder(
                 .setMenuModifier {
                     findItem(R.id.action_download).isVisible = song.song.downloadState == MediaConstants.STATE_NOT_DOWNLOADED
                     findItem(R.id.action_remove_download).isVisible = song.song.downloadState == MediaConstants.STATE_DOWNLOADED
+                    findItem(R.id.action_delete).isVisible = song.album == null
                 }
                 .setOnMenuItemClickListener {
                     when (it.itemId) {

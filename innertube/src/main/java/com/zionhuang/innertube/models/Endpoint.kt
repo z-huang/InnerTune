@@ -1,6 +1,7 @@
 package com.zionhuang.innertube.models
 
 import android.os.Parcelable
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -60,6 +61,9 @@ data class BrowseEndpoint(
     val params: String? = null,
     val browseEndpointContextSupportedConfigs: BrowseEndpointContextSupportedConfigs? = null,
 ) : Endpoint() {
+    val isAlbumEndpoint: Boolean
+        get() = browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_ALBUM
+
     @Parcelize
     @Serializable
     data class BrowseEndpointContextSupportedConfigs(

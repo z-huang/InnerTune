@@ -84,6 +84,7 @@ class YouTubeItemPagingAdapter(
         else -> ITEM
     }
 
+    fun getItemAt(position: Int) = getItem(position)
 
     class ItemComparator : DiffUtil.ItemCallback<YTBaseItem>() {
         override fun areItemsTheSame(oldItem: YTBaseItem, newItem: YTBaseItem): Boolean = oldItem::class == newItem::class && oldItem.id == newItem.id

@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.PagingDataAdapter
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.BuildConfig
 import com.zionhuang.music.databinding.LayoutLoadStateBinding
@@ -40,4 +42,14 @@ fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.bindLoadSta
     binding.btnRetry.setOnClickListener {
         retry()
     }
+}
+
+fun <Key : Any, Value : Any> List<Value>.toPagingSource() = object : PagingSource<Key, Value>() {
+    override suspend fun load(params: LoadParams<Key>): LoadResult<Key, Value> = LoadResult.Page(
+        data = this@toPagingSource,
+        prevKey = null,
+        nextKey = null
+    )
+
+    override fun getRefreshKey(state: PagingState<Key, Value>): Key? = null
 }

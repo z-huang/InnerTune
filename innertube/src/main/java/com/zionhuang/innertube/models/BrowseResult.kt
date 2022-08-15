@@ -2,10 +2,8 @@ package com.zionhuang.innertube.models
 
 data class BrowseResult(
     val items: List<YTBaseItem>,
-    val continuations: List<String>?, // act as a stack for nested continuation
+    val urlCanonical: String? = null,
+    val continuations: List<String>? = null, // act as a stack for nested continuation
 ) {
-    fun addHeader(header: YTBaseItem?) = if (header == null) this else BrowseResult(
-        items = listOf(header) + items,
-        continuations = continuations
-    )
+    fun addHeader(header: YTBaseItem?) = if (header == null) this else copy(items = listOf(header) + items)
 }

@@ -109,7 +109,8 @@ object SongRepository : LocalRepository {
     suspend fun addAlbum(album: AlbumItem) = addAlbums(listOf(album))
     suspend fun addAlbums(albums: List<AlbumItem>) = withContext(IO) {
         albums.forEach { album ->
-            YouTube.getQueue(playlistId = album.playlistId).let { songs ->
+            val ids = YouTube.browse(BrowseEndpoint(browseId = "VL" + album.playlistId)).items.filterIsInstance<SongItem>().map { it.id }
+            YouTube.getQueue(videoIds = ids).let { songs ->
                 albumDao.insert(AlbumEntity(
                     id = album.id,
                     title = album.title,

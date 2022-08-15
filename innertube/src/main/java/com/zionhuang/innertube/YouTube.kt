@@ -6,6 +6,7 @@ import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
 import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
 import io.ktor.client.call.*
+import io.ktor.http.*
 
 /**
  * Parse useful data with [InnerTube] sending requests.
@@ -59,8 +60,25 @@ object YouTube {
     suspend fun player(videoId: String, playlistId: String? = null): PlayerResponse =
         innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
 
-    suspend fun browse(endpoint: BrowseEndpoint): BrowseResult =
-        innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
+    suspend fun browse(endpoint: BrowseEndpoint): BrowseResult {
+        val browseResult = innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
+        if (endpoint.isAlbumEndpoint && browseResult.urlCanonical != null) {
+            Url(browseResult.urlCanonical).parameters["list"]?.let { playlistId ->
+                // replace video items with audio items
+                return browseResult.copy(
+                    items = browseResult.items.subList(0, browseResult.items.indexOfFirst { it is SongItem }) +
+                            browse(BrowseEndpoint(browseId = "VL$playlistId")).items.filterIsInstance<SongItem>().mapIndexed { index, item ->
+                                item.copy(
+                                    subtitle = item.subtitle.split(" • ").lastOrNull().orEmpty(),
+                                    index = (index + 1).toString()
+                                )
+                            } +
+                            browseResult.items.subList(browseResult.items.indexOfLast { it is SongItem } + 1, browseResult.items.size)
+                )
+            }
+        }
+        return browseResult
+    }
 
     suspend fun browse(continuation: String): BrowseResult =
         innerTube.browse(WEB_REMIX, continuation = continuation).body<BrowseResponse>().toBrowseResult()

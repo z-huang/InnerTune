@@ -15,21 +15,25 @@ data class BrowseResponse(
         continuationContents != null -> when {
             continuationContents.sectionListContinuation != null -> BrowseResult(
                 items = continuationContents.sectionListContinuation.contents.flatMap { it.toBaseItems() },
+                urlCanonical = microformat?.microformatDataRenderer?.urlCanonical,
                 continuations = continuationContents.sectionListContinuation.continuations?.getContinuations()
             )
             continuationContents.musicPlaylistShelfContinuation != null -> BrowseResult(
                 items = continuationContents.musicPlaylistShelfContinuation.contents.mapNotNull { it.toItem() },
+                urlCanonical = microformat?.microformatDataRenderer?.urlCanonical,
                 continuations = continuationContents.musicPlaylistShelfContinuation.continuations?.getContinuations()
             )
             else -> throw UnsupportedOperationException("Unknown continuation type")
         }
         contents != null -> BrowseResult(
             items = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toBaseItems() },
+            urlCanonical = microformat?.microformatDataRenderer?.urlCanonical,
             continuations = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicPlaylistShelfRenderer?.continuations?.getContinuations().orEmpty()
                     + contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuations().orEmpty()
         )
         else -> BrowseResult(
             items = emptyList(),
+            urlCanonical = null,
             continuations = null
         )
     }.addHeader(header?.toHeader())
@@ -112,11 +116,11 @@ data class BrowseResponse(
 
     @Serializable
     data class Microformat(
-        val microformatDataRenderer: MicroformatDataRenderer,
+        val microformatDataRenderer: MicroformatDataRenderer?,
     ) {
         @Serializable
         data class MicroformatDataRenderer(
-            val urlCanonical: String,
+            val urlCanonical: String?,
         )
     }
 }

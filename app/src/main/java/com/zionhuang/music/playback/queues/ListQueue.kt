@@ -3,7 +3,7 @@ package com.zionhuang.music.playback.queues
 import com.google.android.exoplayer2.MediaItem
 
 class ListQueue(
-    override val title: String?,
+    override val title: String? = null,
     val items: List<MediaItem>,
     val startIndex: Int,
 ) : Queue {

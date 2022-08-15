@@ -12,6 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
 import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Album
@@ -34,7 +37,14 @@ class AlbumsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvi
             addOnClickListener { position, _ ->
                 (this@AlbumsFragment.adapter.getItemAt(position) as? Album)?.let { album ->
                     NavigationEndpointHandler(this@AlbumsFragment).handle(NavigationEndpoint(
-                        browseEndpoint = BrowseEndpoint(browseId = album.id)
+                        browseEndpoint = BrowseEndpoint(
+                            browseId = album.id,
+                            browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
+                                browseEndpointContextMusicConfig = BrowseEndpointContextMusicConfig(
+                                    pageType = MUSIC_PAGE_TYPE_ALBUM
+                                )
+                            )
+                        )
                     ))
                 }
             }

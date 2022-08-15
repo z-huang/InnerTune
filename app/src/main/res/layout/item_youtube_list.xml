@@ -11,6 +11,7 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zionhuang.innertube.models.SongItem" />
         <import type="com.zionhuang.innertube.models.ArtistItem" />
     </data>
 
@@ -33,7 +34,7 @@
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             android:scaleType="fitCenter"
-            android:visibility="@{item.thumbnails.empty ? View.GONE : View.VISIBLE}"
+            android:visibility="@{(item.thumbnails.empty || (item instanceof SongItem &amp;&amp; ((SongItem) item).index != null)) ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toStartOf="@id/content"
@@ -48,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:gravity="center"
-            android:visibility="@{item.thumbnails.empty ? View.VISIBLE : View.GONE}"
+            android:visibility="@{(item instanceof SongItem &amp;&amp; ((SongItem) item).index != null) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toStartOf="@id/content"

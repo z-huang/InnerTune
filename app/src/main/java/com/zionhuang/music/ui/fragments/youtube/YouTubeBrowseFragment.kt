@@ -13,7 +13,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.R
+import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.playback.MediaSessionConnection
+import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.YouTubeItemPagingAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -24,8 +29,8 @@ import kotlinx.coroutines.launch
 
 class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>(), MenuProvider {
     private val args: YouTubeBrowseFragmentArgs by navArgs()
-
     private val viewModel by viewModels<YouTubeBrowseViewModel> { YouTubeBrowseViewModelFactory(requireActivity().application, args.endpoint) }
+
     override val adapter = YouTubeItemPagingAdapter(NavigationEndpointHandler(this))
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,6 +38,19 @@ class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapte
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        if (args.endpoint.isAlbumEndpoint) {
+            binding.recyclerView.addOnClickListener { position, _ ->
+                (adapter.getItemAt(position) as? SongItem)?.let { item ->
+                    viewModel.getAlbumSongs()?.let { songs ->
+                        MediaSessionConnection.binder?.playQueue(ListQueue(
+                            items = songs.map { it.toMediaItem() },
+                            startIndex = songs.indexOfFirst { it.id == item.id }
+                        ))
+                    }
+
+                }
+            }
+        }
         lifecycleScope.launch {
             viewModel.pagingData.collectLatest {
                 adapter.submitData(it)
