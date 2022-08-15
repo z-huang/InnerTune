@@ -1,5 +1,8 @@
 package com.zionhuang.innertube.models
 
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Header(
     val title: String,
     val subtitle: String? = null,
@@ -7,6 +10,7 @@ data class Header(
     override val id: String = title,
 ) : YTBaseItem()
 
+@Parcelize
 data class ArtistHeader(
     override val id: String,
     val name: String,
@@ -16,6 +20,7 @@ data class ArtistHeader(
     val radioEndpoint: NavigationEndpoint?,
 ) : YTBaseItem()
 
+@Parcelize
 data class AlbumOrPlaylistHeader(
     override val id: String,
     val name: String,
@@ -28,6 +33,7 @@ data class AlbumOrPlaylistHeader(
     val menu: ItemMenu,
 ) : YTBaseItem()
 
+@Parcelize
 data class CarouselSection(
     override val id: String,
     val items: List<YTBaseItem>,
@@ -35,12 +41,14 @@ data class CarouselSection(
     val itemViewType: ViewType,
 ) : YTBaseItem()
 
+@Parcelize
 data class GridSection(
     override val id: String,
     val items: List<YTBaseItem>,
 //    val moreNavigationEndpoint: BrowseEndpoint,
 ) : YTBaseItem()
 
+@Parcelize
 data class DescriptionSection(
     override val id: String = "DESCRIPTION",
     val description: String,

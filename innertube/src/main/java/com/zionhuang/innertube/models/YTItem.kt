@@ -30,6 +30,7 @@ sealed class YTItem : YTBaseItem() {
     }
 }
 
+@Parcelize
 data class SongItem(
     override val id: String,
     override val title: String,
@@ -106,6 +107,7 @@ data class SongItem(
     }
 }
 
+@Parcelize
 data class AlbumItem(
     override val id: String, // browseId
     val playlistId: String,
@@ -153,6 +155,7 @@ data class AlbumItem(
     }
 }
 
+@Parcelize
 data class PlaylistItem(
     override val id: String,
     override val title: String,
@@ -197,6 +200,7 @@ data class PlaylistItem(
     }
 }
 
+@Parcelize
 data class ArtistItem(
     override val id: String,
     override val title: String,
@@ -232,6 +236,7 @@ data class ArtistItem(
     }
 }
 
+@Parcelize
 data class NavigationItem(
     val title: String,
     override val id: String = title,
@@ -241,6 +246,7 @@ data class NavigationItem(
     val navigationEndpoint: NavigationEndpoint,
 ) : YTBaseItem()
 
+@Parcelize
 data class SuggestionTextItem(
     val query: String,
     val source: SuggestionSource = SuggestionSource.YOUTUBE,
@@ -251,6 +257,7 @@ data class SuggestionTextItem(
     }
 }
 
+@Parcelize
 object Separator : YTBaseItem() {
     @IgnoredOnParcel
     override val id: String = "SEPARATOR"

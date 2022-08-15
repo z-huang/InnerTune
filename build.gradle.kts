@@ -7,8 +7,8 @@ buildscript {
     }
     val kotlin_version = "1.6.20"
     dependencies {
-        classpath("com.android.tools.build:gradle:7.2.1")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.0-rc01")
+        classpath("com.android.tools.build:gradle:7.2.2")
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
         classpath("dev.rikka.tools.materialthemebuilder:gradle-plugin:1.3.2")

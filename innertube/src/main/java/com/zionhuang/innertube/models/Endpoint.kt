@@ -18,14 +18,16 @@ data class WatchEndpoint(
     val index: Int? = null,
     val watchEndpointMusicSupportedConfigs: WatchEndpointMusicSupportedConfigs? = null,
 ) : Endpoint() {
+    @Parcelize
     @Serializable
     data class WatchEndpointMusicSupportedConfigs(
         val watchEndpointMusicConfig: WatchEndpointMusicConfig,
-    ) : java.io.Serializable {
+    ) : Parcelable {
+        @Parcelize
         @Serializable
         data class WatchEndpointMusicConfig(
             val musicVideoType: String,
-        ) : java.io.Serializable {
+        ) : Parcelable {
             companion object {
                 const val MUSIC_VIDEO_TYPE_OMV = "MUSIC_VIDEO_TYPE_OMV"
                 const val MUSIC_VIDEO_TYPE_UGC = "MUSIC_VIDEO_TYPE_UGC"
@@ -92,11 +94,12 @@ data class QueueAddEndpoint(
     val queueInsertPosition: String,
     val queueTarget: QueueTarget,
 ) : Endpoint() {
+    @Parcelize
     @Serializable
     data class QueueTarget(
         val videoId: String?,
         val playlistId: String?,
-    ) : java.io.Serializable
+    ) : Parcelable
 
     companion object {
         const val INSERT_AFTER_CURRENT_VIDEO = "INSERT_AFTER_CURRENT_VIDEO"
