@@ -1,10 +1,15 @@
 package com.zionhuang.music.ui.fragments.youtube
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_PREVIOUS
 import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -37,6 +42,15 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
     private val viewModel by viewModels<SuggestionViewModel>()
     private val adapter = YouTubeItemAdapter(NavigationEndpointHandler(this))
 
+    private val voiceResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            val spokenText = it.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.firstOrNull()
+            if (spokenText != null) {
+                binding.searchView.setText(spokenText)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong())
@@ -57,6 +71,9 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@YouTubeSuggestionFragment.adapter
+        }
+        binding.btnVoice.setOnClickListener {
+            voiceResultLauncher.launch(Intent(ACTION_RECOGNIZE_SPEECH))
         }
         setupSearchView()
         showKeyboard()
@@ -110,4 +127,8 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
 
     private fun showKeyboard() = showKeyboard(requireActivity(), binding.searchView)
     private fun hideKeyboard() = hideKeyboard(requireActivity(), binding.searchView)
+
+    companion object {
+        private const val SPEECH_REQUEST_CODE = 0
+    }
 }

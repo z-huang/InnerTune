@@ -40,9 +40,19 @@
                     android:id="@+id/btn_clear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
                     android:background="?attr/actionBarItemBackground"
-                    android:padding="16dp"
+                    android:padding="5dp"
                     app:srcCompat="@drawable/ic_close" />
+
+                <ImageButton
+                    android:id="@+id/btn_voice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:background="?attr/actionBarItemBackground"
+                    android:padding="5dp"
+                    app:srcCompat="@drawable/ic_keyboard_voice" />
             </LinearLayout>
         </com.google.android.material.appbar.MaterialToolbar>
 
