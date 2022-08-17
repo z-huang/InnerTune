@@ -245,7 +245,7 @@ class SongPlayer(
         player.clearMediaItems()
 
         scope.launch {
-            val initialStatus = queue.getInitialStatus()
+            val initialStatus = withContext(IO) { queue.getInitialStatus() }
             player.setMediaItems(initialStatus.items)
             if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
             player.prepare()

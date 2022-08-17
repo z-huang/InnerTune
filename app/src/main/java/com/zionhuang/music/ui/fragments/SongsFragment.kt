@@ -17,10 +17,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
-import com.zionhuang.music.extensions.addFastScroller
-import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.getQueryTextChangeFlow
-import com.zionhuang.music.extensions.resolveColor
+import com.zionhuang.music.extensions.*
+import com.zionhuang.music.models.PreferenceSortInfo
+import com.zionhuang.music.playback.queues.Queue
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -49,16 +49,19 @@ class SongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvid
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
-            addOnClickListener { pos, _ ->
-                // TODO
-//                if (pos == 0) return@addOnClickListener
-//                playbackViewModel.playQueue(requireActivity(),
-//                    ListQueue(
-//                        title = null,
-//                        items = this@SongsFragment.adapter.snapshot().items.drop(1).map { it.toMediaItem() },
-//                        startIndex = pos - 1
-//                    )
-//                )
+            addOnClickListener { position, _ ->
+                playbackViewModel.playQueue(requireActivity(),
+                    object : Queue {
+                        override val title: String? = null
+                        override suspend fun getInitialStatus() = Queue.Status(
+                            items = SongRepository.getAllSongs(PreferenceSortInfo).getList().map { it.toMediaItem() },
+                            index = position
+                        )
+
+                        override fun hasNextPage(): Boolean = false
+                        override suspend fun nextPage() = throw UnsupportedOperationException()
+                    }
+                )
             }
             addFastScroller { useMd2Style() }
         }
