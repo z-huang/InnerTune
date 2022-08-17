@@ -32,9 +32,9 @@ class LocalItemAdapter : PagingDataAdapter<LocalItem, LocalItemViewHolder>(ItemC
                 is SongViewHolder -> holder.bind(item as Song)
                 is AlbumViewHolder -> {
                     holder.bind(item as Album)
-                    if (item.album.thumbnailUrl == null) {
+                    if (item.album.thumbnailUrl == null || item.album.year == null) {
                         GlobalScope.launch {
-                            SongRepository.fetchAlbumThumbnail(item.album)
+                            SongRepository.refetchAlbum(item.album)
                         }
                     }
                 }

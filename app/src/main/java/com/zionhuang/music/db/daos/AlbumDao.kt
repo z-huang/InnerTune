@@ -26,10 +26,10 @@ interface AlbumDao {
     suspend fun insert(songAlbumMaps: List<SongAlbumMap>): List<Long>
 
     @Update
-    fun update(album: AlbumEntity)
+    suspend fun update(album: AlbumEntity)
 
     @Update
-    fun update(songAlbumMaps: List<SongAlbumMap>)
+    suspend fun update(songAlbumMaps: List<SongAlbumMap>)
 
     suspend fun upsert(songAlbumMaps: List<SongAlbumMap>) {
         insert(songAlbumMaps)
@@ -37,4 +37,7 @@ interface AlbumDao {
             .mapNotNull { if (it.value == -1L) songAlbumMaps[it.index] else null }
             .let { insert(it) }
     }
+
+    @Delete
+    suspend fun delete(album: AlbumEntity)
 }

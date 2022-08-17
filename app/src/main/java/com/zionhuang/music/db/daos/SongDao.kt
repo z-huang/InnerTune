@@ -71,6 +71,10 @@ interface SongDao {
     @Query(QUERY_PLAYLIST_SONGS)
     suspend fun getPlaylistSongsAsList(playlistId: String): List<Song>
 
+    @Transaction
+    @Query("SELECT * FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
+    suspend fun getAlbumSongs(albumId: String): List<SongEntity>
+
     fun getSortQuery(sortInfo: ISortInfo) = QUERY_ORDER.format(
         when (sortInfo.type) {
             ORDER_CREATE_DATE -> "song.create_date"

@@ -19,12 +19,16 @@ import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.base.IMutableSortInfo
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
 import com.zionhuang.music.ui.listeners.PlaylistPopupMenuListener
 import com.zionhuang.music.ui.listeners.SongPopupMenuListener
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -101,19 +105,21 @@ class ArtistViewHolder(
 class AlbumViewHolder(
     override val binding: ItemAlbumBinding,
 ) : LocalItemViewHolder(binding) {
+    @OptIn(DelicateCoroutinesApi::class)
     fun bind(album: Album) {
         binding.album = album
         binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.songs_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
         binding.btnMoreAction.setOnClickListener {
-//            MenuBottomSheetDialogFragment
-//                .newInstance(R.menu.artist)
-//                .setOnMenuItemClickListener {
-//                    when (it.itemId) {
-//                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.context)
-//                        R.id.action_delete -> popupMenuListener?.deleteArtist(artist)
-//                    }
-//                }
-//                .show(binding.context)
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.album)
+                .setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_delete -> GlobalScope.launch {
+                            SongRepository.deleteAlbum(album)
+                        }
+                    }
+                }
+                .show(binding.context)
         }
     }
 }

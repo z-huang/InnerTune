@@ -333,10 +333,20 @@ object SongRepository : LocalRepository {
         getPagingSource = { albumDao.getAllAlbumsAsPagingSource() }
     )
 
-    suspend fun fetchAlbumThumbnail(album: AlbumEntity) = withContext(IO) {
+    suspend fun refetchAlbum(album: AlbumEntity) = withContext(IO) {
         (YouTube.browse(BrowseEndpoint(browseId = album.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-            albumDao.update(album.copy(thumbnailUrl = header.thumbnails.lastOrNull()?.url))
+            albumDao.update(album.copy(
+                title = header.name,
+                thumbnailUrl = header.thumbnails.lastOrNull()?.url,
+                year = header.year
+            ))
         }
+    }
+
+    suspend fun deleteAlbum(album: Album) = withContext(IO) {
+        val songs = songDao.getAlbumSongs(album.id)
+        albumDao.delete(album.album)
+        songDao.delete(songs)
     }
 
     override fun getAllPlaylists() = ListWrapper(
