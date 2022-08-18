@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import coil.load
 import coil.size.Scale
+import coil.size.Size
 import coil.transform.CircleCropTransformation
 import coil.transform.RoundedCornersTransformation
 import com.zionhuang.innertube.models.Thumbnail
@@ -51,7 +52,7 @@ fun setRepeatMode(view: RepeatButton, @RepeatMode state: Int) {
     view.setState(state)
 }
 
-@BindingAdapter("srcUrl", "cornerRadius", "circleCrop", "placeholder", "thumbnailWidth", "thumbnailHeight", requireAll = false)
+@BindingAdapter("srcUrl", "cornerRadius", "circleCrop", "placeholder", "thumbnailWidth", "thumbnailHeight", "originalSize", requireAll = false)
 fun setImageUrl(
     view: ImageView,
     url: String?,
@@ -60,6 +61,7 @@ fun setImageUrl(
     placeholder: Drawable?,
     thumbnailWidth: Float?,
     thumbnailHeight: Float?,
+    originalSize: Boolean?,
 ) {
     val density = view.context.getDensity()
     val resizedUrl = resizeThumbnailUrl(url, thumbnailWidth?.let { (it * density).roundToInt() }, thumbnailHeight?.let { (it * density).roundToInt() })
@@ -73,10 +75,13 @@ fun setImageUrl(
             placeholder(placeholder)
             error(placeholder)
         }
+        if (originalSize == true) {
+            size(Size.ORIGINAL)
+        }
     }
 }
 
-@BindingAdapter("thumbnails", "cornerRadius", "circleCrop", "placeholder", "thumbnailWidth", "thumbnailHeight", requireAll = false)
+@BindingAdapter("thumbnails", "cornerRadius", "circleCrop", "placeholder", "thumbnailWidth", "thumbnailHeight", "originalSize", requireAll = false)
 fun setThumbnails(
     view: ImageView,
     thumbnails: List<Thumbnail>?,
@@ -85,7 +90,8 @@ fun setThumbnails(
     placeholder: Drawable?,
     thumbnailWidth: Float?,
     thumbnailHeight: Float?,
-) = setImageUrl(view, thumbnails?.lastOrNull()?.url, cornerRadius, circleCrop, placeholder, thumbnailWidth, thumbnailHeight)
+    originalSize: Boolean?,
+) = setImageUrl(view, thumbnails?.lastOrNull()?.url, cornerRadius, circleCrop, placeholder, thumbnailWidth, thumbnailHeight, originalSize)
 
 fun resizeThumbnailUrl(url: String?, width: Int?, height: Int?): String? {
     if (url == null || (width == null && height == null)) return url
