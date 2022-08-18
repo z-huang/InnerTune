@@ -67,6 +67,10 @@
             android:icon="@drawable/ic_open_in_full"
             android:key="@string/pref_expand_on_play"
             android:title="@string/pref_expand_on_play_title" />
+        <Preference
+            android:icon="@drawable/ic_equalizer"
+            android:key="@string/pref_equalizer"
+            android:title="@string/pref_equalizer_title" />
     </PreferenceCategory>
 
     <PreferenceCategory

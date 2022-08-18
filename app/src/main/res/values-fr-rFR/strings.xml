@@ -29,6 +29,7 @@
     <string name="pref_auto_add_song_title">Ajout automatique de chansons à la bibliothèque</string>
     <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
     <string name="pref_expand_on_play_title">Ajouter la chanson à votre bibliothèque lorsqu\'elle est terminée.</string>
+    <string name="pref_equalizer_title">Equalizer</string>
     <string name="pref_about">À propos</string>
     <string name="pref_app_version_title">Version de l\'application</string>
     <string name="pref_newpipe_version_title">Version de NewPipe Extractor</string>

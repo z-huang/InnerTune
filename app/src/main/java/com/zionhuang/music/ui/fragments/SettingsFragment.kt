@@ -2,8 +2,10 @@ package com.zionhuang.music.ui.fragments
 
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
+import android.media.audiofx.AudioEffect.*
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
@@ -15,6 +17,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.APP_URL
 import com.zionhuang.music.constants.Constants.NEWPIPE_EXTRACTOR_URL
 import com.zionhuang.music.extensions.preferenceLiveData
+import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.update.UpdateInfo.*
 import com.zionhuang.music.viewmodels.UpdateViewModel
 import com.zionhuang.music.youtube.InfoCache
@@ -25,6 +28,8 @@ import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private val viewModel by activityViewModels<UpdateViewModel>()
+
+    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     private lateinit var checkForUpdatePreference: Preference
     private lateinit var updatePreference: Preference
@@ -63,6 +68,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
             NewPipe.setPreferredContentCountry(ContentCountry(if (newValue == systemDefault) Locale.getDefault().country else newValue))
             InfoCache.clearCache()
             true
+        }
+
+        val equalizerIntent = Intent(ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+            putExtra(EXTRA_AUDIO_SESSION, MediaSessionConnection.binder?.songPlayer?.player?.audioSessionId)
+            putExtra(EXTRA_PACKAGE_NAME, requireContext().packageName)
+            putExtra(EXTRA_CONTENT_TYPE, CONTENT_TYPE_MUSIC)
+        }
+        findPreference<Preference>(getString(R.string.pref_equalizer))?.apply {
+            isEnabled = equalizerIntent.resolveActivity(requireContext().packageManager) != null
+            setOnPreferenceClickListener {
+                activityResultLauncher.launch(equalizerIntent)
+                true
+            }
         }
 
         findPreference<Preference>(getString(R.string.pref_app_version))?.setOnPreferenceClickListener {

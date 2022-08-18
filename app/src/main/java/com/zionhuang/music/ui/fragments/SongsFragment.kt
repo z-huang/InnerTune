@@ -1,6 +1,8 @@
 package com.zionhuang.music.ui.fragments
 
 import android.app.SearchManager
+import android.content.Intent
+import android.media.audiofx.AudioEffect
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.PreferenceSortInfo
+import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
@@ -26,6 +29,7 @@ import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -104,6 +108,17 @@ class SongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvid
         }
 
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        lifecycleScope.launch {
+            while (true) {
+                val equalizerIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                    putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MediaSessionConnection.binder?.songPlayer?.player?.audioSessionId)
+                    putExtra(AudioEffect.EXTRA_PACKAGE_NAME, requireContext().packageName)
+                    putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+                }
+                logd("${equalizerIntent.resolveActivity(requireContext().packageManager) != null}")
+                delay(1000)
+            }
+        }
     }
 
     @OptIn(FlowPreview::class)

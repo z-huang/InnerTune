@@ -29,6 +29,7 @@
     <string name="pref_auto_add_song_title">Aggiunta automatica nella libreria</string>
     <string name="pref_auto_add_song_summary">Aggiungi la canzone nella tua libreria quando viene terminato l\'ascolto</string>
     <string name="pref_expand_on_play_title">Espandi il riproduttore in basso quando inizia un ascolto</string>
+    <string name="pref_equalizer_title">Equalizer</string>
     <string name="pref_about">Informazioni</string>
     <string name="pref_app_version_title">Versione dell\'app</string>
     <string name="pref_newpipe_version_title">Versione di NewPipe Extractor</string>

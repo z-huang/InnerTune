@@ -29,6 +29,7 @@
     <string name="pref_auto_add_song_title">Automaattinen vienti kirjastoon</string>
     <string name="pref_auto_add_song_summary">Lisää kappale kirjastoon automaattisesti, kun se on soitettu</string>
     <string name="pref_expand_on_play_title">Laajenna alapalkki toistaessa</string>
+    <string name="pref_equalizer_title">Equalizer</string>
     <string name="pref_about">Tietoa</string>
     <string name="pref_app_version_title">Sovelluksen versio</string>
     <string name="pref_newpipe_version_title">NewPipe Extractor-versio</string>

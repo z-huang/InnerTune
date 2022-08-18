@@ -29,6 +29,7 @@
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
+    <string name="pref_equalizer_title">等化器</string>
     <string name="pref_about">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
     <string name="pref_newpipe_version_title">NewPipe Extractor 版本</string>
