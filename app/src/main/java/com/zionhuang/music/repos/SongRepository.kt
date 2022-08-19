@@ -7,7 +7,7 @@ import androidx.lifecycle.distinctUntilChanged
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.YouTube.MAX_GET_QUEUE_SIZE
 import com.zionhuang.innertube.models.*
-import com.zionhuang.innertube.utils.browse
+import com.zionhuang.innertube.utils.browseAll
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
@@ -22,6 +22,7 @@ import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
@@ -53,7 +54,8 @@ object SongRepository : LocalRepository {
     )
 
     suspend fun addSong(mediaMetadata: MediaMetadata) = withContext(IO) {
-        songDao.insert(mediaMetadata.toSongEntity())
+        val song = mediaMetadata.toSongEntity()
+        songDao.insert(song)
         mediaMetadata.artists.forEachIndexed { index, artist ->
             val artistId = getArtistByName(artist.name)?.id ?: artist.id.also {
                 artistDao.insert(ArtistEntity(
@@ -67,43 +69,41 @@ object SongRepository : LocalRepository {
                 position = index
             ))
         }
-        if (autoDownload) {
-            getSongById(mediaMetadata.id)?.let { downloadSong(it) }
-        }
+        if (autoDownload) downloadSong(song)
     }
 
     /**
      * Safe add song: call [YouTube.getQueue] to ensure we get full information
      */
     suspend fun safeAddSong(song: SongItem) = safeAddSongs(listOf(song))
-    suspend fun safeAddSongs(songs: List<SongItem>) = withContext(IO) {
-        songs.chunked(MAX_GET_QUEUE_SIZE).forEach { chunk ->
+    suspend fun safeAddSongs(songs: List<SongItem>): List<SongEntity> = withContext(IO) {
+        songs.chunked(MAX_GET_QUEUE_SIZE).flatMap { chunk ->
             addSongs(YouTube.getQueue(chunk.map { it.id }))
         }
     }
 
     suspend fun addSong(song: SongItem) = addSongs(listOf(song))
-    suspend fun addSongs(songs: List<SongItem>) = withContext(IO) {
-        songs.forEach { song ->
-            songDao.insert(song.toSongEntity())
-            song.artists.forEachIndexed { index, run ->
-                // for artists that can't browse or have no id, we treat them as local artists
-                val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
+    suspend fun addSongs(items: List<SongItem>) = withContext(IO) {
+        val songs = items.map { it.toSongEntity() }
+        val songArtistMaps = items.flatMap { song ->
+            song.artists.mapIndexed { index, run ->
+                val artistId = getArtistByName(run.text)?.id ?: (run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
                     artistDao.insert(ArtistEntity(
                         id = it,
                         name = run.text
                     ))
                 }
-                artistDao.insert(SongArtistMap(
+                SongArtistMap(
                     songId = song.id,
                     artistId = artistId,
                     position = index
-                ))
-            }
-            if (autoDownload) {
-                getSongById(song.id)?.let { downloadSong(it) }
+                )
             }
         }
+        songDao.insert(songs)
+        artistDao.insert(songArtistMaps)
+        if (autoDownload) downloadSongs(songs)
+        return@withContext songs
     }
 
     suspend fun addAlbum(album: AlbumItem) = addAlbums(listOf(album))
@@ -163,18 +163,15 @@ object SongRepository : LocalRepository {
             val playlistId = generatePlaylistId()
             playlistDao.insert(playlist.toPlaylistEntity().copy(id = playlistId))
             var index = 0
-            YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)) { items ->
-                items.filterIsInstance<SongItem>().let { songs ->
-                    safeAddSongs(songs)
-                    playlistDao.insert(songs.map {
-                        PlaylistSongMap(
-                            playlistId = playlistId,
-                            songId = it.id,
-                            idInPlaylist = index++
-                        )
-                    })
-                }
-            }
+            val songs = YouTube.browseAll(BrowseEndpoint(browseId = "VL" + playlist.id)).filterIsInstance<SongItem>()
+            safeAddSongs(songs)
+            playlistDao.insert(songs.map {
+                PlaylistSongMap(
+                    playlistId = playlistId,
+                    songId = it.id,
+                    idInPlaylist = index++
+                )
+            })
         }
     }
 
@@ -206,30 +203,30 @@ object SongRepository : LocalRepository {
         songDao.update(songs.map { it.song.copy(liked = liked) })
     }
 
-    override suspend fun downloadSongs(songs: List<Song>) = withContext(IO) {
-        songs.filter { it.song.downloadState == STATE_NOT_DOWNLOADED }.let { songs ->
-            songDao.update(songs.map { it.song.copy(downloadState = STATE_PREPARING) })
+    override suspend fun downloadSongs(songs: List<SongEntity>) = withContext(IO) {
+        songs.filter { it.downloadState == STATE_NOT_DOWNLOADED }.let { songs ->
+            songDao.update(songs.map { it.copy(downloadState = STATE_PREPARING) })
             songs.forEach { song ->
-                val playerResponse = YouTube.player(videoId = song.song.id)
+                val playerResponse = YouTube.player(videoId = song.id)
                 if (playerResponse.playabilityStatus.status == "OK") {
                     val url = playerResponse.streamingData?.adaptiveFormats
                         ?.filter { it.isAudio }
                         ?.maxByOrNull { it.bitrate }
                         ?.url
                     if (url == null) {
-                        songDao.update(song.song.copy(downloadState = STATE_NOT_DOWNLOADED))
+                        songDao.update(song.copy(downloadState = STATE_NOT_DOWNLOADED))
                         // TODO
                     } else {
-                        songDao.update(song.song.copy(downloadState = STATE_DOWNLOADING))
+                        songDao.update(song.copy(downloadState = STATE_DOWNLOADING))
                         val downloadManager = context.getSystemService<DownloadManager>()!!
                         val req = DownloadManager.Request(url.toUri())
-                            .setTitle(song.song.title)
-                            .setDestinationUri(getSongFile(song.song.id).toUri())
+                            .setTitle(song.title)
+                            .setDestinationUri(getSongFile(song.id).toUri())
                         val did = downloadManager.enqueue(req)
-                        addDownload(DownloadEntity(did, song.song.id))
+                        addDownload(DownloadEntity(did, song.id))
                     }
                 } else {
-                    songDao.update(song.song.copy(downloadState = STATE_NOT_DOWNLOADED))
+                    songDao.update(song.copy(downloadState = STATE_NOT_DOWNLOADED))
                     // TODO
                 }
             }
@@ -325,13 +322,17 @@ object SongRepository : LocalRepository {
         artistDao.update(artist)
     }
 
-    override suspend fun deleteArtist(artist: ArtistEntity) = withContext(IO) {
-        artistDao.delete(artist)
+    override suspend fun deleteArtists(artists: List<ArtistEntity>) = withContext(IO) {
+        artistDao.delete(artists)
     }
 
     override fun getAllAlbums() = ListWrapper(
         getPagingSource = { albumDao.getAllAlbumsAsPagingSource() }
     )
+
+    suspend fun getAlbumSongs(albumId: String) = withContext(IO) {
+        songDao.getAlbumSongs(albumId)
+    }
 
     suspend fun refetchAlbum(album: AlbumEntity) = withContext(IO) {
         (YouTube.browse(BrowseEndpoint(browseId = album.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
@@ -343,10 +344,12 @@ object SongRepository : LocalRepository {
         }
     }
 
-    suspend fun deleteAlbum(album: Album) = withContext(IO) {
-        val songs = songDao.getAlbumSongs(album.id)
-        albumDao.delete(album.album)
-        songDao.delete(songs)
+    suspend fun deleteAlbums(albums: List<Album>) = withContext(IO) {
+        albums.forEach { album ->
+            val songs = songDao.getAlbumSongEntities(album.id)
+            albumDao.delete(album.album)
+            songDao.delete(songs)
+        }
     }
 
     override fun getAllPlaylists() = ListWrapper(
@@ -364,7 +367,7 @@ object SongRepository : LocalRepository {
 
     override suspend fun addPlaylist(playlist: PlaylistEntity) = withContext(IO) { playlistDao.insert(playlist) }
     override suspend fun updatePlaylist(playlist: PlaylistEntity) = withContext(IO) { playlistDao.update(playlist) }
-    override suspend fun deletePlaylist(playlist: PlaylistEntity) = withContext(IO) { playlistDao.delete(playlist) }
+    override suspend fun deletePlaylists(playlists: List<PlaylistEntity>) = withContext(IO) { playlistDao.delete(playlists) }
 
 
     override suspend fun getPlaylistSongEntities(playlistId: String) = ListWrapper<Int, PlaylistSongMap>(
@@ -386,27 +389,32 @@ object SongRepository : LocalRepository {
         })
     }
 
-    suspend fun addToPlaylist(item: YTItem, playlist: PlaylistEntity) = withContext(IO) {
-        if (playlist.isYouTubePlaylist) return@withContext
-        when (item) {
-            is ArtistItem -> return@withContext
-            is SongItem -> {
-                val song = YouTube.getQueue(videoIds = listOf(item.id))[0]
-                addSong(song)
-                addSongsToPlaylist(playlist.id, listOf(song.id))
-            }
-            is AlbumItem -> {
-                val songs = YouTube.getQueue(playlistId = item.playlistId)
-                addSongs(songs)
-                addSongsToPlaylist(playlist.id, songs.map { it.id })
-            }
-            is PlaylistItem -> YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)) { items ->
-                items.filterIsInstance<SongItem>().let { songs ->
-                    addSongs(songs)
-                    addSongsToPlaylist(playlist.id, songs.map { it.id })
+    suspend fun addToPlaylist(playlist: PlaylistEntity, items: List<LocalItem>) = withContext(IO) {
+        val songIds = items.flatMap { item ->
+            when (item) {
+                is Song -> listOf(item).map { it.id }
+                is Album -> getAlbumSongs(item.id).map { it.id }
+                is Artist -> getArtistSongs(item.id, PreferenceSortInfo).getList().map { it.id }
+                is Playlist -> if (item.playlist.isLocalPlaylist) {
+                    getPlaylistSongs(item.id, PreferenceSortInfo).getList().map { it.id }
+                } else {
+                    safeAddSongs(YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).filterIsInstance<SongItem>()).map { it.id }
                 }
             }
         }
+        addSongsToPlaylist(playlist.id, songIds)
+    }
+
+    suspend fun addToPlaylist(playlist: PlaylistEntity, item: YTItem) = withContext(IO) {
+        if (playlist.isYouTubePlaylist) return@withContext
+        val songs = when (item) {
+            is ArtistItem -> return@withContext
+            is SongItem -> YouTube.getQueue(videoIds = listOf(item.id))
+            is AlbumItem -> YouTube.getQueue(playlistId = item.playlistId)
+            is PlaylistItem -> YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).filterIsInstance<SongItem>()
+        }
+        addSongs(songs)
+        addSongsToPlaylist(playlist.id, songs.map { it.id })
     }
 
     override suspend fun removeSongsFromPlaylist(playlistId: String, idInPlaylist: List<Int>) = withContext(IO) { playlistDao.deletePlaylistSongEntities(playlistId, idInPlaylist) }

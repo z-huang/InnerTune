@@ -12,6 +12,7 @@ import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
+import com.zionhuang.music.ui.listeners.SongMenuListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -22,16 +23,14 @@ class ArtistSongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>() {
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    override val adapter = LocalItemAdapter()
+    override val adapter = LocalItemAdapter().apply {
+        songMenuListener = SongMenuListener(this@ArtistSongsFragment)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
-        adapter.apply {
-            popupMenuListener = songsViewModel.songPopupMenuListener
-            sortInfo = songsViewModel.sortInfo
-        }
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

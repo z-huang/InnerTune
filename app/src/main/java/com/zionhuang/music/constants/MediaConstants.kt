@@ -8,6 +8,7 @@ object MediaConstants {
     const val EXTRA_SONG = "song"
     const val EXTRA_ARTIST = "artist"
     const val EXTRA_PLAYLIST = "playlist"
+    const val EXTRA_ITEM = "item"
     const val EXTRA_YT_ITEM = "yt_item"
     const val EXTRA_BLOCK = "block"
 

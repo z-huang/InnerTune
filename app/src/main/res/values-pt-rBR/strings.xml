@@ -67,6 +67,7 @@
     <!-- Popup Menu -->
     <string name="menu_edit">Editar</string>
     <string name="menu_start_radio">Start radio</string>
+    <string name="menu_play">Play</string>
     <string name="menu_play_next">Tocar em seguida</string>
     <string name="menu_add_to_queue">Adicionar à fila</string>
     <string name="menu_add_to_library">Adicionar à biblioteca</string>

@@ -67,6 +67,7 @@
     <!-- Popup Menu -->
     <string name="menu_edit">編輯</string>
     <string name="menu_start_radio">開啟電台</string>
+    <string name="menu_play">播放</string>
     <string name="menu_play_next">接著播放</string>
     <string name="menu_add_to_queue">加入待播清單</string>
     <string name="menu_add_to_library">加入媒體庫</string>

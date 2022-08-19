@@ -5,7 +5,7 @@ import com.google.android.exoplayer2.MediaItem
 class ListQueue(
     override val title: String? = null,
     val items: List<MediaItem>,
-    val startIndex: Int,
+    val startIndex: Int = 0,
 ) : Queue {
     override suspend fun getInitialStatus() = Queue.Status(items, startIndex)
 

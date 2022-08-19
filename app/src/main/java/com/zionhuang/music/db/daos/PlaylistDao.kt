@@ -32,7 +32,7 @@ interface PlaylistDao {
     suspend fun update(playlist: PlaylistEntity)
 
     @Delete
-    suspend fun delete(playlist: PlaylistEntity)
+    suspend fun delete(playlists: List<PlaylistEntity>)
 
 
     @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId ORDER BY idInPlaylist")

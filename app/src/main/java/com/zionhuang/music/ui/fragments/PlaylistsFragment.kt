@@ -8,7 +8,6 @@ import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,8 +23,8 @@ import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
+import com.zionhuang.music.ui.listeners.PlaylistMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
-import com.zionhuang.music.viewmodels.PlaylistsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,12 +34,12 @@ class PlaylistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuPr
     override fun getToolbar(): Toolbar = binding.toolbar
 
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    private val playlistsViewModel by viewModels<PlaylistsViewModel>()
-    override val adapter = LocalItemAdapter()
+    override val adapter = LocalItemAdapter().apply {
+        playlistMenuListener = PlaylistMenuListener(this@PlaylistsFragment)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        adapter.popupMenuListener = playlistsViewModel.popupMenuListener
         (requireActivity() as MainActivity).fab.setOnClickListener {
             CreatePlaylistDialog().show(childFragmentManager, null)
         }

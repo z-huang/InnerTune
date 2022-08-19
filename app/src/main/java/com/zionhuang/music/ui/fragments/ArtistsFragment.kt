@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,20 +20,20 @@ import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
+import com.zionhuang.music.ui.listeners.ArtistMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
-import com.zionhuang.music.viewmodels.ArtistsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ArtistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    private val artistsViewModel by viewModels<ArtistsViewModel>()
-    override val adapter = LocalItemAdapter()
+    override val adapter = LocalItemAdapter().apply {
+        artistMenuListener = ArtistMenuListener(this@ArtistsFragment)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        adapter.popupMenuListener = artistsViewModel.popupMenuListener
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->

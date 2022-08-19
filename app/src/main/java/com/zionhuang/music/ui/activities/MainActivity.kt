@@ -71,7 +71,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         YouTubeLinkHandler.getVideoId(url)?.let { id ->
             lifecycleScope.launch {
                 while (!MediaSessionConnection.isConnected.value) delay(300)
-                MediaSessionConnection.binder?.playQueue(YouTubeQueue(WatchEndpoint(videoId = id)))
+                MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(WatchEndpoint(videoId = id)))
             }
             return
         }

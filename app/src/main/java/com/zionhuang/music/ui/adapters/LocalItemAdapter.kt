@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
-import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import com.zionhuang.music.ui.listeners.IAlbumMenuListener
+import com.zionhuang.music.ui.listeners.IArtistMenuListener
+import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
+import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -20,8 +22,11 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 class LocalItemAdapter : PagingDataAdapter<LocalItem, LocalItemViewHolder>(ItemComparator()), PopupTextProvider {
-    var popupMenuListener: SongPopupMenuListener? = null
-    var sortInfo: IMutableSortInfo? = null
+    var songMenuListener: ISongMenuListener? = null
+    var artistMenuListener: IArtistMenuListener? = null
+    var albumMenuListener: IAlbumMenuListener? = null
+    var playlistMenuListener: IPlaylistMenuListener? = null
+
     var tracker: SelectionTracker<String>? = null
     var allowMoreAction: Boolean = true
 
@@ -54,10 +59,10 @@ class LocalItemAdapter : PagingDataAdapter<LocalItem, LocalItemViewHolder>(ItemC
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalItemViewHolder = when (viewType) {
-        TYPE_SONG -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), popupMenuListener)
-        TYPE_ARTIST -> ArtistViewHolder(parent.inflateWithBinding(R.layout.item_artist), null)
-        TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album))
-        TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), null, allowMoreAction)
+        TYPE_SONG -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), songMenuListener)
+        TYPE_ARTIST -> ArtistViewHolder(parent.inflateWithBinding(R.layout.item_artist), artistMenuListener)
+        TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album), albumMenuListener)
+        TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), playlistMenuListener, allowMoreAction)
         else -> error("Unknown view type")
     }
 

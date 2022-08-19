@@ -30,9 +30,12 @@ interface ArtistDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songArtistMap: SongArtistMap): Long
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(songArtistMaps: List<SongArtistMap>)
+
     @Update
     suspend fun update(artist: ArtistEntity)
 
     @Delete
-    suspend fun delete(artist: ArtistEntity)
+    suspend fun delete(artists: List<ArtistEntity>)
 }

@@ -9,7 +9,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_YT_ITEM
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -100,11 +99,11 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                             SongRepository.importPlaylist(item)
                         }
                     }
-                    R.id.action_add_to_playlist -> ChoosePlaylistDialog()
-                        .apply {
-                            arguments = bundleOf(EXTRA_YT_ITEM to item)
+                    R.id.action_add_to_playlist -> ChoosePlaylistDialog { playlist ->
+                        GlobalScope.launch {
+                            SongRepository.addToPlaylist(playlist, item)
                         }
-                        .show(navigationEndpointHandler.fragment.childFragmentManager, null)
+                    }.show(navigationEndpointHandler.fragment.childFragmentManager, null)
                     R.id.action_download -> {}
                     R.id.action_view_artist -> navigationEndpointHandler.handle(item.menu.artistEndpoint)
                     R.id.action_view_album -> navigationEndpointHandler.handle(item.menu.albumEndpoint)

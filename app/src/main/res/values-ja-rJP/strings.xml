@@ -67,6 +67,7 @@
     <!-- Popup Menu -->
     <string name="menu_edit">編集</string>
     <string name="menu_start_radio">Start radio</string>
+    <string name="menu_play">Play</string>
     <string name="menu_play_next">次に再生</string>
     <string name="menu_add_to_queue">キューに追加</string>
     <string name="menu_add_to_library">ライブラリに追加</string>

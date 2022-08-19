@@ -67,6 +67,7 @@
     <!-- Popup Menu -->
     <string name="menu_edit">수정</string>
     <string name="menu_start_radio">Start radio</string>
+    <string name="menu_play">Play</string>
     <string name="menu_play_next">다음 노래 재생</string>
     <string name="menu_add_to_queue">목록에 추가</string>
     <string name="menu_add_to_library">라이브러리에 추가</string>

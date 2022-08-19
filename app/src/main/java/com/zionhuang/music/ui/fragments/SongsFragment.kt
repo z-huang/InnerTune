@@ -26,6 +26,7 @@ import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
+import com.zionhuang.music.ui.listeners.SongMenuListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.FlowPreview
@@ -39,17 +40,13 @@ import kotlin.time.toDuration
 class SongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    override val adapter = LocalItemAdapter()
+    override val adapter = LocalItemAdapter().apply {
+        songMenuListener = SongMenuListener(this@SongsFragment)
+    }
     private var tracker: SelectionTracker<String>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        adapter.apply {
-            popupMenuListener = songsViewModel.songPopupMenuListener
-            sortInfo = songsViewModel.sortInfo
-        }
-
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)

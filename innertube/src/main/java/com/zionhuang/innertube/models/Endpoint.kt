@@ -41,7 +41,7 @@ data class WatchEndpoint(
 @Parcelize
 @Serializable
 data class WatchPlaylistEndpoint(
-    val params: String?,
+    val params: String? = null,
     val playlistId: String,
 ) : Endpoint() {
     fun toWatchEndpoint() = WatchEndpoint(
@@ -101,8 +101,8 @@ data class QueueAddEndpoint(
     @Parcelize
     @Serializable
     data class QueueTarget(
-        val videoId: String?,
-        val playlistId: String?,
+        val videoId: String? = null,
+        val playlistId: String? = null,
     ) : Parcelable
 
     companion object {

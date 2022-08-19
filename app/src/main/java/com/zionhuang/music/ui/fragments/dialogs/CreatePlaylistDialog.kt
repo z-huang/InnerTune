@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.DialogInterface.BUTTON_POSITIVE
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
@@ -16,18 +17,18 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-typealias OnPlaylistCreated = (PlaylistEntity) -> Unit
-
-class CreatePlaylistDialog : AppCompatDialogFragment() {
+class CreatePlaylistDialog() : AppCompatDialogFragment() {
     private lateinit var binding: DialogSingleTextInputBinding
-    private var onPlaylistCreated: OnPlaylistCreated = {}
+    private var listener: PlaylistListener? = null
+
+    constructor(listener: PlaylistListener?) : this() {
+        arguments = bundleOf(EXTRA_BLOCK to listener)
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getSerializable(EXTRA_BLOCK)?.let {
-            onPlaylistCreated = it as OnPlaylistCreated
-        }
+        listener = arguments?.getSerializable(EXTRA_BLOCK) as? PlaylistListener
     }
 
     private fun setupUI() {
@@ -66,7 +67,7 @@ class CreatePlaylistDialog : AppCompatDialogFragment() {
         )
         GlobalScope.launch {
             SongRepository.addPlaylist(playlist)
-            onPlaylistCreated(playlist)
+            listener?.invoke(playlist)
         }
         dismiss()
     }

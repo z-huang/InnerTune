@@ -253,7 +253,7 @@ class SongPlayer(
         }
     }
 
-    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: YTItem) {
+    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: YTItem?) {
         scope.launch {
             val items = when (item) {
                 is SongItem -> listOf(item.toMediaItem())
@@ -263,6 +263,15 @@ class SongPlayer(
                     }
                 }
                 is ArtistItem -> return@launch
+                null -> when {
+                    endpoint.queueTarget.videoId != null -> withContext(IO) {
+                        YouTube.getQueue(videoIds = listOf(endpoint.queueTarget.videoId!!)).map { it.toMediaItem() }
+                    }
+                    endpoint.queueTarget.playlistId != null -> withContext(IO) {
+                        YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId).map { it.toMediaItem() }
+                    }
+                    else -> error("Unknown queue target")
+                }
             }
             when (endpoint.queueInsertPosition) {
                 INSERT_AFTER_CURRENT_VIDEO -> player.addMediaItems((if (player.mediaItemCount == 0) -1 else player.currentMediaItemIndex) + 1, items)

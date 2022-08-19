@@ -4,9 +4,6 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.base.ISortInfo
-import com.zionhuang.music.repos.SongRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 
 interface LocalRepository {
@@ -17,8 +14,8 @@ interface LocalRepository {
     suspend fun restoreFromTrash(songs: List<Song>)
     suspend fun deleteSongs(songs: List<Song>)
     suspend fun setLiked(liked: Boolean, songs: List<Song>)
-    suspend fun downloadSongs(songs: List<Song>)
-    suspend fun downloadSong(song: Song) = downloadSongs(listOf(song))
+    suspend fun downloadSongs(songs: List<SongEntity>)
+    suspend fun downloadSong(song: SongEntity) = downloadSongs(listOf(song))
     suspend fun removeDownloads(songs: List<Song>)
     suspend fun removeDownload(song: Song) = removeDownloads(listOf(song))
     fun getSongFile(songId: String): File
@@ -34,7 +31,8 @@ interface LocalRepository {
     fun searchArtists(query: String): ListWrapper<Int, ArtistEntity>
     suspend fun addArtist(artist: ArtistEntity)
     suspend fun updateArtist(artist: ArtistEntity)
-    suspend fun deleteArtist(artist: ArtistEntity)
+    suspend fun deleteArtist(artist: ArtistEntity) = deleteArtists(listOf(artist))
+    suspend fun deleteArtists(artists: List<ArtistEntity>)
 
     fun getAllAlbums(): ListWrapper<Int, Album>
 
@@ -43,7 +41,7 @@ interface LocalRepository {
     fun searchPlaylists(query: String): ListWrapper<Int, PlaylistEntity>
     suspend fun addPlaylist(playlist: PlaylistEntity)
     suspend fun updatePlaylist(playlist: PlaylistEntity)
-    suspend fun deletePlaylist(playlist: PlaylistEntity)
+    suspend fun deletePlaylists(playlists: List<PlaylistEntity>)
 
     suspend fun getPlaylistSongEntities(playlistId: String): ListWrapper<Int, PlaylistSongMap>
     suspend fun updatePlaylistSongEntities(playlistSongEntities: List<PlaylistSongMap>)

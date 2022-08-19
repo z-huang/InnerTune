@@ -67,6 +67,7 @@
     <!-- Popup Menu -->
     <string name="menu_edit">Muokkaa</string>
     <string name="menu_start_radio">Start radio</string>
+    <string name="menu_play">Play</string>
     <string name="menu_play_next">Toista seuraavaksi</string>
     <string name="menu_add_to_queue">Lisää jonoon</string>
     <string name="menu_add_to_playlist">Lisää soittolistaan</string>

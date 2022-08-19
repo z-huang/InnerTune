@@ -16,11 +16,11 @@ import com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragmentDirections.
 open class NavigationEndpointHandler(val fragment: Fragment) {
     open fun handle(navigationEndpoint: NavigationEndpoint?, item: YTItem? = null) = when (val endpoint = navigationEndpoint?.endpoint) {
         is WatchEndpoint -> {
-            MediaSessionConnection.binder?.playQueue(YouTubeQueue(endpoint, item))
+            MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint, item))
             (fragment.requireActivity() as? MainActivity)?.showBottomSheet()
         }
         is WatchPlaylistEndpoint -> {
-            MediaSessionConnection.binder?.playQueue(YouTubeQueue(endpoint.toWatchEndpoint(), item))
+            MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint.toWatchEndpoint(), item))
             (fragment.requireActivity() as? MainActivity)?.showBottomSheet()
         }
         is BrowseEndpoint -> {
@@ -29,7 +29,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
             fragment.findNavController().navigate(openYouTubeBrowseFragment(endpoint))
         }
         is SearchEndpoint -> {}
-        is QueueAddEndpoint -> MediaSessionConnection.binder?.handleQueueAddEndpoint(endpoint, item!!)
+        is QueueAddEndpoint -> MediaSessionConnection.binder?.songPlayer?.handleQueueAddEndpoint(endpoint, item)
         is ShareEntityEndpoint -> {}
         null -> {}
     }

@@ -18,14 +18,14 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.base.IMutableSortInfo
-import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.text.DateFormat
 
 class SongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
-    var popupMenuListener: SongPopupMenuListener? = null
+    var popupMenuListener: ISongMenuListener? = null
     var sortInfo: IMutableSortInfo? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null
     var tracker: SelectionTracker<String>? = null

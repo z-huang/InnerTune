@@ -6,63 +6,62 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.filter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.constants.MediaConstants.EXTRA_BLOCK
 import com.zionhuang.music.databinding.DialogChoosePlaylistBinding
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.viewmodels.SongsViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
-class ChoosePlaylistDialog : AppCompatDialogFragment() {
+typealias PlaylistListener = (PlaylistEntity) -> Unit
+
+class ChoosePlaylistDialog() : AppCompatDialogFragment() {
     private lateinit var binding: DialogChoosePlaylistBinding
     private val viewModel by activityViewModels<SongsViewModel>()
     private val adapter = LocalItemAdapter().apply {
         allowMoreAction = false
     }
 
-    private lateinit var item: YTItem
+    private var listener: PlaylistListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        item = arguments?.getParcelable(MediaConstants.EXTRA_YT_ITEM)!!
+    constructor(listener: PlaylistListener) : this() {
+        arguments = bundleOf(EXTRA_BLOCK to listener)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
+    @Suppress("UNCHECKED_CAST")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        listener = arguments?.getSerializable(EXTRA_BLOCK) as? PlaylistListener
+    }
+
     private fun setupUI() {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ChoosePlaylistDialog.adapter
             addOnClickListener { position, _ ->
-                GlobalScope.launch {
-                    SongRepository.addToPlaylist(item, (this@ChoosePlaylistDialog.adapter.getItemAt(position) as Playlist).playlist)
-                }
+                listener?.invoke((this@ChoosePlaylistDialog.adapter.getItemAt(position) as Playlist).playlist)
                 dismiss()
             }
         }
         binding.createPlaylist.setOnClickListener {
-            CreatePlaylistDialog().apply {
-                arguments = bundleOf(EXTRA_BLOCK to { playlist: PlaylistEntity ->
-                    GlobalScope.launch {
-                        SongRepository.addToPlaylist(item, playlist)
-                    }
-                    dismiss()
-                })
-            }.show(parentFragmentManager, null)
+            CreatePlaylistDialog(listener).show(parentFragmentManager, null)
             dismiss()
         }
+
         lifecycleScope.launch {
-            viewModel.allPlaylistsFlow.collectLatest {
+            viewModel.allPlaylistsFlow.map { pagingData ->
+                pagingData.filter { item ->
+                    item is Playlist && item.playlist.isLocalPlaylist
+                }
+            }.collectLatest {
                 adapter.submitData(it)
             }
         }

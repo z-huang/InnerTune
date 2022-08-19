@@ -42,7 +42,7 @@ class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapte
             binding.recyclerView.addOnClickListener { position, _ ->
                 (adapter.getItemAt(position) as? SongItem)?.let { item ->
                     viewModel.getAlbumSongs()?.let { songs ->
-                        MediaSessionConnection.binder?.playQueue(ListQueue(
+                        MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
                             items = songs.map { it.toMediaItem() },
                             startIndex = songs.indexOfFirst { it.id == item.id }
                         ))

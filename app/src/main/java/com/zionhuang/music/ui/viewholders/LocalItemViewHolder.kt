@@ -19,22 +19,19 @@ import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.base.IMutableSortInfo
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
-import com.zionhuang.music.ui.listeners.ArtistPopupMenuListener
-import com.zionhuang.music.ui.listeners.PlaylistPopupMenuListener
-import com.zionhuang.music.ui.listeners.SongPopupMenuListener
+import com.zionhuang.music.ui.listeners.IAlbumMenuListener
+import com.zionhuang.music.ui.listeners.IArtistMenuListener
+import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
+import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
 
 open class SongViewHolder(
     override val binding: ItemSongBinding,
-    private val popupMenuListener: SongPopupMenuListener?,
+    private val menuListener: ISongMenuListener?,
 ) : LocalItemViewHolder(binding) {
     val itemDetails: ItemDetailsLookup.ItemDetails<String>
         get() = object : ItemDetailsLookup.ItemDetails<String>() {
@@ -51,17 +48,21 @@ open class SongViewHolder(
                 .setMenuModifier {
                     findItem(R.id.action_download).isVisible = song.song.downloadState == MediaConstants.STATE_NOT_DOWNLOADED
                     findItem(R.id.action_remove_download).isVisible = song.song.downloadState == MediaConstants.STATE_DOWNLOADED
+                    findItem(R.id.action_view_album).isVisible = song.album != null
                     findItem(R.id.action_delete).isVisible = song.album == null
                 }
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.action_edit -> popupMenuListener?.editSong(song, binding.context)
-                        R.id.action_play_next -> popupMenuListener?.playNext(song, binding.context)
-                        R.id.action_add_to_queue -> popupMenuListener?.addToQueue(song, binding.context)
-                        R.id.action_add_to_playlist -> popupMenuListener?.addToPlaylist(song, binding.context)
-                        R.id.action_download -> popupMenuListener?.downloadSong(song, binding.context)
-                        R.id.action_remove_download -> popupMenuListener?.removeDownload(song, binding.context)
-                        R.id.action_delete -> popupMenuListener?.deleteSongs(song)
+                        R.id.action_edit -> menuListener?.editSong(song)
+                        R.id.action_play_next -> menuListener?.playNext(song)
+                        R.id.action_add_to_queue -> menuListener?.addToQueue(song)
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist(song)
+                        R.id.action_download -> menuListener?.download(song)
+                        R.id.action_remove_download -> menuListener?.removeDownload(song)
+                        R.id.action_view_artist -> menuListener?.viewArtist(song)
+                        R.id.action_view_album -> menuListener?.viewAlbum(song)
+                        R.id.action_share -> menuListener?.share(song)
+                        R.id.action_delete -> menuListener?.delete(song)
                     }
                 }
                 .show(binding.context)
@@ -84,28 +85,36 @@ open class SongViewHolder(
 
 class ArtistViewHolder(
     override val binding: ItemArtistBinding,
-    private val popupMenuListener: ArtistPopupMenuListener?,
+    private val menuListener: IArtistMenuListener?,
 ) : LocalItemViewHolder(binding) {
     fun bind(artist: Artist) {
         binding.artist = artist
         binding.btnMoreAction.setOnClickListener {
-//            MenuBottomSheetDialogFragment
-//                .newInstance(R.menu.artist)
-//                .setOnMenuItemClickListener {
-//                    when (it.itemId) {
-//                        R.id.action_edit -> popupMenuListener?.editArtist(artist, binding.context)
-//                        R.id.action_delete -> popupMenuListener?.deleteArtist(artist)
-//                    }
-//                }
-//                .show(binding.context)
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.artist)
+                .setMenuModifier {
+                    findItem(R.id.action_edit).isVisible = false // temporary
+                    findItem(R.id.action_share).isVisible = artist.artist.isYouTubeArtist
+                }
+                .setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_edit -> menuListener?.edit(artist)
+                        R.id.action_play_next -> menuListener?.playNext(artist)
+                        R.id.action_add_to_queue -> menuListener?.addToQueue(artist)
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist(artist)
+                        R.id.action_share -> menuListener?.edit(artist)
+                        R.id.action_delete -> menuListener?.delete(artist)
+                    }
+                }
+                .show(binding.context)
         }
     }
 }
 
 class AlbumViewHolder(
     override val binding: ItemAlbumBinding,
+    private val menuListener: IAlbumMenuListener?,
 ) : LocalItemViewHolder(binding) {
-    @OptIn(DelicateCoroutinesApi::class)
     fun bind(album: Album) {
         binding.album = album
         binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.songs_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
@@ -114,9 +123,12 @@ class AlbumViewHolder(
                 .newInstance(R.menu.album)
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.action_delete -> GlobalScope.launch {
-                            SongRepository.deleteAlbum(album)
-                        }
+                        R.id.action_play_next -> menuListener?.playNext(album)
+                        R.id.action_add_to_queue -> menuListener?.addToQueue(album)
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist(album)
+                        R.id.action_view_artist -> menuListener?.viewArtist(album)
+                        R.id.action_share -> menuListener?.share(album)
+                        R.id.action_delete -> menuListener?.delete(album)
                     }
                 }
                 .show(binding.context)
@@ -126,7 +138,7 @@ class AlbumViewHolder(
 
 class PlaylistViewHolder(
     override val binding: ItemPlaylistBinding,
-    private val popupMenuListener: PlaylistPopupMenuListener?,
+    private val menuListener: IPlaylistMenuListener?,
     private val allowMoreAction: Boolean,
 ) : LocalItemViewHolder(binding) {
     fun bind(playlist: Playlist) {
@@ -138,15 +150,23 @@ class PlaylistViewHolder(
         }
         binding.btnMoreAction.isVisible = allowMoreAction
         binding.btnMoreAction.setOnClickListener {
-//            MenuBottomSheetDialogFragment
-//                .newInstance(R.menu.artist)
-//                .setOnMenuItemClickListener {
-//                    when (it.itemId) {
-//                        R.id.action_edit -> popupMenuListener?.editPlaylist(playlist, binding.context)
-//                        R.id.action_delete -> popupMenuListener?.deletePlaylist(playlist)
-//                    }
-//                }
-//                .show(binding.context)
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.playlist)
+                .setMenuModifier {
+                    findItem(R.id.action_share).isVisible = playlist.playlist.isYouTubePlaylist
+                }
+                .setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_edit -> menuListener?.edit(playlist)
+                        R.id.action_play -> menuListener?.play(playlist)
+                        R.id.action_play_next -> menuListener?.playNext(playlist)
+                        R.id.action_add_to_queue -> menuListener?.addToQueue(playlist)
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist(playlist)
+                        R.id.action_share -> menuListener?.share(playlist)
+                        R.id.action_delete -> menuListener?.delete(playlist)
+                    }
+                }
+                .show(binding.context)
         }
     }
 }

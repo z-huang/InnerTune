@@ -23,6 +23,7 @@ import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.PlaylistSongsAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
+import com.zionhuang.music.ui.listeners.SongMenuListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.PlaylistSongsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
@@ -71,7 +72,7 @@ class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.apply {
-            popupMenuListener = songsViewModel.songPopupMenuListener
+            popupMenuListener = SongMenuListener(this@PlaylistSongsFragment)
             itemTouchHelper = this@PlaylistSongsFragment.itemTouchHelper
             onProcessMove = {
                 viewModel.processMove(playlistId, it)
