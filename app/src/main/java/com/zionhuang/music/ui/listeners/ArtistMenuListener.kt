@@ -6,8 +6,12 @@ import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialSharedAxis
+import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST
-import com.zionhuang.music.constants.MediaConstants.EXTRA_ITEM
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
@@ -17,8 +21,10 @@ import com.zionhuang.music.models.PreferenceSortInfo
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.ui.fragments.dialogs.EditArtistDialog
+import com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragmentArgs
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,6 +47,9 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
     val context: Context
         get() = fragment.requireContext()
 
+    val mainActivity: MainActivity
+        get() = fragment.requireActivity() as MainActivity
+
     override fun edit(artist: Artist) {
         EditArtistDialog().apply {
             arguments = bundleOf(EXTRA_ARTIST to artist)
@@ -58,6 +67,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
+            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_artist_play_next, LENGTH_SHORT).show()
         }
     }
 
@@ -72,14 +82,21 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
+            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_artist_added_to_queue, LENGTH_SHORT).show()
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(artists: List<Artist>) {
-        ChoosePlaylistDialog {
+        ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
-                SongRepository.addToPlaylist(it, artists)
+                SongRepository.addToPlaylist(playlist, artists)
+                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                    .setAction(R.string.snackbar_action_view) {
+                        fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                        fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                        fragment.findNavController().navigate(R.id.playlistSongsFragment, PlaylistSongsFragmentArgs.Builder(playlist.id).build().toBundle())
+                    }.show()
             }
         }.show(fragment.childFragmentManager, null)
     }

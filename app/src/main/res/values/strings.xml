@@ -134,15 +134,28 @@
     <string name="sort_by_create_date">Date added</string>
 
     <!-- Snackbar -->
-    <plurals name="snack_bar_delete_song">
+    <plurals name="snackbar_delete_song">
         <item quantity="one">%d song has been deleted.</item>
         <item quantity="other">%d songs has been deleted.</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="other">%d selected</item>
     </plurals>
-    <string name="snack_bar_undo">Undo</string>
-    <string name="snack_bar_url_error">Can\'t identify this url.</string>
+    <string name="snackbar_undo">Undo</string>
+    <string name="snackbar_url_error">Can\'t identify this url.</string>
+    <string name="snackbar_song_play_next">Song will play next</string>
+    <string name="snackbar_artist_play_next">Artist will play next</string>
+    <string name="snackbar_album_play_next">Album will play next</string>
+    <string name="snackbar_playlist_play_next">Playlist will play next</string>
+    <string name="snackbar_song_added_to_queue">Song added to queue</string>
+    <string name="snackbar_artist_added_to_queue">Artist added to queue</string>
+    <string name="snackbar_album_added_to_queue">Album added to queue</string>
+    <string name="snackbar_playlist_added_to_queue">Playlist added to queue</string>
+    <string name="snackbar_added_to_library">Added to library</string>
+    <string name="snackbar_removed_from_library">Removed from library</string>
+    <string name="snackbar_playlist_imported">Playlist imported</string>
+    <string name="snackbar_added_to_playlist">Added to %1$s</string>
+    <string name="snackbar_action_view">View</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Add to library</string>

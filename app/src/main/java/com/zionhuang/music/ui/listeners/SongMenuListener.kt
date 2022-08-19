@@ -6,11 +6,16 @@ import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs
 import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig
 import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
 import com.zionhuang.innertube.models.NavigationEndpoint
+import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
@@ -20,8 +25,10 @@ import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.ui.fragments.dialogs.EditSongDialog
+import com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragmentArgs
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -51,6 +58,9 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
     val context: Context
         get() = fragment.requireContext()
 
+    val mainActivity: MainActivity
+        get() = fragment.requireActivity() as MainActivity
+
     override fun editSong(song: Song) {
         EditSongDialog().apply {
             arguments = bundleOf(EXTRA_SONG to song)
@@ -63,6 +73,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
             bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
             null
         )
+        Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_song_play_next, LENGTH_SHORT).show()
     }
 
     override fun addToQueue(songs: List<Song>) {
@@ -71,13 +82,20 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
             bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
             null
         )
+        Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_song_added_to_queue, LENGTH_SHORT).show()
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(songs: List<Song>) {
-        ChoosePlaylistDialog {
+        ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
-                SongRepository.addToPlaylist(it, songs)
+                SongRepository.addToPlaylist(playlist, songs)
+                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                    .setAction(R.string.snackbar_action_view) {
+                        fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                        fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                        fragment.findNavController().navigate(R.id.playlistSongsFragment, PlaylistSongsFragmentArgs.Builder(playlist.id).build().toBundle())
+                    }.show()
             }
         }.show(fragment.childFragmentManager, null)
     }

@@ -99,7 +99,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             }
             return
         }
-        Snackbar.make(binding.mainContent, getString(R.string.snack_bar_url_error), LENGTH_LONG).show()
+        Snackbar.make(binding.mainContent, getString(R.string.snackbar_url_error), LENGTH_LONG).show()
     }
 
     private fun setupUI() {
@@ -151,10 +151,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {
         bottomSheetCallback = bottomSheetListener
-    }
-
-    fun expandBottomSheet() {
-        bottomSheetBehavior.state = STATE_EXPANDED
     }
 
     fun showBottomSheet() {

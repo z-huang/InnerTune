@@ -6,12 +6,17 @@ import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.innertube.models.QueueAddEndpoint
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
 import com.zionhuang.innertube.models.WatchPlaylistEndpoint
+import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaSessionConstants
@@ -24,8 +29,10 @@ import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.ui.fragments.dialogs.EditPlaylistDialog
+import com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragmentArgs
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import kotlinx.coroutines.*
 
@@ -48,6 +55,9 @@ interface IPlaylistMenuListener {
 class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListener {
     val context: Context
         get() = fragment.requireContext()
+
+    val mainActivity: MainActivity
+        get() = fragment.requireActivity() as MainActivity
 
     override fun edit(playlist: Playlist) {
         EditPlaylistDialog().apply {
@@ -73,7 +83,6 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun play(playlist: Playlist) {
         if (playlist.playlist.isYouTubePlaylist) {
             NavigationEndpointHandler(fragment).handle(NavigationEndpoint(
@@ -99,6 +108,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
                 null
             )
+            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_play_next, LENGTH_SHORT).show()
         }
     }
 
@@ -112,6 +122,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     )
                 )
             ))
+            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_play_next, LENGTH_SHORT).show()
         } else {
             playNext(listOf(playlist))
         }
@@ -132,6 +143,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
                 null
             )
+            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_added_to_queue, LENGTH_SHORT).show()
         }
     }
 
@@ -145,6 +157,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     )
                 )
             ))
+            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_added_to_queue, LENGTH_SHORT).show()
         } else {
             addToQueue(listOf(playlist))
         }
@@ -152,9 +165,15 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(playlists: List<Playlist>) {
-        ChoosePlaylistDialog {
+        ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
-                SongRepository.addToPlaylist(it, playlists)
+                SongRepository.addToPlaylist(playlist, playlists)
+                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                    .setAction(R.string.snackbar_action_view) {
+                        fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                        fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                        fragment.findNavController().navigate(R.id.playlistSongsFragment, PlaylistSongsFragmentArgs.Builder(playlist.id).build().toBundle())
+                    }.show()
             }
         }.show(fragment.childFragmentManager, null)
     }

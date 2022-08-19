@@ -2,19 +2,15 @@ package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.view.Menu
 import androidx.annotation.MenuRes
 import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.R
-import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.utils.NavigationEndpointHandler
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.Serializable
 
 typealias MenuModifier = Menu.() -> Unit
@@ -69,7 +65,6 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
             arguments = bundleOf(KEY_MENU_RES_ID to menuResId)
         }
 
-        @OptIn(DelicateCoroutinesApi::class)
         fun newInstance(item: YTItem, navigationEndpointHandler: NavigationEndpointHandler) = newInstance(R.menu.youtube_item)
             .setMenuModifier {
                 findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
@@ -84,26 +79,13 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
             .setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.action_radio -> navigationEndpointHandler.handle(item.menu.radioEndpoint)
-                    R.id.action_play_next -> navigationEndpointHandler.handle(item.menu.playNextEndpoint, item)
-                    R.id.action_add_to_queue -> navigationEndpointHandler.handle(item.menu.addToQueueEndpoint, item)
-                    R.id.action_add_to_library -> GlobalScope.launch {
-                        when (item) {
-                            is SongItem -> SongRepository.safeAddSong(item)
-                            is AlbumItem -> SongRepository.addAlbum(item)
-                            is PlaylistItem -> SongRepository.addPlaylist(item)
-                            else -> {}
-                        }
+                    R.id.action_play_next -> navigationEndpointHandler.playNext(item)
+                    R.id.action_add_to_queue -> navigationEndpointHandler.addToQueue(item)
+                    R.id.action_add_to_library -> navigationEndpointHandler.addToLibrary(item)
+                    R.id.action_import_playlist -> if (item is PlaylistItem) {
+                        navigationEndpointHandler.importPlaylist(item)
                     }
-                    R.id.action_import_playlist -> GlobalScope.launch {
-                        if (item is PlaylistItem) {
-                            SongRepository.importPlaylist(item)
-                        }
-                    }
-                    R.id.action_add_to_playlist -> ChoosePlaylistDialog { playlist ->
-                        GlobalScope.launch {
-                            SongRepository.addToPlaylist(playlist, item)
-                        }
-                    }.show(navigationEndpointHandler.fragment.childFragmentManager, null)
+                    R.id.action_add_to_playlist -> navigationEndpointHandler.addToPlaylist(item)
                     R.id.action_download -> {}
                     R.id.action_view_artist -> navigationEndpointHandler.handle(item.menu.artistEndpoint)
                     R.id.action_view_album -> navigationEndpointHandler.handle(item.menu.albumEndpoint)

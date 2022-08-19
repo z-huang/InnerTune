@@ -131,14 +131,27 @@
     <string name="sort_by_create_date">新增時間</string>
 
     <!-- Snackbar -->
-    <plurals name="snack_bar_delete_song">
+    <plurals name="snackbar_delete_song">
         <item quantity="other">已刪除 %d 首歌曲</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="other">已選取 %d 個項目</item>
     </plurals>
-    <string name="snack_bar_undo">復原</string>
-    <string name="snack_bar_url_error">無法辨識此連結</string>
+    <string name="snackbar_undo">復原</string>
+    <string name="snackbar_url_error">無法辨識此連結</string>
+    <string name="snackbar_song_play_next">即將播放此歌曲</string>
+    <string name="snackbar_artist_play_next">即將播放此藝人的歌曲</string>
+    <string name="snackbar_album_play_next">即將播放此專輯</string>
+    <string name="snackbar_playlist_play_next">即將播放此播放清單</string>
+    <string name="snackbar_song_added_to_queue">已將此歌曲加入待播清單</string>
+    <string name="snackbar_artist_added_to_queue">已將此藝人的歌曲加入待播清單</string>
+    <string name="snackbar_album_added_to_queue">已將此專輯加入待播清單</string>
+    <string name="snackbar_playlist_added_to_queue">已將此播放清單加入待播清單</string>
+    <string name="snackbar_added_to_library">已新增至媒體庫</string>
+    <string name="snackbar_removed_from_library">已從媒體庫中移除</string>
+    <string name="snackbar_playlist_imported">已匯入此播放清單</string>
+    <string name="snackbar_added_to_playlist">已新增至「%1$s」</string>
+    <string name="snackbar_action_view">查看</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">加入音樂庫</string>
