@@ -43,12 +43,14 @@ interface IPlaylistMenuListener {
     fun addToQueue(playlists: List<Playlist>)
     fun addToPlaylist(playlists: List<Playlist>)
     fun share(playlist: Playlist)
+    fun refetch(playlists: List<Playlist>)
     fun delete(playlists: List<Playlist>)
 
     fun play(playlist: Playlist) = play(listOf(playlist))
     fun playNext(playlist: Playlist) = playNext(listOf(playlist))
     fun addToQueue(playlist: Playlist) = addToQueue(listOf(playlist))
     fun addToPlaylist(playlist: Playlist) = addToPlaylist(listOf(playlist))
+    fun refetch(playlist: Playlist) = refetch(listOf(playlist))
     fun delete(playlist: Playlist) = delete(listOf(playlist))
 }
 
@@ -186,6 +188,15 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 putExtra(EXTRA_TEXT, "https://music.youtube.com/playlist?list=${playlist.id}")
             }
             fragment.startActivity(Intent.createChooser(intent, null))
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun refetch(playlists: List<Playlist>) {
+        GlobalScope.launch {
+            playlists.forEach { playlist ->
+                SongRepository.refetchPlaylist(playlist)
+            }
         }
     }
 

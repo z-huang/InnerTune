@@ -72,13 +72,14 @@
     <string name="menu_add_to_queue">加入待播清單</string>
     <string name="menu_add_to_library">加入媒體庫</string>
     <string name="menu_download">下載</string>
-    <string name="menu_song_remove_download">刪除下載</string>
+    <string name="menu_remove_download">刪除下載</string>
     <string name="menu_import_playlist">匯入播放清單</string>
     <string name="menu_add_to_playlist">加入播放清單</string>
     <string name="menu_view_artist">瀏覽藝人</string>
     <string name="menu_view_album">瀏覽專輯</string>
-    <string name="menu_song_delete">移除</string>
+    <string name="menu_refetch">更新資料</string>
     <string name="menu_share">分享</string>
+    <string name="menu_delete">移除</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">編輯歌曲</string>

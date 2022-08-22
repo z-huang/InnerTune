@@ -72,13 +72,14 @@
     <string name="menu_add_to_queue">Add to queue</string>
     <string name="menu_add_to_library">Add to library</string>
     <string name="menu_download">Download</string>
-    <string name="menu_song_remove_download">Remove download</string>
+    <string name="menu_remove_download">Remove download</string>
     <string name="menu_import_playlist">Import playlist</string>
     <string name="menu_add_to_playlist">Add to playlist</string>
     <string name="menu_view_artist">View artist</string>
     <string name="menu_view_album">View album</string>
-    <string name="menu_song_delete">Delete</string>
+    <string name="menu_refetch">Refetch</string>
     <string name="menu_share">Share</string>
+    <string name="menu_delete">Delete</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Edit song</string>

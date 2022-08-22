@@ -32,11 +32,13 @@ interface IAlbumMenuListener {
     fun addToPlaylist(albums: List<Album>)
     fun viewArtist(album: Album)
     fun share(album: Album)
+    fun refetch(albums: List<Album>)
     fun delete(albums: List<Album>)
 
     fun playNext(album: Album) = playNext(listOf(album))
     fun addToQueue(album: Album) = addToQueue(listOf(album))
     fun addToPlaylist(album: Album) = addToPlaylist(listOf(album))
+    fun refetch(album: Album) = refetch(listOf(album))
     fun delete(album: Album) = delete(listOf(album))
 }
 
@@ -109,6 +111,15 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
             putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/${album.id}")
         }
         fragment.startActivity(Intent.createChooser(intent, null))
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun refetch(albums: List<Album>) {
+        GlobalScope.launch {
+            albums.forEach { album ->
+                SongRepository.refetchAlbum(album.album)
+            }
+        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)

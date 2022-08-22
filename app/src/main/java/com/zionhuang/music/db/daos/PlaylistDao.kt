@@ -23,7 +23,7 @@ interface PlaylistDao {
     suspend fun searchPlaylists(query: String): List<PlaylistEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(playlist: PlaylistEntity)
+    suspend fun insert(playlist: PlaylistEntity): Long
 
     @Insert
     suspend fun insert(playlistSongMaps: List<PlaylistSongMap>)
@@ -31,9 +31,14 @@ interface PlaylistDao {
     @Update
     suspend fun update(playlist: PlaylistEntity)
 
+    suspend fun upsert(playlist: PlaylistEntity) {
+        if (insert(playlist) == -1L) {
+            update(playlist)
+        }
+    }
+
     @Delete
     suspend fun delete(playlists: List<PlaylistEntity>)
-
 
     @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId ORDER BY idInPlaylist")
     suspend fun getPlaylistSongEntities(playlistId: String): List<PlaylistSongMap>
@@ -44,7 +49,7 @@ interface PlaylistDao {
     @Insert
     suspend fun insertPlaylistSongEntities(playlistSong: List<PlaylistSongMap>)
 
-    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND idInPlaylist = (:idInPlaylist)")
+    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND idInPlaylist = :idInPlaylist")
     suspend fun deletePlaylistSongEntities(playlistId: String, idInPlaylist: List<Int>)
 
     @Query("SELECT max(idInPlaylist) FROM playlist_song_map WHERE playlistId = :playlistId")

@@ -72,13 +72,14 @@
     <string name="menu_add_to_queue">목록에 추가</string>
     <string name="menu_add_to_library">라이브러리에 추가</string>
     <string name="menu_download">다운로드</string>
-    <string name="menu_song_remove_download">다운로드 제거</string>
+    <string name="menu_remove_download">다운로드 제거</string>
     <string name="menu_import_playlist">Import playlist</string>
     <string name="menu_add_to_playlist">플레이리스트에 추가</string>
     <string name="menu_view_artist">View artist</string>
     <string name="menu_view_album">View album</string>
-    <string name="menu_song_delete">삭제</string>
+    <string name="menu_refetch">Refetch</string>
     <string name="menu_share">Share</string>
+    <string name="menu_delete">삭제</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">노래 편집</string>

@@ -72,13 +72,14 @@
     <string name="menu_add_to_queue">Lisää jonoon</string>
     <string name="menu_add_to_playlist">Lisää soittolistaan</string>
     <string name="menu_download">Lataa</string>
-    <string name="menu_song_remove_download">Poista lataus</string>
+    <string name="menu_remove_download">Poista lataus</string>
     <string name="menu_import_playlist">Import playlist</string>
     <string name="menu_add_to_library">Lisää kirjastoon</string>
     <string name="menu_view_artist">View artist</string>
     <string name="menu_view_album">View album</string>
-    <string name="menu_song_delete">Poista</string>
+    <string name="menu_refetch">Refetch</string>
     <string name="menu_share">Share</string>
+    <string name="menu_delete">Poista</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Muokkaa kappaletta</string>

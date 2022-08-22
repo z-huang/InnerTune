@@ -72,13 +72,14 @@
     <string name="menu_add_to_queue">Lägg till i kön</string>
     <string name="menu_add_to_library">Add to library</string>
     <string name="menu_download">Ladda ned</string>
-    <string name="menu_song_remove_download">Ta bort nedladdning</string>
+    <string name="menu_remove_download">Ta bort nedladdning</string>
     <string name="menu_import_playlist">Import playlist</string>
     <string name="menu_add_to_playlist">Lägg till i spellista</string>
     <string name="menu_view_artist">View artist</string>
     <string name="menu_view_album">View album</string>
-    <string name="menu_song_delete">Ta bort</string>
+    <string name="menu_refetch">Refetch</string>
     <string name="menu_share">Share</string>
+    <string name="menu_delete">Ta bort</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Redigera låten</string>

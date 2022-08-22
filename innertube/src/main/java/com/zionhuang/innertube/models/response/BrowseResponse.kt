@@ -78,8 +78,10 @@ data class BrowseResponse(
             )
             musicDetailHeaderRenderer != null -> {
                 val subtitle = musicDetailHeaderRenderer.subtitle.runs.splitBySeparator()
+                val menu = musicDetailHeaderRenderer.menu.toItemMenu()
                 AlbumOrPlaylistHeader(
-                    id = musicDetailHeaderRenderer.title.toString(),
+                    id = menu.playNextEndpoint?.queueAddEndpoint?.queueTarget?.playlistId
+                        ?: menu.addToQueueEndpoint?.queueAddEndpoint?.queueTarget?.playlistId!!,
                     name = musicDetailHeaderRenderer.title.toString(),
                     subtitle = musicDetailHeaderRenderer.subtitle.toString(),
                     secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),

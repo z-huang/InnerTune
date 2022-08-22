@@ -37,7 +37,6 @@ interface LocalRepository {
     fun getAllAlbums(): ListWrapper<Int, Album>
 
     fun getAllPlaylists(): ListWrapper<Int, Playlist>
-    suspend fun getPlaylistById(playlistId: String): PlaylistEntity?
     fun searchPlaylists(query: String): ListWrapper<Int, PlaylistEntity>
     suspend fun addPlaylist(playlist: PlaylistEntity)
     suspend fun updatePlaylist(playlist: PlaylistEntity)

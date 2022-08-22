@@ -23,7 +23,7 @@
     <item
         android:id="@+id/action_remove_download"
         android:icon="@drawable/ic_offline_pin"
-        android:title="@string/menu_song_remove_download" />
+        android:title="@string/menu_remove_download" />
     <item
         android:id="@+id/action_view_artist"
         android:icon="@drawable/ic_artist"
@@ -39,5 +39,5 @@
     <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_delete"
-        android:title="@string/menu_song_delete" />
+        android:title="@string/menu_delete" />
 </menu>

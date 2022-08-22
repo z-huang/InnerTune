@@ -35,11 +35,13 @@ interface IArtistMenuListener {
     fun addToQueue(artists: List<Artist>)
     fun addToPlaylist(artists: List<Artist>)
     fun share(artist: Artist)
+    fun refetch(artists: List<Artist>)
     fun delete(artists: List<Artist>)
 
     fun playNext(artist: Artist) = playNext(listOf(artist))
     fun addToQueue(artist: Artist) = addToQueue(listOf(artist))
     fun addToPlaylist(artist: Artist) = addToPlaylist(listOf(artist))
+    fun refetch(artist: Artist) = refetch(listOf(artist))
     fun delete(artist: Artist) = delete(listOf(artist))
 }
 
@@ -109,6 +111,15 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
                 putExtra(EXTRA_TEXT, "https://music.youtube.com/channel/${artist.id}")
             }
             fragment.startActivity(Intent.createChooser(intent, null))
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun refetch(artists: List<Artist>) {
+        GlobalScope.launch {
+            artists.forEach { artist ->
+                SongRepository.refetchArtist(artist.artist)
+            }
         }
     }
 

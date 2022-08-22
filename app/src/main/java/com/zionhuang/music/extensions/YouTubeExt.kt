@@ -1,12 +1,12 @@
 package com.zionhuang.music.extensions
 
 import androidx.paging.PagingSource.LoadResult
-import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AlbumOrPlaylistHeader
+import com.zionhuang.innertube.models.BrowseResult
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.SongEntity
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
 import org.schabi.newpipe.extractor.ListInfo
@@ -26,6 +26,15 @@ fun PlaylistItem.toPlaylistEntity() = PlaylistEntity(
     id = id,
     name = title,
     thumbnailUrl = thumbnails.last().url
+)
+
+fun AlbumOrPlaylistHeader.toPlaylistEntity() = PlaylistEntity(
+    id = id,
+    name = name,
+    author = artists?.firstOrNull()?.text,
+    authorId = artists?.firstOrNull()?.navigationEndpoint?.browseEndpoint?.browseId,
+    year = year,
+    thumbnailUrl = thumbnails.lastOrNull()?.url
 )
 
 fun <T : InfoItem> ListInfo<T>.toPage() = LoadResult.Page<Page, InfoItem>(

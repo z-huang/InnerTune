@@ -146,14 +146,7 @@ object SongRepository : LocalRepository {
 
     suspend fun addPlaylist(playlist: PlaylistItem) = withContext(IO) {
         (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-            playlistDao.insert(PlaylistEntity(
-                id = playlist.id,
-                name = header.name,
-                author = header.artists?.firstOrNull()?.text,
-                authorId = header.artists?.firstOrNull()?.navigationEndpoint?.browseEndpoint?.browseId,
-                year = header.year,
-                thumbnailUrl = header.thumbnails.lastOrNull()?.url
-            ))
+            playlistDao.insert(header.toPlaylistEntity())
         }
     }
 
@@ -357,18 +350,19 @@ object SongRepository : LocalRepository {
         getPagingSource = { playlistDao.getAllPlaylistsAsPagingSource() }
     )
 
-    override suspend fun getPlaylistById(playlistId: String): PlaylistEntity? = withContext(IO) {
-        playlistDao.getPlaylist(playlistId)
+    suspend fun refetchPlaylist(playlist: Playlist) = withContext(IO) {
+        (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
+            playlistDao.upsert(header.toPlaylistEntity())
+        }
     }
 
     override fun searchPlaylists(query: String) = ListWrapper<Int, PlaylistEntity>(
         getList = { withContext(IO) { playlistDao.searchPlaylists(query) } }
     )
 
-    override suspend fun addPlaylist(playlist: PlaylistEntity) = withContext(IO) { playlistDao.insert(playlist) }
+    override suspend fun addPlaylist(playlist: PlaylistEntity): Unit = withContext(IO) { playlistDao.insert(playlist) }
     override suspend fun updatePlaylist(playlist: PlaylistEntity) = withContext(IO) { playlistDao.update(playlist) }
     override suspend fun deletePlaylists(playlists: List<PlaylistEntity>) = withContext(IO) { playlistDao.delete(playlists) }
-
 
     override suspend fun getPlaylistSongEntities(playlistId: String) = ListWrapper<Int, PlaylistSongMap>(
         getList = { withContext(IO) { playlistDao.getPlaylistSongEntities(playlistId) } }
