@@ -10,7 +10,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.requireAppCompatActivity
-import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.ui.listeners.SongMenuListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
@@ -18,12 +18,12 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistSongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>() {
+class ArtistSongsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>() {
     private val args: ArtistSongsFragmentArgs by navArgs()
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    override val adapter = LocalItemAdapter().apply {
+    override val adapter = LocalItemPagingAdapter().apply {
         songMenuListener = SongMenuListener(this@ArtistSongsFragment)
     }
 

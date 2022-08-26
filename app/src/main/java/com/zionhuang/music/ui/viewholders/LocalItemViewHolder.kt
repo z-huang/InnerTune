@@ -1,6 +1,6 @@
 package com.zionhuang.music.ui.viewholders
 
-import android.widget.PopupMenu
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.selection.ItemDetailsLookup
@@ -11,14 +11,11 @@ import com.zionhuang.music.constants.ORDER_ARTIST
 import com.zionhuang.music.constants.ORDER_CREATE_DATE
 import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.databinding.*
-import com.zionhuang.music.db.entities.Album
-import com.zionhuang.music.db.entities.Artist
-import com.zionhuang.music.db.entities.Playlist
-import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.context
+import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.DownloadProgress
-import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
@@ -177,23 +174,21 @@ class PlaylistViewHolder(
 
 class SongHeaderViewHolder(
     override val binding: ItemSongHeaderBinding,
-    private val sortInfo: IMutableSortInfo,
 ) : LocalItemViewHolder(binding) {
-    init {
-        binding.sortMenu.setOnClickListener { view ->
+    fun bind(header: SongHeader, isPayload: Boolean = false) {
+        binding.sortName.setOnClickListener { view ->
             PopupMenu(view.context, view).apply {
                 inflate(R.menu.sort_song)
                 setOnMenuItemClickListener {
-                    sortInfo.type = when (it.itemId) {
+                    header.sortInfo.type = when (it.itemId) {
                         R.id.sort_by_create_date -> ORDER_CREATE_DATE
                         R.id.sort_by_name -> ORDER_NAME
                         R.id.sort_by_artist -> ORDER_ARTIST
                         else -> throw IllegalArgumentException("Unexpected sort type.")
                     }
-                    updateSortName(sortInfo.type)
                     true
                 }
-                menu.findItem(when (sortInfo.type) {
+                menu.findItem(when (header.sortInfo.type) {
                     ORDER_CREATE_DATE -> R.id.sort_by_create_date
                     ORDER_NAME -> R.id.sort_by_name
                     ORDER_ARTIST -> R.id.sort_by_artist
@@ -202,17 +197,12 @@ class SongHeaderViewHolder(
                 show()
             }
         }
-        binding.sortMenu.setOnLongClickListener {
-            sortInfo.toggleIsDescending()
-            updateSortOrderIcon(sortInfo.isDescending)
-            true
+        binding.sortOrder.setOnClickListener {
+            header.sortInfo.toggleIsDescending()
         }
-        updateSortName(sortInfo.type)
-        updateSortOrderIcon(sortInfo.isDescending, false)
-    }
-
-    fun bind(songsCount: Int) {
-        binding.songsCount = songsCount
+        updateSortName(header.sortInfo.type)
+        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
+        binding.songsCount = header.songCount
     }
 
     private fun updateSortName(sortType: Int) {
@@ -226,9 +216,9 @@ class SongHeaderViewHolder(
 
     private fun updateSortOrderIcon(sortDescending: Boolean, animate: Boolean = true) {
         if (sortDescending) {
-            binding.sortOrderIcon.animateToDown(animate)
+            binding.sortOrder.animateToDown(animate)
         } else {
-            binding.sortOrderIcon.animateToUp(animate)
+            binding.sortOrder.animateToUp(animate)
         }
     }
 }

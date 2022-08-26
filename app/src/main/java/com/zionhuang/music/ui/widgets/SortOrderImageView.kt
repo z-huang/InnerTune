@@ -12,6 +12,7 @@ import com.zionhuang.music.extensions.getAnimatedVectorDrawable
 
 
 class SortOrderImageView : AppCompatImageView {
+    private var state: State = State.DOWN
     private val arrowUpwardDrawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_upward)
     private val arrowDownwardDrawable = ContextCompat.getDrawable(context, R.drawable.ic_arrow_downward)
     private val arrowUpToDownAnimation = context.getAnimatedVectorDrawable(R.drawable.avd_arrow_up_to_down)
@@ -30,7 +31,8 @@ class SortOrderImageView : AppCompatImageView {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     fun animateToUp(animate: Boolean) {
-        if (drawable != arrowUpwardDrawable) {
+        if (state != State.UP) {
+            state = State.UP
             if (animate) {
                 setAvd(arrowDownToUpAnimation)
             } else {
@@ -40,7 +42,8 @@ class SortOrderImageView : AppCompatImageView {
     }
 
     fun animateToDown(animate: Boolean) {
-        if (drawable != arrowDownwardDrawable) {
+        if (state != State.DOWN) {
+            state = State.DOWN
             if (animate) {
                 setAvd(arrowUpToDownAnimation)
             } else {
@@ -55,5 +58,9 @@ class SortOrderImageView : AppCompatImageView {
             start()
             registerAnimationCallback(animationCallback)
         }
+    }
+
+    enum class State {
+        UP, DOWN
     }
 }

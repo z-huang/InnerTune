@@ -17,7 +17,7 @@ import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
 import com.zionhuang.music.ui.fragments.ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.ui.listeners.ArtistMenuListener
@@ -26,9 +26,9 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
+class ArtistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    override val adapter = LocalItemAdapter().apply {
+    override val adapter = LocalItemPagingAdapter().apply {
         artistMenuListener = ArtistMenuListener(this@ArtistsFragment)
     }
 

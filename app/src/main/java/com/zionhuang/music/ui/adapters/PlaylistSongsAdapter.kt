@@ -22,7 +22,6 @@ import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.ui.listeners.ISongMenuListener
-import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.text.DateFormat
@@ -59,7 +58,6 @@ class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(So
                     }
                 }
             }
-            is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }
     }
 
@@ -78,14 +76,12 @@ class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(So
                     is DownloadProgress -> holder.setProgress(payload)
                 }
             }
-            is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortInfo!!)
             TYPE_ITEM -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), popupMenuListener)
             else -> throw IllegalArgumentException("Unexpected view type.")
         }

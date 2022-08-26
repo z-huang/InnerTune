@@ -16,7 +16,6 @@ import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.ui.viewholders.DraggableSongViewHolder
-import com.zionhuang.music.ui.viewholders.SongHeaderViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 
 class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()) {
@@ -41,7 +40,6 @@ class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(Song
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SongViewHolder -> holder.bind(getItem(position)!!, false)
-            is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }
     }
 
@@ -55,14 +53,12 @@ class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(Song
                     is DownloadProgress -> holder.setProgress(payload)
                 }
             }
-            is SongHeaderViewHolder -> holder.bind(itemCount - 1)
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            TYPE_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header), sortInfo!!)
             TYPE_ITEM -> DraggableSongViewHolder(parent.inflateWithBinding(R.layout.item_song)).apply {
                 binding.dragHandle.setOnTouchListener { _, event ->
                     if (event.actionMasked == MotionEvent.ACTION_DOWN) {

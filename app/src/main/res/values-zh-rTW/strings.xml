@@ -2,7 +2,7 @@
     <!-- Title -->
     <string name="title_home">首頁</string>
     <string name="title_songs">歌曲</string>
-    <string name="title_artists">演出者</string>
+    <string name="title_artists">藝人</string>
     <string name="title_albums">專輯</string>
     <string name="title_channels">頻道</string>
     <string name="title_playlists">播放清單</string>
@@ -84,18 +84,18 @@
     <!-- Dialog -->
     <string name="dialog_title_edit_song">編輯歌曲</string>
     <string name="song_title">歌名</string>
-    <string name="song_artist">演出者</string>
+    <string name="song_artist">藝人</string>
     <string name="error_song_title_empty">歌名不能為空</string>
-    <string name="error_song_artist_empty">演出者不能為空</string>
+    <string name="error_song_artist_empty">藝人不能為空</string>
     <string name="dialog_button_save">儲存</string>
 
     <string name="dialog_title_create_playlist">新增播放清單</string>
     <string name="text_view_hint_playlist_name">名稱</string>
     <string name="error_playlist_name_empty">播放清單名稱不能為空</string>
 
-    <string name="dialog_title_edit_artist">編輯演出者</string>
-    <string name="text_view_hint_artist_name">演出者名稱</string>
-    <string name="error_artist_name_empty">演出者名稱不能為空</string>
+    <string name="dialog_title_edit_artist">編輯藝人</string>
+    <string name="text_view_hint_artist_name">藝人名稱</string>
+    <string name="error_artist_name_empty">藝人名稱不能為空</string>
 
     <string name="dialog_title_duplicate_artist">重複的作曲家</string>
     <string name="dialog_msg_duplicate_artist">作曲家「%1$s」已存在。</string>
@@ -128,7 +128,7 @@
 
     <!-- Sort Menu -->
     <string name="sort_by_name">曲名</string>
-    <string name="sort_by_artist">演出者</string>
+    <string name="sort_by_artist">藝人</string>
     <string name="sort_by_create_date">新增時間</string>
 
     <!-- Snackbar -->
@@ -162,7 +162,7 @@
     <string name="search_filter_songs">歌曲</string>
     <string name="search_filter_videos">影片</string>
     <string name="search_filter_albums">專輯</string>
-    <string name="search_filter_artists">演出者</string>
+    <string name="search_filter_artists">藝人</string>
     <string name="search_filter_playlists">播放清單</string>
     <string name="search_filter_community_playlists">社群播放清單</string>
     <string name="search_filter_featured_playlists">精選播放清單</string>

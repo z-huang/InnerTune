@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -9,47 +10,48 @@
             type="int" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="?attr/colorSurface"
         android:layout_height="@dimen/list_item_height"
         android:orientation="horizontal"
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/all_songs_count"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:text="@{@plurals/songs_count(songsCount, songsCount)}"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            tools:text="100 songs" />
-
-        <LinearLayout
-            android:id="@+id/sort_menu"
+            android:id="@+id/sort_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:layout_gravity="start|center_vertical"
             android:background="?selectableItemBackgroundBorderless"
-            android:orientation="horizontal">
+            android:textSize="14sp"
+            android:padding="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Name" />
 
-            <TextView
-                android:id="@+id/sort_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                tools:text="Name" />
+        <com.zionhuang.music.ui.widgets.SortOrderImageView
+            android:id="@+id/sort_order"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="start"
+            android:background="?selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_downward"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/sort_name"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.zionhuang.music.ui.widgets.SortOrderImageView
-                android:id="@+id/sort_order_icon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="6dp"
-                android:src="@drawable/ic_arrow_downward" />
-        </LinearLayout>
-
-    </LinearLayout>
+        <TextView
+            android:id="@+id/song_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:ellipsize="end"
+            android:text="@{@plurals/songs_count(songsCount, songsCount)}"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="100 songs" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

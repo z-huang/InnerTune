@@ -4,12 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
 
-
-class ListWrapper<K : Any, V : Any>(
-    val getList: suspend () -> List<V> = { throw UnsupportedOperationException() },
-    val getPagingSource: () -> PagingSource<K, V> = { throw UnsupportedOperationException() },
-    override val getFlow: () -> Flow<List<V>> = { throw UnsupportedOperationException() },
-    override val getLiveData: () -> LiveData<List<V>> = { throw UnsupportedOperationException() },
-) : DataWrapper<List<V>>(getValueAsync = getList) {
-    val pagingSource: PagingSource<K, V> get() = getPagingSource()
+class ListWrapper<Key : Any, Value : Any>(
+    val getList: suspend () -> List<Value> = { throw UnsupportedOperationException() },
+    val getPagingSource: () -> PagingSource<Key, Value> = { throw UnsupportedOperationException() },
+    override val getFlow: () -> Flow<List<Value>> = { throw UnsupportedOperationException() },
+    override val getLiveData: () -> LiveData<List<Value>> = { throw UnsupportedOperationException() },
+) : DataWrapper<List<Value>>(getValueAsync = getList) {
+    val pagingSource: PagingSource<Key, Value> get() = getPagingSource()
 }

@@ -13,21 +13,21 @@ import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_PREPARING
+import com.zionhuang.music.constants.ORDER_ARTIST
+import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.DataWrapper
-import com.zionhuang.music.models.ListWrapper
-import com.zionhuang.music.models.MediaMetadata
-import com.zionhuang.music.models.PreferenceSortInfo
+import com.zionhuang.music.models.*
 import com.zionhuang.music.models.base.ISortInfo
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import com.zionhuang.music.utils.md5
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -50,7 +50,7 @@ object SongRepository : LocalRepository {
 
     override fun hasSong(songId: String): DataWrapper<Boolean> = DataWrapper(
         getValueAsync = { songDao.hasSong(songId) },
-        getLiveData = { songDao.hasSongLiveData(songId).distinctUntilChanged() }
+        getLiveData = { songDao.hasSongAsLiveData(songId).distinctUntilChanged() }
     )
 
     suspend fun addSong(mediaMetadata: MediaMetadata) = withContext(IO) {
@@ -260,8 +260,21 @@ object SongRepository : LocalRepository {
 
     override fun getAllSongs(sortInfo: ISortInfo): ListWrapper<Int, Song> = ListWrapper<Int, Song>(
         getList = { withContext(IO) { songDao.getAllSongsAsList(sortInfo) } },
+        getFlow = {
+            if (sortInfo.type != ORDER_ARTIST) {
+                songDao.getAllSongsAsFlow(sortInfo)
+            } else {
+                songDao.getAllSongsAsFlow(SortInfo(ORDER_NAME, true)).map { list ->
+                    list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
+                        song.artists.joinToString(separator = "") { it.name }
+                    }).reversed(sortInfo.isDescending)
+                }
+            }
+        },
         getPagingSource = { songDao.getAllSongsAsPagingSource(sortInfo) }
     )
+
+    suspend fun getSongCount() = withContext(IO) { songDao.songCount() }
 
     override fun getArtistSongs(artistId: String, sortInfo: ISortInfo): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getArtistSongsAsList(artistId, sortInfo) } },

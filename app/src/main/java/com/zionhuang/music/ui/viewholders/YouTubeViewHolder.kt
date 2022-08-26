@@ -180,10 +180,10 @@ class YouTubeNavigationItemViewHolder(
     }
 }
 
-class YouTubeNavigationButtonViewHolder(
+class YouTubeNavigationTileViewHolder(
     val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
-) : YouTubeViewHolder<ItemYoutubeNavigationBtnBinding>(viewGroup, R.layout.item_youtube_navigation_btn) {
+) : YouTubeViewHolder<ItemYoutubeNavigationTileBinding>(viewGroup, R.layout.item_youtube_navigation_tile) {
     fun bind(item: NavigationItem) {
         binding.item = item
         binding.card.setOnClickListener {

@@ -19,7 +19,7 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
 import com.zionhuang.music.ui.fragments.PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
@@ -29,12 +29,12 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
+class PlaylistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), MenuProvider {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
 
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    override val adapter = LocalItemAdapter().apply {
+    override val adapter = LocalItemPagingAdapter().apply {
         playlistMenuListener = PlaylistMenuListener(this@PlaylistsFragment)
     }
 

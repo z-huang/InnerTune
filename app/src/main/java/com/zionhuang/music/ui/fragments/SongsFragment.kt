@@ -1,8 +1,6 @@
 package com.zionhuang.music.ui.fragments
 
 import android.app.SearchManager
-import android.content.Intent
-import android.media.audiofx.AudioEffect
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,25 +17,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
+import com.zionhuang.music.db.entities.LocalItem
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.PreferenceSortInfo
-import com.zionhuang.music.playback.MediaSessionConnection
-import com.zionhuang.music.playback.queues.Queue
-import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
-import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
+import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.listeners.SongMenuListener
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-class SongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
+class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
     override val adapter = LocalItemAdapter().apply {
@@ -51,18 +48,13 @@ class SongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvid
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
             addOnClickListener { position, _ ->
-                playbackViewModel.playQueue(requireActivity(),
-                    object : Queue {
-                        override val title: String? = null
-                        override suspend fun getInitialStatus() = Queue.Status(
-                            items = SongRepository.getAllSongs(PreferenceSortInfo).getList().map { it.toMediaItem() },
-                            index = position
-                        )
-
-                        override fun hasNextPage(): Boolean = false
-                        override suspend fun nextPage() = throw UnsupportedOperationException()
-                    }
-                )
+                if (this@SongsFragment.adapter.currentList[position] !is LocalItem) {
+                    return@addOnClickListener
+                }
+                playbackViewModel.playQueue(requireActivity(), ListQueue(
+                    items = this@SongsFragment.adapter.currentList.filterIsInstance<Song>().map { it.toMediaItem() },
+                    startIndex = position - 1
+                ))
             }
             addFastScroller { useMd2Style() }
         }
@@ -96,26 +88,11 @@ class SongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvid
 
         lifecycleScope.launch {
             songsViewModel.allSongsFlow.collectLatest {
-                adapter.submitData(it)
+                adapter.submitList(it)
             }
-        }
-
-        songsViewModel.sortInfo.liveData.observe(viewLifecycleOwner) {
-            adapter.refresh()
         }
 
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        lifecycleScope.launch {
-            while (true) {
-                val equalizerIntent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                    putExtra(AudioEffect.EXTRA_AUDIO_SESSION, MediaSessionConnection.binder?.songPlayer?.player?.audioSessionId)
-                    putExtra(AudioEffect.EXTRA_PACKAGE_NAME, requireContext().packageName)
-                    putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                }
-                logd("${equalizerIntent.resolveActivity(requireContext().packageManager) != null}")
-                delay(1000)
-            }
-        }
     }
 
     @OptIn(FlowPreview::class)
@@ -134,7 +111,7 @@ class SongsFragment : PagingRecyclerViewFragment<LocalItemAdapter>(), MenuProvid
                     .debounce(100.toDuration(DurationUnit.MILLISECONDS))
                     .collect { e ->
                         songsViewModel.query = e.query
-                        adapter.refresh()
+//                        adapter.refresh()
                     }
             }
         }

@@ -6,3 +6,5 @@ inline fun <reified T : Any> List<*>.castOrNull(): List<T>? = if (all { it is T 
 fun <T> MutableList<T>.swap(i: Int, j: Int) {
     this[i] = this[j].also { this[j] = this[i] }
 }
+
+fun <T> List<T>.reversed(reversed: Boolean) = if (reversed) reversed() else this

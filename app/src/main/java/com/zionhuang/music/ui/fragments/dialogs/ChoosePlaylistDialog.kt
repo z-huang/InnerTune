@@ -15,7 +15,7 @@ import com.zionhuang.music.databinding.DialogChoosePlaylistBinding
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
@@ -26,7 +26,7 @@ typealias PlaylistListener = (PlaylistEntity) -> Unit
 class ChoosePlaylistDialog() : AppCompatDialogFragment() {
     private lateinit var binding: DialogChoosePlaylistBinding
     private val viewModel by activityViewModels<SongsViewModel>()
-    private val adapter = LocalItemAdapter().apply {
+    private val adapter = LocalItemPagingAdapter().apply {
         allowMoreAction = false
     }
 

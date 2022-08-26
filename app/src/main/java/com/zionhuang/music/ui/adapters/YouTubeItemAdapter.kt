@@ -28,7 +28,7 @@ class YouTubeItemAdapter(
         BASE_ITEM_SEPARATOR -> YouTubeSeparatorViewHolder(parent)
         BASE_ITEM_NAVIGATION -> when (itemViewType) {
             YTBaseItem.ViewType.LIST -> YouTubeNavigationItemViewHolder(parent, navigationEndpointHandler)
-            YTBaseItem.ViewType.BLOCK -> YouTubeNavigationButtonViewHolder(parent, navigationEndpointHandler)
+            YTBaseItem.ViewType.BLOCK -> YouTubeNavigationTileViewHolder(parent, navigationEndpointHandler)
         }
         BASE_ITEM_SUGGESTION -> YouTubeSuggestionViewHolder(parent, onFillQuery, onSearch, onRefreshSuggestions)
         ITEM -> when (itemViewType) {
@@ -54,7 +54,7 @@ class YouTubeItemAdapter(
             is YouTubeDescriptionViewHolder -> holder.bind(item as DescriptionSection)
             is YouTubeSeparatorViewHolder -> {}
             is YouTubeNavigationItemViewHolder -> holder.bind(item as NavigationItem)
-            is YouTubeNavigationButtonViewHolder -> holder.bind(item as NavigationItem)
+            is YouTubeNavigationTileViewHolder -> holder.bind(item as NavigationItem)
             is YouTubeSuggestionViewHolder -> holder.bind(item as SuggestionTextItem)
             is YouTubeListItemViewHolder -> holder.bind(item as YTItem)
             is YouTubeSquareItemViewHolder -> holder.bind(item as YTItem)

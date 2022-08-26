@@ -18,24 +18,29 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 abstract class AbsPagingRecyclerViewFragment<V : ViewBinding, A : PagingDataAdapter<*, *>> : AbsRecyclerViewFragment<V, A>() {
-    abstract fun getLayoutLoadState(): LayoutLoadStateBinding
-    abstract fun getSwipeRefreshLayout(): SwipeRefreshLayout
+    open fun getLayoutLoadState(): LayoutLoadStateBinding? = null
+    open fun getSwipeRefreshLayout(): SwipeRefreshLayout? = null
     val refreshable: Boolean = true
 
     @CallSuper
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter.bindLoadStateLayout(getLayoutLoadState(), isSwipeRefreshing = {
-            getSwipeRefreshLayout().isRefreshing
-        })
-        getSwipeRefreshLayout().isEnabled = refreshable
-        getSwipeRefreshLayout().setOnRefreshListener {
-            adapter.refresh()
+
+        getLayoutLoadState()?.let { loadStateBinding ->
+            adapter.bindLoadStateLayout(loadStateBinding, isSwipeRefreshing = {
+                getSwipeRefreshLayout()?.isRefreshing ?: false
+            })
         }
-        lifecycleScope.launch {
-            adapter.loadStateFlow.collectLatest { loadStates ->
-                if (loadStates.refresh !is LoadState.Loading && getSwipeRefreshLayout().isRefreshing) {
-                    getSwipeRefreshLayout().isRefreshing = false
+        getSwipeRefreshLayout()?.let { swipeRefreshLayout ->
+            swipeRefreshLayout.isEnabled = refreshable
+            swipeRefreshLayout.setOnRefreshListener {
+                adapter.refresh()
+            }
+            lifecycleScope.launch {
+                adapter.loadStateFlow.collectLatest { loadStates ->
+                    if (loadStates.refresh !is LoadState.Loading && swipeRefreshLayout.isRefreshing) {
+                        swipeRefreshLayout.isRefreshing = false
+                    }
                 }
             }
         }
