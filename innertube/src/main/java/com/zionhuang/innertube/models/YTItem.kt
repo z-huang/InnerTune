@@ -77,7 +77,7 @@ data class SongItem(
                             } else {
                                 // From search
                                 item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.let {
-                                    it.getOrNull(it.lastIndex - 4) ?: it[it.lastIndex - 2]
+                                    it.getOrNull(it.lastIndex - 4) ?: it.getOrNull(it.lastIndex - 2)
                                 }
                             }
                         )
