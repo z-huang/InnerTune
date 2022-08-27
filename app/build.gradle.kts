@@ -17,8 +17,8 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 26
         targetSdk = 31
-        versionCode = 9
-        versionName = "0.3.2"
+        versionCode = 10
+        versionName = "0.3.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     applicationVariants.all {
@@ -148,7 +148,7 @@ dependencies {
     implementation(project(mapOf("path" to ":innertube")))
     // NewPipe Extractor
     implementation("com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751")
-    implementation("com.github.TeamNewPipe:NewPipeExtractor:76aad92fa54524f20c3338ab568c9cd6b50c9d33")
+    implementation("com.github.TeamNewPipe:NewPipeExtractor:6a858368c86bc9a55abee586eb6c733e86c26b97")
     // Apache Utils
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")
