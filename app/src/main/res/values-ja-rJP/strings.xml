@@ -109,14 +109,17 @@
     <string name="channel_name_download">ダウンロード</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="other">%d曲</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="other">登録者 %d人</item>
+    <plurals name="artist_count">
+        <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="other">%d 動画</item>
+    <plurals name="album_count">
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="other">%d playlists</item>
     </plurals>
 
     <!-- Button -->
@@ -130,6 +133,7 @@
     <string name="sort_by_name">曲名</string>
     <string name="sort_by_artist">アーティスト</string>
     <string name="sort_by_create_date">追加日時</string>
+    <string name="sort_by_song_count">Song count</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

@@ -109,14 +109,17 @@
     <string name="channel_name_download">下載</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="other">%d 首歌曲</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="other">%d 位訂閱者</item>
+    <plurals name="artist_count">
+        <item quantity="other">%d 位藝人</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="other">%d 部影片</item>
+    <plurals name="album_count">
+        <item quantity="other">%d 張專輯</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="other">%d 個播放清單</item>
     </plurals>
 
     <!-- Button -->
@@ -130,6 +133,7 @@
     <string name="sort_by_name">曲名</string>
     <string name="sort_by_artist">藝人</string>
     <string name="sort_by_create_date">新增時間</string>
+    <string name="sort_by_song_count">歌曲總數</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

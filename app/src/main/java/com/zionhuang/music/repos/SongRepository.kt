@@ -7,14 +7,13 @@ import androidx.lifecycle.distinctUntilChanged
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.YouTube.MAX_GET_QUEUE_SIZE
 import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.ArtistHeader
 import com.zionhuang.innertube.utils.browseAll
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_PREPARING
-import com.zionhuang.music.constants.ORDER_ARTIST
-import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.daos.DownloadDao
 import com.zionhuang.music.db.entities.*
@@ -258,13 +257,13 @@ object SongRepository : LocalRepository {
     }
 
 
-    override fun getAllSongs(sortInfo: ISortInfo): ListWrapper<Int, Song> = ListWrapper<Int, Song>(
+    override fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getAllSongsAsList(sortInfo) } },
         getFlow = {
-            if (sortInfo.type != ORDER_ARTIST) {
+            if (sortInfo.type != SongSortType.ARTIST) {
                 songDao.getAllSongsAsFlow(sortInfo)
             } else {
-                songDao.getAllSongsAsFlow(SortInfo(ORDER_NAME, true)).map { list ->
+                songDao.getAllSongsAsFlow(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
                     list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
                         song.artists.joinToString(separator = "") { it.name }
                     }).reversed(sortInfo.isDescending)
@@ -274,21 +273,29 @@ object SongRepository : LocalRepository {
         getPagingSource = { songDao.getAllSongsAsPagingSource(sortInfo) }
     )
 
-    suspend fun getSongCount() = withContext(IO) { songDao.songCount() }
+    suspend fun getSongCount() = withContext(IO) { songDao.getSongCount() }
 
-    override fun getArtistSongs(artistId: String, sortInfo: ISortInfo): ListWrapper<Int, Song> = ListWrapper(
+    override fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getArtistSongsAsList(artistId, sortInfo) } },
         getPagingSource = { songDao.getArtistSongsAsPagingSource(artistId, sortInfo) }
     )
 
-    override fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo): ListWrapper<Int, Song> = ListWrapper(
+    override fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) } },
         getPagingSource = { songDao.getPlaylistSongsAsPagingSource(playlistId) }
     )
 
 
-    override fun getAllArtists() = ListWrapper(
-        getPagingSource = { artistDao.getAllArtistsAsPagingSource() }
+    override fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>) = ListWrapper<Int, Artist>(
+        getFlow = {
+            if (sortInfo.type != ArtistSortType.SONG_COUNT) {
+                artistDao.getAllArtistsAsFlow(sortInfo)
+            } else {
+                artistDao.getAllArtistsAsFlow(SortInfo(ArtistSortType.CREATE_DATE, true)).map { list ->
+                    list.sortedBy { it.songCount }.reversed(sortInfo.isDescending)
+                }
+            }
+        }
     )
 
     override suspend fun getArtistById(artistId: String): ArtistEntity? = withContext(IO) {
@@ -298,6 +305,8 @@ object SongRepository : LocalRepository {
     override suspend fun getArtistByName(name: String): ArtistEntity? = withContext(IO) {
         artistDao.getArtistByName(name)
     }
+
+    suspend fun getArtistCount() = withContext(IO) { artistDao.getArtistCount() }
 
     override fun searchArtists(query: String) = ListWrapper<Int, ArtistEntity>(
         getList = { withContext(IO) { artistDao.searchArtists(query) } }
@@ -401,9 +410,9 @@ object SongRepository : LocalRepository {
             when (item) {
                 is Song -> listOf(item).map { it.id }
                 is Album -> getAlbumSongs(item.id).map { it.id }
-                is Artist -> getArtistSongs(item.id, PreferenceSortInfo).getList().map { it.id }
+                is Artist -> getArtistSongs(item.id, SongSortInfoPreference).getList().map { it.id }
                 is Playlist -> if (item.playlist.isLocalPlaylist) {
-                    getPlaylistSongs(item.id, PreferenceSortInfo).getList().map { it.id }
+                    getPlaylistSongs(item.id, SongSortInfoPreference).getList().map { it.id }
                 } else {
                     safeAddSongs(YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).filterIsInstance<SongItem>()).map { it.id }
                 }

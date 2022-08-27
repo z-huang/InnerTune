@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{@plurals/songs_count(artist.songCount, artist.songCount)}"
+                android:text="@{@plurals/song_count(artist.songCount, artist.songCount)}"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="12sp"
                 tools:text="100 songs" />

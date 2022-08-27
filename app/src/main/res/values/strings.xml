@@ -109,17 +109,21 @@
     <string name="channel_name_download">Download</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="one">%d song</item>
         <item quantity="other">%d songs</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="one">%d subscriber</item>
-        <item quantity="other">%d subscribers</item>
+    <plurals name="artist_count">
+        <item quantity="one">%d artist</item>
+        <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="one">%d video</item>
-        <item quantity="other">%d videos</item>
+    <plurals name="album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d playlist</item>
+        <item quantity="other">%d playlists</item>
     </plurals>
 
     <!-- Button -->
@@ -133,6 +137,7 @@
     <string name="sort_by_name">Name</string>
     <string name="sort_by_artist">Artist</string>
     <string name="sort_by_create_date">Date added</string>
+    <string name="sort_by_song_count">Song count</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

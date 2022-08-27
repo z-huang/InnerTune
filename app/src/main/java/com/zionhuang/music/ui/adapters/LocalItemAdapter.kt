@@ -5,12 +5,11 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.ORDER_ARTIST
-import com.zionhuang.music.constants.ORDER_CREATE_DATE
-import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
-import com.zionhuang.music.models.PreferenceSortInfo
+import com.zionhuang.music.extensions.logd
+import com.zionhuang.music.models.SongSortInfoPreference
+import com.zionhuang.music.models.SongSortType
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
@@ -21,7 +20,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.zhanghai.android.fastscroll.PopupTextProvider
-import java.text.DateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -58,15 +56,16 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             }
             is PlaylistViewHolder -> holder.bind(item as Playlist)
             is SongHeaderViewHolder -> holder.bind(item as SongHeader)
+            is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
         }
     }
 
     override fun onBindViewHolder(holder: LocalItemViewHolder, position: Int, payloads: MutableList<Any>) {
         val payload = payloads.firstOrNull()
-        if (payload is SongHeader && holder is SongHeaderViewHolder) {
-            holder.bind(payload, true)
-        } else {
-            onBindViewHolder(holder, position)
+        when {
+            payload is SongHeader && holder is SongHeaderViewHolder -> holder.bind(payload, true)
+            payload is ArtistHeader && holder is ArtistHeaderViewHolder -> holder.bind(payload, true)
+            else -> onBindViewHolder(holder, position)
         }
     }
 
@@ -76,6 +75,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album), albumMenuListener)
         TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), playlistMenuListener, allowMoreAction)
         TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header))
+        TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_artist_header))
         else -> error("Unknown view type")
     }
 
@@ -85,18 +85,16 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         is Album -> TYPE_ALBUM
         is Playlist -> TYPE_PLAYLIST
         is SongHeader -> TYPE_SONG_HEADER
+        is ArtistHeader -> TYPE_ARTIST_HEADER
     }
-
-    private val dateFormat = DateFormat.getDateInstance()
 
     override fun getPopupText(position: Int): String =
         when (val item = getItem(position)) {
-            is SongHeader -> "#"
-            is Song -> when (PreferenceSortInfo.type) {
-                ORDER_CREATE_DATE -> item.song.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                ORDER_NAME -> item.song.title.substring(0, 1)
-                ORDER_ARTIST -> item.artists.firstOrNull()?.name
-                else -> throw IllegalStateException("Unknown sort type")
+            is SongHeader, is ArtistHeader -> "#"
+            is Song -> when (SongSortInfoPreference.type) {
+                SongSortType.CREATE_DATE -> item.song.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                SongSortType.NAME -> item.song.title.substring(0, 1)
+                SongSortType.ARTIST -> item.artists.firstOrNull()?.name
             }
             else -> throw IllegalStateException("Unsupported item type")
         } ?: ""
@@ -113,5 +111,6 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         const val TYPE_ALBUM = 2
         const val TYPE_PLAYLIST = 3
         const val TYPE_SONG_HEADER = 4
+        const val TYPE_ARTIST_HEADER = 5
     }
 }

@@ -14,21 +14,18 @@ import com.zionhuang.music.constants.Constants.HEADER_ITEM_ID
 import com.zionhuang.music.constants.Constants.TYPE_HEADER
 import com.zionhuang.music.constants.Constants.TYPE_ITEM
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
-import com.zionhuang.music.constants.ORDER_ARTIST
-import com.zionhuang.music.constants.ORDER_CREATE_DATE
-import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
-import com.zionhuang.music.models.base.IMutableSortInfo
+import com.zionhuang.music.models.SongSortInfoPreference
+import com.zionhuang.music.models.SongSortType
 import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider
-import java.text.DateFormat
+import java.time.format.DateTimeFormatter
 
 class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()), PopupTextProvider {
     var popupMenuListener: ISongMenuListener? = null
-    var sortInfo: IMutableSortInfo? = null
     var downloadInfo: LiveData<Map<String, DownloadProgress>>? = null
     var tracker: SelectionTracker<String>? = null
     var itemTouchHelper: ItemTouchHelper? = null
@@ -99,17 +96,14 @@ class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(So
     override fun getItemViewType(position: Int): Int =
         if (getItem(position)?.song?.id == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM
 
-    private val dateFormat = DateFormat.getDateInstance()
-
     override fun getPopupText(position: Int): String =
-        if (getItemViewType(position) == TYPE_HEADER) "#"
-        else getItem(position)?.let {
-            when (sortInfo!!.type) {
-                ORDER_CREATE_DATE -> dateFormat.format(it.song.createDate)
-                ORDER_NAME -> it.song.title[0].toString()
-                ORDER_ARTIST -> it.artists.joinToString { it.name }
-                else -> it.song.title[0].toString()
+        when (val item = getItem(position)) {
+            is Song -> when (SongSortInfoPreference.type) {
+                SongSortType.CREATE_DATE -> item.song.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                SongSortType.NAME -> item.song.title.substring(0, 1)
+                SongSortType.ARTIST -> item.artists.firstOrNull()?.name
             }
+            else -> throw IllegalStateException("Unsupported item type")
         } ?: ""
 
     class SongItemComparator : DiffUtil.ItemCallback<Song>() {

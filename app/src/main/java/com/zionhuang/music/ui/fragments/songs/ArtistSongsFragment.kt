@@ -10,6 +10,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.requireAppCompatActivity
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
 import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
 import com.zionhuang.music.ui.listeners.SongMenuListener
@@ -48,14 +49,10 @@ class ArtistSongsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>()
         }
 
         lifecycleScope.launch {
-            requireAppCompatActivity().title = songsViewModel.songRepository.getArtistById(args.artistId)!!.name
+            requireAppCompatActivity().title = SongRepository.getArtistById(args.artistId)!!.name
             songsViewModel.getArtistSongsAsFlow(args.artistId).collectLatest {
                 adapter.submitData(it)
             }
-        }
-
-        songsViewModel.sortInfo.liveData.observe(viewLifecycleOwner) {
-            adapter.refresh()
         }
     }
 }

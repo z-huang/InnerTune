@@ -17,7 +17,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.models.PreferenceSortInfo
+import com.zionhuang.music.models.SongSortInfoPreference
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
@@ -62,7 +62,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
     override fun playNext(artists: List<Artist>) {
         GlobalScope.launch {
             val songs = artists.flatMap { artist ->
-                SongRepository.getArtistSongs(artist.id, PreferenceSortInfo).getList()
+                SongRepository.getArtistSongs(artist.id, SongSortInfoPreference).getList()
             }
             MediaSessionConnection.mediaController?.sendCommand(
                 COMMAND_PLAY_NEXT,
@@ -77,7 +77,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
     override fun addToQueue(artists: List<Artist>) {
         GlobalScope.launch {
             val songs = artists.flatMap { artist ->
-                SongRepository.getArtistSongs(artist.id, PreferenceSortInfo).getList()
+                SongRepository.getArtistSongs(artist.id, SongSortInfoPreference).getList()
             }
             MediaSessionConnection.mediaController?.sendCommand(
                 COMMAND_ADD_TO_QUEUE,

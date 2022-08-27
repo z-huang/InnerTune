@@ -1,8 +1,10 @@
 package com.zionhuang.music.repos.base
 
 import com.zionhuang.music.db.entities.*
+import com.zionhuang.music.models.ArtistSortType
 import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
+import com.zionhuang.music.models.SongSortType
 import com.zionhuang.music.models.base.ISortInfo
 import java.io.File
 
@@ -21,11 +23,11 @@ interface LocalRepository {
     fun getSongFile(songId: String): File
     fun getSongArtworkFile(songId: String): File
 
-    fun getAllSongs(sortInfo: ISortInfo): ListWrapper<Int, Song>
-    fun getArtistSongs(artistId: String, sortInfo: ISortInfo): ListWrapper<Int, Song>
-    fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo): ListWrapper<Int, Song>
+    fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
 
-    fun getAllArtists(): ListWrapper<Int, Artist>
+    fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>): ListWrapper<Int, Artist>
     suspend fun getArtistById(artistId: String): ArtistEntity?
     suspend fun getArtistByName(name: String): ArtistEntity?
     fun searchArtists(query: String): ListWrapper<Int, ArtistEntity>

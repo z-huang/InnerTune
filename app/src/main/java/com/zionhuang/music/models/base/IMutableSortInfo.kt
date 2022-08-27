@@ -1,14 +1,16 @@
 package com.zionhuang.music.models.base
 
-import androidx.lifecycle.LiveData
 import com.zionhuang.music.models.SortInfo
+import com.zionhuang.music.models.SortType
 
-interface IMutableSortInfo : ISortInfo {
-    override var type: Int
+interface IMutableSortInfo<T : SortType> : ISortInfo<T> {
+    override var type: T
     override var isDescending: Boolean
-    val liveData: LiveData<SortInfo>
 
     fun toggleIsDescending() {
         isDescending = !isDescending
     }
+
+    val currentInfo: SortInfo<T>
+        get() = SortInfo(type, isDescending)
 }

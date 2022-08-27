@@ -122,7 +122,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{playlist.playlist.isYouTubePlaylist ? playlist.playlist.author : @plurals/songs_count(playlist.songCount, playlist.songCount)}"
+                android:text="@{playlist.playlist.isYouTubePlaylist ? playlist.playlist.author : @plurals/song_count(playlist.songCount, playlist.songCount)}"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="12sp"
                 tools:text="100 songs" />

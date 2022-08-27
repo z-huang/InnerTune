@@ -1,12 +1,8 @@
 package com.zionhuang.music.models.base
 
-import com.zionhuang.music.constants.SongSortType
-import com.zionhuang.music.models.SortInfo
+import com.zionhuang.music.models.SortType
 
-interface ISortInfo {
-    @SongSortType
-    val type: Int
+interface ISortInfo<T : SortType> {
+    val type: T
     val isDescending: Boolean
-
-    fun parcelize() = SortInfo(type, isDescending)
 }

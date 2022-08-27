@@ -17,18 +17,18 @@ import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
+import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment
-import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
+import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.listeners.ArtistMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class ArtistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), MenuProvider {
+class ArtistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    override val adapter = LocalItemPagingAdapter().apply {
+    override val adapter = LocalItemAdapter().apply {
         artistMenuListener = ArtistMenuListener(this@ArtistsFragment)
     }
 
@@ -37,7 +37,7 @@ class ArtistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), Me
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-                (this@ArtistsFragment.adapter.getItemAt(position) as? Artist)?.let { artist ->
+                (this@ArtistsFragment.adapter.currentList[position] as? Artist)?.let { artist ->
                     if (artist.artist.isYouTubeArtist) {
                         NavigationEndpointHandler(this@ArtistsFragment).handle(NavigationEndpoint(
                             browseEndpoint = BrowseEndpoint(
@@ -55,7 +55,7 @@ class ArtistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), Me
 
         lifecycleScope.launch {
             songsViewModel.allArtistsFlow.collectLatest {
-                adapter.submitData(it)
+                adapter.submitList(it)
             }
         }
 

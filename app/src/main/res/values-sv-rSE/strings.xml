@@ -109,17 +109,21 @@
     <string name="channel_name_download">Nedladdning</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="one">%d låt</item>
         <item quantity="other">%d låtar</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="one">%d prenumeranter</item>
-        <item quantity="other">%d prenumeranter</item>
+    <plurals name="artist_count">
+        <item quantity="one">%d artist</item>
+        <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="one">%d video</item>
-        <item quantity="other">%d videor</item>
+    <plurals name="album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d playlist</item>
+        <item quantity="other">%d playlists</item>
     </plurals>
 
     <!-- Button -->
@@ -133,6 +137,7 @@
     <string name="sort_by_name">Namn</string>
     <string name="sort_by_artist">Artist</string>
     <string name="sort_by_create_date">Datum tillagd</string>
+    <string name="sort_by_song_count">Song count</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

@@ -1,11 +1,18 @@
 package com.zionhuang.music.models
 
-import android.os.Parcelable
 import com.zionhuang.music.models.base.ISortInfo
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class SortInfo(
-    override val type: Int,
+data class SortInfo<T : SortType>(
+    override val type: T,
     override val isDescending: Boolean,
-) : ISortInfo, Parcelable
+) : ISortInfo<T>
+
+interface SortType
+
+enum class SongSortType : SortType {
+    CREATE_DATE, NAME, ARTIST
+}
+
+enum class ArtistSortType : SortType {
+    CREATE_DATE, NAME, SONG_COUNT
+}

@@ -109,20 +109,25 @@
     <string name="channel_name_download">Télécharger</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="one">%d chanson</item>
         <item quantity="other">%d chansons</item>
         <item quantity="many">%d chansons</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="one">%d abonné</item>
-        <item quantity="other">%d abonnés</item>
-        <item quantity="many">%d abonnés</item>
+    <plurals name="artist_count">
+        <item quantity="one">%d artist</item>
+        <item quantity="other">%d artists</item>
+        <item quantity="many">%d artists</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="one">%d vidéo</item>
-        <item quantity="other">%d vidéos</item>
-        <item quantity="many">%d vidéos</item>
+    <plurals name="album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albums</item>
+        <item quantity="many">%d albums</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d playlist</item>
+        <item quantity="other">%d playlists</item>
+        <item quantity="many">%d albums</item>
     </plurals>
 
     <!-- Button -->
@@ -136,6 +141,7 @@
     <string name="sort_by_name">Nom</string>
     <string name="sort_by_artist">Artiste</string>
     <string name="sort_by_create_date">Date d\'ajout</string>
+    <string name="sort_by_song_count">Song count</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

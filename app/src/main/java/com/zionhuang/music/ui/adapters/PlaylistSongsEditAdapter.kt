@@ -14,12 +14,10 @@ import com.zionhuang.music.constants.Constants.TYPE_ITEM
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
-import com.zionhuang.music.models.base.IMutableSortInfo
 import com.zionhuang.music.ui.viewholders.DraggableSongViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 
 class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(SongItemComparator()) {
-    var sortInfo: IMutableSortInfo? = null
     var itemTouchHelper: ItemTouchHelper? = null
 
     private val moves: MutableList<Pair<Int, Int>> = mutableListOf()
@@ -69,8 +67,6 @@ class PlaylistSongsEditAdapter : ListAdapter<Song, RecyclerView.ViewHolder>(Song
             }
             else -> throw IllegalArgumentException("Unexpected view type.")
         }
-
-    fun getItemByPosition(position: Int): Song? = getItem(position)
 
     override fun getItemViewType(position: Int): Int =
         if (getItem(position)?.song?.id == HEADER_ITEM_ID) TYPE_HEADER else TYPE_ITEM

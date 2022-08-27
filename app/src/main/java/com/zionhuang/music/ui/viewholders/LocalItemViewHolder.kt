@@ -7,15 +7,12 @@ import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants
-import com.zionhuang.music.constants.ORDER_ARTIST
-import com.zionhuang.music.constants.ORDER_CREATE_DATE
-import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.context
 import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.models.DownloadProgress
+import com.zionhuang.music.models.*
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
@@ -115,7 +112,7 @@ class AlbumViewHolder(
 ) : LocalItemViewHolder(binding) {
     fun bind(album: Album) {
         binding.album = album
-        binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.songs_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
+        binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.song_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
         binding.btnMoreAction.setOnClickListener {
             MenuBottomSheetDialogFragment
                 .newInstance(R.menu.album)
@@ -145,7 +142,7 @@ class PlaylistViewHolder(
         binding.subtitle.text = if (playlist.playlist.isYouTubePlaylist) {
             listOf(playlist.playlist.name, playlist.playlist.year.toString()).joinByBullet()
         } else {
-            binding.context.resources.getQuantityString(R.plurals.songs_count, playlist.songCount, playlist.songCount)
+            binding.context.resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount)
         }
         binding.btnMoreAction.isVisible = allowMoreAction
         binding.btnMoreAction.setOnClickListener {
@@ -180,37 +177,84 @@ class SongHeaderViewHolder(
             PopupMenu(view.context, view).apply {
                 inflate(R.menu.sort_song)
                 setOnMenuItemClickListener {
-                    header.sortInfo.type = when (it.itemId) {
-                        R.id.sort_by_create_date -> ORDER_CREATE_DATE
-                        R.id.sort_by_name -> ORDER_NAME
-                        R.id.sort_by_artist -> ORDER_ARTIST
+                    SongSortInfoPreference.type = when (it.itemId) {
+                        R.id.sort_by_create_date -> SongSortType.CREATE_DATE
+                        R.id.sort_by_name -> SongSortType.NAME
+                        R.id.sort_by_artist -> SongSortType.ARTIST
                         else -> throw IllegalArgumentException("Unexpected sort type.")
                     }
                     true
                 }
                 menu.findItem(when (header.sortInfo.type) {
-                    ORDER_CREATE_DATE -> R.id.sort_by_create_date
-                    ORDER_NAME -> R.id.sort_by_name
-                    ORDER_ARTIST -> R.id.sort_by_artist
-                    else -> throw IllegalArgumentException("Unexpected sort type.")
+                    SongSortType.CREATE_DATE -> R.id.sort_by_create_date
+                    SongSortType.NAME -> R.id.sort_by_name
+                    SongSortType.ARTIST -> R.id.sort_by_artist
                 })?.isChecked = true
                 show()
             }
         }
         binding.sortOrder.setOnClickListener {
-            header.sortInfo.toggleIsDescending()
+            SongSortInfoPreference.toggleIsDescending()
         }
         updateSortName(header.sortInfo.type)
         updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
-        binding.songsCount = header.songCount
+        binding.songCount = header.songCount
     }
 
-    private fun updateSortName(sortType: Int) {
+    private fun updateSortName(sortType: SongSortType) {
         binding.sortName.setText(when (sortType) {
-            ORDER_CREATE_DATE -> R.string.sort_by_create_date
-            ORDER_NAME -> R.string.sort_by_name
-            ORDER_ARTIST -> R.string.sort_by_artist
-            else -> throw IllegalArgumentException("Unexpected sort type.")
+            SongSortType.CREATE_DATE -> R.string.sort_by_create_date
+            SongSortType.NAME -> R.string.sort_by_name
+            SongSortType.ARTIST -> R.string.sort_by_artist
+        })
+    }
+
+    private fun updateSortOrderIcon(sortDescending: Boolean, animate: Boolean = true) {
+        if (sortDescending) {
+            binding.sortOrder.animateToDown(animate)
+        } else {
+            binding.sortOrder.animateToUp(animate)
+        }
+    }
+}
+
+class ArtistHeaderViewHolder(
+    override val binding: ItemArtistHeaderBinding,
+) : LocalItemViewHolder(binding) {
+    fun bind(header: ArtistHeader, isPayload: Boolean = false) {
+        binding.sortName.setOnClickListener { view ->
+            PopupMenu(view.context, view).apply {
+                inflate(R.menu.sort_artist)
+                setOnMenuItemClickListener {
+                    ArtistSortInfoPreference.type = when (it.itemId) {
+                        R.id.sort_by_create_date -> ArtistSortType.CREATE_DATE
+                        R.id.sort_by_name -> ArtistSortType.NAME
+                        R.id.sort_by_song_count -> ArtistSortType.SONG_COUNT
+                        else -> throw IllegalArgumentException("Unexpected sort type.")
+                    }
+                    true
+                }
+                menu.findItem(when (header.sortInfo.type) {
+                    ArtistSortType.CREATE_DATE -> R.id.sort_by_create_date
+                    ArtistSortType.NAME -> R.id.sort_by_name
+                    ArtistSortType.SONG_COUNT -> R.id.sort_by_song_count
+                })?.isChecked = true
+                show()
+            }
+        }
+        binding.sortOrder.setOnClickListener {
+            ArtistSortInfoPreference.toggleIsDescending()
+        }
+        updateSortName(header.sortInfo.type)
+        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
+        binding.artistCount = header.artistCount
+    }
+
+    private fun updateSortName(sortType: ArtistSortType) {
+        binding.sortName.setText(when (sortType) {
+            ArtistSortType.CREATE_DATE -> R.string.sort_by_create_date
+            ArtistSortType.NAME -> R.string.sort_by_name
+            ArtistSortType.SONG_COUNT -> R.string.sort_by_song_count
         })
     }
 

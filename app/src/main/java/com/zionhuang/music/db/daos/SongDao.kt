@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.zionhuang.music.constants.ORDER_CREATE_DATE
-import com.zionhuang.music.constants.ORDER_NAME
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toSQLiteQuery
+import com.zionhuang.music.models.SongSortType
 import com.zionhuang.music.models.base.ISortInfo
 import kotlinx.coroutines.flow.Flow
 
@@ -42,7 +41,7 @@ interface SongDao {
     fun hasSongAsLiveData(songId: String): LiveData<Boolean>
 
     @Query("SELECT COUNT(*) FROM song WHERE NOT isTrash")
-    suspend fun songCount(): Int
+    suspend fun getSongCount(): Int
 
     @Delete
     suspend fun delete(songs: List<SongEntity>)
@@ -59,11 +58,11 @@ interface SongDao {
     @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
     fun getSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
 
-    suspend fun getAllSongsAsList(sortInfo: ISortInfo): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getAllSongsAsFlow(sortInfo: ISortInfo): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getAllSongsAsPagingSource(sortInfo: ISortInfo): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-    suspend fun getArtistSongsAsList(artistId: String, sortInfo: ISortInfo): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getArtistSongsAsPagingSource(artistId: String, sortInfo: ISortInfo): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+    suspend fun getAllSongsAsList(sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getAllSongsAsFlow(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getAllSongsAsPagingSource(sortInfo: ISortInfo<SongSortType>): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+    suspend fun getArtistSongsAsList(artistId: String, sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getArtistSongsAsPagingSource(artistId: String, sortInfo: ISortInfo<SongSortType>): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
 
     @Transaction
     @Query(QUERY_PLAYLIST_SONGS)
@@ -74,17 +73,18 @@ interface SongDao {
     suspend fun getPlaylistSongsAsList(playlistId: String): List<Song>
 
     @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
     suspend fun getAlbumSongs(albumId: String): List<Song>
 
     @Transaction
-    @Query("SELECT * FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
+    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
     suspend fun getAlbumSongEntities(albumId: String): List<SongEntity>
 
-    fun getSortQuery(sortInfo: ISortInfo) = QUERY_ORDER.format(
+    fun getSortQuery(sortInfo: ISortInfo<SongSortType>) = QUERY_ORDER.format(
         when (sortInfo.type) {
-            ORDER_CREATE_DATE -> "song.create_date"
-            ORDER_NAME -> "song.title"
+            SongSortType.CREATE_DATE -> "song.create_date"
+            SongSortType.NAME -> "song.title"
             else -> throw IllegalArgumentException("Unexpected song sort type.")
         },
         if (sortInfo.isDescending) "DESC" else "ASC"

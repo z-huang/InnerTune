@@ -21,8 +21,10 @@
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
     <string name="pref_equalizer" translatable="false">EQUALIZER</string>
-    <string name="pref_sort_type" translatable="false">SORT_TYPE</string>
-    <string name="pref_sort_descending" translatable="false">SORT_DESC</string>
+    <string name="pref_song_sort_type" translatable="false">SONG_SORT_TYPE</string>
+    <string name="pref_song_sort_descending" translatable="false">SONG_SORT_DESC</string>
+    <string name="pref_artist_sort_type" translatable="false">ARTIST_SORT_TYPE</string>
+    <string name="pref_artist_sort_descending" translatable="false">ARTIST_SORT_DESC</string>
     <string name="pref_about_category" translatable="false">ABOUT_CATEGORY</string>
     <string name="pref_newpipe_version" translatable="false">NEWPIPE_VERSION</string>
     <string name="pref_app_version" translatable="false">APP_VERSION</string>
