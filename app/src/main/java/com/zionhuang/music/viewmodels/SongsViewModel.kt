@@ -5,10 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import com.zionhuang.innertube.utils.plus
-import com.zionhuang.music.db.entities.*
+import com.zionhuang.music.db.entities.AlbumHeader
+import com.zionhuang.music.db.entities.ArtistHeader
+import com.zionhuang.music.db.entities.PlaylistHeader
+import com.zionhuang.music.db.entities.SongHeader
 import com.zionhuang.music.models.sortInfo.AlbumSortInfoPreference
 import com.zionhuang.music.models.sortInfo.ArtistSortInfoPreference
 import com.zionhuang.music.models.sortInfo.PlaylistSortInfoPreference
@@ -51,9 +53,11 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getArtistSongsAsFlow(artistId: String) = Pager(PagingConfig(pageSize = 50)) {
-        songRepository.getArtistSongs(artistId, SongSortInfoPreference).pagingSource as PagingSource<Int, LocalBaseItem>
-    }.flow.cachedIn(viewModelScope)
+    fun getArtistSongsAsFlow(artistId: String) = SongSortInfoPreference.flow.flatMapLatest { sortInfo ->
+        SongRepository.getArtistSongs(artistId, sortInfo).flow
+    }.map { list ->
+        SongHeader(SongRepository.getArtistSongCount(artistId), SongSortInfoPreference.currentInfo) + list
+    }
 
     fun getPlaylistSongsAsFlow(playlistId: String) = Pager(PagingConfig(pageSize = 50)) {
         songRepository.getPlaylistSongs(playlistId, SongSortInfoPreference).pagingSource

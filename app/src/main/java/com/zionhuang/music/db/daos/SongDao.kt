@@ -43,6 +43,9 @@ interface SongDao {
     @Query("SELECT COUNT(*) FROM song WHERE NOT isTrash")
     suspend fun getSongCount(): Int
 
+    @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :artistId")
+    suspend fun getArtistSongCount(artistId: String): Int
+
     @Delete
     suspend fun delete(songs: List<SongEntity>)
 
@@ -61,7 +64,9 @@ interface SongDao {
     suspend fun getAllSongsAsList(sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
     fun getAllSongsAsFlow(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
     fun getAllSongsAsPagingSource(sortInfo: ISortInfo<SongSortType>): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+
     suspend fun getArtistSongsAsList(artistId: String, sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getArtistSongsAsFlow(artistId: String, sortInfo: ISortInfo<SongSortType>) = getSongsAsFlow((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
     fun getArtistSongsAsPagingSource(artistId: String, sortInfo: ISortInfo<SongSortType>): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
 
     @Transaction

@@ -279,14 +279,17 @@ object SongRepository : LocalRepository {
 
     override fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getArtistSongsAsList(artistId, sortInfo) } },
-        getPagingSource = { songDao.getArtistSongsAsPagingSource(artistId, sortInfo) }
+        getFlow = {
+            songDao.getArtistSongsAsFlow(artistId, if (sortInfo.type == SongSortType.ARTIST) SortInfo(SongSortType.CREATE_DATE, sortInfo.isDescending) else sortInfo)
+        }
     )
+
+    suspend fun getArtistSongCount(artistId: String) = withContext(IO) { songDao.getArtistSongCount(artistId) }
 
     override fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) } },
         getPagingSource = { songDao.getPlaylistSongsAsPagingSource(playlistId) }
     )
-
 
     override fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>) = ListWrapper<Int, Artist>(
         getFlow = {
