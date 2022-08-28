@@ -215,7 +215,7 @@ object SongRepository : LocalRepository {
                         val downloadManager = context.getSystemService<DownloadManager>()!!
                         val req = DownloadManager.Request(url.toUri())
                             .setTitle(song.title)
-                            .setDestinationUri(getSongFile(song.id).toUri())
+                            .setDestinationUri(getSongTempFile(song.id).toUri())
                         val did = downloadManager.enqueue(req)
                         addDownload(DownloadEntity(did, song.id))
                     }
@@ -231,6 +231,7 @@ object SongRepository : LocalRepository {
         getDownloadEntity(downloadId)?.songId?.let { songId ->
             getSongById(songId)?.let { song ->
                 songDao.update(song.song.copy(downloadState = if (success) STATE_DOWNLOADED else STATE_NOT_DOWNLOADED))
+                getSongTempFile(songId).renameTo(getSongFile(songId))
                 removeDownloadEntity(downloadId)
             }
         }
@@ -252,12 +253,11 @@ object SongRepository : LocalRepository {
         return mediaDir / md5(songId)
     }
 
-    override fun getSongArtworkFile(songId: String): File {
-        val artworkDir = context.getExternalFilesDir(null)!! / "artwork"
-        if (!artworkDir.isDirectory) artworkDir.mkdirs()
-        return artworkDir / md5(songId)
+    fun getSongTempFile(songId: String): File {
+        val mediaDir = context.getExternalFilesDir(null)!! / "media"
+        if (!mediaDir.isDirectory) mediaDir.mkdirs()
+        return mediaDir / (md5(songId) + ".tmp")
     }
-
 
     override fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getAllSongsAsList(sortInfo) } },

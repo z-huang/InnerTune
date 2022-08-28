@@ -18,7 +18,6 @@ interface LocalRepository {
     suspend fun removeDownloads(songs: List<Song>)
     suspend fun removeDownload(song: Song) = removeDownloads(listOf(song))
     fun getSongFile(songId: String): File
-    fun getSongArtworkFile(songId: String): File
 
     fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
     fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
