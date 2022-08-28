@@ -24,7 +24,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.extensions.toMediaItem
-import com.zionhuang.music.models.SongSortInfoPreference
+import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.ListQueue

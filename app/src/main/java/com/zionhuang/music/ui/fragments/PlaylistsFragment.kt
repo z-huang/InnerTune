@@ -19,9 +19,9 @@ import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
+import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.fragments.PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment
-import com.zionhuang.music.ui.fragments.base.PagingRecyclerViewFragment
+import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
 import com.zionhuang.music.ui.listeners.PlaylistMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -29,12 +29,12 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), MenuProvider {
+class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
 
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    override val adapter = LocalItemPagingAdapter().apply {
+    override val adapter = LocalItemAdapter().apply {
         playlistMenuListener = PlaylistMenuListener(this@PlaylistsFragment)
     }
 
@@ -47,7 +47,7 @@ class PlaylistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addOnClickListener { position, _ ->
-                (this@PlaylistsFragment.adapter.getItemAt(position) as? Playlist)?.let { playlist ->
+                (this@PlaylistsFragment.adapter.currentList[position] as? Playlist)?.let { playlist ->
                     if (playlist.playlist.isYouTubePlaylist) {
                         NavigationEndpointHandler(this@PlaylistsFragment).handle(NavigationEndpoint(
                             browseEndpoint = BrowseEndpoint(browseId = "VL" + playlist.id)
@@ -62,7 +62,7 @@ class PlaylistsFragment : PagingRecyclerViewFragment<LocalItemPagingAdapter>(), 
 
         lifecycleScope.launch {
             songsViewModel.allPlaylistsFlow.collectLatest {
-                adapter.submitData(it)
+                adapter.submitList(it)
             }
         }
 

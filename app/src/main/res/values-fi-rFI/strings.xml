@@ -134,10 +134,12 @@
     <string name="btn_shuffle">Sekoita</string>
 
     <!-- Sort Menu -->
+    <string name="sort_by_create_date">Lisäyspäivä</string>
     <string name="sort_by_name">Nimi</string>
     <string name="sort_by_artist">Artisti</string>
-    <string name="sort_by_create_date">Lisäyspäivä</string>
+    <string name="sort_by_year">Year</string>
     <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

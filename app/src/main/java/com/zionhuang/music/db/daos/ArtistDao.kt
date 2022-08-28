@@ -7,8 +7,8 @@ import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.SongArtistMap
 import com.zionhuang.music.extensions.toSQLiteQuery
-import com.zionhuang.music.models.ArtistSortType
-import com.zionhuang.music.models.base.ISortInfo
+import com.zionhuang.music.models.sortInfo.ArtistSortType
+import com.zionhuang.music.models.sortInfo.ISortInfo
 import kotlinx.coroutines.flow.Flow
 
 @Dao

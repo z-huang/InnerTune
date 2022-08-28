@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.filter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
@@ -15,7 +14,7 @@ import com.zionhuang.music.databinding.DialogChoosePlaylistBinding
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.ui.adapters.LocalItemPagingAdapter
+import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
@@ -26,7 +25,7 @@ typealias PlaylistListener = (PlaylistEntity) -> Unit
 class ChoosePlaylistDialog() : AppCompatDialogFragment() {
     private lateinit var binding: DialogChoosePlaylistBinding
     private val viewModel by activityViewModels<SongsViewModel>()
-    private val adapter = LocalItemPagingAdapter().apply {
+    private val adapter = LocalItemAdapter().apply {
         allowMoreAction = false
     }
 
@@ -47,7 +46,7 @@ class ChoosePlaylistDialog() : AppCompatDialogFragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ChoosePlaylistDialog.adapter
             addOnClickListener { position, _ ->
-                listener?.invoke((this@ChoosePlaylistDialog.adapter.getItemAt(position) as Playlist).playlist)
+                listener?.invoke((this@ChoosePlaylistDialog.adapter.currentList[position] as Playlist).playlist)
                 dismiss()
             }
         }
@@ -62,7 +61,7 @@ class ChoosePlaylistDialog() : AppCompatDialogFragment() {
                     item is Playlist && item.playlist.isLocalPlaylist
                 }
             }.collectLatest {
-                adapter.submitData(it)
+                adapter.submitList(it)
             }
         }
     }

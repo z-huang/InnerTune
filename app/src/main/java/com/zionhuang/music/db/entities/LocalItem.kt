@@ -1,10 +1,10 @@
 package com.zionhuang.music.db.entities
 
+import com.zionhuang.music.constants.Constants.ALBUM_HEADER_ID
 import com.zionhuang.music.constants.Constants.ARTIST_HEADER_ID
+import com.zionhuang.music.constants.Constants.PLAYLIST_HEADER_ID
 import com.zionhuang.music.constants.Constants.SONG_HEADER_ID
-import com.zionhuang.music.models.ArtistSortType
-import com.zionhuang.music.models.SongSortType
-import com.zionhuang.music.models.SortInfo
+import com.zionhuang.music.models.sortInfo.*
 
 sealed class LocalBaseItem {
     abstract val id: String
@@ -24,4 +24,18 @@ data class ArtistHeader(
     val sortInfo: SortInfo<ArtistSortType>,
 ) : LocalBaseItem() {
     override val id = ARTIST_HEADER_ID
+}
+
+data class AlbumHeader(
+    val albumCount: Int,
+    val sortInfo: SortInfo<AlbumSortType>,
+) : LocalBaseItem() {
+    override val id = ALBUM_HEADER_ID
+}
+
+data class PlaylistHeader(
+    val playlistCount: Int,
+    val sortInfo: SortInfo<PlaylistSortType>,
+) : LocalBaseItem() {
+    override val id = PLAYLIST_HEADER_ID
 }

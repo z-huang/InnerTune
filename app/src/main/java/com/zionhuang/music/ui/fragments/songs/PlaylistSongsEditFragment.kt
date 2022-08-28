@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
+import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.ui.adapters.PlaylistSongsEditAdapter
 import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.viewmodels.PlaylistSongsViewModel
@@ -68,7 +69,7 @@ class PlaylistSongsEditFragment : RecyclerViewFragment<PlaylistSongsEditAdapter>
         }
 
         lifecycleScope.launch {
-            adapter.submitList(songsViewModel.songRepository.getPlaylistSongs(playlistId, songsViewModel.sortInfo).getList())
+            adapter.submitList(songsViewModel.songRepository.getPlaylistSongs(playlistId, SongSortInfoPreference).getList())
         }
     }
 

@@ -6,8 +6,8 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toSQLiteQuery
-import com.zionhuang.music.models.SongSortType
-import com.zionhuang.music.models.base.ISortInfo
+import com.zionhuang.music.models.sortInfo.ISortInfo
+import com.zionhuang.music.models.sortInfo.SongSortType
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,11 +1,8 @@
 package com.zionhuang.music.repos.base
 
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.models.ArtistSortType
-import com.zionhuang.music.models.DataWrapper
-import com.zionhuang.music.models.ListWrapper
-import com.zionhuang.music.models.SongSortType
-import com.zionhuang.music.models.base.ISortInfo
+import com.zionhuang.music.models.*
+import com.zionhuang.music.models.sortInfo.*
 import java.io.File
 
 interface LocalRepository {
@@ -36,9 +33,9 @@ interface LocalRepository {
     suspend fun deleteArtist(artist: ArtistEntity) = deleteArtists(listOf(artist))
     suspend fun deleteArtists(artists: List<ArtistEntity>)
 
-    fun getAllAlbums(): ListWrapper<Int, Album>
+    fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>): ListWrapper<Int, Album>
 
-    fun getAllPlaylists(): ListWrapper<Int, Playlist>
+    fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): ListWrapper<Int, Playlist>
     fun searchPlaylists(query: String): ListWrapper<Int, PlaylistEntity>
     suspend fun addPlaylist(playlist: PlaylistEntity)
     suspend fun updatePlaylist(playlist: PlaylistEntity)

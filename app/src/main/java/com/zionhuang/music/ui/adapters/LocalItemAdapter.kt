@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
-import com.zionhuang.music.extensions.logd
-import com.zionhuang.music.models.SongSortInfoPreference
-import com.zionhuang.music.models.SongSortType
+import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
+import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
@@ -57,6 +56,8 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             is PlaylistViewHolder -> holder.bind(item as Playlist)
             is SongHeaderViewHolder -> holder.bind(item as SongHeader)
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
+            is AlbumHeaderViewHolder -> holder.bind(item as AlbumHeader)
+            is PlaylistHeaderViewHolder -> holder.bind(item as PlaylistHeader)
         }
     }
 
@@ -65,6 +66,8 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         when {
             payload is SongHeader && holder is SongHeaderViewHolder -> holder.bind(payload, true)
             payload is ArtistHeader && holder is ArtistHeaderViewHolder -> holder.bind(payload, true)
+            payload is AlbumHeader && holder is AlbumHeaderViewHolder -> holder.bind(payload, true)
+            payload is PlaylistHeader && holder is PlaylistHeaderViewHolder -> holder.bind(payload, true)
             else -> onBindViewHolder(holder, position)
         }
     }
@@ -74,8 +77,10 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         TYPE_ARTIST -> ArtistViewHolder(parent.inflateWithBinding(R.layout.item_artist), artistMenuListener)
         TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album), albumMenuListener)
         TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), playlistMenuListener, allowMoreAction)
-        TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header))
-        TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_artist_header))
+        TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_ALBUM_HEADER -> AlbumHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_PLAYLIST_HEADER -> PlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         else -> error("Unknown view type")
     }
 
@@ -86,6 +91,8 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         is Playlist -> TYPE_PLAYLIST
         is SongHeader -> TYPE_SONG_HEADER
         is ArtistHeader -> TYPE_ARTIST_HEADER
+        is AlbumHeader -> TYPE_ALBUM_HEADER
+        is PlaylistHeader -> TYPE_PLAYLIST_HEADER
     }
 
     override fun getPopupText(position: Int): String =
@@ -112,5 +119,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         const val TYPE_PLAYLIST = 3
         const val TYPE_SONG_HEADER = 4
         const val TYPE_ARTIST_HEADER = 5
+        const val TYPE_ALBUM_HEADER = 6
+        const val TYPE_PLAYLIST_HEADER = 7
     }
 }

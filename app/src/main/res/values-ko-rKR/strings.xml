@@ -130,10 +130,12 @@
     <string name="btn_shuffle">셔플</string>
 
     <!-- Sort Menu -->
+    <string name="sort_by_create_date">추가된 날짜</string>
     <string name="sort_by_name">이름</string>
     <string name="sort_by_artist">아티스트</string>
-    <string name="sort_by_create_date">추가된 날짜</string>
+    <string name="sort_by_year">Year</string>
     <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

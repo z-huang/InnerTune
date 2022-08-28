@@ -130,10 +130,12 @@
     <string name="btn_shuffle">シャッフル</string>
 
     <!-- Sort Menu -->
+    <string name="sort_by_create_date">追加日時</string>
     <string name="sort_by_name">曲名</string>
     <string name="sort_by_artist">アーティスト</string>
-    <string name="sort_by_create_date">追加日時</string>
+    <string name="sort_by_year">Year</string>
     <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

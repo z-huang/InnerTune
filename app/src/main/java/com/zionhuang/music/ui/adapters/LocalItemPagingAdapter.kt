@@ -53,6 +53,8 @@ class LocalItemPagingAdapter : PagingDataAdapter<LocalBaseItem, LocalItemViewHol
             is PlaylistViewHolder -> holder.bind(item as Playlist)
             is SongHeaderViewHolder -> holder.bind(item as SongHeader)
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
+            is AlbumHeaderViewHolder -> holder.bind(item as AlbumHeader)
+            is PlaylistHeaderViewHolder -> holder.bind(item as PlaylistHeader)
         }
     }
 
@@ -61,6 +63,8 @@ class LocalItemPagingAdapter : PagingDataAdapter<LocalBaseItem, LocalItemViewHol
         when {
             payload is SongHeader && holder is SongHeaderViewHolder -> holder.bind(payload, true)
             payload is ArtistHeader && holder is ArtistHeaderViewHolder -> holder.bind(payload, true)
+            payload is AlbumHeader && holder is AlbumHeaderViewHolder -> holder.bind(payload, true)
+            payload is PlaylistHeader && holder is PlaylistHeaderViewHolder -> holder.bind(payload, true)
             else -> onBindViewHolder(holder, position)
         }
     }
@@ -70,8 +74,10 @@ class LocalItemPagingAdapter : PagingDataAdapter<LocalBaseItem, LocalItemViewHol
         TYPE_ARTIST -> ArtistViewHolder(parent.inflateWithBinding(R.layout.item_artist), artistMenuListener)
         TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album), albumMenuListener)
         TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), playlistMenuListener, allowMoreAction)
-        TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_song_header))
-        TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_artist_header))
+        TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_ALBUM_HEADER -> AlbumHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_PLAYLIST_HEADER -> PlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         else -> error("Unknown view type")
     }
 
@@ -82,6 +88,8 @@ class LocalItemPagingAdapter : PagingDataAdapter<LocalBaseItem, LocalItemViewHol
         is Playlist -> TYPE_PLAYLIST
         is SongHeader -> TYPE_SONG_HEADER
         is ArtistHeader -> TYPE_ARTIST_HEADER
+        is AlbumHeader -> TYPE_ALBUM_HEADER
+        is PlaylistHeader -> TYPE_PLAYLIST_HEADER
     }
 
     fun getItemAt(position: Int) = getItem(position)
@@ -91,6 +99,7 @@ class LocalItemPagingAdapter : PagingDataAdapter<LocalBaseItem, LocalItemViewHol
     class ItemComparator : DiffUtil.ItemCallback<LocalBaseItem>() {
         override fun areItemsTheSame(oldItem: LocalBaseItem, newItem: LocalBaseItem): Boolean = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: LocalBaseItem, newItem: LocalBaseItem): Boolean = oldItem == newItem
+        override fun getChangePayload(oldItem: LocalBaseItem, newItem: LocalBaseItem) = newItem
     }
 
     companion object {
@@ -100,5 +109,7 @@ class LocalItemPagingAdapter : PagingDataAdapter<LocalBaseItem, LocalItemViewHol
         const val TYPE_PLAYLIST = 3
         const val TYPE_SONG_HEADER = 4
         const val TYPE_ARTIST_HEADER = 5
+        const val TYPE_ALBUM_HEADER = 6
+        const val TYPE_PLAYLIST_HEADER = 7
     }
 }

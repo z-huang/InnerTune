@@ -17,7 +17,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.models.SongSortInfoPreference
+import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository

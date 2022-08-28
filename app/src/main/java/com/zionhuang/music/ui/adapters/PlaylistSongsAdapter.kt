@@ -17,8 +17,8 @@ import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.DownloadProgress
-import com.zionhuang.music.models.SongSortInfoPreference
-import com.zionhuang.music.models.SongSortType
+import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
+import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.SongViewHolder
 import me.zhanghai.android.fastscroll.PopupTextProvider

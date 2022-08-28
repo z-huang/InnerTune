@@ -20,8 +20,10 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.*
-import com.zionhuang.music.models.base.ISortInfo
+import com.zionhuang.music.models.DataWrapper
+import com.zionhuang.music.models.ListWrapper
+import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import com.zionhuang.music.utils.md5
@@ -341,13 +343,25 @@ object SongRepository : LocalRepository {
         artistDao.delete(artists)
     }
 
-    override fun getAllAlbums() = ListWrapper(
-        getPagingSource = { albumDao.getAllAlbumsAsPagingSource() }
+    override fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>) = ListWrapper<Int, Album>(
+        getFlow = {
+            if (sortInfo.type == AlbumSortType.ARTIST) {
+                albumDao.getAllAlbumsAsFlow(SortInfo(AlbumSortType.CREATE_DATE, true)).map { list ->
+                    list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
+                        song.artists.joinToString(separator = "") { it.name }
+                    }).reversed(sortInfo.isDescending)
+                }
+            } else {
+                albumDao.getAllAlbumsAsFlow(sortInfo)
+            }
+        }
     )
 
     suspend fun getAlbumSongs(albumId: String) = withContext(IO) {
         songDao.getAlbumSongs(albumId)
     }
+
+    suspend fun getAlbumCount() = withContext(IO) { albumDao.getAlbumCount() }
 
     suspend fun refetchAlbum(album: AlbumEntity) = withContext(IO) {
         (YouTube.browse(BrowseEndpoint(browseId = album.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
@@ -367,10 +381,20 @@ object SongRepository : LocalRepository {
         }
     }
 
-    override fun getAllPlaylists() = ListWrapper(
+    override fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>) = ListWrapper<Int, Playlist>(
         getList = { withContext(IO) { playlistDao.getAllPlaylistsAsList() } },
-        getPagingSource = { playlistDao.getAllPlaylistsAsPagingSource() }
+        getFlow = {
+            if (sortInfo.type == PlaylistSortType.SONG_COUNT) {
+                playlistDao.getAllPlaylistsAsFlow(SortInfo(PlaylistSortType.CREATE_DATE, true)).map { list ->
+                    list.sortedBy { it.songCount }.reversed(sortInfo.isDescending)
+                }
+            } else {
+                playlistDao.getAllPlaylistsAsFlow(sortInfo)
+            }
+        }
     )
+
+    suspend fun getPlaylistCount() = withContext(IO) { playlistDao.getPlaylistCount() }
 
     suspend fun refetchPlaylist(playlist: Playlist) = withContext(IO) {
         (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->

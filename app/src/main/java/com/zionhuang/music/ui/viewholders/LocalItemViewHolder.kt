@@ -10,9 +10,9 @@ import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.context
-import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.models.*
+import com.zionhuang.music.models.DownloadProgress
+import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
@@ -170,7 +170,7 @@ class PlaylistViewHolder(
 }
 
 class SongHeaderViewHolder(
-    override val binding: ItemSongHeaderBinding,
+    override val binding: ItemHeaderBinding,
 ) : LocalItemViewHolder(binding) {
     fun bind(header: SongHeader, isPayload: Boolean = false) {
         binding.sortName.setOnClickListener { view ->
@@ -196,17 +196,13 @@ class SongHeaderViewHolder(
         binding.sortOrder.setOnClickListener {
             SongSortInfoPreference.toggleIsDescending()
         }
-        updateSortName(header.sortInfo.type)
-        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
-        binding.songCount = header.songCount
-    }
-
-    private fun updateSortName(sortType: SongSortType) {
-        binding.sortName.setText(when (sortType) {
+        binding.sortName.setText(when (header.sortInfo.type) {
             SongSortType.CREATE_DATE -> R.string.sort_by_create_date
             SongSortType.NAME -> R.string.sort_by_name
             SongSortType.ARTIST -> R.string.sort_by_artist
         })
+        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
+        binding.countText.text = binding.context.resources.getQuantityString(R.plurals.song_count, header.songCount, header.songCount)
     }
 
     private fun updateSortOrderIcon(sortDescending: Boolean, animate: Boolean = true) {
@@ -219,7 +215,7 @@ class SongHeaderViewHolder(
 }
 
 class ArtistHeaderViewHolder(
-    override val binding: ItemArtistHeaderBinding,
+    override val binding: ItemHeaderBinding,
 ) : LocalItemViewHolder(binding) {
     fun bind(header: ArtistHeader, isPayload: Boolean = false) {
         binding.sortName.setOnClickListener { view ->
@@ -245,17 +241,113 @@ class ArtistHeaderViewHolder(
         binding.sortOrder.setOnClickListener {
             ArtistSortInfoPreference.toggleIsDescending()
         }
-        updateSortName(header.sortInfo.type)
-        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
-        binding.artistCount = header.artistCount
-    }
-
-    private fun updateSortName(sortType: ArtistSortType) {
-        binding.sortName.setText(when (sortType) {
+        binding.sortName.setText(when (header.sortInfo.type) {
             ArtistSortType.CREATE_DATE -> R.string.sort_by_create_date
             ArtistSortType.NAME -> R.string.sort_by_name
             ArtistSortType.SONG_COUNT -> R.string.sort_by_song_count
         })
+        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
+        binding.countText.text = binding.context.resources.getQuantityString(R.plurals.artist_count, header.artistCount, header.artistCount)
+    }
+
+    private fun updateSortOrderIcon(sortDescending: Boolean, animate: Boolean = true) {
+        if (sortDescending) {
+            binding.sortOrder.animateToDown(animate)
+        } else {
+            binding.sortOrder.animateToUp(animate)
+        }
+    }
+}
+
+class AlbumHeaderViewHolder(
+    override val binding: ItemHeaderBinding,
+) : LocalItemViewHolder(binding) {
+    fun bind(header: AlbumHeader, isPayload: Boolean = false) {
+        binding.sortName.setOnClickListener { view ->
+            PopupMenu(view.context, view).apply {
+                inflate(R.menu.sort_album)
+                setOnMenuItemClickListener {
+                    AlbumSortInfoPreference.type = when (it.itemId) {
+                        R.id.sort_by_create_date -> AlbumSortType.CREATE_DATE
+                        R.id.sort_by_name -> AlbumSortType.NAME
+                        R.id.sort_by_artist -> AlbumSortType.ARTIST
+                        R.id.sort_by_year -> AlbumSortType.YEAR
+                        R.id.sort_by_song_count -> AlbumSortType.SONG_COUNT
+                        R.id.sort_by_length -> AlbumSortType.LENGTH
+                        else -> throw IllegalArgumentException("Unexpected sort type.")
+                    }
+                    true
+                }
+                menu.findItem(when (header.sortInfo.type) {
+                    AlbumSortType.CREATE_DATE -> R.id.sort_by_create_date
+                    AlbumSortType.NAME -> R.id.sort_by_name
+                    AlbumSortType.ARTIST -> R.id.sort_by_artist
+                    AlbumSortType.YEAR -> R.id.sort_by_year
+                    AlbumSortType.SONG_COUNT -> R.id.sort_by_song_count
+                    AlbumSortType.LENGTH -> R.id.sort_by_length
+                })?.isChecked = true
+                show()
+            }
+        }
+        binding.sortOrder.setOnClickListener {
+            AlbumSortInfoPreference.toggleIsDescending()
+        }
+        binding.sortName.setText(when (header.sortInfo.type) {
+            AlbumSortType.CREATE_DATE -> R.string.sort_by_create_date
+            AlbumSortType.NAME -> R.string.sort_by_name
+            AlbumSortType.ARTIST -> R.string.sort_by_artist
+            AlbumSortType.YEAR -> R.string.sort_by_year
+            AlbumSortType.SONG_COUNT -> R.string.sort_by_song_count
+            AlbumSortType.LENGTH -> R.string.sort_by_length
+        })
+        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
+        binding.countText.text = binding.context.resources.getQuantityString(R.plurals.album_count, header.albumCount, header.albumCount)
+    }
+
+    private fun updateSortOrderIcon(sortDescending: Boolean, animate: Boolean = true) {
+        if (sortDescending) {
+            binding.sortOrder.animateToDown(animate)
+        } else {
+            binding.sortOrder.animateToUp(animate)
+        }
+    }
+}
+
+
+class PlaylistHeaderViewHolder(
+    override val binding: ItemHeaderBinding,
+) : LocalItemViewHolder(binding) {
+    fun bind(header: PlaylistHeader, isPayload: Boolean = false) {
+        binding.sortName.setOnClickListener { view ->
+            PopupMenu(view.context, view).apply {
+                inflate(R.menu.sort_playlist)
+                setOnMenuItemClickListener {
+                    PlaylistSortInfoPreference.type = when (it.itemId) {
+                        R.id.sort_by_create_date -> PlaylistSortType.CREATE_DATE
+                        R.id.sort_by_name -> PlaylistSortType.NAME
+                        R.id.sort_by_song_count -> PlaylistSortType.SONG_COUNT
+                        else -> throw IllegalArgumentException("Unexpected sort type.")
+                    }
+                    true
+                }
+                menu.findItem(when (header.sortInfo.type) {
+                    PlaylistSortType.CREATE_DATE -> R.id.sort_by_create_date
+                    PlaylistSortType.NAME -> R.id.sort_by_name
+                    PlaylistSortType.SONG_COUNT -> R.id.sort_by_song_count
+                })?.isChecked = true
+                show()
+            }
+        }
+        binding.sortOrder.setOnClickListener {
+            PlaylistSortInfoPreference.toggleIsDescending()
+        }
+        binding.sortName.setText(when (header.sortInfo.type) {
+            PlaylistSortType.CREATE_DATE -> R.string.sort_by_create_date
+            PlaylistSortType.NAME -> R.string.sort_by_name
+            PlaylistSortType.SONG_COUNT -> R.string.sort_by_song_count
+        })
+        updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
+        binding.countText.text = binding.context.resources.getQuantityString(R.plurals.playlist_count, header.playlistCount, header.playlistCount)
     }
 
     private fun updateSortOrderIcon(sortDescending: Boolean, animate: Boolean = true) {

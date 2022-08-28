@@ -134,10 +134,12 @@
     <string name="btn_shuffle">Shuffle</string>
 
     <!-- Sort Menu -->
+    <string name="sort_by_create_date">Fecha Agregada</string>
     <string name="sort_by_name">Nombre</string>
     <string name="sort_by_artist">Artista</string>
-    <string name="sort_by_create_date">Fecha Agregada</string>
+    <string name="sort_by_year">Year</string>
     <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
