@@ -79,7 +79,7 @@ interface PlaylistDao {
     )
 
     companion object {
-        private const val QUERY_ALL_PLAYLIST = "SELECT * FROM playlist"
+        private const val QUERY_ALL_PLAYLIST = "SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist"
         private const val QUERY_ORDER = " ORDER BY %s %s"
     }
 }
