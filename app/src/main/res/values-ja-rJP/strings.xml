@@ -175,7 +175,7 @@
     <string name="search_filter_channels">チャンネル</string>
 
     <string name="system_default">システムに従う</string>
-    <string name="explore_page_content">検索して音楽を発見</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Update Fragment -->
     <string name="whatsnew">新着情報</string>

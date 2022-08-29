@@ -31,7 +31,10 @@ data class PlaylistPanelVideoRenderer(
             duration = TimeParser.parse(lengthText.runs[0].text),
             thumbnails = thumbnail.thumbnails,
             menu = menu.toItemMenu(),
-            navigationEndpoint = navigationEndpoint
+            navigationEndpoint = navigationEndpoint.copy(
+                // remove watchEndpoint params so that we can get queue items
+                watchEndpoint = navigationEndpoint.watchEndpoint?.copy(params = null)
+            )
         )
     }
 }

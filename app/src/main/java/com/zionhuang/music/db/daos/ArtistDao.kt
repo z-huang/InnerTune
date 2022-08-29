@@ -38,6 +38,9 @@ interface ArtistDao {
     @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :id")
     suspend fun getArtistSongCount(id: String): Int
 
+    @Query("SELECT EXISTS(SELECT * FROM artist WHERE id = :id)")
+    suspend fun hasArtist(id: String): Boolean
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(artist: ArtistEntity): Long
 

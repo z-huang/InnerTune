@@ -181,7 +181,7 @@
     <string name="search_filter_channels">Kanaler</string>
 
     <string name="system_default">Systemets standardinställning</string>
-    <string name="explore_page_content">Sök för att hitta låtar</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Update Fragment -->
     <string name="whatsnew">Vad är nytt</string>

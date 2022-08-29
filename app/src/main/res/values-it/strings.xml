@@ -181,7 +181,7 @@
     <string name="search_filter_channels">Canali</string>
 
     <string name="system_default">Predefinito di sistema</string>
-    <string name="explore_page_content">Cerca per trovare della musica</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Aggiornamento -->
     <string name="whatsnew">Novità</string>

@@ -15,6 +15,7 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
+import com.zionhuang.music.ui.fragments.songs.ArtistSongsFragmentArgs
 import com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragmentArgs
 import com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragmentDirections.openYouTubeBrowseFragment
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -43,6 +44,11 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
         is SearchEndpoint -> {}
         is QueueAddEndpoint -> MediaSessionConnection.binder?.songPlayer?.handleQueueAddEndpoint(endpoint, item)
         is ShareEntityEndpoint -> {}
+        is BrowseLocalArtistSongsEndpoint -> {
+            fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+            fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+            fragment.findNavController().navigate(R.id.artistSongsFragment, ArtistSongsFragmentArgs.Builder(endpoint.artistId).build().toBundle())
+        }
         null -> {}
     }
 

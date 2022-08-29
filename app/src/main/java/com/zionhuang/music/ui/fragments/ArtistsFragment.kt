@@ -13,6 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ARTIST
 import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Artist
@@ -41,7 +44,12 @@ class ArtistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
                     if (artist.artist.isYouTubeArtist) {
                         NavigationEndpointHandler(this@ArtistsFragment).handle(NavigationEndpoint(
                             browseEndpoint = BrowseEndpoint(
-                                browseId = artist.id
+                                browseId = artist.id,
+                                browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
+                                    browseEndpointContextMusicConfig = BrowseEndpointContextMusicConfig(
+                                        pageType = MUSIC_PAGE_TYPE_ARTIST
+                                    )
+                                )
                             )
                         ))
                     } else {

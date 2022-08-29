@@ -175,7 +175,7 @@
     <string name="search_filter_channels">頻道</string>
 
     <string name="system_default">系統預設</string>
-    <string name="explore_page_content">搜尋以尋找音樂</string>
+    <string name="header_from_your_library">來自你的媒體庫</string>
 
     <!-- Update Fragment-->
     <string name="whatsnew">What\'s new</string>

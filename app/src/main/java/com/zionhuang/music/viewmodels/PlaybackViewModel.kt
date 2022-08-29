@@ -28,7 +28,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     private val playbackStateObserver = Observer<PlaybackStateCompat?> { playbackState ->
         if (playbackState != null) {
-            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState, mediaController.value))
+            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState, mediaController?.value))
         }
     }
 

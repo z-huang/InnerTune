@@ -181,7 +181,7 @@
     <string name="search_filter_channels">Canales</string>
 
     <string name="system_default">Sistema por defecto</string>
-    <string name="explore_page_content">Buscar para encontrar algo de música</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Update Fragment -->
     <string name="whatsnew">Que hay de nuevo</string>

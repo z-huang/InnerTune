@@ -20,6 +20,8 @@ data class NavigationEndpoint(
     val searchEndpoint: SearchEndpoint? = null,
     val queueAddEndpoint: QueueAddEndpoint? = null,
     val shareEntityEndpoint: ShareEntityEndpoint? = null,
+    // Custom endpoint
+    val browseLocalArtistSongsEndpoint: BrowseLocalArtistSongsEndpoint? = null,
 ) : Parcelable {
     val endpoint: Endpoint?
         get() = watchEndpoint
@@ -28,6 +30,7 @@ data class NavigationEndpoint(
             ?: searchEndpoint
             ?: queueAddEndpoint
             ?: shareEntityEndpoint
+            ?: browseLocalArtistSongsEndpoint
 
     fun getEndpointType(): Int = when (val ep = endpoint) {
         is WatchEndpoint -> when (ep.watchEndpointMusicSupportedConfigs?.watchEndpointMusicConfig?.musicVideoType) {

@@ -63,11 +63,12 @@ interface SongDao {
 
     suspend fun getAllSongsAsList(sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
     fun getAllSongsAsFlow(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getAllSongsAsPagingSource(sortInfo: ISortInfo<SongSortType>): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
 
     suspend fun getArtistSongsAsList(artistId: String, sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
     fun getArtistSongsAsFlow(artistId: String, sortInfo: ISortInfo<SongSortType>) = getSongsAsFlow((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getArtistSongsAsPagingSource(artistId: String, sortInfo: ISortInfo<SongSortType>): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Query("SELECT song.id FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND NOT song.isTrash LIMIT 5")
+    suspend fun getArtistSongsPreview(artistId: String): List<String>
 
     @Transaction
     @Query(QUERY_PLAYLIST_SONGS)

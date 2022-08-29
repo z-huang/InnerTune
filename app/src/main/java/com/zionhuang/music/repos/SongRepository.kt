@@ -9,6 +9,7 @@ import com.zionhuang.innertube.YouTube.MAX_GET_QUEUE_SIZE
 import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.ArtistHeader
 import com.zionhuang.innertube.utils.browseAll
+import com.zionhuang.innertube.utils.plus
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
@@ -271,8 +272,7 @@ object SongRepository : LocalRepository {
                     }).reversed(sortInfo.isDescending)
                 }
             }
-        },
-        getPagingSource = { songDao.getAllSongsAsPagingSource(sortInfo) }
+        }
     )
 
     suspend fun getSongCount() = withContext(IO) { songDao.getSongCount() }
@@ -283,6 +283,19 @@ object SongRepository : LocalRepository {
             songDao.getArtistSongsAsFlow(artistId, if (sortInfo.type == SongSortType.ARTIST) SortInfo(SongSortType.CREATE_DATE, sortInfo.isDescending) else sortInfo)
         }
     )
+
+    suspend fun getArtistSongsPreview(artistId: String): List<YTBaseItem> = withContext(IO) {
+        if (artistDao.hasArtist(artistId)) {
+            Header(
+                title = context.getString(R.string.header_from_your_library),
+                moreNavigationEndpoint = NavigationEndpoint(
+                    browseLocalArtistSongsEndpoint = BrowseLocalArtistSongsEndpoint(artistId)
+                )
+            ) + YouTube.getQueue(videoIds = songDao.getArtistSongsPreview(artistId))
+        } else {
+            emptyList()
+        }
+    }
 
     suspend fun getArtistSongCount(artistId: String) = withContext(IO) { songDao.getArtistSongCount(artistId) }
 

@@ -175,7 +175,7 @@
     <string name="search_filter_channels">채널</string>
 
     <string name="system_default">시스템 기본값</string>
-    <string name="explore_page_content">노래을 찾으려면 검색</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Update Fragment -->
     <string name="whatsnew">최신 소식</string>

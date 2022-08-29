@@ -1,12 +1,16 @@
 package com.zionhuang.music.extensions
 
 import androidx.paging.PagingSource.LoadResult
-import com.zionhuang.innertube.models.AlbumOrPlaylistHeader
-import com.zionhuang.innertube.models.BrowseResult
-import com.zionhuang.innertube.models.PlaylistItem
-import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ARTIST
 import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.utils.joinByBullet
+import com.zionhuang.music.utils.makeTimeString
 import org.schabi.newpipe.extractor.InfoItem
 import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
 import org.schabi.newpipe.extractor.ListInfo

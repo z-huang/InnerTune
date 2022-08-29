@@ -2,6 +2,7 @@ package com.zionhuang.innertube.models
 
 import android.os.Parcelable
 import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ARTIST
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -61,6 +62,8 @@ data class BrowseEndpoint(
     val params: String? = null,
     val browseEndpointContextSupportedConfigs: BrowseEndpointContextSupportedConfigs? = null,
 ) : Endpoint() {
+    val isArtistEndpoint: Boolean
+        get() = browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_ARTIST
     val isAlbumEndpoint: Boolean
         get() = browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_ALBUM
 
@@ -115,4 +118,11 @@ data class QueueAddEndpoint(
 @Serializable
 data class ShareEntityEndpoint(
     val serializedShareEntity: String,
+) : Endpoint()
+
+// Custom endpoint
+@Parcelize
+@Serializable
+data class BrowseLocalArtistSongsEndpoint(
+    val artistId: String,
 ) : Endpoint()

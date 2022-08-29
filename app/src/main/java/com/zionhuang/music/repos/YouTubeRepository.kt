@@ -3,6 +3,7 @@ package com.zionhuang.music.repos
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.models.ArtistHeader
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.YTBaseItem
 import com.zionhuang.music.extensions.toPage
@@ -45,7 +46,16 @@ object YouTubeRepository {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 if (params.key == null) {
-                    YouTube.browse(endpoint)
+                    val browseResult = YouTube.browse(endpoint)
+                    if (endpoint.isArtistEndpoint) {
+                        browseResult.copy(
+                            items = browseResult.items.toMutableList().apply {
+                                addAll(if (browseResult.items.firstOrNull() is ArtistHeader) 1 else 0, SongRepository.getArtistSongsPreview(endpoint.browseId))
+                            }
+                        )
+                    } else {
+                        browseResult
+                    }
                 } else {
                     YouTube.browse(params.key!!)
                 }.toPage()
