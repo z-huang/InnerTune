@@ -10,6 +10,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint
@@ -19,20 +22,25 @@ import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
+import com.zionhuang.music.ui.adapters.selection.LocalItemKeyProvider
 import com.zionhuang.music.ui.fragments.PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment
 import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
 import com.zionhuang.music.ui.listeners.PlaylistMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
+import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val menuListener = PlaylistMenuListener(this)
     override val adapter = LocalItemAdapter().apply {
-        playlistMenuListener = PlaylistMenuListener(this@PlaylistsFragment)
+        playlistMenuListener = menuListener
     }
+    private var tracker: SelectionTracker<String>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,6 +64,24 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
                 }
             }
         }
+
+        tracker = SelectionTracker.Builder("selectionId", binding.recyclerView, LocalItemKeyProvider(adapter), LocalItemDetailsLookup(binding.recyclerView), StorageStrategy.createStringStorage())
+            .withSelectionPredicate(SelectionPredicates.createSelectAnything())
+            .build()
+            .apply {
+                adapter.tracker = this
+                addActionModeObserver(requireActivity(), R.menu.playlist_batch) { item ->
+                    val map = adapter.currentList.associateBy { it.id }
+                    val playlists = selection.toList().map { map[it] }.filterIsInstance<Playlist>()
+                    when (item.itemId) {
+                        R.id.action_play_next -> menuListener.playNext(playlists)
+                        R.id.action_add_to_queue -> menuListener.addToQueue(playlists)
+                        R.id.action_add_to_playlist -> menuListener.addToPlaylist(playlists)
+                        R.id.action_delete -> menuListener.delete(playlists)
+                    }
+                    true
+                }
+            }
 
         lifecycleScope.launch {
             songsViewModel.allPlaylistsFlow.collectLatest {

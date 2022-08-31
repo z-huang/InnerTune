@@ -19,6 +19,17 @@
         android:paddingStart="6dp"
         android:paddingEnd="6dp">
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/selected_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="?colorSecondaryContainer"
+            app:strokeWidth="0dp"
+            tools:visibility="visible" />
+
         <ImageView
             android:id="@+id/thumbnail"
             cornerRadius="@{@dimen/thumbnail_radius}"
@@ -88,12 +99,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_more_vert" />
 
-        <FrameLayout
-            android:id="@+id/selected_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.25"
-            android:background="?colorAccent"
-            android:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

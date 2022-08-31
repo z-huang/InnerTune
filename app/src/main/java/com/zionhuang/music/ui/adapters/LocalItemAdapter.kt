@@ -38,23 +38,23 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         val item = getItem(position) ?: return
         when (holder) {
             is SongViewHolder -> holder.bind(item as Song, tracker?.isSelected(getItem(position).id) ?: false)
-            is AlbumViewHolder -> {
-                holder.bind(item as Album)
-                if (item.album.thumbnailUrl == null || item.album.year == null) {
-                    GlobalScope.launch {
-                        SongRepository.refetchAlbum(item.album)
-                    }
-                }
-            }
             is ArtistViewHolder -> {
-                holder.bind(item as Artist)
+                holder.bind(item as Artist, tracker?.isSelected(getItem(position).id) ?: false)
                 if (item.artist.bannerUrl == null || Duration.between(item.artist.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)) {
                     GlobalScope.launch {
                         SongRepository.refetchArtist(item.artist)
                     }
                 }
             }
-            is PlaylistViewHolder -> holder.bind(item as Playlist)
+            is AlbumViewHolder -> {
+                holder.bind(item as Album, tracker?.isSelected(getItem(position).id) ?: false)
+                if (item.album.thumbnailUrl == null || item.album.year == null) {
+                    GlobalScope.launch {
+                        SongRepository.refetchAlbum(item.album)
+                    }
+                }
+            }
+            is PlaylistViewHolder -> holder.bind(item as Playlist, tracker?.isSelected(getItem(position).id) ?: false)
             is SongHeaderViewHolder -> holder.bind(item as SongHeader)
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
             is AlbumHeaderViewHolder -> holder.bind(item as AlbumHeader)

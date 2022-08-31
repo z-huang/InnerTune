@@ -68,7 +68,6 @@ open class SongViewHolder(
                 .show(binding.context)
         }
         binding.selectedIndicator.isVisible = isSelected
-        binding.selectedIndicator.alpha = 1f
         binding.executePendingBindings()
     }
 
@@ -80,11 +79,8 @@ open class SongViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) {
-            binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        } else {
-            binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        }
+        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
     }
 }
 
@@ -98,7 +94,7 @@ class ArtistViewHolder(
             override fun getSelectionKey(): String? = binding.artist?.id
         }
 
-    fun bind(artist: Artist) {
+    fun bind(artist: Artist, isSelected: Boolean = false) {
         binding.artist = artist
         binding.btnMoreAction.setOnClickListener {
             MenuBottomSheetDialogFragment
@@ -120,6 +116,12 @@ class ArtistViewHolder(
                 }
                 .show(binding.context)
         }
+        binding.selectedIndicator.isVisible = isSelected
+    }
+
+    override fun onSelectionChanged(isSelected: Boolean) {
+        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
     }
 }
 
@@ -133,7 +135,7 @@ class AlbumViewHolder(
             override fun getSelectionKey(): String? = binding.album?.id
         }
 
-    fun bind(album: Album) {
+    fun bind(album: Album, isSelected: Boolean = false) {
         binding.album = album
         binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.song_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
         binding.btnMoreAction.setOnClickListener {
@@ -152,6 +154,12 @@ class AlbumViewHolder(
                 }
                 .show(binding.context)
         }
+        binding.selectedIndicator.isVisible = isSelected
+    }
+
+    override fun onSelectionChanged(isSelected: Boolean) {
+        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
     }
 }
 
@@ -166,7 +174,7 @@ class PlaylistViewHolder(
             override fun getSelectionKey(): String? = binding.playlist?.id
         }
 
-    fun bind(playlist: Playlist) {
+    fun bind(playlist: Playlist, isSelected: Boolean = false) {
         binding.playlist = playlist
         binding.subtitle.text = if (playlist.playlist.isYouTubePlaylist) {
             listOf(playlist.playlist.name, playlist.playlist.year.toString()).joinByBullet()
@@ -178,6 +186,7 @@ class PlaylistViewHolder(
             MenuBottomSheetDialogFragment
                 .newInstance(R.menu.playlist)
                 .setMenuModifier {
+                    findItem(R.id.action_edit).isVisible = playlist.playlist.isLocalPlaylist
                     findItem(R.id.action_share).isVisible = playlist.playlist.isYouTubePlaylist
                     findItem(R.id.action_refetch).isVisible = playlist.playlist.isYouTubePlaylist
                 }
@@ -195,6 +204,12 @@ class PlaylistViewHolder(
                 }
                 .show(binding.context)
         }
+        binding.selectedIndicator.isVisible = isSelected
+    }
+
+    override fun onSelectionChanged(isSelected: Boolean) {
+        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
     }
 }
 

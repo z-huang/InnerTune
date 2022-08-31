@@ -63,7 +63,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     override fun edit(playlist: Playlist) {
         EditPlaylistDialog().apply {
-            arguments = bundleOf(MediaConstants.EXTRA_PLAYLIST to playlist)
+            arguments = bundleOf(MediaConstants.EXTRA_PLAYLIST to playlist.playlist)
         }.show(context)
     }
 
