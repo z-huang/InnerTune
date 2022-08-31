@@ -5,11 +5,11 @@ import android.view.*
 import androidx.annotation.MenuRes
 import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.navigation.NavigationView
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.R
+import com.zionhuang.music.databinding.MenuBottomSheetDialogBinding
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import java.io.Serializable
 
@@ -17,6 +17,8 @@ typealias MenuModifier = Menu.() -> Unit
 typealias MenuItemClickListener = (MenuItem) -> Unit
 
 class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
+    private lateinit var binding: MenuBottomSheetDialogBinding
+
     @MenuRes
     private var menuResId: Int = 0
     private var menuModifier: MenuModifier? = null
@@ -30,12 +32,15 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
         onMenuItemClicked = requireArguments().getSerializable(KEY_MENU_LISTENER) as? MenuItemClickListener
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.menu_bottom_sheet_dialog, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = MenuBottomSheetDialogBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<NavigationView>(R.id.navigation_view).apply {
+        binding.navigationView.background = binding.dragHandle.background
+        binding.navigationView.apply {
             inflateMenu(menuResId)
             menuModifier?.invoke(menu)
             setNavigationItemSelectedListener {

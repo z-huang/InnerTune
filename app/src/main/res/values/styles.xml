@@ -27,6 +27,7 @@
         <item name="android:colorAccent">?colorPrimary</item>
         <!-- Preference switch -->
         <item name="android:colorControlActivated">?colorPrimary</item>
+        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
     </style>
 
     <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">
@@ -54,19 +55,29 @@
         <item name="elevationOverlayEnabled">false</item>
     </style>
 
-    <style name="MenuBottomSheetDialogShapeAppearance" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">24dp</item>
-        <item name="cornerSizeTopLeft">24dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-    </style>
-
     <style name="ThumbnailShapeAppearance" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopRight">@dimen/thumbnail_radius</item>
         <item name="cornerSizeTopLeft">@dimen/thumbnail_radius</item>
         <item name="cornerSizeBottomRight">@dimen/thumbnail_radius</item>
         <item name="cornerSizeBottomLeft">@dimen/thumbnail_radius</item>
+    </style>
+
+    <style name="CustomBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+        <item name="background">?colorSurface</item>
+    </style>
+
+    <style name="CustomBottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/CustomShapeAppearanceBottomSheetDialog</item>
+        <item name="background">?colorSurface</item>
+    </style>
+
+    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 </resources>

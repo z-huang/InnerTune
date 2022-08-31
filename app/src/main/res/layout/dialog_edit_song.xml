@@ -15,7 +15,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/background_song_cover"
             android:minWidth="50dp"
             android:minHeight="50dp"
             android:scaleType="centerCrop"
