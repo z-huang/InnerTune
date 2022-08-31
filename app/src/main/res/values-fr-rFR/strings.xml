@@ -192,6 +192,11 @@
     <string name="snackbar_removed_from_library">Removed from library</string>
     <string name="snackbar_playlist_imported">Playlist imported</string>
     <string name="snackbar_added_to_playlist">Added to %1$s</string>
+    <plurals name="snackbar_download_song">
+        <item quantity="one">Start downloading %d song</item>
+        <item quantity="many">Start downloading %d songs</item>
+    </plurals>
+    <string name="snackbar_removed_download">Removed download</string>
     <string name="snackbar_action_view">View</string>
 
     <!-- Custom Action -->

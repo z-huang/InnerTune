@@ -182,6 +182,11 @@
     <string name="snackbar_removed_from_library">已從媒體庫中移除</string>
     <string name="snackbar_playlist_imported">已匯入此播放清單</string>
     <string name="snackbar_added_to_playlist">已新增至「%1$s」</string>
+    <plurals name="snackbar_download_song" tools:ignore="UnusedQuantity">
+        <item quantity="one">正在下載歌曲</item>
+        <item quantity="other">正在下載%d首歌曲</item>
+    </plurals>
+    <string name="snackbar_removed_download">已移除下載</string>
     <string name="snackbar_action_view">查看</string>
 
     <!-- Custom Action -->

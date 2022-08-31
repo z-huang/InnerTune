@@ -208,7 +208,12 @@ object SongRepository : LocalRepository {
     override suspend fun refetchSongs(songs: List<Song>) {
         songDao.update(songs.chunked(MAX_GET_QUEUE_SIZE).flatMap { chunk ->
             YouTube.getQueue(chunk.map { it.id })
-        }.map { it.toSongEntity() })
+        }.mapIndexed { i, item ->
+            item.toSongEntity().copy(
+                downloadState = songs[i].song.downloadState,
+                createDate = songs[i].song.createDate
+            )
+        })
     }
 
     override suspend fun getSongById(songId: String): Song? = withContext(IO) { songDao.getSong(songId) }

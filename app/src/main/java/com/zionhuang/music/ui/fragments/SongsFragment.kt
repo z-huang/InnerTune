@@ -78,6 +78,7 @@ class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
                         R.id.action_add_to_playlist -> menuListener.addToPlaylist(songs)
                         R.id.action_download -> menuListener.download(songs)
                         R.id.action_remove_download -> menuListener.removeDownload(songs)
+                        R.id.action_refetch -> menuListener.refetch(songs)
                         R.id.action_delete -> menuListener.delete(songs)
                     }
                     true

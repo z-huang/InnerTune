@@ -105,6 +105,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
     @OptIn(DelicateCoroutinesApi::class)
     override fun download(songs: List<Song>) {
         GlobalScope.launch {
+            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_download_song, songs.size, songs.size), LENGTH_SHORT).show()
             SongRepository.downloadSongs(songs.map { it.song })
         }
     }
@@ -113,6 +114,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
     override fun removeDownload(songs: List<Song>) {
         GlobalScope.launch {
             SongRepository.removeDownloads(songs)
+            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_removed_download, LENGTH_SHORT).show()
         }
     }
 
