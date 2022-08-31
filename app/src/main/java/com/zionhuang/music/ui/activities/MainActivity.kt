@@ -36,6 +36,7 @@ import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
+import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import kotlinx.coroutines.delay
@@ -108,8 +109,13 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         navController.addOnDestinationChangedListener(this)
         binding.bottomNav.setupWithNavController(navController)
         binding.bottomNav.setOnItemSelectedListener { item ->
-            onNavDestinationSelected(item, navController)
-            item.isChecked = true
+            if (item.isChecked) {
+                // scroll to top
+                (currentFragment as? AbsRecyclerViewFragment<*, *>)?.getRecyclerView()?.smoothScrollToPosition(0)
+            } else {
+                onNavDestinationSelected(item, navController)
+                item.isChecked = true
+            }
             true
         }
 
