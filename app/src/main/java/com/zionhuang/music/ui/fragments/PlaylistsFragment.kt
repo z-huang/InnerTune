@@ -5,17 +5,16 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
-import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
@@ -30,9 +29,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
-    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
-    override fun getToolbar(): Toolbar = binding.toolbar
-
     private val songsViewModel by activityViewModels<SongsViewModel>()
     override val adapter = LocalItemAdapter().apply {
         playlistMenuListener = PlaylistMenuListener(this@PlaylistsFragment)
@@ -53,8 +49,9 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
                             browseEndpoint = BrowseEndpoint(browseId = "VL" + playlist.id)
                         ))
                     } else {
-                        val directions = actionPlaylistsFragmentToPlaylistSongsFragment(playlist.id)
-                        findNavController().navigate(directions)
+                        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                        findNavController().navigate(actionPlaylistsFragmentToPlaylistSongsFragment(playlist.id))
                     }
                 }
             }

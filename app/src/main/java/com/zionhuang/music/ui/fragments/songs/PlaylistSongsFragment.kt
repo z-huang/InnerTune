@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.toMediaItem
@@ -71,6 +72,9 @@ class PlaylistSongsFragment : PagingRecyclerViewFragment<PlaylistSongsAdapter>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+
         adapter.apply {
             popupMenuListener = SongMenuListener(this@PlaylistSongsFragment)
             itemTouchHelper = this@PlaylistSongsFragment.itemTouchHelper

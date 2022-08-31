@@ -64,13 +64,17 @@ object YouTube {
         val browseResult = innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
         if (endpoint.isAlbumEndpoint && browseResult.urlCanonical != null) {
             Url(browseResult.urlCanonical).parameters["list"]?.let { playlistId ->
+                val albumName = (browseResult.items.first() as AlbumOrPlaylistHeader).name
+                val albumYear = (browseResult.items.first() as AlbumOrPlaylistHeader).year
                 // replace video items with audio items
                 return browseResult.copy(
                     items = browseResult.items.subList(0, browseResult.items.indexOfFirst { it is SongItem }) +
                             browse(BrowseEndpoint(browseId = "VL$playlistId")).items.filterIsInstance<SongItem>().mapIndexed { index, item ->
                                 item.copy(
                                     subtitle = item.subtitle.split(" • ").lastOrNull().orEmpty(),
-                                    index = (index + 1).toString()
+                                    index = (index + 1).toString(),
+                                    album = Link(text = albumName, navigationEndpoint = endpoint),
+                                    albumYear = albumYear
                                 )
                             } +
                             browseResult.items.subList(browseResult.items.indexOfLast { it is SongItem } + 1, browseResult.items.size)
