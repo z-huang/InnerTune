@@ -9,6 +9,10 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.Icon.Companion.ICON_EXPLORE
+import com.zionhuang.innertube.models.Icon.Companion.ICON_MUSIC_NEW_RELEASE
+import com.zionhuang.innertube.models.Icon.Companion.ICON_STICKER_EMOTICON
+import com.zionhuang.innertube.models.Icon.Companion.ICON_TRENDING_UP
 import com.zionhuang.innertube.models.SuggestionTextItem.SuggestionSource.LOCAL
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.*
@@ -166,9 +170,10 @@ class YouTubeNavigationItemViewHolder(
     fun bind(item: NavigationItem) {
         binding.item = item
         when (item.icon) {
-            "MUSIC_NEW_RELEASE" -> R.drawable.ic_new_releases
-            "TRENDING_UP" -> R.drawable.ic_trending_up
-            "STICKER_EMOTICON" -> R.drawable.ic_sentiment_satisfied
+            ICON_MUSIC_NEW_RELEASE -> R.drawable.ic_new_releases
+            ICON_TRENDING_UP -> R.drawable.ic_trending_up
+            ICON_STICKER_EMOTICON -> R.drawable.ic_sentiment_satisfied
+            ICON_EXPLORE -> R.drawable.ic_explore
             else -> null
         }?.let {
             binding.icon.setImageResource(it)

@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
+import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
@@ -31,7 +31,7 @@ class HomeFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapter>(), Men
     private val viewModel by viewModels<YouTubeBrowseViewModel> {
         YouTubeBrowseViewModelFactory(
             requireActivity().application,
-            BrowseEndpoint(browseId = EXPLORE_BROWSE_ID)
+            BrowseEndpoint(browseId = HOME_BROWSE_ID)
         )
     }
     override val adapter = YouTubeItemPagingAdapter(NavigationEndpointHandler(this))

@@ -244,8 +244,8 @@ data class NavigationItem(
     val title: String,
     override val id: String = title,
     val subtitle: String? = null,
-    val icon: String?,
-    val stripeColor: Long?,
+    val icon: String? = null,
+    val stripeColor: Long? = null,
     val navigationEndpoint: NavigationEndpoint,
 ) : YTBaseItem()
 

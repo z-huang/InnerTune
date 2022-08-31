@@ -3,9 +3,13 @@ package com.zionhuang.music.repos
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.ArtistHeader
-import com.zionhuang.innertube.models.BrowseEndpoint
-import com.zionhuang.innertube.models.YTBaseItem
+import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
+import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
+import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.Icon.Companion.ICON_EXPLORE
+import com.zionhuang.innertube.utils.plus
+import com.zionhuang.music.R
+import com.zionhuang.music.extensions.getApplication
 import com.zionhuang.music.extensions.toPage
 import com.zionhuang.music.youtube.InfoCache.checkCache
 import kotlinx.coroutines.Dispatchers.IO
@@ -47,7 +51,19 @@ object YouTubeRepository {
             try {
                 if (params.key == null) {
                     val browseResult = YouTube.browse(endpoint)
-                    if (endpoint.isArtistEndpoint) {
+                    if (endpoint.browseId == HOME_BROWSE_ID) {
+                        // inject explore link
+                        browseResult.copy(
+                            items = NavigationItem(
+                                title = getApplication().getString(R.string.title_explore),
+                                icon = ICON_EXPLORE,
+                                navigationEndpoint = NavigationEndpoint(
+                                    browseEndpoint = BrowseEndpoint(browseId = EXPLORE_BROWSE_ID)
+                                )
+                            ) + browseResult.items
+                        )
+                    } else if (endpoint.isArtistEndpoint) {
+                        // inject library artist songs preview
                         browseResult.copy(
                             items = browseResult.items.toMutableList().apply {
                                 addAll(if (browseResult.items.firstOrNull() is ArtistHeader) 1 else 0, SongRepository.getArtistSongsPreview(endpoint.browseId))
