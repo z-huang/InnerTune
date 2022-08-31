@@ -1,6 +1,5 @@
 package com.zionhuang.music.db.daos
 
-import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.db.entities.Album
@@ -15,10 +14,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AlbumDao {
     @Transaction
-    @Query("SELECT * FROM album")
-    fun getAllAlbumsAsPagingSource(): PagingSource<Int, Album>
-
-    @Transaction
     @RawQuery(observedEntities = [AlbumEntity::class, AlbumArtistMap::class])
     fun getAlbumsAsFlow(query: SupportSQLiteQuery): Flow<List<Album>>
 
@@ -31,10 +26,7 @@ interface AlbumDao {
     suspend fun insert(album: AlbumEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(songAlbumMap: SongAlbumMap): Long
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(songAlbumMap: AlbumArtistMap): Long
+    suspend fun insert(albumArtistMap: AlbumArtistMap): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songAlbumMaps: List<SongAlbumMap>): List<Long>
@@ -49,7 +41,7 @@ interface AlbumDao {
         insert(songAlbumMaps)
             .withIndex()
             .mapNotNull { if (it.value == -1L) songAlbumMaps[it.index] else null }
-            .let { insert(it) }
+            .let { update(it) }
     }
 
     @Delete

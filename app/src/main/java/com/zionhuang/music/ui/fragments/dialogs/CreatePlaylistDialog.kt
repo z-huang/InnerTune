@@ -66,7 +66,7 @@ class CreatePlaylistDialog() : AppCompatDialogFragment() {
             name = name
         )
         GlobalScope.launch {
-            SongRepository.addPlaylist(playlist)
+            SongRepository.insertPlaylist(playlist)
             listener?.invoke(playlist)
         }
         dismiss()

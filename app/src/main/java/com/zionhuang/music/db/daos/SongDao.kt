@@ -13,6 +13,46 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SongDao {
     @Transaction
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
+    suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
+
+    @Transaction
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
+    fun getSongsAsFlow(query: SupportSQLiteQuery): Flow<List<Song>>
+
+    suspend fun getAllSongsAsList(sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getAllSongsAsFlow(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Query("SELECT COUNT(*) FROM song WHERE NOT isTrash")
+    suspend fun getSongCount(): Int
+
+    suspend fun getArtistSongsAsList(artistId: String, sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getArtistSongsAsFlow(artistId: String, sortInfo: ISortInfo<SongSortType>) = getSongsAsFlow((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :artistId")
+    suspend fun getArtistSongCount(artistId: String): Int
+
+    @Query("SELECT song.id FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND NOT song.isTrash LIMIT 5")
+    suspend fun getArtistSongsPreview(artistId: String): List<String>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
+    suspend fun getAlbumSongs(albumId: String): List<Song>
+
+    @Transaction
+    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
+    suspend fun getAlbumSongEntities(albumId: String): List<SongEntity>
+
+    @Transaction
+    @Query(QUERY_PLAYLIST_SONGS)
+    fun getPlaylistSongsAsPagingSource(playlistId: String): PagingSource<Int, Song>
+
+    @Transaction
+    @Query(QUERY_PLAYLIST_SONGS)
+    suspend fun getPlaylistSongsAsList(playlistId: String): List<Song>
+
+    @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSong(songId: String): Song?
@@ -21,6 +61,12 @@ interface SongDao {
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash")
     fun searchSongsAsPagingSource(query: String): PagingSource<Int, Song>
+
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
+    suspend fun hasSong(songId: String): Boolean
+
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
+    fun hasSongAsLiveData(songId: String): LiveData<Boolean>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songs: List<SongEntity>)
@@ -34,58 +80,8 @@ interface SongDao {
     @Update
     suspend fun update(songs: List<SongEntity>)
 
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
-    suspend fun hasSong(songId: String): Boolean
-
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
-    fun hasSongAsLiveData(songId: String): LiveData<Boolean>
-
-    @Query("SELECT COUNT(*) FROM song WHERE NOT isTrash")
-    suspend fun getSongCount(): Int
-
-    @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :artistId")
-    suspend fun getArtistSongCount(artistId: String): Int
-
     @Delete
     suspend fun delete(songs: List<SongEntity>)
-
-    @Transaction
-    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
-    suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
-
-    @Transaction
-    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
-    fun getSongsAsFlow(query: SupportSQLiteQuery): Flow<List<Song>>
-
-    @Transaction
-    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
-    fun getSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
-
-    suspend fun getAllSongsAsList(sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getAllSongsAsFlow(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-
-    suspend fun getArtistSongsAsList(artistId: String, sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getArtistSongsAsFlow(artistId: String, sortInfo: ISortInfo<SongSortType>) = getSongsAsFlow((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
-
-    @Query("SELECT song.id FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND NOT song.isTrash LIMIT 5")
-    suspend fun getArtistSongsPreview(artistId: String): List<String>
-
-    @Transaction
-    @Query(QUERY_PLAYLIST_SONGS)
-    fun getPlaylistSongsAsPagingSource(playlistId: String): PagingSource<Int, Song>
-
-    @Transaction
-    @Query(QUERY_PLAYLIST_SONGS)
-    suspend fun getPlaylistSongsAsList(playlistId: String): List<Song>
-
-    @Transaction
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
-    suspend fun getAlbumSongs(albumId: String): List<Song>
-
-    @Transaction
-    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
-    suspend fun getAlbumSongEntities(albumId: String): List<SongEntity>
 
     fun getSortQuery(sortInfo: ISortInfo<SongSortType>) = QUERY_ORDER.format(
         when (sortInfo.type) {

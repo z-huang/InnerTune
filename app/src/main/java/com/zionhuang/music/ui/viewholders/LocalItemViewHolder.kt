@@ -55,6 +55,7 @@ open class SongViewHolder(
                         R.id.action_remove_download -> menuListener?.removeDownload(song)
                         R.id.action_view_artist -> menuListener?.viewArtist(song)
                         R.id.action_view_album -> menuListener?.viewAlbum(song)
+                        R.id.action_refetch -> menuListener?.refetch(song)
                         R.id.action_share -> menuListener?.share(song)
                         R.id.action_delete -> menuListener?.delete(song)
                     }

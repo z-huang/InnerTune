@@ -33,6 +33,10 @@
         android:icon="@drawable/ic_album"
         android:title="@string/menu_view_album" />
     <item
+        android:id="@+id/action_refetch"
+        android:icon="@drawable/ic_cached"
+        android:title="@string/menu_refetch" />
+    <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
         android:title="@string/menu_share" />

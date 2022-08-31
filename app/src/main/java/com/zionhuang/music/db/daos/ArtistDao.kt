@@ -1,6 +1,5 @@
 package com.zionhuang.music.db.daos
 
-import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.db.entities.Artist
@@ -19,9 +18,8 @@ interface ArtistDao {
 
     fun getAllArtistsAsFlow(sortInfo: ISortInfo<ArtistSortType>) = getArtistsAsFlow((QUERY_ALL_ARTIST + getSortQuery(sortInfo)).toSQLiteQuery())
 
-    @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM song_artist_map WHERE artistId = artist.id) AS songCount FROM artist")
-    fun getAllArtistsAsPagingSource(): PagingSource<Int, Artist>
+    @Query("SELECT COUNT(*) FROM artist")
+    suspend fun getArtistCount(): Int
 
     @Query("SELECT * FROM artist WHERE id = :id")
     suspend fun getArtistById(id: String): ArtistEntity?
@@ -29,14 +27,11 @@ interface ArtistDao {
     @Query("SELECT * FROM artist WHERE name = :name")
     suspend fun getArtistByName(name: String): ArtistEntity?
 
-    @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
-    suspend fun searchArtists(query: String): List<ArtistEntity>
-
-    @Query("SELECT COUNT(*) FROM artist")
-    suspend fun getArtistCount(): Int
-
     @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :id")
     suspend fun getArtistSongCount(id: String): Int
+
+    @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
+    suspend fun searchArtists(query: String): List<ArtistEntity>
 
     @Query("SELECT EXISTS(SELECT * FROM artist WHERE id = :id)")
     suspend fun hasArtist(id: String): Boolean

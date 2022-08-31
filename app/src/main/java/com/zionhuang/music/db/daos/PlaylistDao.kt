@@ -1,6 +1,5 @@
 package com.zionhuang.music.db.daos
 
-import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.db.entities.Playlist
@@ -18,10 +17,6 @@ interface PlaylistDao {
     suspend fun getAllPlaylistsAsList(): List<Playlist>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist")
-    fun getAllPlaylistsAsPagingSource(): PagingSource<Int, Playlist>
-
-    @Transaction
     @RawQuery(observedEntities = [PlaylistEntity::class, PlaylistSongMap::class])
     fun getPlaylistsAsFlow(query: SupportSQLiteQuery): Flow<List<Playlist>>
 
@@ -29,9 +24,6 @@ interface PlaylistDao {
 
     @Query("SELECT COUNT(*) FROM playlist")
     suspend fun getPlaylistCount(): Int
-
-    @Query("SELECT * FROM playlist WHERE id = :playlistId")
-    suspend fun getPlaylist(playlistId: String): PlaylistEntity?
 
     @Query("SELECT * FROM playlist WHERE name LIKE '%' || :query || '%'")
     suspend fun searchPlaylists(query: String): List<PlaylistEntity>

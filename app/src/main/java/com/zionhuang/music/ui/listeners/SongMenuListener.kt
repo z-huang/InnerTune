@@ -43,6 +43,7 @@ interface ISongMenuListener {
     fun removeDownload(songs: List<Song>)
     fun viewArtist(song: Song)
     fun viewAlbum(song: Song)
+    fun refetch(songs: List<Song>)
     fun share(song: Song)
     fun delete(songs: List<Song>)
 
@@ -51,6 +52,7 @@ interface ISongMenuListener {
     fun addToPlaylist(song: Song) = addToPlaylist(listOf(song))
     fun download(song: Song) = download(listOf(song))
     fun removeDownload(song: Song) = removeDownload(listOf(song))
+    fun refetch(song: Song) = refetch(listOf(song))
     fun delete(song: Song) = delete(listOf(song))
 }
 
@@ -137,6 +139,13 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
                 )
             ))
         }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun refetch(songs: List<Song>) {
+       GlobalScope.launch {
+           SongRepository.refetchSongs(songs)
+       }
     }
 
     override fun share(song: Song) {
