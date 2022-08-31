@@ -10,6 +10,8 @@ import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.context
+import com.zionhuang.music.extensions.fadeIn
+import com.zionhuang.music.extensions.fadeOut
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.sortInfo.*
@@ -21,19 +23,22 @@ import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 
-sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root)
+sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+    abstract val itemDetails: ItemDetailsLookup.ItemDetails<String>?
+    open fun onSelectionChanged(isSelected: Boolean) {}
+}
 
 open class SongViewHolder(
     override val binding: ItemSongBinding,
     private val menuListener: ISongMenuListener?,
 ) : LocalItemViewHolder(binding) {
-    val itemDetails: ItemDetailsLookup.ItemDetails<String>
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>
         get() = object : ItemDetailsLookup.ItemDetails<String>() {
             override fun getPosition(): Int = absoluteAdapterPosition
-            override fun getSelectionKey(): String? = binding.song?.song?.id
+            override fun getSelectionKey(): String? = binding.song?.id
         }
 
-    fun bind(song: Song, selected: Boolean? = false) {
+    fun bind(song: Song, isSelected: Boolean = false) {
         binding.song = song
         binding.subtitle.text = listOf(song.artists.joinToString { it.name }, song.song.albumName, makeTimeString(song.song.duration.toLong() * 1000)).joinByBullet()
         binding.btnMoreAction.setOnClickListener {
@@ -62,7 +67,8 @@ open class SongViewHolder(
                 }
                 .show(binding.context)
         }
-        binding.isSelected = selected == true
+        binding.selectedIndicator.isVisible = isSelected
+        binding.selectedIndicator.alpha = 1f
         binding.executePendingBindings()
     }
 
@@ -73,8 +79,12 @@ open class SongViewHolder(
         }
     }
 
-    fun onSelectionChanged(selected: Boolean?) {
-        binding.isSelected = selected == true
+    override fun onSelectionChanged(isSelected: Boolean) {
+        if (isSelected) {
+            binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        } else {
+            binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        }
     }
 }
 
@@ -82,6 +92,12 @@ class ArtistViewHolder(
     override val binding: ItemArtistBinding,
     private val menuListener: IArtistMenuListener?,
 ) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>
+        get() = object : ItemDetailsLookup.ItemDetails<String>() {
+            override fun getPosition(): Int = absoluteAdapterPosition
+            override fun getSelectionKey(): String? = binding.artist?.id
+        }
+
     fun bind(artist: Artist) {
         binding.artist = artist
         binding.btnMoreAction.setOnClickListener {
@@ -111,6 +127,12 @@ class AlbumViewHolder(
     override val binding: ItemAlbumBinding,
     private val menuListener: IAlbumMenuListener?,
 ) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>
+        get() = object : ItemDetailsLookup.ItemDetails<String>() {
+            override fun getPosition(): Int = absoluteAdapterPosition
+            override fun getSelectionKey(): String? = binding.album?.id
+        }
+
     fun bind(album: Album) {
         binding.album = album
         binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.song_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
@@ -138,6 +160,12 @@ class PlaylistViewHolder(
     private val menuListener: IPlaylistMenuListener?,
     private val allowMoreAction: Boolean,
 ) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>
+        get() = object : ItemDetailsLookup.ItemDetails<String>() {
+            override fun getPosition(): Int = absoluteAdapterPosition
+            override fun getSelectionKey(): String? = binding.playlist?.id
+        }
+
     fun bind(playlist: Playlist) {
         binding.playlist = playlist
         binding.subtitle.text = if (playlist.playlist.isYouTubePlaylist) {
@@ -173,6 +201,8 @@ class PlaylistViewHolder(
 class SongHeaderViewHolder(
     override val binding: ItemHeaderBinding,
 ) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
     fun bind(header: SongHeader, isPayload: Boolean = false) {
         binding.sortName.setOnClickListener { view ->
             PopupMenu(view.context, view).apply {
@@ -218,6 +248,8 @@ class SongHeaderViewHolder(
 class ArtistHeaderViewHolder(
     override val binding: ItemHeaderBinding,
 ) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
     fun bind(header: ArtistHeader, isPayload: Boolean = false) {
         binding.sortName.setOnClickListener { view ->
             PopupMenu(view.context, view).apply {
@@ -263,6 +295,8 @@ class ArtistHeaderViewHolder(
 class AlbumHeaderViewHolder(
     override val binding: ItemHeaderBinding,
 ) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
     fun bind(header: AlbumHeader, isPayload: Boolean = false) {
         binding.sortName.setOnClickListener { view ->
             PopupMenu(view.context, view).apply {
@@ -318,6 +352,8 @@ class AlbumHeaderViewHolder(
 class PlaylistHeaderViewHolder(
     override val binding: ItemHeaderBinding,
 ) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
     fun bind(header: PlaylistHeader, isPayload: Boolean = false) {
         binding.sortName.setOnClickListener { view ->
             PopupMenu(view.context, view).apply {

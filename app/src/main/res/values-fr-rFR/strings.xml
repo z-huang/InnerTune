@@ -148,24 +148,46 @@
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
         <item quantity="one">%d chanson a été supprimée.</item>
-        <item quantity="other">%d chansons ont été supprimées.</item>
         <item quantity="many">%d chansons ont été supprimées.</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="one">%d sélectionné</item>
-        <item quantity="other">%d sélectionné</item>
         <item quantity="many">%d sélectionné</item>
     </plurals>
     <string name="snackbar_undo">Annuler</string>
     <string name="snackbar_url_error">Can\'t identify this url.</string>
-    <string name="snackbar_song_play_next">Song will play next</string>
-    <string name="snackbar_artist_play_next">Artist will play next</string>
-    <string name="snackbar_album_play_next">Album will play next</string>
-    <string name="snackbar_playlist_play_next">Playlist will play next</string>
-    <string name="snackbar_song_added_to_queue">Song added to queue</string>
-    <string name="snackbar_artist_added_to_queue">Artist added to queue</string>
-    <string name="snackbar_album_added_to_queue">Album added to queue</string>
-    <string name="snackbar_playlist_added_to_queue">Playlist added to queue</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">%d song will play next</item>
+        <item quantity="many">%d songs will play next</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">%d artist will play next</item>
+        <item quantity="many">%d artists will play next</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">%d album will play next</item>
+        <item quantity="many">%d albums will play next</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">%d playlist will play next</item>
+        <item quantity="many">%d playlists will play next</item>
+    </plurals>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">%d song added to queue</item>
+        <item quantity="many">%d songs added to queue</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">%d artist added to queue</item>
+        <item quantity="many">%d artists added to queue</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">%d album added to queue</item>
+        <item quantity="many">%d albums added to queue</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">%d playlist added to queue</item>
+        <item quantity="many">%d playlists added to queue</item>
+    </plurals>
     <string name="snackbar_added_to_library">Added to library</string>
     <string name="snackbar_removed_from_library">Removed from library</string>
     <string name="snackbar_playlist_imported">Playlist imported</string>

@@ -9,10 +9,6 @@
             name="song"
             type="com.zionhuang.music.db.entities.Song" />
 
-        <variable
-            name="isSelected"
-            type="Boolean" />
-
         <import type="com.zionhuang.music.constants.MediaConstants" />
 
         <import type="android.view.View" />
@@ -26,6 +22,17 @@
         android:orientation="vertical"
         android:paddingStart="6dp"
         android:paddingEnd="6dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/selected_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="?colorSecondaryContainer"
+            app:strokeWidth="0dp"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/thumbnail"
@@ -136,14 +143,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_drag_handle" />
-
-        <FrameLayout
-            android:id="@+id/overlay_selection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.25"
-            android:background="?colorAccent"
-            android:visibility="@{(isSelected ?? true) ? View.VISIBLE : View.GONE}"
-            tools:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

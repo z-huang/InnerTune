@@ -48,7 +48,7 @@ class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(So
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is SongViewHolder -> getItem(position)?.let { song ->
-                holder.bind(song, tracker?.isSelected(song.song.id))
+                holder.bind(song, tracker?.isSelected(song.song.id) ?: false)
                 if (song.song.downloadState == STATE_DOWNLOADING) {
                     downloadInfo?.value?.get(song.song.id)?.let { info ->
                         holder.setProgress(info, false)
@@ -64,11 +64,7 @@ class PlaylistSongsAdapter : PagingDataAdapter<Song, RecyclerView.ViewHolder>(So
                 if (payloads.isEmpty()) {
                     onBindViewHolder(holder, position)
                 } else when (val payload = payloads[0]) {
-                    SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(
-                        tracker?.isSelected(
-                            holder.binding.song?.song?.id
-                        )
-                    )
+                    SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(tracker?.isSelected(holder.binding.song?.id) ?: false)
                     is Song -> holder.bind(payload)
                     is DownloadProgress -> holder.setProgress(payload)
                 }

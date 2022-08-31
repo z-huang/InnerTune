@@ -63,22 +63,22 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
 
     fun playNext(item: YTItem) {
         handle(item.menu.playNextEndpoint, item)
-        Snackbar.make(mainActivity.binding.mainContent, when (item) {
-            is SongItem -> R.string.snackbar_song_play_next
-            is AlbumItem -> R.string.snackbar_album_play_next
-            is PlaylistItem -> R.string.snackbar_playlist_play_next
+        Snackbar.make(mainActivity.binding.mainContent, fragment.resources.getQuantityString(when (item) {
+            is SongItem -> R.plurals.snackbar_song_play_next
+            is AlbumItem -> R.plurals.snackbar_album_play_next
+            is PlaylistItem -> R.plurals.snackbar_playlist_play_next
             else -> throw UnsupportedOperationException()
-        }, LENGTH_SHORT).show()
+        }, 1, 1), LENGTH_SHORT).show()
     }
 
     fun addToQueue(item: YTItem) {
         handle(item.menu.addToQueueEndpoint, item)
-        Snackbar.make(mainActivity.binding.mainContent, when (item) {
-            is SongItem -> R.string.snackbar_song_added_to_queue
-            is AlbumItem -> R.string.snackbar_album_added_to_queue
-            is PlaylistItem -> R.string.snackbar_playlist_added_to_queue
+        Snackbar.make(mainActivity.binding.mainContent, fragment.resources.getQuantityString(when (item) {
+            is SongItem -> R.plurals.snackbar_song_added_to_queue
+            is AlbumItem -> R.plurals.snackbar_album_added_to_queue
+            is PlaylistItem -> R.plurals.snackbar_playlist_added_to_queue
             else -> throw UnsupportedOperationException()
-        }, LENGTH_SHORT).show()
+        }, 1, 1), LENGTH_SHORT).show()
     }
 
     fun addToLibrary(item: YTItem) {

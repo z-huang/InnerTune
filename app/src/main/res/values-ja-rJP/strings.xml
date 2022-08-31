@@ -146,14 +146,38 @@
     </plurals>
     <string name="snackbar_undo">元に戻す</string>
     <string name="snackbar_url_error">Can\'t identify this url.</string>
-    <string name="snackbar_song_play_next">Song will play next</string>
-    <string name="snackbar_artist_play_next">Artist will play next</string>
-    <string name="snackbar_album_play_next">Album will play next</string>
-    <string name="snackbar_playlist_play_next">Playlist will play next</string>
-    <string name="snackbar_song_added_to_queue">Song added to queue</string>
-    <string name="snackbar_artist_added_to_queue">Artist added to queue</string>
-    <string name="snackbar_album_added_to_queue">Album added to queue</string>
-    <string name="snackbar_playlist_added_to_queue">Playlist added to queue</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">Song will play next</item>
+        <item quantity="other">%d songs will play next</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">Artist will play next</item>
+        <item quantity="other">%d artists will play next</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">Album will play next</item>
+        <item quantity="other">%d albums will play next</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">Playlist will play next</item>
+        <item quantity="other">%d playlists will play next</item>
+    </plurals>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">Song added to queue</item>
+        <item quantity="other">%d songs added to queue</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">Artist added to queue</item>
+        <item quantity="other">%d artists added to queue</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">Album added to queue</item>
+        <item quantity="other">%d albums added to queue</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">Playlist added to queue</item>
+        <item quantity="other">%d playlists added to queue</item>
+    </plurals>
     <string name="snackbar_added_to_library">Added to library</string>
     <string name="snackbar_removed_from_library">Removed from library</string>
     <string name="snackbar_playlist_imported">Playlist imported</string>

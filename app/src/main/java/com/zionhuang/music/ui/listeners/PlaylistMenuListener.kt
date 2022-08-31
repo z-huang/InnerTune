@@ -110,7 +110,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_play_next, LENGTH_SHORT).show()
+            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, playlists.size, playlists.size), LENGTH_SHORT).show()
         }
     }
 
@@ -124,7 +124,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     )
                 )
             ))
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_play_next, LENGTH_SHORT).show()
+            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, 1, 1), LENGTH_SHORT).show()
         } else {
             playNext(listOf(playlist))
         }
@@ -145,7 +145,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_added_to_queue, LENGTH_SHORT).show()
+            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, playlists.size, playlists.size), LENGTH_SHORT).show()
         }
     }
 
@@ -159,7 +159,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     )
                 )
             ))
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_added_to_queue, LENGTH_SHORT).show()
+            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, 1, 1), LENGTH_SHORT).show()
         } else {
             addToQueue(listOf(playlist))
         }

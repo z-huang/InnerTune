@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Title -->
     <string name="title_home">首頁</string>
     <string name="title_songs">歌曲</string>
@@ -146,14 +146,38 @@
     </plurals>
     <string name="snackbar_undo">復原</string>
     <string name="snackbar_url_error">無法辨識此連結</string>
-    <string name="snackbar_song_play_next">即將播放此歌曲</string>
-    <string name="snackbar_artist_play_next">即將播放此藝人的歌曲</string>
-    <string name="snackbar_album_play_next">即將播放此專輯</string>
-    <string name="snackbar_playlist_play_next">即將播放此播放清單</string>
-    <string name="snackbar_song_added_to_queue">已將此歌曲加入待播清單</string>
-    <string name="snackbar_artist_added_to_queue">已將此藝人的歌曲加入待播清單</string>
-    <string name="snackbar_album_added_to_queue">已將此專輯加入待播清單</string>
-    <string name="snackbar_playlist_added_to_queue">已將此播放清單加入待播清單</string>
+    <plurals name="snackbar_song_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此歌曲</item>
+        <item quantity="other">即將播放這%d首歌曲</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此藝人的歌曲</item>
+        <item quantity="other">即將播放這%d位藝人的歌曲</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此專輯</item>
+        <item quantity="other">即將播放這%d張專輯</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此播放清單</item>
+        <item quantity="other">即將播放這%d個播放清單</item>
+    </plurals>
+    <plurals name="snackbar_song_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此歌曲加入待播清單</item>
+        <item quantity="other">已將這%d首歌曲加入待播清單</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此藝人的歌曲加入待播清單</item>
+        <item quantity="other">已將這%d位藝人的歌曲加入待播清單</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此專輯加入待播清單</item>
+        <item quantity="other">已將這%d張專輯加入待播清單</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此播放清單加入待播清單</item>
+        <item quantity="other">已將這%d個播放清單加入待播清單</item>
+    </plurals>
     <string name="snackbar_added_to_library">已新增至媒體庫</string>
     <string name="snackbar_removed_from_library">已從媒體庫中移除</string>
     <string name="snackbar_playlist_imported">已匯入此播放清單</string>

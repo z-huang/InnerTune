@@ -14,7 +14,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.LocalItem
@@ -22,11 +24,13 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
+import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
+import com.zionhuang.music.ui.adapters.selection.LocalItemKeyProvider
 import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.listeners.SongMenuListener
+import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -37,8 +41,9 @@ import kotlin.time.toDuration
 class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val menuListener = SongMenuListener(this)
     override val adapter = LocalItemAdapter().apply {
-        songMenuListener = SongMenuListener(this@SongsFragment)
+        songMenuListener = menuListener
     }
     private var tracker: SelectionTracker<String>? = null
 
@@ -59,32 +64,25 @@ class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
             addFastScroller { useMd2Style() }
         }
 
-//        tracker = SelectionTracker.Builder(
-//            "selectionId",
-//            binding.recyclerView,
-//            SongItemKeyProvider(adapter),
-//            SongItemDetailsLookup(binding.recyclerView),
-//            StorageStrategy.createStringStorage()
-//        ).withSelectionPredicate(
-//            SelectionPredicates.createSelectAnything()
-//        ).build().apply {
-//            adapter.tracker = this
-//            addActionModeObserver(requireActivity(), this, R.menu.song_contextual_action_bar) { item ->
-//                val selectedMap = adapter.snapshot().items
-//                    .filter { selection.contains(it.song.id) }
-//                    .associateBy { it.song.id }
-//                val songs = selection.toList().mapNotNull { selectedMap[it] }
-//                when (item.itemId) {
-//                    R.id.action_play_next -> songsViewModel.songPopupMenuListener.playNext(songs, requireContext())
-//                    R.id.action_add_to_queue -> songsViewModel.songPopupMenuListener.addToQueue(songs, requireContext())
-//                    R.id.action_add_to_playlist -> songsViewModel.songPopupMenuListener.addToPlaylist(songs, requireContext())
-//                    R.id.action_download -> songsViewModel.songPopupMenuListener.downloadSongs(songs, requireContext())
-//                    R.id.action_remove_download -> songsViewModel.songPopupMenuListener.removeDownloads(songs, requireContext())
-//                    R.id.action_delete -> songsViewModel.songPopupMenuListener.deleteSongs(songs)
-//                }
-//                true
-//            }
-//        }
+        tracker = SelectionTracker.Builder("selectionId", binding.recyclerView, LocalItemKeyProvider(adapter), LocalItemDetailsLookup(binding.recyclerView), StorageStrategy.createStringStorage())
+            .withSelectionPredicate(SelectionPredicates.createSelectAnything())
+            .build()
+            .apply {
+                adapter.tracker = this
+                addActionModeObserver(requireActivity(), R.menu.song_batch) { item ->
+                    val map = adapter.currentList.associateBy { it.id }
+                    val songs = selection.toList().map { map[it] }.filterIsInstance<Song>()
+                    when (item.itemId) {
+                        R.id.action_play_next -> menuListener.playNext(songs)
+                        R.id.action_add_to_queue -> menuListener.addToQueue(songs)
+                        R.id.action_add_to_playlist -> menuListener.addToPlaylist(songs)
+                        R.id.action_download -> menuListener.download(songs)
+                        R.id.action_remove_download -> menuListener.removeDownload(songs)
+                        R.id.action_delete -> menuListener.delete(songs)
+                    }
+                    true
+                }
+            }
 
         lifecycleScope.launch {
             songsViewModel.allSongsFlow.collectLatest {

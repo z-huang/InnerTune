@@ -114,7 +114,7 @@
             app:srcCompat="@drawable/ic_drag_handle" />
 
         <FrameLayout
-            android:id="@+id/overlay_selection"
+            android:id="@+id/selected_indicator"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.25"

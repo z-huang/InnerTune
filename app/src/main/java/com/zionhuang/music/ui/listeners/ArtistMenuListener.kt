@@ -69,7 +69,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_artist_play_next, LENGTH_SHORT).show()
+            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_artist_play_next, artists.size, artists.size), LENGTH_SHORT).show()
         }
     }
 
@@ -84,7 +84,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_artist_added_to_queue, LENGTH_SHORT).show()
+            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_artist_added_to_queue, artists.size, artists.size), LENGTH_SHORT).show()
         }
     }
 

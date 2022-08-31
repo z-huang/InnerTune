@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.SelectionTracker.SELECTION_CHANGED_MARKER
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.zionhuang.music.R
@@ -36,7 +37,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
     override fun onBindViewHolder(holder: LocalItemViewHolder, position: Int) {
         val item = getItem(position) ?: return
         when (holder) {
-            is SongViewHolder -> holder.bind(item as Song)
+            is SongViewHolder -> holder.bind(item as Song, tracker?.isSelected(getItem(position).id) ?: false)
             is AlbumViewHolder -> {
                 holder.bind(item as Album)
                 if (item.album.thumbnailUrl == null || item.album.year == null) {
@@ -68,6 +69,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             payload is ArtistHeader && holder is ArtistHeaderViewHolder -> holder.bind(payload, true)
             payload is AlbumHeader && holder is AlbumHeaderViewHolder -> holder.bind(payload, true)
             payload is PlaylistHeader && holder is PlaylistHeaderViewHolder -> holder.bind(payload, true)
+            payload == SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(tracker?.isSelected(getItem(position).id) ?: false)
             else -> onBindViewHolder(holder, position)
         }
     }

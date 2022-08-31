@@ -75,7 +75,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
             bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
             null
         )
-        Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_song_play_next, LENGTH_SHORT).show()
+        Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_song_play_next, songs.size, songs.size), LENGTH_SHORT).show()
     }
 
     override fun addToQueue(songs: List<Song>) {
@@ -84,7 +84,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
             bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
             null
         )
-        Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_song_added_to_queue, LENGTH_SHORT).show()
+        Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_song_added_to_queue, songs.size, songs.size), LENGTH_SHORT).show()
     }
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -143,9 +143,9 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(songs: List<Song>) {
-       GlobalScope.launch {
-           SongRepository.refetchSongs(songs)
-       }
+        GlobalScope.launch {
+            SongRepository.refetchSongs(songs)
+        }
     }
 
     override fun share(song: Song) {
