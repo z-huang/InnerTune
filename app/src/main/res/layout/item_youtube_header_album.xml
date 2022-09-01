@@ -160,7 +160,7 @@
 
         </LinearLayout>
 
-        <TextView
+        <com.zionhuang.music.ui.widgets.ExpandableTextView
             android:id="@+id/description"
             style="@style/TextAppearance.Material3.BodyMedium"
             android:layout_width="match_parent"
