@@ -41,6 +41,9 @@
         </action>
     </fragment>
     <fragment
+        android:id="@+id/localSearchFragment"
+        android:name="com.zionhuang.music.ui.fragments.LocalSearchFragment" />
+    <fragment
         android:id="@+id/youtubeSuggestionFragment"
         android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragment">
         <action

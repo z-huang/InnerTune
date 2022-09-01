@@ -30,8 +30,13 @@ interface ArtistDao {
     @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :id")
     suspend fun getArtistSongCount(id: String): Int
 
-    @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
-    suspend fun searchArtists(query: String): List<ArtistEntity>
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM song_artist_map WHERE artistId = artist.id) AS songCount FROM artist WHERE name LIKE '%' || :query || '%'")
+    fun searchArtists(query: String): Flow<List<Artist>>
+
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM song_artist_map WHERE artistId = artist.id) AS songCount FROM artist WHERE name LIKE '%' || :query || '%' LIMIT :previewSize")
+    fun searchArtistsPreview(query: String, previewSize: Int): Flow<List<Artist>>
 
     @Query("SELECT EXISTS(SELECT * FROM artist WHERE id = :id)")
     suspend fun hasArtist(id: String): Boolean

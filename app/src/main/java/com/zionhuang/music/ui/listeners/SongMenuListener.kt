@@ -10,11 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
-import com.zionhuang.innertube.models.BrowseEndpoint
-import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs
-import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig
-import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
-import com.zionhuang.innertube.models.NavigationEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint.Companion.albumBrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
@@ -120,26 +117,13 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
 
     override fun viewArtist(song: Song) {
         if (song.artists.isNotEmpty()) {
-            NavigationEndpointHandler(fragment).handle(NavigationEndpoint(
-                browseEndpoint = BrowseEndpoint(
-                    browseId = song.artists[0].id
-                )
-            ))
+            NavigationEndpointHandler(fragment).handle(artistBrowseEndpoint(song.artists[0].id))
         }
     }
 
     override fun viewAlbum(song: Song) {
         if (song.song.albumId != null) {
-            NavigationEndpointHandler(fragment).handle(NavigationEndpoint(
-                browseEndpoint = BrowseEndpoint(
-                    browseId = song.song.albumId,
-                    browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
-                        browseEndpointContextMusicConfig = BrowseEndpointContextMusicConfig(
-                            pageType = MUSIC_PAGE_TYPE_ALBUM
-                        )
-                    )
-                )
-            ))
+            NavigationEndpointHandler(fragment).handle(albumBrowseEndpoint(song.song.albumId))
         }
     }
 

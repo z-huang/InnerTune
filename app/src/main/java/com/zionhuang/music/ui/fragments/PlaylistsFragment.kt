@@ -15,8 +15,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
-import com.zionhuang.innertube.models.BrowseEndpoint
-import com.zionhuang.innertube.models.NavigationEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint.Companion.playlistBrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.addOnClickListener
@@ -53,9 +52,7 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
             addOnClickListener { position, _ ->
                 (this@PlaylistsFragment.adapter.currentList[position] as? Playlist)?.let { playlist ->
                     if (playlist.playlist.isYouTubePlaylist) {
-                        NavigationEndpointHandler(this@PlaylistsFragment).handle(NavigationEndpoint(
-                            browseEndpoint = BrowseEndpoint(browseId = "VL" + playlist.id)
-                        ))
+                        NavigationEndpointHandler(this@PlaylistsFragment).handle(playlistBrowseEndpoint("VL" + playlist.id))
                     } else {
                         exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
@@ -93,11 +90,13 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.settings, menu)
+        inflater.inflate(R.menu.search_and_settings, menu)
+        menu.findItem(R.id.action_search).actionView = null
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_search -> findNavController().navigate(R.id.localSearchFragment)
             R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
         }
         return true

@@ -6,6 +6,7 @@ import com.zionhuang.music.models.DataWrapper
 import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.sortInfo.*
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface LocalRepository {
@@ -34,9 +35,11 @@ interface LocalRepository {
     /**
      * Search
      */
-    fun searchSongs(query: String): ListWrapper<Int, Song>
-    fun searchArtists(query: String): ListWrapper<Int, ArtistEntity>
-    fun searchPlaylists(query: String): ListWrapper<Int, PlaylistEntity>
+    fun searchAll(query: String): Flow<List<LocalBaseItem>>
+    fun searchSongs(query: String): Flow<List<Song>>
+    fun searchArtists(query: String): Flow<List<Artist>>
+    fun searchAlbums(query: String): Flow<List<Album>>
+    fun searchPlaylists(query: String): Flow<List<Playlist>>
 
     /**
      * Song

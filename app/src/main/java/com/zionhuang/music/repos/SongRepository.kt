@@ -9,7 +9,6 @@ import com.zionhuang.innertube.YouTube.MAX_GET_QUEUE_SIZE
 import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.ArtistHeader
 import com.zionhuang.innertube.utils.browseAll
-import com.zionhuang.innertube.utils.plus
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
@@ -28,6 +27,8 @@ import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import com.zionhuang.music.utils.md5
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -79,12 +80,12 @@ object SongRepository : LocalRepository {
 
     override suspend fun getArtistSongsPreview(artistId: String): List<YTBaseItem> = withContext(IO) {
         if (artistDao.hasArtist(artistId)) {
-            Header(
+            listOf(Header(
                 title = context.getString(R.string.header_from_your_library),
                 moreNavigationEndpoint = NavigationEndpoint(
                     browseLocalArtistSongsEndpoint = BrowseLocalArtistSongsEndpoint(artistId)
                 )
-            ) + YouTube.getQueue(videoIds = songDao.getArtistSongsPreview(artistId))
+            )) + YouTube.getQueue(videoIds = songDao.getArtistSongsPreview(artistId))
         } else {
             emptyList()
         }
@@ -141,17 +142,20 @@ object SongRepository : LocalRepository {
     /**
      * Search
      */
-    override fun searchSongs(query: String) = ListWrapper(
-        getPagingSource = { songDao.searchSongsAsPagingSource(query) }
-    )
+    override fun searchAll(query: String): Flow<List<LocalBaseItem>> =
+        combine(
+            songDao.searchSongsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_songs))) + it else emptyList() },
+            artistDao.searchArtistsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_artists))) + it else emptyList() },
+            albumDao.searchAlbumsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_albums))) + it else emptyList() },
+            playlistDao.searchPlaylistsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_playlists))) + it else emptyList() }
+        ) { songResult, artistResult, albumResult, playlistResult ->
+            songResult + artistResult + albumResult + playlistResult
+        }
 
-    override fun searchArtists(query: String) = ListWrapper<Int, ArtistEntity>(
-        getList = { withContext(IO) { artistDao.searchArtists(query) } }
-    )
-
-    override fun searchPlaylists(query: String) = ListWrapper<Int, PlaylistEntity>(
-        getList = { withContext(IO) { playlistDao.searchPlaylists(query) } }
-    )
+    override fun searchSongs(query: String) = songDao.searchSongs(query)
+    override fun searchArtists(query: String) = artistDao.searchArtists(query)
+    override fun searchAlbums(query: String) = albumDao.searchAlbums(query)
+    override fun searchPlaylists(query: String) = playlistDao.searchPlaylists(query)
 
     /**
      * Song

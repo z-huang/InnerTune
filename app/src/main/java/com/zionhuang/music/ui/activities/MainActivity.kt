@@ -1,6 +1,7 @@
 package com.zionhuang.music.ui.activities
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
 import android.os.Bundle
@@ -24,6 +25,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint.Companion.playlistBrowseEndpoint
 import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.utils.YouTubeLinkHandler
@@ -78,25 +81,19 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
         YouTubeLinkHandler.getBrowseId(url)?.let { id ->
             currentFragment?.let {
-                NavigationEndpointHandler(it).handle(NavigationEndpoint(
-                    browseEndpoint = BrowseEndpoint(browseId = id)
-                ))
+                NavigationEndpointHandler(it).handle(BrowseEndpoint(browseId = id))
             }
             return
         }
         YouTubeLinkHandler.getPlaylistId(url)?.let { id ->
             currentFragment?.let {
-                NavigationEndpointHandler(it).handle(NavigationEndpoint(
-                    browseEndpoint = BrowseEndpoint(browseId = "VL$id")
-                ))
+                NavigationEndpointHandler(it).handle(playlistBrowseEndpoint("VL$id"))
             }
             return
         }
         YouTubeLinkHandler.getChannelId(url)?.let { id ->
             currentFragment?.let {
-                NavigationEndpointHandler(it).handle(NavigationEndpoint(
-                    browseEndpoint = BrowseEndpoint(browseId = id)
-                ))
+                NavigationEndpointHandler(it).handle(artistBrowseEndpoint(id))
             }
             return
         }
@@ -141,7 +138,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         } else if (binding.fab.isVisible) {
             binding.fab.hide()
         }
-        if (destination.id == R.id.youtubeSuggestionFragment) {
+        if (destination.id == R.id.youtubeSuggestionFragment || destination.id == R.id.localSearchFragment) {
             currentFragment?.exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
             currentFragment?.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
         }
@@ -150,6 +147,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
     }
 
+    @SuppressLint("PrivateResource")
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         bottomSheetBehavior.setPeekHeight(dip(R.dimen.m3_bottom_nav_min_height) + dip(R.dimen.bottom_controls_sheet_peek_height), true)

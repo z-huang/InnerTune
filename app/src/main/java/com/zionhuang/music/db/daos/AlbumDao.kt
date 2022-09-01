@@ -22,6 +22,14 @@ interface AlbumDao {
     @Query("SELECT COUNT(*) FROM album")
     suspend fun getAlbumCount(): Int
 
+    @Transaction
+    @Query("SELECT * FROM album WHERE title LIKE '%' || :query || '%'")
+    fun searchAlbums(query: String): Flow<List<Album>>
+
+    @Transaction
+    @Query("SELECT * FROM album WHERE title LIKE '%' || :query || '%' LIMIT :previewSize")
+    fun searchAlbumsPreview(query: String, previewSize: Int): Flow<List<Album>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(album: AlbumEntity): Long
 

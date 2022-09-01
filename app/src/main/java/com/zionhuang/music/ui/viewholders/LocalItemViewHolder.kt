@@ -9,10 +9,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.extensions.context
-import com.zionhuang.music.extensions.fadeIn
-import com.zionhuang.music.extensions.fadeOut
-import com.zionhuang.music.extensions.show
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
@@ -408,5 +405,16 @@ class PlaylistHeaderViewHolder(
         } else {
             binding.sortOrder.animateToUp(animate)
         }
+    }
+}
+
+class TextHeaderViewHolder(
+    override val binding: ItemTextHeaderBinding,
+) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
+    fun bind(header: TextHeader) {
+        logd("bind")
+        binding.title.text = header.title
     }
 }

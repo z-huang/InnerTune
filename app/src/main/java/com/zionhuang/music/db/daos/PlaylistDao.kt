@@ -25,8 +25,13 @@ interface PlaylistDao {
     @Query("SELECT COUNT(*) FROM playlist")
     suspend fun getPlaylistCount(): Int
 
-    @Query("SELECT * FROM playlist WHERE name LIKE '%' || :query || '%'")
-    suspend fun searchPlaylists(query: String): List<PlaylistEntity>
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE name LIKE '%' || :query || '%'")
+    fun searchPlaylists(query: String): Flow<List<Playlist>>
+
+    @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE name LIKE '%' || :query || '%' LIMIT :previewSize")
+    fun searchPlaylistsPreview(query: String, previewSize: Int): Flow<List<Playlist>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(playlist: PlaylistEntity): Long

@@ -27,7 +27,9 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
     val mainActivity: MainActivity
         get() = fragment.requireActivity() as MainActivity
 
-    open fun handle(navigationEndpoint: NavigationEndpoint?, item: YTItem? = null) = when (val endpoint = navigationEndpoint?.endpoint) {
+    fun handle(navigationEndpoint: NavigationEndpoint?, item: YTItem? = null) = navigationEndpoint?.endpoint?.let { handle(it, item) }
+
+    fun handle(endpoint: Endpoint, item: YTItem? = null) = when (endpoint) {
         is WatchEndpoint -> {
             MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint, item))
             (fragment.requireActivity() as? MainActivity)?.showBottomSheet()
@@ -49,7 +51,6 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
             fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
             fragment.findNavController().navigate(R.id.artistSongsFragment, ArtistSongsFragmentArgs.Builder(endpoint.artistId).build().toBundle())
         }
-        null -> {}
     }
 
     fun share(item: YTItem) {

@@ -59,6 +59,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
             is AlbumHeaderViewHolder -> holder.bind(item as AlbumHeader)
             is PlaylistHeaderViewHolder -> holder.bind(item as PlaylistHeader)
+            is TextHeaderViewHolder -> holder.bind(item as TextHeader)
         }
     }
 
@@ -69,6 +70,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             payload is ArtistHeader && holder is ArtistHeaderViewHolder -> holder.bind(payload, true)
             payload is AlbumHeader && holder is AlbumHeaderViewHolder -> holder.bind(payload, true)
             payload is PlaylistHeader && holder is PlaylistHeaderViewHolder -> holder.bind(payload, true)
+            payload is TextHeader && holder is TextHeaderViewHolder -> holder.bind(payload)
             payload == SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(tracker?.isSelected(getItem(position).id) ?: false)
             else -> onBindViewHolder(holder, position)
         }
@@ -83,6 +85,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         TYPE_ALBUM_HEADER -> AlbumHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         TYPE_PLAYLIST_HEADER -> PlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_TEXT_HEADER -> TextHeaderViewHolder(parent.inflateWithBinding(R.layout.item_text_header))
         else -> error("Unknown view type")
     }
 
@@ -95,6 +98,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         is ArtistHeader -> TYPE_ARTIST_HEADER
         is AlbumHeader -> TYPE_ALBUM_HEADER
         is PlaylistHeader -> TYPE_PLAYLIST_HEADER
+        is TextHeader -> TYPE_TEXT_HEADER
     }
 
     override fun getPopupText(position: Int): String =
@@ -123,5 +127,6 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         const val TYPE_ARTIST_HEADER = 5
         const val TYPE_ALBUM_HEADER = 6
         const val TYPE_PLAYLIST_HEADER = 7
+        const val TYPE_TEXT_HEADER = 8
     }
 }

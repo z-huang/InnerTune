@@ -63,6 +63,7 @@
     <!-- Nav Menu -->
     <string name="menu_search_title">搜尋</string>
     <string name="search_yt_music">搜尋 YouTube Music…</string>
+    <string name="search_library">搜尋媒體庫…</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">編輯</string>

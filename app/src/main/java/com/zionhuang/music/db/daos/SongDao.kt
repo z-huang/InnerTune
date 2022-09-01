@@ -60,7 +60,12 @@ interface SongDao {
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash")
-    fun searchSongsAsPagingSource(query: String): PagingSource<Int, Song>
+    fun searchSongs(query: String): Flow<List<Song>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash LIMIT :previewSize")
+    fun searchSongsPreview(query: String, previewSize: Int): Flow<List<Song>>
 
     @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
     suspend fun hasSong(songId: String): Boolean

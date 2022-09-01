@@ -1,14 +1,10 @@
 package com.zionhuang.music.ui.fragments
 
-import android.app.SearchManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import androidx.appcompat.widget.SearchView
-import androidx.core.content.getSystemService
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -21,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.LocalItem
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.extensions.*
+import com.zionhuang.music.extensions.addFastScroller
+import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
@@ -31,12 +29,8 @@ import com.zionhuang.music.ui.listeners.SongMenuListener
 import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
@@ -94,30 +88,14 @@ class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    @OptIn(FlowPreview::class)
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_and_settings, menu)
-        val searchView = menu.findItem(R.id.action_search).actionView as SearchView
-        searchView.apply {
-            findViewById<EditText>(androidx.appcompat.R.id.search_src_text)?.apply {
-                setPadding(0, 2, 0, 2)
-                setTextColor(requireContext().resolveColor(R.attr.colorOnSurface))
-                setHintTextColor(requireContext().resolveColor(R.attr.colorOnSurfaceVariant))
-            }
-            setSearchableInfo(requireContext().getSystemService<SearchManager>()?.getSearchableInfo(requireActivity().componentName))
-            viewLifecycleOwner.lifecycleScope.launch {
-                getQueryTextChangeFlow()
-                    .debounce(100.toDuration(DurationUnit.MILLISECONDS))
-                    .collect { e ->
-                        songsViewModel.query = e.query
-//                        adapter.refresh()
-                    }
-            }
-        }
+        menu.findItem(R.id.action_search).actionView = null
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.action_search -> findNavController().navigate(R.id.localSearchFragment)
             R.id.action_settings -> findNavController().navigate(R.id.settingsActivity)
         }
         return true

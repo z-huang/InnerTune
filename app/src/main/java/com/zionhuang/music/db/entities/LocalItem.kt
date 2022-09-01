@@ -4,6 +4,7 @@ import com.zionhuang.music.constants.Constants.ALBUM_HEADER_ID
 import com.zionhuang.music.constants.Constants.ARTIST_HEADER_ID
 import com.zionhuang.music.constants.Constants.PLAYLIST_HEADER_ID
 import com.zionhuang.music.constants.Constants.SONG_HEADER_ID
+import com.zionhuang.music.constants.Constants.TEXT_HEADER_ID
 import com.zionhuang.music.models.sortInfo.*
 
 sealed class LocalBaseItem {
@@ -38,4 +39,10 @@ data class PlaylistHeader(
     val sortInfo: SortInfo<PlaylistSortType>,
 ) : LocalBaseItem() {
     override val id = PLAYLIST_HEADER_ID
+}
+
+data class TextHeader(
+    val title: String,
+) : LocalBaseItem() {
+    override val id = TEXT_HEADER_ID
 }

@@ -127,8 +127,4 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
 
     private fun showKeyboard() = showKeyboard(requireActivity(), binding.searchView)
     private fun hideKeyboard() = hideKeyboard(requireActivity(), binding.searchView)
-
-    companion object {
-        private const val SPEECH_REQUEST_CODE = 0
-    }
 }

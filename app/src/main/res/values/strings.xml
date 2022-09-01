@@ -63,6 +63,7 @@
     <!-- Nav Menu -->
     <string name="menu_search_title">Search</string>
     <string name="search_yt_music">Search YouTube Music…</string>
+    <string name="search_library">Search library…</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">Edit</string>

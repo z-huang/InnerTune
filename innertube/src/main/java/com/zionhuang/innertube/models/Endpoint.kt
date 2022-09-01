@@ -3,6 +3,7 @@ package com.zionhuang.innertube.models
 import android.os.Parcelable
 import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ALBUM
 import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_ARTIST
+import com.zionhuang.innertube.models.BrowseEndpoint.BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig.Companion.MUSIC_PAGE_TYPE_PLAYLIST
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
@@ -85,6 +86,35 @@ data class BrowseEndpoint(
                 const val MUSIC_PAGE_TYPE_TRACK_LYRICS = "MUSIC_PAGE_TYPE_TRACK_LYRICS"
             }
         }
+    }
+
+    companion object {
+        fun artistBrowseEndpoint(artistId: String) = BrowseEndpoint(
+            browseId = artistId,
+            browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
+                browseEndpointContextMusicConfig = BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig(
+                    pageType = MUSIC_PAGE_TYPE_ARTIST
+                )
+            )
+        )
+
+        fun albumBrowseEndpoint(albumId:String) = BrowseEndpoint(
+            browseId = albumId,
+            browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
+                browseEndpointContextMusicConfig = BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig(
+                    pageType = MUSIC_PAGE_TYPE_ALBUM
+                )
+            )
+        )
+
+        fun playlistBrowseEndpoint(playlistId:String) = BrowseEndpoint(
+            browseId = playlistId,
+            browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
+                browseEndpointContextMusicConfig = BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig(
+                    pageType = MUSIC_PAGE_TYPE_PLAYLIST
+                )
+            )
+        )
     }
 }
 

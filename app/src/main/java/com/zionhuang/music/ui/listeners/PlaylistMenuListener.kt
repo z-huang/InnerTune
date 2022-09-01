@@ -11,7 +11,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.innertube.models.QueueAddEndpoint
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
@@ -87,9 +86,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     override fun play(playlist: Playlist) {
         if (playlist.playlist.isYouTubePlaylist) {
-            NavigationEndpointHandler(fragment).handle(NavigationEndpoint(
-                watchPlaylistEndpoint = WatchPlaylistEndpoint(playlistId = playlist.id)
-            ))
+            NavigationEndpointHandler(fragment).handle(WatchPlaylistEndpoint(playlistId = playlist.id))
         } else {
             play(listOf(playlist))
         }
@@ -116,12 +113,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     override fun playNext(playlist: Playlist) {
         if (playlist.playlist.isYouTubePlaylist) {
-            NavigationEndpointHandler(fragment).handle(NavigationEndpoint(
-                queueAddEndpoint = QueueAddEndpoint(
-                    queueInsertPosition = INSERT_AFTER_CURRENT_VIDEO,
-                    queueTarget = QueueAddEndpoint.QueueTarget(
-                        playlistId = playlist.id
-                    )
+            NavigationEndpointHandler(fragment).handle(QueueAddEndpoint(
+                queueInsertPosition = INSERT_AFTER_CURRENT_VIDEO,
+                queueTarget = QueueAddEndpoint.QueueTarget(
+                    playlistId = playlist.id
                 )
             ))
             Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, 1, 1), LENGTH_SHORT).show()
@@ -151,12 +146,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     override fun addToQueue(playlist: Playlist) {
         if (playlist.playlist.isYouTubePlaylist) {
-            NavigationEndpointHandler(fragment).handle(NavigationEndpoint(
-                queueAddEndpoint = QueueAddEndpoint(
-                    queueInsertPosition = INSERT_AT_END,
-                    queueTarget = QueueAddEndpoint.QueueTarget(
-                        playlistId = playlist.id
-                    )
+            NavigationEndpointHandler(fragment).handle(QueueAddEndpoint(
+                queueInsertPosition = INSERT_AT_END,
+                queueTarget = QueueAddEndpoint.QueueTarget(
+                    playlistId = playlist.id
                 )
             ))
             Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, 1, 1), LENGTH_SHORT).show()
