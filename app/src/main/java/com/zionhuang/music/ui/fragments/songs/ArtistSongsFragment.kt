@@ -36,17 +36,22 @@ class ArtistSongsFragment : RecyclerViewFragment<LocalItemAdapter>() {
         enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            addOnClickListener { position, _ ->
-                if (this@ArtistSongsFragment.adapter.currentList[position] !is Song) return@addOnClickListener
-                playbackViewModel.playQueue(requireActivity(),
-                    ListQueue(
-                        items = this@ArtistSongsFragment.adapter.currentList.drop(1).filterIsInstance<Song>().map { it.toMediaItem() },
-                        startIndex = position - 1
-                    )
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.addOnClickListener { position, _ ->
+            if (adapter.currentList[position] !is Song) return@addOnClickListener
+            playbackViewModel.playQueue(requireActivity(),
+                ListQueue(
+                    items = adapter.currentList.drop(1).filterIsInstance<Song>().map { it.toMediaItem() },
+                    startIndex = position - 1
                 )
-            }
+            )
+        }
+        adapter.onShuffle = {
+            playbackViewModel.playQueue(requireActivity(),
+                ListQueue(
+                    items = adapter.currentList.drop(1).filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
+                )
+            )
         }
 
         lifecycleScope.launch {

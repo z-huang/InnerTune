@@ -258,7 +258,7 @@ class SongPlayer(
             val items = when (item) {
                 is SongItem -> YouTube.getQueue(videoIds = listOf(item.id)).map { it.toMediaItem() }
                 is AlbumItem -> withContext(IO) {
-                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
+                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
                     // consider refetch by [YouTube.getQueue] if needed
                 }
                 is PlaylistItem -> withContext(IO) {

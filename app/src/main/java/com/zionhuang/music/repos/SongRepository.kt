@@ -470,7 +470,7 @@ object SongRepository : LocalRepository {
         val songs = when (item) {
             is ArtistItem -> return@withContext
             is SongItem -> YouTube.getQueue(videoIds = listOf(item.id))
-            is AlbumItem -> YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>() // consider refetch by [YouTube.getQueue] if needed
+            is AlbumItem -> YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>() // consider refetch by [YouTube.getQueue] if needed
             is PlaylistItem -> YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).filterIsInstance<SongItem>()
         }
         addSongs(songs)
@@ -482,7 +482,7 @@ object SongRepository : LocalRepository {
             when (item) {
                 is SongItem -> listOf(item)
                 is AlbumItem -> withContext(IO) {
-                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>()
+                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>()
                     // consider refetch by [YouTube.getQueue] if needed
                 }
                 is PlaylistItem -> withContext(IO) {

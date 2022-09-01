@@ -39,7 +39,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
                 when (item) {
                     is SongItem -> listOf(item.toMediaItem())
                     is AlbumItem -> withContext(Dispatchers.IO) {
-                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
+                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
                         // consider refetch by [YouTube.getQueue] if needed
                     }
                     is PlaylistItem -> withContext(Dispatchers.IO) {
@@ -68,7 +68,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
                 when (item) {
                     is SongItem -> listOf(item.toMediaItem())
                     is AlbumItem -> withContext(Dispatchers.IO) {
-                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
+                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
                         // consider refetch by [YouTube.getQueue] if needed
                     }
                     is PlaylistItem -> withContext(Dispatchers.IO) {
