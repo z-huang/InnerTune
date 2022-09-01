@@ -413,9 +413,11 @@ object SongRepository : LocalRepository {
      * Playlist
      */
     override suspend fun insertPlaylist(playlist: PlaylistEntity): Unit = withContext(IO) { playlistDao.insert(playlist) }
-    override suspend fun addPlaylist(playlist: PlaylistItem): Unit = withContext(IO) {
-        (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-            playlistDao.insert(header.toPlaylistEntity())
+    override suspend fun addPlaylists(playlists: List<PlaylistItem>) = withContext(IO) {
+        playlists.forEach { playlist ->
+            (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
+                playlistDao.insert(header.toPlaylistEntity())
+            }
         }
     }
 
@@ -468,8 +470,26 @@ object SongRepository : LocalRepository {
         val songs = when (item) {
             is ArtistItem -> return@withContext
             is SongItem -> YouTube.getQueue(videoIds = listOf(item.id))
-            is AlbumItem -> YouTube.getQueue(playlistId = item.playlistId)
+            is AlbumItem -> YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>() // consider refetch by [YouTube.getQueue] if needed
             is PlaylistItem -> YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).filterIsInstance<SongItem>()
+        }
+        addSongs(songs)
+        addSongsToPlaylist(playlist.id, songs.map { it.id })
+    }
+
+    override suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>) {
+        val songs = items.flatMap { item ->
+            when (item) {
+                is SongItem -> listOf(item)
+                is AlbumItem -> withContext(IO) {
+                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>()
+                    // consider refetch by [YouTube.getQueue] if needed
+                }
+                is PlaylistItem -> withContext(IO) {
+                    YouTube.getQueue(playlistId = item.id)
+                }
+                is ArtistItem -> emptyList()
+            }
         }
         addSongs(songs)
         addSongsToPlaylist(playlist.id, songs.map { it.id })

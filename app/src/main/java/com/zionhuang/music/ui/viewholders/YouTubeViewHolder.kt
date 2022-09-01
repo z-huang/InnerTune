@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.innertube.models.*
@@ -17,6 +18,8 @@ import com.zionhuang.innertube.models.SuggestionTextItem.SuggestionSource.LOCAL
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.extensions.context
+import com.zionhuang.music.extensions.fadeIn
+import com.zionhuang.music.extensions.fadeOut
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
@@ -121,7 +124,17 @@ class YouTubeListItemViewHolder(
     val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
 ) : YouTubeItemViewHolder<ItemYoutubeListBinding>(viewGroup, R.layout.item_youtube_list) {
-    override fun bind(item: YTItem) {
+    val itemDetails: ItemDetailsLookup.ItemDetails<String>?
+        get() = if (binding.item !is ArtistItem) {
+            object : ItemDetailsLookup.ItemDetails<String>() {
+                override fun getPosition(): Int = absoluteAdapterPosition
+                override fun getSelectionKey(): String? = binding.item?.id
+            }
+        } else null
+
+    override fun bind(item: YTItem) = bind(item, false)
+
+    fun bind(item: YTItem, isSelected: Boolean) {
         binding.item = item
         if (item is SongItem && item.index != null) {
             binding.index.text = item.index
@@ -135,7 +148,13 @@ class YouTubeListItemViewHolder(
                 .newInstance(item, navigationEndpointHandler)
                 .show(binding.context)
         }
+        binding.selectedIndicator.isVisible = isSelected
         binding.executePendingBindings()
+    }
+
+    fun onSelectionChanged(isSelected: Boolean) {
+        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
     }
 }
 

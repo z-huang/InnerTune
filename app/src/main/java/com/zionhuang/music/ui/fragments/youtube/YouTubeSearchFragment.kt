@@ -13,6 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
@@ -22,12 +25,17 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_P
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentSearchBinding
 import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.ui.adapters.YouTubeItemPagingAdapter
+import com.zionhuang.music.ui.adapters.selection.YouTubeItemDetailsLookup
+import com.zionhuang.music.ui.adapters.selection.YouTubeItemKeyProvider
 import com.zionhuang.music.ui.fragments.base.AbsPagingRecyclerViewFragment
+import com.zionhuang.music.ui.listeners.YTItemBatchMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
+import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.YouTubeSearchViewModel
 import com.zionhuang.music.viewmodels.YouTubeSearchViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
@@ -48,6 +56,8 @@ class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBindin
 
     private val navigationEndpointHandler = NavigationEndpointHandler(this)
     override val adapter = YouTubeItemPagingAdapter(navigationEndpointHandler)
+    private var tracker: SelectionTracker<String>? = null
+    private val menuListener = YTItemBatchMenuListener(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,7 +80,7 @@ class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBindin
         }?.isChecked = true
 
         binding.chipGroup.setOnCheckedStateChangeListener { group, _ ->
-            viewModel.filter.value = when (group.checkedChipId) {
+            val newFilter = when (group.checkedChipId) {
                 R.id.chip_all -> null
                 R.id.chip_songs -> FILTER_SONG
                 R.id.chip_videos -> FILTER_VIDEO
@@ -80,8 +90,38 @@ class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBindin
                 R.id.chip_featured_playlists -> FILTER_FEATURED_PLAYLIST
                 else -> null
             }
-            adapter.refresh()
+            if (viewModel.filter.value == newFilter) {
+                binding.recyclerView.smoothScrollToPosition(0)
+            } else {
+                tracker?.clearSelection()
+                viewModel.filter.value = newFilter
+                adapter.refresh()
+            }
         }
+
+        tracker = SelectionTracker.Builder("selectionId", binding.recyclerView, YouTubeItemKeyProvider(adapter), YouTubeItemDetailsLookup(binding.recyclerView), StorageStrategy.createStringStorage())
+            .withSelectionPredicate(SelectionPredicates.createSelectAnything())
+            .build()
+            .apply {
+                adapter.tracker = this
+                addObserver(object : SelectionTracker.SelectionObserver<String>() {
+                    override fun onItemStateChanged(key: String, selected: Boolean) {
+                        getSwipeRefreshLayout().isEnabled = !hasSelection()
+                    }
+                })
+                addActionModeObserver(requireActivity(), R.menu.youtube_item_batch) { menuItem ->
+                    val map = adapter.snapshot().items.associateBy { it.id }
+                    val items = selection.toList().map { map[it] }.filterIsInstance<YTItem>()
+                    when (menuItem.itemId) {
+                        R.id.action_play_next -> menuListener.playNext(items)
+                        R.id.action_add_to_queue -> menuListener.addToQueue(items)
+                        R.id.action_add_to_library -> menuListener.addToLibrary(items)
+                        R.id.action_add_to_playlist -> menuListener.addToPlaylist(items)
+                        R.id.action_download -> menuListener.download(items)
+                    }
+                    true
+                }
+            }
 
         lifecycleScope.launch {
             // Always show the first item when switching filters

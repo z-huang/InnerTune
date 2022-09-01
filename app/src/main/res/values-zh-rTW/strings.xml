@@ -131,7 +131,7 @@
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">新增時間</string>
-    <string name="sort_by_name">曲名</string>
+    <string name="sort_by_name">名稱</string>
     <string name="sort_by_artist">藝人</string>
     <string name="sort_by_year">年份</string>
     <string name="sort_by_song_count">歌曲總數</string>
@@ -162,6 +162,7 @@
         <item quantity="one">即將播放此播放清單</item>
         <item quantity="other">即將播放這%d個播放清單</item>
     </plurals>
+    <string name="snackbar_play_next">即將播放所選項目</string>
     <plurals name="snackbar_song_added_to_queue" tools:ignore="UnusedQuantity">
         <item quantity="one">已將此歌曲加入待播清單</item>
         <item quantity="other">已將這%d首歌曲加入待播清單</item>
@@ -178,6 +179,7 @@
         <item quantity="one">已將此播放清單加入待播清單</item>
         <item quantity="other">已將這%d個播放清單加入待播清單</item>
     </plurals>
+    <string name="snackbar_added_to_queue">已將所選加入待播清單</string>
     <string name="snackbar_added_to_library">已新增至媒體庫</string>
     <string name="snackbar_removed_from_library">已從媒體庫中移除</string>
     <string name="snackbar_playlist_imported">已匯入此播放清單</string>

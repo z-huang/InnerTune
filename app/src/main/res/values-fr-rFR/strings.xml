@@ -172,6 +172,7 @@
         <item quantity="one">%d playlist will play next</item>
         <item quantity="many">%d playlists will play next</item>
     </plurals>
+    <string name="snackbar_play_next">Selected will play next</string>
     <plurals name="snackbar_song_added_to_queue">
         <item quantity="one">%d song added to queue</item>
         <item quantity="many">%d songs added to queue</item>
@@ -188,6 +189,7 @@
         <item quantity="one">%d playlist added to queue</item>
         <item quantity="many">%d playlists added to queue</item>
     </plurals>
+    <string name="snackbar_added_to_queue">Selected added to queue</string>
     <string name="snackbar_added_to_library">Added to library</string>
     <string name="snackbar_removed_from_library">Removed from library</string>
     <string name="snackbar_playlist_imported">Playlist imported</string>

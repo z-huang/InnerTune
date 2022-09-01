@@ -4,6 +4,8 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.core.view.updateLayoutParams
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.SelectionTracker.SELECTION_CHANGED_MARKER
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +21,7 @@ class YouTubeItemPagingAdapter(
     private val itemViewType: YTBaseItem.ViewType = YTBaseItem.ViewType.LIST,
     private val forceMatchParent: Boolean = false,
 ) : PagingDataAdapter<YTBaseItem, YouTubeViewHolder<*>>(ItemComparator()) {
+    var tracker: SelectionTracker<String>? = null
     var onFillQuery: (String) -> Unit = {}
     var onSearch: (String) -> Unit = {}
     var onRefreshSuggestions: () -> Unit = {}
@@ -65,9 +68,17 @@ class YouTubeItemPagingAdapter(
                 is YouTubeNavigationItemViewHolder -> holder.bind(item as NavigationItem)
                 is YouTubeNavigationTileViewHolder -> holder.bind(item as NavigationItem)
                 is YouTubeSuggestionViewHolder -> holder.bind(item as SuggestionTextItem)
-                is YouTubeListItemViewHolder -> holder.bind(item as YTItem)
+                is YouTubeListItemViewHolder -> holder.bind(item as YTItem, tracker?.isSelected(item.id) ?: false)
                 is YouTubeSquareItemViewHolder -> holder.bind(item as YTItem)
             }
+        }
+    }
+
+    override fun onBindViewHolder(holder: YouTubeViewHolder<*>, position: Int, payloads: MutableList<Any>) {
+        val payload = payloads.firstOrNull()
+        when {
+            payload == SELECTION_CHANGED_MARKER && holder is YouTubeListItemViewHolder -> holder.onSelectionChanged(tracker?.isSelected(getItem(position)!!.id) ?: false)
+            else -> onBindViewHolder(holder, position)
         }
     }
 
@@ -87,8 +98,9 @@ class YouTubeItemPagingAdapter(
     fun getItemAt(position: Int) = getItem(position)
 
     class ItemComparator : DiffUtil.ItemCallback<YTBaseItem>() {
-        override fun areItemsTheSame(oldItem: YTBaseItem, newItem: YTBaseItem): Boolean = oldItem::class == newItem::class && oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: YTBaseItem, newItem: YTBaseItem): Boolean = oldItem == newItem
+        override fun areItemsTheSame(oldItem: YTBaseItem, newItem: YTBaseItem) = oldItem::class == newItem::class && oldItem.id == newItem.id
+        override fun areContentsTheSame(oldItem: YTBaseItem, newItem: YTBaseItem) = oldItem == newItem
+        override fun getChangePayload(oldItem: YTBaseItem, newItem: YTBaseItem) = newItem
     }
 
     companion object {

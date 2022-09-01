@@ -75,6 +75,7 @@ class MenuBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 findItem(R.id.action_radio)?.isVisible = item.menu.radioEndpoint != null
                 findItem(R.id.action_play_next)?.isVisible = item.menu.playNextEndpoint != null
                 findItem(R.id.action_add_to_queue)?.isVisible = item.menu.addToQueueEndpoint != null
+                findItem(R.id.action_add_to_library)?.isVisible = item !is ArtistItem
                 findItem(R.id.action_import_playlist)?.isVisible = item is PlaylistItem
                 findItem(R.id.action_add_to_playlist)?.isVisible = item !is ArtistItem
                 findItem(R.id.action_download)?.isVisible = item !is ArtistItem

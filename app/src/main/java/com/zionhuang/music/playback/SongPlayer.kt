@@ -256,11 +256,13 @@ class SongPlayer(
     fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: YTItem?) {
         scope.launch {
             val items = when (item) {
-                is SongItem -> listOf(item.toMediaItem())
-                is AlbumItem, is PlaylistItem -> withContext(IO) {
-                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).mapNotNull {
-                        (it as? SongItem)?.toMediaItem()
-                    }
+                is SongItem -> YouTube.getQueue(videoIds = listOf(item.id)).map { it.toMediaItem() }
+                is AlbumItem -> withContext(IO) {
+                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.id)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
+                    // consider refetch by [YouTube.getQueue] if needed
+                }
+                is PlaylistItem -> withContext(IO) {
+                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).map { it.toMediaItem() }
                 }
                 is ArtistItem -> return@launch
                 null -> when {
@@ -280,6 +282,16 @@ class SongPlayer(
             }
             player.prepare()
         }
+    }
+
+    fun playNext(items: List<MediaItem>) {
+        player.addMediaItems(if (player.mediaItemCount == 0) 0 else player.currentMediaItemIndex + 1, items)
+        player.prepare()
+    }
+
+    fun addToQueue(items: List<MediaItem>) {
+        player.addMediaItems(items)
+        player.prepare()
     }
 
     /**
