@@ -29,9 +29,9 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
     var artistMenuListener: IArtistMenuListener? = null
     var albumMenuListener: IAlbumMenuListener? = null
     var playlistMenuListener: IPlaylistMenuListener? = null
-
     var tracker: SelectionTracker<String>? = null
     var allowMoreAction: Boolean = true
+    var onShuffle: () -> Unit = {}
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: LocalItemViewHolder, position: Int) {
@@ -81,7 +81,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         TYPE_ARTIST -> ArtistViewHolder(parent.inflateWithBinding(R.layout.item_artist), artistMenuListener)
         TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album), albumMenuListener)
         TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), playlistMenuListener, allowMoreAction)
-        TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header), onShuffle)
         TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         TYPE_ALBUM_HEADER -> AlbumHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         TYPE_PLAYLIST_HEADER -> PlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))

@@ -57,6 +57,11 @@ class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
             }
             addFastScroller { useMd2Style() }
         }
+        adapter.onShuffle = {
+            playbackViewModel.playQueue(requireActivity(), ListQueue(
+                items = adapter.currentList.filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
+            ))
+        }
 
         tracker = SelectionTracker.Builder("selectionId", binding.recyclerView, LocalItemKeyProvider(adapter), LocalItemDetailsLookup(binding.recyclerView), StorageStrategy.createStringStorage())
             .withSelectionPredicate(SelectionPredicates.createSelectAnything())

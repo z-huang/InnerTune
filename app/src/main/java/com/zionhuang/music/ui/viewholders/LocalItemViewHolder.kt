@@ -212,6 +212,7 @@ class PlaylistViewHolder(
 
 class SongHeaderViewHolder(
     override val binding: ItemHeaderBinding,
+    private val onShuffle: () -> Unit = {},
 ) : LocalItemViewHolder(binding) {
     override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
 
@@ -236,15 +237,19 @@ class SongHeaderViewHolder(
                 show()
             }
         }
-        binding.sortOrder.setOnClickListener {
-            SongSortInfoPreference.toggleIsDescending()
-        }
         binding.sortName.setText(when (header.sortInfo.type) {
             SongSortType.CREATE_DATE -> R.string.sort_by_create_date
             SongSortType.NAME -> R.string.sort_by_name
             SongSortType.ARTIST -> R.string.sort_by_artist
         })
+        binding.sortOrder.setOnClickListener {
+            SongSortInfoPreference.toggleIsDescending()
+        }
         updateSortOrderIcon(header.sortInfo.isDescending, isPayload)
+        binding.btnShuffle.isVisible = true
+        binding.btnShuffle.setOnClickListener {
+            onShuffle()
+        }
         binding.countText.text = binding.context.resources.getQuantityString(R.plurals.song_count, header.songCount, header.songCount)
     }
 
