@@ -135,6 +135,17 @@
                 app:icon="@drawable/ic_play"
                 app:iconGravity="start" />
 
+            <Button
+                android:id="@+id/btn_radio"
+                style="@style/Widget.Material3.Button.Icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_radio"
+                app:icon="@drawable/ic_radio"
+                app:iconGravity="start"
+                tools:visibility="gone" />
+
             <Space
                 android:layout_width="12dp"
                 android:layout_height="wrap_content" />

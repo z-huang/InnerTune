@@ -74,22 +74,23 @@ class YouTubeAlbumOrPlaylistHeaderViewHolder(
 ) : YouTubeViewHolder<ItemYoutubeHeaderAlbumBinding>(viewGroup, R.layout.item_youtube_header_album) {
     fun bind(header: AlbumOrPlaylistHeader) {
         binding.header = header
+        binding.btnPlay.isVisible = onPlayAlbum != null || header.menu.playEndpoint != null
+        binding.btnRadio.isVisible = header.menu.radioEndpoint != null && !binding.btnPlay.isVisible
         binding.btnPlay.setOnClickListener {
             if (onPlayAlbum != null) {
                 onPlayAlbum.invoke()
             } else {
-                header.menu.playEndpoint?.let { endpoint ->
-                    navigationEndpointHandler.handle(endpoint)
-                }
+                navigationEndpointHandler.handle(header.menu.playEndpoint)
             }
+        }
+        binding.btnRadio.setOnClickListener {
+            navigationEndpointHandler.handle(header.menu.radioEndpoint)
         }
         binding.btnShuffle.setOnClickListener {
             if (onShuffleAlbum != null) {
                 onShuffleAlbum.invoke()
             } else {
-                header.menu.shuffleEndpoint?.let { endpoint ->
-                    navigationEndpointHandler.handle(endpoint)
-                }
+                navigationEndpointHandler.handle(header.menu.shuffleEndpoint)
             }
         }
     }
