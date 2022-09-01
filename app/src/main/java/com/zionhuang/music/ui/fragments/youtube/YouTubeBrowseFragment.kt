@@ -39,6 +39,20 @@ class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapte
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         if (args.endpoint.isAlbumEndpoint) {
+            adapter.onPlayAlbum = {
+                viewModel.getAlbumSongs()?.let { songs ->
+                    MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                        items = songs.map { it.toMediaItem() }
+                    ))
+                }
+            }
+            adapter.onShuffleAlbum = {
+                viewModel.getAlbumSongs()?.let { songs ->
+                    MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                        items = songs.shuffled().map { it.toMediaItem() }
+                    ))
+                }
+            }
             binding.recyclerView.addOnClickListener { position, _ ->
                 (adapter.getItemAt(position) as? SongItem)?.let { item ->
                     viewModel.getAlbumSongs()?.let { songs ->

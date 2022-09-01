@@ -25,13 +25,15 @@ class YouTubeItemPagingAdapter(
     var onFillQuery: (String) -> Unit = {}
     var onSearch: (String) -> Unit = {}
     var onRefreshSuggestions: () -> Unit = {}
+    var onPlayAlbum: (() -> Unit)? = null
+    var onShuffleAlbum: (() -> Unit)? = null
 
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): YouTubeViewHolder<*> = when (viewType) {
         BASE_ITEM_HEADER -> YouTubeHeaderViewHolder(parent, navigationEndpointHandler)
         BASE_ITEM_HEADER_ARTIST -> YouTubeArtistHeaderViewHolder(parent, navigationEndpointHandler)
-        BASE_ITEM_HEADER_ALBUM_OR_PLAYLIST -> YouTubeAlbumOrPlaylistHeaderViewHolder(parent, navigationEndpointHandler)
+        BASE_ITEM_HEADER_ALBUM_OR_PLAYLIST -> YouTubeAlbumOrPlaylistHeaderViewHolder(parent, navigationEndpointHandler, onPlayAlbum, onShuffleAlbum)
         BASE_ITEM_CAROUSEL, BASE_ITEM_GRID -> YouTubeItemContainerViewHolder(parent, navigationEndpointHandler)
         BASE_ITEM_DESCRIPTION -> YouTubeDescriptionViewHolder(parent)
         BASE_ITEM_SEPARATOR -> YouTubeSeparatorViewHolder(parent)

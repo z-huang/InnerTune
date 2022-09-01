@@ -69,17 +69,27 @@ class YouTubeArtistHeaderViewHolder(
 class YouTubeAlbumOrPlaylistHeaderViewHolder(
     val viewGroup: ViewGroup,
     private val navigationEndpointHandler: NavigationEndpointHandler,
+    private val onPlayAlbum: (() -> Unit)? = null,
+    private val onShuffleAlbum: (() -> Unit)? = null,
 ) : YouTubeViewHolder<ItemYoutubeHeaderAlbumBinding>(viewGroup, R.layout.item_youtube_header_album) {
     fun bind(header: AlbumOrPlaylistHeader) {
         binding.header = header
         binding.btnPlay.setOnClickListener {
-            header.menu.playEndpoint?.let { endpoint ->
-                navigationEndpointHandler.handle(endpoint)
+            if (onPlayAlbum != null) {
+                onPlayAlbum.invoke()
+            } else {
+                header.menu.playEndpoint?.let { endpoint ->
+                    navigationEndpointHandler.handle(endpoint)
+                }
             }
         }
         binding.btnShuffle.setOnClickListener {
-            header.menu.shuffleEndpoint?.let { endpoint ->
-                navigationEndpointHandler.handle(endpoint)
+            if (onShuffleAlbum != null) {
+                onShuffleAlbum.invoke()
+            } else {
+                header.menu.shuffleEndpoint?.let { endpoint ->
+                    navigationEndpointHandler.handle(endpoint)
+                }
             }
         }
     }
