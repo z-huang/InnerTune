@@ -5,21 +5,12 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.playback.MediaSessionConnection
-import com.zionhuang.music.utils.getPreferredContentCountry
-import com.zionhuang.music.utils.getPreferredLocalization
-import com.zionhuang.music.youtube.NewPipeDownloader
-import org.schabi.newpipe.extractor.NewPipe
 import java.util.*
 
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
-        NewPipe.init(
-            NewPipeDownloader.init(),
-            getPreferredLocalization(this),
-            getPreferredContentCountry(this)
-        )
 
         val systemDefault = getString(R.string.default_localization_key)
         YouTube.locale = YouTubeLocale(

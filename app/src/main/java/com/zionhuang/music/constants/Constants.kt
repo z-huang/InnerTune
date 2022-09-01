@@ -11,5 +11,4 @@ object Constants {
     const val TYPE_ITEM = 1
 
     const val APP_URL = "https://github.com/z-huang/music"
-    const val NEWPIPE_EXTRACTOR_URL = "https://github.com/TeamNewPipe/NewPipeExtractor"
 }

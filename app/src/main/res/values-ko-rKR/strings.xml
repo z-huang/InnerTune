@@ -32,7 +32,6 @@
     <string name="pref_equalizer_title">Equalizer</string>
     <string name="pref_about">정보</string>
     <string name="pref_app_version_title">앱 버전</string>
-    <string name="pref_newpipe_version_title">NewPipe Extractor 버전</string>
     <string name="pref_check_for_updates_title">업데이트 확인</string>
     <string name="pref_checking_for_updates">확인 중…</string>
     <string name="pref_up_to_date">최신입니다.</string>

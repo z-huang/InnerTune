@@ -32,7 +32,6 @@
     <string name="pref_equalizer_title">等化器</string>
     <string name="pref_about">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
-    <string name="pref_newpipe_version_title">NewPipe Extractor 版本</string>
     <string name="pref_check_for_updates_title">檢查更新</string>
     <string name="pref_checking_for_updates">正在檢查…</string>
     <string name="pref_up_to_date">已是最新版本</string>

@@ -77,11 +77,6 @@
         android:key="@string/pref_about_category"
         android:title="@string/pref_about">
         <Preference
-            android:icon="@drawable/ic_newpipe"
-            android:key="@string/pref_newpipe_version"
-            android:summary="@string/newpipe_version"
-            android:title="@string/pref_newpipe_version_title" />
-        <Preference
             android:key="@string/pref_app_version"
             android:summary="@string/app_version"
             android:title="@string/pref_app_version_title"

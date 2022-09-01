@@ -11,7 +11,7 @@ import com.zionhuang.innertube.utils.plus
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.getApplication
 import com.zionhuang.music.extensions.toPage
-import com.zionhuang.music.youtube.InfoCache.checkCache
+import com.zionhuang.music.utils.InfoCache.checkCache
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 

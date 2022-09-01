@@ -1,4 +1,4 @@
-package com.zionhuang.music.youtube
+package com.zionhuang.music.utils
 
 import androidx.collection.LruCache
 import kotlinx.coroutines.Dispatchers.IO
@@ -35,11 +35,11 @@ object InfoCache {
         return data.info
     }
 
-    fun getFromKey(id: String): Any? = synchronized(LRU_CACHE) {
+    private fun getFromKey(id: String): Any? = synchronized(LRU_CACHE) {
         getInfo(keyOf(id))
     }
 
-    fun putInfo(id: String, info: Any) {
+    private fun putInfo(id: String, info: Any) {
         val expirationMillis = MILLISECONDS.convert(1, HOURS)
         synchronized(LRU_CACHE) {
             val data = CacheData(info, expirationMillis)
@@ -77,7 +77,7 @@ object InfoCache {
         }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <T : Any> loadFromCache(id: String): T? = getFromKey(id) as T?
+    private fun <T : Any> loadFromCache(id: String): T? = getFromKey(id) as? T
 
     private class CacheData(val info: Any, timeoutMillis: Long) {
         private val expireTimestamp: Long = System.currentTimeMillis() + timeoutMillis

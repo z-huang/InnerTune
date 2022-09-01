@@ -8,8 +8,6 @@ plugins {
     id("dev.rikka.tools.materialthemebuilder")
 }
 
-val newpipeVersion: String by rootProject.extra
-
 android {
     compileSdk = 32
     buildToolsVersion = "30.0.3"
@@ -23,7 +21,6 @@ android {
     }
     applicationVariants.all {
         resValue("string", "app_version", versionName)
-        resValue("string", "newpipe_version", newpipeVersion)
     }
     buildTypes {
         getByName("release") {
@@ -146,9 +143,6 @@ dependencies {
     testImplementation("androidx.room:room-testing:2.4.2")
     // YouTube API
     implementation(project(mapOf("path" to ":innertube")))
-    // NewPipe Extractor
-    implementation("com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751")
-    implementation("com.github.TeamNewPipe:NewPipeExtractor:6a858368c86bc9a55abee586eb6c733e86c26b97")
     // Apache Utils
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")

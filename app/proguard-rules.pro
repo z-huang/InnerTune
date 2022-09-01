@@ -29,13 +29,6 @@
   public *;
 }
 
-# Rules for NewPipe
--dontobfuscate
--keep class org.schabi.newpipe.extractor.timeago.patterns.** { *; }
--keep class org.ocpsoft.prettytime.i18n.** { *; }
-
--keep class org.mozilla.javascript.** { *; }
-
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.

@@ -25,8 +25,6 @@ allprojects {
     }
 }
 
-extra["newpipeVersion"] = "0.22.1"
-
 tasks.register<Delete>("Clean") {
     delete(rootProject.buildDir)
 }

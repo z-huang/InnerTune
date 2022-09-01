@@ -7,10 +7,6 @@ import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.SongEntity
-import org.schabi.newpipe.extractor.InfoItem
-import org.schabi.newpipe.extractor.ListExtractor.InfoItemsPage
-import org.schabi.newpipe.extractor.ListInfo
-import org.schabi.newpipe.extractor.Page
 
 // the SongItem should be produced by get_queue endpoint to have detailed information
 fun SongItem.toSongEntity() = SongEntity(
@@ -35,18 +31,6 @@ fun AlbumOrPlaylistHeader.toPlaylistEntity() = PlaylistEntity(
     authorId = artists?.firstOrNull()?.navigationEndpoint?.browseEndpoint?.browseId,
     year = year,
     thumbnailUrl = thumbnails.lastOrNull()?.url
-)
-
-fun <T : InfoItem> ListInfo<T>.toPage() = LoadResult.Page<Page, InfoItem>(
-    data = relatedItems,
-    nextKey = nextPage,
-    prevKey = null
-)
-
-fun <T : InfoItem> InfoItemsPage<T>.toPage() = LoadResult.Page<Page, InfoItem>(
-    data = items,
-    nextKey = nextPage,
-    prevKey = null
 )
 
 fun BrowseResult.toPage() = LoadResult.Page(
