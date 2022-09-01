@@ -42,12 +42,6 @@ interface PlaylistDao {
     @Update
     suspend fun update(playlist: PlaylistEntity)
 
-    suspend fun upsert(playlist: PlaylistEntity) {
-        if (insert(playlist) == -1L) {
-            update(playlist)
-        }
-    }
-
     @Delete
     suspend fun delete(playlists: List<PlaylistEntity>)
 

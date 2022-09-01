@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDateTime
 
 @Parcelize
 @Entity(tableName = "album")
@@ -14,4 +15,6 @@ data class AlbumEntity(
     val thumbnailUrl: String? = null,
     val songCount: Int,
     val duration: Int,
+    val createDate: LocalDateTime = LocalDateTime.now(),
+    val lastUpdateTime: LocalDateTime = LocalDateTime.now(),
 ) : Parcelable

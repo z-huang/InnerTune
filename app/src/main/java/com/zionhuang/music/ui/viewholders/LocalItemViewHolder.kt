@@ -413,6 +413,23 @@ class PlaylistHeaderViewHolder(
     }
 }
 
+class PlaylistSongHeaderViewHolder(
+    override val binding: ItemPlaylistHeaderBinding,
+    private val onShuffle: () -> Unit = {},
+) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
+    fun bind(header: PlaylistSongHeader) {
+        binding.title.text = listOf(
+            binding.context.resources.getQuantityString(R.plurals.song_count, header.songCount, header.songCount),
+            makeTimeString(header.length * 1000)
+        ).joinByBullet()
+        binding.btnShuffle.setOnClickListener {
+            onShuffle()
+        }
+    }
+}
+
 class TextHeaderViewHolder(
     override val binding: ItemTextHeaderBinding,
 ) : LocalItemViewHolder(binding) {

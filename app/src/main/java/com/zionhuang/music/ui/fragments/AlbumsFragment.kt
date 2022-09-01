@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.albumBrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Album
+import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
@@ -41,6 +42,7 @@ class AlbumsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            addFastScroller { useMd2Style() }
             addOnClickListener { position, _ ->
                 (this@AlbumsFragment.adapter.currentList[position] as? Album)?.let { album ->
                     NavigationEndpointHandler(this@AlbumsFragment).handle(albumBrowseEndpoint(album.id))

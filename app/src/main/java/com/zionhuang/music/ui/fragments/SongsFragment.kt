@@ -46,16 +46,15 @@ class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
-            addOnClickListener { position, _ ->
-                if (this@SongsFragment.adapter.currentList[position] !is LocalItem) {
-                    return@addOnClickListener
-                }
-                playbackViewModel.playQueue(requireActivity(), ListQueue(
-                    items = this@SongsFragment.adapter.currentList.filterIsInstance<Song>().map { it.toMediaItem() },
-                    startIndex = position - 1
-                ))
-            }
             addFastScroller { useMd2Style() }
+        }
+        binding.recyclerView.addOnClickListener { position, _ ->
+            if (adapter.currentList[position] !is LocalItem) return@addOnClickListener
+
+            playbackViewModel.playQueue(requireActivity(), ListQueue(
+                items = adapter.currentList.filterIsInstance<Song>().map { it.toMediaItem() },
+                startIndex = position - 1
+            ))
         }
         adapter.onShuffle = {
             playbackViewModel.playQueue(requireActivity(), ListQueue(

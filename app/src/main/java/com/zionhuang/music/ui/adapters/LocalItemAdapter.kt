@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.ListAdapter
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
-import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
-import com.zionhuang.music.models.sortInfo.SongSortType
+import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
 import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
 import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.*
+import com.zionhuang.music.utils.makeTimeString
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -59,6 +59,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
             is AlbumHeaderViewHolder -> holder.bind(item as AlbumHeader)
             is PlaylistHeaderViewHolder -> holder.bind(item as PlaylistHeader)
+            is PlaylistSongHeaderViewHolder -> holder.bind(item as PlaylistSongHeader)
             is TextHeaderViewHolder -> holder.bind(item as TextHeader)
         }
     }
@@ -70,6 +71,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             payload is ArtistHeader && holder is ArtistHeaderViewHolder -> holder.bind(payload, true)
             payload is AlbumHeader && holder is AlbumHeaderViewHolder -> holder.bind(payload, true)
             payload is PlaylistHeader && holder is PlaylistHeaderViewHolder -> holder.bind(payload, true)
+            payload is PlaylistSongHeader && holder is PlaylistSongHeaderViewHolder -> holder.bind(payload)
             payload is TextHeader && holder is TextHeaderViewHolder -> holder.bind(payload)
             payload == SELECTION_CHANGED_MARKER -> holder.onSelectionChanged(tracker?.isSelected(getItem(position).id) ?: false)
             else -> onBindViewHolder(holder, position)
@@ -85,6 +87,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         TYPE_ALBUM_HEADER -> AlbumHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         TYPE_PLAYLIST_HEADER -> PlaylistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
+        TYPE_PLAYLIST_SONG_HEADER -> PlaylistSongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_playlist_header), onShuffle)
         TYPE_TEXT_HEADER -> TextHeaderViewHolder(parent.inflateWithBinding(R.layout.item_text_header))
         else -> error("Unknown view type")
     }
@@ -98,18 +101,36 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         is ArtistHeader -> TYPE_ARTIST_HEADER
         is AlbumHeader -> TYPE_ALBUM_HEADER
         is PlaylistHeader -> TYPE_PLAYLIST_HEADER
+        is PlaylistSongHeader -> TYPE_PLAYLIST_SONG_HEADER
         is TextHeader -> TYPE_TEXT_HEADER
     }
 
     override fun getPopupText(position: Int): String =
         when (val item = getItem(position)) {
-            is SongHeader, is ArtistHeader -> "#"
+            is SongHeader, is ArtistHeader, is AlbumHeader, is PlaylistHeader, is PlaylistSongHeader, is TextHeader -> "#"
             is Song -> when (SongSortInfoPreference.type) {
                 SongSortType.CREATE_DATE -> item.song.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 SongSortType.NAME -> item.song.title.substring(0, 1)
                 SongSortType.ARTIST -> item.artists.firstOrNull()?.name
             }
-            else -> throw IllegalStateException("Unsupported item type")
+            is Artist -> when (ArtistSortInfoPreference.type) {
+                ArtistSortType.CREATE_DATE -> item.artist.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                ArtistSortType.NAME -> item.artist.name.substring(0, 1)
+                ArtistSortType.SONG_COUNT -> item.songCount.toString()
+            }
+            is Album -> when (AlbumSortInfoPreference.type) {
+                AlbumSortType.CREATE_DATE -> item.album.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                AlbumSortType.NAME -> item.album.title.substring(0, 1)
+                AlbumSortType.ARTIST -> item.artists.firstOrNull()?.name
+                AlbumSortType.YEAR -> item.album.year?.toString()
+                AlbumSortType.SONG_COUNT -> item.album.songCount.toString()
+                AlbumSortType.LENGTH -> makeTimeString(item.album.duration.toLong() * 1000)
+            }
+            is Playlist -> when (PlaylistSortInfoPreference.type) {
+                PlaylistSortType.CREATE_DATE -> item.playlist.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                PlaylistSortType.NAME -> item.playlist.name.substring(0, 1)
+                PlaylistSortType.SONG_COUNT -> item.songCount.toString()
+            }
         } ?: ""
 
     class ItemComparator : DiffUtil.ItemCallback<LocalBaseItem>() {
@@ -127,6 +148,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         const val TYPE_ARTIST_HEADER = 5
         const val TYPE_ALBUM_HEADER = 6
         const val TYPE_PLAYLIST_HEADER = 7
-        const val TYPE_TEXT_HEADER = 8
+        const val TYPE_PLAYLIST_SONG_HEADER = 8
+        const val TYPE_TEXT_HEADER = 9
     }
 }

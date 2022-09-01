@@ -23,7 +23,6 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.extensions.toMediaItem
-import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.ListQueue
@@ -73,7 +72,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 if (playlist.playlist.isYouTubePlaylist) {
                     YouTube.getQueue(playlistId = playlist.id).map { it.toMediaItem() }
                 } else {
-                    SongRepository.getPlaylistSongs(playlist.id, SongSortInfoPreference).getList().map { it.toMediaItem() }
+                    SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaItem() }
                 }
             }
             withContext(Dispatchers.Main) {
@@ -99,7 +98,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 if (playlist.playlist.isYouTubePlaylist) {
                     YouTube.getQueue(playlistId = playlist.id).map { it.toMediaMetadata() }
                 } else {
-                    SongRepository.getPlaylistSongs(playlist.id, SongSortInfoPreference).getList().map { it.toMediaMetadata() }
+                    SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
                 }
             }
             MediaSessionConnection.mediaController?.sendCommand(
@@ -132,7 +131,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 if (playlist.playlist.isYouTubePlaylist) {
                     YouTube.getQueue(playlistId = playlist.id).map { it.toMediaMetadata() }
                 } else {
-                    SongRepository.getPlaylistSongs(playlist.id, SongSortInfoPreference).getList().map { it.toMediaMetadata() }
+                    SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
                 }
             }
             MediaSessionConnection.mediaController?.sendCommand(

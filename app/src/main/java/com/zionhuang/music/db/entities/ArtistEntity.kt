@@ -15,6 +15,7 @@ data class ArtistEntity(
     val thumbnailUrl: String? = null,
     val bannerUrl: String? = null,
     val description: String? = null,
+    val createDate: LocalDateTime = LocalDateTime.now(),
     val lastUpdateTime: LocalDateTime = LocalDateTime.now(),
 ) : Parcelable {
     override fun toString(): String = name

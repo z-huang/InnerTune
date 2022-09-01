@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDateTime
 
 object SongRepository : LocalRepository {
     private val context = getApplication()
@@ -134,9 +135,9 @@ object SongRepository : LocalRepository {
 
     override suspend fun getPlaylistCount() = withContext(IO) { playlistDao.getPlaylistCount() }
 
-    override fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
+    override fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) } },
-        getPagingSource = { songDao.getPlaylistSongsAsPagingSource(playlistId) }
+        getFlow = { songDao.getPlaylistSongsAsFlow(playlistId) }
     )
 
     /**
@@ -332,12 +333,12 @@ object SongRepository : LocalRepository {
             val browseResult = YouTube.browse(BrowseEndpoint(browseId = artist.id))
             val header = browseResult.items.firstOrNull()
             if (header is ArtistHeader) {
-                artistDao.update(ArtistEntity(
-                    id = artist.id,
+                artistDao.update(artist.copy(
                     name = header.name,
                     thumbnailUrl = resizeThumbnailUrl(header.bannerThumbnails.lastOrNull()?.url, 400, 400),
                     bannerUrl = header.bannerThumbnails.lastOrNull()?.url,
                     description = header.description,
+                    lastUpdateTime = LocalDateTime.now()
                 ))
             }
         }
@@ -396,7 +397,8 @@ object SongRepository : LocalRepository {
             albumDao.update(album.copy(
                 title = header.name,
                 thumbnailUrl = header.thumbnails.lastOrNull()?.url,
-                year = header.year
+                year = header.year,
+                lastUpdateTime = LocalDateTime.now()
             ))
         }
     }
@@ -456,7 +458,7 @@ object SongRepository : LocalRepository {
                 is Album -> getAlbumSongs(item.id).map { it.id }
                 is Artist -> getArtistSongs(item.id, SongSortInfoPreference).getList().map { it.id }
                 is Playlist -> if (item.playlist.isLocalPlaylist) {
-                    getPlaylistSongs(item.id, SongSortInfoPreference).getList().map { it.id }
+                    getPlaylistSongs(item.id).getList().map { it.id }
                 } else {
                     safeAddSongs(YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).filterIsInstance<SongItem>()).map { it.id }
                 }
@@ -497,7 +499,14 @@ object SongRepository : LocalRepository {
 
     override suspend fun refetchPlaylist(playlist: Playlist): Unit = withContext(IO) {
         (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-            playlistDao.upsert(header.toPlaylistEntity())
+            playlistDao.update(playlist.playlist.copy(
+                name = header.name,
+                author = header.artists?.firstOrNull()?.text,
+                authorId = header.artists?.firstOrNull()?.navigationEndpoint?.browseEndpoint?.browseId,
+                year = header.year,
+                thumbnailUrl = header.thumbnails.lastOrNull()?.url,
+                lastUpdateTime = LocalDateTime.now()
+            ))
         }
     }
 

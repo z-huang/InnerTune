@@ -1,7 +1,6 @@
 package com.zionhuang.music.db.daos
 
 import androidx.lifecycle.LiveData
-import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.music.db.entities.*
@@ -46,11 +45,11 @@ interface SongDao {
 
     @Transaction
     @Query(QUERY_PLAYLIST_SONGS)
-    fun getPlaylistSongsAsPagingSource(playlistId: String): PagingSource<Int, Song>
+    fun getPlaylistSongsAsList(playlistId: String): List<Song>
 
     @Transaction
     @Query(QUERY_PLAYLIST_SONGS)
-    suspend fun getPlaylistSongsAsList(playlistId: String): List<Song>
+    fun getPlaylistSongsAsFlow(playlistId: String): Flow<List<Song>>
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

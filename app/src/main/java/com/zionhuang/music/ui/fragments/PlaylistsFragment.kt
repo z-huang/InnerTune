@@ -18,6 +18,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.playlistBrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Playlist
+import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
@@ -49,6 +50,7 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            addFastScroller { useMd2Style() }
             addOnClickListener { position, _ ->
                 (this@PlaylistsFragment.adapter.currentList[position] as? Playlist)?.let { playlist ->
                     if (playlist.playlist.isYouTubePlaylist) {

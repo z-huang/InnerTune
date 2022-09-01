@@ -30,7 +30,7 @@ interface LocalRepository {
     fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): ListWrapper<Int, Playlist>
     suspend fun getPlaylistCount(): Int
 
-    fun getPlaylistSongs(playlistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song>
 
     /**
      * Search

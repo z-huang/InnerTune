@@ -16,7 +16,8 @@ data class PlaylistEntity(
     val authorId: String? = null,
     val year: Int? = null,
     val thumbnailUrl: String? = null,
-    val timestamp: LocalDateTime = LocalDateTime.now(),
+    val createDate: LocalDateTime = LocalDateTime.now(),
+    val lastUpdateTime: LocalDateTime = LocalDateTime.now(),
 ) : Parcelable {
     val isLocalPlaylist: Boolean
         get() = id.startsWith("LP")

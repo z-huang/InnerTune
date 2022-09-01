@@ -3,6 +3,7 @@ package com.zionhuang.music.db.entities
 import com.zionhuang.music.constants.Constants.ALBUM_HEADER_ID
 import com.zionhuang.music.constants.Constants.ARTIST_HEADER_ID
 import com.zionhuang.music.constants.Constants.PLAYLIST_HEADER_ID
+import com.zionhuang.music.constants.Constants.PLAYLIST_SONG_HEADER_ID
 import com.zionhuang.music.constants.Constants.SONG_HEADER_ID
 import com.zionhuang.music.constants.Constants.TEXT_HEADER_ID
 import com.zionhuang.music.models.sortInfo.*
@@ -39,6 +40,13 @@ data class PlaylistHeader(
     val sortInfo: SortInfo<PlaylistSortType>,
 ) : LocalBaseItem() {
     override val id = PLAYLIST_HEADER_ID
+}
+
+data class PlaylistSongHeader(
+    val songCount: Int,
+    val length: Long,
+) : LocalBaseItem() {
+    override val id: String = PLAYLIST_SONG_HEADER_ID
 }
 
 data class TextHeader(

@@ -18,6 +18,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Artist
+import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
@@ -43,6 +44,7 @@ class ArtistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
+            addFastScroller { useMd2Style() }
             addOnClickListener { position, _ ->
                 (this@ArtistsFragment.adapter.currentList[position] as? Artist)?.let { artist ->
                     if (artist.artist.isYouTubeArtist) {
