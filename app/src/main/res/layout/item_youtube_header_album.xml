@@ -54,7 +54,6 @@
 
                 <TextView
                     android:id="@+id/subtitle"
-                    style="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -64,7 +63,6 @@
 
                 <TextView
                     android:id="@+id/second_subtitle"
-                    style="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
