@@ -197,6 +197,9 @@
     <string name="snackbar_removed_download">Removed download</string>
     <string name="snackbar_action_view">View</string>
 
+    <!-- Toast -->
+    <string name="toast_restart_to_take_effect">Restart to take effect</string>
+
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Lisää kirjastoon</string>
 

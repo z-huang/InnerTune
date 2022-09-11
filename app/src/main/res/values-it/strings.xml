@@ -197,6 +197,9 @@
     <string name="snackbar_removed_download">Download rimosso</string>
     <string name="snackbar_action_view">Guarda</string>
 
+    <!-- Toast -->
+    <string name="toast_restart_to_take_effect">Restart to take effect</string>
+
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Aggiungi alla libreria</string>
 

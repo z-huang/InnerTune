@@ -5,6 +5,8 @@ import android.content.Intent.ACTION_VIEW
 import android.media.audiofx.AudioEffect.*
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.core.net.toUri
@@ -18,7 +20,6 @@ import com.zionhuang.music.constants.Constants.APP_URL
 import com.zionhuang.music.extensions.preferenceLiveData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.update.UpdateInfo.*
-import com.zionhuang.music.utils.InfoCache
 import com.zionhuang.music.viewmodels.UpdateViewModel
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -51,14 +52,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
-        findPreference<ListPreference>(getString(R.string.pref_content_language))?.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue !is String) return@setOnPreferenceChangeListener false
-            InfoCache.clearCache()
+        findPreference<ListPreference>(getString(R.string.pref_content_language))?.setOnPreferenceChangeListener { preference, newValue ->
+            if ((preference as ListPreference).value == newValue) return@setOnPreferenceChangeListener false
+            Toast.makeText(requireContext(), R.string.toast_restart_to_take_effect, LENGTH_SHORT).show()
             true
         }
-        findPreference<ListPreference>(getString(R.string.pref_content_country))?.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue !is String) return@setOnPreferenceChangeListener false
-            InfoCache.clearCache()
+        findPreference<ListPreference>(getString(R.string.pref_content_country))?.setOnPreferenceChangeListener { preference, newValue ->
+            if ((preference as ListPreference).value == newValue) return@setOnPreferenceChangeListener false
+            Toast.makeText(requireContext(), R.string.toast_restart_to_take_effect, LENGTH_SHORT).show()
+            true
+        }
+
+        findPreference<SwitchPreferenceCompat>(getString(R.string.pref_proxy_enabled))?.setOnPreferenceChangeListener { preference, newValue ->
+            if ((preference as SwitchPreferenceCompat).isChecked == newValue) return@setOnPreferenceChangeListener false
+            Toast.makeText(requireContext(), R.string.toast_restart_to_take_effect, LENGTH_SHORT).show()
+            true
+        }
+        findPreference<EditTextPreference>(getString(R.string.pref_proxy_url))?.setOnPreferenceChangeListener { preference, newValue ->
+            if ((preference as EditTextPreference).text == newValue) return@setOnPreferenceChangeListener false
+            Toast.makeText(requireContext(), R.string.toast_restart_to_take_effect, LENGTH_SHORT).show()
             true
         }
 
