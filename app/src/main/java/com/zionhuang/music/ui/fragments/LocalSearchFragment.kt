@@ -127,7 +127,6 @@ class LocalSearchFragment : AbsRecyclerViewFragment<FragmentSearchLocalBinding, 
 
         lifecycleScope.launch {
             viewModel.result.collectLatest { list ->
-                logd("$list")
                 adapter.submitList(list)
             }
         }

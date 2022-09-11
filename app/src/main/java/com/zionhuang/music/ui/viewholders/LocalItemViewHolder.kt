@@ -438,7 +438,6 @@ class TextHeaderViewHolder(
     override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
 
     fun bind(header: TextHeader) {
-        logd("bind")
         binding.title.text = header.title
     }
 }

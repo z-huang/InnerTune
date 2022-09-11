@@ -239,6 +239,10 @@ object SongRepository : LocalRepository {
         getLiveData = { songDao.hasSongAsLiveData(songId).distinctUntilChanged() }
     )
 
+    override suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long) = withContext(IO) {
+        songDao.incrementSongTotalPlayTime(songId, playTime)
+    }
+
     override suspend fun updateSongTitle(song: Song, newTitle: String) = withContext(IO) {
         songDao.update(song.song.copy(title = newTitle, modifyDate = LocalDateTime.now()))
     }

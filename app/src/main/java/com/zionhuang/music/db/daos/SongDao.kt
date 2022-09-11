@@ -72,6 +72,9 @@ interface SongDao {
     @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
     fun hasSongAsLiveData(songId: String): LiveData<Boolean>
 
+    @Query("UPDATE song SET totalPlayTime = totalPlayTime + :playTime WHERE id = :songId")
+    suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songs: List<SongEntity>)
 

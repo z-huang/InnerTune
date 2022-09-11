@@ -18,6 +18,9 @@ import androidx.core.net.toUri
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.PlaybackException.ERROR_CODE_REMOTE_ERROR
 import com.google.android.exoplayer2.Player.*
+import com.google.android.exoplayer2.analytics.AnalyticsListener
+import com.google.android.exoplayer2.analytics.PlaybackStats
+import com.google.android.exoplayer2.analytics.PlaybackStatsListener
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
@@ -58,7 +61,7 @@ class SongPlayer(
     private val context: Context,
     private val scope: CoroutineScope,
     notificationListener: PlayerNotificationManager.NotificationListener,
-) : Listener {
+) : Listener, PlaybackStatsListener.Callback {
     private val localRepository = SongRepository
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private val bitmapProvider = BitmapProvider(context)
@@ -101,6 +104,7 @@ class SongPlayer(
         .build()
         .apply {
             addListener(this@SongPlayer)
+            addAnalyticsListener(PlaybackStatsListener(false, this@SongPlayer))
             val audioAttributes = AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
@@ -304,6 +308,13 @@ class SongPlayer(
             player.currentMetadata?.let {
                 addToLibrary(it)
             }
+        }
+    }
+
+    override fun onPlaybackStatsReady(eventTime: AnalyticsListener.EventTime, playbackStats: PlaybackStats) {
+        val mediaItem = eventTime.timeline.getWindow(eventTime.windowIndex, Timeline.Window()).mediaItem
+        scope.launch {
+            SongRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
         }
     }
 

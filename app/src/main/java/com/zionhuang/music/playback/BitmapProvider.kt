@@ -7,7 +7,6 @@ import android.util.LruCache
 import coil.imageLoader
 import coil.request.Disposable
 import coil.request.ImageRequest
-import com.zionhuang.music.extensions.logd
 
 class BitmapProvider(private val context: Context) {
     private val map = object : LruCache<String, Bitmap>(MAX_CACHE_SIZE) {
@@ -17,7 +16,6 @@ class BitmapProvider(private val context: Context) {
     private var disposable: Disposable? = null
 
     fun load(url: String, callback: (Bitmap) -> Unit): Bitmap? {
-        logd("load $url")
         val cache = map.get(url)
         disposable?.dispose()
         if (cache == null) {

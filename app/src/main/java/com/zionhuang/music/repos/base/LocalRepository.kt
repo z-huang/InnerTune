@@ -51,6 +51,7 @@ interface LocalRepository {
     suspend fun getSongById(songId: String): Song?
     fun getSongFile(songId: String): File
     fun hasSong(songId: String): DataWrapper<Boolean>
+    suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)
     suspend fun updateSongTitle(song: Song, newTitle: String)
     suspend fun setLiked(liked: Boolean, songs: List<Song>)
     suspend fun downloadSong(song: SongEntity) = downloadSongs(listOf(song))

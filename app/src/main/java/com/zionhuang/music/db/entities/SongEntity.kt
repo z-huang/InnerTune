@@ -15,8 +15,8 @@ data class SongEntity(
     val title: String,
     val duration: Int = 0, // in seconds
     val thumbnailUrl: String? = null,
-    val albumId: String?,
-    val albumName: String?,
+    val albumId: String? = null,
+    val albumName: String? = null,
     val liked: Boolean = false,
     val totalPlayTime: Long = 0, // in milliseconds
     val isTrash: Boolean = false,
