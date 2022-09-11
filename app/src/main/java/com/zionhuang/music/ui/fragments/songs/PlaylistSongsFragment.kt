@@ -2,11 +2,16 @@ package com.zionhuang.music.ui.fragments.songs
 
 import android.graphics.Canvas
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,9 +26,12 @@ import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.DraggableLocalItemAdapter
+import com.zionhuang.music.ui.adapters.selection.DraggableLocalItemKeyProvider
 import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.listeners.SongMenuListener
+import com.zionhuang.music.ui.viewholders.LocalItemViewHolder
 import com.zionhuang.music.ui.viewholders.SongViewHolder
+import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -35,10 +43,12 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val menuListener = SongMenuListener(this)
     override val adapter = DraggableLocalItemAdapter().apply {
-        songMenuListener = SongMenuListener(this@PlaylistSongsFragment)
+        songMenuListener = menuListener
         isDraggable = true
     }
+    private var tracker: SelectionTracker<String>? = null
 
     private var move: Pair<Int, Int>? = null
     private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP or DOWN, LEFT or RIGHT) {
@@ -107,6 +117,33 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
                 items = adapter.currentList.filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
             ))
         }
+
+        tracker = SelectionTracker.Builder("selectionId", binding.recyclerView, DraggableLocalItemKeyProvider(adapter),
+            object : ItemDetailsLookup<String>() {
+                // Disable selection if dragging
+                override fun getItemDetails(e: MotionEvent): ItemDetails<String>? = if (move != null) null else binding.recyclerView.findChildViewUnder(e.x, e.y)?.let { v ->
+                    (binding.recyclerView.getChildViewHolder(v) as? LocalItemViewHolder)?.itemDetails
+                }
+            }, StorageStrategy.createStringStorage())
+            .withSelectionPredicate(SelectionPredicates.createSelectAnything())
+            .build()
+            .apply {
+                adapter.tracker = this
+                addActionModeObserver(requireActivity(), R.menu.song_batch) { item ->
+                    val map = adapter.currentList.associateBy { it.id }
+                    val songs = selection.toList().map { map[it] }.filterIsInstance<Song>()
+                    when (item.itemId) {
+                        R.id.action_play_next -> menuListener.playNext(songs)
+                        R.id.action_add_to_queue -> menuListener.addToQueue(songs)
+                        R.id.action_add_to_playlist -> menuListener.addToPlaylist(songs)
+                        R.id.action_download -> menuListener.download(songs)
+                        R.id.action_remove_download -> menuListener.removeDownload(songs)
+                        R.id.action_refetch -> menuListener.refetch(songs)
+                        R.id.action_delete -> menuListener.delete(songs)
+                    }
+                    true
+                }
+            }
 
         lifecycleScope.launch {
             requireAppCompatActivity().title = SongRepository.getPlaylistById(playlistId).playlist.name

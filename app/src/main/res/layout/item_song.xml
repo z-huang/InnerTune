@@ -135,6 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="6dp"
+            android:longClickable="false"
             android:padding="5dp"
             android:scaleType="center"
             android:visibility="gone"

@@ -89,7 +89,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalItemViewHolder = when (viewType) {
         TYPE_SONG -> SongViewHolder(parent.inflateWithBinding(R.layout.item_song), songMenuListener, isDraggable).apply {
             binding.dragHandle.setOnTouchListener { _, event ->
-                if (event.actionMasked == MotionEvent.ACTION_DOWN) itemTouchHelper?.startDrag(this)
+                if (tracker?.hasSelection() == false && event.actionMasked == MotionEvent.ACTION_DOWN) itemTouchHelper?.startDrag(this)
                 true
             }
         }
