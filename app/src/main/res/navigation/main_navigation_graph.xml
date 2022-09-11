@@ -94,21 +94,10 @@
         <argument
             android:name="playlistId"
             app:argType="string" />
-        <action
-            android:id="@+id/action_playlistSongsFragment_to_playlistSongsEditFragment"
-            app:destination="@id/playlistSongsEditFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/playlistSongsEditFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.PlaylistSongsEditFragment">
-        <argument
-            android:name="playlistId"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/queueFragment"
         android:name="com.zionhuang.music.ui.fragments.QueueFragment"
-
         android:label="@string/title_now_playing" />
     <action
         android:id="@+id/open_queueFragment"

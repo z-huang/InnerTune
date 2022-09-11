@@ -31,7 +31,7 @@ data class Song @JvmOverloads constructor(
         )
     )
     val album: AlbumEntity? = null,
-    val idInPlaylist: Int? = -1,
+    val position: Int? = -1,
 ) : LocalItem(), Parcelable {
     override val id: String
         get() = song.id

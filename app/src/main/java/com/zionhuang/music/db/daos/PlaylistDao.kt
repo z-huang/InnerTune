@@ -26,12 +26,38 @@ interface PlaylistDao {
     suspend fun getPlaylistCount(): Int
 
     @Transaction
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE id = :playlistId")
+    suspend fun getPlaylistById(playlistId: String): Playlist
+
+    @Transaction
     @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE name LIKE '%' || :query || '%'")
     fun searchPlaylists(query: String): Flow<List<Playlist>>
 
     @Transaction
     @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE name LIKE '%' || :query || '%' LIMIT :previewSize")
     fun searchPlaylistsPreview(query: String, previewSize: Int): Flow<List<Playlist>>
+
+    @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId AND position = :position")
+    suspend fun getPlaylistSongMap(playlistId: String, position: Int): PlaylistSongMap?
+
+    @Query("UPDATE playlist_song_map SET position = position - 1 WHERE playlistId = :playlistId AND :from <= position")
+    suspend fun decrementSongPositions(playlistId: String, from: Int)
+
+    @Query("UPDATE playlist_song_map SET position = position - 1 WHERE playlistId = :playlistId AND :from <= position AND position <= :to")
+    suspend fun decrementSongPositions(playlistId: String, from: Int, to: Int)
+
+    @Query("UPDATE playlist_song_map SET position = position + 1 WHERE playlistId = :playlistId AND :from <= position AND position <= :to")
+    suspend fun incrementSongPositions(playlistId: String, from: Int, to: Int)
+
+    @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId AND position >= :from")
+    suspend fun getPlaylistSongMaps(playlistId: String, from: Int): List<PlaylistSongMap>
+
+    suspend fun renewSongPositions(playlistId: String, from: Int) {
+        val maps = getPlaylistSongMaps(playlistId, from)
+        if (maps.isEmpty()) return
+        var position = maps[0].position
+        update(maps.map { it.copy(position = position++) })
+    }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(playlist: PlaylistEntity): Long
@@ -42,22 +68,22 @@ interface PlaylistDao {
     @Update
     suspend fun update(playlist: PlaylistEntity)
 
+    @Update
+    suspend fun update(playlistSongMap: PlaylistSongMap)
+
+    @Update
+    suspend fun update(playlistSongMaps: List<PlaylistSongMap>)
+
     @Delete
     suspend fun delete(playlists: List<PlaylistEntity>)
 
-    @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId ORDER BY idInPlaylist")
-    suspend fun getPlaylistSongEntities(playlistId: String): List<PlaylistSongMap>
 
-    @Update
-    suspend fun updatePlaylistSongEntities(list: List<PlaylistSongMap>)
+    suspend fun deletePlaylistSong(playlistId: String, position: Int) = deletePlaylistSong(playlistId, listOf(position))
 
-    @Insert
-    suspend fun insertPlaylistSongEntities(playlistSong: List<PlaylistSongMap>)
+    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND position = :position")
+    suspend fun deletePlaylistSong(playlistId: String, position: List<Int>)
 
-    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND idInPlaylist = :idInPlaylist")
-    suspend fun deletePlaylistSongEntities(playlistId: String, idInPlaylist: List<Int>)
-
-    @Query("SELECT max(idInPlaylist) FROM playlist_song_map WHERE playlistId = :playlistId")
+    @Query("SELECT max(position) FROM playlist_song_map WHERE playlistId = :playlistId")
     suspend fun getPlaylistMaxId(playlistId: String): Int?
 
     fun getSortQuery(sortInfo: ISortInfo<PlaylistSortType>) = QUERY_ORDER.format(

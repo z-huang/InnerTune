@@ -28,6 +28,7 @@ sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerVi
 open class SongViewHolder(
     override val binding: ItemSongBinding,
     private val menuListener: ISongMenuListener?,
+    private val draggable: Boolean = false,
 ) : LocalItemViewHolder(binding) {
     override val itemDetails: ItemDetailsLookup.ItemDetails<String>
         get() = object : ItemDetailsLookup.ItemDetails<String>() {
@@ -65,6 +66,7 @@ open class SongViewHolder(
                 .show(binding.context)
         }
         binding.selectedIndicator.isVisible = isSelected
+        binding.dragHandle.isVisible = draggable
         binding.executePendingBindings()
     }
 

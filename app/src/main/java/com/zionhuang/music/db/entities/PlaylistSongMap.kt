@@ -25,5 +25,5 @@ data class PlaylistSongMap(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(index = true) val playlistId: String,
     @ColumnInfo(index = true) val songId: String,
-    val idInPlaylist: Int = 0,
+    val position: Int = 0,
 )

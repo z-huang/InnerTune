@@ -91,11 +91,11 @@ interface LocalRepository {
     suspend fun addToPlaylist(playlist: PlaylistEntity, item: YTItem)
     suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>)
     suspend fun refetchPlaylist(playlist: Playlist)
+    suspend fun getPlaylistById(playlistId: String): Playlist
     suspend fun updatePlaylist(playlist: PlaylistEntity)
-    suspend fun getPlaylistSongEntities(playlistId: String): ListWrapper<Int, PlaylistSongMap>
-    suspend fun updatePlaylistSongEntities(playlistSongEntities: List<PlaylistSongMap>)
-    suspend fun removeSongsFromPlaylist(playlistId: String, idInPlaylist: List<Int>)
-    suspend fun removeSongFromPlaylist(playlistId: String, idInPlaylist: Int) = removeSongsFromPlaylist(playlistId, listOf(idInPlaylist))
+    suspend fun movePlaylistItems(playlistId: String, from: Int, to: Int)
+    suspend fun removeSongFromPlaylist(playlistId: String, position: Int)
+    suspend fun removeSongsFromPlaylist(playlistId: String, positions: List<Int>)
     suspend fun deletePlaylists(playlists: List<PlaylistEntity>)
 
     /**

@@ -109,12 +109,12 @@ interface SongDao {
         private const val QUERY_ORDER = " ORDER BY %s %s"
         private const val QUERY_PLAYLIST_SONGS =
             """
-            SELECT song.*, playlist_song_map.idInPlaylist
+            SELECT song.*, playlist_song_map.position
               FROM playlist_song_map
                    JOIN song
                      ON playlist_song_map.songId = song.id
              WHERE playlistId = :playlistId AND NOT song.isTrash
-             ORDER BY playlist_song_map.idInPlaylist
+             ORDER BY playlist_song_map.position
             """
     }
 }

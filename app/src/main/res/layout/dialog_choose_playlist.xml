@@ -5,7 +5,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="?dialogPreferredPadding">
+        android:paddingTop="?dialogPreferredPadding"
+        android:paddingBottom="?dialogPreferredPadding">
 
         <LinearLayout
             android:id="@+id/create_playlist"
@@ -21,7 +22,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="6dp"
-                android:padding="6dp"
+                android:padding="8dp"
                 android:src="@drawable/ic_add" />
 
             <TextView

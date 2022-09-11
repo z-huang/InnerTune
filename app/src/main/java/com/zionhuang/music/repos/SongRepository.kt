@@ -240,11 +240,11 @@ object SongRepository : LocalRepository {
     )
 
     override suspend fun updateSongTitle(song: Song, newTitle: String) = withContext(IO) {
-        songDao.update(song.song.copy(title = newTitle))
+        songDao.update(song.song.copy(title = newTitle, modifyDate = LocalDateTime.now()))
     }
 
     override suspend fun setLiked(liked: Boolean, songs: List<Song>) = withContext(IO) {
-        songDao.update(songs.map { it.song.copy(liked = liked) })
+        songDao.update(songs.map { it.song.copy(liked = liked, modifyDate = LocalDateTime.now()) })
     }
 
     override suspend fun downloadSongs(songs: List<SongEntity>) = withContext(IO) {
@@ -434,7 +434,7 @@ object SongRepository : LocalRepository {
                 PlaylistSongMap(
                     playlistId = playlistId,
                     songId = it.id,
-                    idInPlaylist = index++
+                    position = index++
                 )
             })
         }
@@ -442,11 +442,11 @@ object SongRepository : LocalRepository {
 
     private suspend fun addSongsToPlaylist(playlistId: String, songIds: List<String>) {
         var maxId = playlistDao.getPlaylistMaxId(playlistId) ?: -1
-        playlistDao.insertPlaylistSongEntities(songIds.map { songId ->
+        playlistDao.insert(songIds.map { songId ->
             PlaylistSongMap(
                 playlistId = playlistId,
                 songId = songId,
-                idInPlaylist = ++maxId
+                position = ++maxId
             )
         })
     }
@@ -510,16 +510,32 @@ object SongRepository : LocalRepository {
         }
     }
 
-    override suspend fun updatePlaylist(playlist: PlaylistEntity) = withContext(IO) { playlistDao.update(playlist) }
-    override suspend fun getPlaylistSongEntities(playlistId: String) = ListWrapper<Int, PlaylistSongMap>(
-        getList = { withContext(IO) { playlistDao.getPlaylistSongEntities(playlistId) } }
-    )
-
-    override suspend fun updatePlaylistSongEntities(playlistSongEntities: List<PlaylistSongMap>) = withContext(IO) {
-        playlistDao.updatePlaylistSongEntities(playlistSongEntities)
+    override suspend fun getPlaylistById(playlistId: String): Playlist = withContext(IO) {
+        playlistDao.getPlaylistById(playlistId)
     }
 
-    override suspend fun removeSongsFromPlaylist(playlistId: String, idInPlaylist: List<Int>) = withContext(IO) { playlistDao.deletePlaylistSongEntities(playlistId, idInPlaylist) }
+    override suspend fun updatePlaylist(playlist: PlaylistEntity) = withContext(IO) { playlistDao.update(playlist) }
+
+    override suspend fun movePlaylistItems(playlistId: String, from: Int, to: Int) = withContext(IO) {
+        val target = playlistDao.getPlaylistSongMap(playlistId, from) ?: return@withContext
+        if (to < from) {
+            playlistDao.incrementSongPositions(playlistId, to, from - 1)
+        } else if (from < to) {
+            playlistDao.decrementSongPositions(playlistId, from + 1, to)
+        }
+        playlistDao.update(target.copy(position = to))
+    }
+
+    override suspend fun removeSongFromPlaylist(playlistId: String, position: Int) = withContext(IO) {
+        playlistDao.deletePlaylistSong(playlistId, position)
+        playlistDao.decrementSongPositions(playlistId, position + 1)
+    }
+
+    override suspend fun removeSongsFromPlaylist(playlistId: String, positions: List<Int>) = withContext(IO) {
+        playlistDao.deletePlaylistSong(playlistId, positions)
+        playlistDao.renewSongPositions(playlistId, positions.minOrNull()!! - 1)
+    }
+
     override suspend fun deletePlaylists(playlists: List<PlaylistEntity>) = withContext(IO) { playlistDao.delete(playlists) }
 
     /**
@@ -547,6 +563,4 @@ object SongRepository : LocalRepository {
     override suspend fun deleteSearchHistory(query: String) = withContext(IO) {
         database.searchHistoryDao.delete(query)
     }
-
-
 }

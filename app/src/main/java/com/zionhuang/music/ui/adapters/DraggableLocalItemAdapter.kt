@@ -7,27 +7,25 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.SelectionTracker.SELECTION_CHANGED_MARKER
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
-import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
 import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
 import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.*
-import com.zionhuang.music.utils.makeTimeString
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.time.Duration
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemComparator()), PopupTextProvider {
+class DraggableLocalItemAdapter : RecyclerView.Adapter<LocalItemViewHolder>() {
+    var currentList: List<LocalBaseItem> = emptyList()
+
     var songMenuListener: ISongMenuListener? = null
     var artistMenuListener: IArtistMenuListener? = null
     var albumMenuListener: IAlbumMenuListener? = null
@@ -42,7 +40,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: LocalItemViewHolder, position: Int) {
-        val item = getItem(position) ?: return
+        val item = getItem(position)
         when (holder) {
             is SongViewHolder -> holder.bind(item as Song, tracker?.isSelected(getItem(position).id) ?: false)
             is ArtistViewHolder -> {
@@ -105,7 +103,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         else -> error("Unknown view type")
     }
 
-    override fun getItemViewType(position: Int): Int = when (getItem(position)!!) {
+    override fun getItemViewType(position: Int): Int = when (getItem(position)) {
         is Song -> TYPE_SONG
         is Artist -> TYPE_ARTIST
         is Album -> TYPE_ALBUM
@@ -118,34 +116,28 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         is TextHeader -> TYPE_TEXT_HEADER
     }
 
-    override fun getPopupText(position: Int): String = when (val item = getItem(position)) {
-        is SongHeader, is ArtistHeader, is AlbumHeader, is PlaylistHeader, is PlaylistSongHeader, is TextHeader -> "#"
-        is Song -> when (SongSortInfoPreference.type) {
-            SongSortType.CREATE_DATE -> item.song.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            SongSortType.NAME -> item.song.title.substring(0, 1)
-            SongSortType.ARTIST -> item.artists.firstOrNull()?.name
+    @SuppressLint("NotifyDataSetChanged")
+    fun submitList(newList: List<LocalBaseItem>, animation: Boolean = true) {
+        val oldList = currentList
+        currentList = newList
+        if (animation) {
+            DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+                override fun getOldListSize(): Int = oldList.size
+                override fun getNewListSize(): Int = newList.size
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = itemComparator.areItemsTheSame(oldList[oldItemPosition], newList[newItemPosition])
+                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = itemComparator.areContentsTheSame(oldList[oldItemPosition], newList[newItemPosition])
+                override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int) = itemComparator.getChangePayload(oldList[oldItemPosition], newList[newItemPosition])
+            }).dispatchUpdatesTo(this)
+        } else {
+            notifyDataSetChanged()
         }
-        is Artist -> when (ArtistSortInfoPreference.type) {
-            ArtistSortType.CREATE_DATE -> item.artist.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            ArtistSortType.NAME -> item.artist.name.substring(0, 1)
-            ArtistSortType.SONG_COUNT -> item.songCount.toString()
-        }
-        is Album -> when (AlbumSortInfoPreference.type) {
-            AlbumSortType.CREATE_DATE -> item.album.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            AlbumSortType.NAME -> item.album.title.substring(0, 1)
-            AlbumSortType.ARTIST -> item.artists.firstOrNull()?.name
-            AlbumSortType.YEAR -> item.album.year?.toString()
-            AlbumSortType.SONG_COUNT -> item.album.songCount.toString()
-            AlbumSortType.LENGTH -> makeTimeString(item.album.duration.toLong() * 1000)
-        }
-        is Playlist -> when (PlaylistSortInfoPreference.type) {
-            PlaylistSortType.CREATE_DATE -> item.playlist.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            PlaylistSortType.NAME -> item.playlist.name.substring(0, 1)
-            PlaylistSortType.SONG_COUNT -> item.songCount.toString()
-        }
-    } ?: ""
+    }
 
-    class ItemComparator : DiffUtil.ItemCallback<LocalBaseItem>() {
+    private fun getItem(position: Int): LocalBaseItem = currentList[position]
+
+    override fun getItemCount(): Int = currentList.size
+
+    val itemComparator = object : DiffUtil.ItemCallback<LocalBaseItem>() {
         override fun areItemsTheSame(oldItem: LocalBaseItem, newItem: LocalBaseItem): Boolean = oldItem.id == newItem.id
         override fun areContentsTheSame(oldItem: LocalBaseItem, newItem: LocalBaseItem): Boolean = oldItem == newItem
         override fun getChangePayload(oldItem: LocalBaseItem, newItem: LocalBaseItem) = newItem

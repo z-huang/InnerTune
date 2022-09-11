@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "88345384f76ecf1d6c4424c18cae5ac8",
+    "identityHash": "8aee5a08ab3f7d0ac88a8c6dddda6d2b",
     "entities": [
       {
         "tableName": "song",
@@ -553,7 +553,7 @@
       },
       {
         "tableName": "playlist_song_map",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `playlistId` TEXT NOT NULL, `songId` TEXT NOT NULL, `idInPlaylist` INTEGER NOT NULL, FOREIGN KEY(`playlistId`) REFERENCES `playlist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`songId`) REFERENCES `song`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `playlistId` TEXT NOT NULL, `songId` TEXT NOT NULL, `position` INTEGER NOT NULL, FOREIGN KEY(`playlistId`) REFERENCES `playlist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`songId`) REFERENCES `song`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -574,8 +574,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "idInPlaylist",
-            "columnName": "idInPlaylist",
+            "fieldPath": "position",
+            "columnName": "position",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -697,12 +697,12 @@
     "views": [
       {
         "viewName": "PlaylistSongMapPreview",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM playlist_song_map ORDER BY idInPlaylist LIMIT 4"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM playlist_song_map ORDER BY position LIMIT 4"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '88345384f76ecf1d6c4424c18cae5ac8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8aee5a08ab3f7d0ac88a8c6dddda6d2b')"
     ]
   }
 }
