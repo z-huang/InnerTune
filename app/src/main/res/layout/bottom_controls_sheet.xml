@@ -178,6 +178,7 @@
                 android:id="@+id/artwork"
                 originalSize="@{true}"
                 srcUrl="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString()}"
+                thumbnailWidth="@{512f}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

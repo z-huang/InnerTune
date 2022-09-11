@@ -5,7 +5,6 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
@@ -16,8 +15,6 @@ import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Pair
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.PlaybackException.ERROR_CODE_REMOTE_ERROR
 import com.google.android.exoplayer2.Player.*
@@ -46,9 +43,13 @@ import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.utils.GlideApp
-import kotlinx.coroutines.*
+import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
 
 /**
  * A wrapper around [ExoPlayer]
@@ -59,11 +60,10 @@ class SongPlayer(
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Listener {
     private val localRepository = SongRepository
-
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
-
+    private val bitmapProvider = BitmapProvider(context)
+    private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
     private var currentQueue: Queue = EmptyQueue()
-    private var queueJob: Job? = null
 
     private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
@@ -108,8 +108,6 @@ class SongPlayer(
             setAudioAttributes(audioAttributes, true)
             setHandleAudioBecomingNoisy(true)
         }
-
-    private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
 
     private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
         setPlayer(player)
@@ -170,12 +168,10 @@ class SongPlayer(
             }
         })
         setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription() }
-        setErrorMessageProvider { e ->
-            return@setErrorMessageProvider Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage)
-        }
+        setErrorMessageProvider { e -> Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage) }
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?): Boolean {
-                if (COMMAND_MOVE_QUEUE_ITEM != command || extras == null) return false
+                if (command != COMMAND_MOVE_QUEUE_ITEM || extras == null) return false
                 val from = extras.getInt(EXTRA_FROM_INDEX, C.INDEX_UNSET)
                 val to = extras.getInt(EXTRA_TO_INDEX, C.INDEX_UNSET)
                 if (from != C.INDEX_UNSET && to != C.INDEX_UNSET) {
@@ -207,23 +203,11 @@ class SongPlayer(
                 player.currentMetadata?.artists?.joinToString { it.name }
 
             override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
-                val url = player.currentMetadata?.thumbnailUrl
-                val bitmap = GlideApp.with(context)
-                    .asBitmap()
-                    .load(url)
-                    .onlyRetrieveFromCache(true)
-                    .getBlocking()
-                if (bitmap == null) {
-                    GlideApp.with(context)
-                        .asBitmap()
-                        .load(url)
-                        .onlyRetrieveFromCache(false)
-                        .into(object : CustomTarget<Bitmap>() {
-                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) = callback.onBitmap(resource)
-                            override fun onLoadCleared(placeholder: Drawable?) = Unit
-                        })
+                return player.currentMetadata?.thumbnailUrl?.let { url ->
+                    bitmapProvider.load(resizeThumbnailUrl(url, (256 * context.resources.displayMetrics.density).roundToInt(), null)) {
+                        callback.onBitmap(it)
+                    }
                 }
-                return bitmap
             }
 
             override fun createCurrentContentIntent(player: Player): PendingIntent? =
@@ -240,7 +224,6 @@ class SongPlayer(
 
 
     fun playQueue(queue: Queue) {
-        queueJob?.cancel()
         currentQueue = queue
         player.clearMediaItems()
 

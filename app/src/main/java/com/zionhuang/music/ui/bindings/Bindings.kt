@@ -64,7 +64,7 @@ fun setImageUrl(
     originalSize: Boolean?,
 ) {
     val density = view.context.getDensity()
-    val resizedUrl = resizeThumbnailUrl(url, thumbnailWidth?.let { (it * density).roundToInt() }, thumbnailHeight?.let { (it * density).roundToInt() })
+    val resizedUrl = if (url != null) resizeThumbnailUrl(url, thumbnailWidth?.let { (it * density).roundToInt() }, thumbnailHeight?.let { (it * density).roundToInt() }) else null
     view.load(resizedUrl) {
         crossfade(true)
         scale(Scale.FIT)
@@ -93,8 +93,8 @@ fun setThumbnails(
     originalSize: Boolean?,
 ) = setImageUrl(view, thumbnails?.lastOrNull()?.url, cornerRadius, circleCrop, placeholder, thumbnailWidth, thumbnailHeight, originalSize)
 
-fun resizeThumbnailUrl(url: String?, width: Int?, height: Int?): String? {
-    if (url == null || (width == null && height == null)) return url
+fun resizeThumbnailUrl(url: String, width: Int?, height: Int?): String {
+    if (width == null && height == null) return url
     "https://lh3\\.googleusercontent\\.com/.*=w(\\d+)-h(\\d+).*".toRegex().matchEntire(url)?.groupValues?.let { group ->
         val (W, H) = group.drop(1).map { it.toInt() }
         var w = width

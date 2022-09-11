@@ -148,11 +148,6 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.9")
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    // Glide
-    implementation("com.github.bumptech.glide:glide:4.13.2")
-    implementation("com.github.bumptech.glide:annotations:4.13.2")
-    implementation("com.github.bumptech.glide:okhttp3-integration:4.13.1")
-    kapt("com.github.bumptech.glide:compiler:4.13.1")
     // Coil
     implementation("io.coil-kt:coil:2.1.0")
     // Jsoup
