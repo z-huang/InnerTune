@@ -23,6 +23,7 @@ import com.zionhuang.music.db.entities.*
         SearchHistory::class
     ],
     views = [
+        SortedSongArtistMap::class,
         PlaylistSongMapPreview::class
     ],
     version = 2,

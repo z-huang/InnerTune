@@ -19,6 +19,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.addOnClickListener
+import com.zionhuang.music.extensions.requireAppCompatActivity
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.ListQueue
@@ -105,6 +106,7 @@ class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapte
             }
         }
 
+        requireAppCompatActivity().title = ""
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 

@@ -123,8 +123,4 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         viewModel.checkForUpdate()
     }
-
-    companion object {
-        private const val TAG = "SettingsFragment"
-    }
 }

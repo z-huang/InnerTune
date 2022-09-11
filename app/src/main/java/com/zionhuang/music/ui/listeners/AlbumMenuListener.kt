@@ -8,9 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
-import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
-import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaSessionConstants

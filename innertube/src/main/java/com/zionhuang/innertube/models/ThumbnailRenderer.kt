@@ -12,13 +12,6 @@ data class ThumbnailRenderer(
     val musicThumbnailRenderer: MusicThumbnailRenderer?,
     val musicAnimatedThumbnailRenderer: MusicAnimatedThumbnailRenderer?,
 ) {
-    val isSquare: Boolean
-        get() = when {
-            musicThumbnailRenderer != null -> musicThumbnailRenderer.thumbnail.thumbnails[0].isSquare
-            musicAnimatedThumbnailRenderer != null -> musicAnimatedThumbnailRenderer.backupRenderer.thumbnail.thumbnails[0].isSquare
-            else -> throw UnsupportedOperationException("Unknown thumbnail type")
-        }
-
     fun getThumbnails(): List<Thumbnail> = when {
         musicThumbnailRenderer != null -> musicThumbnailRenderer.thumbnail.thumbnails
         musicAnimatedThumbnailRenderer != null -> musicAnimatedThumbnailRenderer.backupRenderer.thumbnail.thumbnails

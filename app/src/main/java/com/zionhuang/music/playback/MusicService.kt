@@ -13,7 +13,6 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.zionhuang.music.playback.queues.Queue
 
 class MusicService : LifecycleMediaBrowserService() {
     companion object {
@@ -27,14 +26,14 @@ class MusicService : LifecycleMediaBrowserService() {
         super.onCreate()
         songPlayer = SongPlayer(this, lifecycleScope, object : PlayerNotificationManager.NotificationListener {
             override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
-                stopForeground(true)
+                stopForeground(STOP_FOREGROUND_REMOVE)
             }
 
             override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
                 if (ongoing) {
                     startForeground(notificationId, notification)
                 } else {
-                    stopForeground(false)
+                    stopForeground(STOP_FOREGROUND_REMOVE)
                 }
             }
         })

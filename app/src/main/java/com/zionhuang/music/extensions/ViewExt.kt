@@ -32,7 +32,7 @@ fun View.fadeOut(duration: Long) {
         .alpha(0f)
         .setDuration(duration)
         .setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 isVisible = false
             }
         })

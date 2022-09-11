@@ -58,7 +58,7 @@ class InnerTube {
         }
     }
 
-    var httpClient = createClient()
+    private var httpClient = createClient()
 
     fun setProxyUrl(url: String) {
         httpClient.close()

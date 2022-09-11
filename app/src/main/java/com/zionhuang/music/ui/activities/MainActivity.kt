@@ -27,7 +27,6 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.playlistBrowseEndpoint
-import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.utils.YouTubeLinkHandler
 import com.zionhuang.music.R
@@ -196,6 +195,8 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
     }
 
+    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (bottomSheetBehavior.state == STATE_EXPANDED) {
             bottomSheetBehavior.state = STATE_COLLAPSED

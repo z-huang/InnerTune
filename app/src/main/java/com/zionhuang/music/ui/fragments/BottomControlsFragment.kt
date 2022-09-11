@@ -24,10 +24,6 @@ import com.zionhuang.music.ui.widgets.MediaWidgetsController
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 
 class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.TransitionListener {
-    companion object {
-        private const val TAG = "BottomControlsFragment"
-    }
-
     private lateinit var binding: BottomControlsSheetBinding
     private val viewModel by activityViewModels<PlaybackViewModel>()
     private lateinit var mediaWidgetsController: MediaWidgetsController

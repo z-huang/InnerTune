@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "8aee5a08ab3f7d0ac88a8c6dddda6d2b",
+    "identityHash": "79f1ba9c091aa78bb6cbec272aa1870a",
     "entities": [
       {
         "tableName": "song",
@@ -696,13 +696,17 @@
     ],
     "views": [
       {
+        "viewName": "SortedSongArtistMap",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM song_artist_map ORDER BY position"
+      },
+      {
         "viewName": "PlaylistSongMapPreview",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM playlist_song_map ORDER BY position LIMIT 4"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM playlist_song_map WHERE position <= 3 ORDER BY position"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8aee5a08ab3f7d0ac88a8c6dddda6d2b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '79f1ba9c091aa78bb6cbec272aa1870a')"
     ]
   }
 }

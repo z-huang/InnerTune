@@ -14,7 +14,7 @@ data class Song @JvmOverloads constructor(
         entityColumn = "id",
         parentColumn = "id",
         associateBy = Junction(
-            value = SongArtistMap::class,
+            value = SortedSongArtistMap::class,
             parentColumn = "songId",
             entityColumn = "artistId"
         )

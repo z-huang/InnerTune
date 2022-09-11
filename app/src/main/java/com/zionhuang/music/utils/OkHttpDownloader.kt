@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 object OkHttpDownloader {
-    private const val TAG = "OkHttpDownloader"
     private val client = OkHttpClient()
 
     @Throws(DownloadException::class)

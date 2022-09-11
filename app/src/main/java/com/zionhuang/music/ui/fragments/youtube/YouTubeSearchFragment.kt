@@ -64,7 +64,7 @@ class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBindin
         enterTransition = null
         exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content).addTarget(R.id.fragment_content)
 
-        requireAppCompatActivity().supportActionBar?.title = args.query
+        requireAppCompatActivity().title = args.query
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
