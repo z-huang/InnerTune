@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH
+import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.View
 import android.view.inputmethod.EditorInfo.IME_ACTION_PREVIOUS
@@ -14,7 +15,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
@@ -97,7 +98,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
             if (actionId == IME_ACTION_PREVIOUS) {
                 hideKeyboard()
                 true
-            } else if (event?.keyCode == KEYCODE_ENTER || event?.action == IME_ACTION_SEARCH) {
+            } else if ((event?.keyCode == KEYCODE_ENTER && event.action == ACTION_DOWN) || event?.action == IME_ACTION_SEARCH) {
                 hideKeyboard()
                 search(view.text.toString())
                 true
@@ -117,7 +118,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
         }
         exitTransition = null
         val action = actionSuggestionFragmentToSearchResultFragment(query)
-        NavHostFragment.findNavController(this).navigate(action)
+        findNavController().navigate(action)
     }
 
     override fun onPause() {
