@@ -9,9 +9,7 @@ import coil.request.Disposable
 import coil.request.ImageRequest
 
 class BitmapProvider(private val context: Context) {
-    private val map = object : LruCache<String, Bitmap>(MAX_CACHE_SIZE) {
-        override fun sizeOf(key: String, value: Bitmap): Int = value.byteCount / 1024 // KB
-    }
+    private val map = LruCache<String, Bitmap>(MAX_CACHE_SIZE)
 
     private var disposable: Disposable? = null
 
@@ -32,6 +30,6 @@ class BitmapProvider(private val context: Context) {
     }
 
     companion object {
-        const val MAX_CACHE_SIZE = 1000000000
+        const val MAX_CACHE_SIZE = 10
     }
 }
