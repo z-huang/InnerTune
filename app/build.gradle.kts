@@ -9,15 +9,20 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 32
     buildToolsVersion = "30.0.3"
     defaultConfig {
         applicationId = "com.zionhuang.music"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 32
         versionCode = 10
         versionName = "0.3.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
+            }
+        }
     }
     applicationVariants.all {
         resValue("string", "app_version", versionName)
@@ -59,6 +64,10 @@ android {
         unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
     }
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+    }
 }
 
 materialThemeBuilder {
@@ -95,12 +104,6 @@ materialThemeBuilder {
     }
 }
 
-kapt {
-    arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
-}
-
 dependencies {
     // Kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
@@ -108,7 +111,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     // AndroidX
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.fragment:fragment-ktx:1.5.2")
@@ -132,6 +135,7 @@ dependencies {
     implementation("com.google.android.exoplayer:extension-mediasession:2.18.1")
     // Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.test:monitor:1.5.0")
     testImplementation("androidx.paging:paging-common-ktx:3.1.1")
     implementation("androidx.paging:paging-rxjava3:3.1.1")
     // Room
