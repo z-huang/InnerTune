@@ -5,7 +5,7 @@ import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.innertube.models.body.*
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -29,7 +29,7 @@ class InnerTube {
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun createClient(proxyUrl: String? = null) = HttpClient(CIO) {
+    private fun createClient(proxyUrl: String? = null) = HttpClient(OkHttp) {
         expectSuccess = true
 
         install(ContentNegotiation) {
