@@ -211,14 +211,38 @@ object SongRepository : LocalRepository {
     }
 
     override suspend fun refetchSongs(songs: List<Song>) {
-        songDao.update(songs.chunked(MAX_GET_QUEUE_SIZE).flatMap { chunk ->
+        val map = songs.associateBy { it.id }
+        val songItems = songs.chunked(MAX_GET_QUEUE_SIZE).flatMap { chunk ->
             YouTube.getQueue(chunk.map { it.id })
-        }.mapIndexed { i, item ->
+        }
+        songDao.update(songItems.map { item ->
             item.toSongEntity().copy(
-                downloadState = songs[i].song.downloadState,
-                createDate = songs[i].song.createDate
+                downloadState = map[item.id]!!.song.downloadState,
+                createDate = map[item.id]!!.song.createDate
             )
         })
+        val songArtistMaps = songItems.flatMap { song ->
+            song.artists.mapIndexed { index, run ->
+                val artistId = getArtistByName(run.text)?.id ?: (run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
+                    artistDao.insert(ArtistEntity(
+                        id = it,
+                        name = run.text
+                    ))
+                }
+                SongArtistMap(
+                    songId = song.id,
+                    artistId = artistId,
+                    position = index
+                )
+            }
+        }
+        artistDao.deleteSongArtists(songs.map { it.id })
+        artistDao.insert(songArtistMaps)
+        artistDao.delete(songs
+            .flatMap { it.artists }
+            .distinctBy { it.id }
+            .filter { artistDao.getArtistSongCount(it.id) == 0 }
+        )
     }
 
     override suspend fun getSongById(songId: String): Song? = withContext(IO) { songDao.getSong(songId) }
@@ -313,12 +337,12 @@ object SongRepository : LocalRepository {
         songDao.delete(songs.map { it.song })
         songs.forEach { song ->
             getSongFile(song.song.id).delete()
-            song.artists.forEach { artist ->
-                if (artistDao.getArtistSongCount(artist.id) == 0) {
-                    deleteArtist(artist)
-                }
-            }
         }
+        artistDao.delete(songs
+            .flatMap { it.artists }
+            .distinctBy { it.id }
+            .filter { artistDao.getArtistSongCount(it.id) == 0 }
+        )
     }
 
     /**

@@ -37,6 +37,7 @@
         <ImageView
             android:id="@+id/thumbnail"
             cornerRadius="@{@dimen/thumbnail_radius}"
+            placeholder="@{@drawable/ic_music_note}"
             srcUrl="@{song.song.thumbnailUrl}"
             thumbnailWidth="@{@dimen/list_thumbnail_size}"
             android:layout_width="@dimen/list_thumbnail_size"

@@ -9,7 +9,10 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.extensions.*
+import com.zionhuang.music.extensions.context
+import com.zionhuang.music.extensions.fadeIn
+import com.zionhuang.music.extensions.fadeOut
+import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
@@ -45,6 +48,7 @@ open class SongViewHolder(
                 .setMenuModifier {
                     findItem(R.id.action_download).isVisible = song.song.downloadState == MediaConstants.STATE_NOT_DOWNLOADED
                     findItem(R.id.action_remove_download).isVisible = song.song.downloadState == MediaConstants.STATE_DOWNLOADED
+                    findItem(R.id.action_view_artist).isVisible = song.artists[0].isYouTubeArtist
                     findItem(R.id.action_view_album).isVisible = song.song.albumId != null
                     findItem(R.id.action_delete).isVisible = song.album == null
                 }

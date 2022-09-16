@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "79f1ba9c091aa78bb6cbec272aa1870a",
+    "identityHash": "3a7db15c3d60f94f6a7acc75fad88d79",
     "entities": [
       {
         "tableName": "song",
@@ -269,62 +269,6 @@
         },
         "indices": [],
         "foreignKeys": []
-      },
-      {
-        "tableName": "stream",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` TEXT NOT NULL, `mimeType` TEXT NOT NULL, `bitrate` INTEGER, `contentLength` INTEGER, `loudnessDb` REAL, PRIMARY KEY(`songId`), FOREIGN KEY(`songId`) REFERENCES `song`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "songId",
-            "columnName": "songId",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "mimeType",
-            "columnName": "mimeType",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "bitrate",
-            "columnName": "bitrate",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "contentLength",
-            "columnName": "contentLength",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "loudnessDb",
-            "columnName": "loudnessDb",
-            "affinity": "REAL",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "songId"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": [
-          {
-            "table": "song",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "songId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
       },
       {
         "tableName": "song_artist_map",
@@ -696,17 +640,17 @@
     ],
     "views": [
       {
-        "viewName": "SortedSongArtistMap",
+        "viewName": "sorted_song_artist_map",
         "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM song_artist_map ORDER BY position"
       },
       {
-        "viewName": "PlaylistSongMapPreview",
+        "viewName": "playlist_song_map_preview",
         "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT * FROM playlist_song_map WHERE position <= 3 ORDER BY position"
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '79f1ba9c091aa78bb6cbec272aa1870a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3a7db15c3d60f94f6a7acc75fad88d79')"
     ]
   }
 }
