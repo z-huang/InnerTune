@@ -33,7 +33,7 @@ class MusicService : LifecycleMediaBrowserService() {
                 if (ongoing) {
                     startForeground(notificationId, notification)
                 } else {
-                    stopForeground(STOP_FOREGROUND_REMOVE)
+                    stopForeground(0)
                 }
             }
         })
