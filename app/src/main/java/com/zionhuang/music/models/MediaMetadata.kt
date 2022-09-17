@@ -2,6 +2,7 @@ package com.zionhuang.music.models
 
 import android.os.Parcelable
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
@@ -42,6 +43,7 @@ data class MediaMetadata(
         .setIconUri(thumbnailUrl?.toUri())
         .setExtras(bundleOf(
             METADATA_KEY_ARTIST to artists.joinToString { it.name },
+            METADATA_KEY_ALBUM to album?.title,
             EXTRA_MEDIA_METADATA to this
         ))
         .build()
