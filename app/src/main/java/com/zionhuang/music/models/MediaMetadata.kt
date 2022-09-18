@@ -45,7 +45,10 @@ data class MediaMetadata(
             METADATA_KEY_ARTIST to artists.joinToString { it.name },
             METADATA_KEY_ALBUM to album?.title,
             EXTRA_MEDIA_METADATA to this
-        ))
+        ).apply {
+            // Fix potential ClassNotFoundException (#182)
+            classLoader = MediaMetadata::class.java.classLoader
+        })
         .build()
 
     fun toSongEntity() = SongEntity(
