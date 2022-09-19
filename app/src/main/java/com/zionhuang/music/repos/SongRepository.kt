@@ -317,11 +317,10 @@ object SongRepository : LocalRepository {
 
     override suspend fun removeDownloads(songs: List<Song>) = withContext(IO) {
         songs.forEach { song ->
-            if (song.song.downloadState == STATE_DOWNLOADED) {
-                if (!getSongFile(song.song.id).exists() || getSongFile(song.song.id).delete()) {
-                    songDao.update(song.song.copy(downloadState = STATE_NOT_DOWNLOADED))
-                }
+            if (getSongFile(song.song.id).exists()) {
+                getSongFile(song.song.id).delete()
             }
+            songDao.update(song.song.copy(downloadState = STATE_NOT_DOWNLOADED))
         }
     }
 
