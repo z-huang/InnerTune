@@ -31,7 +31,7 @@ data class MediaMetadata(
     data class Album(
         val id: String,
         val title: String,
-        val year: Int?,
+        val year: Int? = null,
     ) : Parcelable
 
     fun toMediaDescription(): MediaDescriptionCompat = builder
@@ -76,6 +76,11 @@ fun Song.toMediaMetadata() = MediaMetadata(
             id = it.id,
             title = it.title,
             year = it.year
+        )
+    } ?: song.albumId?.let { albumId ->
+        MediaMetadata.Album(
+            id = albumId,
+            title = song.albumName.orEmpty()
         )
     }
 )
