@@ -32,74 +32,80 @@
             app:strokeWidth="0dp"
             tools:visibility="visible" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/thumbnail_container"
             android:layout_width="@dimen/list_thumbnail_size"
             android:layout_height="@dimen/list_thumbnail_size"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
+            app:strokeWidth="0dp"
+            app:cardCornerRadius="@dimen/thumbnail_radius"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/ThumbnailShapeAppearance">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/thumbnail_1"
-                placeholder="@{@drawable/ic_queue_music}"
-                srcUrl="@{playlist.playlist.thumbnailUrl ?? ((playlist.thumbnails.size() >= 1) ? playlist.thumbnails[0] : null)}"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/thumbnail_3"
-                app:layout_constraintEnd_toStartOf="@id/thumbnail_2"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_weight="1"
-                tools:src="@tools:sample/avatars" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/thumbnail_2"
-                srcUrl="@{(playlist.thumbnails.size() >= 2) ? playlist.thumbnails[1] : null}"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="@{(playlist.playlist.thumbnailUrl == null &amp;&amp; playlist.thumbnails.size() > 1) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/thumbnail_4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@id/thumbnail_1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_weight="1"
-                tools:src="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/thumbnail_1"
+                    placeholder="@{@drawable/ic_queue_music}"
+                    srcUrl="@{playlist.playlist.thumbnailUrl ?? ((playlist.thumbnails.size() >= 1) ? playlist.thumbnails[0] : null)}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toTopOf="@+id/thumbnail_3"
+                    app:layout_constraintEnd_toStartOf="@id/thumbnail_2"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_weight="1"
+                    tools:src="@tools:sample/avatars" />
 
-            <ImageView
-                android:id="@+id/thumbnail_3"
-                srcUrl="@{(playlist.thumbnails.size() >= 3) ? playlist.thumbnails[2] : null}"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="@{(playlist.playlist.thumbnailUrl == null &amp;&amp; playlist.thumbnails.size() > 1) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/thumbnail_4"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/thumbnail_1"
-                app:layout_constraintVertical_weight="1"
-                tools:src="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/thumbnail_2"
+                    srcUrl="@{(playlist.thumbnails.size() >= 2) ? playlist.thumbnails[1] : null}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="@{(playlist.playlist.thumbnailUrl == null &amp;&amp; playlist.thumbnails.size() > 1) ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toTopOf="@id/thumbnail_4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/thumbnail_1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_weight="1"
+                    tools:src="@tools:sample/avatars" />
 
-            <ImageView
-                android:id="@+id/thumbnail_4"
-                srcUrl="@{(playlist.thumbnails.size() >= 4) ? playlist.thumbnails[3] : null}"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="@{(playlist.playlist.thumbnailUrl == null &amp;&amp; playlist.thumbnails.size() > 1) ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@id/thumbnail_3"
-                app:layout_constraintTop_toBottomOf="@id/thumbnail_2"
-                app:layout_constraintVertical_weight="1"
-                tools:src="@tools:sample/avatars" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/thumbnail_3"
+                    srcUrl="@{(playlist.thumbnails.size() >= 3) ? playlist.thumbnails[2] : null}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="@{(playlist.playlist.thumbnailUrl == null &amp;&amp; playlist.thumbnails.size() > 1) ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/thumbnail_4"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/thumbnail_1"
+                    app:layout_constraintVertical_weight="1"
+                    tools:src="@tools:sample/avatars" />
+
+                <ImageView
+                    android:id="@+id/thumbnail_4"
+                    srcUrl="@{(playlist.thumbnails.size() >= 4) ? playlist.thumbnails[3] : null}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="@{(playlist.playlist.thumbnailUrl == null &amp;&amp; playlist.thumbnails.size() > 1) ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintStart_toEndOf="@id/thumbnail_3"
+                    app:layout_constraintTop_toBottomOf="@id/thumbnail_2"
+                    app:layout_constraintVertical_weight="1"
+                    tools:src="@tools:sample/avatars" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:id="@+id/content"
