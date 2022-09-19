@@ -141,6 +141,14 @@ class SongPlayer(
         registerCustomCommandReceiver { player, command, extras, _ ->
             if (extras == null) return@registerCustomCommandReceiver false
             when (command) {
+                COMMAND_MOVE_QUEUE_ITEM -> {
+                    val from = extras.getInt(EXTRA_FROM_INDEX, C.INDEX_UNSET)
+                    val to = extras.getInt(EXTRA_TO_INDEX, C.INDEX_UNSET)
+                    if (from != C.INDEX_UNSET && to != C.INDEX_UNSET) {
+                        player.moveMediaItem(from, to)
+                    }
+                    true
+                }
                 COMMAND_SEEK_TO_QUEUE_ITEM -> {
                     val mediaId = extras.getString(EXTRA_MEDIA_ID)
                         ?: return@registerCustomCommandReceiver true
@@ -173,22 +181,9 @@ class SongPlayer(
         setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription() }
         setErrorMessageProvider { e -> Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage) }
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
-            override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?): Boolean {
-                if (command != COMMAND_MOVE_QUEUE_ITEM || extras == null) return false
-                val from = extras.getInt(EXTRA_FROM_INDEX, C.INDEX_UNSET)
-                val to = extras.getInt(EXTRA_TO_INDEX, C.INDEX_UNSET)
-                if (from != C.INDEX_UNSET && to != C.INDEX_UNSET) {
-                    player.moveMediaItem(from, to)
-                }
-                return true
-            }
-
-            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) =
-                player.addMediaItem(description.toMediaItem())
-
-            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat, index: Int) =
-                player.addMediaItem(index, description.toMediaItem())
-
+            override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
+            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) = throw UnsupportedOperationException()
+            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat, index: Int)  = throw UnsupportedOperationException()
             override fun onRemoveQueueItem(player: Player, description: MediaDescriptionCompat) {
                 player.mediaItemIndexOf(description.mediaId)?.let { i ->
                     player.removeMediaItem(i)

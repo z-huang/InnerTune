@@ -7,7 +7,6 @@ import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.zionhuang.innertube.models.SongItem
-import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
@@ -43,12 +42,8 @@ data class MediaMetadata(
         .setIconUri(thumbnailUrl?.toUri())
         .setExtras(bundleOf(
             METADATA_KEY_ARTIST to artists.joinToString { it.name },
-            METADATA_KEY_ALBUM to album?.title,
-            EXTRA_MEDIA_METADATA to this
-        ).apply {
-            // Fix potential ClassNotFoundException (#182)
-            classLoader = MediaMetadata::class.java.classLoader
-        })
+            METADATA_KEY_ALBUM to album?.title
+        ))
         .build()
 
     fun toSongEntity() = SongEntity(
