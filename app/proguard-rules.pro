@@ -20,22 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Rules for Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep class * extends com.bumptech.glide.module.AppGlideModule
--keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
-# Rules for NewPipe
--dontobfuscate
--keep class org.schabi.newpipe.extractor.timeago.patterns.** { *; }
--keep class org.ocpsoft.prettytime.i18n.** { *; }
-
--keep class org.mozilla.javascript.** { *; }
-
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.

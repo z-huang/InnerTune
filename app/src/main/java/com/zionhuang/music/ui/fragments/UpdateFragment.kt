@@ -1,11 +1,9 @@
 package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
-import android.os.FileUtils
 import android.text.Html
 import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.text.format.Formatter.formatShortFileSize
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -13,7 +11,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentUpdateBinding
-import com.zionhuang.music.extensions.TAG
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.ui.fragments.base.BindingFragment
 import com.zionhuang.music.update.UpdateStatus

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings_navigation_graph"
+    app:startDestination="@id/settingsFragment">
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
+        android:label="@string/title_settings" />
+
+    <fragment
+        android:id="@+id/updateFragment"
+        android:name="com.zionhuang.music.ui.fragments.UpdateFragment"
+        android:label="@string/title_update" />
+    <action
+        android:id="@+id/open_updateFragment"
+        app:destination="@id/updateFragment" />
+</navigation>

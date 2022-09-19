@@ -10,6 +10,7 @@
             android:defaultValue="MATERIAL_BLUE"
             android:entries="@array/color_texts"
             android:entryValues="@array/color_values"
+            android:icon="@drawable/ic_palette"
             android:key="@string/pref_theme_color"
             android:summary="%s"
             android:title="@string/pref_theme_color_title" />
@@ -17,6 +18,7 @@
             android:defaultValue="-1"
             android:entries="@array/dark_theme_texts"
             android:entryValues="@array/dark_theme_values"
+            android:icon="@drawable/ic_dark_mode"
             android:key="@string/pref_dark_theme"
             android:summary="%s"
             android:title="@string/pref_dark_theme_title" />
@@ -41,6 +43,15 @@
             android:title="@string/pref_default_content_country_title" />
         <SwitchPreferenceCompat
             android:defaultValue="false"
+            android:key="@string/pref_proxy_enabled"
+            app:title="@string/pref_enable_proxy_title" />
+        <EditTextPreference
+            android:defaultValue="host:port"
+            android:key="@string/pref_proxy_url"
+            app:title="@string/pref_proxy_url_title"
+            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
             app:icon="@drawable/ic_save_alt"
             app:key="@string/pref_auto_download"
             app:summary="@string/pref_auto_download_summary"
@@ -56,16 +67,15 @@
             android:icon="@drawable/ic_open_in_full"
             android:key="@string/pref_expand_on_play"
             android:title="@string/pref_expand_on_play_title" />
+        <Preference
+            android:icon="@drawable/ic_equalizer"
+            android:key="@string/pref_equalizer"
+            android:title="@string/pref_equalizer_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_about_category"
         android:title="@string/pref_about">
-        <Preference
-            android:icon="@drawable/ic_newpipe"
-            android:key="@string/pref_newpipe_version"
-            android:summary="@string/newpipe_version"
-            android:title="@string/pref_newpipe_version_title" />
         <Preference
             android:key="@string/pref_app_version"
             android:summary="@string/app_version"

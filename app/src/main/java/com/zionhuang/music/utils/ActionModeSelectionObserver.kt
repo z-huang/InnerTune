@@ -53,13 +53,12 @@ class ActionModeSelectionObserver<T : Any>(
 
 fun <T : Any> SelectionTracker<T>.addActionModeObserver(
     activity: Activity,
-    tracker: SelectionTracker<T>,
     @MenuRes menuRes: Int,
     onActionItemClicked: (MenuItem) -> Boolean,
 ) = addObserver(
     ActionModeSelectionObserver(
         activity,
-        tracker,
+        this,
         menuRes,
         onActionItemClicked
     )

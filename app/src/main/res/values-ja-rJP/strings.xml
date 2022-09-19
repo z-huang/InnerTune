@@ -1,7 +1,9 @@
 <resources>
     <!-- Title -->
+    <string name="title_home">Home</string>
     <string name="title_songs">曲</string>
     <string name="title_artists">アーティスト</string>
+    <string name="title_albums">Albums</string>
     <string name="title_channels">チャンネル</string>
     <string name="title_playlists">プレイリスト</string>
     <string name="title_explore">探索</string>
@@ -20,14 +22,16 @@
     <string name="pref_content">コンテンツ</string>
     <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>
     <string name="pref_default_content_country_title">デフォルトのコンテンツの国</string>
+    <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">自動ダウンロード</string>
     <string name="pref_auto_download_summary">ライブラリに追加したら曲をダウンロードする</string>
     <string name="pref_auto_add_song_title">曲を自動でライブラリに追加</string>
     <string name="pref_auto_add_song_summary">再生が終了したら曲をライブラリに追加する</string>
     <string name="pref_expand_on_play_title">再生時にボトムプレイヤーを展開する</string>
+    <string name="pref_equalizer_title">Equalizer</string>
     <string name="pref_about">アプリについて</string>
     <string name="pref_app_version_title">アプリのバージョン</string>
-    <string name="pref_newpipe_version_title">NewPipe Extractorのバージョン</string>
     <string name="pref_check_for_updates_title">アップデートを確認</string>
     <string name="pref_checking_for_updates">確認中…</string>
     <string name="pref_up_to_date">最新版を使用しています。</string>
@@ -57,17 +61,25 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">検索</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
+    <string name="search_library">Search library…</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">ライブラリに追加</string>
-    <string name="search_item_menu_download">ダウンロード</string>
     <string name="menu_edit">編集</string>
-    <string name="menu_song_play_next">次に再生</string>
-    <string name="menu_song_add_to_queue">キューに追加</string>
-    <string name="menu_song_add_to_playlist">プレイリストに追加</string>
-    <string name="menu_song_download">ダウンロード</string>
-    <string name="menu_song_remove_download">ダウンロードを削除</string>
-    <string name="menu_song_delete">削除</string>
+    <string name="menu_start_radio">Start radio</string>
+    <string name="menu_play">Play</string>
+    <string name="menu_play_next">次に再生</string>
+    <string name="menu_add_to_queue">キューに追加</string>
+    <string name="menu_add_to_library">ライブラリに追加</string>
+    <string name="menu_download">ダウンロード</string>
+    <string name="menu_remove_download">ダウンロードを削除</string>
+    <string name="menu_import_playlist">Import playlist</string>
+    <string name="menu_add_to_playlist">プレイリストに追加</string>
+    <string name="menu_view_artist">View artist</string>
+    <string name="menu_view_album">View album</string>
+    <string name="menu_refetch">Refetch</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">削除</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">曲を編集</string>
@@ -86,7 +98,7 @@
     <string name="error_artist_name_empty">アーティスト名は空白にできません。</string>
 
     <string name="dialog_title_duplicate_artist">アーティスト名が重複しています</string>
-    <string name="dialog_msg_duplicate_artist">アーティスト %1$s は既に存在します。統合しますか？</string>
+    <string name="dialog_msg_duplicate_artist">アーティスト %1$s は既に存在します。</string>
 
     <string name="dialog_title_choose_playlist">プレイリストを選択</string>
 
@@ -97,34 +109,90 @@
     <string name="channel_name_download">ダウンロード</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="other">%d曲</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="other">登録者 %d人</item>
+    <plurals name="artist_count">
+        <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="other">%d 動画</item>
+    <plurals name="album_count">
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="other">%d playlists</item>
     </plurals>
 
     <!-- Button -->
     <string name="btn_retry">再試行</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">すべて再生</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">シャッフル</string>
 
     <!-- Sort Menu -->
+    <string name="sort_by_create_date">追加日時</string>
     <string name="sort_by_name">曲名</string>
     <string name="sort_by_artist">アーティスト</string>
-    <string name="sort_by_create_date">追加日時</string>
+    <string name="sort_by_year">Year</string>
+    <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
 
     <!-- Snackbar -->
-    <plurals name="snack_bar_delete_song">
+    <plurals name="snackbar_delete_song">
         <item quantity="other">%d曲が削除されました。</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="other">%dを選択済み</item>
     </plurals>
-    <string name="snack_bar_undo">元に戻す</string>
+    <string name="snackbar_undo">元に戻す</string>
+    <string name="snackbar_url_error">Can\'t identify this url.</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">Song will play next</item>
+        <item quantity="other">%d songs will play next</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">Artist will play next</item>
+        <item quantity="other">%d artists will play next</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">Album will play next</item>
+        <item quantity="other">%d albums will play next</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">Playlist will play next</item>
+        <item quantity="other">%d playlists will play next</item>
+    </plurals>
+    <string name="snackbar_play_next">Selected will play next</string>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">Song added to queue</item>
+        <item quantity="other">%d songs added to queue</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">Artist added to queue</item>
+        <item quantity="other">%d artists added to queue</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">Album added to queue</item>
+        <item quantity="other">%d albums added to queue</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">Playlist added to queue</item>
+        <item quantity="other">%d playlists added to queue</item>
+    </plurals>
+    <string name="snackbar_added_to_queue">Selected added to queue</string>
+    <string name="snackbar_added_to_library">Added to library</string>
+    <string name="snackbar_removed_from_library">Removed from library</string>
+    <string name="snackbar_playlist_imported">Playlist imported</string>
+    <string name="snackbar_added_to_playlist">Added to %1$s</string>
+    <plurals name="snackbar_download_song">
+        <item quantity="one">Start downloading song</item>
+        <item quantity="other">Start downloading %d songs</item>
+    </plurals>
+    <string name="snackbar_removed_download">Removed download</string>
+    <string name="snackbar_action_view">View</string>
+
+    <!-- Toast -->
+    <string name="toast_restart_to_take_effect">Restart to take effect</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">ライブラリに追加</string>
@@ -136,10 +204,12 @@
     <string name="search_filter_albums">アルバム</string>
     <string name="search_filter_artists">アーティスト</string>
     <string name="search_filter_playlists">プレイリスト</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">チャンネル</string>
 
     <string name="system_default">システムに従う</string>
-    <string name="explore_page_content">検索して音楽を発見</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Update Fragment -->
     <string name="whatsnew">新着情報</string>

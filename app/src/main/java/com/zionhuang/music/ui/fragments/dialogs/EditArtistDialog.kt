@@ -11,10 +11,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_ARTIST
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
 import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.repos.SongRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class EditArtistDialog : AppCompatDialogFragment() {
     private lateinit var binding: DialogSingleTextInputBinding
@@ -52,6 +49,7 @@ class EditArtistDialog : AppCompatDialogFragment() {
             }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun onOK() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
@@ -63,13 +61,7 @@ class EditArtistDialog : AppCompatDialogFragment() {
                     MaterialAlertDialogBuilder(requireContext(), R.style.Dialog)
                         .setTitle(getString(R.string.dialog_title_duplicate_artist))
                         .setMessage(getString(R.string.dialog_msg_duplicate_artist, existedArtist.name))
-                        .setPositiveButton(resources.getString(android.R.string.ok)) { _, _ ->
-                            GlobalScope.launch {
-                                SongRepository.mergeArtists(artist.id!!, existedArtist.id!!)
-                            }
-                            dismiss()
-                        }
-                        .setNegativeButton(resources.getString(android.R.string.cancel), null)
+                        .setPositiveButton(resources.getString(android.R.string.ok), null)
                         .show()
                 }
             } else {

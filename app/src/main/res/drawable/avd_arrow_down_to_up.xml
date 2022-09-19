@@ -5,6 +5,7 @@
             android:name="arrow_down_to_up"
             android:width="24dp"
             android:height="24dp"
+            android:tint="?colorControlNormal"
             android:viewportWidth="24"
             android:viewportHeight="24">
             <group
@@ -13,20 +14,20 @@
                 android:pivotY="12">
                 <path
                     android:name="arrow"
-                    android:pathData="M 20 12 L 18.59 10.59 L 13 16.17 L 13 4 L 11 4 L 11 16.17 L 5.42 10.58 L 4 12 L 12 20 L 20 12 Z"
-                    android:fillColor="?invertedColor" />
+                    android:fillColor="@android:color/white"
+                    android:pathData="M 20 12 L 18.59 10.59 L 13 16.17 L 13 4 L 11 4 L 11 16.17 L 5.42 10.58 L 4 12 L 12 20 L 20 12 Z" />
             </group>
         </vector>
     </aapt:attr>
     <target android:name="group">
         <aapt:attr name="android:animation">
             <objectAnimator
-                android:propertyName="rotation"
                 android:duration="200"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="rotation"
                 android:valueFrom="0"
                 android:valueTo="180"
-                android:valueType="floatType"
-                android:interpolator="@android:interpolator/fast_out_slow_in" />
+                android:valueType="floatType" />
         </aapt:attr>
     </target>
 </animated-vector>

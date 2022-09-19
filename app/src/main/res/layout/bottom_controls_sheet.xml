@@ -8,6 +8,10 @@
         <import type="android.view.View" />
 
         <import
+            alias="MediaMetadata"
+            type="android.support.v4.media.MediaMetadataCompat" />
+
+        <import
             alias="PlaybackState"
             type="android.support.v4.media.session.PlaybackStateCompat" />
 
@@ -113,7 +117,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@{viewModel.mediaData.title}"
+                    android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_TITLE)}"
                     android:textColor="?android:textColorPrimary"
                     android:textSize="16sp"
                     tools:text="Song Title" />
@@ -126,7 +130,7 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@{viewModel.mediaData.artist}"
+                    android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_ARTIST)}"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Song Artist" />
@@ -139,11 +143,13 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:background="?selectableItemBackgroundBorderless"
                 android:onClick="@{()->viewModel.togglePlayPause()}"
                 android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_btm_skip_next"
                 app:layout_constraintTop_toTopOf="parent"
+                app:playPauseButtonTint="?invertedColor"
                 app:playState="@{viewModel.playbackState.state}"
                 tools:src="@drawable/ic_pause" />
 
@@ -170,20 +176,11 @@
 
             <ImageView
                 android:id="@+id/artwork"
+                originalSize="@{true}"
+                srcUrl="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString()}"
+                thumbnailWidth="@{512f}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_song_cover"
-                android:src="@drawable/ic_music_note"
-                app:artworkType="@{viewModel.mediaData.artworkType}"
-                app:fullResolution="@{true}"
-                app:srcUrl="@{viewModel.mediaData.artwork}" />
-
-            <com.google.android.exoplayer2.ui.PlayerView
-                android:id="@+id/player"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                app:use_controller="false" />
+                android:layout_height="match_parent" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/load_indicator"
@@ -228,7 +225,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@{viewModel.mediaData.title}"
+                android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_TITLE)}"
                 android:textAlignment="center"
                 tools:text="Song Title" />
 
@@ -241,7 +238,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="@{viewModel.mediaData.artist}"
+                android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_ARTIST)}"
                 android:textAlignment="center"
                 android:textColor="?android:textColorSecondary"
                 tools:text="Song Artist" />
@@ -303,10 +300,12 @@
                 android:layout_height="wrap_content"
                 android:valueFrom="0"
                 android:valueTo="100"
+                app:haloRadius="12dp"
                 app:labelBehavior="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:thumbRadius="6dp"
                 tools:value="50"
                 tools:valueFrom="0"
                 tools:valueTo="100" />
@@ -321,7 +320,7 @@
 
             <TextView
                 android:id="@+id/duration_text"
-                duration="@{viewModel.mediaData.duration}"
+                duration="@{viewModel.mediaMetadata.getLong(MediaMetadata.METADATA_KEY_DURATION)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -355,13 +354,16 @@
 
             <com.zionhuang.music.ui.widgets.PlayPauseButton
                 android:id="@+id/btn_play_pause"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/btn_play_pause_background"
                 android:onClick="@{()->viewModel.togglePlayPause()}"
-                android:padding="6dp"
+                android:padding="16dp"
+                android:tint="?colorOnPrimary"
                 app:layout_constraintEnd_toStartOf="@id/btn_next"
                 app:layout_constraintStart_toEndOf="@id/btn_previous"
                 app:layout_constraintTop_toBottomOf="@id/duration_text"
+                app:playPauseButtonTint="?colorOnPrimary"
                 app:playState="@{viewModel.playbackState.state}"
                 tools:src="@drawable/ic_pause" />
 

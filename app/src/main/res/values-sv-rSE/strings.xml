@@ -1,7 +1,9 @@
 <resources>
     <!-- Title -->
+    <string name="title_home">Home</string>
     <string name="title_songs">Låtar</string>
     <string name="title_artists">Artister</string>
+    <string name="title_albums">Albums</string>
     <string name="title_channels">Kanaler</string>
     <string name="title_playlists">Spellistor</string>
     <string name="title_explore">Utforska</string>
@@ -20,14 +22,16 @@
     <string name="pref_content">Innehåll</string>
     <string name="pref_content_language_title">Standard innehållsspråk</string>
     <string name="pref_default_content_country_title">Standard innehållsland</string>
+    <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">Automatisk nedladdning</string>
     <string name="pref_auto_download_summary">Ladda ner låt när det läggs till i biblioteket</string>
     <string name="pref_auto_add_song_title">Lägg till låt i biblioteket automatiskt</string>
     <string name="pref_auto_add_song_summary">Lägg till låten i biblioteket efter det spelats klart</string>
     <string name="pref_expand_on_play_title">Utöka bottenspelaren vid låtspel</string>
+    <string name="pref_equalizer_title">Equalizer</string>
     <string name="pref_about">Om</string>
     <string name="pref_app_version_title">App version</string>
-    <string name="pref_newpipe_version_title">NewPipe Extractor version</string>
     <string name="pref_check_for_updates_title">Leta efter uppdateringar</string>
     <string name="pref_checking_for_updates">Letar…</string>
     <string name="pref_up_to_date">Du har de senaste uppdateringarna.</string>
@@ -57,17 +61,25 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Sök</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
+    <string name="search_library">Search library…</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">Lägg till i biblioteket</string>
-    <string name="search_item_menu_download">Ladda ned</string>
     <string name="menu_edit">Redigera</string>
-    <string name="menu_song_play_next">Spela upp nästa</string>
-    <string name="menu_song_add_to_queue">Lägg till i kön</string>
-    <string name="menu_song_add_to_playlist">Lägg till i spellista</string>
-    <string name="menu_song_download">Ladda ned</string>
-    <string name="menu_song_remove_download">Ta bort nedladdning</string>
-    <string name="menu_song_delete">Ta bort</string>
+    <string name="menu_start_radio">Start radio</string>
+    <string name="menu_play">Play</string>
+    <string name="menu_play_next">Spela upp nästa</string>
+    <string name="menu_add_to_queue">Lägg till i kön</string>
+    <string name="menu_add_to_library">Add to library</string>
+    <string name="menu_download">Ladda ned</string>
+    <string name="menu_remove_download">Ta bort nedladdning</string>
+    <string name="menu_import_playlist">Import playlist</string>
+    <string name="menu_add_to_playlist">Lägg till i spellista</string>
+    <string name="menu_view_artist">View artist</string>
+    <string name="menu_view_album">View album</string>
+    <string name="menu_refetch">Refetch</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Ta bort</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Redigera låten</string>
@@ -86,7 +98,7 @@
     <string name="error_artist_name_empty">Artist namn kan inte vara tom.</string>
 
     <string name="dialog_title_duplicate_artist">Duplicerat artist</string>
-    <string name="dialog_msg_duplicate_artist">Artist %1$s finns redan. Slå samman två artister?</string>
+    <string name="dialog_msg_duplicate_artist">Artist %1$s finns redan.</string>
 
     <string name="dialog_title_choose_playlist">Välj spellista</string>
 
@@ -97,33 +109,40 @@
     <string name="channel_name_download">Nedladdning</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
-        <item quantity="zero">%d låtar</item>
+    <plurals name="song_count">
         <item quantity="one">%d låt</item>
         <item quantity="other">%d låtar</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="zero">%d prenumeranter</item>
-        <item quantity="one">%d prenumeranter</item>
-        <item quantity="other">%d prenumeranter</item>
+    <plurals name="artist_count">
+        <item quantity="one">%d artist</item>
+        <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="one">%d video</item>
-        <item quantity="other">%d videor</item>
+    <plurals name="album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d playlist</item>
+        <item quantity="other">%d playlists</item>
     </plurals>
 
     <!-- Button -->
     <string name="btn_retry">Försök igen</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">Spela upp alla</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Blanda</string>
 
     <!-- Sort Menu -->
+    <string name="sort_by_create_date">Datum tillagd</string>
     <string name="sort_by_name">Namn</string>
     <string name="sort_by_artist">Artist</string>
-    <string name="sort_by_create_date">Datum tillagd</string>
+    <string name="sort_by_year">Year</string>
+    <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
 
     <!-- Snackbar -->
-    <plurals name="snack_bar_delete_song">
+    <plurals name="snackbar_delete_song">
         <item quantity="one">%d låt har tagits bort.</item>
         <item quantity="other">%d låtar har tagits bort.</item>
     </plurals>
@@ -131,7 +150,55 @@
         <item quantity="one">%d vald</item>
         <item quantity="other">%d valda</item>
     </plurals>
-    <string name="snack_bar_undo">Ångra</string>
+    <string name="snackbar_undo">Ångra</string>
+    <string name="snackbar_url_error">Can\'t identify this url.</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">Song will play next</item>
+        <item quantity="other">%d songs will play next</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">Artist will play next</item>
+        <item quantity="other">%d artists will play next</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">Album will play next</item>
+        <item quantity="other">%d albums will play next</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">Playlist will play next</item>
+        <item quantity="other">%d playlists will play next</item>
+    </plurals>
+    <string name="snackbar_play_next">Selected will play next</string>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">Song added to queue</item>
+        <item quantity="other">%d songs added to queue</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">Artist added to queue</item>
+        <item quantity="other">%d artists added to queue</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">Album added to queue</item>
+        <item quantity="other">%d albums added to queue</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">Playlist added to queue</item>
+        <item quantity="other">%d playlists added to queue</item>
+    </plurals>
+    <string name="snackbar_added_to_queue">Selected added to queue</string>
+    <string name="snackbar_added_to_library">Added to library</string>
+    <string name="snackbar_removed_from_library">Removed from library</string>
+    <string name="snackbar_playlist_imported">Playlist imported</string>
+    <string name="snackbar_added_to_playlist">Added to %1$s</string>
+    <plurals name="snackbar_download_song">
+        <item quantity="one">Start downloading song</item>
+        <item quantity="other">Start downloading %d songs</item>
+    </plurals>
+    <string name="snackbar_removed_download">Removed download</string>
+    <string name="snackbar_action_view">View</string>
+
+    <!-- Toast -->
+    <string name="toast_restart_to_take_effect">Restart to take effect</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Lägg till i biblioteket</string>
@@ -143,10 +210,12 @@
     <string name="search_filter_albums">Album</string>
     <string name="search_filter_artists">Artister</string>
     <string name="search_filter_playlists">Spellistor</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">Kanaler</string>
 
     <string name="system_default">Systemets standardinställning</string>
-    <string name="explore_page_content">Sök för att hitta låtar</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Update Fragment -->
     <string name="whatsnew">Vad är nytt</string>

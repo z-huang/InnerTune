@@ -1,15 +1,12 @@
 package com.zionhuang.music.constants
 
-import com.zionhuang.music.db.entities.Song
-
 object Constants {
-    const val EMPTY_SONG_ID = "empty_song"
-
-    const val HEADER_ITEM_ID = "\$HEADER$"
-    val HEADER_PLACEHOLDER_SONG = Song(id = HEADER_ITEM_ID, title = "")
-    const val TYPE_HEADER = 0
-    const val TYPE_ITEM = 1
+    const val SONG_HEADER_ID = "song_header"
+    const val ARTIST_HEADER_ID = "artist_header"
+    const val ALBUM_HEADER_ID = "album_header"
+    const val PLAYLIST_HEADER_ID = "playlist_header"
+    const val PLAYLIST_SONG_HEADER_ID = "playlist_song_header"
+    const val TEXT_HEADER_ID = "text_header"
 
     const val APP_URL = "https://github.com/z-huang/music"
-    const val NEWPIPE_EXTRACTOR_URL = "https://github.com/TeamNewPipe/NewPipeExtractor"
 }

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="header"
+            type="com.zionhuang.innertube.models.AlbumOrPlaylistHeader" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                cornerRadius="@{@dimen/thumbnail_radius}"
+                thumbnailHeight="@{@dimen/album_thumbnail_size}"
+                thumbnails="@{header.thumbnails}"
+                android:layout_width="@dimen/album_thumbnail_size"
+                android:layout_height="@dimen/album_thumbnail_size"
+                android:layout_marginEnd="6dp"
+                android:scaleType="centerCrop"
+                tools:src="@tools:sample/avatars" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/TextAppearance.Material3.HeadlineSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="@{header.name}"
+                    android:textStyle="bold"
+                    tools:text="Title" />
+
+                <TextView
+                    android:id="@+id/subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="@{header.subtitle}"
+                    android:textStyle="bold"
+                    tools:text="subtitle" />
+
+                <TextView
+                    android:id="@+id/second_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="@{header.secondSubtitle}"
+                    android:textStyle="bold"
+                    tools:text="second subtitle" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <ImageButton
+                        android:id="@+id/add_to_library"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_library_add" />
+
+                    <ImageButton
+                        android:id="@+id/remove_from_library"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_library_add_check"
+                        android:visibility="gone" />
+
+                    <Space
+                        android:layout_width="6dp"
+                        android:layout_height="wrap_content" />
+
+                    <ImageButton
+                        android:id="@+id/download"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_file_download" />
+
+                    <Space
+                        android:layout_width="6dp"
+                        android:layout_height="wrap_content" />
+
+                    <ImageButton
+                        android:id="@+id/more"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_more_vert" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/button_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp">
+
+            <Button
+                android:id="@+id/btn_play"
+                style="@style/Widget.Material3.Button.Icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_play"
+                app:icon="@drawable/ic_play"
+                app:iconGravity="start" />
+
+            <Button
+                android:id="@+id/btn_radio"
+                style="@style/Widget.Material3.Button.Icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_radio"
+                app:icon="@drawable/ic_radio"
+                app:iconGravity="start"
+                tools:visibility="gone" />
+
+            <Space
+                android:layout_width="12dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/btn_shuffle"
+                style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_shuffle"
+                app:icon="@drawable/ic_shuffle"
+                app:iconGravity="start" />
+
+        </LinearLayout>
+
+        <com.zionhuang.music.ui.widgets.ExpandableTextView
+            android:id="@+id/description"
+            style="@style/TextAppearance.Material3.BodyMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:padding="12dp"
+            android:text="@{header.description}"
+            android:visibility="@{header.description == null ? View.GONE : View.VISIBLE}"
+            tools:text="description" />
+
+    </LinearLayout>
+</layout>

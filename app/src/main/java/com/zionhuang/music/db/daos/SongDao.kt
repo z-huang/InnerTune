@@ -1,76 +1,99 @@
 package com.zionhuang.music.db.daos
 
 import androidx.lifecycle.LiveData
-import androidx.paging.PagingSource
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.zionhuang.music.constants.ORDER_ARTIST
-import com.zionhuang.music.constants.ORDER_CREATE_DATE
-import com.zionhuang.music.constants.ORDER_NAME
-import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toSQLiteQuery
-import com.zionhuang.music.models.base.ISortInfo
+import com.zionhuang.music.models.sortInfo.ISortInfo
+import com.zionhuang.music.models.sortInfo.SongSortType
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongDao {
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
+    suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
+
+    @Transaction
+    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
+    fun getSongsAsFlow(query: SupportSQLiteQuery): Flow<List<Song>>
+
+    suspend fun getAllSongsAsList(sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getAllSongsAsFlow(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Query("SELECT COUNT(*) FROM song WHERE NOT isTrash")
+    suspend fun getSongCount(): Int
+
+    suspend fun getArtistSongsAsList(artistId: String, sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+    fun getArtistSongsAsFlow(artistId: String, sortInfo: ISortInfo<SongSortType>) = getSongsAsFlow((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :artistId")
+    suspend fun getArtistSongCount(artistId: String): Int
+
+    @Query("SELECT song.id FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND NOT song.isTrash LIMIT 5")
+    suspend fun getArtistSongsPreview(artistId: String): List<String>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
+    suspend fun getAlbumSongs(albumId: String): List<Song>
+
+    @Transaction
+    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
+    suspend fun getAlbumSongEntities(albumId: String): List<SongEntity>
+
+    @Transaction
+    @Query(QUERY_PLAYLIST_SONGS)
+    fun getPlaylistSongsAsList(playlistId: String): List<Song>
+
+    @Transaction
+    @Query(QUERY_PLAYLIST_SONGS)
+    fun getPlaylistSongsAsFlow(playlistId: String): Flow<List<Song>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE id = :songId")
     suspend fun getSong(songId: String): Song?
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash")
-    fun searchSongsAsPagingSource(query: String): PagingSource<Int, Song>
+    fun searchSongs(query: String): Flow<List<Song>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(songs: List<SongEntity>)
-
-    @Update
-    suspend fun update(songs: List<SongEntity>)
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash LIMIT :previewSize")
+    fun searchSongsPreview(query: String, previewSize: Int): Flow<List<Song>>
 
     @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
     suspend fun hasSong(songId: String): Boolean
 
     @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
-    fun hasSongLiveData(songId: String): LiveData<Boolean>
+    fun hasSongAsLiveData(songId: String): LiveData<Boolean>
 
-    @Query("DELETE FROM song WHERE id IN (:songIds)")
-    suspend fun delete(songIds: List<String>)
+    @Query("UPDATE song SET totalPlayTime = totalPlayTime + :playTime WHERE id = :songId")
+    suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(songs: List<SongEntity>)
 
-    @Transaction
-    @RawQuery
-    suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(song: SongEntity)
 
-    @Transaction
-    @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class])
-    fun getSongsAsPagingSource(query: SupportSQLiteQuery): PagingSource<Int, Song>
+    @Update
+    suspend fun update(song: SongEntity)
 
-    suspend fun getAllSongsAsList(sortInfo: ISortInfo): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getAllSongsAsPagingSource(sortInfo: ISortInfo): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
-    suspend fun getArtistSongsAsList(artistId: Int, sortInfo: ISortInfo): List<Song> = getSongsAsList((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
-    fun getArtistSongsAsPagingSource(artistId: Int, sortInfo: ISortInfo): PagingSource<Int, Song> = getSongsAsPagingSource((QUERY_ARTIST_SONG.format(artistId) + getSortQuery(sortInfo)).toSQLiteQuery())
+    @Update
+    suspend fun update(songs: List<SongEntity>)
 
-    @Transaction
-    @Query(QUERY_PLAYLIST_SONGS)
-    fun getPlaylistSongsAsPagingSource(playlistId: Int): PagingSource<Int, Song>
+    @Delete
+    suspend fun delete(songs: List<SongEntity>)
 
-    @Transaction
-    @Query(QUERY_PLAYLIST_SONGS)
-    suspend fun getPlaylistSongsAsList(playlistId: Int): List<Song>
-
-
-    @Query("SELECT COUNT(id) FROM song WHERE artistId = :artistId")
-    suspend fun artistSongsCount(artistId: Int): Int
-
-    fun getSortQuery(sortInfo: ISortInfo) = QUERY_ORDER.format(
+    fun getSortQuery(sortInfo: ISortInfo<SongSortType>) = QUERY_ORDER.format(
         when (sortInfo.type) {
-            ORDER_CREATE_DATE -> "create_date"
-            ORDER_NAME -> "title"
-            ORDER_ARTIST -> "artistId"
+            SongSortType.CREATE_DATE -> "song.create_date"
+            SongSortType.NAME -> "song.title"
             else -> throw IllegalArgumentException("Unexpected song sort type.")
         },
         if (sortInfo.isDescending) "DESC" else "ASC"
@@ -78,16 +101,23 @@ interface SongDao {
 
     companion object {
         private const val QUERY_ALL_SONG = "SELECT * FROM song WHERE NOT isTrash"
-        private const val QUERY_ARTIST_SONG = "SELECT * FROM song WHERE artistId = %d AND NOT isTrash"
+        private const val QUERY_ARTIST_SONG =
+            """
+            SELECT song.*
+              FROM song_artist_map
+                   JOIN song
+                     ON song_artist_map.songId = song.id
+             WHERE artistId = "%s" AND NOT song.isTrash
+            """
         private const val QUERY_ORDER = " ORDER BY %s %s"
         private const val QUERY_PLAYLIST_SONGS =
             """
-            SELECT song.*, playlist_song.idInPlaylist
-              FROM playlist_song
+            SELECT song.*, playlist_song_map.position
+              FROM playlist_song_map
                    JOIN song
-                     ON playlist_song.songId = song.id
+                     ON playlist_song_map.songId = song.id
              WHERE playlistId = :playlistId AND NOT song.isTrash
-             ORDER BY playlist_song.idInPlaylist
+             ORDER BY playlist_song_map.position
             """
     }
 }

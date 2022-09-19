@@ -4,30 +4,25 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.zionhuang.innertube.models.SuggestionTextItem
+import com.zionhuang.innertube.models.SuggestionTextItem.SuggestionSource.LOCAL
+import com.zionhuang.innertube.models.YTBaseItem
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.YouTubeRepository
 import kotlinx.coroutines.launch
 
 class SuggestionViewModel(application: Application) : AndroidViewModel(application) {
-    val onFillQuery = MutableLiveData<String?>()
-    val query = MutableLiveData<String?>(null)
-    val suggestions = MutableLiveData<List<String>>(emptyList())
+    val suggestions = MutableLiveData<List<YTBaseItem>>(emptyList())
 
-    fun fillQuery(q: String) {
-        onFillQuery.postValue(q)
-    }
-
-    fun setQuery(q: String?) {
-        query.postValue(q)
-    }
-
-    fun fetchSuggestions(query: String?) {
+    fun fetchSuggestions(query: String?) = viewModelScope.launch {
         if (query.isNullOrEmpty()) {
-            suggestions.postValue(emptyList())
-            return
-        }
-        viewModelScope.launch {
+            suggestions.postValue(SongRepository.getAllSearchHistory().map { SuggestionTextItem(it.query, LOCAL) })
+        } else {
             try {
-                suggestions.postValue(YouTubeRepository.suggestionsFor(query))
+                val history = SongRepository.getSearchHistory(query).map { SuggestionTextItem(it.query, LOCAL) }
+                suggestions.postValue(history + YouTubeRepository.getSuggestions(query).filter { item ->
+                    item !is SuggestionTextItem || history.find { it.query == item.query } == null
+                })
             } catch (e: Exception) {
             }
         }

@@ -19,9 +19,7 @@
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         android:textColor="?android:textColorPrimary"
-        android:visibility="gone"
-        tools:text="Timeout"
-        tools:visibility="visible" />
+        tools:text="Timeout" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_bar"
@@ -38,6 +36,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/btn_retry"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:visibility="gone" />
 </LinearLayout>

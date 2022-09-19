@@ -11,10 +11,9 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
-import com.google.android.exoplayer2.ui.PlayerView
 import com.zionhuang.music.models.MediaSessionQueueData
-import com.zionhuang.music.playback.MusicService.LocalBinder
-import java.lang.ref.WeakReference
+import com.zionhuang.music.playback.MusicService.MusicBinder
+import com.zionhuang.music.utils.livedata.SafeMutableLiveData
 
 object MediaSessionConnection {
     var mediaController: MediaControllerCompat? = null
@@ -23,23 +22,20 @@ object MediaSessionConnection {
     private val mediaControllerCallback = MediaControllerCallback()
     private var serviceConnection: ServiceConnection? = null
 
-    val isConnected = MutableLiveData(false)
+    val isConnected = SafeMutableLiveData(false)
     val playbackState = MutableLiveData<PlaybackStateCompat?>(null)
     val nowPlaying = MutableLiveData<MediaMetadataCompat?>(null)
     val queueData = MutableLiveData(MediaSessionQueueData())
 
-    private var weakPlayerView = WeakReference<PlayerView>(null)
-    var playerView: PlayerView?
-        get() = weakPlayerView.get()
-        set(value) {
-            weakPlayerView = WeakReference(value)
-        }
+    private var _binder: MusicBinder? = null
+    val binder: MusicBinder?
+        get() = _binder
 
     fun connect(context: Context) {
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, iBinder: IBinder) {
-                if (iBinder !is LocalBinder) return
-                iBinder.setPlayerView(playerView)
+                if (iBinder !is MusicBinder) return
+                _binder = iBinder
                 try {
                     mediaController = MediaControllerCompat(context, iBinder.sessionToken).apply {
                         registerCallback(mediaControllerCallback)
@@ -50,6 +46,7 @@ object MediaSessionConnection {
             }
 
             override fun onServiceDisconnected(name: ComponentName) {
+                _binder = null
                 mediaController?.unregisterCallback(mediaControllerCallback)
                 isConnected.postValue(false)
             }

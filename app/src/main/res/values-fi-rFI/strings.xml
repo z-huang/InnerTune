@@ -1,7 +1,9 @@
 <resources>
     <!-- Title -->
+    <string name="title_home">Home</string>
     <string name="title_songs">Kappaleet</string>
     <string name="title_artists">Artistit</string>
+    <string name="title_albums">Albums</string>
     <string name="title_channels">Kanavat</string>
     <string name="title_playlists">Soittolistat</string>
     <string name="title_explore">Tutustu</string>
@@ -20,14 +22,16 @@
     <string name="pref_content">Sisältö</string>
     <string name="pref_content_language_title">Sisällön oletuskieli</string>
     <string name="pref_default_content_country_title">Sisällön oletusmaa</string>
+    <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">Automaattinen lataus</string>
     <string name="pref_auto_download_summary">Lataa kirjastoon lisätyt kappaleet automaattisesti</string>
     <string name="pref_auto_add_song_title">Automaattinen vienti kirjastoon</string>
     <string name="pref_auto_add_song_summary">Lisää kappale kirjastoon automaattisesti, kun se on soitettu</string>
     <string name="pref_expand_on_play_title">Laajenna alapalkki toistaessa</string>
+    <string name="pref_equalizer_title">Equalizer</string>
     <string name="pref_about">Tietoa</string>
     <string name="pref_app_version_title">Sovelluksen versio</string>
-    <string name="pref_newpipe_version_title">NewPipe Extractor-versio</string>
     <string name="pref_check_for_updates_title">Tarkista päivitykset</string>
     <string name="pref_checking_for_updates">Tarkistetaan…</string>
     <string name="pref_up_to_date">Sovellus on ajan tasalla.</string>
@@ -57,17 +61,25 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">Etsi</string>
+    <string name="search_yt_music">Search YouTube Music…</string>
+    <string name="search_library">Search library…</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">Lisää kirjastoon</string>
-    <string name="search_item_menu_download">Lataa</string>
     <string name="menu_edit">Muokkaa</string>
-    <string name="menu_song_play_next">Toista seuraavaksi</string>
-    <string name="menu_song_add_to_queue">Lisää jonoon</string>
-    <string name="menu_song_add_to_playlist">Lisää soittolistaan</string>
-    <string name="menu_song_download">Lataa</string>
-    <string name="menu_song_remove_download">Poista lataus</string>
-    <string name="menu_song_delete">Poista</string>
+    <string name="menu_start_radio">Start radio</string>
+    <string name="menu_play">Play</string>
+    <string name="menu_play_next">Toista seuraavaksi</string>
+    <string name="menu_add_to_queue">Lisää jonoon</string>
+    <string name="menu_add_to_playlist">Lisää soittolistaan</string>
+    <string name="menu_download">Lataa</string>
+    <string name="menu_remove_download">Poista lataus</string>
+    <string name="menu_import_playlist">Import playlist</string>
+    <string name="menu_add_to_library">Lisää kirjastoon</string>
+    <string name="menu_view_artist">View artist</string>
+    <string name="menu_view_album">View album</string>
+    <string name="menu_refetch">Refetch</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Poista</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">Muokkaa kappaletta</string>
@@ -86,7 +98,7 @@
     <string name="error_artist_name_empty">Artistin nimi ei voi olla tyhjä.</string>
 
     <string name="dialog_title_duplicate_artist">Artistin kaksoiskappale</string>
-    <string name="dialog_msg_duplicate_artist">Artisti %1$s on jo olemassa. Yhdistetäänkö artistit?</string>
+    <string name="dialog_msg_duplicate_artist">Artisti %1$s on jo olemassa.</string>
 
     <string name="dialog_title_choose_playlist">Valitse soittolista</string>
 
@@ -97,31 +109,40 @@
     <string name="channel_name_download">Lataa</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="one">%d kappale</item>
         <item quantity="other">%d kappaletta</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="one">%d tilaaja</item>
-        <item quantity="other">%d tilaajaa</item>
+    <plurals name="artist_count">
+        <item quantity="one">%d artist</item>
+        <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="one">%d video</item>
-        <item quantity="other">%d videota</item>
+    <plurals name="album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d albums</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d playlist</item>
+        <item quantity="other">%d playlists</item>
     </plurals>
 
     <!-- Button -->
     <string name="btn_retry">Toisto</string>
+    <string name="btn_play">Play</string>
     <string name="btn_play_all">Toista kaikki</string>
+    <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Sekoita</string>
 
     <!-- Sort Menu -->
+    <string name="sort_by_create_date">Lisäyspäivä</string>
     <string name="sort_by_name">Nimi</string>
     <string name="sort_by_artist">Artisti</string>
-    <string name="sort_by_create_date">Lisäyspäivä</string>
+    <string name="sort_by_year">Year</string>
+    <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
 
     <!-- Snackbar -->
-    <plurals name="snack_bar_delete_song">
+    <plurals name="snackbar_delete_song">
         <item quantity="one">%d kappale poistettu.</item>
         <item quantity="other">%d kappaletta poistettu.</item>
     </plurals>
@@ -129,7 +150,55 @@
         <item quantity="one">%d valittu</item>
         <item quantity="other">%d kappaletta valittu</item>
     </plurals>
-    <string name="snack_bar_undo">Kumoa</string>
+    <string name="snackbar_undo">Kumoa</string>
+    <string name="snackbar_url_error">Can\'t identify this url.</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">Song will play next</item>
+        <item quantity="other">%d songs will play next</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">Artist will play next</item>
+        <item quantity="other">%d artists will play next</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">Album will play next</item>
+        <item quantity="other">%d albums will play next</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">Playlist will play next</item>
+        <item quantity="other">%d playlists will play next</item>
+    </plurals>
+    <string name="snackbar_play_next">Selected will play next</string>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">Song added to queue</item>
+        <item quantity="other">%d songs added to queue</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">Artist added to queue</item>
+        <item quantity="other">%d artists added to queue</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">Album added to queue</item>
+        <item quantity="other">%d albums added to queue</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">Playlist added to queue</item>
+        <item quantity="other">%d playlists added to queue</item>
+    </plurals>
+    <string name="snackbar_added_to_queue">Selected added to queue</string>
+    <string name="snackbar_added_to_library">Added to library</string>
+    <string name="snackbar_removed_from_library">Removed from library</string>
+    <string name="snackbar_playlist_imported">Playlist imported</string>
+    <string name="snackbar_added_to_playlist">Added to %1$s</string>
+    <plurals name="snackbar_download_song">
+        <item quantity="one">Start downloading song</item>
+        <item quantity="other">Start downloading %d songs</item>
+    </plurals>
+    <string name="snackbar_removed_download">Removed download</string>
+    <string name="snackbar_action_view">View</string>
+
+    <!-- Toast -->
+    <string name="toast_restart_to_take_effect">Restart to take effect</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Lisää kirjastoon</string>
@@ -141,10 +210,12 @@
     <string name="search_filter_albums">Albumit</string>
     <string name="search_filter_artists">Artistit</string>
     <string name="search_filter_playlists">Soittolistat</string>
+    <string name="search_filter_community_playlists">Community playlists</string>
+    <string name="search_filter_featured_playlists">Featured playlists</string>
     <string name="search_filter_channels">Kanavat</string>
 
     <string name="system_default">Järjestelmän oletus</string>
-    <string name="explore_page_content">Hae musiikkia</string>
+    <string name="header_from_your_library">From your library</string>
 
     <!-- Update Fragment -->
     <string name="whatsnew">Muutokset</string>

@@ -11,6 +11,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.repos.SongRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -50,6 +51,7 @@ class EditPlaylistDialog : AppCompatDialogFragment() {
             }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun onOK() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
