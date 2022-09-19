@@ -15,8 +15,8 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 26
         targetSdk = 32
-        versionCode = 10
-        versionName = "0.3.3"
+        versionCode = 11
+        versionName = "0.4.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
