@@ -67,29 +67,32 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
     }
 
     override fun playNext(songs: List<Song>) {
+        val mainContent = mainActivity.binding.mainContent
         MediaSessionConnection.mediaController?.sendCommand(
             COMMAND_PLAY_NEXT,
             bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
             null
         )
-        Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_song_play_next, songs.size, songs.size), LENGTH_SHORT).show()
+        Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_song_play_next, songs.size, songs.size), LENGTH_SHORT).show()
     }
 
     override fun addToQueue(songs: List<Song>) {
+        val mainContent = mainActivity.binding.mainContent
         MediaSessionConnection.mediaController?.sendCommand(
             COMMAND_ADD_TO_QUEUE,
             bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
             null
         )
-        Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_song_added_to_queue, songs.size, songs.size), LENGTH_SHORT).show()
+        Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_song_added_to_queue, songs.size, songs.size), LENGTH_SHORT).show()
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(songs: List<Song>) {
+        val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
                 SongRepository.addToPlaylist(playlist, songs)
-                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
@@ -109,9 +112,10 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun removeDownload(songs: List<Song>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             SongRepository.removeDownloads(songs)
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_removed_download, LENGTH_SHORT).show()
+            Snackbar.make(mainContent, R.string.snackbar_removed_download, LENGTH_SHORT).show()
         }
     }
 

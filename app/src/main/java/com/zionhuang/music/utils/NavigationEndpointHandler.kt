@@ -63,8 +63,9 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
     }
 
     fun playNext(item: YTItem) {
+        val mainContent = mainActivity.binding.mainContent
         handle(item.menu.playNextEndpoint, item)
-        Snackbar.make(mainActivity.binding.mainContent, fragment.resources.getQuantityString(when (item) {
+        Snackbar.make(mainContent, fragment.resources.getQuantityString(when (item) {
             is SongItem -> R.plurals.snackbar_song_play_next
             is AlbumItem -> R.plurals.snackbar_album_play_next
             is PlaylistItem -> R.plurals.snackbar_playlist_play_next
@@ -73,8 +74,9 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
     }
 
     fun addToQueue(item: YTItem) {
+        val mainContent = mainActivity.binding.mainContent
         handle(item.menu.addToQueueEndpoint, item)
-        Snackbar.make(mainActivity.binding.mainContent, fragment.resources.getQuantityString(when (item) {
+        Snackbar.make(mainContent, fragment.resources.getQuantityString(when (item) {
             is SongItem -> R.plurals.snackbar_song_added_to_queue
             is AlbumItem -> R.plurals.snackbar_album_added_to_queue
             is PlaylistItem -> R.plurals.snackbar_playlist_added_to_queue
@@ -83,6 +85,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
     }
 
     fun addToLibrary(item: YTItem) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             when (item) {
                 is SongItem -> SongRepository.safeAddSong(item)
@@ -90,22 +93,24 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
                 is PlaylistItem -> SongRepository.addPlaylist(item)
                 else -> {}
             }
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_added_to_library, LENGTH_SHORT).show()
+            Snackbar.make(mainContent, R.string.snackbar_added_to_library, LENGTH_SHORT).show()
         }
     }
 
     fun importPlaylist(playlist: PlaylistItem) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             SongRepository.importPlaylist(playlist)
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_playlist_imported, LENGTH_SHORT).show()
+            Snackbar.make(mainContent, R.string.snackbar_playlist_imported, LENGTH_SHORT).show()
         }
     }
 
     fun addToPlaylist(item: YTItem) {
+        val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
                 SongRepository.addToPlaylist(playlist, item)
-                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)

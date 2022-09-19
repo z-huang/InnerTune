@@ -60,6 +60,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(artists: List<Artist>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             val songs = artists.flatMap { artist ->
                 SongRepository.getArtistSongs(artist.id, SongSortInfoPreference).getList()
@@ -69,12 +70,13 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_artist_play_next, artists.size, artists.size), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_artist_play_next, artists.size, artists.size), LENGTH_SHORT).show()
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(artists: List<Artist>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             val songs = artists.flatMap { artist ->
                 SongRepository.getArtistSongs(artist.id, SongSortInfoPreference).getList()
@@ -84,16 +86,17 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_artist_added_to_queue, artists.size, artists.size), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_artist_added_to_queue, artists.size, artists.size), LENGTH_SHORT).show()
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(artists: List<Artist>) {
+        val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
                 SongRepository.addToPlaylist(playlist, artists)
-                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)

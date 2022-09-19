@@ -50,6 +50,7 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(albums: List<Album>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             val songs = albums.flatMap { album ->
                 SongRepository.getAlbumSongs(album.id)
@@ -59,12 +60,13 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_album_play_next, albums.size, albums.size), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_album_play_next, albums.size, albums.size), LENGTH_SHORT).show()
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(albums: List<Album>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             val songs = albums.flatMap { album ->
                 SongRepository.getAlbumSongs(album.id)
@@ -74,16 +76,17 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.map { it.toMediaMetadata() }.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_album_added_to_queue, albums.size, albums.size), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_album_added_to_queue, albums.size, albums.size), LENGTH_SHORT).show()
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(albums: List<Album>) {
+        val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
                 SongRepository.addToPlaylist(playlist, albums)
-                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)

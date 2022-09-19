@@ -93,6 +93,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(playlists: List<Playlist>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
@@ -106,11 +107,12 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, playlists.size, playlists.size), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, playlists.size, playlists.size), LENGTH_SHORT).show()
         }
     }
 
     override fun playNext(playlist: Playlist) {
+        val mainContent = mainActivity.binding.mainContent
         if (playlist.playlist.isYouTubePlaylist) {
             NavigationEndpointHandler(fragment).handle(QueueAddEndpoint(
                 queueInsertPosition = INSERT_AFTER_CURRENT_VIDEO,
@@ -118,7 +120,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     playlistId = playlist.id
                 )
             ))
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, 1, 1), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, 1, 1), LENGTH_SHORT).show()
         } else {
             playNext(listOf(playlist))
         }
@@ -126,6 +128,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(playlists: List<Playlist>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
@@ -139,11 +142,12 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                 bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
                 null
             )
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, playlists.size, playlists.size), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, playlists.size, playlists.size), LENGTH_SHORT).show()
         }
     }
 
     override fun addToQueue(playlist: Playlist) {
+        val mainContent = mainActivity.binding.mainContent
         if (playlist.playlist.isYouTubePlaylist) {
             NavigationEndpointHandler(fragment).handle(QueueAddEndpoint(
                 queueInsertPosition = INSERT_AT_END,
@@ -151,7 +155,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     playlistId = playlist.id
                 )
             ))
-            Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, 1, 1), LENGTH_SHORT).show()
+            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, 1, 1), LENGTH_SHORT).show()
         } else {
             addToQueue(listOf(playlist))
         }
@@ -159,10 +163,11 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(playlists: List<Playlist>) {
+        val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
                 SongRepository.addToPlaylist(playlist, playlists)
-                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)

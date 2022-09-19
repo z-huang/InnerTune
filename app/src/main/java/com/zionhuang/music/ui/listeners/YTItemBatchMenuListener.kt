@@ -34,6 +34,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(items: List<YTItem>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch(Dispatchers.Main) {
             MediaSessionConnection.binder?.songPlayer?.playNext(items.flatMap { item ->
                 when (item) {
@@ -49,7 +50,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
                 }
             })
             Snackbar.make(
-                mainActivity.binding.mainContent,
+                mainContent,
                 when {
                     items.all { it is SongItem } -> context.resources.getQuantityString(R.plurals.snackbar_song_play_next, items.size, items.size)
                     items.all { it is AlbumItem } -> context.resources.getQuantityString(R.plurals.snackbar_album_play_next, items.size, items.size)
@@ -63,6 +64,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(items: List<YTItem>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch(Dispatchers.Main) {
             MediaSessionConnection.binder?.songPlayer?.addToQueue(items.flatMap { item ->
                 when (item) {
@@ -78,7 +80,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
                 }
             })
             Snackbar.make(
-                mainActivity.binding.mainContent,
+                mainContent,
                 when {
                     items.all { it is SongItem } -> context.resources.getQuantityString(R.plurals.snackbar_song_added_to_queue, items.size, items.size)
                     items.all { it is AlbumItem } -> context.resources.getQuantityString(R.plurals.snackbar_album_added_to_queue, items.size, items.size)
@@ -92,20 +94,22 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToLibrary(items: List<YTItem>) {
+        val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
             SongRepository.safeAddSongs(items.filterIsInstance<SongItem>())
             SongRepository.addAlbums(items.filterIsInstance<AlbumItem>())
             SongRepository.addPlaylists(items.filterIsInstance<PlaylistItem>())
-            Snackbar.make(mainActivity.binding.mainContent, R.string.snackbar_added_to_library, LENGTH_SHORT).show()
+            Snackbar.make(mainContent, R.string.snackbar_added_to_library, LENGTH_SHORT).show()
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(items: List<YTItem>) {
+        val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch {
                 SongRepository.addYouTubeItemsToPlaylist(playlist, items)
-                Snackbar.make(mainActivity.binding.mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
+                Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
