@@ -162,18 +162,17 @@ object SongRepository : LocalRepository {
      * Song
      */
     override suspend fun addSong(mediaMetadata: MediaMetadata) = withContext(IO) {
+        if (getSongById(mediaMetadata.id) != null) return@withContext
         val song = mediaMetadata.toSongEntity()
         songDao.insert(song)
         mediaMetadata.artists.forEachIndexed { index, artist ->
-            val artistId = getArtistByName(artist.name)?.id ?: artist.id.also {
-                artistDao.insert(ArtistEntity(
-                    id = artist.id,
-                    name = artist.name
-                ))
-            }
+            artistDao.insert(ArtistEntity(
+                id = artist.id,
+                name = artist.name
+            ))
             artistDao.insert(SongArtistMap(
                 songId = mediaMetadata.id,
-                artistId = artistId,
+                artistId = artist.id,
                 position = index
             ))
         }
@@ -184,7 +183,7 @@ object SongRepository : LocalRepository {
         val songs = items.map { it.toSongEntity() }
         val songArtistMaps = items.flatMap { song ->
             song.artists.mapIndexed { index, run ->
-                val artistId = getArtistByName(run.text)?.id ?: (run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
+                val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
                     artistDao.insert(ArtistEntity(
                         id = it,
                         name = run.text
@@ -223,7 +222,7 @@ object SongRepository : LocalRepository {
         })
         val songArtistMaps = songItems.flatMap { song ->
             song.artists.mapIndexed { index, run ->
-                val artistId = getArtistByName(run.text)?.id ?: (run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
+                val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
                     artistDao.insert(ArtistEntity(
                         id = it,
                         name = run.text
@@ -409,7 +408,7 @@ object SongRepository : LocalRepository {
                 })
             }
             (YouTube.browse(BrowseEndpoint(browseId = album.id)).items.firstOrNull() as? AlbumOrPlaylistHeader)?.artists?.forEachIndexed { index, run ->
-                val artistId = (getArtistByName(run.text)?.id ?: run.navigationEndpoint?.browseEndpoint?.browseId ?: generateArtistId()).also {
+                val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
                     artistDao.insert(ArtistEntity(
                         id = it,
                         name = run.text
