@@ -68,10 +68,9 @@ class SongPlayer(
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
     private var currentQueue: Queue = EmptyQueue()
 
-    private val _mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
+    val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
     }
-    val mediaSession: MediaSessionCompat get() = _mediaSession
 
     val player: ExoPlayer = ExoPlayer.Builder(context)
         .setMediaSourceFactory(
@@ -206,13 +205,12 @@ class SongPlayer(
             override fun getCurrentContentText(player: Player): CharSequence? =
                 player.currentMetadata?.artists?.joinToString { it.name }
 
-            override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? {
-                return player.currentMetadata?.thumbnailUrl?.let { url ->
+            override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? =
+                player.currentMetadata?.thumbnailUrl?.let { url ->
                     bitmapProvider.load(resizeThumbnailUrl(url, (256 * context.resources.displayMetrics.density).roundToInt(), null)) {
                         callback.onBitmap(it)
                     }
                 }
-            }
 
             override fun createCurrentContentIntent(player: Player): PendingIntent? =
                 PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), FLAG_IMMUTABLE)
@@ -295,7 +293,7 @@ class SongPlayer(
         }
     }
 
-    override fun onPositionDiscontinuity(oldPosition: PositionInfo, newPosition: PositionInfo, @Player.DiscontinuityReason reason: Int) {
+    override fun onPositionDiscontinuity(oldPosition: PositionInfo, newPosition: PositionInfo, @DiscontinuityReason reason: Int) {
         if (reason == DISCONTINUITY_REASON_AUTO_TRANSITION && autoAddSong) {
             oldPosition.mediaItem?.metadata?.let {
                 addToLibrary(it)

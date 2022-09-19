@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PlaylistDao {
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist")
+    @Query(QUERY_ALL_PLAYLIST)
     suspend fun getAllPlaylistsAsList(): List<Playlist>
 
     @Transaction
@@ -26,19 +26,25 @@ interface PlaylistDao {
     suspend fun getPlaylistCount(): Int
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE id = :playlistId")
+    @Query("$QUERY_ALL_PLAYLIST WHERE id = :playlistId")
     suspend fun getPlaylistById(playlistId: String): Playlist
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE name LIKE '%' || :query || '%'")
+    @Query("$QUERY_ALL_PLAYLIST WHERE name LIKE '%' || :query || '%'")
     fun searchPlaylists(query: String): Flow<List<Playlist>>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE name LIKE '%' || :query || '%' LIMIT :previewSize")
+    @Query("$QUERY_ALL_PLAYLIST WHERE name LIKE '%' || :query || '%' LIMIT :previewSize")
     fun searchPlaylistsPreview(query: String, previewSize: Int): Flow<List<Playlist>>
 
     @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId AND position = :position")
     suspend fun getPlaylistSongMap(playlistId: String, position: Int): PlaylistSongMap?
+
+    @Query("SELECT * FROM playlist_song_map WHERE songId = :songIds")
+    suspend fun getPlaylistSongMaps(songIds: List<String>): List<PlaylistSongMap>
+
+    @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId AND position >= :from ORDER BY position")
+    suspend fun getPlaylistSongMaps(playlistId: String, from: Int): List<PlaylistSongMap>
 
     @Query("UPDATE playlist_song_map SET position = position - 1 WHERE playlistId = :playlistId AND :from <= position")
     suspend fun decrementSongPositions(playlistId: String, from: Int)
@@ -49,13 +55,10 @@ interface PlaylistDao {
     @Query("UPDATE playlist_song_map SET position = position + 1 WHERE playlistId = :playlistId AND :from <= position AND position <= :to")
     suspend fun incrementSongPositions(playlistId: String, from: Int, to: Int)
 
-    @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId AND position >= :from")
-    suspend fun getPlaylistSongMaps(playlistId: String, from: Int): List<PlaylistSongMap>
-
     suspend fun renewSongPositions(playlistId: String, from: Int) {
         val maps = getPlaylistSongMaps(playlistId, from)
         if (maps.isEmpty()) return
-        var position = maps[0].position
+        var position = if (from <= 0) 0 else maps[0].position
         update(maps.map { it.copy(position = position++) })
     }
 

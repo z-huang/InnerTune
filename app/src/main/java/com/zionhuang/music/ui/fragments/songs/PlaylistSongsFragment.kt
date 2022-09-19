@@ -51,7 +51,7 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
     private var tracker: SelectionTracker<String>? = null
 
     private var move: Pair<Int, Int>? = null
-    private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(UP or DOWN, LEFT or RIGHT) {
+    private val itemTouchHelper = ItemTouchHelper(object : SimpleCallback(UP or DOWN, LEFT or RIGHT) {
         private val elevation by lazy { requireContext().resources.getDimension(R.dimen.drag_item_elevation) }
 
         override fun isLongPressDragEnabled(): Boolean = false
