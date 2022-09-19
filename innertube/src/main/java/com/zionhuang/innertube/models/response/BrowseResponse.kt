@@ -72,7 +72,7 @@ data class BrowseResponse(
                 id = musicImmersiveHeaderRenderer.title.toString(),
                 name = musicImmersiveHeaderRenderer.title.toString(),
                 description = musicImmersiveHeaderRenderer.description?.toString(),
-                bannerThumbnails = musicImmersiveHeaderRenderer.thumbnail.getThumbnails(),
+                bannerThumbnails = musicImmersiveHeaderRenderer.thumbnail?.getThumbnails(),
                 shuffleEndpoint = musicImmersiveHeaderRenderer.playButton?.buttonRenderer?.navigationEndpoint,
                 radioEndpoint = musicImmersiveHeaderRenderer.startRadioButton?.buttonRenderer?.navigationEndpoint,
             )
@@ -99,7 +99,7 @@ data class BrowseResponse(
         data class MusicImmersiveHeaderRenderer(
             val title: Runs,
             val description: Runs?,
-            val thumbnail: ThumbnailRenderer,
+            val thumbnail: ThumbnailRenderer?,
             val playButton: Button?,
             val startRadioButton: Button?,
             val menu: Menu,

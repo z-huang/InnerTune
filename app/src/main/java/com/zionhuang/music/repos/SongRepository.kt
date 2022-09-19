@@ -367,8 +367,8 @@ object SongRepository : LocalRepository {
             if (header is ArtistHeader) {
                 artistDao.update(artist.copy(
                     name = header.name,
-                    thumbnailUrl = header.bannerThumbnails.lastOrNull()?.url?.let { resizeThumbnailUrl(it, 400, 400) },
-                    bannerUrl = header.bannerThumbnails.lastOrNull()?.url,
+                    thumbnailUrl = header.bannerThumbnails?.lastOrNull()?.url?.let { resizeThumbnailUrl(it, 400, 400) },
+                    bannerUrl = header.bannerThumbnails?.lastOrNull()?.url,
                     description = header.description,
                     lastUpdateTime = LocalDateTime.now()
                 ))
