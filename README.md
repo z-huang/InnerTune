@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/z-huang/music/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" height="72">
 
-Make your own music library with any song on YouTube Music.  
+Make your own music library with any song from YouTube Music.  
 No ads, free, and simple.
 
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music)
