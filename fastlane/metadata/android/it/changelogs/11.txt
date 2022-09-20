@@ -1,4 +1,4 @@
-In questa versione diamo l'addio a NewPipe Extractor e diamo il benvenuto a una nuova libreria: ***Innertube***! Questo cambiamento rende possibile nuove funzioni potenti! Gli aggiornamenti principali sono i seguenti:
+In questa versione diamo l'addio a NewPipe Extractor e diamo il benvenuto a una nuova libreria: <b><i>Innertube</i></b>! Questo cambiamento rende possibile nuove funzioni potenti! Gli aggiornamenti principali sono i seguenti:
 * Cerca tutto come su YouTube Music
 * Una nuova pagina principale dove trovare suggerimenti e cercare nuove pubblicazioni #43 #68 #124
 * Riassunto dei risultati della ricerca

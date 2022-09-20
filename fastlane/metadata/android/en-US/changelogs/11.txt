@@ -1,4 +1,4 @@
-In this version, we are saying goodbye to NewPipe Extractor and introducing a new library: ***Innertube***! This change makes more powerful features possible! The primary updates are as follows:
+In this version, we are saying goodbye to NewPipe Extractor and introducing a new library: <b><i>Innertube</i></b>! This change makes more powerful features possible! The primary updates are as follows:
 * Browse everything as in YouTube Music
 * New home page to browse suggestions and find new music releases #43 #68 #124
 * Search result summary tab
