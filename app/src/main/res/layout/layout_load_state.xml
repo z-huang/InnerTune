@@ -17,8 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="?android:textColorPrimary"
         tools:text="Timeout" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
