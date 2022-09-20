@@ -332,14 +332,15 @@ object SongRepository : LocalRepository {
     }
 
     override suspend fun deleteSongs(songs: List<Song>) = withContext(IO) {
-        val renewPlaylists = playlistDao.getPlaylistSongMaps(songs.map { it.id }).groupBy { it.playlistId }.mapValues { entry ->
+        val deletableSongs = songs.filter { it.album == null }
+        val renewPlaylists = playlistDao.getPlaylistSongMaps(deletableSongs.map { it.id }).groupBy { it.playlistId }.mapValues { entry ->
             entry.value.minOf { it.position } - 1
         }
-        songDao.delete(songs.map { it.song })
-        songs.forEach { song ->
+        songDao.delete(deletableSongs.map { it.song })
+        deletableSongs.forEach { song ->
             getSongFile(song.song.id).delete()
         }
-        artistDao.delete(songs
+        artistDao.delete(deletableSongs
             .flatMap { it.artists }
             .distinctBy { it.id }
             .filter { artistDao.getArtistSongCount(it.id) == 0 })
