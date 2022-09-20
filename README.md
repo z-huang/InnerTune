@@ -45,15 +45,16 @@ With this app, you're like getting a free music streaming service. You can liste
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/main.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/playlists.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/player.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/now_playing.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="170" />
 </p>
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/search.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/search results.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/settings.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/07.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/08.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="170" />
 </p>
 
 ## Installation
