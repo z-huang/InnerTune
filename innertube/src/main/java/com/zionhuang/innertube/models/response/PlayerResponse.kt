@@ -27,8 +27,8 @@ data class PlayerResponse(
     ) {
         @Serializable
         data class AudioConfig(
-            val loudnessDb: Double,
-            val perceptualLoudnessDb: Double,
+            val loudnessDb: Double?,
+            val perceptualLoudnessDb: Double?,
         )
     }
 

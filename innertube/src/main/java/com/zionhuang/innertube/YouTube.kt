@@ -114,7 +114,9 @@ object YouTube {
 
     suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): NextResult {
         val response = innerTube.next(WEB_REMIX, endpoint.videoId, endpoint.playlistId, endpoint.playlistSetVideoId, endpoint.index, endpoint.params, continuation).body<NextResponse>()
-        val playlistPanelRenderer = response.continuationContents?.playlistPanelContinuation ?: response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content?.musicQueueRenderer?.content?.playlistPanelRenderer!!
+        val playlistPanelRenderer = response.continuationContents?.playlistPanelContinuation
+            ?: response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content?.musicQueueRenderer?.content?.playlistPanelRenderer
+            ?: throw YouTubeException("Queue items not found.")
         playlistPanelRenderer.contents.lastOrNull()?.automixPreviewVideoRenderer?.content?.automixPlaylistVideoRenderer?.navigationEndpoint?.watchPlaylistEndpoint?.let { watchPlaylistEndpoint ->
             return next(watchPlaylistEndpoint.toWatchEndpoint()).let { result ->
                 result.copy(
@@ -149,6 +151,8 @@ object YouTube {
             val FILTER_COMMUNITY_PLAYLIST = SearchFilter("EgeKAQQoAEABagwQAxAOEAQQCRAKEAU%3D")
         }
     }
+
+    class YouTubeException(message: String?) : Exception(message)
 
     const val HOME_BROWSE_ID = "FEmusic_home"
     const val EXPLORE_BROWSE_ID = "FEmusic_explore"

@@ -88,7 +88,7 @@ class SongPlayer(
                     }
                 }.mapCatching { playerResponse ->
                     if (playerResponse.playabilityStatus.status != "OK") {
-                        throw PlaybackException(playerResponse.playabilityStatus.status, null, ERROR_CODE_REMOTE_ERROR)
+                        throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
                     }
                     val uri = playerResponse.streamingData?.adaptiveFormats
                         ?.filter { it.isAudio }
@@ -183,7 +183,7 @@ class SongPlayer(
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
             override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) = throw UnsupportedOperationException()
-            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat, index: Int)  = throw UnsupportedOperationException()
+            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat, index: Int) = throw UnsupportedOperationException()
             override fun onRemoveQueueItem(player: Player, description: MediaDescriptionCompat) {
                 player.mediaItemIndexOf(description.mediaId)?.let { i ->
                     player.removeMediaItem(i)
