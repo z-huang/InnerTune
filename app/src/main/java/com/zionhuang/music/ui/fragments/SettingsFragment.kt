@@ -159,8 +159,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         preference.value = newValue
                         preference.callChangeListener(newValue)
 
-                        // dismiss the dialog
-                        dialog.dismiss()
+                        // invoke the on change listener
+                        preference.callChangeListener(preference.value)
                     }
                     .setNegativeButton(android.R.string.cancel, null)
                     .show()
@@ -176,6 +176,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         // save the new value to the preference
                         preference.text = binding.editText.text.toString()
+
+                        // invoke the on change listener
+                        preference.callChangeListener(preference.text)
                     }
                     .setNegativeButton(android.R.string.cancel, null)
                     .show()
