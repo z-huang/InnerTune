@@ -1,7 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Title -->
+    <string name="title_home">首頁</string>
     <string name="title_songs">歌曲</string>
-    <string name="title_artists">演出者</string>
+    <string name="title_artists">藝人</string>
+    <string name="title_albums">專輯</string>
     <string name="title_channels">頻道</string>
     <string name="title_playlists">播放清單</string>
     <string name="title_explore">探索</string>
@@ -20,14 +22,16 @@
     <string name="pref_content">內容</string>
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
+    <string name="pref_enable_proxy_title">啟用 Proxy</string>
+    <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_auto_download_title">自動下載</string>
     <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
+    <string name="pref_equalizer_title">等化器</string>
     <string name="pref_about">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
-    <string name="pref_newpipe_version_title">NewPipe Extractor 版本</string>
     <string name="pref_check_for_updates_title">檢查更新</string>
     <string name="pref_checking_for_updates">正在檢查…</string>
     <string name="pref_up_to_date">已是最新版本</string>
@@ -57,36 +61,44 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">搜尋</string>
+    <string name="search_yt_music">搜尋 YouTube Music…</string>
+    <string name="search_library">搜尋媒體庫…</string>
 
     <!-- Popup Menu -->
-    <string name="search_item_menu_add">加入媒體庫</string>
-    <string name="search_item_menu_download">下載</string>
     <string name="menu_edit">編輯</string>
-    <string name="menu_song_play_next">接著播放</string>
-    <string name="menu_song_add_to_queue">加入待播清單</string>
-    <string name="menu_song_add_to_playlist">加入播放清單</string>
-    <string name="menu_song_download">下載</string>
-    <string name="menu_song_remove_download">刪除下載</string>
-    <string name="menu_song_delete">移除</string>
+    <string name="menu_start_radio">開啟電台</string>
+    <string name="menu_play">播放</string>
+    <string name="menu_play_next">接著播放</string>
+    <string name="menu_add_to_queue">加入待播清單</string>
+    <string name="menu_add_to_library">加入媒體庫</string>
+    <string name="menu_download">下載</string>
+    <string name="menu_remove_download">刪除下載</string>
+    <string name="menu_import_playlist">匯入播放清單</string>
+    <string name="menu_add_to_playlist">加入播放清單</string>
+    <string name="menu_view_artist">瀏覽藝人</string>
+    <string name="menu_view_album">瀏覽專輯</string>
+    <string name="menu_refetch">更新資料</string>
+    <string name="menu_share">分享</string>
+    <string name="menu_delete">移除</string>
 
     <!-- Dialog -->
     <string name="dialog_title_edit_song">編輯歌曲</string>
     <string name="song_title">歌名</string>
-    <string name="song_artist">演出者</string>
+    <string name="song_artist">藝人</string>
     <string name="error_song_title_empty">歌名不能為空</string>
-    <string name="error_song_artist_empty">演出者不能為空</string>
+    <string name="error_song_artist_empty">藝人不能為空</string>
     <string name="dialog_button_save">儲存</string>
 
     <string name="dialog_title_create_playlist">新增播放清單</string>
     <string name="text_view_hint_playlist_name">名稱</string>
     <string name="error_playlist_name_empty">播放清單名稱不能為空</string>
 
-    <string name="dialog_title_edit_artist">編輯演出者</string>
-    <string name="text_view_hint_artist_name">演出者名稱</string>
-    <string name="error_artist_name_empty">演出者名稱不能為空</string>
+    <string name="dialog_title_edit_artist">編輯藝人</string>
+    <string name="text_view_hint_artist_name">藝人名稱</string>
+    <string name="error_artist_name_empty">藝人名稱不能為空</string>
 
     <string name="dialog_title_duplicate_artist">重複的作曲家</string>
-    <string name="dialog_msg_duplicate_artist">作曲家「%1$s」已存在。合併兩個作曲家？</string>
+    <string name="dialog_msg_duplicate_artist">作曲家「%1$s」已存在。</string>
 
     <string name="dialog_title_choose_playlist">選擇播放清單</string>
 
@@ -97,34 +109,90 @@
     <string name="channel_name_download">下載</string>
 
     <!-- Noun -->
-    <plurals name="songs_count">
+    <plurals name="song_count">
         <item quantity="other">%d 首歌曲</item>
     </plurals>
-    <plurals name="subscribers">
-        <item quantity="other">%d 位訂閱者</item>
+    <plurals name="artist_count">
+        <item quantity="other">%d 位藝人</item>
     </plurals>
-    <plurals name="videos">
-        <item quantity="other">%d 部影片</item>
+    <plurals name="album_count">
+        <item quantity="other">%d 張專輯</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="other">%d 個播放清單</item>
     </plurals>
 
     <!-- Button -->
     <string name="btn_retry">重試</string>
+    <string name="btn_play">播放</string>
     <string name="btn_play_all">全部播放</string>
+    <string name="btn_radio">電台</string>
     <string name="btn_shuffle">隨機播放</string>
 
     <!-- Sort Menu -->
-    <string name="sort_by_name">曲名</string>
-    <string name="sort_by_artist">演出者</string>
     <string name="sort_by_create_date">新增時間</string>
+    <string name="sort_by_name">名稱</string>
+    <string name="sort_by_artist">藝人</string>
+    <string name="sort_by_year">年份</string>
+    <string name="sort_by_song_count">歌曲總數</string>
+    <string name="sort_by_length">長度</string>
 
     <!-- Snackbar -->
-    <plurals name="snack_bar_delete_song">
+    <plurals name="snackbar_delete_song">
         <item quantity="other">已刪除 %d 首歌曲</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="other">已選取 %d 個項目</item>
     </plurals>
-    <string name="snack_bar_undo">復原</string>
+    <string name="snackbar_undo">復原</string>
+    <string name="snackbar_url_error">無法辨識此連結</string>
+    <plurals name="snackbar_song_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此歌曲</item>
+        <item quantity="other">即將播放這%d首歌曲</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此藝人的歌曲</item>
+        <item quantity="other">即將播放這%d位藝人的歌曲</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此專輯</item>
+        <item quantity="other">即將播放這%d張專輯</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next" tools:ignore="UnusedQuantity">
+        <item quantity="one">即將播放此播放清單</item>
+        <item quantity="other">即將播放這%d個播放清單</item>
+    </plurals>
+    <string name="snackbar_play_next">即將播放所選項目</string>
+    <plurals name="snackbar_song_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此歌曲加入待播清單</item>
+        <item quantity="other">已將這%d首歌曲加入待播清單</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此藝人的歌曲加入待播清單</item>
+        <item quantity="other">已將這%d位藝人的歌曲加入待播清單</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此專輯加入待播清單</item>
+        <item quantity="other">已將這%d張專輯加入待播清單</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue" tools:ignore="UnusedQuantity">
+        <item quantity="one">已將此播放清單加入待播清單</item>
+        <item quantity="other">已將這%d個播放清單加入待播清單</item>
+    </plurals>
+    <string name="snackbar_added_to_queue">已將所選加入待播清單</string>
+    <string name="snackbar_added_to_library">已新增至媒體庫</string>
+    <string name="snackbar_removed_from_library">已從媒體庫中移除</string>
+    <string name="snackbar_playlist_imported">已匯入此播放清單</string>
+    <string name="snackbar_added_to_playlist">已新增至「%1$s」</string>
+    <plurals name="snackbar_download_song" tools:ignore="UnusedQuantity">
+        <item quantity="one">正在下載歌曲</item>
+        <item quantity="other">正在下載%d首歌曲</item>
+    </plurals>
+    <string name="snackbar_removed_download">已移除下載</string>
+    <string name="snackbar_action_view">查看</string>
+
+    <!-- Toast -->
+    <string name="toast_restart_to_take_effect">重啟以套用變更</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">加入音樂庫</string>
@@ -134,12 +202,14 @@
     <string name="search_filter_songs">歌曲</string>
     <string name="search_filter_videos">影片</string>
     <string name="search_filter_albums">專輯</string>
-    <string name="search_filter_artists">演出者</string>
+    <string name="search_filter_artists">藝人</string>
     <string name="search_filter_playlists">播放清單</string>
+    <string name="search_filter_community_playlists">社群播放清單</string>
+    <string name="search_filter_featured_playlists">精選播放清單</string>
     <string name="search_filter_channels">頻道</string>
 
     <string name="system_default">系統預設</string>
-    <string name="explore_page_content">搜尋以尋找音樂</string>
+    <string name="header_from_your_library">來自你的媒體庫</string>
 
     <!-- Update Fragment-->
     <string name="whatsnew">What\'s new</string>

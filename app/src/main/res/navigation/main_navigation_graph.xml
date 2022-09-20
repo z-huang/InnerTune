@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.zionhuang.music.ui.fragments.HomeFragment"
+        android:label="@string/title_home" />
+    <fragment
+        android:id="@+id/songsFragment"
+        android:name="com.zionhuang.music.ui.fragments.SongsFragment"
+        android:label="@string/title_songs" />
+    <fragment
+        android:id="@+id/artistsFragment"
+        android:name="com.zionhuang.music.ui.fragments.ArtistsFragment"
+        android:label="@string/title_artists">
+        <action
+            android:id="@+id/action_artistsFragment_to_artistSongsFragment"
+            app:destination="@id/artistSongsFragment">
+            <argument
+                android:name="artistId"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/albumsFragment"
+        android:name="com.zionhuang.music.ui.fragments.AlbumsFragment"
+        android:label="@string/title_albums" />
+    <fragment
+        android:id="@+id/playlistsFragment"
+        android:name="com.zionhuang.music.ui.fragments.PlaylistsFragment"
+        android:label="@string/title_playlists">
+        <action
+            android:id="@+id/action_playlistsFragment_to_playlistSongsFragment"
+            app:destination="@id/playlistSongsFragment">
+            <argument
+                android:name="playlistId"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/localSearchFragment"
+        android:name="com.zionhuang.music.ui.fragments.LocalSearchFragment" />
+    <fragment
+        android:id="@+id/youtubeSuggestionFragment"
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragment">
+        <action
+            android:id="@+id/action_suggestionFragment_to_searchResultFragment"
+            app:destination="@id/youtubeSearchFragment"
+            app:popUpTo="@id/homeFragment">
+            <argument
+                android:name="query"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/youtubeSearchFragment"
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSearchFragment">
+        <argument
+            android:name="query"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
+            app:destination="@id/youtubeSuggestionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/youTubeBrowseFragment"
+        android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeBrowseFragment">
+        <argument
+            android:name="endpoint"
+            app:argType="com.zionhuang.innertube.models.BrowseEndpoint" />
+    </fragment>
+    <fragment
+        android:id="@+id/songDetailsFragment"
+        android:name="com.zionhuang.music.ui.fragments.dialogs.EditSongDialog"
+        android:label="SongDetailsFragment">
+        <argument
+            android:name="songId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/artistSongsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.ArtistSongsFragment">
+        <argument
+            android:name="artistId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistSongsFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragment">
+        <argument
+            android:name="playlistId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/queueFragment"
+        android:name="com.zionhuang.music.ui.fragments.QueueFragment"
+        android:label="@string/title_now_playing" />
+    <action
+        android:id="@+id/open_queueFragment"
+        app:destination="@id/queueFragment" />
+    <action
+        android:id="@+id/open_youTubeSuggestionFragment"
+        app:destination="@id/youtubeSuggestionFragment" />
+    <action
+        android:id="@+id/open_youTubeBrowseFragment"
+        app:destination="@id/youTubeBrowseFragment" />
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.zionhuang.music.ui.activities.SettingsActivity"
+        tools:layout="@layout/activity_settings" />
+</navigation>

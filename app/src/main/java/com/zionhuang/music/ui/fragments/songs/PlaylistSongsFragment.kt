@@ -1,55 +1,63 @@
 package com.zionhuang.music.ui.fragments.songs
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
-import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_PLAYLIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_QUEUE_DATA
-import com.zionhuang.music.constants.MediaConstants.QUEUE_PLAYLIST
-import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.db.entities.LocalItem
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.addOnClickListener
-import com.zionhuang.music.extensions.resolveColor
-import com.zionhuang.music.models.QueueData
-import com.zionhuang.music.ui.adapters.PlaylistSongsAdapter
-import com.zionhuang.music.ui.fragments.base.BindingFragment
+import com.zionhuang.music.extensions.requireAppCompatActivity
+import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.playback.queues.ListQueue
+import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.adapters.DraggableLocalItemAdapter
+import com.zionhuang.music.ui.adapters.selection.DraggableLocalItemKeyProvider
+import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
+import com.zionhuang.music.ui.listeners.SongMenuListener
+import com.zionhuang.music.ui.viewholders.LocalItemViewHolder
+import com.zionhuang.music.ui.viewholders.SongViewHolder
+import com.zionhuang.music.utils.addActionModeObserver
 import com.zionhuang.music.viewmodels.PlaybackViewModel
-import com.zionhuang.music.viewmodels.PlaylistSongsViewModel
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
-    override fun getViewBinding() = LayoutRecyclerviewBinding.inflate(layoutInflater)
-
+class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() {
     private val args: PlaylistSongsFragmentArgs by navArgs()
     private val playlistId by lazy { args.playlistId }
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
-    private val viewModel by viewModels<PlaylistSongsViewModel>()
-    private val songsAdapter = PlaylistSongsAdapter()
+    private val menuListener = SongMenuListener(this)
+    override val adapter = DraggableLocalItemAdapter().apply {
+        songMenuListener = menuListener
+        isDraggable = true
+    }
+    private var tracker: SelectionTracker<String>? = null
 
-    private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+    private var move: Pair<Int, Int>? = null
+    private val itemTouchHelper = ItemTouchHelper(object : SimpleCallback(UP or DOWN, LEFT or RIGHT) {
         private val elevation by lazy { requireContext().resources.getDimension(R.dimen.drag_item_elevation) }
 
         override fun isLongPressDragEnabled(): Boolean = false
+
+        override fun canDropOver(recyclerView: RecyclerView, current: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) =
+            current is SongViewHolder && target is SongViewHolder
 
         override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -61,82 +69,87 @@ class PlaylistSongsFragment : BindingFragment<LayoutRecyclerviewBinding>() {
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             ViewCompat.setElevation(viewHolder.itemView, 0f)
-            songsAdapter.processMove()
+            lifecycleScope.launch {
+                move?.let {
+                    SongRepository.movePlaylistItems(playlistId, it.first, it.second)
+                    move = null
+                }
+            }
         }
 
         override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-            val from = viewHolder.absoluteAdapterPosition
-            val to = target.absoluteAdapterPosition
-            songsAdapter.moveItem(from, to)
+            val from = viewHolder.absoluteAdapterPosition - 1
+            val to = target.absoluteAdapterPosition - 1
+            adapter.notifyItemMoved(from + 1, to + 1)
+            move = Pair(move?.first ?: from, to)
             return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.removeFromPlaylist(playlistId, songsAdapter.getItemByPosition(viewHolder.absoluteAdapterPosition)!!.idInPlaylist!!)
+            val position = viewHolder.absoluteAdapterPosition - 1
+            lifecycleScope.launch {
+                SongRepository.removeSongFromPlaylist(playlistId, position)
+            }
         }
     })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.nav_host_fragment
-            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
-            scrimColor = Color.TRANSPARENT
-            setAllContainerColors(requireContext().resolveColor(R.attr.colorSurface))
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
-
-        songsAdapter.apply {
-            popupMenuListener = songsViewModel.songPopupMenuListener
-            downloadInfo = songsViewModel.downloadInfoLiveData
-            itemTouchHelper = this@PlaylistSongsFragment.itemTouchHelper
-            onProcessMove = {
-                viewModel.processMove(playlistId, it)
-            }
-        }
+        super.onViewCreated(view, savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
 
         binding.recyclerView.apply {
-            transitionName = getString(R.string.playlist_songs_transition_name)
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = songsAdapter
+            setHasFixedSize(true)
             itemTouchHelper.attachToRecyclerView(this)
-            addOnClickListener { pos, _ ->
-                playbackViewModel.playMedia(
-                    requireActivity(), songsAdapter.getItemByPosition(pos)!!.id, bundleOf(
-                        EXTRA_QUEUE_DATA to QueueData(QUEUE_PLAYLIST, sortInfo = songsViewModel.sortInfo.parcelize(), extras = bundleOf(
-                            EXTRA_PLAYLIST_ID to playlistId
-                        ))
-                    )
-                )
-            }
         }
+        binding.recyclerView.addOnClickListener { position, _ ->
+            if (adapter.currentList[position] !is LocalItem) return@addOnClickListener
+
+            playbackViewModel.playQueue(requireActivity(), ListQueue(
+                items = adapter.currentList.filterIsInstance<Song>().map { it.toMediaItem() },
+                startIndex = position - 1
+            ))
+        }
+        adapter.itemTouchHelper = itemTouchHelper
+        adapter.onShuffle = {
+            playbackViewModel.playQueue(requireActivity(), ListQueue(
+                items = adapter.currentList.filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
+            ))
+        }
+
+        tracker = SelectionTracker.Builder("selectionId", binding.recyclerView, DraggableLocalItemKeyProvider(adapter),
+            object : ItemDetailsLookup<String>() {
+                // Disable selection if dragging
+                override fun getItemDetails(e: MotionEvent): ItemDetails<String>? = if (move != null) null else binding.recyclerView.findChildViewUnder(e.x, e.y)?.let { v ->
+                    (binding.recyclerView.getChildViewHolder(v) as? LocalItemViewHolder)?.itemDetails
+                }
+            }, StorageStrategy.createStringStorage())
+            .withSelectionPredicate(SelectionPredicates.createSelectAnything())
+            .build()
+            .apply {
+                adapter.tracker = this
+                addActionModeObserver(requireActivity(), R.menu.song_batch) { item ->
+                    val map = adapter.currentList.associateBy { it.id }
+                    val songs = selection.toList().map { map[it] }.filterIsInstance<Song>()
+                    when (item.itemId) {
+                        R.id.action_play_next -> menuListener.playNext(songs)
+                        R.id.action_add_to_queue -> menuListener.addToQueue(songs)
+                        R.id.action_add_to_playlist -> menuListener.addToPlaylist(songs)
+                        R.id.action_download -> menuListener.download(songs)
+                        R.id.action_remove_download -> menuListener.removeDownload(songs)
+                        R.id.action_refetch -> menuListener.refetch(songs)
+                        R.id.action_delete -> menuListener.delete(songs)
+                    }
+                    true
+                }
+            }
 
         lifecycleScope.launch {
+            requireAppCompatActivity().title = SongRepository.getPlaylistById(playlistId).playlist.name
             songsViewModel.getPlaylistSongsAsFlow(playlistId).collectLatest {
-                songsAdapter.submitData(it)
+                adapter.submitList(it, animation = false)
             }
         }
-
-        songsViewModel.downloadInfoLiveData.observe(viewLifecycleOwner) { map ->
-            map.forEach { (key, value) ->
-                songsAdapter.setProgress(key, value)
-            }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.playlist_songs_fragment, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_edit -> findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToPlaylistSongsEditFragment(playlistId))
-        }
-        return true
     }
 }

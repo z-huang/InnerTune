@@ -20,22 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Rules for Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep class * extends com.bumptech.glide.module.AppGlideModule
--keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
-# Rules for NewPipe
--dontobfuscate
--keep class org.schabi.newpipe.extractor.timeago.patterns.** { *; }
--keep class org.ocpsoft.prettytime.i18n.** { *; }
-
--keep class org.mozilla.javascript.** { *; }
-
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
 # removes such information by default, so configure it to keep all of it.
@@ -72,7 +56,7 @@
 # Keep `Companion` object fields of serializable classes.
 # This avoids serializer lookup through `getDeclaredClasses` as done for named companion objects.
 -if @kotlinx.serialization.Serializable class **
--keepclassmembers class <1> {
+-keepclasseswithmembers class <1> {
     static <1>$Companion Companion;
 }
 
@@ -80,7 +64,7 @@
 -if @kotlinx.serialization.Serializable class ** {
     static **$* *;
 }
--keepclassmembers class <2>$<3> {
+-keepclasseswithmembers class <2>$<3> {
     kotlinx.serialization.KSerializer serializer(...);
 }
 
@@ -88,10 +72,21 @@
 -if @kotlinx.serialization.Serializable class ** {
     public static ** INSTANCE;
 }
--keepclassmembers class <1> {
+-keepclasseswithmembers class <1> {
     public static <1> INSTANCE;
     kotlinx.serialization.KSerializer serializer(...);
 }
 
 # @Serializable and @Polymorphic are used at runtime for polymorphic serialization.
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+
+-dontwarn javax.servlet.ServletContainerInitializer
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE

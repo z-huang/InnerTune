@@ -31,3 +31,10 @@ inline fun <reified T : Any> serializablePreference(context: Context, keyId: Int
         sharedPreferences.putSerializable(key, value)
     }
 }
+
+inline fun <reified E : Enum<E>> enumPreference(context: Context, keyId: Int, defaultValue: E): Preference<E> = object : Preference<E>(context, keyId, defaultValue) {
+    override fun getPreferenceValue(): E = sharedPreferences.getEnum(key, defaultValue)
+    override fun setPreferenceValue(value: E) {
+        sharedPreferences.putEnum(key, value)
+    }
+}

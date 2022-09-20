@@ -13,7 +13,6 @@ abstract class BindingFragment<T : ViewBinding> : Fragment() {
     abstract fun getViewBinding(): T
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
         binding = getViewBinding()
         return binding.root
     }

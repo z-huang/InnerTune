@@ -15,13 +15,21 @@
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
+    <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
+    <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
-    <string name="pref_sort_type" translatable="false">SORT_TYPE</string>
-    <string name="pref_sort_descending" translatable="false">SORT_DESC</string>
+    <string name="pref_equalizer" translatable="false">EQUALIZER</string>
+    <string name="pref_song_sort_type" translatable="false">SONG_SORT_TYPE</string>
+    <string name="pref_song_sort_descending" translatable="false">SONG_SORT_DESC</string>
+    <string name="pref_artist_sort_type" translatable="false">ARTIST_SORT_TYPE</string>
+    <string name="pref_artist_sort_descending" translatable="false">ARTIST_SORT_DESC</string>
+    <string name="pref_album_sort_type" translatable="false">ALBUM_SORT_TYPE</string>
+    <string name="pref_album_sort_descending" translatable="false">ALBUM_SORT_DESC</string>
+    <string name="pref_playlist_sort_type" translatable="false">PLAYLIST_SORT_TYPE</string>
+    <string name="pref_playlist_sort_descending" translatable="false">PLAYLIST_SORT_DESC</string>
     <string name="pref_about_category" translatable="false">ABOUT_CATEGORY</string>
-    <string name="pref_newpipe_version" translatable="false">NEWPIPE_VERSION</string>
     <string name="pref_app_version" translatable="false">APP_VERSION</string>
     <string name="pref_check_for_updates" translatable="false">CHECK_FOR_UPDATE</string>
     <string name="pref_last_check_time" translatable="false">LAST_CHECK_TIME</string>

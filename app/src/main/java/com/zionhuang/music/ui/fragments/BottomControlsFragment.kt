@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import android.view.LayoutInflater
@@ -13,24 +14,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.ui.widgets.MediaWidgetsController
-import com.zionhuang.music.ui.widgets.PlayPauseBehavior
 import com.zionhuang.music.viewmodels.PlaybackViewModel
-import com.zionhuang.music.youtube.NewPipeYouTubeHelper.videoIdToUrl
 
 class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.TransitionListener {
-    companion object {
-        private const val TAG = "BottomControlsFragment"
-    }
-
     private lateinit var binding: BottomControlsSheetBinding
     private val viewModel by activityViewModels<PlaybackViewModel>()
     private lateinit var mediaWidgetsController: MediaWidgetsController
@@ -51,7 +44,6 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
     private fun setupUI() {
         binding.motionLayout.background = mainActivity.binding.bottomNav.background
-        viewModel.setPlayerView(binding.player)
         // Marquee
         binding.btmSongTitle.isSelected = true
         binding.btmSongArtist.isSelected = true
@@ -62,21 +54,23 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         mainActivity.setBottomSheetListener(this)
 
         viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
-            if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED && !viewModel.expandOnPlay) {
-                mainActivity.showBottomSheet()
+            if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED) {
+                if (mainActivity.bottomSheetBehavior.state == STATE_HIDDEN) {
+                    mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
+                }
             }
         }
 
         binding.bottomBar.setOnClickListener {
-            mainActivity.expandBottomSheet()
+            mainActivity.bottomSheetBehavior.state = STATE_EXPANDED
         }
 
         binding.btnHide.setOnClickListener {
-            mainActivity.showBottomSheet(true)
+            mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
         }
 
         binding.btnQueue.setOnClickListener {
-            mainActivity.showBottomSheet(true)
+            mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
             findNavController().navigate(QueueFragmentDirections.openQueueFragment())
         }
 
@@ -89,14 +83,9 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
         }
 
         binding.btnShare.setOnClickListener {
-            viewModel.mediaData.value?.id?.let { id ->
-                startActivity(Intent(Intent.ACTION_VIEW, videoIdToUrl(id)?.toUri()))
+            viewModel.mediaMetadata.value?.getString(METADATA_KEY_MEDIA_ID)?.let { id ->
+                startActivity(Intent(Intent.ACTION_VIEW, "https://music.youtube.com/watch?v=$id".toUri()))
             }
-        }
-
-        with(PlayPauseBehavior(requireContext())) {
-            binding.btnBtmPlayPause.setBehavior(this)
-            binding.btnPlayPause.setBehavior(this)
         }
 
         mediaWidgetsController = MediaWidgetsController(requireContext(), binding.progressBar, binding.slider, binding.positionText)
@@ -115,7 +104,7 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
     }
 
     override fun onStateChanged(bottomSheet: View, newState: Int) {
-        binding.progressBar.isVisible = newState == BottomSheetBehavior.STATE_COLLAPSED
+        binding.progressBar.isVisible = newState == STATE_COLLAPSED
         if (newState == STATE_HIDDEN) {
             viewModel.transportControls?.stop()
         }

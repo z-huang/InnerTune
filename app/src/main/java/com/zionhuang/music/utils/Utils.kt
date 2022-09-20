@@ -11,24 +11,16 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.system.measureTimeMillis
 
-fun <T> logTimeMillis(tag: String, msg: String, block: () -> T): T {
-    if (!BuildConfig.DEBUG) return block()
-    var result: T
-    val duration = measureTimeMillis {
-        result = block()
-    }
-    Log.d(tag, msg.format(duration))
-    return result
-}
-
 fun md5(str: String): String {
     val md = MessageDigest.getInstance("MD5")
     return BigInteger(1, md.digest(str.toByteArray())).toString(16).padStart(32, '0')
 }
 
-fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.bindLoadStateLayout(binding: LayoutLoadStateBinding) {
+fun List<String?>.joinByBullet() = filterNot { it.isNullOrEmpty() }.joinToString(separator = " • ")
+
+fun <T : Any, VH : RecyclerView.ViewHolder> PagingDataAdapter<T, VH>.bindLoadStateLayout(binding: LayoutLoadStateBinding, isSwipeRefreshing: () -> Boolean = { false }) {
     addLoadStateListener { loadState ->
-        binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+        binding.progressBar.isVisible = loadState.refresh is LoadState.Loading && !isSwipeRefreshing()
         binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
         binding.errorMsg.isVisible = loadState.refresh is LoadState.Error
         if (loadState.refresh is LoadState.Error) {

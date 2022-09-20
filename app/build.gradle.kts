@@ -8,22 +8,24 @@ plugins {
     id("dev.rikka.tools.materialthemebuilder")
 }
 
-val newpipeVersion: String by rootProject.extra
-
 android {
-    compileSdk = 31
+    compileSdk = 32
     buildToolsVersion = "30.0.3"
     defaultConfig {
         applicationId = "com.zionhuang.music"
         minSdk = 26
-        targetSdk = 31
-        versionCode = 10
-        versionName = "0.3.3"
+        targetSdk = 32
+        versionCode = 11
+        versionName = "0.4.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
+            }
+        }
     }
     applicationVariants.all {
         resValue("string", "app_version", versionName)
-        resValue("string", "newpipe_version", newpipeVersion)
     }
     buildTypes {
         getByName("release") {
@@ -51,7 +53,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += listOf("-Xopt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs = freeCompilerArgs + listOf("-opt-in=kotlin.RequiresOptIn")
     }
     configurations.all {
         resolutionStrategy {
@@ -61,6 +63,10 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
+    }
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
 }
 
@@ -99,63 +105,55 @@ materialThemeBuilder {
 }
 
 dependencies {
-    implementation(fileTree("dir" to "libs", "include" to "*.jar"))
     // Kotlin
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
     // AndroidX
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.fragment:fragment-ktx:1.4.1")
+    implementation("androidx.fragment:fragment-ktx:1.5.2")
     implementation("androidx.preference:preference-ktx:1.2.0")
     implementation("androidx.vectordrawable:vectordrawable:1.1.0")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.4.2")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.4.2")
-    implementation("androidx.navigation:navigation-ui-ktx:2.4.2")
-    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation("androidx.lifecycle:lifecycle-common-java8:2.4.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.1")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.5.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.2")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
+    implementation("androidx.lifecycle:lifecycle-common-java8:2.5.1")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation("androidx.transition:transition-ktx:1.4.1")
-    implementation("com.google.android.material:material:1.6.1")
+    implementation("com.google.android.material:material:1.7.0-rc01")
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
     // ExoPlayer
-    implementation("com.google.android.exoplayer:exoplayer:2.17.1")
-    implementation("com.google.android.exoplayer:extension-mediasession:2.17.1")
+    implementation("com.google.android.exoplayer:exoplayer:2.18.1")
+    implementation("com.google.android.exoplayer:extension-mediasession:2.18.1")
     // Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.test:monitor:1.5.0")
     testImplementation("androidx.paging:paging-common-ktx:3.1.1")
     implementation("androidx.paging:paging-rxjava3:3.1.1")
     // Room
-    implementation("androidx.room:room-runtime:2.4.2")
-    kapt("androidx.room:room-compiler:2.4.2")
-    implementation("androidx.room:room-rxjava3:2.4.2")
-    implementation("androidx.room:room-ktx:2.4.2")
-    implementation("androidx.room:room-paging:2.4.2")
-    testImplementation("androidx.room:room-testing:2.4.2")
-    // NewPipe Extractor
-    implementation("com.github.TeamNewPipe:nanojson:1d9e1aea9049fc9f85e68b43ba39fe7be1c1f751")
-    implementation("com.github.TeamNewPipe:NewPipeExtractor:6a858368c86bc9a55abee586eb6c733e86c26b97")
+    implementation("androidx.room:room-runtime:2.4.3")
+    kapt("androidx.room:room-compiler:2.4.3")
+    implementation("androidx.room:room-rxjava3:2.4.3")
+    implementation("androidx.room:room-ktx:2.4.3")
+    implementation("androidx.room:room-paging:2.4.3")
+    testImplementation("androidx.room:room-testing:2.4.3")
+    // YouTube API
+    implementation(project(mapOf("path" to ":innertube")))
     // Apache Utils
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")
     // OkHttp
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    // Glide
-    implementation("com.github.bumptech.glide:glide:4.13.2")
-    implementation("com.github.bumptech.glide:annotations:4.13.2")
-    implementation("com.github.bumptech.glide:okhttp3-integration:4.13.1")
-    kapt("com.github.bumptech.glide:compiler:4.13.1")
-    // Jsoup
-    implementation("org.jsoup:jsoup:1.14.3")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    // Coil
+    implementation("io.coil-kt:coil:2.2.0")
     // Fast Scroll
     implementation("me.zhanghai.android.fastscroll:library:1.1.7")
     // Markdown

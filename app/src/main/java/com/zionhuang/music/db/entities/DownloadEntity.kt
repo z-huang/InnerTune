@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "download")
 data class DownloadEntity(
-    @PrimaryKey
-    val id: Long,
+    @PrimaryKey val id: Long,
     val songId: String,
 )

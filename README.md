@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/z-huang/music/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" height="72">
 
-Make your own music library with any song on YouTube/YouTube Music.  
+Make your own music library with any song from YouTube Music.  
 No ads, free, and simple.
 
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music)
@@ -15,27 +15,23 @@ No ads, free, and simple.
 
 > **Note 2:** The name of this app is temporary. It will be changed in the future.
 
-> **Note 3:** We are currently making a change about the YouTube library. The development is in `feature/innertube` branch. Issues are put on hold until `feature/innertube` gets merged into `dev` branch.
-## Description
-
-With this app, you're like getting a free music streaming service. You can listen to music from YouTube/YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. The metadata of songs and artists are fully editable. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
-
-The ability to retrieve information and stream data from YouTube/YouTube Music is provided by [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor).
+With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
 ## Features
 
 ### YouTube
 
-- No ads
-- Search songs, albums, videos, playlists and channels from YouTube/YouTube Music
-- Auto load more songs when playing the last 5 songs in queues from YouTube
+- Play songs without ads
+- Browse almost any YouTube Music page
+- Search songs, albums, videos and playlists from YouTube Music
+- Open YouTube Music links
 
 ### Library
 
-- Play and save songs from YouTube/YouTube Music
+- Save songs, albums and playlists in local database
 - Download music for offline playback
-- Edit song and artist metadata
-- Create playlists in local database
+- Edit song title
+- Add links to your favorite YouTube Music playlists
 
 ### Player
 
@@ -49,15 +45,16 @@ The ability to retrieve information and stream data from YouTube/YouTube Music i
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/main.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/playlists.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/player.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/now_playing.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="170" />
 </p>
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/search.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/search results.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/screenshots/settings.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/07.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/08.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="170" />
 </p>
 
 ## Installation
