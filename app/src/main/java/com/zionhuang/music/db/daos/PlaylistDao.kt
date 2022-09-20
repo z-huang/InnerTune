@@ -40,7 +40,7 @@ interface PlaylistDao {
     @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId AND position = :position")
     suspend fun getPlaylistSongMap(playlistId: String, position: Int): PlaylistSongMap?
 
-    @Query("SELECT * FROM playlist_song_map WHERE songId = :songIds")
+    @Query("SELECT * FROM playlist_song_map WHERE songId IN (:songIds)")
     suspend fun getPlaylistSongMaps(songIds: List<String>): List<PlaylistSongMap>
 
     @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId AND position >= :from ORDER BY position")
@@ -83,7 +83,7 @@ interface PlaylistDao {
 
     suspend fun deletePlaylistSong(playlistId: String, position: Int) = deletePlaylistSong(playlistId, listOf(position))
 
-    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND position = :position")
+    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND position IN (:position)")
     suspend fun deletePlaylistSong(playlistId: String, position: List<Int>)
 
     @Query("SELECT max(position) FROM playlist_song_map WHERE playlistId = :playlistId")

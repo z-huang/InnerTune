@@ -48,10 +48,6 @@ interface ArtistDao {
         deleteSongArtists(it)
     }
 
-    suspend fun checkArtistWithoutSongs(artists: List<ArtistEntity>) {
-        delete(artists.filter { getArtistSongCount(it.id) == 0 })
-    }
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(artist: ArtistEntity): Long
 
