@@ -40,10 +40,6 @@ interface SongDao {
     suspend fun getAlbumSongs(albumId: String): List<Song>
 
     @Transaction
-    @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
-    suspend fun getAlbumSongEntities(albumId: String): List<SongEntity>
-
-    @Transaction
     @Query(QUERY_PLAYLIST_SONGS)
     fun getPlaylistSongsAsList(playlistId: String): List<Song>
 

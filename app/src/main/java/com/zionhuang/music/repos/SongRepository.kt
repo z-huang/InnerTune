@@ -380,6 +380,7 @@ object SongRepository : LocalRepository {
     }
 
     override suspend fun deleteArtists(artists: List<ArtistEntity>) = withContext(IO) {
+        // TODO
         artistDao.delete(artists)
     }
 
@@ -436,9 +437,9 @@ object SongRepository : LocalRepository {
 
     override suspend fun deleteAlbums(albums: List<Album>) = withContext(IO) {
         albums.forEach { album ->
-            val songs = songDao.getAlbumSongEntities(album.id)
+            val songs = songDao.getAlbumSongs(album.id)
             albumDao.delete(album.album)
-            songDao.delete(songs)
+            deleteSongs(songs)
         }
     }
 
@@ -567,7 +568,9 @@ object SongRepository : LocalRepository {
         playlistDao.renewSongPositions(playlistId, positions.minOrNull()!! - 1)
     }
 
-    override suspend fun deletePlaylists(playlists: List<PlaylistEntity>) = withContext(IO) { playlistDao.delete(playlists) }
+    override suspend fun deletePlaylists(playlists: List<PlaylistEntity>) = withContext(IO) {
+        playlistDao.delete(playlists)
+    }
 
     /**
      * Download
