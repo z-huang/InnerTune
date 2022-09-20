@@ -14,10 +14,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.*
 import com.google.android.material.color.DynamicColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.APP_URL
+import com.zionhuang.music.databinding.DialogTextPreferenceBinding
 import com.zionhuang.music.extensions.preferenceLiveData
+import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.update.UpdateInfo.*
 import com.zionhuang.music.viewmodels.UpdateViewModel
@@ -134,5 +137,53 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         viewModel.checkForUpdate()
+    }
+
+    /**
+     * Show a preference dialog using the [MaterialAlertDialogBuilder]
+     */
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        when (preference) {
+            // Show a MaterialAlertDialogBuilder when the preference type is ListPreference
+            is ListPreference -> {
+                // get the index of the previous selected item
+                val prefIndex = preference.entryValues.indexOf(preference.value)
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(preference.title)
+                    .setSingleChoiceItems(preference.entries, prefIndex) { dialog, index ->
+
+                        // get the new ListPreference value
+                        val newValue = preference.entryValues[index].toString()
+
+                        // save the new value and call the onPreferenceChange Method
+                        preference.value = newValue
+                        preference.callChangeListener(newValue)
+
+                        // invoke the on change listener
+                        preference.callChangeListener(preference.value)
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            }
+            is EditTextPreference -> {
+                val binding = DialogTextPreferenceBinding.inflate(layoutInflater)
+                binding.editText.setText(
+                    requireContext().sharedPreferences.getString(preference.key, "")
+                )
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(preference.title)
+                    .setView(binding.root)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        // save the new value to the preference
+                        preference.text = binding.editText.text.toString()
+
+                        // invoke the on change listener
+                        preference.callChangeListener(preference.text)
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            }
+            else -> super.onDisplayPreferenceDialog(preference)
+        }
     }
 }
