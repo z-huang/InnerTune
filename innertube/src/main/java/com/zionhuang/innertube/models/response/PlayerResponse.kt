@@ -52,7 +52,7 @@ data class PlayerResponse(
             val qualityLabel: String?,
             val averageBitrate: Int?,
             val audioQuality: String?,
-            val approxDurationMs: Long,
+            val approxDurationMs: String?,
             val audioSampleRate: Int?,
             val audioChannels: Int?,
         ) {
@@ -68,7 +68,7 @@ data class PlayerResponse(
         val author: String,
         val channelId: String,
         val lengthSeconds: String,
-        val musicVideoType: String,
+        val musicVideoType: String?,
         val viewCount: String,
         val thumbnail: Thumbnails,
     )

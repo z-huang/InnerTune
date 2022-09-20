@@ -18,24 +18,23 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
-import org.junit.Ignore
 import org.junit.Test
 
-@Ignore("IDK Why GitHub Action always runs the test with error")
+//@Ignore("IDK Why GitHub Action always runs the test with error")
 class YouTubeTest {
     private val youTube = YouTube
 
     @Test
-    fun `Check 'player' endpoint`() = VIDEO_IDS.forEach { videoId ->
-        runBlocking {
+    fun `Check 'player' endpoint`() = runBlocking {
+        VIDEO_IDS.forEach { videoId ->
             val playerResponse = youTube.player(videoId)
             assertEquals(videoId, playerResponse.videoDetails.videoId)
         }
     }
 
     @Test
-    fun `Check playable stream`() = VIDEO_IDS.forEach { videoId ->
-        runBlocking {
+    fun `Check playable stream`() = runBlocking {
+        VIDEO_IDS.forEach { videoId ->
             val playerResponse = youTube.player(videoId)
             val format = playerResponse.streamingData!!.adaptiveFormats[0]
             val url = format.url
@@ -111,9 +110,9 @@ class YouTubeTest {
 
     @Test
     fun `Check 'next' endpoint`() = runBlocking {
-        val videoId = "qivRUhepWVA"
-        val playlistId = "RDEMQWAKLFUHzBCn9nEsPHDYAw"
-        val nextResult = youTube.next(WatchEndpoint(videoId = videoId, playlistId = playlistId))
+        var nextResult = youTube.next(WatchEndpoint(videoId = "qivRUhepWVA", playlistId = "RDEMQWAKLFUHzBCn9nEsPHDYAw"))
+        assertTrue(nextResult.items.isNotEmpty())
+        nextResult = youTube.next(WatchEndpoint(videoId = "jF4KKOsoyDs", playlistId = "PLaHh1PiehjvqOXm1J7b2QGy2iAvN84Azb"))
         assertTrue(nextResult.items.isNotEmpty())
         val playlistSongInfo = youTube.getPlaylistSongInfo(videoId = VIDEO_IDS.random())
         assertNotNull(playlistSongInfo.lyricsEndpoint)
@@ -166,6 +165,7 @@ class YouTubeTest {
     companion object {
         private val VIDEO_IDS = listOf(
             "4H-N260cPCg",
+            "jF4KKOsoyDs"
 //            "x8VYWazR5mE" Login required
         )
 
