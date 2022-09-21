@@ -100,10 +100,6 @@
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
         </activity>
 
         <activity
