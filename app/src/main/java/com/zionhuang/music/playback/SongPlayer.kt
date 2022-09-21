@@ -5,6 +5,7 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.audiofx.AudioEffect
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
@@ -274,6 +275,24 @@ class SongPlayer(
         player.prepare()
     }
 
+    private fun openAudioEffectSession() {
+        context.sendBroadcast(
+            Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION).apply {
+                putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
+                putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+            }
+        )
+    }
+
+    private fun closeAudioEffectSession() {
+        context.sendBroadcast(
+            Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION).apply {
+                putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
+            }
+        )
+    }
+
     /**
      * Auto load more
      */
@@ -304,6 +323,16 @@ class SongPlayer(
         }
     }
 
+    override fun onEvents(player: Player, events: Events) {
+        if (events.containsAny(EVENT_PLAYBACK_STATE_CHANGED, EVENT_PLAY_WHEN_READY_CHANGED, EVENT_IS_PLAYING_CHANGED, EVENT_POSITION_DISCONTINUITY)) {
+            if (player.playbackState != STATE_ENDED && player.playWhenReady) {
+                openAudioEffectSession()
+            } else {
+                closeAudioEffectSession()
+            }
+        }
+    }
+
     override fun onPlaybackStatsReady(eventTime: AnalyticsListener.EventTime, playbackStats: PlaybackStats) {
         val mediaItem = eventTime.timeline.getWindow(eventTime.windowIndex, Timeline.Window()).mediaItem
         scope.launch {
@@ -324,6 +353,7 @@ class SongPlayer(
         }
         mediaSessionConnector.setPlayer(null)
         playerNotificationManager.setPlayer(null)
+        player.removeListener(this)
         player.release()
     }
 
