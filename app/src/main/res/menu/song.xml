@@ -5,6 +5,10 @@
         android:icon="@drawable/ic_edit"
         android:title="@string/menu_edit" />
     <item
+        android:id="@+id/action_radio"
+        android:icon="@drawable/ic_radio"
+        android:title="@string/menu_start_radio" />
+    <item
         android:id="@+id/action_play_next"
         android:icon="@drawable/ic_playlist_play"
         android:title="@string/menu_play_next" />

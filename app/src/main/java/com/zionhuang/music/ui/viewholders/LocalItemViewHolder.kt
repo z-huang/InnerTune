@@ -55,6 +55,7 @@ open class SongViewHolder(
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.action_edit -> menuListener?.editSong(song)
+                        R.id.action_radio -> menuListener?.startRadio(song)
                         R.id.action_play_next -> menuListener?.playNext(song)
                         R.id.action_add_to_queue -> menuListener?.addToQueue(song)
                         R.id.action_add_to_playlist -> menuListener?.addToPlaylist(song)

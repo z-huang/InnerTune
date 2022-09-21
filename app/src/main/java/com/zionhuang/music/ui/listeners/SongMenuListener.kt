@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.albumBrowseEndpoint
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
@@ -21,6 +22,7 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
+import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 
 interface ISongMenuListener {
     fun editSong(song: Song)
+    fun startRadio(song: Song)
     fun playNext(songs: List<Song>)
     fun addToQueue(songs: List<Song>)
     fun addToPlaylist(songs: List<Song>)
@@ -64,6 +67,10 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
         EditSongDialog().apply {
             arguments = bundleOf(EXTRA_SONG to song)
         }.show(context)
+    }
+
+    override fun startRadio(song: Song) {
+        MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint = WatchEndpoint(videoId = song.id)))
     }
 
     override fun playNext(songs: List<Song>) {
