@@ -34,6 +34,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MUSIC_PLAYER" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.APP_MUSIC" />
