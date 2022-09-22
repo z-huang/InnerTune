@@ -51,7 +51,8 @@ class YouTubeTest {
 
     @Test
     fun `Check 'search' endpoint`() = runBlocking {
-        val searchAllTypeResult = youTube.searchAllType(SEARCH_QUERY)
+        // Top result with radio link
+        val searchAllTypeResult = youTube.searchAllType("musi")
         assertTrue(searchAllTypeResult.items.size > 1)
         for (filter in listOf(
             FILTER_SONG,

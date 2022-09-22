@@ -64,7 +64,8 @@ data class SongItem(
             return SongItem(
                 id = item.playlistItemData?.videoId
                     ?: item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint?.watchEndpoint?.videoId
-                    ?: menu.radioEndpoint?.watchEndpoint?.videoId!!,
+                    ?: menu.radioEndpoint?.watchEndpoint?.videoId
+                    ?: return null,
                 title = item.getTitle(),
                 subtitle = item.getSubtitle(),
                 index = item.index?.toString(),

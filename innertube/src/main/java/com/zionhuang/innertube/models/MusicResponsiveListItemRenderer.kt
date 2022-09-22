@@ -32,6 +32,8 @@ data class MusicResponsiveListItemRenderer(
             it.musicResponsiveListItemFlexColumnRenderer.text.toString()
         }
 
+    // TODO
+    private val isRadio: Boolean = false
     private val isSong: Boolean
         get() = navigationEndpoint == null || navigationEndpoint.watchEndpoint != null || navigationEndpoint.watchPlaylistEndpoint != null
     private val isPlaylist: Boolean
