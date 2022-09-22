@@ -9,7 +9,6 @@
         android:key="@string/pref_content_language"
         android:summary="%s"
         android:title="@string/pref_content_language_title" />
-
     <ListPreference
         android:defaultValue="@string/default_localization_key"
         android:entries="@array/country_names"
@@ -22,9 +21,19 @@
         android:defaultValue="false"
         android:key="@string/pref_proxy_enabled"
         app:title="@string/pref_enable_proxy_title" />
+    <ListPreference
+        android:defaultValue="HTTP"
+        android:entries="@array/proxy_types"
+        android:entryValues="@array/proxy_types"
+        android:key="@string/pref_proxy_type"
+        android:summary="%s"
+        android:title="@string/pref_proxy_type_title" />
     <EditTextPreference
         android:defaultValue="host:port"
         android:key="@string/pref_proxy_url"
         app:title="@string/pref_proxy_url_title"
         app:useSimpleSummaryProvider="true" />
+    <Preference
+        android:enabled="false"
+        android:summary="@string/toast_restart_to_take_effect" />
 </PreferenceScreen>

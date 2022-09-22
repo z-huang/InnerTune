@@ -19,6 +19,7 @@
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
+    <string name="pref_proxy_type" translatable="false">PROXY_TYPE</string>
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
@@ -108,6 +109,11 @@
         <item>@string/color_deep_orange</item>
         <item>@string/color_brown</item>
         <item>@string/color_blue_grey</item>
+    </string-array>
+
+    <string-array name="proxy_types" translatable="false">
+        <item>HTTP</item>
+        <item>SOCKS</item>
     </string-array>
 
     <!-- Localizations   -->

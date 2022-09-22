@@ -7,6 +7,7 @@ import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
 import io.ktor.client.call.*
 import io.ktor.http.*
+import java.net.Proxy
 
 /**
  * Parse useful data with [InnerTube] sending requests.
@@ -20,7 +21,7 @@ object YouTube {
             innerTube.locale = value
         }
 
-    fun setProxyUrl(url: String) = innerTube.setProxyUrl(url)
+    fun setProxy(proxy: Proxy) = innerTube.setProxy(proxy)
 
     suspend fun getSearchSuggestions(query: String): List<YTBaseItem> =
         innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents

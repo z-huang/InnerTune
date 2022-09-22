@@ -23,6 +23,7 @@
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="pref_enable_proxy_title">啟用 Proxy</string>
+    <string name="pref_proxy_type_title">Proxy 種類</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_general_title">一般</string>
     <string name="pref_auto_download_title">自動下載</string>

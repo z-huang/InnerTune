@@ -23,6 +23,7 @@
     <string name="pref_content_language_title">Idioma de contenido predeterminado</string>
     <string name="pref_default_content_country_title">País de contenido predeterminado</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_type_title">Proxy type</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_general_title">Gerenal</string>
     <string name="pref_auto_download_title">Descarga automatica</string>

@@ -14,7 +14,6 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import java.net.InetSocketAddress.createUnresolved
 import java.net.Proxy
 import java.util.*
 
@@ -23,13 +22,15 @@ import java.util.*
  * For making HTTP requests, not parsing response.
  */
 class InnerTube {
+    private var httpClient = createClient()
+
     var locale = YouTubeLocale(
         gl = Locale.getDefault().country,
         hl = Locale.getDefault().toLanguageTag()
     )
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun createClient(proxyUrl: String? = null) = HttpClient(OkHttp) {
+    private fun createClient(proxy: Proxy? = null) = HttpClient(OkHttp) {
         expectSuccess = true
 
         install(ContentNegotiation) {
@@ -46,10 +47,9 @@ class InnerTube {
             deflate(0.8F)
         }
 
-        if (proxyUrl != null) {
-            val (host, port) = proxyUrl.split(":")
+        if (proxy != null) {
             engine {
-                proxy = Proxy(Proxy.Type.HTTP, createUnresolved(host, port.toInt()))
+                this.proxy = proxy
             }
         }
 
@@ -58,11 +58,9 @@ class InnerTube {
         }
     }
 
-    private var httpClient = createClient()
-
-    fun setProxyUrl(url: String) {
+    fun setProxy(proxy: Proxy) {
         httpClient.close()
-        httpClient = createClient(proxyUrl = url)
+        httpClient = createClient(proxy)
     }
 
     private fun HttpRequestBuilder.configYTClient(client: YouTubeClient) {
