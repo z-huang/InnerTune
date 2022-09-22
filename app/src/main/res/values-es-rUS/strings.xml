@@ -12,25 +12,26 @@
     <string name="title_update">Actualización</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">Apariencia</string>
+    <string name="pref_appearance_title">Apariencia</string>
     <string name="pref_follow_system_accent_title">Seguir color de acento del sistema</string>
     <string name="pref_theme_color_title">Color de acento</string>
     <string name="pref_dark_theme_title">Modo oscuro</string>
     <string name="dark_theme_on">Encendido</string>
     <string name="dark_theme_off">Apagado</string>
     <string name="dark_theme_follow_system">Predeterminado del sistema</string>
-    <string name="pref_content">Contenido</string>
+    <string name="pref_content_title">Contenido</string>
     <string name="pref_content_language_title">Idioma por defecto del contenido</string>
     <string name="pref_default_content_country_title">País por defecto del contenido</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_general_title">Gerenal</string>
     <string name="pref_auto_download_title">Descarga automática</string>
     <string name="pref_auto_download_summary">Descarga la canción cuando se añade a la biblioteca</string>
     <string name="pref_auto_add_song_title">Añadir automáticamente la canción a la biblioteca</string>
     <string name="pref_auto_add_song_summary">Añadir canción a la biblioteca cuando termine de reproducirse</string>
     <string name="pref_expand_on_play_title">Expandir reproductor inferior cuando comience la reproducción</string>
     <string name="pref_equalizer_title">Equalizer</string>
-    <string name="pref_about">Acerca de</string>
+    <string name="pref_about_title">Acerca de</string>
     <string name="pref_app_version_title">Versión de la aplicación</string>
     <string name="pref_check_for_updates_title">Buscar actualizaciones</string>
     <string name="pref_checking_for_updates">Buscando…</string>

@@ -12,25 +12,26 @@
     <string name="title_update">업데이트</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">모양</string>
+    <string name="pref_appearance_title">모양</string>
     <string name="pref_follow_system_accent_title">시스템 테마</string>
     <string name="pref_theme_color_title">테마 색상</string>
     <string name="pref_dark_theme_title">다크 테마</string>
     <string name="dark_theme_on">켬</string>
     <string name="dark_theme_off">끔</string>
     <string name="dark_theme_follow_system">시스템</string>
-    <string name="pref_content">콘텐츠</string>
+    <string name="pref_content_title">콘텐츠</string>
     <string name="pref_content_language_title">기본 콘텐츠 언어</string>
     <string name="pref_default_content_country_title">기본 콘텐츠 국가</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_general_title">Gerenal</string>
     <string name="pref_auto_download_title">자동 다운로드</string>
     <string name="pref_auto_download_summary">라이브러리에 추가할 때 노래 다운로드</string>
     <string name="pref_auto_add_song_title">라이브러리에 노래 자동 추가</string>
     <string name="pref_auto_add_song_summary">재생이 완료되면 라이브러리에 노래 추가</string>
     <string name="pref_expand_on_play_title">플레이 시 하단 플레이어 확장</string>
     <string name="pref_equalizer_title">Equalizer</string>
-    <string name="pref_about">정보</string>
+    <string name="pref_about_title">정보</string>
     <string name="pref_app_version_title">앱 버전</string>
     <string name="pref_check_for_updates_title">업데이트 확인</string>
     <string name="pref_checking_for_updates">확인 중…</string>

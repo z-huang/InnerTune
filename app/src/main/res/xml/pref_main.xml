@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen
+        android:icon="@drawable/ic_palette"
+        android:iconSpaceReserved="false"
+        android:key="@string/pref_appearance"
+        android:title="@string/pref_appearance_title" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_language"
+        android:key="@string/pref_content"
+        android:title="@string/pref_content_title" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_testing"
+        android:key="@string/pref_general"
+        android:title="@string/pref_general_title" />
+    <PreferenceScreen
+        android:icon="@drawable/ic_info"
+        android:key="@string/pref_about"
+        android:title="@string/pref_about_title" />
+</PreferenceScreen>

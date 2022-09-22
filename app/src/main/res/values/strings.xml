@@ -12,26 +12,29 @@
     <string name="title_update">Update</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">Appearance</string>
+    <string name="pref_appearance_title">Appearance</string>
     <string name="pref_follow_system_accent_title">Follow system theme</string>
     <string name="pref_theme_color_title">Theme color</string>
     <string name="pref_dark_theme_title">Dark theme</string>
     <string name="dark_theme_on">On</string>
     <string name="dark_theme_off">Off</string>
     <string name="dark_theme_follow_system">Follow system</string>
-    <string name="pref_content">Content</string>
+    <string name="pref_content_title">Content</string>
     <string name="pref_content_language_title">Default content language</string>
     <string name="pref_default_content_country_title">Default content country</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_general_title">Gerenal</string>
     <string name="pref_auto_download_title">Auto download</string>
     <string name="pref_auto_download_summary">Download song when added to library</string>
     <string name="pref_auto_add_song_title">Auto add song to library</string>
     <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
     <string name="pref_expand_on_play_title">Expand bottom player on play</string>
     <string name="pref_equalizer_title">Equalizer</string>
-    <string name="pref_about">About</string>
+    <string name="pref_about_title">About</string>
     <string name="pref_app_version_title">App version</string>
+    <string name="pref_github_title" translatable="false">GitHub</string>
+    <string name="pref_github_summary" translatable="false">z-huang/music</string>
     <string name="pref_check_for_updates_title">Check for updates</string>
     <string name="pref_checking_for_updates">Checking…</string>
     <string name="pref_up_to_date">You are up to date.</string>

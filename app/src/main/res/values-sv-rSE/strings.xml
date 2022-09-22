@@ -12,25 +12,26 @@
     <string name="title_update">Uppdatera</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">Utseende</string>
+    <string name="pref_appearance_title">Utseende</string>
     <string name="pref_follow_system_accent_title">Följ systemtema</string>
     <string name="pref_theme_color_title">Tema</string>
     <string name="pref_dark_theme_title">Mörkt tema</string>
     <string name="dark_theme_on">På</string>
     <string name="dark_theme_off">Av</string>
     <string name="dark_theme_follow_system">Följ systemet</string>
-    <string name="pref_content">Innehåll</string>
+    <string name="pref_content_title">Innehåll</string>
     <string name="pref_content_language_title">Standard innehållsspråk</string>
     <string name="pref_default_content_country_title">Standard innehållsland</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_general_title">Gerenal</string>
     <string name="pref_auto_download_title">Automatisk nedladdning</string>
     <string name="pref_auto_download_summary">Ladda ner låt när det läggs till i biblioteket</string>
     <string name="pref_auto_add_song_title">Lägg till låt i biblioteket automatiskt</string>
     <string name="pref_auto_add_song_summary">Lägg till låten i biblioteket efter det spelats klart</string>
     <string name="pref_expand_on_play_title">Utöka bottenspelaren vid låtspel</string>
     <string name="pref_equalizer_title">Equalizer</string>
-    <string name="pref_about">Om</string>
+    <string name="pref_about_title">Om</string>
     <string name="pref_app_version_title">App version</string>
     <string name="pref_check_for_updates_title">Leta efter uppdateringar</string>
     <string name="pref_checking_for_updates">Letar…</string>

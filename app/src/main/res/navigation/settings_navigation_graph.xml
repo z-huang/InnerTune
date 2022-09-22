@@ -7,7 +7,22 @@
         android:id="@+id/settingsFragment"
         android:name="com.zionhuang.music.ui.fragments.SettingsFragment"
         android:label="@string/title_settings" />
-
+    <fragment
+        android:id="@+id/appearanceSettingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.settings.AppearanceSettingsFragment"
+        android:label="AppearanceSettingsFragment" />
+    <fragment
+        android:id="@+id/contentSettingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.settings.ContentSettingsFragment"
+        android:label="ContentSettingsFragment" />
+    <fragment
+        android:id="@+id/generalSettingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.settings.GeneralSettingsFragment"
+        android:label="GeneralSettingsFragment" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.zionhuang.music.ui.fragments.settings.AboutFragment"
+        android:label="AboutFragment" />
     <fragment
         android:id="@+id/updateFragment"
         android:name="com.zionhuang.music.ui.fragments.UpdateFragment"

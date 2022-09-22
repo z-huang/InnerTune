@@ -12,25 +12,26 @@
     <string name="title_update">更新</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">外觀</string>
+    <string name="pref_appearance_title">外觀</string>
     <string name="pref_follow_system_accent_title">跟隨系統主題</string>
     <string name="pref_theme_color_title">主題顏色</string>
     <string name="pref_dark_theme_title">深色主題</string>
     <string name="dark_theme_on">開</string>
     <string name="dark_theme_off">關</string>
     <string name="dark_theme_follow_system">跟隨系統</string>
-    <string name="pref_content">內容</string>
+    <string name="pref_content_title">內容</string>
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="pref_enable_proxy_title">啟用 Proxy</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_general_title">一般</string>
     <string name="pref_auto_download_title">自動下載</string>
     <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
     <string name="pref_equalizer_title">等化器</string>
-    <string name="pref_about">關於</string>
+    <string name="pref_about_title">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
     <string name="pref_check_for_updates_title">檢查更新</string>
     <string name="pref_checking_for_updates">正在檢查…</string>

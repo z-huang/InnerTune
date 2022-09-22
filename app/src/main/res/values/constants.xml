@@ -9,7 +9,10 @@
     <integer name="motion_duration_small">175</integer>
 
     <!-- Preference Keys -->
-    <string name="pref_api_key" translatable="false">API_KEY</string>
+    <string name="pref_appearance" translatable="false">APPEARANCE</string>
+    <string name="pref_content" translatable="false">CONTENT</string>
+    <string name="pref_general" translatable="false">GENERAL</string>
+    <string name="pref_about" translatable="false">ABOUT</string>
     <string name="pref_follow_system_accent" translatable="false">FOLLOW_SYSTEM_ACCENT</string>
     <string name="pref_theme_color" translatable="false">THEME_COLOR</string>
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
@@ -31,6 +34,7 @@
     <string name="pref_playlist_sort_descending" translatable="false">PLAYLIST_SORT_DESC</string>
     <string name="pref_about_category" translatable="false">ABOUT_CATEGORY</string>
     <string name="pref_app_version" translatable="false">APP_VERSION</string>
+    <string name="pref_github" translatable="false">GITHUB</string>
     <string name="pref_check_for_updates" translatable="false">CHECK_FOR_UPDATE</string>
     <string name="pref_last_check_time" translatable="false">LAST_CHECK_TIME</string>
     <string name="pref_last_check_info" translatable="false">LAST_CHECK_INFO</string>
