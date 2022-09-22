@@ -20,4 +20,11 @@
         android:key="@string/pref_dark_theme"
         android:summary="%s"
         android:title="@string/pref_dark_theme_title" />
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/bottom_nav_items"
+        android:entryValues="@array/bottom_nav_index"
+        android:key="@string/pref_default_open_tab"
+        android:summary="%s"
+        android:title="@string/pref_default_open_tab_title" />
 </PreferenceScreen>

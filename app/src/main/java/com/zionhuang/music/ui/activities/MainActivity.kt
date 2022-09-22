@@ -34,6 +34,7 @@ import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.dip
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.extensions.replaceFragment
+import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
@@ -100,8 +101,19 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     }
 
     private fun setupUI() {
+        val defaultTabIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        val graph = navController.navInflater.inflate(R.navigation.main_navigation_graph)
+        graph.setStartDestination(when (defaultTabIndex) {
+            0 -> R.id.homeFragment
+            1 -> R.id.songsFragment
+            2 -> R.id.artistsFragment
+            3 -> R.id.albumsFragment
+            4 -> R.id.playlistsFragment
+            else -> throw IllegalStateException("Illegal tab index")
+        })
+        navController.setGraph(graph, null)
         navController.addOnDestinationChangedListener(this)
         binding.bottomNav.setupWithNavController(navController)
         binding.bottomNav.setOnItemSelectedListener { item ->
@@ -114,6 +126,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             }
             true
         }
+//        binding.bottomNav.menu[defaultTabIndex].isChecked = true
 
         replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {

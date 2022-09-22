@@ -8,14 +8,13 @@ import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.APP_URL
-import com.zionhuang.music.ui.fragments.UpdateFragmentDirections
+import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 import com.zionhuang.music.update.UpdateInfo.*
 import com.zionhuang.music.viewmodels.UpdateViewModel
 
-class AboutFragment : PreferenceFragmentCompat() {
+class AboutFragment : BaseSettingsFragment() {
     private val viewModel by activityViewModels<UpdateViewModel>()
 
     private lateinit var checkForUpdatePreference: Preference
@@ -38,7 +37,7 @@ class AboutFragment : PreferenceFragmentCompat() {
         }
 
         updatePreference.setOnPreferenceClickListener {
-            findNavController().navigate(UpdateFragmentDirections.openUpdateFragment())
+            findNavController().navigate(R.id.updateFragment)
             true
         }
     }

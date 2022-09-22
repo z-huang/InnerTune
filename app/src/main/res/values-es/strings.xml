@@ -16,6 +16,7 @@
     <string name="pref_follow_system_accent_title">Seguir el tema del sistema</string>
     <string name="pref_theme_color_title">Color del tema</string>
     <string name="pref_dark_theme_title">Tema oscuro</string>
+    <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="dark_theme_on">Encendido</string>
     <string name="dark_theme_off">Apagado</string>
     <string name="dark_theme_follow_system">Seguir el sistema</string>

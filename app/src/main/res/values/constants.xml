@@ -16,6 +16,7 @@
     <string name="pref_follow_system_accent" translatable="false">FOLLOW_SYSTEM_ACCENT</string>
     <string name="pref_theme_color" translatable="false">THEME_COLOR</string>
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
+    <string name="pref_default_open_tab" translatable="false">DEFAULT_OPEN_TAB</string>
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
@@ -109,6 +110,22 @@
         <item>@string/color_deep_orange</item>
         <item>@string/color_brown</item>
         <item>@string/color_blue_grey</item>
+    </string-array>
+
+    <string-array name="bottom_nav_items">
+        <item>@string/title_home</item>
+        <item>@string/title_songs</item>
+        <item>@string/title_artists</item>
+        <item>@string/title_artists</item>
+        <item>@string/title_playlists</item>
+    </string-array>
+
+    <string-array name="bottom_nav_index" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string-array name="proxy_types" translatable="false">

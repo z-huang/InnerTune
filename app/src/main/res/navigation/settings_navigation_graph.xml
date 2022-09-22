@@ -10,24 +10,21 @@
     <fragment
         android:id="@+id/appearanceSettingsFragment"
         android:name="com.zionhuang.music.ui.fragments.settings.AppearanceSettingsFragment"
-        android:label="AppearanceSettingsFragment" />
+        android:label="@string/pref_appearance_title" />
     <fragment
         android:id="@+id/contentSettingsFragment"
         android:name="com.zionhuang.music.ui.fragments.settings.ContentSettingsFragment"
-        android:label="ContentSettingsFragment" />
+        android:label="@string/pref_content_title" />
     <fragment
         android:id="@+id/generalSettingsFragment"
         android:name="com.zionhuang.music.ui.fragments.settings.GeneralSettingsFragment"
-        android:label="GeneralSettingsFragment" />
+        android:label="@string/pref_general_title" />
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.zionhuang.music.ui.fragments.settings.AboutFragment"
-        android:label="AboutFragment" />
+        android:label="@string/pref_about_title" />
     <fragment
         android:id="@+id/updateFragment"
         android:name="com.zionhuang.music.ui.fragments.UpdateFragment"
         android:label="@string/title_update" />
-    <action
-        android:id="@+id/open_updateFragment"
-        app:destination="@id/updateFragment" />
 </navigation>
