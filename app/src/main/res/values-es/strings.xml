@@ -27,6 +27,10 @@
     <string name="pref_proxy_type_title">Proxy type</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_general_title">Gerenal</string>
+    <string name="pref_audio_quality_title">Audio quality</string>
+    <string name="audio_quality_auto">Auto</string>
+    <string name="audio_quality_high">High</string>
+    <string name="audio_quality_low">Low</string>
     <string name="pref_auto_download_title">Descarga automatica</string>
     <string name="pref_auto_download_summary">Descargar canción cuando se agrega a la biblioteca</string>
     <string name="pref_auto_add_song_title">Agregar canción automáticamente a la biblioteca</string>

@@ -27,6 +27,10 @@
     <string name="pref_proxy_type_title">Proxy 種類</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_general_title">一般</string>
+    <string name="pref_audio_quality_title">音質</string>
+    <string name="audio_quality_auto">自動</string>
+    <string name="audio_quality_high">高</string>
+    <string name="audio_quality_low">低</string>
     <string name="pref_auto_download_title">自動下載</string>
     <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>

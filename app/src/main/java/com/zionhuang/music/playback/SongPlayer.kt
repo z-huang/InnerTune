@@ -48,6 +48,7 @@ import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
+import com.zionhuang.music.utils.preference.enumPreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -67,6 +68,7 @@ class SongPlayer(
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private val bitmapProvider = BitmapProvider(context)
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
+    private var audioQuality by enumPreference(context, R.string.pref_audio_quality, AudioQuality.AUTO)
     private var currentQueue: Queue = EmptyQueue()
 
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
@@ -93,7 +95,13 @@ class SongPlayer(
                     }
                     val uri = playerResponse.streamingData?.adaptiveFormats
                         ?.filter { it.isAudio }
-                        ?.maxByOrNull { it.bitrate * (if (connectivityManager.isActiveNetworkMetered) -1 else 1) }
+                        ?.maxByOrNull {
+                            it.bitrate * when (audioQuality) {
+                                AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
+                                AudioQuality.HIGH -> 1
+                                AudioQuality.LOW -> -1
+                            }
+                        }
                         ?.url
                         ?.toUri()
                         ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
@@ -355,6 +363,10 @@ class SongPlayer(
         playerNotificationManager.setPlayer(null)
         player.removeListener(this)
         player.release()
+    }
+
+    enum class AudioQuality {
+        AUTO, HIGH, LOW
     }
 
     companion object {

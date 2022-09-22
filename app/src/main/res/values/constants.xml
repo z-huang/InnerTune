@@ -22,6 +22,7 @@
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
     <string name="pref_proxy_type" translatable="false">PROXY_TYPE</string>
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
+    <string name="pref_audio_quality" translatable="false">AUDIO_QUALITY</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
@@ -131,6 +132,18 @@
     <string-array name="proxy_types" translatable="false">
         <item>HTTP</item>
         <item>SOCKS</item>
+    </string-array>
+
+    <string-array name="audio_qualities_text">
+        <item>@string/audio_quality_auto</item>
+        <item>@string/audio_quality_high</item>
+        <item>@string/audio_quality_low</item>
+    </string-array>
+
+    <string-array name="audio_qualities" translatable="false">
+        <item>AUTO</item>
+        <item>HIGH</item>
+        <item>LOW</item>
     </string-array>
 
     <!-- Localizations   -->
