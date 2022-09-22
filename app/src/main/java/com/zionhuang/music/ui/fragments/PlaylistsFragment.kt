@@ -24,7 +24,6 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
 import com.zionhuang.music.ui.adapters.selection.LocalItemKeyProvider
-import com.zionhuang.music.ui.fragments.PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment
 import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
 import com.zionhuang.music.ui.listeners.PlaylistMenuListener
@@ -58,7 +57,7 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
                     } else {
                         exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
-                        findNavController().navigate(actionPlaylistsFragmentToPlaylistSongsFragment(playlist.id))
+                        findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsToPlaylistSongs(playlist.id))
                     }
                 }
             }

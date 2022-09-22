@@ -17,7 +17,7 @@
         android:name="com.zionhuang.music.ui.fragments.ArtistsFragment"
         android:label="@string/title_artists">
         <action
-            android:id="@+id/action_artistsFragment_to_artistSongsFragment"
+            android:id="@+id/action_artists_to_artistSongs"
             app:destination="@id/artistSongsFragment">
             <argument
                 android:name="artistId"
@@ -33,7 +33,7 @@
         android:name="com.zionhuang.music.ui.fragments.PlaylistsFragment"
         android:label="@string/title_playlists">
         <action
-            android:id="@+id/action_playlistsFragment_to_playlistSongsFragment"
+            android:id="@+id/action_playlists_to_playlistSongs"
             app:destination="@id/playlistSongsFragment">
             <argument
                 android:name="playlistId"
@@ -46,8 +46,13 @@
     <fragment
         android:id="@+id/youtubeSuggestionFragment"
         android:name="com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragment">
+        <argument
+            android:name="query"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <action
-            android:id="@+id/action_suggestionFragment_to_searchResultFragment"
+            android:id="@+id/action_searchSuggestion_to_searchResult"
             app:destination="@id/youtubeSearchFragment"
             app:popUpTo="@id/homeFragment">
             <argument
@@ -62,8 +67,13 @@
             android:name="query"
             app:argType="string" />
         <action
-            android:id="@+id/action_searchResultFragment_to_searchSuggestionFragment"
-            app:destination="@id/youtubeSuggestionFragment" />
+            android:id="@+id/action_searchResult_to_searchSuggestion"
+            app:destination="@id/youtubeSuggestionFragment">
+            <argument
+                android:name="query"
+                app:argType="string"
+                app:nullable="true" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/youTubeBrowseFragment"
