@@ -12,21 +12,29 @@
     <string name="pref_appearance" translatable="false">APPEARANCE</string>
     <string name="pref_content" translatable="false">CONTENT</string>
     <string name="pref_general" translatable="false">GENERAL</string>
+    <string name="pref_privacy" translatable="false">PRIVACY</string>
     <string name="pref_about" translatable="false">ABOUT</string>
+
     <string name="pref_follow_system_accent" translatable="false">FOLLOW_SYSTEM_ACCENT</string>
     <string name="pref_theme_color" translatable="false">THEME_COLOR</string>
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
     <string name="pref_default_open_tab" translatable="false">DEFAULT_OPEN_TAB</string>
+
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
     <string name="pref_proxy_type" translatable="false">PROXY_TYPE</string>
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
+
     <string name="pref_audio_quality" translatable="false">AUDIO_QUALITY</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
     <string name="pref_equalizer" translatable="false">EQUALIZER</string>
+
+    <string name="pref_pause_search_history" translatable="false">PAUSE_SEARCH_HISTORY</string>
+    <string name="pref_clear_search_history" translatable="false">CLEAR_SEARCH_HISTORY</string>
+
     <string name="pref_song_sort_type" translatable="false">SONG_SORT_TYPE</string>
     <string name="pref_song_sort_descending" translatable="false">SONG_SORT_DESC</string>
     <string name="pref_artist_sort_type" translatable="false">ARTIST_SORT_TYPE</string>

@@ -14,6 +14,10 @@
         android:key="@string/pref_general"
         android:title="@string/pref_general_title" />
     <PreferenceScreen
+        android:icon="@drawable/ic_security"
+        android:key="@string/pref_privacy"
+        android:title="@string/pref_privacy_title" />
+    <PreferenceScreen
         android:icon="@drawable/ic_info"
         android:key="@string/pref_about"
         android:title="@string/pref_about_title" />

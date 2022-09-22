@@ -37,6 +37,10 @@
     <string name="pref_auto_add_song_summary">Adicionar música à sua biblioteca quando terminar de ser reproduzida</string>
     <string name="pref_expand_on_play_title">Expandir player ao reproduzir</string>
     <string name="pref_equalizer_title">Equalizer</string>
+    <string name="pref_privacy_title">Privacy</string>
+    <string name="pref_pause_search_history_title">Pause search history</string>
+    <string name="pref_clear_search_history_title">Clear search history</string>
+    <string name="clear_search_history_question">Are you sure to clear all search history?</string>
     <string name="pref_about_title">Sobre</string>
     <string name="pref_app_version_title">Versão do aplicativo</string>
     <string name="pref_check_for_updates_title">Procurar atualizações</string>

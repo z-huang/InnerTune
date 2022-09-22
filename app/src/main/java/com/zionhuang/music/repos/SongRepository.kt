@@ -598,4 +598,8 @@ object SongRepository : LocalRepository {
     override suspend fun deleteSearchHistory(query: String) = withContext(IO) {
         database.searchHistoryDao.delete(query)
     }
+
+    override suspend fun clearSearchHistory() {
+        database.searchHistoryDao.clearHistory()
+    }
 }

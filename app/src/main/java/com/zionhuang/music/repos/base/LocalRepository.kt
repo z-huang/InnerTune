@@ -113,4 +113,5 @@ interface LocalRepository {
     suspend fun getSearchHistory(query: String): List<SearchHistory>
     suspend fun insertSearchHistory(query: String)
     suspend fun deleteSearchHistory(query: String)
+    suspend fun clearSearchHistory()
 }

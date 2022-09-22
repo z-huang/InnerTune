@@ -22,6 +22,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentYoutubeSuggestionBinding
 import com.zionhuang.music.extensions.getTextChangeFlow
+import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
@@ -119,8 +120,10 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun search(query: String) {
-        GlobalScope.launch {
-            SongRepository.insertSearchHistory(query)
+        if (!requireContext().sharedPreferences.getBoolean(getString(R.string.pref_pause_search_history), false)) {
+            GlobalScope.launch {
+                SongRepository.insertSearchHistory(query)
+            }
         }
         exitTransition = null
         val action = YouTubeSuggestionFragmentDirections.actionSearchSuggestionToSearchResult(query)

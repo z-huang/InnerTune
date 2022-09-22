@@ -22,6 +22,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             findNavController().navigate(R.id.generalSettingsFragment)
             true
         }
+        findPreference<PreferenceScreen>(getString(R.string.pref_privacy))?.setOnPreferenceClickListener {
+            findNavController().navigate(R.id.privacySettingsFragment)
+            true
+        }
         findPreference<PreferenceScreen>(getString(R.string.pref_about))?.setOnPreferenceClickListener {
             findNavController().navigate(R.id.aboutFragment)
             true
