@@ -22,6 +22,10 @@
         android:key="@string/pref_privacy"
         android:title="@string/pref_privacy_title" />
     <PreferenceScreen
+        android:icon="@drawable/ic_settings_backup_restore"
+        android:key="@string/pref_backup_restore"
+        android:title="@string/pref_backup_restore_title" />
+    <PreferenceScreen
         android:icon="@drawable/ic_info"
         android:key="@string/pref_about"
         android:title="@string/pref_about_title" />

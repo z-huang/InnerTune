@@ -23,7 +23,7 @@ object YouTube {
 
     fun setProxy(proxy: Proxy) = innerTube.setProxy(proxy)
 
-    suspend fun getSearchSuggestions(query: String): Result<List<YTBaseItem>> = kotlin.runCatching {
+    suspend fun getSearchSuggestions(query: String): Result<List<YTBaseItem>> = runCatching {
         innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents
             .flatMap { section ->
                 section.searchSuggestionsSectionRenderer.contents.mapNotNull { it.toItem() }
@@ -33,7 +33,7 @@ object YouTube {
             }
     }
 
-    suspend fun searchAllType(query: String): Result<BrowseResult> = kotlin.runCatching {
+    suspend fun searchAllType(query: String): Result<BrowseResult> = runCatching {
         val response = innerTube.search(WEB_REMIX, query).body<SearchResponse>()
         BrowseResult(
             items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
@@ -43,7 +43,7 @@ object YouTube {
         )
     }
 
-    suspend fun search(query: String, filter: SearchFilter): Result<BrowseResult> = kotlin.runCatching {
+    suspend fun search(query: String, filter: SearchFilter): Result<BrowseResult> = runCatching {
         val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
         BrowseResult(
             items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.mapNotNull { it.toItem() },
@@ -51,7 +51,7 @@ object YouTube {
         )
     }
 
-    suspend fun search(continuation: String): Result<BrowseResult> = kotlin.runCatching {
+    suspend fun search(continuation: String): Result<BrowseResult> = runCatching {
         val response = innerTube.search(WEB_REMIX, continuation = continuation).body<SearchResponse>()
         BrowseResult(
             items = response.continuationContents?.musicShelfContinuation?.contents?.mapNotNull { it.toItem() }.orEmpty(),
@@ -59,11 +59,11 @@ object YouTube {
         )
     }
 
-    suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = kotlin.runCatching {
+    suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
         innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
     }
 
-    suspend fun browse(endpoint: BrowseEndpoint): Result<BrowseResult> = kotlin.runCatching {
+    suspend fun browse(endpoint: BrowseEndpoint): Result<BrowseResult> = runCatching {
         val browseResult = innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params, null).body<BrowseResponse>().toBrowseResult()
         if (endpoint.isAlbumEndpoint && browseResult.urlCanonical != null) {
             Url(browseResult.urlCanonical).parameters["list"]?.let { playlistId ->
@@ -87,7 +87,7 @@ object YouTube {
         browseResult
     }
 
-    suspend fun browse(continuation: String): Result<BrowseResult> = kotlin.runCatching {
+    suspend fun browse(continuation: String): Result<BrowseResult> = runCatching {
         innerTube.browse(WEB_REMIX, continuation = continuation).body<BrowseResponse>().toBrowseResult()
     }
 
@@ -109,7 +109,7 @@ object YouTube {
         playlistSetVideoId: String? = null,
         index: Int? = null,
         params: String? = null,
-    ): Result<PlaylistSongInfo> = kotlin.runCatching {
+    ): Result<PlaylistSongInfo> = runCatching {
         val response = innerTube.next(WEB_REMIX, videoId, playlistId, playlistSetVideoId, index, params).body<NextResponse>()
         PlaylistSongInfo(
             lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[1].tabRenderer.endpoint!!.browseEndpoint!!,
@@ -117,7 +117,7 @@ object YouTube {
         )
     }
 
-    suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): Result<NextResult> = kotlin.runCatching {
+    suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): Result<NextResult> = runCatching {
         val response = innerTube.next(WEB_REMIX, endpoint.videoId, endpoint.playlistId, endpoint.playlistSetVideoId, endpoint.index, endpoint.params, continuation).body<NextResponse>()
         val playlistPanelRenderer = response.continuationContents?.playlistPanelContinuation
             ?: response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[0].tabRenderer.content?.musicQueueRenderer?.content?.playlistPanelRenderer!!
@@ -137,7 +137,7 @@ object YouTube {
         )
     }
 
-    suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): Result<List<SongItem>> = kotlin.runCatching {
+    suspend fun getQueue(videoIds: List<String>? = null, playlistId: String? = null): Result<List<SongItem>> = runCatching {
         if (videoIds != null) {
             assert(videoIds.size <= MAX_GET_QUEUE_SIZE) // Max video limit
         }

@@ -43,6 +43,9 @@
     <string name="pref_pause_search_history_title">暫停搜尋紀錄</string>
     <string name="pref_clear_search_history_title">清除搜尋紀錄</string>
     <string name="clear_search_history_question">您確定要清除所有搜尋紀錄嗎？</string>
+    <string name="pref_backup_restore_title">備份與還原</string>
+    <string name="pref_backup_title">備份</string>
+    <string name="pref_restore_title">還原</string>
     <string name="pref_about_title">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
     <string name="pref_check_for_updates_title">檢查更新</string>
@@ -116,6 +119,15 @@
     <string name="dialog_title_choose_playlist">選擇播放清單</string>
 
     <string name="dialog_title_edit_playlist">編輯播放清單</string>
+
+    <string name="dialog_title_choose_backup_content">選擇備份項目</string>
+    <string name="dialog_title_choose_restore_content">選擇還原項目</string>
+    <string name="choice_preferences">設定</string>
+    <string name="choice_database">資料庫</string>
+    <string name="choice_downloaded_songs">已下載的歌曲</string>
+    <string name="message_backup_create_success">成功建立備份</string>
+    <string name="message_backup_create_failed">無法建立備份</string>
+    <string name="message_restore_failed">無法還原備份</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">音樂播放器</string>

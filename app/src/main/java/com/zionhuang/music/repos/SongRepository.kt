@@ -85,7 +85,7 @@ object SongRepository : LocalRepository {
     override suspend fun getArtistCount() = withContext(IO) { artistDao.getArtistCount() }
 
     override suspend fun getArtistSongsPreview(artistId: String): Result<List<YTBaseItem>> = withContext(IO) {
-        kotlin.runCatching {
+        runCatching {
             if (artistDao.hasArtist(artistId)) {
                 listOf(Header(
                     title = context.getString(R.string.header_from_your_library),
@@ -145,6 +145,10 @@ object SongRepository : LocalRepository {
     override fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) } },
         getFlow = { songDao.getPlaylistSongsAsFlow(playlistId) }
+    )
+
+    override fun getDownloadedSongs(): ListWrapper<Int, Song> = ListWrapper(
+        getList = { withContext(IO) { songDao.getDownloadedSongsAsList() } }
     )
 
     /**
@@ -324,6 +328,14 @@ object SongRepository : LocalRepository {
                 getSongTempFile(songId).renameTo(getSongFile(songId))
             }
             removeDownloadEntity(downloadId)
+        }
+    }
+
+    override suspend fun validateDownloads() {
+        songDao.getDownloadedSongsAsList().forEach { song ->
+            if (!getSongFile(song.id).exists() && !getSongTempFile(song.id).exists()) {
+                songDao.update(song.song.copy(downloadState = STATE_NOT_DOWNLOADED))
+            }
         }
     }
 

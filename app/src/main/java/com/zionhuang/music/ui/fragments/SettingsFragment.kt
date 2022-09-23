@@ -30,6 +30,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             findNavController().navigate(R.id.privacySettingsFragment)
             true
         }
+        findPreference<PreferenceScreen>(getString(R.string.pref_backup_restore))?.setOnPreferenceClickListener {
+            findNavController().navigate(R.id.backupRestoreSettingsFragment)
+            true
+        }
         findPreference<PreferenceScreen>(getString(R.string.pref_about))?.setOnPreferenceClickListener {
             findNavController().navigate(R.id.aboutFragment)
             true

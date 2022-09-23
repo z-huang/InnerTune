@@ -28,6 +28,10 @@
         android:name="com.zionhuang.music.ui.fragments.settings.PrivacySettingsFragment"
         android:label="@string/pref_privacy_title" />
     <fragment
+        android:id="@+id/backupRestoreSettingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.settings.BackupRestoreSettingsFragment"
+        android:label="@string/pref_backup_restore_title" />
+    <fragment
         android:id="@+id/aboutFragment"
         android:name="com.zionhuang.music.ui.fragments.settings.AboutFragment"
         android:label="@string/pref_about_title" />

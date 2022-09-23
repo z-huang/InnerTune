@@ -5,7 +5,7 @@ import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.BrowseResult
 import com.zionhuang.innertube.models.YTBaseItem
 
-suspend fun YouTube.browseAll(browseEndpoint: BrowseEndpoint): Result<List<YTBaseItem>> = kotlin.runCatching {
+suspend fun YouTube.browseAll(browseEndpoint: BrowseEndpoint): Result<List<YTBaseItem>> = runCatching {
     val items = mutableListOf<YTBaseItem>()
     var browseResult: BrowseResult? = null
     do {

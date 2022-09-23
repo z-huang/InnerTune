@@ -1,6 +1,7 @@
 package com.zionhuang.music.db
 
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.CONFLICT_ABORT
 import androidx.core.content.contentValuesOf
 import androidx.room.Database
@@ -48,7 +49,7 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract val searchHistoryDao: SearchHistoryDao
 
     companion object {
-        private const val DBNAME = "song.db"
+        const val DB_NAME = "song.db"
 
         @Volatile
         var INSTANCE: MusicDatabase? = null
@@ -57,7 +58,7 @@ abstract class MusicDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 synchronized(MusicDatabase::class.java) {
                     if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(context, MusicDatabase::class.java, DBNAME)
+                        INSTANCE = Room.databaseBuilder(context, MusicDatabase::class.java, DB_NAME)
                             .addMigrations(MIGRATION_1_2)
                             .build()
                     }
@@ -204,6 +205,22 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 "songId" to playlistSongMap.songId,
                 "position" to playlistSongMap.position
             ))
+        }
+    }
+}
+
+fun RoomDatabase.checkpoint() {
+    openHelper.writableDatabase.run {
+        query("PRAGMA journal_mode").use { cursor ->
+            if (cursor.moveToFirst()) {
+                when (cursor.getString(0).lowercase()) {
+                    "wal" -> {
+                        query("PRAGMA wal_checkpoint").use(Cursor::moveToFirst)
+                        query("PRAGMA wal_checkpoint(TRUNCATE)").use(Cursor::moveToFirst)
+                        query("PRAGMA wal_checkpoint").use(Cursor::moveToFirst)
+                    }
+                }
+            }
         }
     }
 }

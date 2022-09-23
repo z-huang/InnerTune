@@ -37,6 +37,7 @@ import com.zionhuang.music.extensions.replaceFragment
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
@@ -95,6 +96,10 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
 
         handleIntent(intent)
+
+        lifecycleScope.launch {
+            SongRepository.validateDownloads()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {

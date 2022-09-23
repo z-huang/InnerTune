@@ -43,6 +43,9 @@
     <string name="pref_pause_search_history_title">Pause search history</string>
     <string name="pref_clear_search_history_title">Clear search history</string>
     <string name="clear_search_history_question">Are you sure to clear all search history?</string>
+    <string name="pref_backup_restore_title">Backup and restore</string>
+    <string name="pref_backup_title">Backup</string>
+    <string name="pref_restore_title">Restore</string>
     <string name="pref_about_title">정보</string>
     <string name="pref_app_version_title">앱 버전</string>
     <string name="pref_check_for_updates_title">업데이트 확인</string>
@@ -116,6 +119,15 @@
     <string name="dialog_title_choose_playlist">플레이리스트 선택</string>
 
     <string name="dialog_title_edit_playlist">플레이리스트 수정</string>
+
+    <string name="dialog_title_choose_backup_content">Choose backup content</string>
+    <string name="dialog_title_choose_restore_content">Choose restore content</string>
+    <string name="choice_preferences">Preferences</string>
+    <string name="choice_database">Database</string>
+    <string name="choice_downloaded_songs">Downloaded songs</string>
+    <string name="message_backup_create_success">Backup created successfully</string>
+    <string name="message_backup_create_failed">Couldn\'t create backup</string>
+    <string name="message_restore_failed">Failed to restore backup</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">음악 플레이어</string>

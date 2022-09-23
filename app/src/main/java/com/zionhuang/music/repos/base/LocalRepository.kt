@@ -32,6 +32,8 @@ interface LocalRepository {
 
     fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song>
 
+    fun getDownloadedSongs(): ListWrapper<Int, Song>
+
     /**
      * Search
      */
@@ -57,6 +59,7 @@ interface LocalRepository {
     suspend fun downloadSong(song: SongEntity) = downloadSongs(listOf(song))
     suspend fun downloadSongs(songs: List<SongEntity>)
     suspend fun onDownloadComplete(downloadId: Long, success: Boolean)
+    suspend fun validateDownloads()
     suspend fun removeDownloads(songs: List<Song>)
     suspend fun moveToTrash(songs: List<Song>)
     suspend fun restoreFromTrash(songs: List<Song>)
