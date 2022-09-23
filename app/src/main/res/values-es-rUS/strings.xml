@@ -10,6 +10,7 @@
     <string name="title_settings">Configuración</string>
     <string name="title_now_playing">Sonando ahora</string>
     <string name="title_update">Actualización</string>
+    <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
     <string name="pref_appearance_title">Apariencia</string>
@@ -143,6 +144,9 @@
     <string name="btn_play_all">Reproducir todo</string>
     <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Aleatorio</string>
+    <string name="btn_copy_stacktrace">Copy stacktrace</string>
+    <string name="btn_report">Report</string>
+    <string name="btn_report_on_github">Report on GitHub</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">Fecha de incorporación</string>
@@ -234,4 +238,8 @@
     <string name="update_status_preparing">Preparando…</string>
     <string name="update_status_verifying">Verificando…</string>
     <string name="update_status_downloading">Descargando… (%1$s/%2$s)</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Sorry, that should not have happened.</string>
+    <string name="copied">Copied to clipboard</string>
 </resources>

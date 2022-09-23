@@ -11,17 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
 import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
 import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.*
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.time.Duration
-import java.time.LocalDateTime
 
 class DraggableLocalItemAdapter : RecyclerView.Adapter<LocalItemViewHolder>() {
     var currentList: List<LocalBaseItem> = emptyList()
@@ -43,22 +38,8 @@ class DraggableLocalItemAdapter : RecyclerView.Adapter<LocalItemViewHolder>() {
         val item = getItem(position)
         when (holder) {
             is SongViewHolder -> holder.bind(item as Song, tracker?.isSelected(getItem(position).id) ?: false)
-            is ArtistViewHolder -> {
-                holder.bind(item as Artist, tracker?.isSelected(getItem(position).id) ?: false)
-                if (item.artist.bannerUrl == null || Duration.between(item.artist.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)) {
-                    GlobalScope.launch {
-                        SongRepository.refetchArtist(item.artist)
-                    }
-                }
-            }
-            is AlbumViewHolder -> {
-                holder.bind(item as Album, tracker?.isSelected(getItem(position).id) ?: false)
-                if (item.album.thumbnailUrl == null || item.album.year == null) {
-                    GlobalScope.launch {
-                        SongRepository.refetchAlbum(item.album)
-                    }
-                }
-            }
+            is ArtistViewHolder -> holder.bind(item as Artist, tracker?.isSelected(getItem(position).id) ?: false)
+            is AlbumViewHolder -> holder.bind(item as Album, tracker?.isSelected(getItem(position).id) ?: false)
             is PlaylistViewHolder -> holder.bind(item as Playlist, tracker?.isSelected(getItem(position).id) ?: false)
             is SongHeaderViewHolder -> holder.bind(item as SongHeader)
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)

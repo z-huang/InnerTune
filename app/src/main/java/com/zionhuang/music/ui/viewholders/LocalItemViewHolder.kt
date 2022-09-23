@@ -9,12 +9,10 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.extensions.context
-import com.zionhuang.music.extensions.fadeIn
-import com.zionhuang.music.extensions.fadeOut
-import com.zionhuang.music.extensions.show
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.sortInfo.*
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
@@ -22,6 +20,11 @@ import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
 import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.LocalDateTime
 
 sealed class LocalItemViewHolder(open val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
     abstract val itemDetails: ItemDetailsLookup.ItemDetails<String>?
@@ -98,6 +101,7 @@ class ArtistViewHolder(
             override fun getSelectionKey(): String? = binding.artist?.id
         }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun bind(artist: Artist, isSelected: Boolean = false) {
         binding.artist = artist
         binding.btnMoreAction.setOnClickListener {
@@ -115,12 +119,16 @@ class ArtistViewHolder(
                         R.id.action_add_to_playlist -> menuListener?.addToPlaylist(artist)
                         R.id.action_refetch -> menuListener?.refetch(artist)
                         R.id.action_share -> menuListener?.edit(artist)
-                        R.id.action_delete -> menuListener?.delete(artist)
                     }
                 }
                 .show(binding.context)
         }
         binding.selectedIndicator.isVisible = isSelected
+        if (artist.artist.bannerUrl == null || Duration.between(artist.artist.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)) {
+            GlobalScope.launch(binding.context.exceptionHandler) {
+                SongRepository.refetchArtist(artist.artist)
+            }
+        }
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
@@ -139,6 +147,7 @@ class AlbumViewHolder(
             override fun getSelectionKey(): String? = binding.album?.id
         }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun bind(album: Album, isSelected: Boolean = false) {
         binding.album = album
         binding.subtitle.text = listOf(album.artists.joinToString { it.name }, binding.context.resources.getQuantityString(R.plurals.song_count, album.album.songCount, album.album.songCount), album.album.year?.toString()).joinByBullet()
@@ -159,6 +168,11 @@ class AlbumViewHolder(
                 .show(binding.context)
         }
         binding.selectedIndicator.isVisible = isSelected
+        if (album.album.thumbnailUrl == null || album.album.year == null) {
+            GlobalScope.launch(binding.context.exceptionHandler) {
+                SongRepository.refetchAlbum(album.album)
+            }
+        }
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {

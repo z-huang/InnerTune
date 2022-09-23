@@ -24,9 +24,4 @@
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share"
         android:title="@string/menu_share" />
-    <item
-        android:id="@+id/action_delete"
-        android:icon="@drawable/ic_delete"
-        android:title="@string/menu_delete"
-        android:visible="false" />
 </menu>

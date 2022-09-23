@@ -107,6 +107,10 @@
             android:name=".ui.activities.SettingsActivity"
             android:parentActivityName=".ui.activities.MainActivity" />
 
+        <activity
+            android:name=".ui.activities.ErrorActivity"
+            android:parentActivityName=".ui.activities.MainActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.FileProvider"

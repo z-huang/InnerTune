@@ -9,7 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.Constants.APP_URL
+import com.zionhuang.music.constants.Constants.GITHUB_URL
 import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 import com.zionhuang.music.update.UpdateInfo.*
 import com.zionhuang.music.viewmodels.UpdateViewModel
@@ -24,7 +24,7 @@ class AboutFragment : BaseSettingsFragment() {
         addPreferencesFromResource(R.xml.pref_about)
 
         findPreference<Preference>(getString(R.string.pref_github))?.setOnPreferenceClickListener {
-            startActivity(Intent(ACTION_VIEW, APP_URL.toUri()))
+            startActivity(Intent(ACTION_VIEW, GITHUB_URL.toUri()))
             true
         }
 

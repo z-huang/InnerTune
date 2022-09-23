@@ -10,6 +10,7 @@
     <string name="title_settings">設定</string>
     <string name="title_now_playing">現正播放</string>
     <string name="title_update">更新</string>
+    <string name="title_error_report">錯誤報告</string>
 
     <!-- Preference Title -->
     <string name="pref_appearance_title">外觀</string>
@@ -139,6 +140,9 @@
     <string name="btn_play_all">全部播放</string>
     <string name="btn_radio">電台</string>
     <string name="btn_shuffle">隨機播放</string>
+    <string name="btn_copy_stacktrace">複製 stacktrace</string>
+    <string name="btn_report">回報</string>
+    <string name="btn_report_on_github">在 GitHub 上回報</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">新增時間</string>
@@ -228,4 +232,8 @@
     <string name="update_status_preparing">正在準備…</string>
     <string name="update_status_verifying">正在驗證…</string>
     <string name="update_status_downloading">正在下載… (%1$s/%2$s)</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">抱歉，這不該發生的</string>
+    <string name="copied">已複製至剪貼簿</string>
 </resources>

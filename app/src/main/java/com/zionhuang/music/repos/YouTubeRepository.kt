@@ -19,9 +19,8 @@ object YouTubeRepository {
     fun searchAll(query: String) = object : PagingSource<List<String>, YTBaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
-                YouTube.searchAllType(query).toPage()
+                YouTube.searchAllType(query).getOrThrow().toPage()
             } catch (e: Exception) {
-                e.printStackTrace()
                 LoadResult.Error(e)
             }
         }
@@ -33,12 +32,11 @@ object YouTubeRepository {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 if (params.key == null) {
-                    YouTube.search(query, filter)
+                    YouTube.search(query, filter).getOrThrow()
                 } else {
-                    YouTube.search(params.key!![0])
+                    YouTube.search(params.key!![0]).getOrThrow()
                 }.toPage()
             } catch (e: Exception) {
-                e.printStackTrace()
                 LoadResult.Error(e)
             }
         }
@@ -50,7 +48,7 @@ object YouTubeRepository {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
                 if (params.key == null) {
-                    val browseResult = YouTube.browse(endpoint)
+                    val browseResult = YouTube.browse(endpoint).getOrThrow()
                     if (endpoint.browseId == HOME_BROWSE_ID) {
                         // inject explore link
                         browseResult.copy(
@@ -66,17 +64,16 @@ object YouTubeRepository {
                         // inject library artist songs preview
                         browseResult.copy(
                             items = browseResult.items.toMutableList().apply {
-                                addAll(if (browseResult.items.firstOrNull() is ArtistHeader) 1 else 0, SongRepository.getArtistSongsPreview(endpoint.browseId))
+                                addAll(if (browseResult.items.firstOrNull() is ArtistHeader) 1 else 0, SongRepository.getArtistSongsPreview(endpoint.browseId).getOrThrow())
                             }
                         )
                     } else {
                         browseResult
                     }
                 } else {
-                    YouTube.browse(params.key!!)
+                    YouTube.browse(params.key!!).getOrThrow()
                 }.toPage()
             } catch (e: Exception) {
-                e.printStackTrace()
                 LoadResult.Error(e)
             }
         }
@@ -86,7 +83,7 @@ object YouTubeRepository {
 
     suspend fun getSuggestions(query: String): List<YTBaseItem> = withContext(IO) {
         checkCache("SU$query") {
-            YouTube.getSearchSuggestions(query)
+            YouTube.getSearchSuggestions(query).getOrThrow()
         }
     }
 }

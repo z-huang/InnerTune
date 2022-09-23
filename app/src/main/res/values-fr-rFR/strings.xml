@@ -10,6 +10,7 @@
     <string name="title_settings">Paramètres</string>
     <string name="title_now_playing">Lecture en cours</string>
     <string name="title_update">Mise à jour</string>
+    <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
     <string name="pref_appearance_title">Appearance</string>
@@ -147,6 +148,9 @@
     <string name="btn_play_all">Tout jouer</string>
     <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Lecture aléatoire</string>
+    <string name="btn_copy_stacktrace">Copy stacktrace</string>
+    <string name="btn_report">Report</string>
+    <string name="btn_report_on_github">Report on GitHub</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">Date d\'ajout</string>
@@ -238,4 +242,8 @@
     <string name="update_status_preparing">Préparation…</string>
     <string name="update_status_verifying">Vérification…</string>
     <string name="update_status_downloading">Téléchargement… (%1$s/%2$s)</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Sorry, that should not have happened.</string>
+    <string name="copied">Copied to clipboard</string>
 </resources>

@@ -10,6 +10,7 @@
     <string name="title_settings">設定</string>
     <string name="title_now_playing">再生中</string>
     <string name="title_update">アップデート</string>
+    <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
     <string name="pref_appearance_title">外観</string>
@@ -139,6 +140,9 @@
     <string name="btn_play_all">すべて再生</string>
     <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">シャッフル</string>
+    <string name="btn_copy_stacktrace">Copy stacktrace</string>
+    <string name="btn_report">Report</string>
+    <string name="btn_report_on_github">Report on GitHub</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">追加日時</string>
@@ -228,4 +232,8 @@
     <string name="update_status_preparing">準備中…</string>
     <string name="update_status_verifying">確認中…</string>
     <string name="update_status_downloading">ダウンロード中… (%1$s/%2$s)</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Sorry, that should not have happened.</string>
+    <string name="copied">Copied to clipboard</string>
 </resources>

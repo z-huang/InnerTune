@@ -19,7 +19,7 @@ interface LocalRepository {
     fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>): ListWrapper<Int, Artist>
     suspend fun getArtistCount(): Int
 
-    suspend fun getArtistSongsPreview(artistId: String): List<YTBaseItem>
+    suspend fun getArtistSongsPreview(artistId: String): Result<List<YTBaseItem>>
     fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
     suspend fun getArtistSongCount(artistId: String): Int
 
@@ -67,17 +67,17 @@ interface LocalRepository {
      */
     suspend fun getArtistById(artistId: String): ArtistEntity?
     suspend fun getArtistByName(name: String): ArtistEntity?
-    suspend fun refetchArtist(artist: ArtistEntity)
+    suspend fun refetchArtist(artist: ArtistEntity) = refetchArtists(listOf(artist))
+    suspend fun refetchArtists(artists: List<ArtistEntity>)
     suspend fun updateArtist(artist: ArtistEntity)
-    suspend fun deleteArtist(artist: ArtistEntity) = deleteArtists(listOf(artist))
-    suspend fun deleteArtists(artists: List<ArtistEntity>)
 
     /**
      * Album
      */
     suspend fun addAlbum(album: AlbumItem) = addAlbums(listOf(album))
     suspend fun addAlbums(albums: List<AlbumItem>)
-    suspend fun refetchAlbum(album: AlbumEntity)
+    suspend fun refetchAlbum(album: AlbumEntity) = refetchAlbums(listOf(album))
+    suspend fun refetchAlbums(albums: List<AlbumEntity>)
     suspend fun deleteAlbums(albums: List<Album>)
 
     /**
@@ -91,7 +91,7 @@ interface LocalRepository {
     suspend fun addToPlaylist(playlist: PlaylistEntity, items: List<LocalItem>)
     suspend fun addToPlaylist(playlist: PlaylistEntity, item: YTItem)
     suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>)
-    suspend fun refetchPlaylist(playlist: Playlist)
+    suspend fun refetchPlaylists(playlists: List<Playlist>)
     suspend fun getPlaylistById(playlistId: String): Playlist
     suspend fun updatePlaylist(playlist: PlaylistEntity)
     suspend fun movePlaylistItems(playlistId: String, from: Int, to: Int)

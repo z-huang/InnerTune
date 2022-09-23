@@ -1,5 +1,6 @@
 package com.zionhuang.music.utils
 
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
@@ -10,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
@@ -26,6 +28,8 @@ import kotlinx.coroutines.launch
 open class NavigationEndpointHandler(val fragment: Fragment) {
     val mainActivity: MainActivity
         get() = fragment.requireActivity() as MainActivity
+    val context: Context
+        get() = fragment.requireContext()
 
     fun handle(navigationEndpoint: NavigationEndpoint?, item: YTItem? = null) = navigationEndpoint?.endpoint?.let { handle(it, item) }
 
@@ -86,7 +90,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
 
     fun addToLibrary(item: YTItem) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             when (item) {
                 is SongItem -> SongRepository.safeAddSong(item)
                 is AlbumItem -> SongRepository.addAlbum(item)
@@ -99,7 +103,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
 
     fun importPlaylist(playlist: PlaylistItem) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             SongRepository.importPlaylist(playlist)
             Snackbar.make(mainContent, R.string.snackbar_playlist_imported, LENGTH_SHORT).show()
         }
@@ -108,7 +112,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
     fun addToPlaylist(item: YTItem) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addToPlaylist(playlist, item)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {

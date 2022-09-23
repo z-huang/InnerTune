@@ -19,6 +19,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
@@ -97,7 +98,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
     override fun addToPlaylist(songs: List<Song>) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addToPlaylist(playlist, songs)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
@@ -111,7 +112,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun download(songs: List<Song>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_download_song, songs.size, songs.size), LENGTH_SHORT).show()
             SongRepository.downloadSongs(songs.map { it.song })
         }
@@ -140,7 +141,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(songs: List<Song>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             SongRepository.refetchSongs(songs)
         }
     }

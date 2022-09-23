@@ -21,6 +21,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaSessionConstants
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Playlist
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
@@ -67,10 +68,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun play(playlists: List<Playlist>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).map { it.toMediaItem() }
+                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaItem() }
                 } else {
                     SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaItem() }
                 }
@@ -94,10 +95,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(playlists: List<Playlist>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).map { it.toMediaMetadata() }
+                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
                 } else {
                     SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
                 }
@@ -129,10 +130,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(playlists: List<Playlist>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).map { it.toMediaMetadata() }
+                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
                 } else {
                     SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
                 }
@@ -165,7 +166,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
     override fun addToPlaylist(playlists: List<Playlist>) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addToPlaylist(playlist, playlists)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
@@ -190,16 +191,14 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(playlists: List<Playlist>) {
-        GlobalScope.launch {
-            playlists.forEach { playlist ->
-                SongRepository.refetchPlaylist(playlist)
-            }
+        GlobalScope.launch(context.exceptionHandler) {
+            SongRepository.refetchPlaylists(playlists)
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun delete(playlists: List<Playlist>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             SongRepository.deletePlaylists(playlists.map { it.playlist })
         }
     }

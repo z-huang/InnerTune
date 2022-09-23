@@ -4,33 +4,19 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.BrowseResult
 import com.zionhuang.innertube.models.YTBaseItem
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
 
-suspend fun YouTube.browse(browseEndpoint: BrowseEndpoint, block: suspend (List<YTBaseItem>) -> Unit) = withContext(IO) {
-    var browseResult: BrowseResult? = null
-    do {
-        browseResult = if (browseResult == null) {
-            browse(browseEndpoint)
-        } else {
-            browse(browseResult.continuations!!)
-        }
-        block(browseResult.items)
-    } while (!browseResult?.continuations.isNullOrEmpty())
-}
-
-suspend fun YouTube.browseAll(browseEndpoint: BrowseEndpoint): List<YTBaseItem> = withContext(IO) {
+suspend fun YouTube.browseAll(browseEndpoint: BrowseEndpoint): Result<List<YTBaseItem>> = kotlin.runCatching {
     val items = mutableListOf<YTBaseItem>()
     var browseResult: BrowseResult? = null
     do {
         browseResult = if (browseResult == null) {
-            browse(browseEndpoint)
+            browse(browseEndpoint).getOrThrow()
         } else {
-            browse(browseResult.continuations!!)
+            browse(browseResult.continuations!!).getOrThrow()
         }
         items.addAll(browseResult.items)
     } while (!browseResult?.continuations.isNullOrEmpty())
-    return@withContext items
+    items
 }
 
 operator fun <E : Any> E?.plus(list: List<E>): List<E> {
