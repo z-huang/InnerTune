@@ -11,6 +11,7 @@
     <!-- Preference Keys -->
     <string name="pref_appearance" translatable="false">APPEARANCE</string>
     <string name="pref_content" translatable="false">CONTENT</string>
+    <string name="pref_player_audio" translatable="false">PLAYER_AUDIO</string>
     <string name="pref_general" translatable="false">GENERAL</string>
     <string name="pref_privacy" translatable="false">PRIVACY</string>
     <string name="pref_about" translatable="false">ABOUT</string>

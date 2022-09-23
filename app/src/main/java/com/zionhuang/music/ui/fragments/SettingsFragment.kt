@@ -18,6 +18,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             findNavController().navigate(R.id.contentSettingsFragment)
             true
         }
+        findPreference<PreferenceScreen>(getString(R.string.pref_player_audio))?.setOnPreferenceClickListener {
+            findNavController().navigate(R.id.playerAudioSettingsFragment)
+            true
+        }
         findPreference<PreferenceScreen>(getString(R.string.pref_general))?.setOnPreferenceClickListener {
             findNavController().navigate(R.id.generalSettingsFragment)
             true

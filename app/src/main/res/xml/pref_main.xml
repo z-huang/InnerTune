@@ -10,6 +10,10 @@
         android:key="@string/pref_content"
         android:title="@string/pref_content_title" />
     <PreferenceScreen
+        android:icon="@drawable/ic_play"
+        android:key="@string/pref_player_audio"
+        android:title="@string/pref_player_audio_title" />
+    <PreferenceScreen
         android:icon="@drawable/ic_testing"
         android:key="@string/pref_general"
         android:title="@string/pref_general_title" />
