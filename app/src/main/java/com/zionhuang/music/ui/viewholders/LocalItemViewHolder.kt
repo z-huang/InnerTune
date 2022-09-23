@@ -205,8 +205,9 @@ class PlaylistViewHolder(
                 .newInstance(R.menu.playlist)
                 .setMenuModifier {
                     findItem(R.id.action_edit).isVisible = playlist.playlist.isLocalPlaylist
-                    findItem(R.id.action_share).isVisible = playlist.playlist.isYouTubePlaylist
+                    findItem(R.id.action_download).isVisible = playlist.playlist.isLocalPlaylist
                     findItem(R.id.action_refetch).isVisible = playlist.playlist.isYouTubePlaylist
+                    findItem(R.id.action_share).isVisible = playlist.playlist.isYouTubePlaylist
                 }
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
@@ -215,6 +216,7 @@ class PlaylistViewHolder(
                         R.id.action_play_next -> menuListener?.playNext(playlist)
                         R.id.action_add_to_queue -> menuListener?.addToQueue(playlist)
                         R.id.action_add_to_playlist -> menuListener?.addToPlaylist(playlist)
+                        R.id.action_download -> menuListener?.download(playlist)
                         R.id.action_refetch -> menuListener?.refetch(playlist)
                         R.id.action_share -> menuListener?.share(playlist)
                         R.id.action_delete -> menuListener?.delete(playlist)

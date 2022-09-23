@@ -41,6 +41,7 @@ interface IPlaylistMenuListener {
     fun playNext(playlists: List<Playlist>)
     fun addToQueue(playlists: List<Playlist>)
     fun addToPlaylist(playlists: List<Playlist>)
+    fun download(playlists: List<Playlist>)
     fun share(playlist: Playlist)
     fun refetch(playlists: List<Playlist>)
     fun delete(playlists: List<Playlist>)
@@ -49,6 +50,7 @@ interface IPlaylistMenuListener {
     fun playNext(playlist: Playlist) = playNext(listOf(playlist))
     fun addToQueue(playlist: Playlist) = addToQueue(listOf(playlist))
     fun addToPlaylist(playlist: Playlist) = addToPlaylist(listOf(playlist))
+    fun download(playlist: Playlist) = download(listOf(playlist))
     fun refetch(playlist: Playlist) = refetch(listOf(playlist))
     fun delete(playlist: Playlist) = delete(listOf(playlist))
 }
@@ -176,6 +178,13 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     }.show()
             }
         }.show(fragment.childFragmentManager, null)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun download(playlists: List<Playlist>) {
+        GlobalScope.launch(context.exceptionHandler) {
+            SongRepository.downloadPlaylists(playlists)
+        }
     }
 
     override fun share(playlist: Playlist) {

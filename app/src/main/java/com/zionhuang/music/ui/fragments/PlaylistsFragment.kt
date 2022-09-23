@@ -75,6 +75,7 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
                         R.id.action_play_next -> menuListener.playNext(playlists)
                         R.id.action_add_to_queue -> menuListener.addToQueue(playlists)
                         R.id.action_add_to_playlist -> menuListener.addToPlaylist(playlists)
+                        R.id.action_download -> menuListener.download(playlists)
                         R.id.action_delete -> menuListener.delete(playlists)
                     }
                     true

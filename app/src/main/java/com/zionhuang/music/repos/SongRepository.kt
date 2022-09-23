@@ -552,6 +552,14 @@ object SongRepository : LocalRepository {
         }
     }
 
+    override suspend fun downloadPlaylists(playlists: List<Playlist>) = withContext(IO) {
+        downloadSongs(playlists
+            .filter { it.playlist.isLocalPlaylist }
+            .flatMap { getPlaylistSongs(it.id).getList() }
+            .distinctBy { it.id }
+            .map { it.song })
+    }
+
     override suspend fun getPlaylistById(playlistId: String): Playlist = withContext(IO) {
         playlistDao.getPlaylistById(playlistId)
     }

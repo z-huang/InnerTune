@@ -92,6 +92,7 @@ interface LocalRepository {
     suspend fun addToPlaylist(playlist: PlaylistEntity, item: YTItem)
     suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>)
     suspend fun refetchPlaylists(playlists: List<Playlist>)
+    suspend fun downloadPlaylists(playlists: List<Playlist>)
     suspend fun getPlaylistById(playlistId: String): Playlist
     suspend fun updatePlaylist(playlist: PlaylistEntity)
     suspend fun movePlaylistItems(playlistId: String, from: Int, to: Int)
