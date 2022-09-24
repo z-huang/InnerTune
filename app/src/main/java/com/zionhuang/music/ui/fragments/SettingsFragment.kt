@@ -2,11 +2,11 @@ package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import com.zionhuang.music.R
+import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : BaseSettingsFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_main)
 
