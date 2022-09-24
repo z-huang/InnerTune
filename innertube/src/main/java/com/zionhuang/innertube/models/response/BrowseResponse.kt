@@ -83,7 +83,7 @@ data class BrowseResponse(
                     id = menu.playNextEndpoint?.queueAddEndpoint?.queueTarget?.playlistId
                         ?: menu.addToQueueEndpoint?.queueAddEndpoint?.queueTarget?.playlistId!!,
                     name = musicDetailHeaderRenderer.title.toString(),
-                    subtitle = musicDetailHeaderRenderer.subtitle.toString(),
+                    subtitle = musicDetailHeaderRenderer.subtitle.runs.drop(2).asString(),
                     secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),
                     description = musicDetailHeaderRenderer.description?.toString(),
                     artists = subtitle.getOrNull(1)?.oddElements(),

@@ -1,18 +1,8 @@
 package com.zionhuang.innertube.models
 
-import android.os.Parcelable
 import com.zionhuang.innertube.utils.TimeParser
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-
-@Parcelize
-sealed class YTBaseItem : Parcelable {
-    abstract val id: String
-
-    enum class ViewType {
-        LIST, BLOCK
-    }
-}
 
 @Parcelize
 sealed class YTItem : YTBaseItem() {

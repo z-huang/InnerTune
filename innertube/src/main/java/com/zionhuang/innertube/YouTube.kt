@@ -38,7 +38,16 @@ object YouTube {
         BrowseResult(
             items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
                 .flatMap { it.toBaseItems() }
-                .map { if (it is Header) it.copy(moreNavigationEndpoint = null) else it },
+                .map {
+                    when (it) {
+                        is Header -> it.copy(moreNavigationEndpoint = null) // remove search type arrow link
+                        is SongItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        is AlbumItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        is PlaylistItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        is ArtistItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        else -> it
+                    }
+                },
             continuations = null
         )
     }

@@ -11,6 +11,8 @@ data class Runs(
     override fun toString() = runs.joinToString(separator = "") { it.text }
 }
 
+fun List<Run>.asString() = joinToString(separator = "") { it.text }
+
 @Parcelize
 @Serializable
 data class Run(
