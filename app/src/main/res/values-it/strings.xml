@@ -9,7 +9,6 @@
     <string name="title_explore">Esplora</string>
     <string name="title_settings">Impostazioni</string>
     <string name="title_now_playing">In ascolto ora</string>
-    <string name="title_update">Aggiorna</string>
     <string name="title_error_report">Error report</string>
 
     <!-- Preferenze -->
@@ -48,11 +47,6 @@
     <string name="pref_restore_title">Restore</string>
     <string name="pref_about_title">Informazioni</string>
     <string name="pref_app_version_title">Versione dell\'app</string>
-    <string name="pref_check_for_updates_title">Controlla aggiornamenti</string>
-    <string name="pref_checking_for_updates">Controllo in corso…</string>
-    <string name="pref_up_to_date">Stai usando l\'ultima versione.</string>
-    <string name="pref_cant_check_for_updates">Qualcosa è andato storto.</string>
-    <string name="pref_update_title">Un aggiornamento è disponibile</string>
 
     <!-- Colori -->
     <string name="color_sakura">Sakura</string>
@@ -244,13 +238,6 @@
 
     <string name="system_default">Predefinito di sistema</string>
     <string name="header_from_your_library">Dalla tua libreria</string>
-
-    <!-- Aggiornamento -->
-    <string name="whatsnew">Novità</string>
-    <string name="btn_update">Aggiorna</string>
-    <string name="update_status_preparing">Preparazione in corso…</string>
-    <string name="update_status_verifying">Verifica in corso…</string>
-    <string name="update_status_downloading">Scaricamento in corso… (%1$s/%2$s)</string>
 
     <!-- Error Activity -->
     <string name="sorry_for_error">Sorry, that should not have happened.</string>

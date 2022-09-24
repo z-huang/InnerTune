@@ -9,7 +9,6 @@
     <string name="title_explore">Explore</string>
     <string name="title_settings">Paramètres</string>
     <string name="title_now_playing">Lecture en cours</string>
-    <string name="title_update">Mise à jour</string>
     <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
@@ -48,11 +47,6 @@
     <string name="pref_restore_title">Restore</string>
     <string name="pref_about_title">À propos</string>
     <string name="pref_app_version_title">Version de l\'application</string>
-    <string name="pref_check_for_updates_title">Vérifier les mises à jour</string>
-    <string name="pref_checking_for_updates">Vérification…</string>
-    <string name="pref_up_to_date">Vous êtes à jour.</string>
-    <string name="pref_cant_check_for_updates">Quelque chose s\'est mal passé.</string>
-    <string name="pref_update_title">Mise à jour disponible</string>
 
     <!-- Colors -->
     <string name="color_sakura">Sakura</string>
@@ -248,13 +242,6 @@
 
     <string name="system_default">Système par défaut</string>
     <string name="header_from_your_library">From your library</string>
-
-    <!-- Update Fragment -->
-    <string name="whatsnew">Quoi de neuf ?</string>
-    <string name="btn_update">Mise à jour</string>
-    <string name="update_status_preparing">Préparation…</string>
-    <string name="update_status_verifying">Vérification…</string>
-    <string name="update_status_downloading">Téléchargement… (%1$s/%2$s)</string>
 
     <!-- Error Activity -->
     <string name="sorry_for_error">Sorry, that should not have happened.</string>

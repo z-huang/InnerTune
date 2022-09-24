@@ -9,7 +9,6 @@
     <string name="title_explore">Explore</string>
     <string name="title_settings">Settings</string>
     <string name="title_now_playing">Now playing</string>
-    <string name="title_update">Update</string>
     <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
@@ -50,11 +49,6 @@
     <string name="pref_app_version_title">App version</string>
     <string name="pref_github_title" translatable="false">GitHub</string>
     <string name="pref_github_summary" translatable="false">z-huang/music</string>
-    <string name="pref_check_for_updates_title">Check for updates</string>
-    <string name="pref_checking_for_updates">Checking…</string>
-    <string name="pref_up_to_date">You are up to date.</string>
-    <string name="pref_cant_check_for_updates">Something went wrong.</string>
-    <string name="pref_update_title">Update available</string>
 
     <!-- Colors -->
     <string name="color_sakura">Sakura</string>
@@ -245,13 +239,6 @@
 
     <string name="system_default">System default</string>
     <string name="header_from_your_library">From your library</string>
-
-    <!-- Update Fragment -->
-    <string name="whatsnew">What\'s new</string>
-    <string name="btn_update">Update</string>
-    <string name="update_status_preparing">Preparing…</string>
-    <string name="update_status_verifying">Verifying…</string>
-    <string name="update_status_downloading">Downloading… (%1$s/%2$s)</string>
 
     <!-- Error Activity -->
     <string name="sorry_for_error">Sorry, that should not have happened.</string>

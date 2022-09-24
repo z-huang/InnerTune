@@ -70,9 +70,8 @@ You can install _Music_ using the following methods:
 
 How to get updates?
 
-1. If you install from [GitHub Releases](https://github.com/z-huang/music/releases), the app already has a built-in updater.
-2. If you install from method 2, you can check for updates using the F-Droid application.
-3. Or else, visit [GitHub](https://github.com/z-huang/music) and checkout the releases, issues, PRs, or anything new.
+1. F-Droid application.
+2. [GitHub](https://github.com/z-huang/music)
 
 ## Contribution
 

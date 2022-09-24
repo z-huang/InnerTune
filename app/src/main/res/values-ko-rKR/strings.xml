@@ -9,7 +9,6 @@
     <string name="title_explore">탐색</string>
     <string name="title_settings">설정</string>
     <string name="title_now_playing">재생 중</string>
-    <string name="title_update">업데이트</string>
     <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
@@ -48,11 +47,6 @@
     <string name="pref_restore_title">Restore</string>
     <string name="pref_about_title">정보</string>
     <string name="pref_app_version_title">앱 버전</string>
-    <string name="pref_check_for_updates_title">업데이트 확인</string>
-    <string name="pref_checking_for_updates">확인 중…</string>
-    <string name="pref_up_to_date">최신입니다.</string>
-    <string name="pref_cant_check_for_updates">문제가 발생했습니다.</string>
-    <string name="pref_update_title">업데이트가 가능합니다.</string>
 
     <!-- Colors -->
     <string name="color_sakura">사쿠라</string>
@@ -238,13 +232,6 @@
 
     <string name="system_default">시스템 기본값</string>
     <string name="header_from_your_library">From your library</string>
-
-    <!-- Update Fragment -->
-    <string name="whatsnew">최신 소식</string>
-    <string name="btn_update">업데이트</string>
-    <string name="update_status_preparing">준비 중…</string>
-    <string name="update_status_verifying">확인 중…</string>
-    <string name="update_status_downloading">다운로드 중… (%1$s/%2$s)</string>
 
     <!-- Error Activity -->
     <string name="sorry_for_error">Sorry, that should not have happened.</string>

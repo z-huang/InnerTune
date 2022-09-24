@@ -11,14 +11,4 @@
         android:key="@string/pref_github"
         android:summary="@string/pref_github_summary"
         android:title="@string/pref_github_title" />
-    <Preference
-        android:icon="@drawable/ic_update"
-        android:key="@string/pref_check_for_updates"
-        android:title="@string/pref_check_for_updates_title"
-        app:isPreferenceVisible="false" />
-    <Preference
-        android:icon="@drawable/ic_upgrade"
-        android:key="@string/pref_update"
-        android:title="@string/pref_update_title"
-        app:isPreferenceVisible="false" />
 </PreferenceScreen>

@@ -35,8 +35,4 @@
         android:id="@+id/aboutFragment"
         android:name="com.zionhuang.music.ui.fragments.settings.AboutFragment"
         android:label="@string/pref_about_title" />
-    <fragment
-        android:id="@+id/updateFragment"
-        android:name="com.zionhuang.music.ui.fragments.UpdateFragment"
-        android:label="@string/title_update" />
 </navigation>

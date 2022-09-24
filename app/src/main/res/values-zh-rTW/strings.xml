@@ -9,7 +9,6 @@
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
     <string name="title_now_playing">現正播放</string>
-    <string name="title_update">更新</string>
     <string name="title_error_report">錯誤報告</string>
 
     <!-- Preference Title -->
@@ -48,11 +47,6 @@
     <string name="pref_restore_title">還原</string>
     <string name="pref_about_title">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
-    <string name="pref_check_for_updates_title">檢查更新</string>
-    <string name="pref_checking_for_updates">正在檢查…</string>
-    <string name="pref_up_to_date">已是最新版本</string>
-    <string name="pref_cant_check_for_updates">無法檢查更新</string>
-    <string name="pref_update_title">已有新版本</string>
 
     <!-- Colors -->
     <string name="color_sakura">櫻花</string>
@@ -238,13 +232,6 @@
 
     <string name="system_default">系統預設</string>
     <string name="header_from_your_library">來自你的媒體庫</string>
-
-    <!-- Update Fragment-->
-    <string name="whatsnew">What\'s new</string>
-    <string name="btn_update">更新</string>
-    <string name="update_status_preparing">正在準備…</string>
-    <string name="update_status_verifying">正在驗證…</string>
-    <string name="update_status_downloading">正在下載… (%1$s/%2$s)</string>
 
     <!-- Error Activity -->
     <string name="sorry_for_error">抱歉，這不該發生的</string>
