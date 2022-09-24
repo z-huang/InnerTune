@@ -9,18 +9,37 @@
     <integer name="motion_duration_small">175</integer>
 
     <!-- Preference Keys -->
-    <string name="pref_api_key" translatable="false">API_KEY</string>
+    <string name="pref_appearance" translatable="false">APPEARANCE</string>
+    <string name="pref_content" translatable="false">CONTENT</string>
+    <string name="pref_player_audio" translatable="false">PLAYER_AUDIO</string>
+    <string name="pref_general" translatable="false">GENERAL</string>
+    <string name="pref_privacy" translatable="false">PRIVACY</string>
+    <string name="pref_backup_restore" translatable="false">BACKUP_RESTORE</string>
+    <string name="pref_about" translatable="false">ABOUT</string>
+
     <string name="pref_follow_system_accent" translatable="false">FOLLOW_SYSTEM_ACCENT</string>
     <string name="pref_theme_color" translatable="false">THEME_COLOR</string>
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
+    <string name="pref_default_open_tab" translatable="false">DEFAULT_OPEN_TAB</string>
+
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
+    <string name="pref_proxy_type" translatable="false">PROXY_TYPE</string>
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
+
+    <string name="pref_audio_quality" translatable="false">AUDIO_QUALITY</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
     <string name="pref_equalizer" translatable="false">EQUALIZER</string>
+
+    <string name="pref_pause_search_history" translatable="false">PAUSE_SEARCH_HISTORY</string>
+    <string name="pref_clear_search_history" translatable="false">CLEAR_SEARCH_HISTORY</string>
+
+    <string name="pref_backup" translatable="false">BACKUP</string>
+    <string name="pref_restore" translatable="false">RESTORE</string>
+
     <string name="pref_song_sort_type" translatable="false">SONG_SORT_TYPE</string>
     <string name="pref_song_sort_descending" translatable="false">SONG_SORT_DESC</string>
     <string name="pref_artist_sort_type" translatable="false">ARTIST_SORT_TYPE</string>
@@ -29,26 +48,10 @@
     <string name="pref_album_sort_descending" translatable="false">ALBUM_SORT_DESC</string>
     <string name="pref_playlist_sort_type" translatable="false">PLAYLIST_SORT_TYPE</string>
     <string name="pref_playlist_sort_descending" translatable="false">PLAYLIST_SORT_DESC</string>
-    <string name="pref_about_category" translatable="false">ABOUT_CATEGORY</string>
     <string name="pref_app_version" translatable="false">APP_VERSION</string>
-    <string name="pref_check_for_updates" translatable="false">CHECK_FOR_UPDATE</string>
-    <string name="pref_last_check_time" translatable="false">LAST_CHECK_TIME</string>
-    <string name="pref_last_check_info" translatable="false">LAST_CHECK_INFO</string>
-    <string name="pref_update" translatable="false">UPDATE</string>
+    <string name="pref_github" translatable="false">GITHUB</string>
 
     <string name="bullet" translatable="false">•</string>
-
-    <!-- Transition Name -->
-    <string name="youtube_playlist_item_transition_name" translatable="false">playlist_%1$s</string>
-    <string name="youtube_playlist_transition_name" translatable="false">youtube_playlist</string>
-    <string name="youtube_channel_item_transition_name" translatable="false">channel_%1$s</string>
-    <string name="youtube_channel_transition_name" translatable="false">youtube_channel</string>
-    <string name="artist_item_transition_name" translatable="false">artist_%1$d</string>
-    <string name="artist_songs_transition_name" translatable="false">artist_songs</string>
-    <string name="channel_item_transition_name" translatable="false">channel_%1$s</string>
-    <string name="channel_songs_transition_name" translatable="false">channel_songs</string>
-    <string name="playlist_item_transition_name" translatable="false">playlist_%1$d</string>
-    <string name="playlist_songs_transition_name" translatable="false">playlist_songs</string>
 
     <string-array name="dark_theme_texts" translatable="false">
         <item>@string/dark_theme_off</item>
@@ -104,6 +107,39 @@
         <item>@string/color_deep_orange</item>
         <item>@string/color_brown</item>
         <item>@string/color_blue_grey</item>
+    </string-array>
+
+    <string-array name="bottom_nav_items">
+        <item>@string/title_home</item>
+        <item>@string/title_songs</item>
+        <item>@string/title_artists</item>
+        <item>@string/title_artists</item>
+        <item>@string/title_playlists</item>
+    </string-array>
+
+    <string-array name="bottom_nav_index" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="proxy_types" translatable="false">
+        <item>HTTP</item>
+        <item>SOCKS</item>
+    </string-array>
+
+    <string-array name="audio_qualities_text">
+        <item>@string/audio_quality_auto</item>
+        <item>@string/audio_quality_high</item>
+        <item>@string/audio_quality_low</item>
+    </string-array>
+
+    <string-array name="audio_qualities" translatable="false">
+        <item>AUTO</item>
+        <item>HIGH</item>
+        <item>LOW</item>
     </string-array>
 
     <!-- Localizations   -->

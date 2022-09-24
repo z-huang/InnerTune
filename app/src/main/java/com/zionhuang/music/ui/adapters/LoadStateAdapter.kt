@@ -12,5 +12,5 @@ class LoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<LoadSta
             holder.bind(loadState)
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder =
-            LoadStateViewHolder(parent.inflateWithBinding(R.layout.item_load_state), retry)
+            LoadStateViewHolder(parent.inflateWithBinding(R.layout.layout_load_state), retry)
 }

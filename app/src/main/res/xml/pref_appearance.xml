@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="@string/pref_follow_system_accent"
+        android:title="@string/pref_follow_system_accent_title" />
+    <ListPreference
+        android:defaultValue="MATERIAL_BLUE"
+        android:entries="@array/color_texts"
+        android:entryValues="@array/color_values"
+        android:icon="@drawable/ic_palette"
+        android:key="@string/pref_theme_color"
+        android:summary="%s"
+        android:title="@string/pref_theme_color_title" />
+    <ListPreference
+        android:defaultValue="-1"
+        android:entries="@array/dark_theme_texts"
+        android:entryValues="@array/dark_theme_values"
+        android:icon="@drawable/ic_dark_mode"
+        android:key="@string/pref_dark_theme"
+        android:summary="%s"
+        android:title="@string/pref_dark_theme_title" />
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/bottom_nav_items"
+        android:entryValues="@array/bottom_nav_index"
+        android:key="@string/pref_default_open_tab"
+        android:summary="%s"
+        android:title="@string/pref_default_open_tab_title" />
+</PreferenceScreen>

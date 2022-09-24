@@ -21,6 +21,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaSessionConstants
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Playlist
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
@@ -40,6 +41,7 @@ interface IPlaylistMenuListener {
     fun playNext(playlists: List<Playlist>)
     fun addToQueue(playlists: List<Playlist>)
     fun addToPlaylist(playlists: List<Playlist>)
+    fun download(playlists: List<Playlist>)
     fun share(playlist: Playlist)
     fun refetch(playlists: List<Playlist>)
     fun delete(playlists: List<Playlist>)
@@ -48,6 +50,7 @@ interface IPlaylistMenuListener {
     fun playNext(playlist: Playlist) = playNext(listOf(playlist))
     fun addToQueue(playlist: Playlist) = addToQueue(listOf(playlist))
     fun addToPlaylist(playlist: Playlist) = addToPlaylist(listOf(playlist))
+    fun download(playlist: Playlist) = download(listOf(playlist))
     fun refetch(playlist: Playlist) = refetch(listOf(playlist))
     fun delete(playlist: Playlist) = delete(listOf(playlist))
 }
@@ -67,10 +70,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun play(playlists: List<Playlist>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).map { it.toMediaItem() }
+                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaItem() }
                 } else {
                     SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaItem() }
                 }
@@ -94,10 +97,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(playlists: List<Playlist>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).map { it.toMediaMetadata() }
+                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
                 } else {
                     SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
                 }
@@ -129,10 +132,10 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(playlists: List<Playlist>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = playlists.flatMap { playlist ->
                 if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).map { it.toMediaMetadata() }
+                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
                 } else {
                     SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
                 }
@@ -165,7 +168,7 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
     override fun addToPlaylist(playlists: List<Playlist>) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addToPlaylist(playlist, playlists)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
@@ -175,6 +178,13 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
                     }.show()
             }
         }.show(fragment.childFragmentManager, null)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun download(playlists: List<Playlist>) {
+        GlobalScope.launch(context.exceptionHandler) {
+            SongRepository.downloadPlaylists(playlists)
+        }
     }
 
     override fun share(playlist: Playlist) {
@@ -190,16 +200,14 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(playlists: List<Playlist>) {
-        GlobalScope.launch {
-            playlists.forEach { playlist ->
-                SongRepository.refetchPlaylist(playlist)
-            }
+        GlobalScope.launch(context.exceptionHandler) {
+            SongRepository.refetchPlaylists(playlists)
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun delete(playlists: List<Playlist>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             SongRepository.deletePlaylists(playlists.map { it.playlist })
         }
     }

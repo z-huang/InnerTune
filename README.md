@@ -17,6 +17,8 @@ No ads, free, and simple.
 
 With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
+⚠️ Warning: If you're in region that YouTube Music is not supported, you won't be able to use this app ***unless*** you have proxy or VPN to connect to a YTM supported region.
+
 ## Features
 
 ### YouTube
@@ -41,6 +43,14 @@ With this app, you're like getting a free music streaming service. You can liste
 - Skip to next/previous song
 - Repeat/shuffle mode
 - Edit now-playing queue
+
+### Other
+
+- Custom themes
+- Dark theme
+- Localization
+- Proxy
+- Backup & restore
 
 ## Screenshots
 
@@ -68,9 +78,8 @@ You can install _Music_ using the following methods:
 
 How to get updates?
 
-1. If you install from [GitHub Releases](https://github.com/z-huang/music/releases), the app already has a built-in updater.
-2. If you install from method 2, you can check for updates using the F-Droid application.
-3. Or else, visit [GitHub](https://github.com/z-huang/music) and checkout the releases, issues, PRs, or anything new.
+1. F-Droid application.
+2. [GitHub](https://github.com/z-huang/music)
 
 ## Contribution
 

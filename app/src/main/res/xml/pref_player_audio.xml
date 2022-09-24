@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="AUTO"
+        android:entries="@array/audio_qualities_text"
+        android:entryValues="@array/audio_qualities"
+        android:icon="@drawable/ic_graphic_eq"
+        android:key="@string/pref_audio_quality"
+        android:summary="%s"
+        android:title="@string/pref_audio_quality_title" />
+    <Preference
+        android:icon="@drawable/ic_equalizer"
+        android:key="@string/pref_equalizer"
+        android:title="@string/pref_equalizer_title" />
+</PreferenceScreen>

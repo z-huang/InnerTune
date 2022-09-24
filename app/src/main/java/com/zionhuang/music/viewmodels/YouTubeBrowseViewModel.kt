@@ -13,6 +13,8 @@ import com.zionhuang.innertube.models.NavigationEndpoint
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.YTBaseItem
 import com.zionhuang.music.repos.YouTubeRepository
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.withContext
 
 class YouTubeBrowseViewModel(application: Application, private val browseEndpoint: BrowseEndpoint) : AndroidViewModel(application) {
     private var albumSongs: List<SongItem>? = null
@@ -21,16 +23,22 @@ class YouTubeBrowseViewModel(application: Application, private val browseEndpoin
     val pagingData = Pager(PagingConfig(pageSize = 20)) {
         if (browseEndpoint.isAlbumEndpoint) {
             object : PagingSource<List<String>, YTBaseItem>() {
-                override suspend fun load(params: LoadParams<List<String>>): LoadResult<List<String>, YTBaseItem> = LoadResult.Page(
-                    data = YouTube.browse(browseEndpoint).items.also { items ->
-                        albumSongs = items.filterIsInstance<SongItem>().map {
-                            // replaced album audio items have inappropriate navigation endpoint, so we remove it and let clicking handled by fragment
-                            it.copy(navigationEndpoint = NavigationEndpoint())
-                        }
-                    },
-                    prevKey = null,
-                    nextKey = null
-                )
+                override suspend fun load(params: LoadParams<List<String>>): LoadResult<List<String>, YTBaseItem> = withContext(IO) {
+                    YouTube.browse(browseEndpoint).map { result ->
+                        LoadResult.Page<List<String>, YTBaseItem>(
+                            data = result.items.also { items ->
+                                albumSongs = items.filterIsInstance<SongItem>().map {
+                                    // replaced album audio items have inappropriate navigation endpoint, so we remove it and let clicking handled by fragment
+                                    it.copy(navigationEndpoint = NavigationEndpoint())
+                                }
+                            },
+                            prevKey = null,
+                            nextKey = null
+                        )
+                    }.getOrElse { throwable ->
+                        LoadResult.Error(throwable)
+                    }
+                }
 
                 override fun getRefreshKey(state: PagingState<List<String>, YTBaseItem>): List<String>? = null
             }

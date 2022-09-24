@@ -8,5 +8,8 @@ object Constants {
     const val PLAYLIST_SONG_HEADER_ID = "playlist_song_header"
     const val TEXT_HEADER_ID = "text_header"
 
-    const val APP_URL = "https://github.com/z-huang/music"
+    const val GITHUB_URL = "https://github.com/z-huang/music"
+    const val GITHUB_ISSUE_URL = "https://github.com/z-huang/music/issues"
+
+    const val ERROR_INFO = "error_info"
 }

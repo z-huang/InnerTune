@@ -1,7 +1,6 @@
 package com.zionhuang.music.constants
 
 object MediaConstants {
-    const val EXTRA_MEDIA_METADATA = "media_metadata"
     const val EXTRA_MEDIA_METADATA_ITEMS = "media_metadata_items"
     const val EXTRA_SONG = "song"
     const val EXTRA_ARTIST = "artist"

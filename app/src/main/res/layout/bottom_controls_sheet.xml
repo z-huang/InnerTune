@@ -172,7 +172,8 @@
             android:id="@+id/artwork_frame"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clickable="true">
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/artwork"
@@ -259,6 +260,7 @@
                 android:layout_margin="6dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:focusable="true"
                 android:scaleType="center"
                 android:src="@drawable/ic_add" />
 
@@ -269,6 +271,7 @@
                 android:layout_margin="6dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:focusable="true"
                 android:scaleType="center"
                 android:src="@drawable/ic_favorite_border"
                 android:visibility="gone" />
@@ -280,6 +283,7 @@
                 android:layout_margin="6dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
+                android:focusable="true"
                 android:scaleType="center"
                 android:src="@drawable/ic_share" />
 
@@ -384,6 +388,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:clickable="true"
+                android:focusable="true"
                 android:onClick="@{()->viewModel.toggleRepeatMode()}"
                 android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"

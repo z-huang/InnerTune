@@ -23,7 +23,6 @@ import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.ui.adapters.LocalItemAdapter
 import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
 import com.zionhuang.music.ui.adapters.selection.LocalItemKeyProvider
-import com.zionhuang.music.ui.fragments.ArtistsFragmentDirections.actionArtistsFragmentToArtistSongsFragment
 import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.listeners.ArtistMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -52,7 +51,7 @@ class ArtistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
                     } else {
                         exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
                         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
-                        findNavController().navigate(actionArtistsFragmentToArtistSongsFragment(artist.id))
+                        findNavController().navigate(ArtistsFragmentDirections.actionArtistsToArtistSongs(artist.id))
                     }
                 }
             }

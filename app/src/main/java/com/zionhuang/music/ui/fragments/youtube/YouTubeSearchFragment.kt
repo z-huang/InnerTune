@@ -148,7 +148,7 @@ class YouTubeSearchFragment : AbsPagingRecyclerViewFragment<FragmentSearchBindin
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_search) {
-            findNavController().navigate(R.id.action_searchResultFragment_to_searchSuggestionFragment)
+            findNavController().navigate(YouTubeSearchFragmentDirections.actionSearchResultToSearchSuggestion(args.query))
         }
         return true
     }

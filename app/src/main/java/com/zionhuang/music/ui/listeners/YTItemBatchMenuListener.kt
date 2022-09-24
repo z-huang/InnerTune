@@ -9,6 +9,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
@@ -16,6 +17,7 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragmentArgs
 import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 interface IYTItemBatchMenuListener {
     fun playNext(items: List<YTItem>)
@@ -35,16 +37,16 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(items: List<YTItem>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Main + context.exceptionHandler) {
             MediaSessionConnection.binder?.songPlayer?.playNext(items.flatMap { item ->
                 when (item) {
                     is SongItem -> listOf(item.toMediaItem())
-                    is AlbumItem -> withContext(Dispatchers.IO) {
-                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
+                    is AlbumItem -> withContext(IO) {
+                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).getOrThrow().items.filterIsInstance<SongItem>().map { it.toMediaItem() }
                         // consider refetch by [YouTube.getQueue] if needed
                     }
-                    is PlaylistItem -> withContext(Dispatchers.IO) {
-                        YouTube.getQueue(playlistId = item.id).map { it.toMediaItem() }
+                    is PlaylistItem -> withContext(IO) {
+                        YouTube.getQueue(playlistId = item.id).getOrThrow().map { it.toMediaItem() }
                     }
                     is ArtistItem -> emptyList()
                 }
@@ -65,16 +67,16 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(items: List<YTItem>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Main + context.exceptionHandler) {
             MediaSessionConnection.binder?.songPlayer?.addToQueue(items.flatMap { item ->
                 when (item) {
                     is SongItem -> listOf(item.toMediaItem())
-                    is AlbumItem -> withContext(Dispatchers.IO) {
-                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
+                    is AlbumItem -> withContext(IO) {
+                        YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).getOrThrow().items.filterIsInstance<SongItem>().map { it.toMediaItem() }
                         // consider refetch by [YouTube.getQueue] if needed
                     }
-                    is PlaylistItem -> withContext(Dispatchers.IO) {
-                        YouTube.getQueue(playlistId = item.id).map { it.toMediaItem() }
+                    is PlaylistItem -> withContext(IO) {
+                        YouTube.getQueue(playlistId = item.id).getOrThrow().map { it.toMediaItem() }
                     }
                     is ArtistItem -> emptyList()
                 }
@@ -95,7 +97,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToLibrary(items: List<YTItem>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             SongRepository.safeAddSongs(items.filterIsInstance<SongItem>())
             SongRepository.addAlbums(items.filterIsInstance<AlbumItem>())
             SongRepository.addPlaylists(items.filterIsInstance<PlaylistItem>())
@@ -107,7 +109,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
     override fun addToPlaylist(items: List<YTItem>) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addYouTubeItemsToPlaylist(playlist, items)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {

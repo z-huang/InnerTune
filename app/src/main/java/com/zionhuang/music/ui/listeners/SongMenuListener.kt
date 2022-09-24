@@ -12,15 +12,18 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.albumBrowseEndpoint
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
+import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
@@ -33,6 +36,7 @@ import kotlinx.coroutines.launch
 
 interface ISongMenuListener {
     fun editSong(song: Song)
+    fun startRadio(song: Song)
     fun playNext(songs: List<Song>)
     fun addToQueue(songs: List<Song>)
     fun addToPlaylist(songs: List<Song>)
@@ -66,6 +70,10 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
         }.show(context)
     }
 
+    override fun startRadio(song: Song) {
+        MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint = WatchEndpoint(videoId = song.id)))
+    }
+
     override fun playNext(songs: List<Song>) {
         val mainContent = mainActivity.binding.mainContent
         MediaSessionConnection.mediaController?.sendCommand(
@@ -90,7 +98,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
     override fun addToPlaylist(songs: List<Song>) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addToPlaylist(playlist, songs)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
@@ -104,7 +112,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun download(songs: List<Song>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_download_song, songs.size, songs.size), LENGTH_SHORT).show()
             SongRepository.downloadSongs(songs.map { it.song })
         }
@@ -133,7 +141,7 @@ class SongMenuListener(private val fragment: Fragment) : ISongMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(songs: List<Song>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             SongRepository.refetchSongs(songs)
         }
     }

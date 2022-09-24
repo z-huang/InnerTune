@@ -24,6 +24,7 @@ class SuggestionViewModel(application: Application) : AndroidViewModel(applicati
                     item !is SuggestionTextItem || history.find { it.query == item.query } == null
                 })
             } catch (e: Exception) {
+                // TODO
             }
         }
     }

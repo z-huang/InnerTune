@@ -34,8 +34,10 @@ import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.dip
 import com.zionhuang.music.extensions.preference
 import com.zionhuang.music.extensions.replaceFragment
+import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
@@ -60,8 +62,44 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupUI()
+        val defaultTabIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        val graph = navController.navInflater.inflate(R.navigation.main_navigation_graph)
+        graph.setStartDestination(when (defaultTabIndex) {
+            0 -> R.id.homeFragment
+            1 -> R.id.songsFragment
+            2 -> R.id.artistsFragment
+            3 -> R.id.albumsFragment
+            4 -> R.id.playlistsFragment
+            else -> throw IllegalStateException("Illegal tab index")
+        })
+        navController.setGraph(graph, null)
+        navController.addOnDestinationChangedListener(this)
+        binding.bottomNav.setupWithNavController(navController)
+        binding.bottomNav.setOnItemSelectedListener { item ->
+            if (item.isChecked) {
+                // scroll to top
+                (currentFragment as? AbsRecyclerViewFragment<*, *>)?.getRecyclerView()?.smoothScrollToPosition(0)
+            } else {
+                onNavDestinationSelected(item, navController)
+                item.isChecked = true
+            }
+            true
+        }
+
+        replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
+        bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
+            isHideable = true
+            state = STATE_HIDDEN
+            addBottomSheetCallback(BottomSheetCallback())
+        }
+
         handleIntent(intent)
+
+        lifecycleScope.launch {
+            SongRepository.validateDownloads()
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -97,30 +135,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             return
         }
         Snackbar.make(binding.mainContent, getString(R.string.snackbar_url_error), LENGTH_LONG).show()
-    }
-
-    private fun setupUI() {
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        navController.addOnDestinationChangedListener(this)
-        binding.bottomNav.setupWithNavController(navController)
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            if (item.isChecked) {
-                // scroll to top
-                (currentFragment as? AbsRecyclerViewFragment<*, *>)?.getRecyclerView()?.smoothScrollToPosition(0)
-            } else {
-                onNavDestinationSelected(item, navController)
-                item.isChecked = true
-            }
-            true
-        }
-
-        replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
-        bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
-            isHideable = true
-            state = STATE_HIDDEN
-            addBottomSheetCallback(BottomSheetCallback())
-        }
     }
 
     override fun onDestinationChanged(controller: NavController, destination: NavDestination, arguments: Bundle?) {
@@ -195,8 +209,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
     }
 
-    @Suppress("DEPRECATION")
-    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (bottomSheetBehavior.state == STATE_EXPANDED) {
             bottomSheetBehavior.state = STATE_COLLAPSED

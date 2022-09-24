@@ -4,39 +4,48 @@
     <string name="title_songs">노래</string>
     <string name="title_artists">아티스트</string>
     <string name="title_albums">Albums</string>
-    <string name="title_channels">채널</string>
     <string name="title_playlists">플레이리스트</string>
     <string name="title_explore">탐색</string>
     <string name="title_settings">설정</string>
     <string name="title_now_playing">재생 중</string>
-    <string name="title_update">업데이트</string>
+    <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">모양</string>
+    <string name="pref_appearance_title">모양</string>
     <string name="pref_follow_system_accent_title">시스템 테마</string>
     <string name="pref_theme_color_title">테마 색상</string>
     <string name="pref_dark_theme_title">다크 테마</string>
+    <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="dark_theme_on">켬</string>
     <string name="dark_theme_off">끔</string>
     <string name="dark_theme_follow_system">시스템</string>
-    <string name="pref_content">콘텐츠</string>
+    <string name="pref_content_title">콘텐츠</string>
     <string name="pref_content_language_title">기본 콘텐츠 언어</string>
     <string name="pref_default_content_country_title">기본 콘텐츠 국가</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_type_title">Proxy type</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_player_audio_title">Player and audio</string>
+    <string name="pref_general_title">Gerenal</string>
+    <string name="pref_audio_quality_title">Audio quality</string>
+    <string name="audio_quality_auto">Auto</string>
+    <string name="audio_quality_high">High</string>
+    <string name="audio_quality_low">Low</string>
     <string name="pref_auto_download_title">자동 다운로드</string>
     <string name="pref_auto_download_summary">라이브러리에 추가할 때 노래 다운로드</string>
     <string name="pref_auto_add_song_title">라이브러리에 노래 자동 추가</string>
     <string name="pref_auto_add_song_summary">재생이 완료되면 라이브러리에 노래 추가</string>
     <string name="pref_expand_on_play_title">플레이 시 하단 플레이어 확장</string>
     <string name="pref_equalizer_title">Equalizer</string>
-    <string name="pref_about">정보</string>
+    <string name="pref_privacy_title">Privacy</string>
+    <string name="pref_pause_search_history_title">Pause search history</string>
+    <string name="pref_clear_search_history_title">Clear search history</string>
+    <string name="clear_search_history_question">Are you sure to clear all search history?</string>
+    <string name="pref_backup_restore_title">Backup and restore</string>
+    <string name="pref_backup_title">Backup</string>
+    <string name="pref_restore_title">Restore</string>
+    <string name="pref_about_title">정보</string>
     <string name="pref_app_version_title">앱 버전</string>
-    <string name="pref_check_for_updates_title">업데이트 확인</string>
-    <string name="pref_checking_for_updates">확인 중…</string>
-    <string name="pref_up_to_date">최신입니다.</string>
-    <string name="pref_cant_check_for_updates">문제가 발생했습니다.</string>
-    <string name="pref_update_title">업데이트가 가능합니다.</string>
 
     <!-- Colors -->
     <string name="color_sakura">사쿠라</string>
@@ -104,6 +113,15 @@
 
     <string name="dialog_title_edit_playlist">플레이리스트 수정</string>
 
+    <string name="dialog_title_choose_backup_content">Choose backup content</string>
+    <string name="dialog_title_choose_restore_content">Choose restore content</string>
+    <string name="choice_preferences">Preferences</string>
+    <string name="choice_database">Database</string>
+    <string name="choice_downloaded_songs">Downloaded songs</string>
+    <string name="message_backup_create_success">Backup created successfully</string>
+    <string name="message_backup_create_failed">Couldn\'t create backup</string>
+    <string name="message_restore_failed">Failed to restore backup</string>
+
     <!-- Notification -->
     <string name="channel_name_playback">음악 플레이어</string>
     <string name="channel_name_download">다운로드</string>
@@ -128,6 +146,9 @@
     <string name="btn_play_all">모두 재생</string>
     <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">셔플</string>
+    <string name="btn_copy_stacktrace">Copy stacktrace</string>
+    <string name="btn_report">Report</string>
+    <string name="btn_report_on_github">Report on GitHub</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">추가된 날짜</string>
@@ -206,15 +227,11 @@
     <string name="search_filter_playlists">플레이리스트</string>
     <string name="search_filter_community_playlists">Community playlists</string>
     <string name="search_filter_featured_playlists">Featured playlists</string>
-    <string name="search_filter_channels">채널</string>
 
     <string name="system_default">시스템 기본값</string>
     <string name="header_from_your_library">From your library</string>
 
-    <!-- Update Fragment -->
-    <string name="whatsnew">최신 소식</string>
-    <string name="btn_update">업데이트</string>
-    <string name="update_status_preparing">준비 중…</string>
-    <string name="update_status_verifying">확인 중…</string>
-    <string name="update_status_downloading">다운로드 중… (%1$s/%2$s)</string>
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Sorry, that should not have happened.</string>
+    <string name="copied">Copied to clipboard</string>
 </resources>

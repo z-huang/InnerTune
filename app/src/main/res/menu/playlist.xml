@@ -21,6 +21,10 @@
         android:icon="@drawable/ic_playlist_add"
         android:title="@string/menu_add_to_playlist" />
     <item
+        android:id="@+id/action_download"
+        android:icon="@drawable/ic_file_download"
+        android:title="@string/menu_download" />
+    <item
         android:id="@+id/action_refetch"
         android:icon="@drawable/ic_cached"
         android:title="@string/menu_refetch" />

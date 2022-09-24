@@ -12,19 +12,13 @@ import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.sortInfo.*
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.listeners.IAlbumMenuListener
 import com.zionhuang.music.ui.listeners.IArtistMenuListener
 import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
 import com.zionhuang.music.ui.listeners.ISongMenuListener
 import com.zionhuang.music.ui.viewholders.*
 import com.zionhuang.music.utils.makeTimeString
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import me.zhanghai.android.fastscroll.PopupTextProvider
-import java.time.Duration
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemComparator()), PopupTextProvider {
@@ -40,27 +34,12 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
     var itemTouchHelper: ItemTouchHelper? = null
     var isDraggable: Boolean = false // for reorder playlist
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onBindViewHolder(holder: LocalItemViewHolder, position: Int) {
         val item = getItem(position) ?: return
         when (holder) {
             is SongViewHolder -> holder.bind(item as Song, tracker?.isSelected(getItem(position).id) ?: false)
-            is ArtistViewHolder -> {
-                holder.bind(item as Artist, tracker?.isSelected(getItem(position).id) ?: false)
-                if (item.artist.bannerUrl == null || Duration.between(item.artist.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)) {
-                    GlobalScope.launch {
-                        SongRepository.refetchArtist(item.artist)
-                    }
-                }
-            }
-            is AlbumViewHolder -> {
-                holder.bind(item as Album, tracker?.isSelected(getItem(position).id) ?: false)
-                if (item.album.thumbnailUrl == null || item.album.year == null) {
-                    GlobalScope.launch {
-                        SongRepository.refetchAlbum(item.album)
-                    }
-                }
-            }
+            is ArtistViewHolder -> holder.bind(item as Artist, tracker?.isSelected(getItem(position).id) ?: false)
+            is AlbumViewHolder -> holder.bind(item as Album, tracker?.isSelected(getItem(position).id) ?: false)
             is PlaylistViewHolder -> holder.bind(item as Playlist, tracker?.isSelected(getItem(position).id) ?: false)
             is SongHeaderViewHolder -> holder.bind(item as SongHeader)
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)

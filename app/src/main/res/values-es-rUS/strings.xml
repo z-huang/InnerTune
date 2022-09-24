@@ -4,39 +4,48 @@
     <string name="title_songs">Canciones</string>
     <string name="title_artists">Artistas</string>
     <string name="title_albums">Albums</string>
-    <string name="title_channels">Canales</string>
     <string name="title_playlists">Playlists</string>
     <string name="title_explore">Buscar</string>
     <string name="title_settings">Configuración</string>
     <string name="title_now_playing">Sonando ahora</string>
-    <string name="title_update">Actualización</string>
+    <string name="title_error_report">Error report</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">Apariencia</string>
+    <string name="pref_appearance_title">Apariencia</string>
     <string name="pref_follow_system_accent_title">Seguir color de acento del sistema</string>
     <string name="pref_theme_color_title">Color de acento</string>
     <string name="pref_dark_theme_title">Modo oscuro</string>
+    <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="dark_theme_on">Encendido</string>
     <string name="dark_theme_off">Apagado</string>
     <string name="dark_theme_follow_system">Predeterminado del sistema</string>
-    <string name="pref_content">Contenido</string>
+    <string name="pref_content_title">Contenido</string>
     <string name="pref_content_language_title">Idioma por defecto del contenido</string>
     <string name="pref_default_content_country_title">País por defecto del contenido</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
+    <string name="pref_proxy_type_title">Proxy type</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_player_audio_title">Player and audio</string>
+    <string name="pref_general_title">Gerenal</string>
+    <string name="pref_audio_quality_title">Audio quality</string>
+    <string name="audio_quality_auto">Auto</string>
+    <string name="audio_quality_high">High</string>
+    <string name="audio_quality_low">Low</string>
     <string name="pref_auto_download_title">Descarga automática</string>
     <string name="pref_auto_download_summary">Descarga la canción cuando se añade a la biblioteca</string>
     <string name="pref_auto_add_song_title">Añadir automáticamente la canción a la biblioteca</string>
     <string name="pref_auto_add_song_summary">Añadir canción a la biblioteca cuando termine de reproducirse</string>
     <string name="pref_expand_on_play_title">Expandir reproductor inferior cuando comience la reproducción</string>
     <string name="pref_equalizer_title">Equalizer</string>
-    <string name="pref_about">Acerca de</string>
+    <string name="pref_privacy_title">Privacy</string>
+    <string name="pref_pause_search_history_title">Pause search history</string>
+    <string name="pref_clear_search_history_title">Clear search history</string>
+    <string name="clear_search_history_question">Are you sure to clear all search history?</string>
+    <string name="pref_backup_restore_title">Backup and restore</string>
+    <string name="pref_backup_title">Backup</string>
+    <string name="pref_restore_title">Restore</string>
+    <string name="pref_about_title">Acerca de</string>
     <string name="pref_app_version_title">Versión de la aplicación</string>
-    <string name="pref_check_for_updates_title">Buscar actualizaciones</string>
-    <string name="pref_checking_for_updates">Buscando…</string>
-    <string name="pref_up_to_date">Tienes la última versión disponible.</string>
-    <string name="pref_cant_check_for_updates">Algo salió mal.</string>
-    <string name="pref_update_title">Actualización disponible.</string>
 
     <!-- Colors -->
     <string name="color_sakura">Sakura</string>
@@ -104,6 +113,15 @@
 
     <string name="dialog_title_edit_playlist">Editar playlist</string>
 
+    <string name="dialog_title_choose_backup_content">Choose backup content</string>
+    <string name="dialog_title_choose_restore_content">Choose restore content</string>
+    <string name="choice_preferences">Preferences</string>
+    <string name="choice_database">Database</string>
+    <string name="choice_downloaded_songs">Downloaded songs</string>
+    <string name="message_backup_create_success">Backup created successfully</string>
+    <string name="message_backup_create_failed">Couldn\'t create backup</string>
+    <string name="message_restore_failed">Failed to restore backup</string>
+
     <!-- Notification -->
     <string name="channel_name_playback">Reproductor</string>
     <string name="channel_name_download">Descargar</string>
@@ -132,6 +150,9 @@
     <string name="btn_play_all">Reproducir todo</string>
     <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Aleatorio</string>
+    <string name="btn_copy_stacktrace">Copy stacktrace</string>
+    <string name="btn_report">Report</string>
+    <string name="btn_report_on_github">Report on GitHub</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">Fecha de incorporación</string>
@@ -212,15 +233,11 @@
     <string name="search_filter_playlists">Playlists</string>
     <string name="search_filter_community_playlists">Community playlists</string>
     <string name="search_filter_featured_playlists">Featured playlists</string>
-    <string name="search_filter_channels">Canales</string>
 
     <string name="system_default">Predeterminado del sistema</string>
     <string name="header_from_your_library">From your library</string>
 
-    <!-- Update Fragment -->
-    <string name="whatsnew">Novedades</string>
-    <string name="btn_update">Actualizar</string>
-    <string name="update_status_preparing">Preparando…</string>
-    <string name="update_status_verifying">Verificando…</string>
-    <string name="update_status_downloading">Descargando… (%1$s/%2$s)</string>
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Sorry, that should not have happened.</string>
+    <string name="copied">Copied to clipboard</string>
 </resources>

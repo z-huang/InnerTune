@@ -20,7 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/suggestion_item_height"
         android:background="?android:selectableItemBackground"
-        android:clickable="true">
+        android:clickable="true"
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/icon"
@@ -34,6 +35,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@android:color/tab_indicator_text"
             tools:src="@drawable/ic_search" />
+
         <TextView
             android:id="@+id/query"
             android:layout_width="0dp"

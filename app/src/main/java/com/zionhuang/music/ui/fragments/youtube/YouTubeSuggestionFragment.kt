@@ -16,15 +16,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentYoutubeSuggestionBinding
 import com.zionhuang.music.extensions.getTextChangeFlow
+import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
-import com.zionhuang.music.ui.fragments.youtube.YouTubeSuggestionFragmentDirections.actionSuggestionFragmentToSearchResultFragment
 import com.zionhuang.music.utils.KeyboardUtil.hideKeyboard
 import com.zionhuang.music.utils.KeyboardUtil.showKeyboard
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -39,6 +40,8 @@ import kotlinx.coroutines.launch
 class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBinding>() {
     override fun getViewBinding() = FragmentYoutubeSuggestionBinding.inflate(layoutInflater)
     override fun getToolbar(): Toolbar = binding.toolbar
+
+    private val args: YouTubeSuggestionFragmentArgs by navArgs()
 
     private val viewModel by viewModels<SuggestionViewModel>()
     private val adapter = YouTubeItemAdapter(NavigationEndpointHandler(this))
@@ -78,6 +81,10 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
         }
         setupSearchView()
         showKeyboard()
+        args.query?.let { query ->
+            binding.searchView.setText(query)
+            binding.searchView.setSelection(query.length)
+        }
         viewModel.suggestions.observe(viewLifecycleOwner) { dataSet ->
             adapter.submitList(dataSet)
         }
@@ -113,11 +120,13 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun search(query: String) {
-        GlobalScope.launch {
-            SongRepository.insertSearchHistory(query)
+        if (!requireContext().sharedPreferences.getBoolean(getString(R.string.pref_pause_search_history), false)) {
+            GlobalScope.launch {
+                SongRepository.insertSearchHistory(query)
+            }
         }
         exitTransition = null
-        val action = actionSuggestionFragmentToSearchResultFragment(query)
+        val action = YouTubeSuggestionFragmentDirections.actionSearchSuggestionToSearchResult(query)
         findNavController().navigate(action)
     }
 

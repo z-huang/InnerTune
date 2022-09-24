@@ -16,6 +16,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Artist
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.models.toMediaMetadata
@@ -36,13 +37,11 @@ interface IArtistMenuListener {
     fun addToPlaylist(artists: List<Artist>)
     fun share(artist: Artist)
     fun refetch(artists: List<Artist>)
-    fun delete(artists: List<Artist>)
 
     fun playNext(artist: Artist) = playNext(listOf(artist))
     fun addToQueue(artist: Artist) = addToQueue(listOf(artist))
     fun addToPlaylist(artist: Artist) = addToPlaylist(listOf(artist))
     fun refetch(artist: Artist) = refetch(listOf(artist))
-    fun delete(artist: Artist) = delete(listOf(artist))
 }
 
 class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
@@ -61,7 +60,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(artists: List<Artist>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = artists.flatMap { artist ->
                 SongRepository.getArtistSongs(artist.id, SongSortInfoPreference).getList()
             }
@@ -77,7 +76,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(artists: List<Artist>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = artists.flatMap { artist ->
                 SongRepository.getArtistSongs(artist.id, SongSortInfoPreference).getList()
             }
@@ -94,7 +93,7 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
     override fun addToPlaylist(artists: List<Artist>) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addToPlaylist(playlist, artists)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
@@ -119,17 +118,8 @@ class ArtistMenuListener(private val fragment: Fragment) : IArtistMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(artists: List<Artist>) {
-        GlobalScope.launch {
-            artists.forEach { artist ->
-                SongRepository.refetchArtist(artist.artist)
-            }
-        }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    override fun delete(artists: List<Artist>) {
-        GlobalScope.launch {
-            SongRepository.deleteArtists(artists.map { it.artist })
+        GlobalScope.launch(context.exceptionHandler) {
+            SongRepository.refetchArtists(artists.map { it.artist })
         }
     }
 }

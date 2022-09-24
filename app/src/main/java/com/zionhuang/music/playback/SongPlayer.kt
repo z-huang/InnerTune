@@ -5,13 +5,14 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.audiofx.AudioEffect
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat.*
+import android.support.v4.media.session.PlaybackStateCompat.ERROR_CODE_UNKNOWN_ERROR
 import android.util.Pair
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -47,6 +48,7 @@ import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
+import com.zionhuang.music.utils.preference.enumPreference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -66,6 +68,7 @@ class SongPlayer(
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private val bitmapProvider = BitmapProvider(context)
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
+    private var audioQuality by enumPreference(context, R.string.pref_audio_quality, AudioQuality.AUTO)
     private var currentQueue: Queue = EmptyQueue()
 
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
@@ -82,22 +85,27 @@ class SongPlayer(
                 if (song?.song?.downloadState == STATE_DOWNLOADED) {
                     return@Factory dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
                 }
-                kotlin.runCatching {
-                    runBlocking(IO) {
-                        YouTube.player(mediaId)
-                    }
+                runBlocking(IO) {
+                    YouTube.player(mediaId)
                 }.mapCatching { playerResponse ->
                     if (playerResponse.playabilityStatus.status != "OK") {
-                        throw PlaybackException(playerResponse.playabilityStatus.status, null, ERROR_CODE_REMOTE_ERROR)
+                        throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
                     }
                     val uri = playerResponse.streamingData?.adaptiveFormats
                         ?.filter { it.isAudio }
-                        ?.maxByOrNull { it.bitrate * (if (connectivityManager.isActiveNetworkMetered) -1 else 1) }
-                        ?.url
-                        ?.toUri()
+                        ?.maxByOrNull {
+                            it.bitrate * when (audioQuality) {
+                                AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
+                                AudioQuality.HIGH -> 1
+                                AudioQuality.LOW -> -1
+                            }
+                        }
+                        ?.url?.toUri()
                         ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
                     dataSpec.withUri(uri)
-                }.getOrThrow()
+                }.getOrElse { throwable ->
+                    throw PlaybackException("Unknown error", throwable, ERROR_CODE_REMOTE_ERROR)
+                }
             })
         )
         .build()
@@ -116,26 +124,13 @@ class SongPlayer(
         setPlayer(player)
         setPlaybackPreparer(object : MediaSessionConnector.PlaybackPreparer {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
-
-            override fun getSupportedPrepareActions() =
-                ACTION_PREPARE_FROM_MEDIA_ID or ACTION_PREPARE_FROM_SEARCH or ACTION_PREPARE_FROM_URI or
-                        ACTION_PLAY_FROM_MEDIA_ID or ACTION_PLAY_FROM_SEARCH or ACTION_PLAY_FROM_URI
-
+            override fun getSupportedPrepareActions(): Long = 0L
+            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {}
+            override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {}
+            override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {}
             override fun onPrepare(playWhenReady: Boolean) {
                 player.playWhenReady = playWhenReady
                 player.prepare()
-            }
-
-            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
-                // TODO
-            }
-
-            override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {
-                // TODO
-            }
-
-            override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {
-                // TODO
             }
         })
         registerCustomCommandReceiver { player, command, extras, _ ->
@@ -183,7 +178,7 @@ class SongPlayer(
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
             override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) = throw UnsupportedOperationException()
-            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat, index: Int)  = throw UnsupportedOperationException()
+            override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat, index: Int) = throw UnsupportedOperationException()
             override fun onRemoveQueueItem(player: Player, description: MediaDescriptionCompat) {
                 player.mediaItemIndexOf(description.mediaId)?.let { i ->
                     player.removeMediaItem(i)
@@ -224,7 +219,7 @@ class SongPlayer(
         currentQueue = queue
         player.clearMediaItems()
 
-        scope.launch {
+        scope.launch(context.exceptionHandler) {
             val initialStatus = withContext(IO) { queue.getInitialStatus() }
             player.setMediaItems(initialStatus.items)
             if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
@@ -234,23 +229,23 @@ class SongPlayer(
     }
 
     fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: YTItem?) {
-        scope.launch {
+        scope.launch(context.exceptionHandler) {
             val items = when (item) {
-                is SongItem -> YouTube.getQueue(videoIds = listOf(item.id)).map { it.toMediaItem() }
+                is SongItem -> YouTube.getQueue(videoIds = listOf(item.id)).getOrThrow().map { it.toMediaItem() }
                 is AlbumItem -> withContext(IO) {
-                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).items.filterIsInstance<SongItem>().map { it.toMediaItem() }
+                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).getOrThrow().items.filterIsInstance<SongItem>().map { it.toMediaItem() }
                     // consider refetch by [YouTube.getQueue] if needed
                 }
                 is PlaylistItem -> withContext(IO) {
-                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).map { it.toMediaItem() }
+                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).getOrThrow().map { it.toMediaItem() }
                 }
                 is ArtistItem -> return@launch
                 null -> when {
                     endpoint.queueTarget.videoId != null -> withContext(IO) {
-                        YouTube.getQueue(videoIds = listOf(endpoint.queueTarget.videoId!!)).map { it.toMediaItem() }
+                        YouTube.getQueue(videoIds = listOf(endpoint.queueTarget.videoId!!)).getOrThrow().map { it.toMediaItem() }
                     }
                     endpoint.queueTarget.playlistId != null -> withContext(IO) {
-                        YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId).map { it.toMediaItem() }
+                        YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId).getOrThrow().map { it.toMediaItem() }
                     }
                     else -> error("Unknown queue target")
                 }
@@ -274,6 +269,24 @@ class SongPlayer(
         player.prepare()
     }
 
+    private fun openAudioEffectSession() {
+        context.sendBroadcast(
+            Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION).apply {
+                putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
+                putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+            }
+        )
+    }
+
+    private fun closeAudioEffectSession() {
+        context.sendBroadcast(
+            Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION).apply {
+                putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
+            }
+        )
+    }
+
     /**
      * Auto load more
      */
@@ -283,7 +296,7 @@ class SongPlayer(
             player.mediaItemCount - player.currentMediaItemIndex > 5 ||
             !currentQueue.hasNextPage()
         ) return
-        scope.launch {
+        scope.launch(context.exceptionHandler) {
             player.addMediaItems(currentQueue.nextPage())
         }
     }
@@ -296,10 +309,20 @@ class SongPlayer(
         }
     }
 
-    override fun onPlaybackStateChanged(@Player.State playbackState: Int) {
+    override fun onPlaybackStateChanged(@State playbackState: Int) {
         if (playbackState == STATE_ENDED && autoAddSong) {
             player.currentMetadata?.let {
                 addToLibrary(it)
+            }
+        }
+    }
+
+    override fun onEvents(player: Player, events: Events) {
+        if (events.containsAny(EVENT_PLAYBACK_STATE_CHANGED, EVENT_PLAY_WHEN_READY_CHANGED, EVENT_IS_PLAYING_CHANGED, EVENT_POSITION_DISCONTINUITY)) {
+            if (player.playbackState != STATE_ENDED && player.playWhenReady) {
+                openAudioEffectSession()
+            } else {
+                closeAudioEffectSession()
             }
         }
     }
@@ -312,7 +335,7 @@ class SongPlayer(
     }
 
     private fun addToLibrary(mediaMetadata: MediaMetadata) {
-        scope.launch {
+        scope.launch(context.exceptionHandler) {
             localRepository.addSong(mediaMetadata)
         }
     }
@@ -324,7 +347,12 @@ class SongPlayer(
         }
         mediaSessionConnector.setPlayer(null)
         playerNotificationManager.setPlayer(null)
+        player.removeListener(this)
         player.release()
+    }
+
+    enum class AudioQuality {
+        AUTO, HIGH, LOW
     }
 
     companion object {

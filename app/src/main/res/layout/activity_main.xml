@@ -5,27 +5,20 @@
     android:layout_height="match_parent"
     tools:context=".ui.activities.MainActivity">
 
-    <!--<com.zionhuang.music.ui.widgets.StatusBarView-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="wrap_content"-->
-    <!--    android:background="?colorPrimaryVariant"-->
-    <!--    android:visibility="gone"-->
-    <!--    tools:layout_height="36dp" />-->
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/m3_bottom_nav_min_height"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        tools:ignore="PrivateResource">
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/main_navigation_graph" />
+            app:defaultNavHost="true" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"

@@ -4,39 +4,48 @@
     <string name="title_songs">歌曲</string>
     <string name="title_artists">藝人</string>
     <string name="title_albums">專輯</string>
-    <string name="title_channels">頻道</string>
     <string name="title_playlists">播放清單</string>
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
     <string name="title_now_playing">現正播放</string>
-    <string name="title_update">更新</string>
+    <string name="title_error_report">錯誤報告</string>
 
     <!-- Preference Title -->
-    <string name="pref_appearance">外觀</string>
+    <string name="pref_appearance_title">外觀</string>
     <string name="pref_follow_system_accent_title">跟隨系統主題</string>
     <string name="pref_theme_color_title">主題顏色</string>
     <string name="pref_dark_theme_title">深色主題</string>
+    <string name="pref_default_open_tab_title">預設啟動標籤</string>
     <string name="dark_theme_on">開</string>
     <string name="dark_theme_off">關</string>
     <string name="dark_theme_follow_system">跟隨系統</string>
-    <string name="pref_content">內容</string>
+    <string name="pref_content_title">內容</string>
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="pref_enable_proxy_title">啟用 Proxy</string>
+    <string name="pref_proxy_type_title">Proxy 種類</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_player_audio_title">播放與音訊</string>
+    <string name="pref_general_title">一般</string>
+    <string name="pref_audio_quality_title">音質</string>
+    <string name="audio_quality_auto">自動</string>
+    <string name="audio_quality_high">高</string>
+    <string name="audio_quality_low">低</string>
     <string name="pref_auto_download_title">自動下載</string>
     <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
     <string name="pref_equalizer_title">等化器</string>
-    <string name="pref_about">關於</string>
+    <string name="pref_privacy_title">隱私</string>
+    <string name="pref_pause_search_history_title">暫停搜尋紀錄</string>
+    <string name="pref_clear_search_history_title">清除搜尋紀錄</string>
+    <string name="clear_search_history_question">您確定要清除所有搜尋紀錄嗎？</string>
+    <string name="pref_backup_restore_title">備份與還原</string>
+    <string name="pref_backup_title">備份</string>
+    <string name="pref_restore_title">還原</string>
+    <string name="pref_about_title">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
-    <string name="pref_check_for_updates_title">檢查更新</string>
-    <string name="pref_checking_for_updates">正在檢查…</string>
-    <string name="pref_up_to_date">已是最新版本</string>
-    <string name="pref_cant_check_for_updates">無法檢查更新</string>
-    <string name="pref_update_title">已有新版本</string>
 
     <!-- Colors -->
     <string name="color_sakura">櫻花</string>
@@ -104,6 +113,15 @@
 
     <string name="dialog_title_edit_playlist">編輯播放清單</string>
 
+    <string name="dialog_title_choose_backup_content">選擇備份項目</string>
+    <string name="dialog_title_choose_restore_content">選擇還原項目</string>
+    <string name="choice_preferences">設定</string>
+    <string name="choice_database">資料庫</string>
+    <string name="choice_downloaded_songs">已下載的歌曲</string>
+    <string name="message_backup_create_success">成功建立備份</string>
+    <string name="message_backup_create_failed">無法建立備份</string>
+    <string name="message_restore_failed">無法還原備份</string>
+
     <!-- Notification -->
     <string name="channel_name_playback">音樂播放器</string>
     <string name="channel_name_download">下載</string>
@@ -128,6 +146,9 @@
     <string name="btn_play_all">全部播放</string>
     <string name="btn_radio">電台</string>
     <string name="btn_shuffle">隨機播放</string>
+    <string name="btn_copy_stacktrace">複製 stacktrace</string>
+    <string name="btn_report">回報</string>
+    <string name="btn_report_on_github">在 GitHub 上回報</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">新增時間</string>
@@ -206,15 +227,11 @@
     <string name="search_filter_playlists">播放清單</string>
     <string name="search_filter_community_playlists">社群播放清單</string>
     <string name="search_filter_featured_playlists">精選播放清單</string>
-    <string name="search_filter_channels">頻道</string>
 
     <string name="system_default">系統預設</string>
     <string name="header_from_your_library">來自你的媒體庫</string>
 
-    <!-- Update Fragment-->
-    <string name="whatsnew">What\'s new</string>
-    <string name="btn_update">更新</string>
-    <string name="update_status_preparing">正在準備…</string>
-    <string name="update_status_verifying">正在驗證…</string>
-    <string name="update_status_downloading">正在下載… (%1$s/%2$s)</string>
+    <!-- Error Activity -->
+    <string name="sorry_for_error">抱歉，這不該發生的</string>
+    <string name="copied">已複製至剪貼簿</string>
 </resources>

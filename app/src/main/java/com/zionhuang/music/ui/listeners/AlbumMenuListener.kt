@@ -14,6 +14,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaSessionConstants
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Album
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
@@ -51,7 +52,7 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
     @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(albums: List<Album>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = albums.flatMap { album ->
                 SongRepository.getAlbumSongs(album.id)
             }
@@ -67,7 +68,7 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
     @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(albums: List<Album>) {
         val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             val songs = albums.flatMap { album ->
                 SongRepository.getAlbumSongs(album.id)
             }
@@ -84,7 +85,7 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
     override fun addToPlaylist(albums: List<Album>) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch {
+            GlobalScope.launch(context.exceptionHandler) {
                 SongRepository.addToPlaylist(playlist, albums)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
@@ -113,16 +114,14 @@ class AlbumMenuListener(private val fragment: Fragment) : IAlbumMenuListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(albums: List<Album>) {
-        GlobalScope.launch {
-            albums.forEach { album ->
-                SongRepository.refetchAlbum(album.album)
-            }
+        GlobalScope.launch(context.exceptionHandler) {
+            SongRepository.refetchAlbums(albums.map { it.album })
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun delete(albums: List<Album>) {
-        GlobalScope.launch {
+        GlobalScope.launch(context.exceptionHandler) {
             SongRepository.deleteAlbums(albums)
         }
     }

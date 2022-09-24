@@ -19,4 +19,7 @@ interface SearchHistoryDao {
 
     @Query("DELETE FROM search_history WHERE `query` = :query")
     suspend fun delete(query: String)
+
+    @Query("DELETE FROM search_history")
+    suspend fun clearHistory()
 }

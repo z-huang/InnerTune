@@ -7,7 +7,6 @@
     <dimen name="square_thumbnail_size">128dp</dimen>
     <dimen name="album_thumbnail_size">144dp</dimen>
 
-    <dimen name="bottom_navigation_height">54dp</dimen>
     <dimen name="bottom_controls_sheet_peek_height">54dp</dimen>
 
     <dimen name="drag_item_elevation">4dp</dimen>

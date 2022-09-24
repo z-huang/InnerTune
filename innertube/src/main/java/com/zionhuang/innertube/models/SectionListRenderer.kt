@@ -64,7 +64,10 @@ data class SectionListRenderer(
                     itemViewType = musicCarouselShelfRenderer.getViewType()
                 )
             )
-            musicShelfRenderer != null -> musicShelfRenderer.toHeader() + musicShelfRenderer.contents?.mapNotNull { it.toItem() }.orEmpty()
+            musicShelfRenderer != null -> musicShelfRenderer.contents?.mapNotNull { it.toItem() }.orEmpty().let { items ->
+                if (items.isNotEmpty()) musicShelfRenderer.toHeader() + items
+                else items
+            }
             musicPlaylistShelfRenderer != null -> musicPlaylistShelfRenderer.contents.mapNotNull { it.toItem() }
             musicDescriptionShelfRenderer != null -> listOfNotNull(
                 musicDescriptionShelfRenderer.toSectionHeader(),

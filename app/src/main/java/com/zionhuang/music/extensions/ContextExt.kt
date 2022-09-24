@@ -13,8 +13,11 @@ import androidx.core.content.res.use
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceManager
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import com.zionhuang.music.models.toErrorInfo
+import com.zionhuang.music.ui.activities.ErrorActivity
 import com.zionhuang.music.utils.preference.Preference
 import com.zionhuang.music.utils.preference.PreferenceLiveData
+import kotlinx.coroutines.CoroutineExceptionHandler
 
 fun Context.getDensity(): Float = resources.displayMetrics.density
 
@@ -42,3 +45,14 @@ val Context.sharedPreferences: SharedPreferences
 fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference(this, keyId, defaultValue)
 
 fun <T : Any> Context.preferenceLiveData(@StringRes keyId: Int, defaultValue: T) = PreferenceLiveData(this, keyId, defaultValue)
+
+fun Context.tryOrReport(block: () -> Unit) = try {
+    block()
+} catch (e: Exception) {
+    ErrorActivity.openActivity(this, e.toErrorInfo())
+}
+
+val Context.exceptionHandler
+    get() = CoroutineExceptionHandler { _, throwable ->
+        ErrorActivity.openActivity(this, throwable.toErrorInfo())
+    }

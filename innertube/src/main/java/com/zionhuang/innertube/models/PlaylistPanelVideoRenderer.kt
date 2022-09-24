@@ -5,19 +5,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlaylistPanelVideoRenderer(
-    val title: Runs,
-    val lengthText: Runs,
-    val longBylineText: Runs,
-    val shortBylineText: Runs,
-    val videoId: String,
+    val title: Runs?,
+    val lengthText: Runs?,
+    val longBylineText: Runs?,
+    val shortBylineText: Runs?,
+    val videoId: String?,
     val playlistSetVideoId: String?,
     val selected: Boolean,
     val thumbnail: Thumbnails,
-    val menu: Menu,
+    val unplayableText: Runs?,
+    val menu: Menu?,
     val navigationEndpoint: NavigationEndpoint,
 ) {
     // Best way to get the most detailed song information
-    fun toSongItem(): SongItem {
+    fun toSongItem(): SongItem? {
+        if (videoId == null || title == null || lengthText == null || longBylineText == null || shortBylineText == null || menu == null) return null
         val longByLineRuns = longBylineText.runs.splitBySeparator()
         return SongItem(
             id = videoId,

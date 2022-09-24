@@ -12,6 +12,7 @@ import com.zionhuang.music.constants.MediaConstants.EXTRA_BLOCK
 import com.zionhuang.music.databinding.DialogSingleTextInputBinding
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
+import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.repos.SongRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -65,7 +66,7 @@ class CreatePlaylistDialog() : AppCompatDialogFragment() {
             id = generatePlaylistId(),
             name = name
         )
-        GlobalScope.launch {
+        GlobalScope.launch(requireContext().exceptionHandler) {
             SongRepository.insertPlaylist(playlist)
             listener?.invoke(playlist)
         }

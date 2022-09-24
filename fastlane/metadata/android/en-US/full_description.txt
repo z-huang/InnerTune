@@ -20,3 +20,8 @@ The project is currently in an unstable stage. If you encounter bugs, please rep
 * Skip to next/previous song
 * Repeat/shuffle mode
 * Edit now-playing queue
+* Custom themes
+* Dark theme
+* Localization
+* Proxy
+* Backup & restore

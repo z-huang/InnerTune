@@ -3,6 +3,7 @@ package com.zionhuang.music.db.daos
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.models.sortInfo.ISortInfo
@@ -46,6 +47,11 @@ interface SongDao {
     @Transaction
     @Query(QUERY_PLAYLIST_SONGS)
     fun getPlaylistSongsAsFlow(playlistId: String): Flow<List<Song>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM song WHERE download_state = $STATE_DOWNLOADED")
+    suspend fun getDownloadedSongsAsList(): List<Song>
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

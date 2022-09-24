@@ -30,12 +30,6 @@
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
     </style>
 
-    <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">
-        <item name="titleTextStyle">?attr/textAppearanceHeadline6</item>
-        <item name="subtitleTextStyle">?attr/textAppearanceSubtitle1</item>
-        <item name="background">?colorPrimary</item>
-    </style>
-
     <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">
         <item name="android:layout_width">wrap_content</item>
         <item name="queryHint">@string/abc_search_hint</item>
@@ -49,19 +43,7 @@
 
     <style name="Dialog" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="android:windowTranslucentNavigation">false</item>
-    </style>
-
-    <style name="ThemeOverlay.App.Chip.Choice" parent="">
-        <item name="elevationOverlayEnabled">false</item>
-    </style>
-
-    <style name="ThumbnailShapeAppearance" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">@dimen/thumbnail_radius</item>
-        <item name="cornerSizeTopLeft">@dimen/thumbnail_radius</item>
-        <item name="cornerSizeBottomRight">@dimen/thumbnail_radius</item>
-        <item name="cornerSizeBottomLeft">@dimen/thumbnail_radius</item>
-    </style>
+    </style>-->
 
     <style name="CustomBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
