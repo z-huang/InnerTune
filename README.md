@@ -44,6 +44,14 @@ With this app, you're like getting a free music streaming service. You can liste
 - Repeat/shuffle mode
 - Edit now-playing queue
 
+### Other
+
+- Custom themes
+- Dark theme
+- Localization
+- Proxy
+- Backup & restore
+
 ## Screenshots
 
 <p float="left">
