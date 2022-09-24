@@ -25,6 +25,7 @@
     <string name="pref_enable_proxy_title">Attiva proxy</string>
     <string name="pref_proxy_type_title">Tipo di proxy</string>
     <string name="pref_proxy_url_title">URL proxy</string>
+    <string name="pref_restart_title">Riavvia l\'app per applicare le modifiche</string>
     <string name="pref_player_audio_title">Riproduttore e audio</string>
     <string name="pref_general_title">Gerenale</string>
     <string name="pref_audio_quality_title">Qualità dell\'audio</string>
@@ -217,9 +218,6 @@
     </plurals>
     <string name="snackbar_removed_download">Download rimosso</string>
     <string name="snackbar_action_view">Guarda</string>
-
-    <!-- Toast -->
-    <string name="toast_restart_to_take_effect">Riavvia l\'app per applicare le modifiche</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Aggiungi alla libreria</string>

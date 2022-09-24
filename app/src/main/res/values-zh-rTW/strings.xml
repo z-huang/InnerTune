@@ -25,6 +25,7 @@
     <string name="pref_enable_proxy_title">啟用 Proxy</string>
     <string name="pref_proxy_type_title">Proxy 種類</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_restart_title">重啟以套用變更</string>
     <string name="pref_player_audio_title">播放與音訊</string>
     <string name="pref_general_title">一般</string>
     <string name="pref_audio_quality_title">音質</string>
@@ -211,9 +212,6 @@
     </plurals>
     <string name="snackbar_removed_download">已移除下載</string>
     <string name="snackbar_action_view">查看</string>
-
-    <!-- Toast -->
-    <string name="toast_restart_to_take_effect">重啟以套用變更</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">加入音樂庫</string>
