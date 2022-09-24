@@ -15,6 +15,7 @@
 * Handle most errors and let user report them
 * Download local playlist songs #8
 * Support minimum API 24 #210
+* Remove in-app updater
 
 <br><b>Fixed</b>
 
