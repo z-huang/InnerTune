@@ -4,7 +4,6 @@
     <string name="title_songs">Kappaleet</string>
     <string name="title_artists">Artistit</string>
     <string name="title_albums">Albums</string>
-    <string name="title_channels">Kanavat</string>
     <string name="title_playlists">Soittolistat</string>
     <string name="title_explore">Tutustu</string>
     <string name="title_settings">Asetukset</string>
@@ -234,7 +233,6 @@
     <string name="search_filter_playlists">Soittolistat</string>
     <string name="search_filter_community_playlists">Community playlists</string>
     <string name="search_filter_featured_playlists">Featured playlists</string>
-    <string name="search_filter_channels">Kanavat</string>
 
     <string name="system_default">Järjestelmän oletus</string>
     <string name="header_from_your_library">From your library</string>

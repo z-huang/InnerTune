@@ -4,7 +4,6 @@
     <string name="title_songs">노래</string>
     <string name="title_artists">아티스트</string>
     <string name="title_albums">Albums</string>
-    <string name="title_channels">채널</string>
     <string name="title_playlists">플레이리스트</string>
     <string name="title_explore">탐색</string>
     <string name="title_settings">설정</string>
@@ -228,7 +227,6 @@
     <string name="search_filter_playlists">플레이리스트</string>
     <string name="search_filter_community_playlists">Community playlists</string>
     <string name="search_filter_featured_playlists">Featured playlists</string>
-    <string name="search_filter_channels">채널</string>
 
     <string name="system_default">시스템 기본값</string>
     <string name="header_from_your_library">From your library</string>

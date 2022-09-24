@@ -15,6 +15,7 @@
         android:layout_height="@dimen/list_item_height"
         android:background="?android:selectableItemBackground"
         android:clickable="true"
+        android:focusable="true"
         android:paddingStart="6dp"
         android:paddingEnd="6dp">
 
@@ -106,6 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="6dp"
+            android:contentDescription="@null"
             android:padding="5dp"
             android:scaleType="center"
             app:layout_constraintBottom_toBottomOf="parent"

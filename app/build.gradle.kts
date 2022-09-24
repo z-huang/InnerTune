@@ -13,7 +13,7 @@ android {
     buildToolsVersion = "30.0.3"
     defaultConfig {
         applicationId = "com.zionhuang.music"
-        minSdk = 26
+        minSdk = 24
         targetSdk = 32
         versionCode = 11
         versionName = "0.4.0"
@@ -48,6 +48,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility(JavaVersion.VERSION_1_8)
         targetCompatibility(JavaVersion.VERSION_1_8)
     }
@@ -109,7 +110,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     // AndroidX
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.5.1")
@@ -153,11 +154,13 @@ dependencies {
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     // Coil
-    implementation("io.coil-kt:coil:2.2.0")
+    implementation("io.coil-kt:coil:2.2.1")
     // Fast Scroll
-    implementation("me.zhanghai.android.fastscroll:library:1.1.7")
+    implementation("me.zhanghai.android.fastscroll:library:1.1.8")
     // Markdown
     implementation("org.commonmark:commonmark:0.18.2")
+    // Desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     // Test
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("android.arch.core:core-testing:1.1.1")
@@ -165,7 +168,7 @@ dependencies {
     androidTestImplementation("androidx.test:runner:1.4.0")
     androidTestImplementation("androidx.test:rules:1.4.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    testImplementation("org.mockito:mockito-core:4.3.1")
+    testImplementation("org.mockito:mockito-core:4.8.0")
     testImplementation("org.mockito:mockito-inline:4.3.1")
     testImplementation("org.mockito:mockito-android:4.3.1")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")

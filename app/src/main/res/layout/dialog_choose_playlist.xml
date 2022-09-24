@@ -14,6 +14,7 @@
             android:layout_height="@dimen/list_item_height"
             android:background="?selectableItemBackground"
             android:clickable="true"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <ImageView

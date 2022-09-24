@@ -4,7 +4,6 @@
     <string name="title_songs">歌曲</string>
     <string name="title_artists">藝人</string>
     <string name="title_albums">專輯</string>
-    <string name="title_channels">頻道</string>
     <string name="title_playlists">播放清單</string>
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
@@ -228,7 +227,6 @@
     <string name="search_filter_playlists">播放清單</string>
     <string name="search_filter_community_playlists">社群播放清單</string>
     <string name="search_filter_featured_playlists">精選播放清單</string>
-    <string name="search_filter_channels">頻道</string>
 
     <string name="system_default">系統預設</string>
     <string name="header_from_your_library">來自你的媒體庫</string>

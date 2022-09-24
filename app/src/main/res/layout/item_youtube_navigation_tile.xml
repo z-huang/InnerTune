@@ -18,6 +18,7 @@
         android:layout_height="54dp"
         android:layout_margin="8dp"
         android:clickable="true"
+        android:focusable="true"
         app:strokeColor="@{item.stripeColor.intValue()}"
         tools:strokeColor="?colorOnSurface">
 

@@ -4,7 +4,6 @@
     <string name="title_songs">Brani</string>
     <string name="title_artists">Artisti</string>
     <string name="title_albums">Albums</string>
-    <string name="title_channels">Canali</string>
     <string name="title_playlists">Playlist</string>
     <string name="title_explore">Esplora</string>
     <string name="title_settings">Impostazioni</string>
@@ -234,7 +233,6 @@
     <string name="search_filter_playlists">Playlist</string>
     <string name="search_filter_community_playlists">Playlist della comunità</string>
     <string name="search_filter_featured_playlists">Playlist in rilievo</string>
-    <string name="search_filter_channels">Canali</string>
 
     <string name="system_default">Predefinito di sistema</string>
     <string name="header_from_your_library">Dalla tua libreria</string>

@@ -2,7 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceScreen
         android:icon="@drawable/ic_palette"
-        android:iconSpaceReserved="false"
         android:key="@string/pref_appearance"
         android:title="@string/pref_appearance_title" />
     <PreferenceScreen

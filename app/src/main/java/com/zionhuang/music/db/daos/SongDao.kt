@@ -49,6 +49,7 @@ interface SongDao {
     fun getPlaylistSongsAsFlow(playlistId: String): Flow<List<Song>>
 
     @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE download_state = $STATE_DOWNLOADED")
     suspend fun getDownloadedSongsAsList(): List<Song>
 

@@ -4,7 +4,6 @@
     <string name="title_songs">Músicas</string>
     <string name="title_artists">Artistas</string>
     <string name="title_albums">Albums</string>
-    <string name="title_channels">Canais</string>
     <string name="title_playlists">Playlists</string>
     <string name="title_explore">Explorar</string>
     <string name="title_settings">Configurações</string>
@@ -234,7 +233,6 @@
     <string name="search_filter_playlists">Playlists</string>
     <string name="search_filter_community_playlists">Community playlists</string>
     <string name="search_filter_featured_playlists">Featured playlists</string>
-    <string name="search_filter_channels">Canais</string>
 
     <string name="system_default">Padrão do sistema</string>
     <string name="header_from_your_library">From your library</string>
