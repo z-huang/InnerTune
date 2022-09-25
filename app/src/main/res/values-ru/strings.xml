@@ -3,12 +3,12 @@
     <!-- Title -->
     <string name="title_home">Главная</string>
     <string name="title_songs">Песни</string>
-    <string name="title_artists">Артисты</string>
+    <string name="title_artists">Исполнители</string>
     <string name="title_albums">Альбомы</string>
-    <string name="title_playlists">Плейлисты</string>
+    <string name="title_playlists">Плей-листы</string>
     <string name="title_explore">Изучить</string>
     <string name="title_settings">Настройки</string>
-    <string name="title_now_playing">Сайчас играет</string>
+    <string name="title_now_playing">Сейчас играет</string>
     <string name="title_error_report">Сообщение об ошибке</string>
 
     <!-- Preference Title -->
@@ -22,7 +22,7 @@
     <string name="dark_theme_follow_system">Системная тема</string>
     <string name="pref_content_title">Регион контента</string>
     <string name="pref_content_language_title">Язык музыки по умолчанию</string>
-    <string name="pref_default_content_country_title">Регион музки по умолчанию</string>
+    <string name="pref_default_content_country_title">Регион музыки по умолчанию</string>
     <string name="pref_enable_proxy_title">Включить прокси</string>
     <string name="pref_proxy_type_title">Тип</string>
     <string name="pref_proxy_url_title">URL</string>
@@ -155,7 +155,7 @@
     <string name="snackbar_added_to_queue">Выбранные добавлены в очередь</string>
     <string name="snackbar_added_to_library">Добавлено в библиотеку</string>
     <string name="snackbar_removed_from_library">Удалено из библиотеки</string>
-    <string name="snackbar_playlist_imported">Плейлист импортирован</string>
+    <string name="snackbar_playlist_imported">Плей-лист импортирован</string>
     <string name="snackbar_added_to_playlist">Добавлено в %1$s</string>
 
     <string name="snackbar_removed_download">Удалено с устройства</string>
