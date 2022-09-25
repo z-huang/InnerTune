@@ -74,6 +74,10 @@
     <string name="search_yt_music">Cerca su YouTube Music…</string>
     <string name="search_library">Cerca nella libreria…</string>
 
+    <!-- Built-in playlist -->
+    <string name="liked_songs">喜歡的歌曲</string>
+    <string name="downloaded_songs">已下載的歌曲</string>
+
     <!-- Popup -->
     <string name="menu_edit">Modifica</string>
     <string name="menu_start_radio">Apri la radio</string>

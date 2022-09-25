@@ -76,6 +76,10 @@
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
 
+    <!-- Built-in playlist -->
+    <string name="liked_songs">Liked songs</string>
+    <string name="downloaded_songs">Downloaded songs</string>
+
     <!-- Popup Menu -->
     <string name="menu_edit">Edit</string>
     <string name="menu_start_radio">Start radio</string>

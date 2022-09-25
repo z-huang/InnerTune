@@ -8,6 +8,9 @@ object Constants {
     const val PLAYLIST_SONG_HEADER_ID = "playlist_song_header"
     const val TEXT_HEADER_ID = "text_header"
 
+    const val LIKED_PLAYLIST_ID = "LP_LIKED"
+    const val DOWNLOADED_PLAYLIST_ID = "LP_DOWNLOADED"
+
     const val GITHUB_URL = "https://github.com/z-huang/music"
     const val GITHUB_ISSUE_URL = "https://github.com/z-huang/music/issues"
 
