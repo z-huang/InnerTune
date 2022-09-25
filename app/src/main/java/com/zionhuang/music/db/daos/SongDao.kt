@@ -20,7 +20,6 @@ interface SongDao {
     @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
     fun getSongsAsFlow(query: SupportSQLiteQuery): Flow<List<Song>>
 
-    suspend fun getAllSongsAsList(sortInfo: ISortInfo<SongSortType>): List<Song> = getSongsAsList((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
     fun getAllSongsAsFlow(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>> = getSongsAsFlow((QUERY_ALL_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
 
     @Query("SELECT COUNT(*) FROM song WHERE NOT isTrash")
@@ -42,16 +41,23 @@ interface SongDao {
 
     @Transaction
     @Query(QUERY_PLAYLIST_SONGS)
-    fun getPlaylistSongsAsList(playlistId: String): List<Song>
+    suspend fun getPlaylistSongsAsList(playlistId: String): List<Song>
 
     @Transaction
     @Query(QUERY_PLAYLIST_SONGS)
     fun getPlaylistSongsAsFlow(playlistId: String): Flow<List<Song>>
 
-    @Transaction
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM song WHERE download_state = $STATE_DOWNLOADED")
-    suspend fun getDownloadedSongsAsList(): List<Song>
+    fun getLikedSongs(sortInfo: ISortInfo<SongSortType>) = getSongsAsFlow((QUERY_LIKED_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Query("SELECT COUNT(*) FROM song WHERE liked")
+    fun getLikedSongCount(): Flow<Int>
+
+    fun getDownloadedSongsAsFlow(sortInfo: ISortInfo<SongSortType>) = getSongsAsFlow((QUERY_DOWNLOADED_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    suspend fun getDownloadedSongsAsList(sortInfo: ISortInfo<SongSortType>) = getSongsAsList((QUERY_DOWNLOADED_SONG + getSortQuery(sortInfo)).toSQLiteQuery())
+
+    @Query("SELECT COUNT(*) FROM song WHERE download_state = $STATE_DOWNLOADED")
+    fun getDownloadedSongCount(): Flow<Int>
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -102,6 +108,7 @@ interface SongDao {
     )
 
     companion object {
+        private const val QUERY_ORDER = " ORDER BY %s %s"
         private const val QUERY_ALL_SONG = "SELECT * FROM song WHERE NOT isTrash"
         private const val QUERY_ARTIST_SONG =
             """
@@ -111,7 +118,6 @@ interface SongDao {
                      ON song_artist_map.songId = song.id
              WHERE artistId = "%s" AND NOT song.isTrash
             """
-        private const val QUERY_ORDER = " ORDER BY %s %s"
         private const val QUERY_PLAYLIST_SONGS =
             """
             SELECT song.*, playlist_song_map.position
@@ -121,5 +127,7 @@ interface SongDao {
              WHERE playlistId = :playlistId AND NOT song.isTrash
              ORDER BY playlist_song_map.position
             """
+        private const val QUERY_LIKED_SONG = "SELECT * FROM song WHERE liked"
+        private const val QUERY_DOWNLOADED_SONG = "SELECT * FROM song WHERE download_state = $STATE_DOWNLOADED"
     }
 }

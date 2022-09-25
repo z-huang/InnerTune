@@ -10,14 +10,10 @@ import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
-import com.zionhuang.music.ui.listeners.IAlbumMenuListener
-import com.zionhuang.music.ui.listeners.IArtistMenuListener
-import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
-import com.zionhuang.music.ui.listeners.ISongMenuListener
+import com.zionhuang.music.ui.listeners.*
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -76,13 +72,6 @@ open class SongViewHolder(
         binding.selectedIndicator.isVisible = isSelected
         binding.dragHandle.isVisible = draggable
         binding.executePendingBindings()
-    }
-
-    fun setProgress(progress: DownloadProgress, animate: Boolean = true) {
-        binding.progressBar.run {
-            max = progress.totalBytes
-            setProgress(progress.currentBytes, animate)
-        }
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
@@ -225,6 +214,71 @@ class PlaylistViewHolder(
                 .show(binding.context)
         }
         binding.selectedIndicator.isVisible = isSelected
+    }
+
+    override fun onSelectionChanged(isSelected: Boolean) {
+        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+    }
+}
+
+class CustomPlaylistViewHolder(
+    override val binding: ItemCustomPlaylistBinding,
+) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
+    fun bind(playlist: LikedPlaylist, menuListener: LikedPlaylistMenuListener?) {
+        binding.title.setText(R.string.liked_songs)
+        binding.subtitle.text = binding.context.resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount)
+        binding.thumbnail.setImageResource(R.drawable.ic_favorite)
+        binding.offlineIcon.isVisible = false
+        binding.btnMoreAction.setOnClickListener {
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.playlist)
+                .setMenuModifier {
+                    findItem(R.id.action_edit).isVisible = false
+                    findItem(R.id.action_refetch).isVisible = false
+                    findItem(R.id.action_share).isVisible = false
+                    findItem(R.id.action_delete).isVisible = false
+                }
+                .setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_play -> menuListener?.play()
+                        R.id.action_play_next -> menuListener?.playNext()
+                        R.id.action_add_to_queue -> menuListener?.addToQueue()
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist()
+                        R.id.action_download -> menuListener?.download()
+                    }
+                }
+                .show(binding.context)
+        }
+    }
+
+    fun bind(playlist: DownloadedPlaylist, menuListener: DownloadedPlaylistMenuListener?) {
+        binding.title.setText(R.string.downloaded_songs)
+        binding.subtitle.text = binding.context.resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount)
+        binding.thumbnail.setImageResource(R.drawable.ic_save_alt)
+        binding.offlineIcon.isVisible = true
+        binding.btnMoreAction.setOnClickListener {
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.playlist)
+                .setMenuModifier {
+                    findItem(R.id.action_edit).isVisible = false
+                    findItem(R.id.action_download).isVisible = false
+                    findItem(R.id.action_refetch).isVisible = false
+                    findItem(R.id.action_share).isVisible = false
+                    findItem(R.id.action_delete).isVisible = false
+                }
+                .setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_play -> menuListener?.play()
+                        R.id.action_play_next -> menuListener?.playNext()
+                        R.id.action_add_to_queue -> menuListener?.addToQueue()
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist()
+                    }
+                }
+                .show(binding.context)
+        }
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {

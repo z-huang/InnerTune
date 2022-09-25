@@ -39,6 +39,13 @@
                 android:name="playlistId"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_playlists_to_custom_playlist"
+            app:destination="@id/customPlaylistFragment">
+            <argument
+                android:name="playlistId"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/localSearchFragment"
@@ -100,6 +107,14 @@
     <fragment
         android:id="@+id/playlistSongsFragment"
         android:name="com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragment">
+        <argument
+            android:name="playlistId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/customPlaylistFragment"
+        android:name="com.zionhuang.music.ui.fragments.songs.CustomPlaylistFragment"
+        android:label="CustomPlaylistFragment">
         <argument
             android:name="playlistId"
             app:argType="string" />

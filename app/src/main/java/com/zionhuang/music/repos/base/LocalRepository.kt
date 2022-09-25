@@ -28,11 +28,13 @@ interface LocalRepository {
     suspend fun getAlbumSongs(albumId: String): List<Song>
 
     fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): ListWrapper<Int, Playlist>
-    suspend fun getPlaylistCount(): Int
 
     fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song>
 
-    fun getDownloadedSongs(): ListWrapper<Int, Song>
+    fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getLikedSongCount(): Flow<Int>
+    fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getDownloadedSongCount(): Flow<Int>
 
     /**
      * Search
@@ -92,7 +94,7 @@ interface LocalRepository {
     suspend fun importPlaylist(playlist: PlaylistItem) = importPlaylists(listOf(playlist))
     suspend fun importPlaylists(playlists: List<PlaylistItem>)
     suspend fun addToPlaylist(playlist: PlaylistEntity, items: List<LocalItem>)
-    suspend fun addToPlaylist(playlist: PlaylistEntity, item: YTItem)
+    suspend fun addYouTubeItemToPlaylist(playlist: PlaylistEntity, item: YTItem) = addYouTubeItemsToPlaylist(playlist, listOf(item))
     suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>)
     suspend fun refetchPlaylists(playlists: List<Playlist>)
     suspend fun downloadPlaylists(playlists: List<Playlist>)
