@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Title -->
+    <string name="title_home">Главная</string>
+    <string name="title_songs">Песни</string>
+    <string name="title_artists">Артисты</string>
+    <string name="title_albums">Альбомы</string>
+    <string name="title_playlists">Плейлисты</string>
+    <string name="title_explore">Изучить</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_now_playing">Сайчас играет</string>
+    <string name="title_error_report">Сообщение об ошибке</string>
+
+    <!-- Preference Title -->
+    <string name="pref_appearance_title">Внешний вид</string>
+    <string name="pref_follow_system_accent_title">Использовать системную тему</string>
+    <string name="pref_theme_color_title">Цвет темы</string>
+    <string name="pref_dark_theme_title">Тёмная тема</string>
+    <string name="pref_default_open_tab_title">Открыть вкладку после запуска</string>
+    <string name="dark_theme_on">Вкл</string>
+    <string name="dark_theme_off">Выкл</string>
+    <string name="dark_theme_follow_system">Системная тема</string>
+    <string name="pref_content_title">Регион контента</string>
+    <string name="pref_content_language_title">Язык музыки по умолчанию</string>
+    <string name="pref_default_content_country_title">Регион музки по умолчанию</string>
+    <string name="pref_enable_proxy_title">Включить прокси</string>
+    <string name="pref_proxy_type_title">Тип</string>
+    <string name="pref_proxy_url_title">URL</string>
+    <string name="pref_restart_title">Требуется перезагрузка</string>
+    <string name="pref_player_audio_title">Звук и эффекты</string>
+    <string name="pref_general_title">Основные</string>
+    <string name="pref_audio_quality_title">Качество звука</string>
+    <string name="audio_quality_auto">Авто</string>
+    <string name="audio_quality_high">Высокое</string>
+    <string name="audio_quality_low">Низкое</string>
+    <string name="pref_auto_download_title">Авто загрузка</string>
+    <string name="pref_auto_download_summary">Скачать песню при добавлении в библиотеку</string>
+    <string name="pref_auto_add_song_title">Автоматическое добавление песни в библиотеку</string>
+    <string name="pref_auto_add_song_summary">Добавить песню в библиотеку, если дослушана до конца</string>
+    <string name="pref_expand_on_play_title">Expand bottom player on play</string>
+    <string name="pref_equalizer_title">Эквалайзер</string>
+    <string name="pref_privacy_title">Конфиденциальность</string>
+    <string name="pref_pause_search_history_title">Не записывать историю поиска</string>
+    <string name="pref_clear_search_history_title">Очистить историю поиска</string>
+    <string name="clear_search_history_question">Вы уверены что хотите очистить историю поиска?</string>
+    <string name="pref_backup_restore_title">Бэкап и восстановление</string>
+    <string name="pref_backup_title">Резервное копирование</string>
+    <string name="pref_restore_title">Восстановить</string>
+    <string name="pref_about_title">О приложении</string>
+    <string name="pref_app_version_title">Версия</string>
+    <string name="pref_github_title" translatable="false">GitHub</string>
+    <string name="pref_github_summary" translatable="false">z-huang/music</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Red</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_deep_purple">Deep purple</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_light_blue">Light blue</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_teal">Teal</string>
+    <string name="color_green">Green</string>
+    <string name="color_light_green">Light green</string>
+    <string name="color_lime">Lime</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_amber">Amber</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_deep_orange">Deep orange</string>
+    <string name="color_brown">Brown</string>
+    <string name="color_blue_grey">Blue grey</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">Поиск</string>
+    <string name="search_yt_music">Поиск в YouTube Music…</string>
+    <string name="search_library">Поиск в библиотеке…</string>
+
+    <!-- Popup Menu -->
+    <string name="menu_edit">Редактировать</string>
+    <string name="menu_start_radio">Транслировать как Радио</string>
+    <string name="menu_play">Слушать</string>
+    <string name="menu_play_next">Слушать дальше</string>
+    <string name="menu_add_to_queue">Добавить в очередь</string>
+    <string name="menu_add_to_library">Добавить в библиотеку</string>
+    <string name="menu_download">Скачать</string>
+    <string name="menu_remove_download">Удалить с устройства</string>
+    <string name="menu_import_playlist">Сохранить плей-лист</string>
+    <string name="menu_add_to_playlist">Добавить в плей-лист</string>
+    <string name="menu_view_artist">Исполнитель</string>
+    <string name="menu_view_album">Альбом</string>
+    <string name="menu_refetch">Обновить информацию</string>
+    <string name="menu_share">Поделиться</string>
+    <string name="menu_delete">Удалить</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title_edit_song">Редактировать песню</string>
+    <string name="song_title">Название</string>
+    <string name="song_artist">Исполнитель</string>
+    <string name="error_song_title_empty">Название не может быть пустым.</string>
+    <string name="error_song_artist_empty">Исполнитель не может быть пустым.</string>
+    <string name="dialog_button_save">Сохранить</string>
+
+    <string name="dialog_title_create_playlist">Новый плей-лист</string>
+    <string name="text_view_hint_playlist_name">Название</string>
+    <string name="error_playlist_name_empty">Название не может быть пустым.</string>
+
+    <string name="dialog_title_edit_artist">Изменить исполнителя</string>
+    <string name="text_view_hint_artist_name">Имя исполнителя</string>
+    <string name="error_artist_name_empty">Имя исполнителя не может быть пустым.</string>
+
+    <string name="dialog_title_duplicate_artist">Дубликаты исполнителей</string>
+    <string name="dialog_msg_duplicate_artist">Исполнитель %1$s уже присутствует.</string>
+
+    <string name="dialog_title_choose_playlist">Выберите плейлист</string>
+
+    <string name="dialog_title_edit_playlist">Изменить плейлист</string>
+
+    <string name="dialog_title_choose_backup_content">Выберите что бэкапить</string>
+    <string name="dialog_title_choose_restore_content">Выберите что восстановить</string>
+    <string name="choice_preferences">Настройки</string>
+    <string name="choice_database">Библиотека</string>
+    <string name="choice_downloaded_songs">Скачанные песни</string>
+    <string name="message_backup_create_success">Бэкап успешно создан</string>
+    <string name="message_backup_create_failed">Не могу создать бэкап</string>
+    <string name="message_restore_failed">Не могу восстановить из бэкапа</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Музыка</string>
+    <string name="channel_name_download">Скачать</string>
+
+    <!-- Noun -->
+
+    <!-- Button -->
+    <string name="btn_retry">Повтор</string>
+    <string name="btn_play">Слушать</string>
+    <string name="btn_play_all">Слушать все</string>
+    <string name="btn_radio">Радио</string>
+    <string name="btn_shuffle">Shuffle</string>
+    <string name="btn_copy_stacktrace">Copy stacktrace</string>
+    <string name="btn_report">Отчет</string>
+    <string name="btn_report_on_github">Отчет на GitHub</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_create_date">Дата добавления</string>
+    <string name="sort_by_name">Название</string>
+    <string name="sort_by_artist">Исполнитель</string>
+    <string name="sort_by_year">Год выпуска</string>
+    <string name="sort_by_song_count">Количество песен</string>
+    <string name="sort_by_length">Длительность</string>
+
+    <!-- Snackbar -->
+
+    <string name="snackbar_added_to_queue">Выбранные добавлены в очередь</string>
+    <string name="snackbar_added_to_library">Добавлено в библиотеку</string>
+    <string name="snackbar_removed_from_library">Удалено из библиотеки</string>
+    <string name="snackbar_playlist_imported">Плейлист импортирован</string>
+    <string name="snackbar_added_to_playlist">Добавлено в %1$s</string>
+
+    <string name="snackbar_removed_download">Удалено с устройства</string>
+    <string name="snackbar_action_view">Посмотреть</string>
+
+    <!-- Custom Action -->
+    <string name="custom_action_add_to_library">Добавить в библиотеку</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Все</string>
+    <string name="search_filter_songs">Песни</string>
+    <string name="search_filter_videos">Видео</string>
+    <string name="search_filter_albums">Альбомы</string>
+    <string name="search_filter_artists">Исполнители</string>
+    <string name="search_filter_playlists">Плей-листы</string>
+    <string name="search_filter_community_playlists">Плей-листы сообщества</string>
+    <string name="search_filter_featured_playlists">Избранные плейлисты</string>
+
+    <string name="system_default">По умолчанию</string>
+    <string name="header_from_your_library">Из вашей библиотеки</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Извините, этого не должно было случиться.</string>
+    <string name="copied">Скопировано в буфер</string>
+</resources>
