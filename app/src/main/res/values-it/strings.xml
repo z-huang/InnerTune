@@ -3,7 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_songs">Brani</string>
     <string name="title_artists">Artisti</string>
-    <string name="title_albums">Albums</string>
+    <string name="title_albums">Album</string>
     <string name="title_playlists">Playlist</string>
     <string name="title_explore">Esplora</string>
     <string name="title_settings">Impostazioni</string>
@@ -25,6 +25,7 @@
     <string name="pref_enable_proxy_title">Attiva proxy</string>
     <string name="pref_proxy_type_title">Tipo di proxy</string>
     <string name="pref_proxy_url_title">URL proxy</string>
+    <string name="pref_restart_title">Riavvia l\'app per applicare le modifiche</string>
     <string name="pref_player_audio_title">Riproduttore e audio</string>
     <string name="pref_general_title">Gerenale</string>
     <string name="pref_audio_quality_title">Qualità dell\'audio</string>
@@ -72,6 +73,10 @@
     <string name="menu_search_title">Cerca</string>
     <string name="search_yt_music">Cerca su YouTube Music…</string>
     <string name="search_library">Cerca nella libreria…</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">喜歡的歌曲</string>
+    <string name="downloaded_songs">已下載的歌曲</string>
 
     <!-- Popup -->
     <string name="menu_edit">Modifica</string>
@@ -217,9 +222,6 @@
     </plurals>
     <string name="snackbar_removed_download">Download rimosso</string>
     <string name="snackbar_action_view">Guarda</string>
-
-    <!-- Toast -->
-    <string name="toast_restart_to_take_effect">Riavvia l\'app per applicare le modifiche</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Aggiungi alla libreria</string>

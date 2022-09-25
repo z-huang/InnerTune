@@ -113,7 +113,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch(context.exceptionHandler) {
-                SongRepository.addToPlaylist(playlist, item)
+                SongRepository.addYouTubeItemToPlaylist(playlist, item)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)

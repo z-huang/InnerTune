@@ -27,6 +27,7 @@
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
     <string name="pref_proxy_type" translatable="false">PROXY_TYPE</string>
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
+    <string name="pref_restart" translatable="false">RESTART</string>
 
     <string name="pref_audio_quality" translatable="false">AUDIO_QUALITY</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>

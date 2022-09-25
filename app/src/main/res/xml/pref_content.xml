@@ -34,6 +34,7 @@
         app:title="@string/pref_proxy_url_title"
         app:useSimpleSummaryProvider="true" />
     <Preference
-        android:enabled="false"
-        android:summary="@string/toast_restart_to_take_effect" />
+        android:icon="@drawable/ic_refresh"
+        android:key="@string/pref_restart"
+        android:title="@string/pref_restart_title" />
 </PreferenceScreen>

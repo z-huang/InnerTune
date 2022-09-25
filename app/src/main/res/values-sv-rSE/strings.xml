@@ -25,6 +25,7 @@
     <string name="pref_enable_proxy_title">Enable proxy</string>
     <string name="pref_proxy_type_title">Proxy type</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_restart_title">Restart to take effect</string>
     <string name="pref_player_audio_title">Player and audio</string>
     <string name="pref_general_title">Gerenal</string>
     <string name="pref_audio_quality_title">Audio quality</string>
@@ -72,6 +73,10 @@
     <string name="menu_search_title">Sök</string>
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">喜歡的歌曲</string>
+    <string name="downloaded_songs">已下載的歌曲</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">Redigera</string>
@@ -219,7 +224,6 @@
     <string name="snackbar_action_view">View</string>
 
     <!-- Toast -->
-    <string name="toast_restart_to_take_effect">Restart to take effect</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Lägg till i biblioteket</string>
