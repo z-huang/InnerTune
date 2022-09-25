@@ -462,7 +462,7 @@ object SongRepository : LocalRepository {
 
     override suspend fun deleteAlbums(albums: List<Album>) = withContext(IO) {
         albums.forEach { album ->
-            val songs = songDao.getAlbumSongs(album.id)
+            val songs = songDao.getAlbumSongs(album.id).map { it.copy(album = null) }
             albumDao.delete(album.album)
             deleteSongs(songs)
         }
@@ -519,6 +519,7 @@ object SongRepository : LocalRepository {
                 } else {
                     safeAddSongs(YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).getOrThrow().filterIsInstance<SongItem>()).map { it.id }
                 }
+                else->throw java.lang.Exception()
             }
         }
         addSongsToPlaylist(playlist.id, songIds)
