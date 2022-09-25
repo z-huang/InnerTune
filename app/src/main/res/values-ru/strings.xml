@@ -160,6 +160,7 @@
 
     <string name="snackbar_removed_download">Удалено с устройства</string>
     <string name="snackbar_action_view">Посмотреть</string>
+    <string name="snackbar_undo">Отменить</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">Добавить в библиотеку</string>
