@@ -1,4 +1,4 @@
-# Music
+# Music [rU Translated]
 
 <img src="https://raw.githubusercontent.com/z-huang/music/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" height="72">
 
