@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -84,7 +83,12 @@ class BottomControlsFragment : Fragment(), BottomSheetListener, MotionLayout.Tra
 
         binding.btnShare.setOnClickListener {
             viewModel.mediaMetadata.value?.getString(METADATA_KEY_MEDIA_ID)?.let { id ->
-                startActivity(Intent(Intent.ACTION_VIEW, "https://music.youtube.com/watch?v=$id".toUri()))
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/$id")
+                }
+                startActivity(Intent.createChooser(intent, null))
             }
         }
 
