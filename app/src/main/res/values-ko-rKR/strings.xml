@@ -27,7 +27,7 @@
     <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_restart_title">Restart to take effect</string>
     <string name="pref_player_audio_title">Player and audio</string>
-    <string name="pref_general_title">Gerenal</string>
+    <string name="pref_general_title">General</string>
     <string name="pref_audio_quality_title">Audio quality</string>
     <string name="audio_quality_auto">Auto</string>
     <string name="audio_quality_high">High</string>
