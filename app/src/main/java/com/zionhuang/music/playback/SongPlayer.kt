@@ -173,7 +173,7 @@ class SongPlayer(
                 addToLibrary(it)
             }
         })
-        setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription() }
+        setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription(context) }
         setErrorMessageProvider { e -> Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage) }
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
@@ -197,7 +197,7 @@ class SongPlayer(
 
             override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? =
                 player.currentMetadata?.thumbnailUrl?.let { url ->
-                    bitmapProvider.load(resizeThumbnailUrl(url, (256 * context.resources.displayMetrics.density).roundToInt(), null)) {
+                    bitmapProvider.load(resizeThumbnailUrl(url, (512 * context.resources.displayMetrics.density).roundToInt(), null)) {
                         callback.onBitmap(it)
                     }
                 }

@@ -106,5 +106,7 @@ fun resizeThumbnailUrl(url: String, width: Int?, height: Int?): String {
     if (url matches "https://yt3\\.ggpht\\.com/.*=s(\\d+)".toRegex()) {
         return "$url-s${width ?: height}"
     }
+    if ("sddefault" in url) return url.replace("sddefault", "maxresdefault")
+    if ("hq720" in url) return url.replace("hq720", "maxresdefault")
     return url
 }
