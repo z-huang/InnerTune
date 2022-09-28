@@ -25,7 +25,6 @@ import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getTextChangeFlow
-import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.ListQueue
