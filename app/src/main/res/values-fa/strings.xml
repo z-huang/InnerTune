@@ -46,7 +46,7 @@
     <string name="pref_restore_title">بازگردانی</string>
     <string name="pref_about_title">درباره</string>
     <string name="pref_app_version_title">نسخه‌ی برنامه</string>
-    <string name="pref_github_title" translatable="true">گیت‌هاب</string>
+    <string name="pref_github_title" translatable="false">GitHub</string>
     <string name="pref_github_summary" translatable="false">z-huang/music</string>
 
     <!-- Colors -->
