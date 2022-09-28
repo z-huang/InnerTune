@@ -25,6 +25,7 @@
     <string name="pref_enable_proxy_title">فعال‌کردن پروکسی</string>
     <string name="pref_proxy_type_title">نوع پروکسی</string>
     <string name="pref_proxy_url_title">آدرس‌اینترنتی پروکسی</string>
+    <string name="pref_restart_title">راه‌اندازی‌مجدد برای اعمال اثر</string>
     <string name="pref_player_audio_title">پخش‌کننده و صدا</string>
     <string name="pref_general_title">عمومی</string>
     <string name="pref_audio_quality_title">کیفیت صدا</string>
@@ -74,6 +75,10 @@
     <string name="menu_search_title">جستجو</string>
     <string name="search_yt_music">جستجو در یوتیوب موزیک…</string>
     <string name="search_library">جستجوی کتاب‌خانه…</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">آهنگ‌های موردپسند</string>
+    <string name="downloaded_songs">آهنگ‌های بارگیری‌شده</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">ویرایش</string>
