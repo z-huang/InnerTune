@@ -80,6 +80,7 @@ data class BrowseEndpoint(
         ) : Parcelable {
             companion object {
                 const val MUSIC_PAGE_TYPE_ALBUM = "MUSIC_PAGE_TYPE_ALBUM"
+                const val MUSIC_PAGE_TYPE_AUDIOBOOK = "MUSIC_PAGE_TYPE_AUDIOBOOK"
                 const val MUSIC_PAGE_TYPE_PLAYLIST = "MUSIC_PAGE_TYPE_PLAYLIST"
                 const val MUSIC_PAGE_TYPE_ARTIST = "MUSIC_PAGE_TYPE_ARTIST"
                 const val MUSIC_PAGE_TYPE_USER_CHANNEL = "MUSIC_PAGE_TYPE_USER_CHANNEL"
@@ -98,7 +99,7 @@ data class BrowseEndpoint(
             )
         )
 
-        fun albumBrowseEndpoint(albumId:String) = BrowseEndpoint(
+        fun albumBrowseEndpoint(albumId: String) = BrowseEndpoint(
             browseId = albumId,
             browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
                 browseEndpointContextMusicConfig = BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig(
@@ -107,7 +108,7 @@ data class BrowseEndpoint(
             )
         )
 
-        fun playlistBrowseEndpoint(playlistId:String) = BrowseEndpoint(
+        fun playlistBrowseEndpoint(playlistId: String) = BrowseEndpoint(
             browseId = playlistId,
             browseEndpointContextSupportedConfigs = BrowseEndpointContextSupportedConfigs(
                 browseEndpointContextMusicConfig = BrowseEndpointContextSupportedConfigs.BrowseEndpointContextMusicConfig(

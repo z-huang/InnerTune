@@ -137,7 +137,8 @@ data class AlbumItem(
             return AlbumItem(
                 id = item.navigationEndpoint.browseEndpoint!!.browseId,
                 playlistId = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
-                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.playNextEndpoint?.queueAddEndpoint?.queueTarget?.playlistId!!,
                 title = item.title.toString(),
                 subtitle = item.subtitle.toString(),
                 thumbnails = item.thumbnailRenderer.getThumbnails(),
