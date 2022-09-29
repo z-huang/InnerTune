@@ -172,7 +172,7 @@
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
         <item quantity="one">%d آهنگ حذف‌شده‌است.</item>
-        <item quantity="other">%d آهنگ‌ها حذف‌شده‌است.</item>
+        <item quantity="other">%d آهنگ‌ها حذف‌شده‌اند.</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="other">%d انتخاب‌شده</item>
