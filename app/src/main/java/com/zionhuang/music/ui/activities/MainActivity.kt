@@ -46,6 +46,7 @@ import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
 import com.zionhuang.music.utils.AdaptiveUtils
+import com.zionhuang.music.utils.LocalizationUtils
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -67,6 +68,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
 
     @SuppressLint("PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
+        LocalizationUtils.changeAppLanguage(this, LocalizationUtils.getAppLocale(this))
         super.onCreate(savedInstanceState)
         val defaultTabIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

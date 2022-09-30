@@ -20,6 +20,7 @@
     <string name="dark_theme_off">Av</string>
     <string name="dark_theme_follow_system">Följ systemet</string>
     <string name="pref_content_title">Innehåll</string>
+    <string name="pref_app_language_title">App language</string>
     <string name="pref_content_language_title">Standard innehållsspråk</string>
     <string name="pref_default_content_country_title">Standard innehållsland</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>

@@ -20,6 +20,7 @@
     <string name="dark_theme_off">خاموش</string>
     <string name="dark_theme_follow_system">پیروی از سیستم</string>
     <string name="pref_content_title">محتوا</string>
+    <string name="pref_app_language_title">App language</string>
     <string name="pref_content_language_title">زبان پیش‌فرض محتوا</string>
     <string name="pref_default_content_country_title">کشور پیش‌فرض محتوا</string>
     <string name="pref_enable_proxy_title">فعال‌کردن پروکسی</string>
