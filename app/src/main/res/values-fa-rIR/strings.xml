@@ -175,7 +175,8 @@
         <item quantity="other">%d آهنگ‌ها حذف‌شده‌اند.</item>
     </plurals>
     <plurals name="n_selected">
-        <item quantity="other">%d انتخاب‌شده</item>
+        <item quantity="one">%d انتخاب‌شده</item>
+        <item quantity="other">%d انتخاب‌شده‌اند</item>
     </plurals>
     <string name="snackbar_undo">واگرد</string>
     <string name="snackbar_url_error">نمی توان این آدرس‌اینترنتی را شناسایی کرد.</string>
