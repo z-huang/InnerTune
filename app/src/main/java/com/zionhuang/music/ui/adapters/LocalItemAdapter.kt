@@ -110,6 +110,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             SongSortType.CREATE_DATE -> item.song.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             SongSortType.NAME -> item.song.title.substring(0, 1)
             SongSortType.ARTIST -> item.artists.firstOrNull()?.name
+            SongSortType.PLAY_TIME -> makeTimeString(item.song.totalPlayTime)
         }
         is Artist -> when (ArtistSortInfoPreference.type) {
             ArtistSortType.CREATE_DATE -> item.artist.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))

@@ -166,6 +166,7 @@
     <string name="sort_by_year">Year</string>
     <string name="sort_by_song_count">Song count</string>
     <string name="sort_by_length">Length</string>
+    <string name="sort_by_play_time">Play time</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

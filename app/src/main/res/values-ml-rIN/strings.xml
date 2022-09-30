@@ -168,6 +168,7 @@
     <string name="sort_by_year">വർഷം</string>
     <string name="sort_by_song_count">പാട്ടുകളുടെ എണ്ണം</string>
     <string name="sort_by_length">ദൈർഘ്യം</string>
+    <string name="sort_by_play_time">Play time</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

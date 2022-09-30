@@ -162,6 +162,7 @@
     <string name="sort_by_year">年份</string>
     <string name="sort_by_song_count">歌曲總數</string>
     <string name="sort_by_length">長度</string>
+    <string name="sort_by_play_time">播放時間</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">

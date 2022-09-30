@@ -302,6 +302,7 @@ class SongHeaderViewHolder(
                         R.id.sort_by_create_date -> SongSortType.CREATE_DATE
                         R.id.sort_by_name -> SongSortType.NAME
                         R.id.sort_by_artist -> SongSortType.ARTIST
+                        R.id.sort_by_play_time -> SongSortType.PLAY_TIME
                         else -> throw IllegalArgumentException("Unexpected sort type.")
                     }
                     true
@@ -310,6 +311,7 @@ class SongHeaderViewHolder(
                     SongSortType.CREATE_DATE -> R.id.sort_by_create_date
                     SongSortType.NAME -> R.id.sort_by_name
                     SongSortType.ARTIST -> R.id.sort_by_artist
+                    SongSortType.PLAY_TIME -> R.id.sort_by_play_time
                 })?.isChecked = true
                 show()
             }
@@ -318,6 +320,7 @@ class SongHeaderViewHolder(
             SongSortType.CREATE_DATE -> R.string.sort_by_create_date
             SongSortType.NAME -> R.string.sort_by_name
             SongSortType.ARTIST -> R.string.sort_by_artist
+            SongSortType.PLAY_TIME -> R.string.sort_by_play_time
         })
         binding.sortOrder.setOnClickListener {
             SongSortInfoPreference.toggleIsDescending()

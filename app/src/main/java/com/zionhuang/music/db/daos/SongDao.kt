@@ -102,6 +102,7 @@ interface SongDao {
         when (sortInfo.type) {
             SongSortType.CREATE_DATE -> "song.create_date"
             SongSortType.NAME -> "song.title"
+            SongSortType.PLAY_TIME -> "song.totalPlayTime"
             else -> throw IllegalArgumentException("Unexpected song sort type.")
         },
         if (sortInfo.isDescending) "DESC" else "ASC"
