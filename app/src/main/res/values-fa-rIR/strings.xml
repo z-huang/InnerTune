@@ -181,36 +181,36 @@
     <string name="snackbar_undo">واگرد</string>
     <string name="snackbar_url_error">نمی توان این آدرس‌اینترنتی را شناسایی کرد.</string>
     <plurals name="snackbar_song_play_next">
-        <item quantity="one">آهنگ بعدی پخش‌خواهدشد</item>
+        <item quantity="one">%d آهنگ بعدی پخش‌خواهدشد</item>
         <item quantity="other">%d آهنگ‌ بعدی پخش‌خواهندشد</item>
     </plurals>
     <plurals name="snackbar_artist_play_next">
-        <item quantity="one">هنرمند پخش‌خواهدشد</item>
+        <item quantity="one">%d هنرمند پخش‌خواهدشد</item>
         <item quantity="other">%d هنرمند پخش‌خواهندشد</item>
     </plurals>
     <plurals name="snackbar_album_play_next">
-        <item quantity="one">آلبوم پخش‌خواهدشد</item>
+        <item quantity="one">%d آلبوم پخش‌خواهدشد</item>
         <item quantity="other">%d آلبوم پخش‌خواهندشد</item>
     </plurals>
     <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">لیست‌پخش پخش‌خواهدشد</item>
+        <item quantity="one">%d لیست‌پخش پخش‌خواهدشد</item>
         <item quantity="other">%d لیست‌پخش پخش‌خواهندشد</item>
     </plurals>
     <string name="snackbar_play_next">انتخاب‌ها پخش‌خواهند شد</string>
     <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">آهنگ به‌صف اضافه‌شد</item>
+        <item quantity="one">%d آهنگ به‌صف اضافه‌شد</item>
         <item quantity="other">%d آهنگ به‌صف اضافه‌شدند</item>
     </plurals>
     <plurals name="snackbar_artist_added_to_queue">
-        <item quantity="one">هنرمند به‌صف اضافه‌شد</item>
+        <item quantity="one">%d هنرمند به‌صف اضافه‌شد</item>
         <item quantity="other">%d هنرمند به‌صف اضافه‌شدند</item>
     </plurals>
     <plurals name="snackbar_album_added_to_queue">
-        <item quantity="one">آلبوم به‌صف اضافه‌شد</item>
+        <item quantity="one">%d آلبوم به‌صف اضافه‌شد</item>
         <item quantity="other">%d آلبوم به‌صف اضافه شدند</item>
     </plurals>
     <plurals name="snackbar_playlist_added_to_queue">
-        <item quantity="one">لیست‌پخش به‌صف اضافه‌شد</item>
+        <item quantity="one">%d لیست‌پخش به‌صف اضافه‌شد</item>
         <item quantity="other">%d لیست‌پخش‌ها به‌صف اضافه‌شد</item>
     </plurals>
     <string name="snackbar_added_to_queue">انتخاب‌شده به صف اضافه‌شد</string>
