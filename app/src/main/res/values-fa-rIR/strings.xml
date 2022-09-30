@@ -219,8 +219,8 @@
     <string name="snackbar_playlist_imported">لیست‌پخش واردشد</string>
     <string name="snackbar_added_to_playlist">اضافه‌شده به %1$s</string>
     <plurals name="snackbar_download_song">
-        <item quantity="one">شروع به‌بارگیری آهنگ</item>
-        <item quantity="other">شروع به‌بارگیری %d آهنگ</item>
+        <item quantity="one">شروع به‌بارگیری شد %d آهنگ</item>
+        <item quantity="other">شروع به‌بارگیری شدند %d ‌آهنگ‌های</item>
     </plurals>
     <string name="snackbar_removed_download">حذف بارگیری</string>
     <string name="snackbar_action_view">نما</string>
