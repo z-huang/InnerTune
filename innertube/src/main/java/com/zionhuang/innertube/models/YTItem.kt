@@ -122,7 +122,8 @@ data class AlbumItem(
             return AlbumItem(
                 id = item.navigationEndpoint!!.browseEndpoint!!.browseId,
                 playlistId = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
-                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.playNextEndpoint?.queueAddEndpoint?.queueTarget?.playlistId!!,
                 title = item.getTitle(),
                 subtitle = item.getSubtitle(),
                 year = item.flexColumns.getOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.lastOrNull()?.text?.toIntOrNull(),

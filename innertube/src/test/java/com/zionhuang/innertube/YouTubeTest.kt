@@ -81,6 +81,8 @@ class YouTubeTest {
         searchResult.items.forEach {
             if (it is YTItem) println(it.title)
         }
+        // audio book
+        searchResult = youTube.search("tomori kusunoki", FILTER_ALBUM).getOrThrow()
     }
 
     @Test
