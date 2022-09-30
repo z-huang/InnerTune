@@ -4,10 +4,13 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -42,8 +45,10 @@ import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.ui.widgets.BottomSheetListener
+import com.zionhuang.music.utils.AdaptiveUtils
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
@@ -60,6 +65,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
 
     private var actionMode: ActionMode? = null
 
+    @SuppressLint("PrivateResource")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val defaultTabIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
@@ -77,7 +83,18 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         navController.setGraph(graph, null)
         navController.addOnDestinationChangedListener(this)
         binding.bottomNav.setupWithNavController(navController)
+        binding.navigationRail.setupWithNavController(navController)
         binding.bottomNav.setOnItemSelectedListener { item ->
+            if (item.isChecked) {
+                // scroll to top
+                (currentFragment as? AbsRecyclerViewFragment<*, *>)?.getRecyclerView()?.smoothScrollToPosition(0)
+            } else {
+                onNavDestinationSelected(item, navController)
+                item.isChecked = true
+            }
+            true
+        }
+        binding.navigationRail.setOnItemSelectedListener { item ->
             if (item.isChecked) {
                 // scroll to top
                 (currentFragment as? AbsRecyclerViewFragment<*, *>)?.getRecyclerView()?.smoothScrollToPosition(0)
@@ -100,6 +117,22 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         lifecycleScope.launch {
             SongRepository.validateDownloads()
         }
+        AdaptiveUtils.updateScreenSize(this)
+        lifecycleScope.launch {
+            AdaptiveUtils.screenSizeState.collectLatest {
+                binding.mainContent.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                    bottomMargin = if (it == AdaptiveUtils.ScreenSize.SMALL) resources.getDimensionPixelSize(R.dimen.m3_bottom_nav_min_height) else 0
+                }
+                binding.bottomNav.isVisible = it == AdaptiveUtils.ScreenSize.SMALL
+                binding.navigationRail.isVisible = it != AdaptiveUtils.ScreenSize.SMALL
+                bottomSheetBehavior.setPeekHeight((if (it == AdaptiveUtils.ScreenSize.SMALL) dip(R.dimen.m3_bottom_nav_min_height) else 0) + dip(R.dimen.bottom_controls_sheet_peek_height), true)
+            }
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        AdaptiveUtils.updateScreenSize(this)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -158,12 +191,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         if (destination.id in topLevelDestinations) {
             currentFragment?.reenterTransition = MaterialFadeThrough().setDuration(resources.getInteger(R.integer.motion_duration_large).toLong()).addTarget(R.id.fragment_content)
         }
-    }
-
-    @SuppressLint("PrivateResource")
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        bottomSheetBehavior.setPeekHeight(dip(R.dimen.m3_bottom_nav_min_height) + dip(R.dimen.bottom_controls_sheet_peek_height), true)
     }
 
     fun setBottomSheetListener(bottomSheetListener: BottomSheetListener) {

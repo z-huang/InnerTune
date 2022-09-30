@@ -91,7 +91,9 @@ class YouTubeTest {
 
     @Test
     fun `Check 'browse' endpoint`() = runBlocking {
-        val artist = youTube.browse(BrowseEndpoint("UCI6B8NkZKqlFWoiC_xE-hzA")).getOrThrow()
+        var artist = youTube.browse(BrowseEndpoint("UCI6B8NkZKqlFWoiC_xE-hzA")).getOrThrow()
+        assertTrue(artist.items.isNotEmpty())
+        artist = youTube.browse(BrowseEndpoint("UCy2RKLxIOMOfGld_yBYEBLw")).getOrThrow() // Artist that contains audiobook
         assertTrue(artist.items.isNotEmpty())
         val album = youTube.browse(BrowseEndpoint("MPREb_oNAdr9eUOfS")).getOrThrow()
         assertTrue(album.items.isNotEmpty())
