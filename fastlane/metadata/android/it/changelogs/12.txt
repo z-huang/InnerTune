@@ -1,4 +1,4 @@
-<br><b>Nuovo</b>
+<b>Nuovo</b>
 
 * Inizia ad ascoltare in modalità radio dai brani della libreria
 * Aggiunta impostazione per impostare la scheda iniziale predefinita #92
@@ -6,7 +6,7 @@
 * Interrompi o rimuovi la cronologia delle ricerche
 * Backup e ripristina #57
 
-<br><b>Miglioramenti</b>
+<b>Miglioramenti</b>
 
 * Riduci la dimensione del testo dei messaggi d'errore
 * Usa dialoghi in stile Material dialogs nelle preferenze #195
@@ -19,7 +19,7 @@
 * Supporto minimo alle API 24 #210
 * Rimosso l'aggiornatore in-app
 
-<br><b>Sistemato</b>
+<b>Sistemato</b>
 
 * Sistemata l'eliminazione di un album
 * Sistemato il fatto che equalizzatori di terze parti non venivano trovati #33
