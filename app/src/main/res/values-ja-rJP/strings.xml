@@ -1,51 +1,51 @@
 <resources>
     <!-- Title -->
-    <string name="title_home">Home</string>
+    <string name="title_home">ホーム</string>
     <string name="title_songs">曲</string>
     <string name="title_artists">アーティスト</string>
-    <string name="title_albums">Albums</string>
+    <string name="title_albums">アルバム</string>
     <string name="title_playlists">プレイリスト</string>
     <string name="title_explore">探索</string>
     <string name="title_settings">設定</string>
     <string name="title_now_playing">再生中</string>
-    <string name="title_error_report">Error report</string>
+    <string name="title_error_report">エラーレポート</string>
 
     <!-- Preference Title -->
     <string name="pref_appearance_title">外観</string>
     <string name="pref_follow_system_accent_title">システムのテーマに従う</string>
     <string name="pref_theme_color_title">テーマカラー</string>
     <string name="pref_dark_theme_title">ダークテーマ</string>
-    <string name="pref_default_open_tab_title">Default open tab</string>
+    <string name="pref_default_open_tab_title">起動時に開くタブ</string>
     <string name="dark_theme_on">オン</string>
     <string name="dark_theme_off">オフ</string>
     <string name="dark_theme_follow_system">システムに従う</string>
     <string name="pref_content_title">コンテンツ</string>
-    <string name="pref_app_language_title">App language</string>
+    <string name="pref_app_language_title">アプリの表示言語</string>
     <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>
     <string name="pref_default_content_country_title">デフォルトのコンテンツの国</string>
-    <string name="pref_enable_proxy_title">Enable proxy</string>
-    <string name="pref_proxy_type_title">Proxy type</string>
-    <string name="pref_proxy_url_title">Proxy URL</string>
-    <string name="pref_restart_title">Restart to take effect</string>
-    <string name="pref_player_audio_title">Player and audio</string>
-    <string name="pref_general_title">General</string>
-    <string name="pref_audio_quality_title">Audio quality</string>
-    <string name="audio_quality_auto">Auto</string>
-    <string name="audio_quality_high">High</string>
-    <string name="audio_quality_low">Low</string>
+    <string name="pref_enable_proxy_title">プロキシを有効化</string>
+    <string name="pref_proxy_type_title">プロキシのタイプ</string>
+    <string name="pref_proxy_url_title">プロキシのURL</string>
+    <string name="pref_restart_title">再起動して反映</string>
+    <string name="pref_player_audio_title">プレイヤーとオーディオ</string>
+    <string name="pref_general_title">一般</string>
+    <string name="pref_audio_quality_title">オーディオ品質</string>
+    <string name="audio_quality_auto">自動</string>
+    <string name="audio_quality_high">高</string>
+    <string name="audio_quality_low">低</string>
     <string name="pref_auto_download_title">自動ダウンロード</string>
     <string name="pref_auto_download_summary">ライブラリに追加したら曲をダウンロードする</string>
     <string name="pref_auto_add_song_title">曲を自動でライブラリに追加</string>
     <string name="pref_auto_add_song_summary">再生が終了したら曲をライブラリに追加する</string>
     <string name="pref_expand_on_play_title">再生時にボトムプレイヤーを展開する</string>
-    <string name="pref_equalizer_title">Equalizer</string>
-    <string name="pref_privacy_title">Privacy</string>
-    <string name="pref_pause_search_history_title">Pause search history</string>
-    <string name="pref_clear_search_history_title">Clear search history</string>
-    <string name="clear_search_history_question">Are you sure to clear all search history?</string>
-    <string name="pref_backup_restore_title">Backup and restore</string>
-    <string name="pref_backup_title">Backup</string>
-    <string name="pref_restore_title">Restore</string>
+    <string name="pref_equalizer_title">イコライザー</string>
+    <string name="pref_privacy_title">プライバシー</string>
+    <string name="pref_pause_search_history_title">履歴の記録を一時停止</string>
+    <string name="pref_clear_search_history_title">履歴を削除</string>
+    <string name="clear_search_history_question">すべての検索履歴を削除しますか？</string>
+    <string name="pref_backup_restore_title">バックアップとリストア</string>
+    <string name="pref_backup_title">バックアップ</string>
+    <string name="pref_restore_title">リストア</string>
     <string name="pref_about_title">アプリについて</string>
     <string name="pref_app_version_title">アプリのバージョン</string>
 
@@ -72,8 +72,8 @@
 
     <!-- Nav Menu -->
     <string name="menu_search_title">検索</string>
-    <string name="search_yt_music">Search YouTube Music…</string>
-    <string name="search_library">Search library…</string>
+    <string name="search_yt_music">YouTube Musicを検索…</string>
+    <string name="search_library">ライブラリを検索…</string>
 
     <!-- Built-in playlist -->
     <string name="liked_songs">喜歡的歌曲</string>
@@ -81,19 +81,19 @@
 
     <!-- Popup Menu -->
     <string name="menu_edit">編集</string>
-    <string name="menu_start_radio">Start radio</string>
-    <string name="menu_play">Play</string>
+    <string name="menu_start_radio">ラジオを再生</string>
+    <string name="menu_play">再生</string>
     <string name="menu_play_next">次に再生</string>
     <string name="menu_add_to_queue">キューに追加</string>
     <string name="menu_add_to_library">ライブラリに追加</string>
     <string name="menu_download">ダウンロード</string>
     <string name="menu_remove_download">ダウンロードを削除</string>
-    <string name="menu_import_playlist">Import playlist</string>
+    <string name="menu_import_playlist">プレイリストをインポート</string>
     <string name="menu_add_to_playlist">プレイリストに追加</string>
-    <string name="menu_view_artist">View artist</string>
-    <string name="menu_view_album">View album</string>
-    <string name="menu_refetch">Refetch</string>
-    <string name="menu_share">Share</string>
+    <string name="menu_view_artist">アーティストを見る</string>
+    <string name="menu_view_album">アルバムを見る</string>
+    <string name="menu_refetch">再取得</string>
+    <string name="menu_share">共有</string>
     <string name="menu_delete">削除</string>
 
     <!-- Dialog -->
@@ -119,14 +119,14 @@
 
     <string name="dialog_title_edit_playlist">プレイリストを編集</string>
 
-    <string name="dialog_title_choose_backup_content">Choose backup content</string>
-    <string name="dialog_title_choose_restore_content">Choose restore content</string>
-    <string name="choice_preferences">Preferences</string>
-    <string name="choice_database">Database</string>
-    <string name="choice_downloaded_songs">Downloaded songs</string>
-    <string name="message_backup_create_success">Backup created successfully</string>
-    <string name="message_backup_create_failed">Couldn\'t create backup</string>
-    <string name="message_restore_failed">Failed to restore backup</string>
+    <string name="dialog_title_choose_backup_content">バックアップするコンテンツを選択</string>
+    <string name="dialog_title_choose_restore_content">リストアするコンテンツを選択</string>
+    <string name="choice_preferences">設定</string>
+    <string name="choice_database">データベース</string>
+    <string name="choice_downloaded_songs">ダウンロードした音楽</string>
+    <string name="message_backup_create_success">バックアップの作成に成功しました</string>
+    <string name="message_backup_create_failed">バックアップを作成できませんでした</string>
+    <string name="message_restore_failed">バックアップのリストアに失敗しました</string>
 
     <!-- Notification -->
     <string name="channel_name_playback">音楽プレイヤー</string>
@@ -137,33 +137,33 @@
         <item quantity="other">%d曲</item>
     </plurals>
     <plurals name="artist_count">
-        <item quantity="other">%d artists</item>
+        <item quantity="other">%d アーティスト</item>
     </plurals>
     <plurals name="album_count">
-        <item quantity="other">%d albums</item>
+        <item quantity="other">%d アルバム</item>
     </plurals>
     <plurals name="playlist_count">
-        <item quantity="other">%d playlists</item>
+        <item quantity="other">%d プレイリスト</item>
     </plurals>
 
     <!-- Button -->
     <string name="btn_retry">再試行</string>
-    <string name="btn_play">Play</string>
+    <string name="btn_play">再生</string>
     <string name="btn_play_all">すべて再生</string>
-    <string name="btn_radio">Radio</string>
+    <string name="btn_radio">ラジオ</string>
     <string name="btn_shuffle">シャッフル</string>
-    <string name="btn_copy_stacktrace">Copy stacktrace</string>
-    <string name="btn_report">Report</string>
-    <string name="btn_report_on_github">Report on GitHub</string>
+    <string name="btn_copy_stacktrace">スタックトレースをコピー</string>
+    <string name="btn_report">報告</string>
+    <string name="btn_report_on_github">GitHubで報告</string>
 
     <!-- Sort Menu -->
     <string name="sort_by_create_date">追加日時</string>
     <string name="sort_by_name">曲名</string>
     <string name="sort_by_artist">アーティスト</string>
-    <string name="sort_by_year">Year</string>
-    <string name="sort_by_song_count">Song count</string>
-    <string name="sort_by_length">Length</string>
-    <string name="sort_by_play_time">Play time</string>
+    <string name="sort_by_year">リリース年</string>
+    <string name="sort_by_song_count">曲数</string>
+    <string name="sort_by_length">長さ</string>
+    <string name="sort_by_play_time">再生時間</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
@@ -173,51 +173,51 @@
         <item quantity="other">%dを選択済み</item>
     </plurals>
     <string name="snackbar_undo">元に戻す</string>
-    <string name="snackbar_url_error">Can\'t identify this url.</string>
+    <string name="snackbar_url_error">URLを認識できませんでした。</string>
     <plurals name="snackbar_song_play_next">
-        <item quantity="one">Song will play next</item>
-        <item quantity="other">%d songs will play next</item>
+        <item quantity="one">この曲が次に再生されます</item>
+        <item quantity="other">%d 曲が次に再生されます</item>
     </plurals>
     <plurals name="snackbar_artist_play_next">
-        <item quantity="one">Artist will play next</item>
-        <item quantity="other">%d artists will play next</item>
+        <item quantity="one">このアーティストが次に再生されます</item>
+        <item quantity="other">%d アーティストが次に再生されます</item>
     </plurals>
     <plurals name="snackbar_album_play_next">
-        <item quantity="one">Album will play next</item>
-        <item quantity="other">%d albums will play next</item>
+        <item quantity="one">このアルバムが次に再生されます</item>
+        <item quantity="other">%d アルバムが次に再生されます</item>
     </plurals>
     <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">Playlist will play next</item>
-        <item quantity="other">%d playlists will play next</item>
+        <item quantity="one">このプレイリストが次に再生されます</item>
+        <item quantity="other">%d プレイリストが次に再生されます</item>
     </plurals>
-    <string name="snackbar_play_next">Selected will play next</string>
+    <string name="snackbar_play_next">選択内容が次に再生されます</string>
     <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">Song added to queue</item>
-        <item quantity="other">%d songs added to queue</item>
+        <item quantity="one">この曲がキューに追加されました</item>
+        <item quantity="other">%d 曲がキューに追加されました</item>
     </plurals>
     <plurals name="snackbar_artist_added_to_queue">
-        <item quantity="one">Artist added to queue</item>
-        <item quantity="other">%d artists added to queue</item>
+        <item quantity="one">このアーティストがキューに追加されました</item>
+        <item quantity="other">%d アーティストがキューに追加されました</item>
     </plurals>
     <plurals name="snackbar_album_added_to_queue">
-        <item quantity="one">Album added to queue</item>
-        <item quantity="other">%d albums added to queue</item>
+        <item quantity="one">このアルバムがキューに追加されました</item>
+        <item quantity="other">%d アルバムがキューに追加されました</item>
     </plurals>
     <plurals name="snackbar_playlist_added_to_queue">
-        <item quantity="one">Playlist added to queue</item>
-        <item quantity="other">%d playlists added to queue</item>
+        <item quantity="one">このプレイリストがキューに追加されました</item>
+        <item quantity="other">%d プレイリストがキューに追加されました</item>
     </plurals>
-    <string name="snackbar_added_to_queue">Selected added to queue</string>
-    <string name="snackbar_added_to_library">Added to library</string>
-    <string name="snackbar_removed_from_library">Removed from library</string>
-    <string name="snackbar_playlist_imported">Playlist imported</string>
-    <string name="snackbar_added_to_playlist">Added to %1$s</string>
+    <string name="snackbar_added_to_queue">選択内容がキューに追加されます</string>
+    <string name="snackbar_added_to_library">ライブラリに追加しました</string>
+    <string name="snackbar_removed_from_library">ライブラリから削除しました</string>
+    <string name="snackbar_playlist_imported">プレイリストをインポートしました</string>
+    <string name="snackbar_added_to_playlist">%1$s に追加しました</string>
     <plurals name="snackbar_download_song">
-        <item quantity="one">Start downloading song</item>
-        <item quantity="other">Start downloading %d songs</item>
+        <item quantity="one">曲のダウンロードを開始</item>
+        <item quantity="other">%d 曲のダウンロードを開始</item>
     </plurals>
-    <string name="snackbar_removed_download">Removed download</string>
-    <string name="snackbar_action_view">View</string>
+    <string name="snackbar_removed_download">ダウンロードを削除しました</string>
+    <string name="snackbar_action_view">見る</string>
 
     <!-- Custom Action -->
     <string name="custom_action_add_to_library">ライブラリに追加</string>
@@ -229,13 +229,13 @@
     <string name="search_filter_albums">アルバム</string>
     <string name="search_filter_artists">アーティスト</string>
     <string name="search_filter_playlists">プレイリスト</string>
-    <string name="search_filter_community_playlists">Community playlists</string>
-    <string name="search_filter_featured_playlists">Featured playlists</string>
+    <string name="search_filter_community_playlists">コミュニティのプレイリスト</string>
+    <string name="search_filter_featured_playlists">注目のプレイリスト</string>
 
     <string name="system_default">システムに従う</string>
-    <string name="header_from_your_library">From your library</string>
+    <string name="header_from_your_library">ライブラリから</string>
 
     <!-- Error Activity -->
-    <string name="sorry_for_error">Sorry, that should not have happened.</string>
-    <string name="copied">Copied to clipboard</string>
+    <string name="sorry_for_error">申し訳ありませんが、エラーが発生しました。</string>
+    <string name="copied">クリップボードにコピー</string>
 </resources>
