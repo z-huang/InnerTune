@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Title -->
     <string name="title_home">ホーム</string>
     <string name="title_songs">曲</string>
@@ -174,36 +174,36 @@
     </plurals>
     <string name="snackbar_undo">元に戻す</string>
     <string name="snackbar_url_error">URLを認識できませんでした。</string>
-    <plurals name="snackbar_song_play_next">
+    <plurals name="snackbar_song_play_next" tools:ignore="UnusedQuantity">
         <item quantity="one">この曲が次に再生されます</item>
         <item quantity="other">%d 曲が次に再生されます</item>
     </plurals>
-    <plurals name="snackbar_artist_play_next">
+    <plurals name="snackbar_artist_play_next" tools:ignore="UnusedQuantity">
         <item quantity="one">このアーティストが次に再生されます</item>
         <item quantity="other">%d アーティストが次に再生されます</item>
     </plurals>
-    <plurals name="snackbar_album_play_next">
+    <plurals name="snackbar_album_play_next" tools:ignore="UnusedQuantity">
         <item quantity="one">このアルバムが次に再生されます</item>
         <item quantity="other">%d アルバムが次に再生されます</item>
     </plurals>
-    <plurals name="snackbar_playlist_play_next">
+    <plurals name="snackbar_playlist_play_next" tools:ignore="UnusedQuantity">
         <item quantity="one">このプレイリストが次に再生されます</item>
         <item quantity="other">%d プレイリストが次に再生されます</item>
     </plurals>
     <string name="snackbar_play_next">選択内容が次に再生されます</string>
-    <plurals name="snackbar_song_added_to_queue">
+    <plurals name="snackbar_song_added_to_queue" tools:ignore="UnusedQuantity">
         <item quantity="one">この曲がキューに追加されました</item>
         <item quantity="other">%d 曲がキューに追加されました</item>
     </plurals>
-    <plurals name="snackbar_artist_added_to_queue">
+    <plurals name="snackbar_artist_added_to_queue" tools:ignore="UnusedQuantity">
         <item quantity="one">このアーティストがキューに追加されました</item>
         <item quantity="other">%d アーティストがキューに追加されました</item>
     </plurals>
-    <plurals name="snackbar_album_added_to_queue">
+    <plurals name="snackbar_album_added_to_queue" tools:ignore="UnusedQuantity">
         <item quantity="one">このアルバムがキューに追加されました</item>
         <item quantity="other">%d アルバムがキューに追加されました</item>
     </plurals>
-    <plurals name="snackbar_playlist_added_to_queue">
+    <plurals name="snackbar_playlist_added_to_queue" tools:ignore="UnusedQuantity">
         <item quantity="one">このプレイリストがキューに追加されました</item>
         <item quantity="other">%d プレイリストがキューに追加されました</item>
     </plurals>
@@ -212,7 +212,7 @@
     <string name="snackbar_removed_from_library">ライブラリから削除しました</string>
     <string name="snackbar_playlist_imported">プレイリストをインポートしました</string>
     <string name="snackbar_added_to_playlist">%1$s に追加しました</string>
-    <plurals name="snackbar_download_song">
+    <plurals name="snackbar_download_song" tools:ignore="UnusedQuantity">
         <item quantity="one">曲のダウンロードを開始</item>
         <item quantity="other">%d 曲のダウンロードを開始</item>
     </plurals>
@@ -220,7 +220,10 @@
     <string name="snackbar_action_view">見る</string>
 
     <!-- Custom Action -->
+    <string name="custom_action_like">Like</string>
+    <string name="custom_action_remove_like">Remove like</string>
     <string name="custom_action_add_to_library">ライブラリに追加</string>
+    <string name="custom_action_remove_from_library">Remove from library</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">すべて</string>

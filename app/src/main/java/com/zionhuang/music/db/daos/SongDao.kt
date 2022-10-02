@@ -66,6 +66,16 @@ interface SongDao {
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM song WHERE id = :songId")
+    fun getSongAsLiveData(songId: String): LiveData<Song?>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM song WHERE id = :songId")
+    fun getSongAsFlow(songId: String): Flow<Song?>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash")
     fun searchSongs(query: String): Flow<List<Song>>
 

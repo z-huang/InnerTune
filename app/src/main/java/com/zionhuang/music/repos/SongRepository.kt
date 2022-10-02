@@ -206,8 +206,10 @@ object SongRepository : LocalRepository {
     /**
      * Song
      */
-    override suspend fun addSong(mediaMetadata: MediaMetadata) = withContext(IO) {
-        if (getSongById(mediaMetadata.id) != null) return@withContext
+    override suspend fun addSong(mediaMetadata: MediaMetadata): SongEntity = withContext(IO) {
+        songDao.getSong(mediaMetadata.id)?.let{
+            return@withContext it.song
+        }
         val song = mediaMetadata.toSongEntity()
         songDao.insert(song)
         mediaMetadata.artists.forEachIndexed { index, artist ->
@@ -222,6 +224,7 @@ object SongRepository : LocalRepository {
             ))
         }
         if (autoDownload) downloadSong(song)
+        song
     }
 
     private suspend fun addSongs(items: List<SongItem>) = withContext(IO) {
@@ -289,7 +292,12 @@ object SongRepository : LocalRepository {
         )
     }
 
-    override suspend fun getSongById(songId: String): Song? = withContext(IO) { songDao.getSong(songId) }
+    override fun getSongById(songId: String) = DataWrapper(
+        getValueAsync = { withContext(IO) { songDao.getSong(songId) } },
+        getLiveData = { songDao.getSongAsLiveData(songId).distinctUntilChanged() },
+        getFlow = { songDao.getSongAsFlow(songId) }
+    )
+
     override fun getSongFile(songId: String): File {
         val mediaDir = context.getExternalFilesDir(null)!! / "media"
         if (!mediaDir.isDirectory) mediaDir.mkdirs()
@@ -315,8 +323,8 @@ object SongRepository : LocalRepository {
         songDao.update(song.song.copy(title = newTitle, modifyDate = LocalDateTime.now()))
     }
 
-    override suspend fun setLiked(liked: Boolean, songs: List<Song>) = withContext(IO) {
-        songDao.update(songs.map { it.song.copy(liked = liked, modifyDate = LocalDateTime.now()) })
+    override suspend fun toggleLiked(songs: List<Song>) = withContext(IO) {
+        songDao.update(songs.map { it.song.copy(liked = !it.song.liked, modifyDate = LocalDateTime.now()) })
     }
 
     override suspend fun downloadSongs(songs: List<SongEntity>) = withContext(IO) {
@@ -357,7 +365,7 @@ object SongRepository : LocalRepository {
 
     override suspend fun onDownloadComplete(downloadId: Long, success: Boolean): Unit = withContext(IO) {
         getDownloadEntity(downloadId)?.songId?.let { songId ->
-            getSongById(songId)?.let { song ->
+            songDao.getSong(songId)?.let { song ->
                 songDao.update(song.song.copy(downloadState = if (success) STATE_DOWNLOADED else STATE_NOT_DOWNLOADED))
                 getSongTempFile(songId).renameTo(getSongFile(songId))
             }
@@ -569,6 +577,12 @@ object SongRepository : LocalRepository {
         }
         addSongs(songs)
         addSongsToPlaylist(playlist.id, songs.map { it.id })
+    }
+
+    override suspend fun addMediaItemToPlaylist(playlist: PlaylistEntity, item: MediaMetadata) = withContext(IO) {
+        val song = YouTube.getQueue(videoIds = listOf(item.id)).getOrThrow()
+        addSongs(song)
+        addSongsToPlaylist(playlist.id, song.map { it.id })
     }
 
     override suspend fun refetchPlaylists(playlists: List<Playlist>): Unit = withContext(IO) {

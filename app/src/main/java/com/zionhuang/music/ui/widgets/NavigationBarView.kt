@@ -5,10 +5,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 
-class StatusBarView : View {
+class NavigationBarView : View {
     private val statusBarHeight: Int
         @SuppressLint("InternalInsetResource")
-        get() = resources.getIdentifier("status_bar_height", "dimen", "android").takeIf { it != 0 }?.let {
+        get() = resources.getIdentifier("navigation_bar_height", "dimen", "android").takeIf { it != 0 }?.let {
             resources.getDimensionPixelSize(it)
         } ?: 0
 

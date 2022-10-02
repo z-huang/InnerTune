@@ -6,36 +6,49 @@
     tools:context=".ui.activities.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_content"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/m3_bottom_nav_min_height"
-        android:fitsSystemWindows="true"
         tools:ignore="PrivateResource">
 
-        <com.google.android.material.navigationrail.NavigationRailView
-            android:id="@+id/navigation_rail"
+        <com.zionhuang.music.ui.widgets.StatusBarView
+            android:id="@+id/status_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:id="@+id/navigation_rail_container"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/inner_navigation_bar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/bottom_nav" />
+            app:layout_constraintTop_toBottomOf="@id/status_bar">
+
+            <com.google.android.material.navigationrail.NavigationRailView
+                android:id="@+id/navigation_rail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:menu="@menu/bottom_nav" />
+        </ScrollView>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/main_content"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/inner_navigation_bar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/navigation_rail"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toEndOf="@id/navigation_rail_container"
+            app:layout_constraintTop_toBottomOf="@id/status_bar">
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:defaultNavHost="true" />
+                app:defaultNavHost="true"
+                tools:layout="@layout/layout_recyclerview" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
@@ -47,13 +60,21 @@
                 app:layout_behavior="com.zionhuang.music.ui.widgets.HideOnScrollFabBehavior"
                 app:srcCompat="@drawable/ic_playlist_add" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <com.zionhuang.music.ui.widgets.NavigationBarView
+            android:id="@+id/inner_navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/main_content" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
         android:id="@+id/bottom_controls_sheet"
-        style="@style/Widget.Material3.BottomSheet"
+        style="@style/CustomBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?colorSurface"
         android:elevation="0dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
@@ -63,6 +84,13 @@
             android:id="@+id/bottom_controls_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/miniPlayerFragment"
+            android:name="com.zionhuang.music.ui.fragments.MiniPlayerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_controls_sheet_peek_height"
+            tools:layout="@layout/fragment_mini_player" />
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -75,4 +103,9 @@
         app:labelVisibilityMode="selected"
         app:menu="@menu/bottom_nav" />
 
+    <com.zionhuang.music.ui.widgets.NavigationBarView
+        android:id="@+id/navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

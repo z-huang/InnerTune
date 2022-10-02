@@ -4,8 +4,8 @@
 
     <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">?android:colorBackground</item>
-        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!--<item name="android:statusBarColor">?android:colorBackground</item>-->
+        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="windowActionModeOverlay">true</item>

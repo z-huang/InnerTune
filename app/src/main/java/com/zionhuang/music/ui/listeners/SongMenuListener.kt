@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.albumBrowseEndpoint
 import com.zionhuang.innertube.models.BrowseEndpoint.Companion.artistBrowseEndpoint
+import com.zionhuang.innertube.models.BrowseLocalArtistSongsEndpoint
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants.EXTRA_SONG
@@ -95,7 +96,12 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
 
     override fun viewArtist(song: Song) {
         if (song.artists.isNotEmpty()) {
-            NavigationEndpointHandler(fragment).handle(artistBrowseEndpoint(song.artists[0].id))
+            val artist = song.artists[0]
+            NavigationEndpointHandler(fragment).handle(if (artist.isYouTubeArtist) {
+                artistBrowseEndpoint(artist.id)
+            } else {
+                BrowseLocalArtistSongsEndpoint(artist.id)
+            })
         }
     }
 

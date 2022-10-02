@@ -225,10 +225,11 @@
     <string name="snackbar_removed_download">Removed download</string>
     <string name="snackbar_action_view">View</string>
 
-    <!-- Toast -->
-
     <!-- Custom Action -->
+    <string name="custom_action_like">Like</string>
+    <string name="custom_action_remove_like">Remove like</string>
     <string name="custom_action_add_to_library">Lägg till i biblioteket</string>
+    <string name="custom_action_remove_from_library">Remove from library</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">Alla</string>
