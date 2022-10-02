@@ -92,7 +92,7 @@ class BottomControlsFragment : Fragment() {
                 val intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/$id")
+                    putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=$id")
                 }
                 startActivity(Intent.createChooser(intent, null))
             }
@@ -151,7 +151,7 @@ class BottomControlsFragment : Fragment() {
                             val intent = Intent().apply {
                                 action = Intent.ACTION_SEND
                                 type = "text/plain"
-                                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/${mediaMetadata.id}")
+                                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${mediaMetadata.id}")
                             }
                             startActivity(Intent.createChooser(intent, null))
                         }
