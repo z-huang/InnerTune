@@ -20,7 +20,7 @@
     <string name="dark_theme_off">خاموش</string>
     <string name="dark_theme_follow_system">پیروی از سیستم</string>
     <string name="pref_content_title">محتوا</string>
-    <string name="pref_app_language_title">App language</string>
+    <string name="pref_app_language_title">زبان برنامه</string>
     <string name="pref_content_language_title">زبان پیش‌فرض محتوا</string>
     <string name="pref_default_content_country_title">کشور پیش‌فرض محتوا</string>
     <string name="pref_enable_proxy_title">فعال‌کردن پروکسی</string>
@@ -95,7 +95,7 @@
     <string name="menu_view_artist">مشاهده‌ی هنرمند</string>
     <string name="menu_view_album">مشاهده‌ی آلبوم</string>
     <string name="menu_refetch">نوسازی</string>
-    <string name="menu_share">همرسانی</string>
+    <string name="menu_share">هم‌رسانی</string>
     <string name="menu_delete">حذف</string>
 
     <!-- Dialog -->
@@ -157,7 +157,7 @@
     <string name="btn_play">پخش</string>
     <string name="btn_play_all">پخش همه</string>
     <string name="btn_radio">رادیو</string>
-    <string name="btn_shuffle">برزدن</string>
+    <string name="btn_shuffle">بُرزدن</string>
     <string name="btn_copy_stacktrace">رونوشت ردیابی‌پشته</string>
     <string name="btn_report">گزارش</string>
     <string name="btn_report_on_github">گزارش در گیت‌هاب</string>
@@ -169,7 +169,7 @@
     <string name="sort_by_year">سال</string>
     <string name="sort_by_song_count">تعداد آهنگ</string>
     <string name="sort_by_length">طول</string>
-    <string name="sort_by_play_time">Play time</string>
+    <string name="sort_by_play_time">زمان پخش</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
@@ -228,10 +228,10 @@
     <string name="snackbar_action_view">نما</string>
 
     <!-- Custom Action -->
-    <string name="custom_action_like">Like</string>
-    <string name="custom_action_remove_like">Remove like</string>
+    <string name="custom_action_like">پسندیدن</string>
+    <string name="custom_action_remove_like">حذف پسندیدن</string>
     <string name="custom_action_add_to_library">اضافه‌کردن به کتاب‌خانه</string>
-    <string name="custom_action_remove_from_library">Remove from library</string>
+    <string name="custom_action_remove_from_library">حذف از کتاب‌خانه</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">همه</string>
