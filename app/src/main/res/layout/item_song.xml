@@ -78,29 +78,58 @@
                 app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Song" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="4dp"
+                    android:id="@+id/liked"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/ic_favorite"
+                    android:visibility="@{song.song.liked ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/downloaded"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:src="@drawable/ic_offline_pin"
-                    android:visibility="@{song.song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{song.song.downloadState == MediaConstants.STATE_DOWNLOADED ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toEndOf="@id/liked"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.legacy.widget.Space
+                    android:id="@+id/subtitle_space"
+                    android:layout_width="4dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{(song.song.liked || song.song.downloadState == MediaConstants.STATE_DOWNLOADED) ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/subtitle"
+                    app:layout_constraintStart_toEndOf="@id/downloaded"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/subtitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/subtitle_space"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="Artists • album • 3:00" />
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
