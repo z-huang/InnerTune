@@ -20,7 +20,7 @@
     <string name="dark_theme_off">Disattivato</string>
     <string name="dark_theme_follow_system">Segui sistema</string>
     <string name="pref_content_title">Contenuti</string>
-    <string name="pref_app_language_title">App language</string>
+    <string name="pref_app_language_title">Lingua dell\'app</string>
     <string name="pref_content_language_title">Lingua predefinita dei contenuti</string>
     <string name="pref_default_content_country_title">Paese predefinito dei contenuti</string>
     <string name="pref_enable_proxy_title">Attiva proxy</string>
@@ -76,8 +76,8 @@
     <string name="search_library">Cerca nella libreria…</string>
 
     <!-- Built-in playlist -->
-    <string name="liked_songs">喜歡的歌曲</string>
-    <string name="downloaded_songs">已下載的歌曲</string>
+    <string name="liked_songs">Brani piaciuti</string>
+    <string name="downloaded_songs">Brani scaricati</string>
 
     <!-- Popup -->
     <string name="menu_edit">Modifica</string>
@@ -167,7 +167,7 @@
     <string name="sort_by_year">Anno</string>
     <string name="sort_by_song_count">Numero brani</string>
     <string name="sort_by_length">Durata</string>
-    <string name="sort_by_play_time">Play time</string>
+    <string name="sort_by_play_time">Numero di riproduzioni</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
@@ -226,10 +226,10 @@
     <string name="snackbar_action_view">Guarda</string>
 
     <!-- Custom Action -->
-    <string name="custom_action_like">Like</string>
-    <string name="custom_action_remove_like">Remove like</string>
+    <string name="custom_action_like">Mi piace</string>
+    <string name="custom_action_remove_like">Non mi piace più</string>
     <string name="custom_action_add_to_library">Aggiungi alla libreria</string>
-    <string name="custom_action_remove_from_library">Remove from library</string>
+    <string name="custom_action_remove_from_library">Rimuovi dalla libreria</string>
 
     <!-- Filtri di ricerca -->
     <string name="search_filter_all">Tutto</string>
