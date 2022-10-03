@@ -48,7 +48,6 @@
 
                 <ImageView
                     android:id="@+id/thumbnail"
-                    originalSize="@{true}"
                     srcUrl="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString()}"
                     thumbnailWidth="@{512f}"
                     android:layout_width="match_parent"
@@ -69,8 +68,6 @@
 
         <TextView
             android:id="@+id/song_title"
-            android:textStyle="bold"
-            android:textSize="28sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
@@ -80,11 +77,12 @@
             android:singleLine="true"
             android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_TITLE)}"
             android:textAlignment="center"
+            android:textSize="28sp"
+            android:textStyle="bold"
             tools:text="Song title" />
 
         <TextView
             android:id="@+id/song_artist"
-            android:textSize="18sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
@@ -94,6 +92,7 @@
             android:text="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_ARTIST)}"
             android:textAlignment="center"
             android:textColor="?android:textColorSecondary"
+            android:textSize="18sp"
             tools:text="Song artist" />
 
         <com.google.android.material.slider.Slider

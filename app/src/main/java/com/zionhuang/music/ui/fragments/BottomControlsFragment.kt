@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.fragments
 
 import android.animation.ValueAnimator
 import android.content.Intent
+import android.media.audiofx.AudioEffect.*
 import android.os.Bundle
 import android.provider.Settings
 import android.provider.Settings.Global.ANIMATOR_DURATION_SCALE
@@ -15,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.switchMap
@@ -54,6 +56,7 @@ class BottomControlsFragment : Fragment() {
     private var sliderIsTracking: Boolean = false
     private var mediaController: MediaControllerCompat? = null
     private val mediaControllerCallback = ControllerCallback()
+    private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = BottomControlsSheetBinding.inflate(inflater, container, false)
@@ -109,6 +112,16 @@ class BottomControlsFragment : Fragment() {
                 }
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
+                        R.id.action_equalizer -> {
+                            val equalizerIntent = Intent(ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                                putExtra(EXTRA_AUDIO_SESSION, MediaSessionConnection.binder?.songPlayer?.player?.audioSessionId)
+                                putExtra(EXTRA_PACKAGE_NAME, requireContext().packageName)
+                                putExtra(EXTRA_CONTENT_TYPE, CONTENT_TYPE_MUSIC)
+                            }
+                            if (equalizerIntent.resolveActivity(requireContext().packageManager) != null) {
+                                activityResultLauncher.launch(equalizerIntent)
+                            }
+                        }
                         R.id.action_radio -> MediaSessionConnection.binder?.songPlayer?.startRadioSeamlessly()
                         R.id.action_add_to_playlist -> {
                             val mainContent = mainActivity.binding.mainContent
@@ -185,9 +198,7 @@ class BottomControlsFragment : Fragment() {
             }
         }
         viewModel.mediaMetadata.switchMap { mediaMetadata ->
-            mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)?.let {
-                SongRepository.getSongById(it).liveData
-            }
+            SongRepository.getSongById(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).liveData
         }.observe(viewLifecycleOwner) { song ->
             binding.btnFavorite.setImageResource(if (song?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
             binding.btnAddToLibrary.setImageResource(if (song != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add)

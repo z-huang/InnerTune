@@ -27,9 +27,8 @@
 
         <ImageView
             android:id="@+id/thumbnail"
-            originalSize="@{true}"
             srcUrl="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString()}"
-            thumbnailWidth="@{512f}"
+            thumbnailWidth="@{@dimen/bottom_controls_sheet_peek_height}"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
