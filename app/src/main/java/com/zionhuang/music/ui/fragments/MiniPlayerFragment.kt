@@ -6,8 +6,7 @@ import android.provider.Settings
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
-import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
+import android.support.v4.media.session.PlaybackStateCompat.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,7 +79,7 @@ class MiniPlayerFragment : Fragment() {
 
             val progress = state.position.toInt()
             binding.progressBar.progress = progress
-            if (state.state == PlaybackStateCompat.STATE_PLAYING) {
+            if (state.state == STATE_PLAYING) {
                 val timeToEnd = ((duration - progress) / state.playbackSpeed).toInt()
                 if (timeToEnd > 0) {
                     progressAnimator?.cancel()
@@ -92,6 +91,7 @@ class MiniPlayerFragment : Fragment() {
                     }
                 }
             }
+            binding.progressBar.isIndeterminate = state.state == STATE_BUFFERING
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat) {
