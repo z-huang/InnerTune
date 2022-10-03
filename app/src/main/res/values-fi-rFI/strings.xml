@@ -76,8 +76,8 @@
     <string name="search_library">Search library…</string>
 
     <!-- Built-in playlist -->
-    <string name="liked_songs">喜歡的歌曲</string>
-    <string name="downloaded_songs">已下載的歌曲</string>
+    <string name="liked_songs">Liked songs</string>
+    <string name="downloaded_songs">Downloaded songs</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">Muokkaa</string>
