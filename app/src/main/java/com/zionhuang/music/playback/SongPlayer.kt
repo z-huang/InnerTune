@@ -83,6 +83,14 @@ class SongPlayer(
     }
     var currentSong: Song? = null
 
+    init {
+        scope.launch {
+            currentSongFlow.collectLatest {
+                currentSong = it
+            }
+        }
+    }
+
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
     }
@@ -203,7 +211,7 @@ class SongPlayer(
                 override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction? = if (currentMediaMetadata.value != null) {
                     PlaybackStateCompat.CustomAction.Builder(
                         ACTION_TOGGLE_LIKE,
-                        context.getString(if (currentSong?.song?.liked == true) R.string.custom_action_remove_like else R.string.custom_action_like),
+                        context.getString(if (currentSong?.song?.liked == true) R.string.action_remove_like else R.string.action_like),
                         if (currentSong?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border
                     ).build()
                 } else null
@@ -225,7 +233,7 @@ class SongPlayer(
                 override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction? = if (currentMediaMetadata.value != null) {
                     PlaybackStateCompat.CustomAction.Builder(
                         ACTION_TOGGLE_LIBRARY,
-                        context.getString(if (currentSong != null) R.string.custom_action_remove_from_library else R.string.custom_action_add_to_library),
+                        context.getString(if (currentSong != null) R.string.action_remove_from_library else R.string.action_add_to_library),
                         if (currentSong != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add
                     ).build()
                 } else null
@@ -287,23 +295,13 @@ class SongPlayer(
     }
 
     fun startRadioSeamlessly() {
-        logd("start radio")
         val currentMediaMetadata = player.currentMetadata ?: return
         if (player.currentMediaItemIndex > 0) player.removeMediaItems(0, player.currentMediaItemIndex)
         if (player.currentMediaItemIndex < player.mediaItemCount - 1) player.removeMediaItems(player.currentMediaItemIndex + 1, player.mediaItemCount)
         scope.launch(context.exceptionHandler) {
-            logd("start radio")
             val radioQueue = YouTubeQueue(endpoint = WatchEndpoint(videoId = currentMediaMetadata.id))
             player.addMediaItems(radioQueue.getInitialStatus().items.drop(1))
             currentQueue = radioQueue
-        }
-    }
-
-    init {
-        scope.launch {
-            currentSongFlow.collectLatest {
-                currentSong = it
-            }
         }
     }
 
@@ -404,6 +402,9 @@ class SongPlayer(
                 closeAudioEffectSession()
             }
         }
+        if (events.containsAny(EVENT_TIMELINE_CHANGED, EVENT_POSITION_DISCONTINUITY)) {
+            currentMediaMetadata.value = player.currentMetadata
+        }
     }
 
     override fun onPlaybackStatsReady(eventTime: AnalyticsListener.EventTime, playbackStats: PlaybackStats) {
@@ -411,10 +412,6 @@ class SongPlayer(
         scope.launch {
             localRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
         }
-    }
-
-    override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-        currentMediaMetadata.value = player.currentMetadata
     }
 
     private fun addToLibrary(mediaMetadata: MediaMetadata) {

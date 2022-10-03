@@ -226,10 +226,10 @@
     <string name="snackbar_action_view">Guarda</string>
 
     <!-- Custom Action -->
-    <string name="custom_action_like">Mi piace</string>
-    <string name="custom_action_remove_like">Non mi piace più</string>
-    <string name="custom_action_add_to_library">Aggiungi alla libreria</string>
-    <string name="custom_action_remove_from_library">Rimuovi dalla libreria</string>
+    <string name="action_like">Mi piace</string>
+    <string name="action_remove_like">Non mi piace più</string>
+    <string name="action_add_to_library">Aggiungi alla libreria</string>
+    <string name="action_remove_from_library">Rimuovi dalla libreria</string>
 
     <!-- Filtri di ricerca -->
     <string name="search_filter_all">Tutto</string>

@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 
 interface ISongMenuListener {
     fun editSong(song: Song)
+    fun toggleLike(song: Song)
     fun startRadio(song: Song)
     fun playNext(songs: List<Song>)
     fun addToQueue(songs: List<Song>)
@@ -57,6 +58,13 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
         EditSongDialog().apply {
             arguments = bundleOf(EXTRA_SONG to song)
         }.show(context)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun toggleLike(song: Song) {
+        GlobalScope.launch(context.exceptionHandler) {
+            SongRepository.toggleLiked(song)
+        }
     }
 
     override fun startRadio(song: Song) {

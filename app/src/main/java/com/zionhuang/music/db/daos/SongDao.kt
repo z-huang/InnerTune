@@ -62,17 +62,17 @@ interface SongDao {
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE id = :songId")
-    suspend fun getSong(songId: String): Song?
+    suspend fun getSong(songId: String?): Song?
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE id = :songId")
-    fun getSongAsLiveData(songId: String): LiveData<Song?>
+    fun getSongAsLiveData(songId: String?): LiveData<Song?>
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE id = :songId")
-    fun getSongAsFlow(songId: String): Flow<Song?>
+    fun getSongAsFlow(songId: String?): Flow<Song?>
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)

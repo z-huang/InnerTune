@@ -52,7 +52,7 @@ interface LocalRepository {
     suspend fun safeAddSong(song: SongItem) = safeAddSongs(listOf(song))
     suspend fun safeAddSongs(songs: List<SongItem>): List<SongEntity>
     suspend fun refetchSongs(songs: List<Song>)
-    fun getSongById(songId: String): DataWrapper<Song?>
+    fun getSongById(songId: String?): DataWrapper<Song?>
     fun getSongFile(songId: String): File
     fun hasSong(songId: String): DataWrapper<Boolean>
     suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)

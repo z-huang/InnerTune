@@ -45,6 +45,10 @@ open class SongViewHolder(
             MenuBottomSheetDialogFragment
                 .newInstance(R.menu.song)
                 .setMenuModifier {
+                    findItem(R.id.action_favorite).apply {
+                        setIcon(if (song.song.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
+                        setTitle(if (song.song.liked) R.string.action_remove_like else R.string.action_like)
+                    }
                     findItem(R.id.action_download).isVisible = song.song.downloadState == MediaConstants.STATE_NOT_DOWNLOADED
                     findItem(R.id.action_remove_download).isVisible = song.song.downloadState == MediaConstants.STATE_DOWNLOADED
                     findItem(R.id.action_view_artist).isVisible = song.artists[0].isYouTubeArtist
@@ -54,6 +58,7 @@ open class SongViewHolder(
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.action_edit -> menuListener?.editSong(song)
+                        R.id.action_favorite -> menuListener?.toggleLike(song)
                         R.id.action_radio -> menuListener?.startRadio(song)
                         R.id.action_play_next -> menuListener?.playNext(song)
                         R.id.action_add_to_queue -> menuListener?.addToQueue(song)

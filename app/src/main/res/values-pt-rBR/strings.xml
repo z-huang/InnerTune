@@ -226,10 +226,10 @@
     <string name="snackbar_action_view">View</string>
 
     <!-- Custom Action -->
-    <string name="custom_action_like">Like</string>
-    <string name="custom_action_remove_like">Remove like</string>
-    <string name="custom_action_add_to_library">Adicionar à biblioteca</string>
-    <string name="custom_action_remove_from_library">Remove from library</string>
+    <string name="action_like">Like</string>
+    <string name="action_remove_like">Remove like</string>
+    <string name="action_add_to_library">Adicionar à biblioteca</string>
+    <string name="action_remove_from_library">Remove from library</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">Tudo</string>

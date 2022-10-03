@@ -220,10 +220,10 @@
     <string name="snackbar_action_view">查看</string>
 
     <!-- Custom Action -->
-    <string name="custom_action_like">喜欢</string>
-    <string name="custom_action_remove_like">取消喜欢</string>
-    <string name="custom_action_add_to_library">添加到媒体库</string>
-    <string name="custom_action_remove_from_library">从媒体库中移除</string>
+    <string name="action_like">喜欢</string>
+    <string name="action_remove_like">取消喜欢</string>
+    <string name="action_add_to_library">添加到媒体库</string>
+    <string name="action_remove_from_library">从媒体库中移除</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">全部</string>

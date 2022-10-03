@@ -228,10 +228,10 @@
     <string name="snackbar_action_view">نما</string>
 
     <!-- Custom Action -->
-    <string name="custom_action_like">پسندیدن</string>
-    <string name="custom_action_remove_like">حذف پسندیدن</string>
-    <string name="custom_action_add_to_library">اضافه‌کردن به کتاب‌خانه</string>
-    <string name="custom_action_remove_from_library">حذف از کتاب‌خانه</string>
+    <string name="action_like">پسندیدن</string>
+    <string name="action_remove_like">حذف پسندیدن</string>
+    <string name="action_add_to_library">اضافه‌کردن به کتاب‌خانه</string>
+    <string name="action_remove_from_library">حذف از کتاب‌خانه</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">همه</string>

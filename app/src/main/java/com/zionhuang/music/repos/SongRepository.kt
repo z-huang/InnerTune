@@ -292,7 +292,7 @@ object SongRepository : LocalRepository {
         )
     }
 
-    override fun getSongById(songId: String) = DataWrapper(
+    override fun getSongById(songId: String?) = DataWrapper(
         getValueAsync = { withContext(IO) { songDao.getSong(songId) } },
         getLiveData = { songDao.getSongAsLiveData(songId).distinctUntilChanged() },
         getFlow = { songDao.getSongAsFlow(songId) }
