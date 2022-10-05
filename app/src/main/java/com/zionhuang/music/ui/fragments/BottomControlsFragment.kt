@@ -89,16 +89,6 @@ class BottomControlsFragment : Fragment() {
         binding.btnFavorite.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIKE, null)
         }
-        binding.btnShare.setOnClickListener {
-            viewModel.mediaMetadata.value?.getString(METADATA_KEY_MEDIA_ID)?.let { id ->
-                val intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=$id")
-                }
-                startActivity(Intent.createChooser(intent, null))
-            }
-        }
         binding.btnMore.setOnClickListener {
             val mediaMetadata = MediaSessionConnection.binder?.songPlayer?.currentMediaMetadata?.value ?: return@setOnClickListener
             val song = MediaSessionConnection.binder?.songPlayer?.currentSong

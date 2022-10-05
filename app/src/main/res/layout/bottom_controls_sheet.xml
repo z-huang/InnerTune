@@ -103,11 +103,12 @@
             android:layout_marginTop="12dp"
             android:valueFrom="0"
             android:valueTo="100"
-            app:haloRadius="12dp"
+            app:haloRadius="1dp"
             app:labelBehavior="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:thumbElevation="0dp"
             app:thumbRadius="8dp"
             tools:value="50"
             tools:valueFrom="0"
@@ -246,17 +247,6 @@
             <!--    android:focusable="true"-->
             <!--    android:scaleType="center"-->
             <!--    android:src="@drawable/ic_bedtime" />-->
-
-            <ImageView
-                android:id="@+id/btn_share"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginHorizontal="8dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:scaleType="center"
-                android:src="@drawable/ic_share" />
 
             <ImageView
                 android:id="@+id/btn_more"
