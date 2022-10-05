@@ -79,6 +79,18 @@ class BottomControlsFragment : Fragment() {
             }
         }
 
+        binding.songArtist.setOnClickListener {
+            val mediaMetadata = MediaSessionConnection.binder?.songPlayer?.currentMediaMetadata?.value ?: return@setOnClickListener
+            if (mediaMetadata.artists.isNotEmpty()) {
+                val artist = mediaMetadata.artists[0]
+                NavigationEndpointHandler(mainActivity.currentFragment!!).handle(if (artist.id.startsWith("UC")) {
+                    BrowseEndpoint.artistBrowseEndpoint(artist.id)
+                } else {
+                    BrowseLocalArtistSongsEndpoint(artist.id)
+                })
+                mainActivity.collapseBottomSheet()
+            }
+        }
         binding.btnQueue.setOnClickListener {
             mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
             findNavController().navigate(QueueFragmentDirections.openQueueFragment())
