@@ -28,6 +28,7 @@ class InnerTube {
         gl = Locale.getDefault().country,
         hl = Locale.getDefault().toLanguageTag()
     )
+    var visitorData: String = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun createClient(proxy: Proxy? = null) = HttpClient(OkHttp) {
@@ -86,7 +87,7 @@ class InnerTube {
     ) = httpClient.post("search") {
         configYTClient(client)
         setBody(SearchBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             query = query,
             params = params
         ))
@@ -101,7 +102,7 @@ class InnerTube {
     ) = httpClient.post("player") {
         configYTClient(client)
         setBody(PlayerBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             videoId = videoId,
             playlistId = playlistId
         ))
@@ -115,7 +116,7 @@ class InnerTube {
     ) = httpClient.post("browse") {
         configYTClient(client)
         setBody(BrowseBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             browseId = browseId,
             params = params
         ))
@@ -137,7 +138,7 @@ class InnerTube {
     ) = httpClient.post("next") {
         configYTClient(client)
         setBody(NextBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             videoId = videoId,
             playlistId = playlistId,
             playlistSetVideoId = playlistSetVideoId,
@@ -153,7 +154,7 @@ class InnerTube {
     ) = httpClient.post("music/get_search_suggestions") {
         configYTClient(client)
         setBody(GetSearchSuggestionsBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             input = input
         ))
     }
@@ -165,7 +166,7 @@ class InnerTube {
     ) = httpClient.post("music/get_queue") {
         configYTClient(client)
         setBody(GetQueueBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             videoIds = videoIds,
             playlistId = playlistId
         ))

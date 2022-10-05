@@ -11,6 +11,7 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.models.YTItem
+import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.utils.browseAll
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
@@ -165,6 +166,17 @@ class YouTubeTest {
         result.items.forEach {
             println(it.id)
         }
+    }
+
+    @Test
+    fun visitorData() {
+        assertEquals("CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D", YouTubeClient.generateVisitorData("ldmrJvbAkRo", 1649952524))
+        assertEquals("CgtrLTlNQlQ2SWs1OCjZlu-ZBg%3D%3D", YouTubeClient.generateVisitorData("k-9MBT6Ik58", 1664863065))
+        assertEquals("Cgs1bFZLWXJWVk5MRSisnO-ZBg%3D%3D", YouTubeClient.generateVisitorData("5lVKYrVVNLE", 1664863788))
+        assertEquals("CgtrLTlNQlQ2SWs1OCjN_fSZBg%3D%3D", YouTubeClient.generateVisitorData("k-9MBT6Ik58", 1664958157))
+        assertEquals("CgtXSHBibzJXSm1layj-ifWZBg%3D%3D", YouTubeClient.generateVisitorData("WHpbo2WJmek", 1664959742))
+        assertEquals("CgtlcWs4cjFPYUpyZyj_ifWZBg%3D%3D", YouTubeClient.generateVisitorData("eqk8r1OaJrg", 1664959743))
+        assertEquals("Cgs2eHNHQ3FTVkJDbyj-i_WZBg%3D%3D", YouTubeClient.generateVisitorData("6xsGCqSVBCo", 1664959998))
     }
 
     companion object {

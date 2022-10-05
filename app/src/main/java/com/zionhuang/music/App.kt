@@ -3,7 +3,9 @@ package com.zionhuang.music
 import android.app.Application
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
+import androidx.core.content.edit
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
@@ -38,9 +40,14 @@ class App : Application() {
                     socketAddress
                 ))
             } catch (e: Exception) {
-                // TODO
                 Toast.makeText(this, "Failed to parse proxy url.", LENGTH_SHORT).show()
                 e.printStackTrace()
+            }
+        }
+
+        YouTube.visitorData = sharedPreferences.getString(getString(R.string.pref_visitor_data), null) ?: YouTubeClient.generateVisitorData().also {
+            sharedPreferences.edit {
+                putString(getString(R.string.pref_visitor_data), it)
             }
         }
         MediaSessionConnection.connect(this)

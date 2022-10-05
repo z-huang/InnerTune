@@ -25,6 +25,7 @@
     <string name="pref_app_language" translatable="false">APP_LANGUAGE</string>
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
+    <string name="pref_visitor_data" translatable="false">VISITOR_DATA</string>
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
     <string name="pref_proxy_type" translatable="false">PROXY_TYPE</string>
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>

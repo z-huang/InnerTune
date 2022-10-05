@@ -20,6 +20,11 @@ object YouTube {
         set(value) {
             innerTube.locale = value
         }
+    var visitorData: String
+        get() = innerTube.visitorData
+        set(value) {
+            innerTube.visitorData = value
+        }
 
     fun setProxy(proxy: Proxy) = innerTube.setProxy(proxy)
 

@@ -35,7 +35,6 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.extensions.exceptionHandler
-import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
@@ -216,7 +215,6 @@ class BottomControlsFragment : Fragment() {
 
     private inner class ControllerCallback : MediaControllerCompat.Callback(), ValueAnimator.AnimatorUpdateListener {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-            logd("tag $state")
             progressAnimator?.cancel()
             progressAnimator = null
 
@@ -240,7 +238,6 @@ class BottomControlsFragment : Fragment() {
         }
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-            logd("tag $metadata")
             duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
             if (duration <= 0L) {
                 binding.slider.isEnabled = false
