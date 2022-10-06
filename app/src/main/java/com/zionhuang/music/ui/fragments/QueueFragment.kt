@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
@@ -59,7 +58,7 @@ class QueueFragment : RecyclerViewFragment<MediaQueueAdapter>() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.mediaController.value?.removeQueueItem(adapter.getItem(viewHolder.absoluteAdapterPosition).description)
+            viewModel.mediaController?.removeQueueItem(adapter.getItem(viewHolder.absoluteAdapterPosition).description)
         }
     })
 
@@ -78,19 +77,19 @@ class QueueFragment : RecyclerViewFragment<MediaQueueAdapter>() {
             itemTouchHelper.attachToRecyclerView(this)
             addOnClickListener { pos, _ ->
                 this@QueueFragment.adapter.getItem(pos).description.mediaId?.let {
-                    viewModel.mediaController.value?.seekToQueueItem(it)
+                    viewModel.mediaController?.seekToQueueItem(it)
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.queueData.asFlow().collectLatest {
-                adapter.submitData(it.items)
+            viewModel.queueItems.collectLatest {
+                adapter.submitData(it)
             }
         }
 
         dragEventManager.onDragged = { fromPos, toPos ->
-            viewModel.mediaController.value?.moveQueueItem(fromPos, toPos)
+            viewModel.mediaController?.moveQueueItem(fromPos, toPos)
         }
     }
 

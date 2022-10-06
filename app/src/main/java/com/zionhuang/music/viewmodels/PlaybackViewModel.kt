@@ -4,55 +4,64 @@ import android.app.Activity
 import android.app.Application
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.MediaControllerCompat.TransportControls
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.map
-import com.zionhuang.music.models.MediaSessionQueueData
+import androidx.lifecycle.viewModelScope
 import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.utils.livedata.SafeLiveData
-import com.zionhuang.music.utils.livedata.SafeMutableLiveData
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
-    val mediaMetadata: LiveData<MediaMetadataCompat?> get() = MediaSessionConnection.nowPlaying
+    val transportControls: TransportControls? get() = MediaSessionConnection.transportControls
 
-    private val _playbackState = SafeMutableLiveData(PlaybackStateData())
-    val playbackState: SafeLiveData<PlaybackStateData> get() = _playbackState
+    val mediaMetadata = MediaSessionConnection.mediaMetadata
+    val playbackState = MediaSessionConnection.playbackState.map { playbackState ->
+        if (MediaSessionConnection.mediaController != null && playbackState != null) PlaybackStateData.from(MediaSessionConnection.mediaController!!, playbackState)
+        else PlaybackStateData()
+    }.stateIn(viewModelScope, SharingStarted.Lazily, PlaybackStateData())
+    val queueItems = MediaSessionConnection.queueItems
 
-    val queueData: LiveData<MediaSessionQueueData> get() = MediaSessionConnection.queueData
+    val position = MutableStateFlow(0L)
+    val duration = MutableStateFlow(0L)
+    private var lastPositionJob: Job? = null
 
-    private val playbackStateObserver = Observer<PlaybackStateCompat?> { playbackState ->
-        if (playbackState != null) {
-            _playbackState.postValue(_playbackState.value.pullPlaybackState(playbackState, mediaController?.value))
+    var mediaController: MediaControllerCompat? = null
+        private set
+    private val mediaControllerCallback = ControllerCallback()
+
+    init {
+        viewModelScope.launch {
+            MediaSessionConnection.isConnected.map { isConnected ->
+                if (isConnected) MediaSessionConnection.mediaController else null
+            }.collectLatest {
+                mediaController?.unregisterCallback(mediaControllerCallback)
+                mediaController = it
+                it?.registerCallback(mediaControllerCallback)
+                if (it != null) {
+                    mediaControllerCallback.onMetadataChanged(it.metadata)
+                    mediaControllerCallback.onPlaybackStateChanged(it.playbackState)
+                }
+            }
         }
     }
 
-    private val mediaSessionConnection = MediaSessionConnection.apply {
-        if (!isConnected.value) connect(application)
-        playbackState.observeForever(playbackStateObserver)
-    }
-
-    val mediaController: LiveData<MediaControllerCompat?> = mediaSessionConnection.isConnected.map { isConnected ->
-        if (isConnected) mediaSessionConnection.mediaController else null
-    }
-
-    val transportControls: MediaControllerCompat.TransportControls? get() = mediaSessionConnection.transportControls
-
     fun togglePlayPause() {
-        if (playbackState.value.state == STATE_PLAYING) {
-            mediaSessionConnection.transportControls?.pause()
+        if (MediaSessionConnection.playbackState.value?.state == STATE_PLAYING) {
+            MediaSessionConnection.transportControls?.pause()
         } else {
-            mediaSessionConnection.transportControls?.play()
+            MediaSessionConnection.transportControls?.play()
         }
     }
 
     fun toggleShuffleMode() {
-        mediaSessionConnection.mediaController?.let { mediaController ->
+        MediaSessionConnection.mediaController?.let { mediaController ->
             when (mediaController.shuffleMode) {
                 SHUFFLE_MODE_NONE -> mediaController.transportControls.setShuffleMode(SHUFFLE_MODE_ALL)
                 SHUFFLE_MODE_ALL -> mediaController.transportControls.setShuffleMode(SHUFFLE_MODE_NONE)
@@ -61,7 +70,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun toggleRepeatMode() {
-        mediaSessionConnection.mediaController?.let { mediaController ->
+        MediaSessionConnection.mediaController?.let { mediaController ->
             when (mediaController.repeatMode) {
                 REPEAT_MODE_NONE, REPEAT_MODE_INVALID -> mediaController.transportControls.setRepeatMode(REPEAT_MODE_ALL)
                 REPEAT_MODE_ALL, REPEAT_MODE_GROUP -> mediaController.transportControls.setRepeatMode(REPEAT_MODE_ONE)
@@ -71,15 +80,34 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun playQueue(activity: Activity, queue: Queue) {
-        mediaSessionConnection.binder?.songPlayer?.playQueue(queue)
+        MediaSessionConnection.binder?.songPlayer?.playQueue(queue)
         (activity as? MainActivity)?.showBottomSheet()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        mediaSessionConnection.apply {
-            playbackState.removeObserver(playbackStateObserver)
-            disconnect(getApplication())
+    private inner class ControllerCallback : MediaControllerCompat.Callback() {
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+            position.value = state.position
+            if (state.state == STATE_PLAYING) {
+                val timeToEnd = ((duration.value - position.value) / state.playbackSpeed).toInt()
+                if (timeToEnd > 0) {
+                    lastPositionJob?.cancel()
+                    lastPositionJob = viewModelScope.launch {
+                        while (true) {
+                            MediaSessionConnection.binder?.songPlayer?.player?.currentPosition?.let {
+                                position.value = it
+                            }
+                            delay(100)
+                        }
+                    }
+                }
+            }
+        }
+
+        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
+            duration.value = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+            mediaController?.let {
+                onPlaybackStateChanged(it.playbackState)
+            }
         }
     }
 }

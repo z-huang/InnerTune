@@ -1,25 +1,18 @@
 package com.zionhuang.music.ui.fragments
 
-import android.animation.ValueAnimator
 import android.content.Intent
 import android.media.audiofx.AudioEffect.*
 import android.os.Bundle
-import android.provider.Settings
-import android.provider.Settings.Global.ANIMATOR_DURATION_SCALE
-import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_NONE
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
@@ -45,7 +38,10 @@ import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 class BottomControlsFragment : Fragment() {
@@ -53,8 +49,6 @@ class BottomControlsFragment : Fragment() {
     private val viewModel by activityViewModels<PlaybackViewModel>()
     private val mainActivity: MainActivity get() = requireActivity() as MainActivity
     private var sliderIsTracking: Boolean = false
-    private var mediaController: MediaControllerCompat? = null
-    private val mediaControllerCallback = ControllerCallback()
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -62,7 +56,7 @@ class BottomControlsFragment : Fragment() {
         return binding.root
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
+    @OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
@@ -71,10 +65,12 @@ class BottomControlsFragment : Fragment() {
         binding.songTitle.isSelected = true
         binding.songArtist.isSelected = true
 
-        viewModel.playbackState.observe(viewLifecycleOwner) { playbackState ->
-            if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED) {
-                if (mainActivity.bottomSheetBehavior.state == STATE_HIDDEN) {
-                    mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
+        lifecycleScope.launch {
+            viewModel.playbackState.collect { playbackState ->
+                if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED) {
+                    if (mainActivity.bottomSheetBehavior.state == STATE_HIDDEN) {
+                        mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
+                    }
                 }
             }
         }
@@ -189,77 +185,35 @@ class BottomControlsFragment : Fragment() {
         binding.slider.addOnChangeListener { _, value, _ ->
             binding.position.text = makeTimeString((value).toLong())
         }
-        viewModel.mediaController.observe(viewLifecycleOwner) {
-            mediaController?.unregisterCallback(mediaControllerCallback)
-            mediaController = it
-            it?.registerCallback(mediaControllerCallback)
-            if (it != null) {
-                mediaControllerCallback.onMetadataChanged(it.metadata)
-                mediaControllerCallback.onPlaybackStateChanged(it.playbackState)
+
+        lifecycleScope.launch {
+            viewModel.mediaMetadata.flatMapLatest { mediaMetadata ->
+                SongRepository.getSongById(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).flow
+            }.collectLatest { song ->
+                binding.btnFavorite.setImageResource(if (song?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
+                binding.btnAddToLibrary.setImageResource(if (song != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add)
             }
         }
-        viewModel.mediaMetadata.switchMap { mediaMetadata ->
-            SongRepository.getSongById(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).liveData
-        }.observe(viewLifecycleOwner) { song ->
-            binding.btnFavorite.setImageResource(if (song?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
-            binding.btnAddToLibrary.setImageResource(if (song != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add)
-        }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaController?.unregisterCallback(mediaControllerCallback)
-    }
-
-    private var duration: Long = 0
-    private var progressAnimator: ValueAnimator? = null
-    private val durationScale: Float by lazy { Settings.Global.getFloat(requireContext().contentResolver, ANIMATOR_DURATION_SCALE, 1f) }
-
-    private inner class ControllerCallback : MediaControllerCompat.Callback(), ValueAnimator.AnimatorUpdateListener {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-            progressAnimator?.cancel()
-            progressAnimator = null
-
-            val progress = state.position.toInt()
-            if (binding.slider.isEnabled) {
-                binding.slider.value = progress.toFloat().coerceIn(binding.slider.valueFrom, binding.slider.valueTo)
-            }
-            binding.position.text = makeTimeString(progress.toLong())
-            if (state.state == PlaybackStateCompat.STATE_PLAYING) {
-                val timeToEnd = ((duration - progress) / state.playbackSpeed).toInt()
-                if (timeToEnd > 0) {
-                    progressAnimator?.cancel()
-                    progressAnimator = ValueAnimator.ofInt(progress, duration.toInt()).apply {
-                        duration = (timeToEnd / durationScale).toLong()
-                        interpolator = LinearInterpolator()
-                        addUpdateListener(this@ControllerCallback)
-                        start()
-                    }
+        lifecycleScope.launch {
+            viewModel.position.collect { position ->
+                if (!sliderIsTracking && binding.slider.isEnabled) {
+                    binding.slider.value = position.toFloat().coerceIn(binding.slider.valueFrom, binding.slider.valueTo)
+                    binding.position.text = makeTimeString(position)
                 }
             }
         }
-
-        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-            duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
-            if (duration <= 0L) {
-                binding.slider.isEnabled = false
-            } else {
-                binding.slider.isEnabled = true
-                binding.slider.valueTo = duration.toFloat()
+        lifecycleScope.launch {
+            viewModel.duration.collect { duration ->
+                if (duration <= 0) {
+                    binding.slider.isEnabled = false
+                    binding.duration.text = ""
+                } else {
+                    binding.slider.isEnabled = true
+                    binding.slider.valueTo = duration.toFloat()
+                    binding.duration.text = makeTimeString(duration)
+                }
             }
-            mediaController?.let {
-                onPlaybackStateChanged(it.playbackState)
-            }
-        }
-
-        override fun onAnimationUpdate(animation: ValueAnimator) {
-            if (sliderIsTracking) {
-                animation.cancel()
-                return
-            }
-            val animatedValue = animation.animatedValue as Int
-            binding.slider.value = animatedValue.toFloat().coerceIn(binding.slider.valueFrom, binding.slider.valueTo)
-            binding.position.text = makeTimeString(animatedValue.toLong())
         }
     }
 }

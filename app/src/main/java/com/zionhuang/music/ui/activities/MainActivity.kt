@@ -34,10 +34,7 @@ import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.utils.YouTubeLinkHandler
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.ActivityMainBinding
-import com.zionhuang.music.extensions.dip
-import com.zionhuang.music.extensions.preference
-import com.zionhuang.music.extensions.replaceFragment
-import com.zionhuang.music.extensions.sharedPreferences
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository

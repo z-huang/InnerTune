@@ -100,7 +100,7 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="10dp"
-            android:onClick="@{()->viewModel.mediaController.transportControls.skipToNext()}"
+            android:onClick="@{()->viewModel.transportControls.skipToNext()}"
             android:padding="4dp"
             app:enabled="@{(viewModel.playbackState.actions &amp; PlaybackState.ACTION_SKIP_TO_NEXT) != 0}"
             app:layout_constraintBottom_toBottomOf="parent"

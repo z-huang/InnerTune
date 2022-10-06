@@ -158,7 +158,7 @@
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="12dp"
-                android:onClick="@{()->viewModel.mediaController.transportControls.skipToPrevious()}"
+                android:onClick="@{()->viewModel.transportControls.skipToPrevious()}"
                 tools:src="@drawable/ic_skip_previous" />
 
             <com.zionhuang.music.ui.widgets.PlayPauseButton
@@ -181,7 +181,7 @@
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="12dp"
-                android:onClick="@{()->viewModel.mediaController.transportControls.skipToNext()}"
+                android:onClick="@{()->viewModel.transportControls.skipToNext()}"
                 app:enabled="@{(viewModel.playbackState.actions &amp; PlaybackState.ACTION_SKIP_TO_NEXT) != 0}"
                 tools:src="@drawable/ic_skip_next" />
 
