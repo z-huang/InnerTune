@@ -24,12 +24,16 @@ import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.analytics.PlaybackStats
 import com.google.android.exoplayer2.analytics.PlaybackStatsListener
 import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
@@ -95,49 +99,19 @@ class SongPlayer(
         isActive = true
     }
 
+    private val cacheEvictor = LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024L)
+    private val cache = SimpleCache(context.cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(context))
     val player: ExoPlayer = ExoPlayer.Builder(context)
-        .setMediaSourceFactory(
-            DefaultMediaSourceFactory(ResolvingDataSource.Factory(
-                DefaultDataSource.Factory(context)
-            ) { dataSpec ->
-                val mediaId = dataSpec.key ?: error("No media id")
-                val song = runBlocking(IO) { localRepository.getSongById(mediaId).getValueAsync() }
-                if (song?.song?.downloadState == STATE_DOWNLOADED) {
-                    return@Factory dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
-                }
-                runBlocking(IO) {
-                    YouTube.player(mediaId)
-                }.mapCatching { playerResponse ->
-                    if (playerResponse.playabilityStatus.status != "OK") {
-                        throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
-                    }
-                    val uri = playerResponse.streamingData?.adaptiveFormats
-                        ?.filter { it.isAudio }
-                        ?.maxByOrNull {
-                            it.bitrate * when (audioQuality) {
-                                AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
-                                AudioQuality.HIGH -> 1
-                                AudioQuality.LOW -> -1
-                            }
-                        }
-                        ?.url?.toUri()
-                        ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
-                    dataSpec.withUri(uri)
-                }.getOrElse { throwable ->
-                    throw PlaybackException("Unknown error", throwable, ERROR_CODE_REMOTE_ERROR)
-                }
-            })
-        )
+        .setMediaSourceFactory(createDataSource())
+        .setAudioAttributes(AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+            .build(), true)
+        .setHandleAudioBecomingNoisy(true)
         .build()
         .apply {
             addListener(this@SongPlayer)
             addAnalyticsListener(PlaybackStatsListener(false, this@SongPlayer))
-            val audioAttributes = AudioAttributes.Builder()
-                .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
-                .build()
-            setAudioAttributes(audioAttributes, true)
-            setHandleAudioBecomingNoisy(true)
         }
 
     private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
@@ -280,6 +254,43 @@ class SongPlayer(
             setSmallIcon(R.drawable.ic_notification)
         }
 
+
+    private fun createCacheDataSource() = CacheDataSource.Factory()
+        .setCache(cache)
+        .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
+
+    private fun createDataSource() = DefaultMediaSourceFactory(ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
+        val mediaId = dataSpec.key ?: error("No media id")
+        if (cache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)) {
+            logd("$mediaId is cached")
+            return@Factory dataSpec
+        }
+        val song = runBlocking(IO) { localRepository.getSongById(mediaId).getValueAsync() }
+        if (song?.song?.downloadState == STATE_DOWNLOADED) {
+            return@Factory dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
+        }
+        runBlocking(IO) {
+            YouTube.player(mediaId)
+        }.mapCatching { playerResponse ->
+            if (playerResponse.playabilityStatus.status != "OK") {
+                throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
+            }
+            val uri = playerResponse.streamingData?.adaptiveFormats
+                ?.filter { it.isAudio }
+                ?.maxByOrNull {
+                    it.bitrate * when (audioQuality) {
+                        AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
+                        AudioQuality.HIGH -> 1
+                        AudioQuality.LOW -> -1
+                    }
+                }
+                ?.url?.toUri()
+                ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
+            dataSpec.withUri(uri)
+        }.getOrElse { throwable ->
+            throw PlaybackException("Unknown error", throwable, ERROR_CODE_REMOTE_ERROR)
+        }
+    })
 
     fun playQueue(queue: Queue) {
         currentQueue = queue
@@ -430,6 +441,7 @@ class SongPlayer(
         playerNotificationManager.setPlayer(null)
         player.removeListener(this)
         player.release()
+        cache.release()
     }
 
     enum class AudioQuality {
@@ -439,7 +451,7 @@ class SongPlayer(
     companion object {
         const val CHANNEL_ID = "music_channel_01"
         const val NOTIFICATION_ID = 888
-
         const val ERROR_CODE_NO_STREAM = 1000001
+        const val CHUNK_LENGTH = 512 * 1024L
     }
 }
