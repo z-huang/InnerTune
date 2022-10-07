@@ -38,6 +38,28 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars" />
 
+        <View
+            android:id="@+id/mask"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha=".75"
+            android:background="#000000"
+            android:visibility="@{viewModel.playbackState.errorCode != 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/thumbnail"
+            app:layout_constraintStart_toStartOf="@id/thumbnail"
+            app:layout_constraintTop_toTopOf="@id/thumbnail" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_error"
+            android:visibility="@{viewModel.playbackState.errorCode != 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/thumbnail"
+            app:layout_constraintStart_toStartOf="@id/thumbnail"
+            app:layout_constraintTop_toTopOf="@id/thumbnail" />
+
         <LinearLayout
             android:id="@+id/text_container"
             android:layout_width="0dp"
@@ -93,6 +115,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:playPauseButtonTint="?invertedColor"
             app:playState="@{viewModel.playbackState.state}"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
             tools:src="@drawable/ic_pause" />
 
         <com.zionhuang.music.ui.widgets.SkipNextButton
@@ -106,6 +129,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
             tools:src="@drawable/ic_skip_next" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
