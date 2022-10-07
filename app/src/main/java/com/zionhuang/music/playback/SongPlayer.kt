@@ -29,7 +29,7 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
@@ -257,7 +257,7 @@ class SongPlayer(
 
     private fun createCacheDataSource() = CacheDataSource.Factory()
         .setCache(cache)
-        .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
+        .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context))
 
     private fun createDataSource() = DefaultMediaSourceFactory(ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
         val mediaId = dataSpec.key ?: error("No media id")
