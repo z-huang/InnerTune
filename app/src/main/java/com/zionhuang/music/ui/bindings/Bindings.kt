@@ -31,7 +31,7 @@ fun setDuration(view: TextView, duration: Long) {
 
 @BindingAdapter("playState")
 fun setPlayState(view: PlayPauseButton, @State state: Int) {
-    if (state == STATE_PAUSED || state == STATE_NONE) {
+    if (state == STATE_PAUSED || state == STATE_ERROR || state == STATE_NONE) {
         view.animationPause()
     } else if (state == STATE_PLAYING) {
         view.animatePlay()

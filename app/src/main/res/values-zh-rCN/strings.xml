@@ -241,4 +241,10 @@
     <!-- Error Activity -->
     <string name="sorry_for_error">抱歉，这不该发生。</string>
     <string name="copied">已复制到剪贴板</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">No stream available</string>
+    <string name="error_no_internet">No network connection</string>
+    <string name="error_timeout">Timeout</string>
+    <string name="error_unknown">Unknown error</string>
 </resources>

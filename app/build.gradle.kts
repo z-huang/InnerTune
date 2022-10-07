@@ -128,7 +128,7 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation("androidx.transition:transition-ktx:1.4.1")
-    implementation("com.google.android.material:material:1.7.0-rc01")
+    implementation("com.google.android.material:material:1.8.0-alpha01")
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
     // ExoPlayer

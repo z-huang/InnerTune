@@ -13,12 +13,11 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.support.v4.media.session.PlaybackStateCompat.ERROR_CODE_UNKNOWN_ERROR
 import android.util.Pair
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.PlaybackException.ERROR_CODE_REMOTE_ERROR
+import com.google.android.exoplayer2.PlaybackException.*
 import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.analytics.PlaybackStats
@@ -63,6 +62,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import kotlin.math.roundToInt
 
 /**
@@ -214,7 +216,10 @@ class SongPlayer(
             }
         )
         setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription(context) }
-        setErrorMessageProvider { e -> Pair(ERROR_CODE_UNKNOWN_ERROR, e.localizedMessage) }
+        setErrorMessageProvider { e -> // e is ExoPlaybackException
+            val cause = e.cause?.cause as? PlaybackException // what we throw from resolving data source
+            Pair(cause?.errorCode ?: e.errorCode, cause?.message ?: e.message)
+        }
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
             override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) = throw UnsupportedOperationException()
@@ -262,7 +267,6 @@ class SongPlayer(
     private fun createDataSource() = DefaultMediaSourceFactory(ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
         val mediaId = dataSpec.key ?: error("No media id")
         if (cache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)) {
-            logd("$mediaId is cached")
             return@Factory dataSpec
         }
         val song = runBlocking(IO) { localRepository.getSongById(mediaId).getValueAsync() }
@@ -271,7 +275,7 @@ class SongPlayer(
         }
         runBlocking(IO) {
             YouTube.player(mediaId)
-        }.mapCatching { playerResponse ->
+        }.map { playerResponse ->
             if (playerResponse.playabilityStatus.status != "OK") {
                 throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
             }
@@ -285,10 +289,16 @@ class SongPlayer(
                     }
                 }
                 ?.url?.toUri()
-                ?: throw PlaybackException("No stream available", null, ERROR_CODE_NO_STREAM)
-            dataSpec.withUri(uri)
+                ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
+            dataSpec.withUri(uri).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }.getOrElse { throwable ->
-            throw PlaybackException("Unknown error", throwable, ERROR_CODE_REMOTE_ERROR)
+            if (throwable is ConnectException || throwable is UnknownHostException) {
+                throw PlaybackException(context.getString(R.string.error_no_internet), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
+            }
+            if (throwable is SocketTimeoutException) {
+                throw PlaybackException(context.getString(R.string.error_timeout), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
+            }
+            throw PlaybackException(context.getString(R.string.error_unknown), throwable, ERROR_CODE_REMOTE_ERROR)
         }
     })
 

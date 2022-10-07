@@ -54,6 +54,47 @@
                     android:layout_height="match_parent"
                     tools:src="@tools:sample/avatars" />
 
+                <View
+                    android:id="@+id/mask"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha=".75"
+                    android:background="#000000"
+                    android:visibility="@{viewModel.playbackState.errorCode != 0 ? View.VISIBLE : View.GONE}" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{viewModel.playbackState.errorCode != 0 ? View.VISIBLE : View.GONE}">
+
+                    <ImageView
+                        android:id="@+id/error_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_error"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/error_msg"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/error_msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="6dp"
+                        android:text="@{viewModel.playbackState.errorMessage}"
+                        android:textColor="?android:textColorPrimaryInverse"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/error_icon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Error message" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/load_indicator"
                     style="@style/Widget.Material3.CircularProgressIndicator.Small"
@@ -159,6 +200,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginHorizontal="12dp"
                 android:onClick="@{()->viewModel.transportControls.skipToPrevious()}"
+                tools:ignore="SpeakableTextPresentCheck"
                 tools:src="@drawable/ic_skip_previous" />
 
             <com.zionhuang.music.ui.widgets.PlayPauseButton
@@ -173,6 +215,7 @@
                 android:tint="?colorOnPrimary"
                 app:playPauseButtonTint="?colorOnPrimary"
                 app:playState="@{viewModel.playbackState.state}"
+                tools:ignore="SpeakableTextPresentCheck"
                 tools:src="@drawable/ic_pause" />
 
             <com.zionhuang.music.ui.widgets.SkipNextButton
@@ -183,6 +226,7 @@
                 android:layout_marginHorizontal="12dp"
                 android:onClick="@{()->viewModel.transportControls.skipToNext()}"
                 app:enabled="@{(viewModel.playbackState.actions &amp; PlaybackState.ACTION_SKIP_TO_NEXT) != 0}"
+                tools:ignore="SpeakableTextPresentCheck"
                 tools:src="@drawable/ic_skip_next" />
 
             <com.zionhuang.music.ui.widgets.RepeatButton
@@ -196,6 +240,7 @@
                 android:onClick="@{()->viewModel.toggleRepeatMode()}"
                 android:padding="4dp"
                 app:repeatMode="@{viewModel.playbackState.repeatMode}"
+                tools:ignore="SpeakableTextPresentCheck"
                 tools:src="@drawable/ic_repeat" />
         </LinearLayout>
 
@@ -224,7 +269,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:scaleType="center"
-                android:src="@drawable/ic_queue_music" />
+                android:src="@drawable/ic_queue_music"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageView
                 android:id="@+id/btn_add_to_library"
@@ -235,7 +281,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:scaleType="center"
-                android:src="@drawable/ic_library_add" />
+                android:src="@drawable/ic_library_add"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <!--<ImageView-->
             <!--    android:id="@+id/btn_sleep_timer"-->
@@ -257,7 +304,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:scaleType="center"
-                android:src="@drawable/ic_more_horiz" />
+                android:src="@drawable/ic_more_horiz"
+                tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
     </LinearLayout>
 </layout>

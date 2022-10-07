@@ -241,4 +241,10 @@
     <!-- Error Activity -->
     <string name="sorry_for_error">申し訳ありませんが、エラーが発生しました。</string>
     <string name="copied">クリップボードにコピー</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">No stream available</string>
+    <string name="error_no_internet">No network connection</string>
+    <string name="error_timeout">Timeout</string>
+    <string name="error_unknown">Unknown error</string>
 </resources>

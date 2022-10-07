@@ -247,4 +247,10 @@
     <!-- Error Activity -->
     <string name="sorry_for_error">Mi dispiace ma questo non doveva succedere.</string>
     <string name="copied">Copiato negli appunti</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">No stream available</string>
+    <string name="error_no_internet">No network connection</string>
+    <string name="error_timeout">Timeout</string>
+    <string name="error_unknown">Unknown error</string>
 </resources>
