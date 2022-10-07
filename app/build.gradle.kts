@@ -134,6 +134,7 @@ dependencies {
     // ExoPlayer
     implementation("com.google.android.exoplayer:exoplayer:2.18.1")
     implementation("com.google.android.exoplayer:extension-mediasession:2.18.1")
+    implementation("com.google.android.exoplayer:extension-okhttp:2.18.1")
     // Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation("androidx.test:monitor:1.5.0")

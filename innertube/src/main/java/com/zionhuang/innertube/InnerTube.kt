@@ -28,10 +28,18 @@ class InnerTube {
         gl = Locale.getDefault().country,
         hl = Locale.getDefault().toLanguageTag()
     )
+    private var _proxy: Proxy? = null
+    var proxy: Proxy?
+        get() = _proxy
+        set(value) {
+            _proxy = value
+            httpClient.close()
+            httpClient = createClient()
+        }
     var visitorData: String = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun createClient(proxy: Proxy? = null) = HttpClient(OkHttp) {
+    private fun createClient() = HttpClient(OkHttp) {
         expectSuccess = true
 
         install(ContentNegotiation) {
@@ -48,20 +56,15 @@ class InnerTube {
             deflate(0.8F)
         }
 
-        if (proxy != null) {
+        if (_proxy != null) {
             engine {
-                this.proxy = proxy
+                this.proxy = _proxy
             }
         }
 
         defaultRequest {
             url("https://music.youtube.com/youtubei/v1/")
         }
-    }
-
-    fun setProxy(proxy: Proxy) {
-        httpClient.close()
-        httpClient = createClient(proxy)
     }
 
     private fun HttpRequestBuilder.configYTClient(client: YouTubeClient) {

@@ -25,8 +25,11 @@ object YouTube {
         set(value) {
             innerTube.visitorData = value
         }
-
-    fun setProxy(proxy: Proxy) = innerTube.setProxy(proxy)
+    var proxy: Proxy?
+        get() = innerTube.proxy
+        set(value) {
+            innerTube.proxy = value
+        }
 
     suspend fun getSearchSuggestions(query: String): Result<List<YTBaseItem>> = runCatching {
         innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents

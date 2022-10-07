@@ -35,10 +35,10 @@ class App : Application() {
         if (sharedPreferences.getBoolean(getString(R.string.pref_proxy_enabled), false)) {
             try {
                 val socketAddress = sharedPreferences.getString(getString(R.string.pref_proxy_url), "")!!.toInetSocketAddress()
-                YouTube.setProxy(Proxy(
+                YouTube.proxy = Proxy(
                     sharedPreferences.getEnum(getString(R.string.pref_proxy_type), Proxy.Type.HTTP),
                     socketAddress
-                ))
+                )
             } catch (e: Exception) {
                 Toast.makeText(this, "Failed to parse proxy url.", LENGTH_SHORT).show()
                 e.printStackTrace()
