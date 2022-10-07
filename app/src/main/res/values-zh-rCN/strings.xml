@@ -26,8 +26,8 @@
     <string name="pref_enable_proxy_title">启用代理</string>
     <string name="pref_proxy_type_title">代理类型</string>
     <string name="pref_proxy_url_title">代理链接</string>
-    <string name="pref_restart_title">重启以应用变更</string>
-    <string name="pref_player_audio_title">播放器和音频</string>
+    <string name="pref_restart_title">重启生效</string>
+    <string name="pref_player_audio_title">播放器与音频</string>
     <string name="pref_general_title">通用</string>
     <string name="pref_audio_quality_title">音质</string>
     <string name="audio_quality_auto">自动</string>
@@ -173,7 +173,7 @@
         <item quantity="other">已选择 %d 个项目</item>
     </plurals>
     <string name="snackbar_undo">撤销</string>
-    <string name="snackbar_url_error">无法辨认此链接</string>
+    <string name="snackbar_url_error">无法识别此链接</string>
     <plurals name="snackbar_song_play_next" tools:ignore="UnusedQuantity">
         <item quantity="one">即将播放此歌曲</item>
         <item quantity="other">即将播放此 %d 首歌曲</item>
@@ -239,6 +239,6 @@
     <string name="header_from_your_library">来自您的媒体库</string>
 
     <!-- Error Activity -->
-    <string name="sorry_for_error">抱歉，这不该发生</string>
+    <string name="sorry_for_error">抱歉，这不该发生。</string>
     <string name="copied">已复制到剪贴板</string>
 </resources>
