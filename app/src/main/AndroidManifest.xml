@@ -146,7 +146,7 @@
         </receiver>
         <receiver
             android:name="androidx.media.session.MediaButtonReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
