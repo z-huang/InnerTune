@@ -97,19 +97,6 @@ class SongPlayer(
     }
     var currentSong: Song? = null
 
-    init {
-        scope.launch {
-            currentSongFlow.collect {
-                val shouldInvalidate = currentSong == null || it == null || currentSong?.song?.liked != it.song.liked
-                currentSong = it
-                if (shouldInvalidate) {
-                    mediaSessionConnector.invalidateMediaSessionPlaybackState()
-                    playerNotificationManager.invalidate()
-                }
-            }
-        }
-    }
-
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
     }
@@ -290,6 +277,19 @@ class SongPlayer(
             setUseRewindAction(false)
             setUseFastForwardAction(false)
         }
+
+    init {
+        scope.launch {
+            currentSongFlow.collect {
+                val shouldInvalidate = currentSong == null || it == null || currentSong?.song?.liked != it.song.liked
+                currentSong = it
+                if (shouldInvalidate) {
+                    mediaSessionConnector.invalidateMediaSessionPlaybackState()
+                    playerNotificationManager.invalidate()
+                }
+            }
+        }
+    }
 
     private fun createOkHttpDataSourceFactory() = OkHttpDataSource.Factory(OkHttpClient.Builder()
         .proxy(YouTube.proxy)
@@ -527,7 +527,7 @@ class SongPlayer(
 
         fun createPendingIntent(context: Context, action: String, instanceId: Int): PendingIntent = PendingIntent.getBroadcast(
             context,
-            100,
+            instanceId,
             Intent(action).setPackage(context.packageName).putExtra(EXTRA_INSTANCE_ID, instanceId),
             FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
         )
