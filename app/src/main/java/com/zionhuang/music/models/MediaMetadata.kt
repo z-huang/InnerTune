@@ -3,8 +3,7 @@ package com.zionhuang.music.models
 import android.content.Context
 import android.os.Parcelable
 import android.support.v4.media.MediaDescriptionCompat
-import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ALBUM
-import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_ARTIST
+import android.support.v4.media.MediaMetadataCompat.*
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.zionhuang.innertube.models.SongItem
@@ -44,6 +43,7 @@ data class MediaMetadata(
         .setDescription(artists.joinToString { it.name })
         .setIconUri(thumbnailUrl?.let { resizeThumbnailUrl(it, (512 * context.resources.displayMetrics.density).roundToInt(), null) }?.toUri())
         .setExtras(bundleOf(
+            METADATA_KEY_DURATION to duration * 1000L,
             METADATA_KEY_ARTIST to artists.joinToString { it.name },
             METADATA_KEY_ALBUM to album?.title
         ))
@@ -97,7 +97,7 @@ fun SongItem.toMediaMetadata() = MediaMetadata(
             name = it.text
         )
     },
-    duration = duration ?: -1,
+    duration = duration ?: 0,
     thumbnailUrl = thumbnails.lastOrNull()?.url,
     album = album?.let {
         MediaMetadata.Album(

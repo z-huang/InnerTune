@@ -55,12 +55,22 @@ class CustomPlaylistFragment : RecyclerViewFragment<LocalItemAdapter>() {
             if (adapter.currentList[position] !is LocalItem) return@addOnClickListener
 
             playbackViewModel.playQueue(requireActivity(), ListQueue(
+                title = when (playlistId) {
+                    LIKED_PLAYLIST_ID -> getString(R.string.liked_songs)
+                    DOWNLOADED_PLAYLIST_ID -> getString(R.string.downloaded_songs)
+                    else -> throw IllegalArgumentException("Unknown custom playlist")
+                },
                 items = adapter.currentList.filterIsInstance<Song>().map { it.toMediaItem() },
                 startIndex = position - 1
             ))
         }
         adapter.onShuffle = {
             playbackViewModel.playQueue(requireActivity(), ListQueue(
+                title = when (playlistId) {
+                    LIKED_PLAYLIST_ID -> getString(R.string.liked_songs)
+                    DOWNLOADED_PLAYLIST_ID -> getString(R.string.downloaded_songs)
+                    else -> throw IllegalArgumentException("Unknown custom playlist")
+                },
                 items = adapter.currentList.filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
             ))
         }

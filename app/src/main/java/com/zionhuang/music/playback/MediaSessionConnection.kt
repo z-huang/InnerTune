@@ -23,12 +23,14 @@ object MediaSessionConnection {
     private val _isConnected = MutableStateFlow(false)
     private val _playbackState = MutableStateFlow<PlaybackStateCompat?>(null)
     private val _nowPlaying = MutableStateFlow<MediaMetadataCompat?>(null)
-    private val _queueData = MutableStateFlow<List<QueueItem>>(emptyList())
+    private val _queueTitle = MutableStateFlow<String?>(null)
+    private val _queueItems = MutableStateFlow<List<QueueItem>>(emptyList())
 
     val isConnected: StateFlow<Boolean> = _isConnected
     val playbackState: StateFlow<PlaybackStateCompat?> = _playbackState
     val mediaMetadata: StateFlow<MediaMetadataCompat?> = _nowPlaying
-    val queueItems: StateFlow<List<QueueItem>> = _queueData
+    val queueTitle: StateFlow<String?> = _queueTitle
+    val queueItems: StateFlow<List<QueueItem>> = _queueItems
 
     private var _binder: MusicBinder? = null
     val binder: MusicBinder? get() = _binder
@@ -76,7 +78,11 @@ object MediaSessionConnection {
         }
 
         override fun onQueueChanged(queue: List<QueueItem>) {
-            _queueData.value = queue
+            _queueItems.value = queue
+        }
+
+        override fun onQueueTitleChanged(title: CharSequence?) {
+            _queueTitle.value = title?.toString()
         }
     }
 }

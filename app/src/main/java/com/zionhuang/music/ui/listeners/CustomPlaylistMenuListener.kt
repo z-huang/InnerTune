@@ -18,7 +18,7 @@ class LikedPlaylistMenuListener(override val fragment: Fragment) : BaseMenuListe
         SongRepository.getLikedSongs(SongSortInfoPreference).getList().map { it.toMediaMetadata() }
 
     fun play() {
-        playAll(emptyList())
+        playAll(context.getString(R.string.liked_songs), emptyList())
     }
 
     fun playNext() {
@@ -48,7 +48,7 @@ class DownloadedPlaylistMenuListener(override val fragment: Fragment) : BaseMenu
         SongRepository.getDownloadedSongs(SongSortInfoPreference).getList().map { it.toMediaMetadata() }
 
     fun play() {
-        playAll(emptyList())
+        playAll(context.getString(R.string.downloaded_songs), emptyList())
     }
 
     fun playNext() {

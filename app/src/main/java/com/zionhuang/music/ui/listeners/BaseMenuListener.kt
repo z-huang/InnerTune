@@ -32,9 +32,10 @@ abstract class BaseMenuListener<T>(open val fragment: Fragment) {
     abstract suspend fun getMediaMetadata(items: List<T>): List<MediaMetadata>
 
     @OptIn(DelicateCoroutinesApi::class)
-    fun playAll(items: List<T>) {
+    fun playAll(queueTitle: String?, items: List<T>) {
         GlobalScope.launch(Dispatchers.Main + context.exceptionHandler) {
             MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                title = queueTitle,
                 items = getMediaMetadata(items).map { it.toMediaItem() }
             ))
         }

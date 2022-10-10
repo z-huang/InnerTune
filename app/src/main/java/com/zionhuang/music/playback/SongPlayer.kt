@@ -339,6 +339,7 @@ class SongPlayer(
 
     fun playQueue(queue: Queue) {
         currentQueue = queue
+        mediaSession.setQueueTitle(queue.title)
         player.clearMediaItems()
 
         scope.launch(context.exceptionHandler) {

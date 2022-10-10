@@ -12,12 +12,15 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.Queue
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
     val transportControls: TransportControls? get() = MediaSessionConnection.transportControls
 
@@ -26,7 +29,12 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         if (MediaSessionConnection.mediaController != null && playbackState != null) PlaybackStateData.from(MediaSessionConnection.mediaController!!, playbackState)
         else PlaybackStateData()
     }.stateIn(viewModelScope, SharingStarted.Lazily, PlaybackStateData())
+    val queueTitle = MediaSessionConnection.queueTitle
     val queueItems = MediaSessionConnection.queueItems
+
+    val currentSong = mediaMetadata.flatMapLatest { mediaMetadata ->
+        SongRepository.getSongById(mediaMetadata?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)).flow
+    }
 
     val position = MutableStateFlow(0L)
     val duration = MutableStateFlow(0L)

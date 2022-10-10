@@ -77,6 +77,7 @@ class LocalSearchFragment : AbsRecyclerViewFragment<FragmentSearchLocalBinding, 
                 is Song -> {
                     val songs = adapter.currentList.filterIsInstance<Song>()
                     MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                        title = getString(R.string.queue_searched_songs),
                         items = songs.map { it.toMediaItem() },
                         startIndex = songs.indexOfFirst { it.id == item.id }
                     ))

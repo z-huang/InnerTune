@@ -119,13 +119,6 @@
             android:name="playlistId"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/queueFragment"
-        android:name="com.zionhuang.music.ui.fragments.QueueFragment"
-        android:label="@string/title_now_playing" />
-    <action
-        android:id="@+id/open_queueFragment"
-        app:destination="@id/queueFragment" />
     <action
         android:id="@+id/open_youTubeSuggestionFragment"
         app:destination="@id/youtubeSuggestionFragment" />

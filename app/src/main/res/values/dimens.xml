@@ -8,6 +8,7 @@
     <dimen name="album_thumbnail_size">144dp</dimen>
 
     <dimen name="bottom_controls_sheet_peek_height">54dp</dimen>
+    <dimen name="queue_peek_height">64dp</dimen>
 
     <dimen name="drag_item_elevation">4dp</dimen>
 </resources>

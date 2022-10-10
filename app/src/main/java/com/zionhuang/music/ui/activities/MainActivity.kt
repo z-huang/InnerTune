@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.ActionMode
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
@@ -20,8 +21,8 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import com.google.android.material.bottomsheet.NeoBottomSheetBehavior
+import com.google.android.material.bottomsheet.NeoBottomSheetBehavior.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
@@ -41,6 +42,7 @@ import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.base.ThemedBindingActivity
 import com.zionhuang.music.ui.fragments.BottomControlsFragment
 import com.zionhuang.music.ui.fragments.MiniPlayerFragment
+import com.zionhuang.music.ui.fragments.QueueSheetFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.utils.AdaptiveUtils
 import com.zionhuang.music.utils.LocalizationUtils
@@ -49,6 +51,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+
 class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController.OnDestinationChangedListener {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
@@ -56,16 +59,19 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     val currentFragment: Fragment?
         get() = navHostFragment.childFragmentManager.fragments.firstOrNull()
 
-    lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+    lateinit var bottomSheetBehavior: NeoBottomSheetBehavior<*>
+    lateinit var queueSheetBehavior: NeoBottomSheetBehavior<*>
 
     val fab: FloatingActionButton get() = binding.fab
 
     private var actionMode: ActionMode? = null
 
-    @SuppressLint("PrivateResource")
+    @SuppressLint("PrivateResource", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         LocalizationUtils.changeAppLanguage(this, LocalizationUtils.getAppLocale(this))
         super.onCreate(savedInstanceState)
+
         val defaultTabIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
@@ -103,16 +109,62 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             true
         }
 
-        replaceFragment(R.id.miniPlayerFragment, MiniPlayerFragment())
-        replaceFragment(R.id.bottom_controls_container, BottomControlsFragment())
-        // Fix bottom sheet background color
+        binding.fab.setOnApplyWindowInsetsListener { v, insets ->
+            v.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                bottomMargin = (16 * getDensity()).toInt() + insets.systemBarInsetsCompat.bottom
+            }
+            insets
+        }
+        replaceFragment(R.id.mini_player_fragment, MiniPlayerFragment())
+        replaceFragment(R.id.bottom_controls_fragment, BottomControlsFragment())
+        replaceFragment(R.id.queue_fragment, QueueSheetFragment())
         binding.miniPlayerFragment.background = binding.bottomNav.background
-        binding.bottomControlsContainer.background = binding.bottomNav.background
-        binding.navigationBar.background = binding.bottomNav.background
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
             isHideable = true
             state = STATE_HIDDEN
-            addBottomSheetCallback(BottomSheetCallback())
+            addBottomSheetCallback(object : BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, @State newState: Int) {
+                    if (newState == STATE_COLLAPSED && binding.container.paddingBottom != dip(R.dimen.bottom_controls_sheet_peek_height)) {
+                        ValueAnimator.ofInt(0, dip(R.dimen.bottom_controls_sheet_peek_height)).apply {
+                            duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
+                            interpolator = FastOutSlowInInterpolator()
+                            addUpdateListener {
+                                binding.container.updatePadding(bottom = it.animatedValue as Int)
+                            }
+                        }.start()
+                    } else if (newState == STATE_HIDDEN && binding.container.paddingBottom != 0) {
+                        ValueAnimator.ofInt(dip(R.dimen.bottom_controls_sheet_peek_height), 0).apply {
+                            duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
+                            interpolator = FastOutSlowInInterpolator()
+                            addUpdateListener {
+                                binding.container.updatePadding(bottom = it.animatedValue as Int)
+                            }
+                        }.start()
+                    }
+                    if (newState == STATE_HIDDEN) {
+                        MediaSessionConnection.mediaController?.transportControls?.stop()
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    val progress = slideOffset.coerceIn(0f, 1f)
+                    binding.bottomNav.translationY = binding.bottomNav.height * progress
+                    binding.miniPlayerFragment.alpha = (1 - progress * 4).coerceIn(0f, 1f) // mini player disappears after sliding 25%
+                    binding.bottomControlsFragment.alpha = ((progress - 0.25f) * 4).coerceIn(0f, 1f)
+                }
+            })
+        }
+        queueSheetBehavior = from(binding.queueSheet).apply {
+            state = STATE_COLLAPSED
+            addBottomSheetCallback(object : BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    bottomSheetBehavior.isDraggable = !(newState == STATE_EXPANDED || newState == STATE_DRAGGING)
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+
+            })
         }
 
         handleIntent(intent)
@@ -129,7 +181,10 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
                 binding.container.updatePadding(bottom = if (bottomSheetBehavior.state == STATE_HIDDEN) 0 else dip(R.dimen.bottom_controls_sheet_peek_height))
                 binding.bottomNav.isVisible = it == AdaptiveUtils.ScreenSize.SMALL
                 binding.navigationRail.isVisible = it != AdaptiveUtils.ScreenSize.SMALL
-                bottomSheetBehavior.setPeekHeight((if (it == AdaptiveUtils.ScreenSize.SMALL) dip(R.dimen.m3_bottom_nav_min_height) else 0) + dip(R.dimen.bottom_controls_sheet_peek_height), true)
+                bottomSheetBehavior.setPeekHeight(
+                    (if (it == AdaptiveUtils.ScreenSize.SMALL) dip(R.dimen.m3_bottom_nav_min_height) else 0) + dip(R.dimen.bottom_controls_sheet_peek_height),
+                    true
+                )
             }
         }
     }
@@ -206,44 +261,19 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
                 bottomSheetBehavior.state = STATE_COLLAPSED
             }
         }
+        queueSheetBehavior.state = STATE_COLLAPSED
     }
 
     fun collapseBottomSheet() {
+        queueSheetBehavior.state = STATE_COLLAPSED
         bottomSheetBehavior.state = STATE_COLLAPSED
     }
 
-    private inner class BottomSheetCallback : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, @State newState: Int) {
-            if (newState == STATE_COLLAPSED && binding.container.paddingBottom != dip(R.dimen.bottom_controls_sheet_peek_height)) {
-                ValueAnimator.ofInt(0, dip(R.dimen.bottom_controls_sheet_peek_height)).apply {
-                    duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
-                    interpolator = FastOutSlowInInterpolator()
-                    addUpdateListener {
-                        binding.container.updatePadding(bottom = it.animatedValue as Int)
-                    }
-                }.start()
-            } else if (newState == STATE_HIDDEN && binding.container.paddingBottom != 0) {
-                ValueAnimator.ofInt(dip(R.dimen.bottom_controls_sheet_peek_height), 0).apply {
-                    duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
-                    interpolator = FastOutSlowInInterpolator()
-                    addUpdateListener {
-                        binding.container.updatePadding(bottom = it.animatedValue as Int)
-                    }
-                }.start()
-            }
-            if (newState == STATE_HIDDEN) {
-                MediaSessionConnection.mediaController?.transportControls?.stop()
-            }
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            val progress = slideOffset.coerceIn(0f, 1f)
-            binding.bottomNav.translationY = binding.bottomNav.height * progress
-            binding.miniPlayerFragment.alpha = (1 - progress * 4).coerceIn(0f, 1f) // mini player disappears after sliding 25%
-        }
-    }
-
     override fun onBackPressed() {
+        if (queueSheetBehavior.state != STATE_COLLAPSED) {
+            queueSheetBehavior.state = STATE_COLLAPSED
+            return
+        }
         if (bottomSheetBehavior.state == STATE_EXPANDED) {
             bottomSheetBehavior.state = STATE_COLLAPSED
             return

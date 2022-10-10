@@ -257,4 +257,8 @@
     <string name="error_no_internet">No network connection</string>
     <string name="error_timeout">Timeout</string>
     <string name="error_unknown">Unknown error</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">All songs</string>
+    <string name="queue_searched_songs">Searched songs</string>
 </resources>

@@ -247,4 +247,8 @@
     <string name="error_no_internet">沒有網路連線</string>
     <string name="error_timeout">連線逾時</string>
     <string name="error_unknown">未知的錯誤</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">全部歌曲</string>
+    <string name="queue_searched_songs">搜尋的歌曲</string>
 </resources>

@@ -64,7 +64,7 @@ class PlaylistMenuListener(override val fragment: Fragment) : BaseMenuListener<P
         if (playlists.size == 1 && playlists[0].playlist.isYouTubePlaylist) {
             NavigationEndpointHandler(fragment).handle(WatchPlaylistEndpoint(playlistId = playlists[0].id))
         } else {
-            playAll(playlists)
+            playAll(if (playlists.size == 1) playlists[0].playlist.name else "", playlists)
         }
     }
 
