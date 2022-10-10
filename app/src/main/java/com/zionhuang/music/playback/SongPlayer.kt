@@ -30,6 +30,7 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
+import com.google.android.exoplayer2.source.ShuffleOrder.DefaultShuffleOrder
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.CustomActionReceiver
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.EXTRA_INSTANCE_ID
@@ -341,6 +342,7 @@ class SongPlayer(
         currentQueue = queue
         mediaSession.setQueueTitle(queue.title)
         player.clearMediaItems()
+        player.shuffleModeEnabled = false
 
         scope.launch(context.exceptionHandler) {
             val initialStatus = withContext(IO) { queue.getInitialStatus() }
@@ -501,6 +503,20 @@ class SongPlayer(
         val mediaItem = eventTime.timeline.getWindow(eventTime.windowIndex, Timeline.Window()).mediaItem
         scope.launch {
             localRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
+        }
+    }
+
+    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+        if (shuffleModeEnabled) {
+            // Always put current playing item at first
+            val shuffledIndices = IntArray(player.mediaItemCount)
+            for (i in 0 until player.mediaItemCount) {
+                shuffledIndices[i] = i
+            }
+            shuffledIndices.shuffle()
+            shuffledIndices[shuffledIndices.indexOf(player.currentMediaItemIndex)] = shuffledIndices[0]
+            shuffledIndices[0] = player.currentMediaItemIndex
+            player.setShuffleOrder(DefaultShuffleOrder(shuffledIndices, System.currentTimeMillis()))
         }
     }
 
