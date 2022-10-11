@@ -8,6 +8,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.View
+import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
@@ -120,6 +121,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         replaceFragment(R.id.queue_fragment, QueueSheetFragment())
         binding.miniPlayerFragment.background = binding.bottomNav.background
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
+            maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
             isHideable = true
             state = STATE_HIDDEN
             addBottomSheetCallback(object : BottomSheetCallback() {
@@ -155,6 +157,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             })
         }
         queueSheetBehavior = from(binding.queueSheet).apply {
+            maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
             state = STATE_COLLAPSED
             addBottomSheetCallback(object : BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
