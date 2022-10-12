@@ -143,6 +143,7 @@ object YouTube {
             return@runCatching next(watchPlaylistEndpoint.toWatchEndpoint()).getOrThrow().let { result ->
                 result.copy(
                     items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } + result.items,
+                    lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(1)?.tabRenderer?.endpoint?.browseEndpoint,
                     currentIndex = playlistPanelRenderer.currentIndex
                 )
             }
@@ -150,6 +151,7 @@ object YouTube {
         NextResult(
             items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() },
             currentIndex = playlistPanelRenderer.currentIndex,
+            lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(1)?.tabRenderer?.endpoint?.browseEndpoint,
             continuation = playlistPanelRenderer.continuations?.getContinuation()
         )
     }
