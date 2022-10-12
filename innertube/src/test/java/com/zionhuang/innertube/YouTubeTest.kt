@@ -169,6 +169,13 @@ class YouTubeTest {
     }
 
     @Test
+    fun lyrics() = runBlocking {
+        val nextResult = YouTube.next(WatchEndpoint(videoId = "NCC6lI0GGy0")).getOrThrow()
+        val browseResult = YouTube.browse(nextResult.lyricsEndpoint!!).getOrThrow()
+        assertTrue(browseResult.lyrics != null)
+    }
+
+    @Test
     fun visitorData() {
         assertEquals("CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D", YouTubeClient.generateVisitorData("ldmrJvbAkRo", 1649952524))
         assertEquals("CgtrLTlNQlQ2SWs1OCjZlu-ZBg%3D%3D", YouTubeClient.generateVisitorData("k-9MBT6Ik58", 1664863065))

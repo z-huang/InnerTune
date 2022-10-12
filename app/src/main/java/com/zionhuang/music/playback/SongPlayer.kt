@@ -346,6 +346,9 @@ class SongPlayer(
 
         scope.launch(context.exceptionHandler) {
             val initialStatus = withContext(IO) { queue.getInitialStatus() }
+            initialStatus.title?.let { queueTitle ->
+                mediaSession.setQueueTitle(queueTitle)
+            }
             player.setMediaItems(initialStatus.items)
             if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
             player.prepare()
@@ -359,7 +362,11 @@ class SongPlayer(
         if (player.currentMediaItemIndex < player.mediaItemCount - 1) player.removeMediaItems(player.currentMediaItemIndex + 1, player.mediaItemCount)
         scope.launch(context.exceptionHandler) {
             val radioQueue = YouTubeQueue(endpoint = WatchEndpoint(videoId = currentMediaMetadata.id))
-            player.addMediaItems(radioQueue.getInitialStatus().items.drop(1))
+            val initialStatus = radioQueue.getInitialStatus()
+            initialStatus.title?.let { queueTitle ->
+                mediaSession.setQueueTitle(queueTitle)
+            }
+            player.addMediaItems(initialStatus.items.drop(1))
             currentQueue = radioQueue
         }
     }

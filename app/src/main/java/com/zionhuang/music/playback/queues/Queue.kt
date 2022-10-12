@@ -9,6 +9,7 @@ interface Queue {
     suspend fun nextPage(): List<MediaItem>
 
     data class Status(
+        val title: String?,
         val items: List<MediaItem>,
         val index: Int,
     )
