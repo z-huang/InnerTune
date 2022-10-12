@@ -40,8 +40,8 @@ class AppearanceSettingsFragment : BaseSettingsFragment() {
         findPreference<Preference>(getString(R.string.pref_visible_tabs))?.setOnPreferenceClickListener {
             VisibleTabsDialog {
                 view?.rootView?.let { view ->
-                    Snackbar.make(view, R.string.snackbar_action_restart, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.pref_restart) {
+                    Snackbar.make(view, R.string.pref_restart_title, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.snackbar_action_restart) {
                             requireContext().startActivity(
                                 Intent(
                                     requireContext(),
