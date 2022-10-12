@@ -117,7 +117,7 @@
         <item>@string/title_home</item>
         <item>@string/title_songs</item>
         <item>@string/title_artists</item>
-        <item>@string/title_artists</item>
+        <item>@string/title_albums</item>
         <item>@string/title_playlists</item>
     </string-array>
 

@@ -83,9 +83,12 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             4 -> R.id.playlistsFragment
             else -> throw IllegalStateException("Illegal tab index")
         })
-        NavBarHelper(this).getEnabledItems().forEachIndexed { index, value ->
-            if (!value) listOf(binding.bottomNav, binding.navigationRail).forEach {
-                it.menu.removeItem(it.menu.get(index).itemId)
+        val enabledItems = NavBarHelper(this).getEnabledItems()
+        listOf(binding.bottomNav, binding.navigationRail).forEach {
+            it.menu.forEachIndexed { index, menuItem ->
+                if (!enabledItems[index]) {
+                    menuItem.isVisible = false
+                }
             }
         }
         navController.setGraph(graph, null)
