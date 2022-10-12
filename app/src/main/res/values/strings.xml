@@ -227,6 +227,7 @@
     </plurals>
     <string name="snackbar_removed_download">Removed download</string>
     <string name="snackbar_action_view">View</string>
+    <string name="snackbar_action_restart">Restart</string>
 
     <!-- Custom Action -->
     <string name="action_like">Like</string>

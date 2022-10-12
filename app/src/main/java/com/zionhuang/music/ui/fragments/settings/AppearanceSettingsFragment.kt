@@ -1,14 +1,18 @@
 package com.zionhuang.music.ui.fragments.settings
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.DynamicColors
+import com.google.android.material.snackbar.Snackbar
 import com.zionhuang.music.R
+import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 import com.zionhuang.music.ui.fragments.dialogs.VisibleTabsDialog
+import kotlin.system.exitProcess
 
 class AppearanceSettingsFragment : BaseSettingsFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -34,7 +38,21 @@ class AppearanceSettingsFragment : BaseSettingsFragment() {
         }
 
         findPreference<Preference>(getString(R.string.pref_visible_tabs))?.setOnPreferenceClickListener {
-            VisibleTabsDialog().show(childFragmentManager, null)
+            VisibleTabsDialog {
+                view?.rootView?.let { view ->
+                    Snackbar.make(view, R.string.snackbar_action_restart, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.pref_restart) {
+                            requireContext().startActivity(
+                                Intent(
+                                    requireContext(),
+                                    MainActivity::class.java
+                                )
+                            )
+                            exitProcess(0)
+                        }
+                        .show()
+                }
+            }.show(childFragmentManager, null)
             true
         }
     }

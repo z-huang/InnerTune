@@ -9,7 +9,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.utils.NavBarHelper
 
-class VisibleTabsDialog : AppCompatDialogFragment() {
+class VisibleTabsDialog(
+    private val onChange: () -> Unit
+) : AppCompatDialogFragment() {
     var enabledItems = BooleanArray(5) { true }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -36,7 +38,13 @@ class VisibleTabsDialog : AppCompatDialogFragment() {
             Toast.makeText(context, R.string.visible_tabs_required, Toast.LENGTH_SHORT).show()
             return
         }
-        NavBarHelper(requireContext()).setEnabledItems(enabledItems)
+        val navBarHelper = NavBarHelper(requireContext())
+        if (navBarHelper.getEnabledItems().contentEquals(enabledItems)) {
+            dialog?.dismiss()
+            return
+        }
+        navBarHelper.setEnabledItems(enabledItems)
+        onChange.invoke()
         dialog?.dismiss()
     }
 }
