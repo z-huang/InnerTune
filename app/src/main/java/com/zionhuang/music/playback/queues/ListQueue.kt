@@ -7,7 +7,7 @@ class ListQueue(
     val items: List<MediaItem>,
     val startIndex: Int = 0,
 ) : Queue {
-    override suspend fun getInitialStatus() = Queue.Status(items, startIndex)
+    override suspend fun getInitialStatus() = Queue.Status(title, items, startIndex)
 
     override fun hasNextPage(): Boolean = false
 

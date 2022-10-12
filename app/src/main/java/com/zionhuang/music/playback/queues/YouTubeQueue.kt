@@ -22,6 +22,7 @@ class YouTubeQueue(
         }
         continuation = nextResult.continuation
         return Queue.Status(
+            title = nextResult.title,
             items = nextResult.items.map { it.toMediaItem() },
             index = nextResult.currentIndex ?: 0
         )
