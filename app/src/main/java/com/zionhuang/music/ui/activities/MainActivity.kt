@@ -10,10 +10,7 @@ import android.view.ActionMode
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.WindowCompat
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
+import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
@@ -47,6 +44,7 @@ import com.zionhuang.music.ui.fragments.QueueSheetFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.utils.AdaptiveUtils
 import com.zionhuang.music.utils.LocalizationUtils
+import com.zionhuang.music.utils.NavBarHelper
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -85,6 +83,11 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             4 -> R.id.playlistsFragment
             else -> throw IllegalStateException("Illegal tab index")
         })
+        NavBarHelper(this).getEnabledItems().forEachIndexed { index, value ->
+            if (!value) listOf(binding.bottomNav, binding.navigationRail).forEach {
+                it.menu.removeItem(it.menu.get(index).itemId)
+            }
+        }
         navController.setGraph(graph, null)
         navController.addOnDestinationChangedListener(this)
         binding.bottomNav.setupWithNavController(navController)
