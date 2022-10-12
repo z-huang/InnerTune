@@ -40,14 +40,15 @@ android {
     }
     signingConfigs {
         getByName("debug") {
-            // comment out the following lines to build without a signing key
-            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/Key/"
-            val allFilesFromDir = File(tmpFilePath).listFiles()
-            val keystoreFile = allFilesFromDir?.first()
-            storeFile = keystoreFile ?: file(System.getenv("MUSIC_DEBUG_KEYSTORE_FILE"))
-            storePassword = System.getenv("MUSIC_DEBUG_SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("MUSIC_DEBUG_SIGNING_KEY_ALIAS")
-            keyPassword = System.getenv("MUSIC_DEBUG_SIGNING_KEY_PASSWORD")
+            if (System.getenv("MUSIC_DEBUG_SIGNING_STORE_PASSWORD") != null) {
+                val tmpFilePath = System.getProperty("user.home") + "/work/_temp/Key/"
+                val allFilesFromDir = File(tmpFilePath).listFiles()
+                val keystoreFile = allFilesFromDir?.first()
+                storeFile = keystoreFile ?: file(System.getenv("MUSIC_DEBUG_KEYSTORE_FILE"))
+                storePassword = System.getenv("MUSIC_DEBUG_SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("MUSIC_DEBUG_SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("MUSIC_DEBUG_SIGNING_KEY_PASSWORD")
+            }
         }
     }
     buildFeatures {
