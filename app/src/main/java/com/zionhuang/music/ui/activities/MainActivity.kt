@@ -150,10 +150,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    val progress = slideOffset.coerceIn(0f, 1f)
-                    binding.bottomNav.translationY = binding.bottomNav.height * progress
-                    binding.miniPlayerFragment.alpha = (1 - progress * 4).coerceIn(0f, 1f) // mini player disappears after sliding 25%
-                    binding.bottomControlsFragment.alpha = ((progress - 0.25f) * 4).coerceIn(0f, 1f)
+                    onBottomSheetSlide(slideOffset)
                 }
             })
         }
@@ -165,9 +162,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
                     bottomSheetBehavior.isDraggable = !(newState == STATE_EXPANDED || newState == STATE_DRAGGING)
                 }
 
-                override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                }
-
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
             })
         }
 
@@ -189,6 +184,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
                     (if (it == AdaptiveUtils.ScreenSize.SMALL) dip(R.dimen.m3_bottom_nav_min_height) else 0) + dip(R.dimen.bottom_controls_sheet_peek_height),
                     true
                 )
+                onBottomSheetSlide(if (bottomSheetBehavior.state == STATE_EXPANDED) 1f else 0f)
             }
         }
     }
@@ -196,6 +192,13 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         AdaptiveUtils.updateScreenSize(this)
+    }
+
+    private fun onBottomSheetSlide(slideOffset: Float) {
+        val progress = slideOffset.coerceIn(0f, 1f)
+        binding.bottomNav.translationY = binding.bottomNav.height * progress
+        binding.miniPlayerFragment.alpha = (1 - progress * 4).coerceIn(0f, 1f) // mini player disappears after sliding 25%
+        binding.bottomControlsFragment.alpha = ((progress - 0.25f) * 4).coerceIn(0f, 1f)
     }
 
     override fun onNewIntent(intent: Intent?) {
