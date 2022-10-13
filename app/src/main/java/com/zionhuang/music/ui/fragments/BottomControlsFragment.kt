@@ -56,14 +56,6 @@ class BottomControlsFragment : Fragment() {
             }
         }
 
-//        binding.root.background = mainActivity.binding.bottomNav.background
-//        binding.bottomSheet.background = mainActivity.binding.bottomNav.background
-//        binding.queueSheet.background = mainActivity.binding.bottomNav.background
-
-//        replaceFragment(R.id.queue_sheet, QueueSheetFragment())
-//        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
-
-
         binding.btnFavorite.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIKE, null)
         }

@@ -32,6 +32,8 @@ import com.zionhuang.innertube.models.BrowseEndpoint.Companion.playlistBrowseEnd
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.utils.YouTubeLinkHandler
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.Constants.BOTTOM_SHEET_STATE
+import com.zionhuang.music.constants.Constants.QUEUE_SHEET_STATE
 import com.zionhuang.music.databinding.ActivityMainBinding
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.MediaSessionConnection
@@ -124,29 +126,10 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         bottomSheetBehavior = from(binding.bottomControlsSheet).apply {
             maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
             isHideable = true
-            state = STATE_HIDDEN
+            state = savedInstanceState?.getInt(BOTTOM_SHEET_STATE) ?: STATE_HIDDEN
             addBottomSheetCallback(object : BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, @State newState: Int) {
-                    if (newState == STATE_COLLAPSED && binding.container.paddingBottom != dip(R.dimen.bottom_controls_sheet_peek_height)) {
-                        ValueAnimator.ofInt(0, dip(R.dimen.bottom_controls_sheet_peek_height)).apply {
-                            duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
-                            interpolator = FastOutSlowInInterpolator()
-                            addUpdateListener {
-                                binding.container.updatePadding(bottom = it.animatedValue as Int)
-                            }
-                        }.start()
-                    } else if (newState == STATE_HIDDEN && binding.container.paddingBottom != 0) {
-                        ValueAnimator.ofInt(dip(R.dimen.bottom_controls_sheet_peek_height), 0).apply {
-                            duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
-                            interpolator = FastOutSlowInInterpolator()
-                            addUpdateListener {
-                                binding.container.updatePadding(bottom = it.animatedValue as Int)
-                            }
-                        }.start()
-                    }
-                    if (newState == STATE_HIDDEN) {
-                        MediaSessionConnection.mediaController?.transportControls?.stop()
-                    }
+                    onBottomSheetStateChanged(newState)
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -156,10 +139,10 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
         queueSheetBehavior = from(binding.queueSheet).apply {
             maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
-            state = STATE_COLLAPSED
+            state = savedInstanceState?.getInt(QUEUE_SHEET_STATE) ?: STATE_COLLAPSED
             addBottomSheetCallback(object : BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    bottomSheetBehavior.isDraggable = !(newState == STATE_EXPANDED || newState == STATE_DRAGGING)
+                    onQueueSheetStateChanged(newState)
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {}
@@ -194,11 +177,39 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         AdaptiveUtils.updateScreenSize(this)
     }
 
+    private fun onBottomSheetStateChanged(@State newState: Int) {
+        if (newState == STATE_COLLAPSED && binding.container.paddingBottom != dip(R.dimen.bottom_controls_sheet_peek_height)) {
+            ValueAnimator.ofInt(0, dip(R.dimen.bottom_controls_sheet_peek_height)).apply {
+                duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
+                interpolator = FastOutSlowInInterpolator()
+                addUpdateListener {
+                    binding.container.updatePadding(bottom = it.animatedValue as Int)
+                }
+            }.start()
+        } else if (newState == STATE_HIDDEN && binding.container.paddingBottom != 0) {
+            ValueAnimator.ofInt(dip(R.dimen.bottom_controls_sheet_peek_height), 0).apply {
+                duration = resources.getInteger(R.integer.motion_duration_medium).toLong()
+                interpolator = FastOutSlowInInterpolator()
+                addUpdateListener {
+                    binding.container.updatePadding(bottom = it.animatedValue as Int)
+                }
+            }.start()
+        }
+        if (newState == STATE_HIDDEN) {
+            MediaSessionConnection.mediaController?.transportControls?.stop()
+        }
+    }
+
     private fun onBottomSheetSlide(slideOffset: Float) {
         val progress = slideOffset.coerceIn(0f, 1f)
         binding.bottomNav.translationY = binding.bottomNav.height * progress
+        binding.bottomNav.isVisible = progress != 1f && AdaptiveUtils.screenSizeState.value == AdaptiveUtils.ScreenSize.SMALL
         binding.miniPlayerFragment.alpha = (1 - progress * 4).coerceIn(0f, 1f) // mini player disappears after sliding 25%
         binding.bottomControlsFragment.alpha = ((progress - 0.25f) * 4).coerceIn(0f, 1f)
+    }
+
+    private fun onQueueSheetStateChanged(@State newState: Int) {
+        bottomSheetBehavior.isDraggable = !(newState == STATE_EXPANDED || newState == STATE_DRAGGING)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -296,6 +307,12 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     override fun onActionModeFinished(mode: ActionMode?) {
         super.onActionModeFinished(mode)
         actionMode = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(BOTTOM_SHEET_STATE, bottomSheetBehavior.state)
+        outState.putInt(QUEUE_SHEET_STATE, queueSheetBehavior.state)
     }
 
     override fun onStart() {

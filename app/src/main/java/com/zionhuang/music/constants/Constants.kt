@@ -1,6 +1,9 @@
 package com.zionhuang.music.constants
 
 object Constants {
+    const val BOTTOM_SHEET_STATE = "bottom_sheet_state"
+    const val QUEUE_SHEET_STATE = "queue_sheet_state"
+
     const val SONG_HEADER_ID = "song_header"
     const val ARTIST_HEADER_ID = "artist_header"
     const val ALBUM_HEADER_ID = "album_header"

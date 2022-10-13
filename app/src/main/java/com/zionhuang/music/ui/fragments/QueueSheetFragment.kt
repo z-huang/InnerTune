@@ -199,13 +199,10 @@ class QueueSheetFragment : Fragment() {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                val progress = slideOffset.coerceIn(0f, 1f)
-                binding.actionBar.alpha = (1 - progress * 4).coerceIn(0f, 1f)
-                binding.actionBar.isVisible = 1 - progress * 4 > 0
-                binding.content.alpha = ((progress - 0.25f) * 4).coerceIn(0f, 1f)
-                binding.content.isVisible = progress > 0
+                onSlide(slideOffset)
             }
         })
+        onSlide(if (mainActivity.queueSheetBehavior.state == STATE_EXPANDED) 1f else 0f)
 
         lifecycleScope.launch {
             viewModel.currentSong.collectLatest { song ->
@@ -228,6 +225,14 @@ class QueueSheetFragment : Fragment() {
         dragEventManager.onDragged = { fromPos, toPos ->
             viewModel.mediaController?.moveQueueItem(fromPos, toPos)
         }
+    }
+
+    private fun onSlide(slideOffset: Float) {
+        val progress = slideOffset.coerceIn(0f, 1f)
+        binding.actionBar.alpha = (1 - progress * 4).coerceIn(0f, 1f)
+        binding.actionBar.isVisible = 1 - progress * 4 > 0
+        binding.content.alpha = ((progress - 0.25f) * 4).coerceIn(0f, 1f)
+        binding.content.isVisible = progress > 0
     }
 
     class DragEventManager {
