@@ -50,6 +50,8 @@
     <string name="pref_app_version_title">App version</string>
     <string name="pref_github_title" translatable="false">GitHub</string>
     <string name="pref_github_summary" translatable="false">z-huang/music</string>
+    <string name="visible_tabs">Visible tabs</string>
+    <string name="visible_tabs_required">Please select at least one tab!</string>
 
     <!-- Colors -->
     <string name="color_sakura">Sakura</string>
@@ -225,6 +227,7 @@
     </plurals>
     <string name="snackbar_removed_download">Removed download</string>
     <string name="snackbar_action_view">View</string>
+    <string name="snackbar_action_restart">Restart</string>
 
     <!-- Custom Action -->
     <string name="action_like">Like</string>
