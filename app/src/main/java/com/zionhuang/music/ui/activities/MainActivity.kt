@@ -79,7 +79,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         navController.setGraph(graph, null)
         navController.addOnDestinationChangedListener(this)
 
-        val enabledItems = NavigationTabHelper.getEnabledItems(this)
+        val enabledItems = NavigationTabHelper.getConfig(this)
         listOf(binding.bottomNav, binding.navigationRail).forEach {
             it.menu.forEachIndexed { index, menuItem ->
                 if (!enabledItems[index]) {

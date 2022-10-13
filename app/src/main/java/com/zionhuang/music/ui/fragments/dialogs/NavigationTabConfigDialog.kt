@@ -13,7 +13,7 @@ import com.zionhuang.music.utils.NavigationTabHelper
 
 class NavigationTabConfigDialog : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val enabledTabs = NavigationTabHelper.getEnabledItems(requireContext())
+        val enabledTabs = NavigationTabHelper.getConfig(requireContext())
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.pref_customize_navigation_tabs)
             .setMultiChoiceItems(R.array.bottom_nav_items, enabledTabs) { dialog, index, newState ->
@@ -23,8 +23,8 @@ class NavigationTabConfigDialog : AppCompatDialogFragment() {
                 }
             }
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
-                if (!NavigationTabHelper.getEnabledItems(requireContext()).contentEquals(enabledTabs)) {
-                    NavigationTabHelper.setEnabledItems(requireContext(), enabledTabs)
+                if (!NavigationTabHelper.getConfig(requireContext()).contentEquals(enabledTabs)) {
+                    NavigationTabHelper.setConfig(requireContext(), enabledTabs)
                     Toast.makeText(requireContext(), R.string.pref_restart_title, LENGTH_SHORT).show()
                 }
                 dialog.dismiss()
