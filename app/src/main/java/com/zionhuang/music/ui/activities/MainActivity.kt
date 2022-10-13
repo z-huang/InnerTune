@@ -44,8 +44,8 @@ import com.zionhuang.music.ui.fragments.QueueSheetFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.utils.AdaptiveUtils
 import com.zionhuang.music.utils.LocalizationUtils
-import com.zionhuang.music.utils.NavBarHelper
 import com.zionhuang.music.utils.NavigationEndpointHandler
+import com.zionhuang.music.utils.NavigationTabHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -75,15 +75,11 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         val graph = navController.navInflater.inflate(R.navigation.main_navigation_graph)
-        graph.setStartDestination(when (defaultTabIndex) {
-            0 -> R.id.homeFragment
-            1 -> R.id.songsFragment
-            2 -> R.id.artistsFragment
-            3 -> R.id.albumsFragment
-            4 -> R.id.playlistsFragment
-            else -> throw IllegalStateException("Illegal tab index")
-        })
-        val enabledItems = NavBarHelper(this).getEnabledItems()
+        graph.setStartDestination(listOf(R.id.homeFragment, R.id.songsFragment, R.id.artistsFragment, R.id.albumsFragment, R.id.playlistsFragment)[defaultTabIndex])
+        navController.setGraph(graph, null)
+        navController.addOnDestinationChangedListener(this)
+
+        val enabledItems = NavigationTabHelper.getEnabledItems(this)
         listOf(binding.bottomNav, binding.navigationRail).forEach {
             it.menu.forEachIndexed { index, menuItem ->
                 if (!enabledItems[index]) {
@@ -91,8 +87,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
                 }
             }
         }
-        navController.setGraph(graph, null)
-        navController.addOnDestinationChangedListener(this)
+
         binding.bottomNav.setupWithNavController(navController)
         binding.navigationRail.setupWithNavController(navController)
         binding.bottomNav.setOnItemSelectedListener { item ->

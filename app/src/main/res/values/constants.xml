@@ -21,7 +21,7 @@
     <string name="pref_theme_color" translatable="false">THEME_COLOR</string>
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
     <string name="pref_default_open_tab" translatable="false">DEFAULT_OPEN_TAB</string>
-    <string name="pref_visible_tabs" translatable="false">VISIBLE_TABS</string>
+    <string name="pref_nav_tab_config" translatable="false">NAV_TAB_CONFIG</string>
 
     <string name="pref_app_language" translatable="false">APP_LANGUAGE</string>
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>

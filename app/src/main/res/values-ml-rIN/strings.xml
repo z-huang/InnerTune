@@ -15,9 +15,10 @@
     <string name="pref_follow_system_accent_title">സിസ്റ്റം തീം പിന്തുടരുക</string>
     <string name="pref_theme_color_title">തീം നിറം</string>
     <string name="pref_dark_theme_title">ഡാർക്ക് തീം</string>
-    <string name="pref_default_open_tab_title">സ്ഥിര ഓപ്പൺ ടാബ്</string>
     <string name="dark_theme_on">ഓൺ</string>
     <string name="dark_theme_off">ഓഫ്</string>
+    <string name="pref_default_open_tab_title">സ്ഥിര ഓപ്പൺ ടാബ്</string>
+    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
     <string name="dark_theme_follow_system">സിസ്റ്റം പിന്തുടരുക</string>
     <string name="pref_content_title">കന്റെന്റ്</string>
     <string name="pref_app_language_title">App language</string>

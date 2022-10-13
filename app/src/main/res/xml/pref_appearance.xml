@@ -28,6 +28,6 @@
         android:summary="%s"
         android:title="@string/pref_default_open_tab_title" />
     <Preference
-        android:title="@string/visible_tabs"
-        android:key="@string/pref_visible_tabs" />
+        android:key="@string/pref_nav_tab_config"
+        android:title="@string/pref_customize_navigation_tabs" />
 </PreferenceScreen>

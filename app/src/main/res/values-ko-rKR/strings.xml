@@ -15,9 +15,10 @@
     <string name="pref_follow_system_accent_title">시스템 테마</string>
     <string name="pref_theme_color_title">테마 색상</string>
     <string name="pref_dark_theme_title">다크 테마</string>
-    <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="dark_theme_on">켬</string>
     <string name="dark_theme_off">끔</string>
+    <string name="pref_default_open_tab_title">Default open tab</string>
+    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
     <string name="dark_theme_follow_system">시스템</string>
     <string name="pref_content_title">콘텐츠</string>
     <string name="pref_app_language_title">App language</string>
