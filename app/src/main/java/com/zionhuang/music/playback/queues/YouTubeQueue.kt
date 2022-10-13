@@ -10,10 +10,8 @@ import kotlinx.coroutines.withContext
 
 class YouTubeQueue(
     private val endpoint: WatchEndpoint,
-    val item: YTItem? = null,
+    item: YTItem? = null,
 ) : Queue {
-    override val title: String? = null
-
     private var continuation: String? = null
 
     override suspend fun getInitialStatus(): Queue.Status {

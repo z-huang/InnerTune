@@ -48,7 +48,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             MediaSessionConnection.isConnected.map { isConnected ->
                 if (isConnected) MediaSessionConnection.mediaController else null
-            }.collectLatest {
+            }.collect {
                 mediaController?.unregisterCallback(mediaControllerCallback)
                 mediaController = it
                 it?.registerCallback(mediaControllerCallback)

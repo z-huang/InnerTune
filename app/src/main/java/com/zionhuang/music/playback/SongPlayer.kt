@@ -55,11 +55,12 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_UNLIKE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
-import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_MEDIA_ID
+import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_QUEUE_INDEX
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.queues.EmptyQueue
+import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
@@ -71,10 +72,13 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import okhttp3.OkHttpClient
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.math.roundToInt
+
 
 /**
  * A wrapper around [ExoPlayer]
@@ -142,11 +146,7 @@ class SongPlayer(
                     true
                 }
                 COMMAND_SEEK_TO_QUEUE_ITEM -> {
-                    val mediaId = extras.getString(EXTRA_MEDIA_ID)
-                        ?: return@registerCustomCommandReceiver true
-                    player.mediaItemIndexOf(mediaId)?.let {
-                        player.seekToDefaultPosition(it)
-                    }
+                    player.seekToDefaultPosition(extras.getInt(EXTRA_QUEUE_INDEX))
                     true
                 }
                 COMMAND_PLAY_NEXT -> {
@@ -290,6 +290,24 @@ class SongPlayer(
                 }
             }
         }
+        if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {
+            runCatching {
+                context.filesDir.resolve(PERSIST_QUEUE_FILE).inputStream().use { fis ->
+                    ObjectInputStream(fis).use { oos ->
+                        oos.readObject() as PersistQueue
+                    }
+                }
+            }.onSuccess { queue ->
+                playQueue(ListQueue(
+                    title = queue.title,
+                    items = queue.items.map { it.toMediaItem() },
+                    startIndex = queue.mediaItemIndex,
+                    position = queue.position
+                ), playWhenReady = false)
+            }.onFailure { e ->
+                e.printStackTrace()
+            }
+        }
     }
 
     private fun createOkHttpDataSourceFactory() = OkHttpDataSource.Factory(OkHttpClient.Builder()
@@ -338,9 +356,9 @@ class SongPlayer(
         }
     })
 
-    fun playQueue(queue: Queue) {
+    fun playQueue(queue: Queue, playWhenReady: Boolean = true) {
         currentQueue = queue
-        mediaSession.setQueueTitle(queue.title)
+        mediaSession.setQueueTitle(null)
         player.clearMediaItems()
         player.shuffleModeEnabled = false
 
@@ -349,10 +367,11 @@ class SongPlayer(
             initialStatus.title?.let { queueTitle ->
                 mediaSession.setQueueTitle(queueTitle)
             }
-            player.setMediaItems(initialStatus.items)
-            if (initialStatus.index > 0) player.seekToDefaultPosition(initialStatus.index)
+            player.setMediaItems(initialStatus.items, if (initialStatus.index > 0) initialStatus.index else 0, initialStatus.position)
             player.prepare()
-            player.playWhenReady = true
+            if (playWhenReady) {
+                player.playWhenReady = true
+            }
         }
     }
 
@@ -527,7 +546,28 @@ class SongPlayer(
         }
     }
 
-    fun release() {
+    private fun saveQueueToDisk() {
+        val persistQueue = PersistQueue(
+            title = mediaSession.controller.queueTitle?.toString(),
+            items = player.mediaItems.mapNotNull { it.metadata },
+            mediaItemIndex = player.currentMediaItemIndex,
+            position = player.currentPosition
+        )
+        runCatching {
+            context.filesDir.resolve(PERSIST_QUEUE_FILE).outputStream().use { fos ->
+                ObjectOutputStream(fos).use { oos ->
+                    oos.writeObject(persistQueue)
+                }
+            }
+        }.onFailure {
+            it.printStackTrace()
+        }
+    }
+
+    fun onDestroy() {
+        if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {
+            saveQueueToDisk()
+        }
         mediaSession.apply {
             isActive = false
             release()
@@ -548,6 +588,7 @@ class SongPlayer(
         const val NOTIFICATION_ID = 888
         const val ERROR_CODE_NO_STREAM = 1000001
         const val CHUNK_LENGTH = 512 * 1024L
+        const val PERSIST_QUEUE_FILE = "persist_queue.data"
 
         fun createPendingIntent(context: Context, action: String, instanceId: Int): PendingIntent = PendingIntent.getBroadcast(
             context,

@@ -10,7 +10,6 @@ import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
-import com.zionhuang.music.playback.MediaSessionConnection
 import java.net.Proxy
 import java.util.*
 
@@ -50,7 +49,6 @@ class App : Application() {
                 putString(getString(R.string.pref_visitor_data), it)
             }
         }
-        MediaSessionConnection.connect(this)
     }
 
     companion object {

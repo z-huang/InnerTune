@@ -12,7 +12,6 @@ object NavigationTabHelper {
             .map { it == "true" }
             .toBooleanArray()
     } catch (e: Exception) {
-        e.printStackTrace()
         BooleanArray(context.resources.getStringArray(R.array.bottom_nav_items).size) { true }
     }
 

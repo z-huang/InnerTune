@@ -30,6 +30,7 @@
     <string name="pref_restart_title">راه‌اندازی‌مجدد برای اعمال اثر</string>
     <string name="pref_player_audio_title">پخش‌کننده و صدا</string>
     <string name="pref_general_title">عمومی</string>
+    <string name="pref_persistent_queue_title">Persistent queue</string>
     <string name="pref_audio_quality_title">کیفیت صدا</string>
     <string name="audio_quality_auto">خودکار</string>
     <string name="audio_quality_high">بالا</string>

@@ -297,4 +297,14 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         super.onActionModeFinished(mode)
         actionMode = null
     }
+
+    override fun onStart() {
+        super.onStart()
+        MediaSessionConnection.connect(this)
+    }
+
+    override fun onStop() {
+        MediaSessionConnection.disconnect(this)
+        super.onStop()
+    }
 }

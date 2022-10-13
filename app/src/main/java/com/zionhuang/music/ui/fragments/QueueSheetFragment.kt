@@ -109,9 +109,7 @@ class QueueSheetFragment : Fragment() {
             itemTouchHelper.attachToRecyclerView(this)
         }
         binding.recyclerView.addOnClickListener { pos, _ ->
-            adapter.getItem(pos).description.mediaId?.let {
-                viewModel.mediaController?.seekToQueueItem(it)
-            }
+            viewModel.mediaController?.seekToQueueItem(pos)
         }
 
         binding.btnQueue.setOnClickListener {

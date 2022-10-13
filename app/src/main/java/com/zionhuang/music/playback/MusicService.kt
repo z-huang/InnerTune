@@ -51,7 +51,7 @@ class MusicService : LifecycleMediaBrowserService() {
     }
 
     override fun onDestroy() {
-        songPlayer.release()
+        songPlayer.onDestroy()
         super.onDestroy()
     }
 

@@ -30,6 +30,7 @@
     <string name="pref_restart_title">പ്രാബല്യത്തിൽ വരാൻ പുനരാരംഭിക്കുക</string>
     <string name="pref_player_audio_title">പ്ലെയറും ഓഡിയോയും</string>
     <string name="pref_general_title">പൊതുവായ</string>
+    <string name="pref_persistent_queue_title">Persistent queue</string>
     <string name="pref_audio_quality_title">ഓഡിയോ നിലവാരം</string>
     <string name="audio_quality_auto">ഓട്ടോ</string>
     <string name="audio_quality_high">ഉയർന്ന</string>

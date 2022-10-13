@@ -12,6 +12,7 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 import kotlin.math.roundToInt
 
 @Parcelize
@@ -22,19 +23,19 @@ data class MediaMetadata(
     val duration: Int,
     val thumbnailUrl: String? = null,
     val album: Album? = null,
-) : Parcelable {
+) : Parcelable, Serializable {
     @Parcelize
     data class Artist(
         val id: String,
         val name: String,
-    ) : Parcelable
+    ) : Parcelable, Serializable
 
     @Parcelize
     data class Album(
         val id: String,
         val title: String,
         val year: Int? = null,
-    ) : Parcelable
+    ) : Parcelable, Serializable
 
     fun toMediaDescription(context: Context): MediaDescriptionCompat = builder
         .setMediaId(id)

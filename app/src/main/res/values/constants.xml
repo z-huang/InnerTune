@@ -32,6 +32,7 @@
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>
     <string name="pref_restart" translatable="false">RESTART</string>
 
+    <string name="pref_persistent_queue" translatable="false">PERSISTENT_QUEUE</string>
     <string name="pref_audio_quality" translatable="false">AUDIO_QUALITY</string>
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>

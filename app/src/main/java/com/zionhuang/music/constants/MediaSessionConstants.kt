@@ -10,5 +10,5 @@ object MediaSessionConstants {
     const val COMMAND_SEEK_TO_QUEUE_ITEM = "seek_to_queue_item"
     const val COMMAND_PLAY_NEXT = "action_play_next"
     const val COMMAND_ADD_TO_QUEUE = "action_add_to_queue"
-    const val EXTRA_MEDIA_ID = "media_id"
+    const val EXTRA_QUEUE_INDEX = "index"
 }
