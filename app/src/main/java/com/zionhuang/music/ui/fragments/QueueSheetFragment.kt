@@ -194,8 +194,15 @@ class QueueSheetFragment : Fragment() {
                 .show(requireContext())
         }
 
+        var queueSheetPrevState = mainActivity.queueSheetBehavior.state
         mainActivity.queueSheetBehavior.addBottomSheetCallback(object : NeoBottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (queueSheetPrevState == STATE_COLLAPSED) {
+                    MediaSessionConnection.binder?.songPlayer?.player?.currentMediaItemIndex?.let {
+                        (binding.recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(it, 0)
+                    }
+                }
+                queueSheetPrevState = newState
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {

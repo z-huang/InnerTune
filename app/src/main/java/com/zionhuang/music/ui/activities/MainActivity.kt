@@ -221,6 +221,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     private fun handleIntent(intent: Intent) {
         if (intent.action == ACTION_SHOW_BOTTOM_SHEET) {
             bottomSheetBehavior.state = STATE_EXPANDED
+            onBottomSheetSlide(1f)
             return
         }
         val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT))?.toString() ?: return
