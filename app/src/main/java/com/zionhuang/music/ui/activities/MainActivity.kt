@@ -32,6 +32,7 @@ import com.zionhuang.innertube.models.BrowseEndpoint.Companion.playlistBrowseEnd
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.utils.YouTubeLinkHandler
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.Constants.ACTION_SHOW_BOTTOM_SHEET
 import com.zionhuang.music.constants.Constants.BOTTOM_SHEET_STATE
 import com.zionhuang.music.constants.Constants.QUEUE_SHEET_STATE
 import com.zionhuang.music.databinding.ActivityMainBinding
@@ -149,8 +150,6 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             })
         }
 
-        handleIntent(intent)
-
         lifecycleScope.launch {
             SongRepository.validateDownloads()
         }
@@ -170,6 +169,8 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
                 onBottomSheetSlide(if (bottomSheetBehavior.state == STATE_EXPANDED) 1f else 0f)
             }
         }
+
+        handleIntent(intent)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -218,6 +219,10 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     }
 
     private fun handleIntent(intent: Intent) {
+        if (intent.action == ACTION_SHOW_BOTTOM_SHEET) {
+            bottomSheetBehavior.state = STATE_EXPANDED
+            return
+        }
         val url = (intent.data ?: intent.getStringExtra(EXTRA_TEXT))?.toString() ?: return
         YouTubeLinkHandler.getVideoId(url)?.let { id ->
             lifecycleScope.launch {

@@ -1,6 +1,8 @@
 package com.zionhuang.music.constants
 
 object Constants {
+    const val ACTION_SHOW_BOTTOM_SHEET = "show_bottom_sheet"
+
     const val BOTTOM_SHEET_STATE = "bottom_sheet_state"
     const val QUEUE_SHEET_STATE = "queue_sheet_state"
 
