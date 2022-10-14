@@ -44,6 +44,7 @@ import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.Constants.ACTION_SHOW_BOTTOM_SHEET
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
@@ -78,7 +79,6 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.math.roundToInt
-
 
 /**
  * A wrapper around [ExoPlayer]
@@ -226,7 +226,9 @@ class SongPlayer(
                 }
 
             override fun createCurrentContentIntent(player: Player): PendingIntent? =
-                PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), FLAG_IMMUTABLE)
+                PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java).apply {
+                    action = ACTION_SHOW_BOTTOM_SHEET
+                }, FLAG_IMMUTABLE)
         })
         .setChannelNameResourceId(R.string.channel_name_playback)
         .setNotificationListener(notificationListener)
