@@ -1,1 +1,1 @@
-A material design music player to stream music from YouTube Music
+A material design YouTube Music client
