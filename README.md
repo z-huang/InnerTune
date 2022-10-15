@@ -13,7 +13,7 @@ No ads, free, and simple.
 
 > **Note 1:** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
 
-> **Note 2:** The name of this app is temporary. It will be changed in the future.
+> **Note 2:** The icon of this app is temporary. It will be changed in the future.
 
 With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
@@ -73,7 +73,7 @@ You can install _Music_ using the following methods:
 
 1. Download the APK file from [GitHub Releases](https://github.com/z-huang/music/releases).
 2. Add [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music) to your F-Droid repos following the [instruction](https://apt.izzysoft.de/fdroid/index/info), and you can search for this app and receive updates.
-3. To get a dev build, go to [GitHub Action](https://github.com/z-huang/music/actions) and download the APK artifact of any workflow.
+3. If you want to have bug fixes or enjoy new features quickly, install debug version from [GitHub Action](https://github.com/z-huang/music/actions) at your own risk and remember to backup your data more frequently.
 4. Clone this repository and build a debug APK.
 
 How to get updates?
