@@ -5,11 +5,9 @@ import android.app.Application
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaControllerCompat.TransportControls
-import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.Queue
@@ -41,22 +39,28 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     val duration = MutableStateFlow(0L)
     private var lastPositionJob: Job? = null
 
-    var mediaController: MediaControllerCompat? = null
-        private set
-    private val mediaControllerCallback = ControllerCallback()
+    val mediaController: MediaControllerCompat? get() = MediaSessionConnection.mediaController
 
     init {
         viewModelScope.launch {
-            MediaSessionConnection.isConnected.map { isConnected ->
-                if (isConnected) MediaSessionConnection.mediaController else null
-            }.collect {
-                mediaController?.unregisterCallback(mediaControllerCallback)
-                mediaController = it
-                it?.registerCallback(mediaControllerCallback)
-                if (it != null) {
-                    mediaControllerCallback.onMetadataChanged(it.metadata)
-                    mediaControllerCallback.onPlaybackStateChanged(it.playbackState)
+            MediaSessionConnection.playbackState.collectLatest { state ->
+                lastPositionJob?.cancel()
+                position.value = state?.position ?: 0
+                if (state?.state == STATE_PLAYING) {
+                    lastPositionJob = viewModelScope.launch {
+                        while (true) {
+                            MediaSessionConnection.binder?.songPlayer?.player?.currentPosition?.let {
+                                position.value = it
+                            }
+                            delay(100)
+                        }
+                    }
                 }
+            }
+        }
+        viewModelScope.launch {
+            MediaSessionConnection.mediaMetadata.collectLatest { metadata ->
+                duration.value = metadata?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) ?: -1
             }
         }
     }
@@ -91,31 +95,5 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     fun playQueue(activity: Activity, queue: Queue) {
         MediaSessionConnection.binder?.songPlayer?.playQueue(queue)
         (activity as? MainActivity)?.showBottomSheet()
-    }
-
-    private inner class ControllerCallback : MediaControllerCompat.Callback() {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-            lastPositionJob?.cancel()
-            position.value = state.position
-            logd("update position: ${position.value}")
-            if (state.state == STATE_PLAYING) {
-                lastPositionJob = viewModelScope.launch {
-                    while (true) {
-                        MediaSessionConnection.binder?.songPlayer?.player?.currentPosition?.let {
-                            position.value = it
-                        }
-                        delay(100)
-                    }
-                }
-            }
-        }
-
-        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-            duration.value = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
-            logd("update duration: ${duration.value}")
-            mediaController?.let {
-                onPlaybackStateChanged(it.playbackState)
-            }
-        }
     }
 }
