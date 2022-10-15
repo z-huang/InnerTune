@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
-    <string name="app_name" translatable="false">Music</string>
+    <string name="app_name" translatable="false">InnerTune</string>
 
     <!--Motion-->
     <integer name="motion_duration_large">300</integer>
