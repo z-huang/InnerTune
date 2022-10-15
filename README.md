@@ -15,6 +15,12 @@ No ads, free, and simple.
 
 > **Note** 2: The name of this app is temporary. It will be changed in the future.
 
+<table><td>
+<a href="https://github.com/z-huang/music/issues/new?assignees=&labels=bug&template=bug_report.yml">Bug Report</a>
+</td>
+<td><a href="https://github.com/z-huang/music/issues/new?assignees=&labels=enhancement&template=feature_request.yml">Feature Request</a>
+</td></table>
+
 With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
 > **Warning**: If you're in region that YouTube Music is not supported, you won't be able to use this app ***unless*** you have proxy or VPN to connect to a YTM supported region.
@@ -97,3 +103,7 @@ How to get updates?
 #### Fastlane (App Description and Changelogs)
 
 Follow the [fastlane instruction](https://gitlab.com/-/snippets/1895688) to add your language and create a pull request.
+
+<table><td>
+<a href="#start-of-content">↥ Scroll to top</a>
+</td></table>
