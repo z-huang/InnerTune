@@ -341,11 +341,13 @@ class SongPlayer(
                 return@runBlocking dataSpec.withUri(url.toUri())
             }
 
-            if (localRepository.getSongById(mediaId).getValueAsync()?.song?.downloadState == STATE_DOWNLOADED) {
+            // Check whether format exists so that users from older version can view format details
+            // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
+            val playedFormat = localRepository.getSongFormat(mediaId).getValueAsync()
+            if (playedFormat != null && localRepository.getSongById(mediaId).getValueAsync()?.song?.downloadState == STATE_DOWNLOADED) {
                 return@runBlocking dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
             }
 
-            val playedFormat = localRepository.getSongFormat(mediaId).getValueAsync()
             withContext(IO) {
                 YouTube.player(mediaId)
             }.map { playerResponse ->
