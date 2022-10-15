@@ -94,6 +94,7 @@
     <string name="downloaded_songs">Downloaded songs</string>
 
     <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
     <string name="menu_edit">수정</string>
     <string name="menu_start_radio">Start radio</string>
     <string name="menu_play">Play</string>
@@ -111,9 +112,19 @@
     <string name="menu_delete">삭제</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
     <string name="dialog_title_edit_song">노래 편집</string>
     <string name="song_title">노래 제목</string>
-    <string name="song_artist">노래 아티스트</string>
+    <string name="song_artists">노래 아티스트</string>
     <string name="error_song_title_empty">노래 제목은 비워둘 수 없습니다.</string>
     <string name="error_song_artist_empty">노래 아티스트는 비워둘 수 없습니다.</string>
     <string name="dialog_button_save">저장</string>

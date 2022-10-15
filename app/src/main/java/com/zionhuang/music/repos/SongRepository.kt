@@ -45,6 +45,8 @@ object SongRepository : LocalRepository {
     private val albumDao = database.albumDao
     private val playlistDao = database.playlistDao
     private val downloadDao = database.downloadDao
+    private val searchHistoryDao = database.searchHistoryDao
+    private val formatDao = database.formatDao
 
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private var autoDownload by context.preference(R.string.pref_auto_download, false)
@@ -207,7 +209,7 @@ object SongRepository : LocalRepository {
      * Song
      */
     override suspend fun addSong(mediaMetadata: MediaMetadata): SongEntity = withContext(IO) {
-        songDao.getSong(mediaMetadata.id)?.let{
+        songDao.getSong(mediaMetadata.id)?.let {
             return@withContext it.song
         }
         val song = mediaMetadata.toSongEntity()
@@ -331,25 +333,29 @@ object SongRepository : LocalRepository {
         songs.filter { it.downloadState == STATE_NOT_DOWNLOADED }.let { songs ->
             songDao.update(songs.map { it.copy(downloadState = STATE_PREPARING) })
             songs.forEach { song ->
+                val playedFormat = getSongFormat(song.id).getValueAsync()
                 val playerResponse = YouTube.player(videoId = song.id).getOrThrow()
                 if (playerResponse.playabilityStatus.status == "OK") {
-                    val url = playerResponse.streamingData?.adaptiveFormats
-                        ?.filter { it.isAudio }
-                        ?.maxByOrNull {
-                            it.bitrate * when (audioQuality) {
-                                SongPlayer.AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
-                                SongPlayer.AudioQuality.HIGH -> 1
-                                SongPlayer.AudioQuality.LOW -> -1
+                    val format = if (playedFormat != null) {
+                        playerResponse.streamingData?.adaptiveFormats?.find { it.itag == playedFormat.itag }
+                    } else {
+                        playerResponse.streamingData?.adaptiveFormats
+                            ?.filter { it.isAudio }
+                            ?.maxByOrNull {
+                                it.bitrate * when (audioQuality) {
+                                    SongPlayer.AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
+                                    SongPlayer.AudioQuality.HIGH -> 1
+                                    SongPlayer.AudioQuality.LOW -> -1
+                                }
                             }
-                        }
-                        ?.url
-                    if (url == null) {
+                    }
+                    if (format == null) {
                         songDao.update(song.copy(downloadState = STATE_NOT_DOWNLOADED))
                         // TODO
                     } else {
                         songDao.update(song.copy(downloadState = STATE_DOWNLOADING))
                         val downloadManager = context.getSystemService<DownloadManager>()!!
-                        val req = DownloadManager.Request(url.toUri())
+                        val req = DownloadManager.Request(format.url.toUri())
                             .setTitle(song.title)
                             .setDestinationUri(getSongTempFile(song.id).toUri())
                         val did = downloadManager.enqueue(req)
@@ -649,22 +655,34 @@ object SongRepository : LocalRepository {
      * Search history
      */
     override suspend fun getAllSearchHistory() = withContext(IO) {
-        database.searchHistoryDao.getAllHistory()
+        searchHistoryDao.getAllHistory()
     }
 
     override suspend fun getSearchHistory(query: String) = withContext(IO) {
-        database.searchHistoryDao.getHistory(query)
+        searchHistoryDao.getHistory(query)
     }
 
     override suspend fun insertSearchHistory(query: String) = withContext(IO) {
-        database.searchHistoryDao.insert(SearchHistory(query = query))
+        searchHistoryDao.insert(SearchHistory(query = query))
     }
 
     override suspend fun deleteSearchHistory(query: String) = withContext(IO) {
-        database.searchHistoryDao.delete(query)
+        searchHistoryDao.delete(query)
     }
 
     override suspend fun clearSearchHistory() {
-        database.searchHistoryDao.clearHistory()
+        searchHistoryDao.clearHistory()
+    }
+
+    /**
+     * Format
+     */
+    suspend fun getSongFormat(songId: String?): DataWrapper<FormatEntity?> = DataWrapper(
+        getValueAsync = { withContext(IO) { formatDao.getSongFormat(songId) } },
+        getFlow = { formatDao.getSongFormatAsFlow(songId) }
+    )
+
+    suspend fun upsert(format: FormatEntity) = withContext(IO) {
+        formatDao.upsert(format)
     }
 }

@@ -94,6 +94,7 @@
     <string name="downloaded_songs">Downloaded songs</string>
 
     <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
     <string name="menu_edit">編集</string>
     <string name="menu_start_radio">ラジオを再生</string>
     <string name="menu_play">再生</string>
@@ -111,9 +112,19 @@
     <string name="menu_delete">削除</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
     <string name="dialog_title_edit_song">曲を編集</string>
     <string name="song_title">曲名</string>
-    <string name="song_artist">曲のアーティスト</string>
+    <string name="song_artists">曲のアーティスト</string>
     <string name="error_song_title_empty">曲名は空白にできません。</string>
     <string name="error_song_artist_empty">曲のアーティストは空白にできません。</string>
     <string name="dialog_button_save">保存</string>

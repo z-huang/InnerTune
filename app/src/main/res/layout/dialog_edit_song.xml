@@ -42,7 +42,7 @@
             style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/song_artist"
+            android:hint="@string/song_artists"
             app:errorEnabled="true">
 
             <com.zionhuang.music.ui.widgets.InstantAutoCompleteTextView

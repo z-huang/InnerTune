@@ -94,6 +94,7 @@
     <string name="downloaded_songs">ഡൗൺലോഡ് ചെയ്‌ത പാട്ടുകൾ</string>
 
     <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
     <string name="menu_edit">എഡിറ്റ് ചെയ്യുക</string>
     <string name="menu_start_radio">റേഡിയോ ആരംഭിക്കുക</string>
     <string name="menu_play">പ്ലേ ചെയ്യുക</string>
@@ -111,9 +112,19 @@
     <string name="menu_delete">ഡിലീറ്റ്</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
     <string name="dialog_title_edit_song">ഗാനം എഡിറ്റ് ചെയ്യുക</string>
     <string name="song_title">പാട്ടിന്റെ പേര്</string>
-    <string name="song_artist">പാട്ടുകാരൻ</string>
+    <string name="song_artists">പാട്ടുകാരൻ</string>
     <string name="error_song_title_empty">ഗാനത്തിന്റെ പേര് ശൂന്യമാക്കാൻ കഴിയില്ല.</string>
     <string name="error_song_artist_empty">പാട്ടുകാരൻ ശൂന്യമായിരിക്കാൻ കഴിയില്ല.</string>
     <string name="dialog_button_save">സേവ്</string>

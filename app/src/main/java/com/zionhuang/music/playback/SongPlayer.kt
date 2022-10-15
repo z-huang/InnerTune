@@ -58,6 +58,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_QUEUE_INDEX
+import com.zionhuang.music.db.entities.FormatEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.models.MediaMetadata
@@ -69,6 +70,7 @@ import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
+import com.zionhuang.music.utils.InfoCache
 import com.zionhuang.music.utils.preference.enumPreference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -328,40 +330,65 @@ class SongPlayer(
         .setUpstreamDataSourceFactory(DefaultDataSource.Factory(context, createOkHttpDataSourceFactory()))
 
     private fun createMediaSourceFactory() = DefaultMediaSourceFactory(ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
-        val mediaId = dataSpec.key ?: error("No media id")
-        if (cache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)) {
-            return@Factory dataSpec
-        }
-        val song = runBlocking(IO) { localRepository.getSongById(mediaId).getValueAsync() }
-        if (song?.song?.downloadState == STATE_DOWNLOADED) {
-            return@Factory dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
-        }
-        runBlocking(IO) {
-            YouTube.player(mediaId)
-        }.map { playerResponse ->
-            if (playerResponse.playabilityStatus.status != "OK") {
-                throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
+        runBlocking {
+            val mediaId = dataSpec.key ?: error("No media id")
+
+            if (cache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)) {
+                return@runBlocking dataSpec
             }
-            val uri = playerResponse.streamingData?.adaptiveFormats
-                ?.filter { it.isAudio }
-                ?.maxByOrNull {
-                    it.bitrate * when (audioQuality) {
-                        AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
-                        AudioQuality.HIGH -> 1
-                        AudioQuality.LOW -> -1
-                    }
+
+            (InfoCache.getInfo(mediaId) as? String)?.let { url ->
+                return@runBlocking dataSpec.withUri(url.toUri())
+            }
+
+            if (localRepository.getSongById(mediaId).getValueAsync()?.song?.downloadState == STATE_DOWNLOADED) {
+                return@runBlocking dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
+            }
+
+            val playedFormat = localRepository.getSongFormat(mediaId).getValueAsync()
+            withContext(IO) {
+                YouTube.player(mediaId)
+            }.map { playerResponse ->
+                if (playerResponse.playabilityStatus.status != "OK") {
+                    throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
                 }
-                ?.url?.toUri()
-                ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
-            dataSpec.withUri(uri).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
-        }.getOrElse { throwable ->
-            if (throwable is ConnectException || throwable is UnknownHostException) {
-                throw PlaybackException(context.getString(R.string.error_no_internet), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
+                val format = if (playedFormat != null) {
+                    playerResponse.streamingData?.adaptiveFormats?.find {
+                        // Use itag to identify previous played format
+                        it.itag == playedFormat.itag
+                    }
+                } else {
+                    playerResponse.streamingData?.adaptiveFormats
+                        ?.filter { it.isAudio }
+                        ?.maxByOrNull {
+                            it.bitrate * when (audioQuality) {
+                                AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
+                                AudioQuality.HIGH -> 1
+                                AudioQuality.LOW -> -1
+                            }
+                        }
+                } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
+                localRepository.upsert(FormatEntity(
+                    id = mediaId,
+                    itag = format.itag,
+                    mimeType = format.mimeType.split(";")[0],
+                    codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
+                    bitrate = format.bitrate,
+                    sampleRate = format.audioSampleRate,
+                    contentLength = format.contentLength!!,
+                    loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                ))
+                InfoCache.putInfo(mediaId, format.url, playerResponse.streamingData!!.expiresInSeconds * 1000L)
+                dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
+            }.getOrElse { throwable ->
+                if (throwable is ConnectException || throwable is UnknownHostException) {
+                    throw PlaybackException(context.getString(R.string.error_no_internet), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
+                }
+                if (throwable is SocketTimeoutException) {
+                    throw PlaybackException(context.getString(R.string.error_timeout), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
+                }
+                throw PlaybackException(context.getString(R.string.error_unknown), throwable, ERROR_CODE_REMOTE_ERROR)
             }
-            if (throwable is SocketTimeoutException) {
-                throw PlaybackException(context.getString(R.string.error_timeout), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
-            }
-            throw PlaybackException(context.getString(R.string.error_unknown), throwable, ERROR_CODE_REMOTE_ERROR)
         }
     })
 
@@ -556,6 +583,10 @@ class SongPlayer(
     }
 
     private fun saveQueueToDisk() {
+        if (player.playbackState == STATE_IDLE) {
+            context.filesDir.resolve(PERSIST_QUEUE_FILE).delete()
+            return
+        }
         val persistQueue = PersistQueue(
             title = mediaSession.controller.queueTitle?.toString(),
             items = player.mediaItems.mapNotNull { it.metadata },

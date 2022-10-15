@@ -94,6 +94,7 @@
     <string name="downloaded_songs">Downloaded songs</string>
 
     <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
     <string name="menu_edit">Redigera</string>
     <string name="menu_start_radio">Start radio</string>
     <string name="menu_play">Play</string>
@@ -111,9 +112,19 @@
     <string name="menu_delete">Ta bort</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
     <string name="dialog_title_edit_song">Redigera låten</string>
     <string name="song_title">Låt titel</string>
-    <string name="song_artist">Låt artist</string>
+    <string name="song_artists">Låt artist</string>
     <string name="error_song_title_empty">Låt titel kan inte vara tom.</string>
     <string name="error_song_artist_empty">Låt artist kan inte vara tom.</string>
     <string name="dialog_button_save">Spara</string>

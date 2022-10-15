@@ -26,7 +26,7 @@ object InfoCache {
         }
     }
 
-    private fun getInfo(key: String): Any? {
+    fun getInfo(key: String): Any? {
         val data = LRU_CACHE[key] ?: return null
         if (data.isExpired) {
             LRU_CACHE.remove(key)
@@ -39,8 +39,7 @@ object InfoCache {
         getInfo(keyOf(id))
     }
 
-    private fun putInfo(id: String, info: Any) {
-        val expirationMillis = MILLISECONDS.convert(1, HOURS)
+    fun putInfo(id: String, info: Any, expirationMillis: Long = MILLISECONDS.convert(1, HOURS)) {
         synchronized(LRU_CACHE) {
             val data = CacheData(info, expirationMillis)
             LRU_CACHE.put(keyOf(id), data)

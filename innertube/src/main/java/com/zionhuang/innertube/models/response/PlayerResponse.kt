@@ -36,7 +36,7 @@ data class PlayerResponse(
     data class StreamingData(
         val formats: List<Format>,
         val adaptiveFormats: List<Format>,
-        val expiresInSeconds: String,
+        val expiresInSeconds: Int,
     ) {
         @Serializable
         data class Format(
@@ -55,6 +55,8 @@ data class PlayerResponse(
             val approxDurationMs: String?,
             val audioSampleRate: Int?,
             val audioChannels: Int?,
+            val loudnessDb: Double?,
+            val lastModified: Long?,
         ) {
             val isAudio: Boolean
                 get() = width == null

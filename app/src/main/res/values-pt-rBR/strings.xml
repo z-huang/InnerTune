@@ -94,6 +94,7 @@
     <string name="downloaded_songs">Downloaded songs</string>
 
     <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
     <string name="menu_edit">Editar</string>
     <string name="menu_start_radio">Start radio</string>
     <string name="menu_play">Play</string>
@@ -111,9 +112,19 @@
     <string name="menu_delete">Excluir</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
     <string name="dialog_title_edit_song">Editar música</string>
     <string name="song_title">Título da Música</string>
-    <string name="song_artist">Artista da Música</string>
+    <string name="song_artists">Artista da Música</string>
     <string name="error_song_title_empty">O título da música não pode ficar vazio.</string>
     <string name="error_song_artist_empty">O artista da música não pode ficar vazio.</string>
     <string name="dialog_button_save">Salvar</string>

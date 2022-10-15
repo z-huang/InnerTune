@@ -36,6 +36,7 @@ import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.adapters.QueueItemAdapter
 import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
+import com.zionhuang.music.ui.fragments.dialogs.SongDetailsDialog
 import com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragmentArgs
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.joinByBullet
@@ -133,6 +134,7 @@ class QueueSheetFragment : Fragment() {
                 }
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
+                        R.id.action_info -> SongDetailsDialog().show(requireContext())
                         R.id.action_equalizer -> {
                             val equalizerIntent = Intent(ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
                                 putExtra(EXTRA_AUDIO_SESSION, MediaSessionConnection.binder?.songPlayer?.player?.audioSessionId)

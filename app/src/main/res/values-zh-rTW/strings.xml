@@ -94,6 +94,7 @@
     <string name="downloaded_songs">已下載的歌曲</string>
 
     <!-- Popup Menu -->
+    <string name="menu_details">詳細資訊</string>
     <string name="menu_edit">編輯</string>
     <string name="menu_start_radio">開啟電台</string>
     <string name="menu_play">播放</string>
@@ -111,9 +112,19 @@
     <string name="menu_delete">移除</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">詳細資訊</string>
+    <string name="media_id">Id</string>
+    <string name="mime_type">MIME 類型</string>
+    <string name="codecs">編碼</string>
+    <string name="bitrate">位元速率</string>
+    <string name="sample_rate">採樣率</string>
+    <string name="loudness">音量</string>
+    <string name="file_size">檔案大小</string>
+    <string name="unknown">未知</string>
+
     <string name="dialog_title_edit_song">編輯歌曲</string>
     <string name="song_title">歌名</string>
-    <string name="song_artist">藝人</string>
+    <string name="song_artists">藝人</string>
     <string name="error_song_title_empty">歌名不能為空</string>
     <string name="error_song_artist_empty">藝人不能為空</string>
     <string name="dialog_button_save">儲存</string>

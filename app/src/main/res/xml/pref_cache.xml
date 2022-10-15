@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <NeoSeekBarPreference
+        android:defaultValue="3"
         android:icon="@drawable/ic_image"
         android:key="@string/pref_image_max_cache_size"
         android:max="6"
@@ -12,6 +13,7 @@
         android:key="@string/pref_clear_image_cache"
         android:title="@string/pref_clear_image_cache_title" />
     <NeoSeekBarPreference
+        android:defaultValue="3"
         android:key="@string/pref_song_max_cache_size"
         android:max="7"
         android:title="@string/pref_song_max_cache_size_title"

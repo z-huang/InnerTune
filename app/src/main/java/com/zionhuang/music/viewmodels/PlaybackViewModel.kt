@@ -34,6 +34,9 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     val currentSong = mediaMetadata.flatMapLatest { mediaMetadata ->
         SongRepository.getSongById(mediaMetadata?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)).flow
     }
+    val currentSongFormat = mediaMetadata.flatMapLatest { mediaMetadata ->
+        SongRepository.getSongFormat(mediaMetadata?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)).getFlow()
+    }
 
     val position = MutableStateFlow(0L)
     val duration = MutableStateFlow(0L)

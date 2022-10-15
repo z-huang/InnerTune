@@ -94,6 +94,7 @@
     <string name="downloaded_songs">آهنگ‌های بارگیری‌شده</string>
 
     <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
     <string name="menu_edit">ویرایش</string>
     <string name="menu_start_radio">راه‌اندازی رادیو</string>
     <string name="menu_play">پخش</string>
@@ -111,9 +112,19 @@
     <string name="menu_delete">حذف</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
     <string name="dialog_title_edit_song">ویرایش آهنگ</string>
     <string name="song_title">عنوان آهنگ</string>
-    <string name="song_artist">هنرمند آهنگ</string>
+    <string name="song_artists">هنرمند آهنگ</string>
     <string name="error_song_title_empty">عنوان آهنگ نمی تواند خالی باشد.</string>
     <string name="error_song_artist_empty">هنرمند آهنگ نمی تواند خالی باشد.</string>
     <string name="dialog_button_save">ذخیره</string>
