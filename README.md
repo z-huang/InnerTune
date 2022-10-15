@@ -11,13 +11,13 @@ No ads, free, and simple.
 [![License](https://img.shields.io/github/license/z-huang/music)](https://www.gnu.org/licenses/gpl-3.0)
 [![Downloads](https://img.shields.io/github/downloads/z-huang/music/total)](https://github.com/z-huang/music/releases)
 
-> **Note 1:** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
+> **Note** 1: The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
 
-> **Note 2:** The name of this app is temporary. It will be changed in the future.
+> **Note** 2: The name of this app is temporary. It will be changed in the future.
 
 With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of _Music_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
-⚠️ Warning: If you're in region that YouTube Music is not supported, you won't be able to use this app ***unless*** you have proxy or VPN to connect to a YTM supported region.
+> **Warning**: If you're in region that YouTube Music is not supported, you won't be able to use this app ***unless*** you have proxy or VPN to connect to a YTM supported region.
 
 ## Features
 
@@ -54,18 +54,18 @@ With this app, you're like getting a free music streaming service. You can liste
 
 ## Screenshots
 
-<p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="170" />
-</p>
-<p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/07.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/08.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="170" />
-</p>
+<div style="width:100%; display:flex; justify-content:space-between;">
+
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="30%" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="30%" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="30%" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="30%" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="30%" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/07.jpg" width="30%" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/08.jpg" width="30%" />
+  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="30%" />
+
+</div>
 
 ## Installation
 
