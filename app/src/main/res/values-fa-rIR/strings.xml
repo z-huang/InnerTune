@@ -20,6 +20,7 @@
     <string name="pref_default_open_tab_title">زبانه باز پیش‌فرض</string>
     <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
     <string name="dark_theme_follow_system">پیروی از سیستم</string>
+
     <string name="pref_content_title">محتوا</string>
     <string name="pref_app_language_title">زبان برنامه</string>
     <string name="pref_content_language_title">زبان پیش‌فرض محتوا</string>
@@ -28,30 +29,39 @@
     <string name="pref_proxy_type_title">نوع پروکسی</string>
     <string name="pref_proxy_url_title">آدرس‌اینترنتی پروکسی</string>
     <string name="pref_restart_title">راه‌اندازی‌مجدد برای اعمال اثر</string>
+
     <string name="pref_player_audio_title">پخش‌کننده و صدا</string>
-    <string name="pref_general_title">عمومی</string>
     <string name="pref_persistent_queue_title">Persistent queue</string>
     <string name="pref_audio_quality_title">کیفیت صدا</string>
     <string name="audio_quality_auto">خودکار</string>
     <string name="audio_quality_high">بالا</string>
     <string name="audio_quality_low">پایین</string>
+    <string name="pref_equalizer_title">اکولایزر</string>
+
+    <string name="pref_cache_title">Cache</string>
+    <string name="pref_image_max_cache_size_title">Max image cache size</string>
+    <string name="pref_clear_image_cache_title">Clear image cache</string>
+    <string name="pref_song_max_cache_size_title">Max song cache size</string>
+    <string name="size_used">%s used</string>
+
+    <string name="pref_general_title">عمومی</string>
     <string name="pref_auto_download_title">بارگیری خودکار</string>
     <string name="pref_auto_download_summary">بارگیری آهنگ با اضافه‌شدن به کتاب‌خانه</string>
     <string name="pref_auto_add_song_title">افزودن خودکار آهنگ به کتاب‌خانه</string>
     <string name="pref_auto_add_song_summary">افزودن آهنگ به کتاب‌خانه پس از اتمام پخش</string>
     <string name="pref_expand_on_play_title">گسترش پخش‌کننده‌ی پایین هنگام پخش</string>
-    <string name="pref_equalizer_title">اکولایزر</string>
+
     <string name="pref_privacy_title">حریم‌خصوصی</string>
     <string name="pref_pause_search_history_title">متوقف‌کردن تاریخچه جستجو</string>
     <string name="pref_clear_search_history_title">پاک‌کردن تاریخچه جستجو</string>
     <string name="clear_search_history_question">آیا برای پاک‌کردن تمام سابقه جستجو مطمئن هستید؟</string>
+
     <string name="pref_backup_restore_title">پشتیبان‌گیری و بازگردانی</string>
     <string name="pref_backup_title">پشتیبان‌گیری</string>
     <string name="pref_restore_title">بازگردانی</string>
+
     <string name="pref_about_title">درباره</string>
     <string name="pref_app_version_title">نسخه‌ی برنامه</string>
-    <string name="pref_github_title" translatable="false">GitHub</string>
-    <string name="pref_github_summary" translatable="false">z-huang/music</string>
 
     <!-- Colors -->
     <string name="color_sakura">ساکورا</string>

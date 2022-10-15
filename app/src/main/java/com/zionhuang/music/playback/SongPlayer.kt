@@ -38,6 +38,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.upstream.ResolvingDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.*
@@ -67,6 +68,7 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
+import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
 import com.zionhuang.music.utils.preference.enumPreference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -106,8 +108,13 @@ class SongPlayer(
         isActive = true
     }
 
-    private val cacheEvictor = LeastRecentlyUsedCacheEvictor(1024 * 1024 * 1024L)
-    private val cache = SimpleCache(context.cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(context))
+    private val cacheEvictor = when (val cacheSize = (VALUE_TO_MB.getOrNull(
+        context.sharedPreferences.getInt(context.getString(R.string.pref_song_max_cache_size), 0))
+        ?: 1024)) {
+        -1 -> NoOpCacheEvictor()
+        else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
+    }
+    val cache = SimpleCache(context.cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(context))
     val player: ExoPlayer = ExoPlayer.Builder(context)
         .setMediaSourceFactory(createMediaSourceFactory())
         .setAudioAttributes(AudioAttributes.Builder()

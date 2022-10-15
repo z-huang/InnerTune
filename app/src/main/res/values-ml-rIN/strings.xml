@@ -20,6 +20,7 @@
     <string name="pref_default_open_tab_title">സ്ഥിര ഓപ്പൺ ടാബ്</string>
     <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
     <string name="dark_theme_follow_system">സിസ്റ്റം പിന്തുടരുക</string>
+
     <string name="pref_content_title">കന്റെന്റ്</string>
     <string name="pref_app_language_title">App language</string>
     <string name="pref_content_language_title">സ്ഥിര കന്റെന്റ് ഭാഷ</string>
@@ -28,30 +29,39 @@
     <string name="pref_proxy_type_title">പ്രോക്സി തരം</string>
     <string name="pref_proxy_url_title">പ്രോക്സി URL</string>
     <string name="pref_restart_title">പ്രാബല്യത്തിൽ വരാൻ പുനരാരംഭിക്കുക</string>
+
     <string name="pref_player_audio_title">പ്ലെയറും ഓഡിയോയും</string>
-    <string name="pref_general_title">പൊതുവായ</string>
     <string name="pref_persistent_queue_title">Persistent queue</string>
     <string name="pref_audio_quality_title">ഓഡിയോ നിലവാരം</string>
     <string name="audio_quality_auto">ഓട്ടോ</string>
     <string name="audio_quality_high">ഉയർന്ന</string>
     <string name="audio_quality_low">താഴ്ന്ന</string>
+    <string name="pref_equalizer_title">ഇക്വലൈസർ</string>
+
+    <string name="pref_cache_title">Cache</string>
+    <string name="pref_image_max_cache_size_title">Max image cache size</string>
+    <string name="pref_clear_image_cache_title">Clear image cache</string>
+    <string name="pref_song_max_cache_size_title">Max song cache size</string>
+    <string name="size_used">%s used</string>
+
+    <string name="pref_general_title">പൊതുവായ</string>
     <string name="pref_auto_download_title">യാന്ത്രിക ഡൗൺലോഡ്</string>
     <string name="pref_auto_download_summary">ലൈബ്രറിയിൽ ചേർക്കുമ്പോൾ പാട്ട് ഡൗൺലോഡ് ചെയ്യുക</string>
     <string name="pref_auto_add_song_title">ലൈബ്രറിയിലേക്ക് പാട്ട് സ്വയമേവ ചേർക്കുക</string>
     <string name="pref_auto_add_song_summary">നിങ്ങളുടെ ലൈബ്രറി പ്ലേ ചെയ്യുമ്പോൾ പാട്ട് ചേർക്കുക</string>
     <string name="pref_expand_on_play_title">താഴെയുള്ള പ്ലേയർ വികസിപ്പിക്കുക</string>
-    <string name="pref_equalizer_title">ഇക്വലൈസർ</string>
+
     <string name="pref_privacy_title">സ്വകാര്യത</string>
     <string name="pref_pause_search_history_title">തിരയൽ ചരിത്രം താൽക്കാലികമായി നിർത്തുക</string>
     <string name="pref_clear_search_history_title">തിരയൽ ചരിത്രം മായ്‌ക്കുക</string>
     <string name="clear_search_history_question">എല്ലാ തിരയൽ ചരിത്രവും മായ്‌ക്കണമെന്ന് ഉറപ്പാണോ?</string>
+
     <string name="pref_backup_restore_title">ബാക്കപ്പും വീണ്ടെടുക്കലും</string>
     <string name="pref_backup_title">ബാക്കപ്പ്</string>
     <string name="pref_restore_title">വീണ്ടെടുക്കൽ</string>
+
     <string name="pref_about_title">കുറിച്ച്</string>
     <string name="pref_app_version_title">അപ്ലിക്കേഷൻ പതിപ്പ്</string>
-    <string name="pref_github_title" translatable="false">GitHub</string>
-    <string name="pref_github_summary" translatable="false">z-huang/music</string>
 
     <!-- Colors -->
     <string name="color_sakura">സകുറ</string>

@@ -12,6 +12,7 @@
     <string name="pref_appearance" translatable="false">APPEARANCE</string>
     <string name="pref_content" translatable="false">CONTENT</string>
     <string name="pref_player_audio" translatable="false">PLAYER_AUDIO</string>
+    <string name="pref_cache" translatable="false">CACHE</string>
     <string name="pref_general" translatable="false">GENERAL</string>
     <string name="pref_privacy" translatable="false">PRIVACY</string>
     <string name="pref_backup_restore" translatable="false">BACKUP_RESTORE</string>
@@ -39,6 +40,11 @@
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
     <string name="pref_equalizer" translatable="false">EQUALIZER</string>
 
+    <string name="pref_image_max_cache_size" translatable="false">IMAGE_MAX_CACHE_SIZE</string>
+    <string name="pref_clear_image_cache" translatable="false">CLEAR_IMAGE_CACHE</string>
+    <string name="pref_song_max_cache_size" translatable="false">SONG_MAX_CACHE_SIZE</string>
+    <string name="pref_clear_song_cache" translatable="false">CLEAR_SONG_CACHE</string>
+
     <string name="pref_pause_search_history" translatable="false">PAUSE_SEARCH_HISTORY</string>
     <string name="pref_clear_search_history" translatable="false">CLEAR_SEARCH_HISTORY</string>
 
@@ -55,6 +61,8 @@
     <string name="pref_playlist_sort_descending" translatable="false">PLAYLIST_SORT_DESC</string>
     <string name="pref_app_version" translatable="false">APP_VERSION</string>
     <string name="pref_github" translatable="false">GITHUB</string>
+    <string name="pref_github_title" translatable="false">GitHub</string>
+    <string name="pref_github_summary" translatable="false">z-huang/music</string>
 
     <string name="bullet" translatable="false">•</string>
 

@@ -9,6 +9,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.Queue
@@ -94,18 +95,16 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
     private inner class ControllerCallback : MediaControllerCompat.Callback() {
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+            lastPositionJob?.cancel()
             position.value = state.position
+            logd("update position: ${position.value}")
             if (state.state == STATE_PLAYING) {
-                val timeToEnd = ((duration.value - position.value) / state.playbackSpeed).toInt()
-                if (timeToEnd > 0) {
-                    lastPositionJob?.cancel()
-                    lastPositionJob = viewModelScope.launch {
-                        while (true) {
-                            MediaSessionConnection.binder?.songPlayer?.player?.currentPosition?.let {
-                                position.value = it
-                            }
-                            delay(100)
+                lastPositionJob = viewModelScope.launch {
+                    while (true) {
+                        MediaSessionConnection.binder?.songPlayer?.player?.currentPosition?.let {
+                            position.value = it
                         }
+                        delay(100)
                     }
                 }
             }
@@ -113,6 +112,7 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat) {
             duration.value = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+            logd("update duration: ${duration.value}")
             mediaController?.let {
                 onPlaybackStateChanged(it.playbackState)
             }

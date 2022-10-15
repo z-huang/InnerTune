@@ -20,6 +20,7 @@
     <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
     <string name="dark_theme_follow_system">Follow system</string>
+
     <string name="pref_content_title">Content</string>
     <string name="pref_app_language_title">App language</string>
     <string name="pref_content_language_title">Default content language</string>
@@ -28,30 +29,39 @@
     <string name="pref_proxy_type_title">Proxy type</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
     <string name="pref_restart_title">Restart to take effect</string>
+
     <string name="pref_player_audio_title">Player and audio</string>
-    <string name="pref_general_title">General</string>
     <string name="pref_persistent_queue_title">Persistent queue</string>
     <string name="pref_audio_quality_title">Audio quality</string>
     <string name="audio_quality_auto">Auto</string>
     <string name="audio_quality_high">High</string>
     <string name="audio_quality_low">Low</string>
+    <string name="pref_equalizer_title">Equalizer</string>
+
+    <string name="pref_cache_title">Cache</string>
+    <string name="pref_image_max_cache_size_title">Max image cache size</string>
+    <string name="pref_clear_image_cache_title">Clear image cache</string>
+    <string name="pref_song_max_cache_size_title">Max song cache size</string>
+    <string name="size_used">%s used</string>
+
+    <string name="pref_general_title">General</string>
     <string name="pref_auto_download_title">Auto download</string>
     <string name="pref_auto_download_summary">Download song when added to library</string>
     <string name="pref_auto_add_song_title">Auto add song to library</string>
     <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
     <string name="pref_expand_on_play_title">Expand bottom player on play</string>
-    <string name="pref_equalizer_title">Equalizer</string>
+
     <string name="pref_privacy_title">Privacy</string>
     <string name="pref_pause_search_history_title">Pause search history</string>
     <string name="pref_clear_search_history_title">Clear search history</string>
     <string name="clear_search_history_question">Are you sure to clear all search history?</string>
+
     <string name="pref_backup_restore_title">Backup and restore</string>
     <string name="pref_backup_title">Backup</string>
     <string name="pref_restore_title">Restore</string>
+
     <string name="pref_about_title">About</string>
     <string name="pref_app_version_title">App version</string>
-    <string name="pref_github_title" translatable="false">GitHub</string>
-    <string name="pref_github_summary" translatable="false">z-huang/music</string>
 
     <!-- Colors -->
     <string name="color_sakura">Sakura</string>

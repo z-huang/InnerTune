@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat.startForegroundService
 import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.upstream.cache.Cache
 
 class MusicService : LifecycleMediaBrowserService() {
     private val binder = MusicBinder()
@@ -62,6 +63,9 @@ class MusicService : LifecycleMediaBrowserService() {
 
         val songPlayer: SongPlayer
             get() = this@MusicService.songPlayer
+
+        val cache: Cache
+            get() = this@MusicService.songPlayer.cache
     }
 
     // TODO: Support Android Auto

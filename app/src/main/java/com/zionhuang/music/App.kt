@@ -4,16 +4,20 @@ import android.app.Application
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.edit
+import coil.ImageLoader
+import coil.ImageLoaderFactory
+import coil.disk.DiskCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
+import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
 import java.net.Proxy
 import java.util.*
 
-class App : Application() {
+class App : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
@@ -50,6 +54,19 @@ class App : Application() {
             }
         }
     }
+
+    override fun newImageLoader() = ImageLoader.Builder(this)
+        .crossfade(true)
+        .diskCache(
+            DiskCache.Builder()
+                .directory(cacheDir.resolve("coil"))
+                .maxSizeBytes(
+                    size = (VALUE_TO_MB.getOrNull(
+                        sharedPreferences.getInt(getString(R.string.pref_image_max_cache_size), 0)
+                    ) ?: 1024) * 1024 * 1024L)
+                .build()
+        )
+        .build()
 
     companion object {
         lateinit var INSTANCE: App

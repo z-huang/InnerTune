@@ -22,13 +22,13 @@ object MediaSessionConnection {
 
     private val _isConnected = MutableStateFlow(false)
     private val _playbackState = MutableStateFlow<PlaybackStateCompat?>(null)
-    private val _nowPlaying = MutableStateFlow<MediaMetadataCompat?>(null)
+    private val _mediaMetadata = MutableStateFlow<MediaMetadataCompat?>(null)
     private val _queueTitle = MutableStateFlow<String?>(null)
     private val _queueItems = MutableStateFlow<List<QueueItem>>(emptyList())
 
     val isConnected: StateFlow<Boolean> = _isConnected
     val playbackState: StateFlow<PlaybackStateCompat?> = _playbackState
-    val mediaMetadata: StateFlow<MediaMetadataCompat?> = _nowPlaying
+    val mediaMetadata: StateFlow<MediaMetadataCompat?> = _mediaMetadata
     val queueTitle: StateFlow<String?> = _queueTitle
     val queueItems: StateFlow<List<QueueItem>> = _queueItems
 
@@ -73,8 +73,8 @@ object MediaSessionConnection {
             _playbackState.value = state
         }
 
-        override fun onMetadataChanged(metadata: MediaMetadataCompat) {
-            _nowPlaying.value = metadata
+        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+            _mediaMetadata.value = metadata
         }
 
         override fun onQueueChanged(queue: List<QueueItem>) {
