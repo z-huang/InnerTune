@@ -1,4 +1,4 @@
-Con quest'app, avrai un servizio di streaming musicale gratuito. Puoi ascoltare musica da YouTube Music e crearti la tua libreria musicale personale. Inoltre, i brani possono essere scaricati per un ascolto offline. Puoi anche creare delle playlist per organizzare la tua musica. L'obiettivo di <i>Music</i> è quello di dare la possibilità a chiunque di ascoltare musica senza costi e facilmente, in maniera pratica e priva di pubblicità.
+Con quest'app, avrai un servizio di streaming musicale gratuito. Puoi ascoltare musica da YouTube Music e crearti la tua libreria musicale personale. Inoltre, i brani possono essere scaricati per un ascolto offline. Puoi anche creare delle playlist per organizzare la tua musica. L'obiettivo di <i>InnerTube</i> è quello di dare la possibilità a chiunque di ascoltare musica senza costi e facilmente, in maniera pratica e priva di pubblicità.
 
 <br><b>Nota:</b>
 
@@ -7,6 +7,7 @@ Il progetto è attualmente in una fase instabile. Se trovi degli errori, per fav
 <br><b>Caratteristiche:</b>
 
 * Ascolta brani senza nessuna pubblicità
+* Naviga attraverso quasi tutte le pagine di YouTube Music
 * Cerca brani, video, playlist e canali da YouTube Music
 * Apri link di YouTube Music
 * Salva brani, album e playlist in un database locale
