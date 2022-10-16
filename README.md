@@ -11,13 +11,17 @@ No ads, free, and simple.
 [![License](https://img.shields.io/github/license/z-huang/music)](https://www.gnu.org/licenses/gpl-3.0)
 [![Downloads](https://img.shields.io/github/downloads/z-huang/music/total)](https://github.com/z-huang/music/releases)
 
-> **Note 1:** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
-
-> **Note 2:** The icon of this app is temporary. It will be changed in the future.
+> **Note**
+>
+> **1.** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
+>
+> **2.** The icon of this app is temporary. It will be changed in the future.
 
 With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of _InnerTune_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
-⚠️ Warning: If you're in region that YouTube Music is not supported, you won't be able to use this app ***unless*** you have proxy or VPN to connect to a YTM supported region.
+> **Warning**
+> 
+>If you're in region that YouTube Music is not supported, you won't be able to use this app ***unless*** you have proxy or VPN to connect to a YTM supported region.
 
 ## Features
 
