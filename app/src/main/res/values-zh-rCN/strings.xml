@@ -94,7 +94,7 @@
     <string name="downloaded_songs">已下载的歌曲</string>
 
     <!-- Popup Menu -->
-    <string name="menu_details">Details</string>
+    <string name="menu_details">详情</string>
     <string name="menu_edit">编辑</string>
     <string name="menu_start_radio">收听电台</string>
     <string name="menu_play">播放</string>
@@ -112,15 +112,15 @@
     <string name="menu_delete">移除</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">Details</string>
-    <string name="media_id">Media id</string>
-    <string name="mime_type">MIME type</string>
-    <string name="codecs">Codecs</string>
-    <string name="bitrate">Bitrate</string>
-    <string name="sample_rate">Sample rate</string>
-    <string name="loudness">Loudness</string>
-    <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
+    <string name="dialog_title_details">详情</string>
+    <string name="media_id">媒体 ID</string>
+    <string name="mime_type">媒体类型</string>
+    <string name="codecs">编码</string>
+    <string name="bitrate">比特率</string>
+    <string name="sample_rate">采样率</string>
+    <string name="loudness">音量</string>
+    <string name="file_size">文件大小</string>
+    <string name="unknown">未知</string>
 
     <string name="dialog_title_edit_song">编辑歌曲</string>
     <string name="song_title">歌名</string>
