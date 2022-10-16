@@ -1,0 +1,49 @@
+Music ha cambiato nome ed è diventato InnerTune!
+
+<b>Novità</b>
+
+- Ridisegnato il lettore
+- Riformulata la coda
+- Cache dei brani
+- Statistiche per nerd #304
+- Coda persistente #213
+- Aggiunta playlist built-in (piaciuti, scaricati)
+- Imposta limiti per la cache #266
+- Ordina brani per il numero di riproduzioni #228
+- Personalizzazione delle schede di navigazione #289
+
+<b>Miglioramenti</b>
+
+- Generazione di visitorData per ciascun utente per fornire raccomandazioni personalizzate #251
+- Rimossa stringa non necessaria nei risultati di ricerca
+- Aggiunto tasto per riavviare l'app per applicare le modifiche nelle impostazioni
+- Collassa la barra mentre si scrolla #227
+- Radio parte fluidamente
+- Cache dei media
+- Mostra messaggio di errore del riproduttore
+- Aggiunti bottoni per aggiungere il brano ai preferiti o in libreria nella notifica
+- Supporto al proxy per lo streaming #221
+- Tira in su la coda dal fondo del lettore #128 #252
+- Mostra durata del brano in coda
+- Migliorato il formato della pagina di fondo in modalità orizzontale #227
+- Conserva lo stato della pagina di fondo
+- Espandi pagina di fondo quando si preme sulla notifica
+
+<b>Sistemato</b>
+
+- Uso di BaseSettingsFragment #220
+- Sistemato il comportamento della cancellazione di un album
+- Sistemato il comportamento della condivisione di un brano #236
+- Sistemato il colore dell'icona per il bottone Prossimo
+- Sistemato errore 400 per alcuni Paesi
+- Sistemato errore durante la ricerca contenente audiolibri #248
+- Sistemata barra di ricerca che non funzionava quando le animazioni sono disabilitate #103
+- Il brano corrente deve essere il primo della lista quando si è in modalità Mischia #37
+- Sistemata la grandezza della pagina di fondo che non riempiva lo schermo in modalità orizzontale #283
+
+<b>Aggiornamenti della traduzione</b>
+- Aggiornata traduzione in italiano #218 #264
+- Aggiunta traduzione in persi #234 #258
+- Aggiunta traduzione in malayalam (India) #249
+- Aggiornata traduzione in giapponese #257
+- Aggiunta traduzione in cinese semplificato #259 #275 #294 #303 #306 #309

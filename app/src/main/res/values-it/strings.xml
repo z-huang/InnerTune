@@ -18,7 +18,7 @@
     <string name="dark_theme_on">Attivato</string>
     <string name="dark_theme_off">Disattivato</string>
     <string name="pref_default_open_tab_title">Scheda principale predefinita</string>
-    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
+    <string name="pref_customize_navigation_tabs">Personalizza schede di navigazione</string>
     <string name="dark_theme_follow_system">Segui sistema</string>
 
     <string name="pref_content_title">Contenuti</string>
@@ -30,7 +30,7 @@
     <string name="pref_restart_title">Riavvia l\'app per applicare le modifiche</string>
 
     <string name="pref_player_audio_title">Riproduttore e audio</string>
-    <string name="pref_persistent_queue_title">Persistent queue</string>
+    <string name="pref_persistent_queue_title">Coda persistente</string>
     <string name="pref_audio_quality_title">Qualità dell\'audio</string>
     <string name="audio_quality_auto">Automatica</string>
     <string name="audio_quality_high">Alta</string>
@@ -38,10 +38,10 @@
     <string name="pref_equalizer_title">Equalizzatore</string>
 
     <string name="pref_cache_title">Cache</string>
-    <string name="pref_image_max_cache_size_title">Max image cache size</string>
-    <string name="pref_clear_image_cache_title">Clear image cache</string>
-    <string name="pref_song_max_cache_size_title">Max song cache size</string>
-    <string name="size_used">%s used</string>
+    <string name="pref_image_max_cache_size_title">Grandezza massima della cache delle immagini</string>
+    <string name="pref_clear_image_cache_title">Pulisci cache delle immagini</string>
+    <string name="pref_song_max_cache_size_title">Grandezza massima della cache dei brani</string>
+    <string name="size_used">%s usato</string>
 
     <string name="pref_general_title">Generale</string>
     <string name="pref_auto_download_title">Scaricamento automatico</string>
@@ -88,12 +88,12 @@
     <string name="search_yt_music">Cerca su YouTube Music…</string>
     <string name="search_library">Cerca nella libreria…</string>
 
-    <!-- Built-in playlist -->
+    <!-- Playlist built-in -->
     <string name="liked_songs">Brani piaciuti</string>
     <string name="downloaded_songs">Brani scaricati</string>
 
     <!-- Popup -->
-    <string name="menu_details">Details</string>
+    <string name="menu_details">Dettagli</string>
     <string name="menu_edit">Modifica</string>
     <string name="menu_start_radio">Apri la radio</string>
     <string name="menu_play">Riproduci</string>
@@ -111,15 +111,15 @@
     <string name="menu_delete">Elimina</string>
 
     <!-- Dialoghi -->
-    <string name="dialog_title_details">Details</string>
-    <string name="media_id">Media id</string>
-    <string name="mime_type">MIME type</string>
-    <string name="codecs">Codecs</string>
+    <string name="dialog_title_details">Dettagli</string>
+    <string name="media_id">ID media</string>
+    <string name="mime_type">Tipo MIME</string>
+    <string name="codecs">Codec</string>
     <string name="bitrate">Bitrate</string>
-    <string name="sample_rate">Sample rate</string>
-    <string name="loudness">Loudness</string>
-    <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
+    <string name="sample_rate">Frequenza di campionamento</string>
+    <string name="loudness">Volume</string>
+    <string name="file_size">Dimensioni</string>
+    <string name="unknown">Sconosciuto</string>
 
     <string name="dialog_title_edit_song">Modifica brano</string>
     <string name="song_title">Titolo</string>
@@ -222,7 +222,7 @@
     </plurals>
     <string name="snackbar_play_next">I brani selezionati verranno riprodotti successivamente</string>
     <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">Brano aaggiunto in coda</item>
+        <item quantity="one">Brano aggiunto in coda</item>
         <item quantity="other">%d brani aggiunti in coda</item>
     </plurals>
     <plurals name="snackbar_artist_added_to_queue">
@@ -273,12 +273,12 @@
     <string name="copied">Copiato negli appunti</string>
 
     <!-- Player Error Message -->
-    <string name="error_no_stream">No stream available</string>
-    <string name="error_no_internet">No network connection</string>
-    <string name="error_timeout">Timeout</string>
-    <string name="error_unknown">Unknown error</string>
+    <string name="error_no_stream">Stream non disponibile</string>
+    <string name="error_no_internet">Nessuna connessione a internet presente</string>
+    <string name="error_timeout">Tempo scaduto</string>
+    <string name="error_unknown">Errore sconosciuto</string>
 
     <!-- Queue Title -->
-    <string name="queue_all_songs">All songs</string>
-    <string name="queue_searched_songs">Searched songs</string>
+    <string name="queue_all_songs">Tutti i brani</string>
+    <string name="queue_searched_songs">Brani cercati</string>
 </resources>
