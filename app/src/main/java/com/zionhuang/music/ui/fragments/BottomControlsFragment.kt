@@ -41,7 +41,7 @@ class BottomControlsFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        binding.container!!.applyInsetter {
+        binding.root.applyInsetter {
             type(statusBars = true, navigationBars = true) {
                 padding()
             }
