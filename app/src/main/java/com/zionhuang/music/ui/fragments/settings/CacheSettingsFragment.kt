@@ -12,6 +12,7 @@ import androidx.preference.Preference
 import coil.annotation.ExperimentalCoilApi
 import coil.imageLoader
 import com.zionhuang.music.R
+import com.zionhuang.music.extensions.tryOrNull
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
@@ -22,7 +23,7 @@ class CacheSettingsFragment : BaseSettingsFragment() {
             if (iBinder !is MusicService.MusicBinder) return
             findPreference<NeoSeekBarPreference>(getString(R.string.pref_song_max_cache_size))?.apply {
                 MediaSessionConnection.binder?.cache?.let { cache ->
-                    summary = getString(R.string.size_used, Formatter.formatShortFileSize(context, cache.cacheSpace))
+                    summary = getString(R.string.size_used, Formatter.formatShortFileSize(context, tryOrNull { cache.cacheSpace } ?: 0))
                 }
             }
         }
