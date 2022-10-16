@@ -1,6 +1,8 @@
 package com.zionhuang.music
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.edit
@@ -14,6 +16,8 @@ import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
 import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
+import com.zionhuang.music.utils.LanguageContextWrapper
+import com.zionhuang.music.utils.LocalizationUtils
 import java.net.Proxy
 import java.util.*
 
@@ -26,14 +30,17 @@ class App : Application(), ImageLoaderFactory {
         val locale = Locale.getDefault()
         val languageTag = locale.toLanguageTag().replace("-Hant", "") // replace zh-Hant-* to zh-*
         val languageCodes = resources.getStringArray(R.array.language_codes)
+        val countryCodes = resources.getStringArray(R.array.country_codes)
         YouTube.locale = YouTubeLocale(
             gl = sharedPreferences.getString(getString(R.string.pref_content_country), systemDefault).takeIf { it != systemDefault }
-                ?: locale.country,
+                ?: locale.country.takeIf { it in countryCodes }
+                ?: "US",
             hl = sharedPreferences.getString(getString(R.string.pref_content_language), systemDefault).takeIf { it != systemDefault }
-                ?: if (locale.language in languageCodes) locale.language
-                else if (languageTag in languageCodes) languageTag
-                else "en"
+                ?: locale.language.takeIf { it in languageCodes }
+                ?: languageTag.takeIf { it in languageCodes }
+                ?: "en"
         )
+        Log.d("App", "${YouTube.locale}")
 
         if (sharedPreferences.getBoolean(getString(R.string.pref_proxy_enabled), false)) {
             try {
@@ -53,6 +60,11 @@ class App : Application(), ImageLoaderFactory {
                 putString(getString(R.string.pref_visitor_data), it)
             }
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val locale = LocalizationUtils.getAppLocale(newBase)
+        super.attachBaseContext(LanguageContextWrapper.wrap(newBase, locale))
     }
 
     override fun newImageLoader() = ImageLoader.Builder(this)

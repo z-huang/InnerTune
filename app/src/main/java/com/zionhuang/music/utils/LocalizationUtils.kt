@@ -19,12 +19,4 @@ object LocalizationUtils {
             Locale(lang)
         }
     }
-
-    @Suppress("DEPRECATION")
-    fun changeAppLanguage(context: Context, locale: Locale) {
-        val displayMetrics = context.resources.displayMetrics
-        val config = context.resources.configuration
-        config.setLocale(locale)
-        context.resources.updateConfiguration(config, displayMetrics)
-    }
 }

@@ -2,6 +2,7 @@ package com.zionhuang.music.ui.activities
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
 import android.content.res.Configuration
@@ -46,7 +47,8 @@ import com.zionhuang.music.ui.fragments.MiniPlayerFragment
 import com.zionhuang.music.ui.fragments.QueueSheetFragment
 import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.utils.AdaptiveUtils
-import com.zionhuang.music.utils.LocalizationUtils
+import com.zionhuang.music.utils.LanguageContextWrapper
+import com.zionhuang.music.utils.LocalizationUtils.getAppLocale
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.NavigationTabHelper
 import kotlinx.coroutines.delay
@@ -68,11 +70,15 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
 
     private var actionMode: ActionMode? = null
 
+    override fun attachBaseContext(newBase: Context) {
+        val locale = getAppLocale(newBase)
+        super.attachBaseContext(LanguageContextWrapper.wrap(newBase, locale))
+    }
+
     @SuppressLint("PrivateResource", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        LocalizationUtils.changeAppLanguage(this, LocalizationUtils.getAppLocale(this))
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val defaultTabIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
