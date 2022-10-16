@@ -1,4 +1,4 @@
-Con quest'app, avrai un servizio di streaming musicale gratuito. Puoi ascoltare musica da YouTube Music e crearti la tua libreria musicale personale. Inoltre, i brani possono essere scaricati per un ascolto offline. Puoi anche creare delle playlist per organizzare la tua musica. L'obiettivo di <i>InnerTube</i> è quello di dare la possibilità a chiunque di ascoltare musica senza costi e facilmente, in maniera pratica e priva di pubblicità.
+Con quest'app, avrai un servizio di streaming musicale gratuito. Puoi ascoltare musica da YouTube Music e crearti la tua libreria musicale personale. Inoltre, i brani possono essere scaricati per un ascolto offline. Puoi anche creare delle playlist per organizzare la tua musica. L'obiettivo di <i>InnerTune</i> è quello di dare la possibilità a chiunque di ascoltare musica senza costi e facilmente, in maniera pratica e priva di pubblicità.
 
 <br><b>Nota:</b>
 
