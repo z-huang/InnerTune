@@ -1,1 +1,1 @@
-un riproduttore musicale fatto in Material Design per YouTube e YouTube Music
+un riproduttore musicale fatto in Material Design per YouTube Music

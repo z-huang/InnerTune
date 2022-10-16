@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.databinding.FragmentYoutubeSuggestionBinding
 import com.zionhuang.music.extensions.getTextChangeFlow
 import com.zionhuang.music.extensions.sharedPreferences
+import com.zionhuang.music.extensions.systemBarInsetsCompat
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
 import com.zionhuang.music.ui.fragments.base.NavigationFragment
@@ -75,6 +77,10 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@YouTubeSuggestionFragment.adapter
+            setOnApplyWindowInsetsListener { v, insets ->
+                v.updatePadding(bottom = insets.systemBarInsetsCompat.bottom)
+                insets
+            }
         }
         binding.btnVoice.setOnClickListener {
             voiceResultLauncher.launch(Intent(ACTION_RECOGNIZE_SPEECH))

@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 
-class MediaQueueAdapter(private val itemTouchHelper: ItemTouchHelper) : RecyclerView.Adapter<QueueItemViewHolder>() {
+class QueueItemAdapter(private val itemTouchHelper: ItemTouchHelper) : RecyclerView.Adapter<QueueItemViewHolder>() {
     private var currentList: MutableList<QueueItem> = mutableListOf()
     private val diffCallback = QueueItemComparator()
 
@@ -24,14 +24,14 @@ class MediaQueueAdapter(private val itemTouchHelper: ItemTouchHelper) : Recycler
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueueItemViewHolder =
-            QueueItemViewHolder(parent.inflateWithBinding(R.layout.item_queue)).apply {
-                binding.dragHandle.setOnTouchListener { _, event ->
-                    if (event.actionMasked == ACTION_DOWN) {
-                        itemTouchHelper.startDrag(this)
-                    }
-                    true
+        QueueItemViewHolder(parent.inflateWithBinding(R.layout.item_queue)).apply {
+            binding.dragHandle.setOnTouchListener { _, event ->
+                if (event.actionMasked == ACTION_DOWN) {
+                    itemTouchHelper.startDrag(this)
                 }
+                true
             }
+        }
 
     fun moveItem(from: Int, to: Int) {
         currentList.swap(from, to)
@@ -58,10 +58,10 @@ class MediaQueueAdapter(private val itemTouchHelper: ItemTouchHelper) : Recycler
 
     class QueueItemComparator : DiffUtil.ItemCallback<QueueItem>() {
         override fun areItemsTheSame(oldItem: QueueItem, newItem: QueueItem): Boolean = oldItem.description.mediaId == newItem.description.mediaId
-
-        override fun areContentsTheSame(oldItem: QueueItem, newItem: QueueItem): Boolean = oldItem.description.title.toString() == newItem.description.title.toString() &&
-                oldItem.description.subtitle.toString() == newItem.description.subtitle.toString() &&
-                oldItem.description.iconUri == newItem.description.iconUri
+        override fun areContentsTheSame(oldItem: QueueItem, newItem: QueueItem): Boolean =
+            oldItem.description.title.toString() == newItem.description.title.toString() &&
+                    oldItem.description.subtitle.toString() == newItem.description.subtitle.toString() &&
+                    oldItem.description.iconUri == newItem.description.iconUri
     }
 
 }

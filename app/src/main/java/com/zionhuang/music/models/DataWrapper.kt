@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 
 
-open class DataWrapper<T : Any>(
+open class DataWrapper<T>(
     val getValue: () -> T = { throw UnsupportedOperationException() },
     val getValueAsync: suspend () -> T = { throw UnsupportedOperationException() },
     open val getFlow: () -> Flow<T> = { throw UnsupportedOperationException() },

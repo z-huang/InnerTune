@@ -5,11 +5,13 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.transition.MaterialFadeThrough
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.LayoutRecyclerviewBinding
+import com.zionhuang.music.extensions.systemBarInsetsCompat
 
 abstract class AbsRecyclerViewFragment<V : ViewBinding, T : RecyclerView.Adapter<*>> : NavigationFragment<V>() {
     abstract fun getRecyclerView(): RecyclerView
@@ -23,6 +25,10 @@ abstract class AbsRecyclerViewFragment<V : ViewBinding, T : RecyclerView.Adapter
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         setupRecyclerView(getRecyclerView())
+        getRecyclerView().setOnApplyWindowInsetsListener { v, insets ->
+            v.updatePadding(bottom = insets.systemBarInsetsCompat.bottom)
+            insets
+        }
     }
 
     protected open fun setupRecyclerView(recyclerView: RecyclerView) {

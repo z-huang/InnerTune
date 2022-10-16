@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="@drawable/ic_queue_music"
+        android:key="@string/pref_persistent_queue"
+        android:title="@string/pref_persistent_queue_title" />
     <ListPreference
         android:defaultValue="AUTO"
         android:entries="@array/audio_qualities_text"

@@ -15,8 +15,10 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
-import com.zionhuang.innertube.models.BrowseEndpoint.Companion.playlistBrowseEndpoint
+import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.Constants.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.constants.Constants.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.addFastScroller
 import com.zionhuang.music.extensions.addOnClickListener
@@ -26,6 +28,8 @@ import com.zionhuang.music.ui.adapters.selection.LocalItemDetailsLookup
 import com.zionhuang.music.ui.adapters.selection.LocalItemKeyProvider
 import com.zionhuang.music.ui.fragments.base.RecyclerViewFragment
 import com.zionhuang.music.ui.fragments.dialogs.CreatePlaylistDialog
+import com.zionhuang.music.ui.listeners.DownloadedPlaylistMenuListener
+import com.zionhuang.music.ui.listeners.LikedPlaylistMenuListener
 import com.zionhuang.music.ui.listeners.PlaylistMenuListener
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.addActionModeObserver
@@ -38,6 +42,8 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
     private val menuListener = PlaylistMenuListener(this)
     override val adapter = LocalItemAdapter().apply {
         playlistMenuListener = menuListener
+        likedPlaylistMenuListener = LikedPlaylistMenuListener(this@PlaylistsFragment)
+        downloadedPlaylistMenuListener = DownloadedPlaylistMenuListener(this@PlaylistsFragment)
     }
     private var tracker: SelectionTracker<String>? = null
 
@@ -50,16 +56,21 @@ class PlaylistsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             addFastScroller { useMd2Style() }
-            addOnClickListener { position, _ ->
-                (this@PlaylistsFragment.adapter.currentList[position] as? Playlist)?.let { playlist ->
-                    if (playlist.playlist.isYouTubePlaylist) {
-                        NavigationEndpointHandler(this@PlaylistsFragment).handle(playlistBrowseEndpoint("VL" + playlist.id))
-                    } else {
-                        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
-                        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
-                        findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsToPlaylistSongs(playlist.id))
-                    }
+        }
+        binding.recyclerView.addOnClickListener { position, _ ->
+            val item = adapter.currentList[position]
+            if (item is Playlist) {
+                if (item.playlist.isYouTubePlaylist) {
+                    NavigationEndpointHandler(this).handle(BrowseEndpoint.playlistBrowseEndpoint("VL" + item.id))
+                } else {
+                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                    reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                    findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsToPlaylistSongs(item.id))
                 }
+            } else if (item.id == LIKED_PLAYLIST_ID || item.id == DOWNLOADED_PLAYLIST_ID) {
+                exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
+                reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
+                findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsToCustomPlaylist(item.id))
             }
         }
 

@@ -24,7 +24,12 @@
         android:defaultValue="0"
         android:entries="@array/bottom_nav_items"
         android:entryValues="@array/bottom_nav_index"
+        android:icon="@drawable/ic_tab"
         android:key="@string/pref_default_open_tab"
         android:summary="%s"
         android:title="@string/pref_default_open_tab_title" />
+    <Preference
+        android:icon="@drawable/ic_view_column"
+        android:key="@string/pref_nav_tab_config"
+        android:title="@string/pref_customize_navigation_tabs" />
 </PreferenceScreen>

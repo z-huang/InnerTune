@@ -10,14 +10,10 @@ import com.zionhuang.music.constants.MediaConstants
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.DownloadProgress
 import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.fragments.MenuBottomSheetDialogFragment
-import com.zionhuang.music.ui.listeners.IAlbumMenuListener
-import com.zionhuang.music.ui.listeners.IArtistMenuListener
-import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
-import com.zionhuang.music.ui.listeners.ISongMenuListener
+import com.zionhuang.music.ui.listeners.*
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -49,6 +45,10 @@ open class SongViewHolder(
             MenuBottomSheetDialogFragment
                 .newInstance(R.menu.song)
                 .setMenuModifier {
+                    findItem(R.id.action_favorite).apply {
+                        setIcon(if (song.song.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
+                        setTitle(if (song.song.liked) R.string.action_remove_like else R.string.action_like)
+                    }
                     findItem(R.id.action_download).isVisible = song.song.downloadState == MediaConstants.STATE_NOT_DOWNLOADED
                     findItem(R.id.action_remove_download).isVisible = song.song.downloadState == MediaConstants.STATE_DOWNLOADED
                     findItem(R.id.action_view_artist).isVisible = song.artists[0].isYouTubeArtist
@@ -58,6 +58,7 @@ open class SongViewHolder(
                 .setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.action_edit -> menuListener?.editSong(song)
+                        R.id.action_favorite -> menuListener?.toggleLike(song)
                         R.id.action_radio -> menuListener?.startRadio(song)
                         R.id.action_play_next -> menuListener?.playNext(song)
                         R.id.action_add_to_queue -> menuListener?.addToQueue(song)
@@ -76,13 +77,6 @@ open class SongViewHolder(
         binding.selectedIndicator.isVisible = isSelected
         binding.dragHandle.isVisible = draggable
         binding.executePendingBindings()
-    }
-
-    fun setProgress(progress: DownloadProgress, animate: Boolean = true) {
-        binding.progressBar.run {
-            max = progress.totalBytes
-            setProgress(progress.currentBytes, animate)
-        }
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
@@ -233,6 +227,71 @@ class PlaylistViewHolder(
     }
 }
 
+class CustomPlaylistViewHolder(
+    override val binding: ItemCustomPlaylistBinding,
+) : LocalItemViewHolder(binding) {
+    override val itemDetails: ItemDetailsLookup.ItemDetails<String>? = null
+
+    fun bind(playlist: LikedPlaylist, menuListener: LikedPlaylistMenuListener?) {
+        binding.title.setText(R.string.liked_songs)
+        binding.subtitle.text = binding.context.resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount)
+        binding.thumbnail.setImageResource(R.drawable.ic_favorite)
+        binding.offlineIcon.isVisible = false
+        binding.btnMoreAction.setOnClickListener {
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.playlist)
+                .setMenuModifier {
+                    findItem(R.id.action_edit).isVisible = false
+                    findItem(R.id.action_refetch).isVisible = false
+                    findItem(R.id.action_share).isVisible = false
+                    findItem(R.id.action_delete).isVisible = false
+                }
+                .setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_play -> menuListener?.play()
+                        R.id.action_play_next -> menuListener?.playNext()
+                        R.id.action_add_to_queue -> menuListener?.addToQueue()
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist()
+                        R.id.action_download -> menuListener?.download()
+                    }
+                }
+                .show(binding.context)
+        }
+    }
+
+    fun bind(playlist: DownloadedPlaylist, menuListener: DownloadedPlaylistMenuListener?) {
+        binding.title.setText(R.string.downloaded_songs)
+        binding.subtitle.text = binding.context.resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount)
+        binding.thumbnail.setImageResource(R.drawable.ic_save_alt)
+        binding.offlineIcon.isVisible = true
+        binding.btnMoreAction.setOnClickListener {
+            MenuBottomSheetDialogFragment
+                .newInstance(R.menu.playlist)
+                .setMenuModifier {
+                    findItem(R.id.action_edit).isVisible = false
+                    findItem(R.id.action_download).isVisible = false
+                    findItem(R.id.action_refetch).isVisible = false
+                    findItem(R.id.action_share).isVisible = false
+                    findItem(R.id.action_delete).isVisible = false
+                }
+                .setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.action_play -> menuListener?.play()
+                        R.id.action_play_next -> menuListener?.playNext()
+                        R.id.action_add_to_queue -> menuListener?.addToQueue()
+                        R.id.action_add_to_playlist -> menuListener?.addToPlaylist()
+                    }
+                }
+                .show(binding.context)
+        }
+    }
+
+    override fun onSelectionChanged(isSelected: Boolean) {
+        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+    }
+}
+
 class SongHeaderViewHolder(
     override val binding: ItemHeaderBinding,
     private val onShuffle: () -> Unit = {},
@@ -248,6 +307,7 @@ class SongHeaderViewHolder(
                         R.id.sort_by_create_date -> SongSortType.CREATE_DATE
                         R.id.sort_by_name -> SongSortType.NAME
                         R.id.sort_by_artist -> SongSortType.ARTIST
+                        R.id.sort_by_play_time -> SongSortType.PLAY_TIME
                         else -> throw IllegalArgumentException("Unexpected sort type.")
                     }
                     true
@@ -256,6 +316,7 @@ class SongHeaderViewHolder(
                     SongSortType.CREATE_DATE -> R.id.sort_by_create_date
                     SongSortType.NAME -> R.id.sort_by_name
                     SongSortType.ARTIST -> R.id.sort_by_artist
+                    SongSortType.PLAY_TIME -> R.id.sort_by_play_time
                 })?.isChecked = true
                 show()
             }
@@ -264,6 +325,7 @@ class SongHeaderViewHolder(
             SongSortType.CREATE_DATE -> R.string.sort_by_create_date
             SongSortType.NAME -> R.string.sort_by_name
             SongSortType.ARTIST -> R.string.sort_by_artist
+            SongSortType.PLAY_TIME -> R.string.sort_by_play_time
         })
         binding.sortOrder.setOnClickListener {
             SongSortInfoPreference.toggleIsDescending()

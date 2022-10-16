@@ -1,4 +1,4 @@
-With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of <i>Music</i> is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
+With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of <i>InnerTune</i> is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
 <br><b>Note:</b>
 

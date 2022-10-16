@@ -25,7 +25,6 @@ import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.getTextChangeFlow
-import com.zionhuang.music.extensions.logd
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.ListQueue
@@ -78,6 +77,7 @@ class LocalSearchFragment : AbsRecyclerViewFragment<FragmentSearchLocalBinding, 
                 is Song -> {
                     val songs = adapter.currentList.filterIsInstance<Song>()
                     MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                        title = getString(R.string.queue_searched_songs),
                         items = songs.map { it.toMediaItem() },
                         startIndex = songs.indexOfFirst { it.id == item.id }
                     ))

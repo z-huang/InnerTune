@@ -28,11 +28,13 @@ interface LocalRepository {
     suspend fun getAlbumSongs(albumId: String): List<Song>
 
     fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): ListWrapper<Int, Playlist>
-    suspend fun getPlaylistCount(): Int
 
     fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song>
 
-    fun getDownloadedSongs(): ListWrapper<Int, Song>
+    fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getLikedSongCount(): Flow<Int>
+    fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getDownloadedSongCount(): Flow<Int>
 
     /**
      * Search
@@ -46,16 +48,17 @@ interface LocalRepository {
     /**
      * Song
      */
-    suspend fun addSong(mediaMetadata: MediaMetadata)
+    suspend fun addSong(mediaMetadata: MediaMetadata): SongEntity
     suspend fun safeAddSong(song: SongItem) = safeAddSongs(listOf(song))
     suspend fun safeAddSongs(songs: List<SongItem>): List<SongEntity>
     suspend fun refetchSongs(songs: List<Song>)
-    suspend fun getSongById(songId: String): Song?
+    fun getSongById(songId: String?): DataWrapper<Song?>
     fun getSongFile(songId: String): File
     fun hasSong(songId: String): DataWrapper<Boolean>
     suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)
     suspend fun updateSongTitle(song: Song, newTitle: String)
-    suspend fun setLiked(liked: Boolean, songs: List<Song>)
+    suspend fun toggleLiked(song: Song) = toggleLiked(listOf(song))
+    suspend fun toggleLiked(songs: List<Song>)
     suspend fun downloadSong(song: SongEntity) = downloadSongs(listOf(song))
     suspend fun downloadSongs(songs: List<SongEntity>)
     suspend fun onDownloadComplete(downloadId: Long, success: Boolean)
@@ -63,6 +66,7 @@ interface LocalRepository {
     suspend fun removeDownloads(songs: List<Song>)
     suspend fun moveToTrash(songs: List<Song>)
     suspend fun restoreFromTrash(songs: List<Song>)
+    suspend fun deleteSong(song: Song) = deleteSongs(listOf(song))
     suspend fun deleteSongs(songs: List<Song>)
 
     /**
@@ -91,9 +95,11 @@ interface LocalRepository {
     suspend fun addPlaylists(playlists: List<PlaylistItem>)
     suspend fun importPlaylist(playlist: PlaylistItem) = importPlaylists(listOf(playlist))
     suspend fun importPlaylists(playlists: List<PlaylistItem>)
+    suspend fun addToPlaylist(playlist: PlaylistEntity, item: LocalItem) = addToPlaylist(playlist, listOf(item))
     suspend fun addToPlaylist(playlist: PlaylistEntity, items: List<LocalItem>)
-    suspend fun addToPlaylist(playlist: PlaylistEntity, item: YTItem)
+    suspend fun addYouTubeItemToPlaylist(playlist: PlaylistEntity, item: YTItem) = addYouTubeItemsToPlaylist(playlist, listOf(item))
     suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>)
+    suspend fun addMediaItemToPlaylist(playlist: PlaylistEntity, item: MediaMetadata)
     suspend fun refetchPlaylists(playlists: List<Playlist>)
     suspend fun downloadPlaylists(playlists: List<Playlist>)
     suspend fun getPlaylistById(playlistId: String): Playlist

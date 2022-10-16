@@ -12,10 +12,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.inflateWithBinding
 import com.zionhuang.music.models.sortInfo.*
-import com.zionhuang.music.ui.listeners.IAlbumMenuListener
-import com.zionhuang.music.ui.listeners.IArtistMenuListener
-import com.zionhuang.music.ui.listeners.IPlaylistMenuListener
-import com.zionhuang.music.ui.listeners.ISongMenuListener
+import com.zionhuang.music.ui.listeners.*
 import com.zionhuang.music.ui.viewholders.*
 import com.zionhuang.music.utils.makeTimeString
 import me.zhanghai.android.fastscroll.PopupTextProvider
@@ -26,6 +23,8 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
     var artistMenuListener: IArtistMenuListener? = null
     var albumMenuListener: IAlbumMenuListener? = null
     var playlistMenuListener: IPlaylistMenuListener? = null
+    var likedPlaylistMenuListener: LikedPlaylistMenuListener? = null
+    var downloadedPlaylistMenuListener: DownloadedPlaylistMenuListener? = null
 
     var tracker: SelectionTracker<String>? = null
     var allowMoreAction: Boolean = true // for choosing playlist
@@ -41,6 +40,11 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             is ArtistViewHolder -> holder.bind(item as Artist, tracker?.isSelected(getItem(position).id) ?: false)
             is AlbumViewHolder -> holder.bind(item as Album, tracker?.isSelected(getItem(position).id) ?: false)
             is PlaylistViewHolder -> holder.bind(item as Playlist, tracker?.isSelected(getItem(position).id) ?: false)
+            is CustomPlaylistViewHolder -> when (item) {
+                is LikedPlaylist -> holder.bind(item, likedPlaylistMenuListener)
+                is DownloadedPlaylist -> holder.bind(item, downloadedPlaylistMenuListener)
+                else -> {}
+            }
             is SongHeaderViewHolder -> holder.bind(item as SongHeader)
             is ArtistHeaderViewHolder -> holder.bind(item as ArtistHeader)
             is AlbumHeaderViewHolder -> holder.bind(item as AlbumHeader)
@@ -75,6 +79,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         TYPE_ARTIST -> ArtistViewHolder(parent.inflateWithBinding(R.layout.item_artist), artistMenuListener)
         TYPE_ALBUM -> AlbumViewHolder(parent.inflateWithBinding(R.layout.item_album), albumMenuListener)
         TYPE_PLAYLIST -> PlaylistViewHolder(parent.inflateWithBinding(R.layout.item_playlist), playlistMenuListener, allowMoreAction)
+        TYPE_LIKED_PLAYLIST, TYPE_DOWNLOADED_PLAYLIST -> CustomPlaylistViewHolder(parent.inflateWithBinding(R.layout.item_custom_playlist))
         TYPE_SONG_HEADER -> SongHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header), onShuffle)
         TYPE_ARTIST_HEADER -> ArtistHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
         TYPE_ALBUM_HEADER -> AlbumHeaderViewHolder(parent.inflateWithBinding(R.layout.item_header))
@@ -89,6 +94,8 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         is Artist -> TYPE_ARTIST
         is Album -> TYPE_ALBUM
         is Playlist -> TYPE_PLAYLIST
+        is LikedPlaylist -> TYPE_LIKED_PLAYLIST
+        is DownloadedPlaylist -> TYPE_DOWNLOADED_PLAYLIST
         is SongHeader -> TYPE_SONG_HEADER
         is ArtistHeader -> TYPE_ARTIST_HEADER
         is AlbumHeader -> TYPE_ALBUM_HEADER
@@ -103,6 +110,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             SongSortType.CREATE_DATE -> item.song.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             SongSortType.NAME -> item.song.title.substring(0, 1)
             SongSortType.ARTIST -> item.artists.firstOrNull()?.name
+            SongSortType.PLAY_TIME -> makeTimeString(item.song.totalPlayTime)
         }
         is Artist -> when (ArtistSortInfoPreference.type) {
             ArtistSortType.CREATE_DATE -> item.artist.createDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -122,6 +130,7 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
             PlaylistSortType.NAME -> item.playlist.name.substring(0, 1)
             PlaylistSortType.SONG_COUNT -> item.songCount.toString()
         }
+        else -> ""
     } ?: ""
 
     class ItemComparator : DiffUtil.ItemCallback<LocalBaseItem>() {
@@ -135,11 +144,13 @@ class LocalItemAdapter : ListAdapter<LocalBaseItem, LocalItemViewHolder>(ItemCom
         const val TYPE_ARTIST = 1
         const val TYPE_ALBUM = 2
         const val TYPE_PLAYLIST = 3
-        const val TYPE_SONG_HEADER = 4
-        const val TYPE_ARTIST_HEADER = 5
-        const val TYPE_ALBUM_HEADER = 6
-        const val TYPE_PLAYLIST_HEADER = 7
-        const val TYPE_PLAYLIST_SONG_HEADER = 8
-        const val TYPE_TEXT_HEADER = 9
+        const val TYPE_LIKED_PLAYLIST = 4
+        const val TYPE_DOWNLOADED_PLAYLIST = 5
+        const val TYPE_SONG_HEADER = 6
+        const val TYPE_ARTIST_HEADER = 7
+        const val TYPE_ALBUM_HEADER = 8
+        const val TYPE_PLAYLIST_HEADER = 9
+        const val TYPE_PLAYLIST_SONG_HEADER = 10
+        const val TYPE_TEXT_HEADER = 11
     }
 }

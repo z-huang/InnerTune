@@ -15,35 +15,50 @@
     <string name="pref_follow_system_accent_title">Följ systemtema</string>
     <string name="pref_theme_color_title">Tema</string>
     <string name="pref_dark_theme_title">Mörkt tema</string>
-    <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="dark_theme_on">På</string>
     <string name="dark_theme_off">Av</string>
+    <string name="pref_default_open_tab_title">Default open tab</string>
+    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
     <string name="dark_theme_follow_system">Följ systemet</string>
+
     <string name="pref_content_title">Innehåll</string>
     <string name="pref_content_language_title">Standard innehållsspråk</string>
     <string name="pref_default_content_country_title">Standard innehållsland</string>
     <string name="pref_enable_proxy_title">Enable proxy</string>
     <string name="pref_proxy_type_title">Proxy type</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_restart_title">Restart to take effect</string>
+
     <string name="pref_player_audio_title">Player and audio</string>
-    <string name="pref_general_title">Gerenal</string>
+    <string name="pref_persistent_queue_title">Persistent queue</string>
     <string name="pref_audio_quality_title">Audio quality</string>
     <string name="audio_quality_auto">Auto</string>
     <string name="audio_quality_high">High</string>
     <string name="audio_quality_low">Low</string>
+    <string name="pref_equalizer_title">Equalizer</string>
+
+    <string name="pref_cache_title">Cache</string>
+    <string name="pref_image_max_cache_size_title">Max image cache size</string>
+    <string name="pref_clear_image_cache_title">Clear image cache</string>
+    <string name="pref_song_max_cache_size_title">Max song cache size</string>
+    <string name="size_used">%s used</string>
+
+    <string name="pref_general_title">General</string>
     <string name="pref_auto_download_title">Automatisk nedladdning</string>
     <string name="pref_auto_download_summary">Ladda ner låt när det läggs till i biblioteket</string>
     <string name="pref_auto_add_song_title">Lägg till låt i biblioteket automatiskt</string>
     <string name="pref_auto_add_song_summary">Lägg till låten i biblioteket efter det spelats klart</string>
     <string name="pref_expand_on_play_title">Utöka bottenspelaren vid låtspel</string>
-    <string name="pref_equalizer_title">Equalizer</string>
+
     <string name="pref_privacy_title">Privacy</string>
     <string name="pref_pause_search_history_title">Pause search history</string>
     <string name="pref_clear_search_history_title">Clear search history</string>
     <string name="clear_search_history_question">Are you sure to clear all search history?</string>
+
     <string name="pref_backup_restore_title">Backup and restore</string>
     <string name="pref_backup_title">Backup</string>
     <string name="pref_restore_title">Restore</string>
+
     <string name="pref_about_title">Om</string>
     <string name="pref_app_version_title">App version</string>
 
@@ -73,7 +88,12 @@
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
 
+    <!-- Built-in playlist -->
+    <string name="liked_songs">Liked songs</string>
+    <string name="downloaded_songs">Downloaded songs</string>
+
     <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
     <string name="menu_edit">Redigera</string>
     <string name="menu_start_radio">Start radio</string>
     <string name="menu_play">Play</string>
@@ -91,9 +111,19 @@
     <string name="menu_delete">Ta bort</string>
 
     <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
     <string name="dialog_title_edit_song">Redigera låten</string>
     <string name="song_title">Låt titel</string>
-    <string name="song_artist">Låt artist</string>
+    <string name="song_artists">Låt artist</string>
     <string name="error_song_title_empty">Låt titel kan inte vara tom.</string>
     <string name="error_song_artist_empty">Låt artist kan inte vara tom.</string>
     <string name="dialog_button_save">Spara</string>
@@ -161,6 +191,7 @@
     <string name="sort_by_year">Year</string>
     <string name="sort_by_song_count">Song count</string>
     <string name="sort_by_length">Length</string>
+    <string name="sort_by_play_time">Play time</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
@@ -218,11 +249,11 @@
     <string name="snackbar_removed_download">Removed download</string>
     <string name="snackbar_action_view">View</string>
 
-    <!-- Toast -->
-    <string name="toast_restart_to_take_effect">Restart to take effect</string>
-
     <!-- Custom Action -->
-    <string name="custom_action_add_to_library">Lägg till i biblioteket</string>
+    <string name="action_like">Like</string>
+    <string name="action_remove_like">Remove like</string>
+    <string name="action_add_to_library">Lägg till i biblioteket</string>
+    <string name="action_remove_from_library">Remove from library</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">Alla</string>
@@ -240,4 +271,14 @@
     <!-- Error Activity -->
     <string name="sorry_for_error">Sorry, that should not have happened.</string>
     <string name="copied">Copied to clipboard</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">No stream available</string>
+    <string name="error_no_internet">No network connection</string>
+    <string name="error_timeout">Timeout</string>
+    <string name="error_unknown">Unknown error</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">All songs</string>
+    <string name="queue_searched_songs">Searched songs</string>
 </resources>

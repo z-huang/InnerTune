@@ -15,8 +15,8 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 24
         targetSdk = 32
-        versionCode = 12
-        versionName = "0.4.1"
+        versionCode = 13
+        versionName = "0.4.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -36,6 +36,19 @@ android {
         getByName("debug") {
             isMinifyEnabled = false
             applicationIdSuffix = ".debug"
+        }
+    }
+    signingConfigs {
+        getByName("debug") {
+            if (System.getenv("MUSIC_DEBUG_SIGNING_STORE_PASSWORD") != null) {
+                val tmpFilePath = System.getProperty("user.home") + "/work/_temp/Key/"
+                val allFilesFromDir = File(tmpFilePath).listFiles()
+                val keystoreFile = allFilesFromDir?.first()
+                storeFile = keystoreFile ?: file(System.getenv("MUSIC_DEBUG_KEYSTORE_FILE"))
+                storePassword = System.getenv("MUSIC_DEBUG_SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("MUSIC_DEBUG_SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("MUSIC_DEBUG_SIGNING_KEY_PASSWORD")
+            }
         }
     }
     buildFeatures {
@@ -128,12 +141,14 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation("androidx.transition:transition-ktx:1.4.1")
-    implementation("com.google.android.material:material:1.7.0-rc01")
+    implementation("com.google.android.material:material:1.8.0-alpha01")
+    implementation("dev.chrisbanes.insetter:insetter:0.6.1")
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
     // ExoPlayer
     implementation("com.google.android.exoplayer:exoplayer:2.18.1")
     implementation("com.google.android.exoplayer:extension-mediasession:2.18.1")
+    implementation("com.google.android.exoplayer:extension-okhttp:2.18.1")
     // Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
     implementation("androidx.test:monitor:1.5.0")

@@ -10,5 +10,8 @@
         <item
             android:id="@+id/sort_by_artist"
             android:title="@string/sort_by_artist" />
+        <item
+            android:id="@+id/sort_by_play_time"
+            android:title="@string/sort_by_play_time" />
     </group>
 </menu>

@@ -1,6 +1,16 @@
 package com.zionhuang.innertube.models
 
+import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+
+@Parcelize
+sealed class YTBaseItem : Parcelable {
+    abstract val id: String
+
+    enum class ViewType {
+        LIST, BLOCK
+    }
+}
 
 @Parcelize
 data class Header(

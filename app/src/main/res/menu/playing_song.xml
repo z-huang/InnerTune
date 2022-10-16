@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_info"
+        android:icon="@drawable/ic_info"
+        android:title="@string/menu_details" />
+    <item
+        android:id="@+id/action_equalizer"
+        android:icon="@drawable/ic_equalizer"
+        android:title="@string/pref_equalizer_title" />
+    <item
+        android:id="@+id/action_radio"
+        android:icon="@drawable/ic_radio"
+        android:title="@string/menu_start_radio" />
+    <item
+        android:id="@+id/action_add_to_playlist"
+        android:icon="@drawable/ic_playlist_add"
+        android:title="@string/menu_add_to_playlist" />
+    <item
+        android:id="@+id/action_download"
+        android:icon="@drawable/ic_file_download"
+        android:title="@string/menu_download" />
+    <item
+        android:id="@+id/action_view_artist"
+        android:icon="@drawable/ic_artist"
+        android:title="@string/menu_view_artist" />
+    <item
+        android:id="@+id/action_view_album"
+        android:icon="@drawable/ic_album"
+        android:title="@string/menu_view_album" />
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/menu_share" />
+</menu>

@@ -1,0 +1,284 @@
+<resources>
+    <!-- Title -->
+    <string name="title_home">ഹോം</string>
+    <string name="title_songs">പാട്ടുകൾ</string>
+    <string name="title_artists">കലാകാരന്മാർ</string>
+    <string name="title_albums">ആൽബങ്ങൾ</string>
+    <string name="title_playlists">പ്ലേലിസ്റ്റുകൾ</string>
+    <string name="title_explore">ആരായുക</string>
+    <string name="title_settings">ക്രമീകരണങ്ങൾ</string>
+    <string name="title_now_playing">ഇപ്പോൾ പ്ലേ ചെയ്യുന്നത്</string>
+    <string name="title_error_report">ക്രാഷ് റിപ്പോർട്ട്</string>
+
+    <!-- Preference Title -->
+    <string name="pref_appearance_title">രൂപഭംഗി</string>
+    <string name="pref_follow_system_accent_title">സിസ്റ്റം തീം പിന്തുടരുക</string>
+    <string name="pref_theme_color_title">തീം നിറം</string>
+    <string name="pref_dark_theme_title">ഡാർക്ക് തീം</string>
+    <string name="dark_theme_on">ഓൺ</string>
+    <string name="dark_theme_off">ഓഫ്</string>
+    <string name="pref_default_open_tab_title">സ്ഥിര ഓപ്പൺ ടാബ്</string>
+    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
+    <string name="dark_theme_follow_system">സിസ്റ്റം പിന്തുടരുക</string>
+
+    <string name="pref_content_title">കന്റെന്റ്</string>
+    <string name="pref_content_language_title">സ്ഥിര കന്റെന്റ് ഭാഷ</string>
+    <string name="pref_default_content_country_title">സ്ഥിര കന്റെന്റ് രാജ്യം</string>
+    <string name="pref_enable_proxy_title">പ്രോക്സി പ്രവർത്തനക്ഷമമാക്കുക</string>
+    <string name="pref_proxy_type_title">പ്രോക്സി തരം</string>
+    <string name="pref_proxy_url_title">പ്രോക്സി URL</string>
+    <string name="pref_restart_title">പ്രാബല്യത്തിൽ വരാൻ പുനരാരംഭിക്കുക</string>
+
+    <string name="pref_player_audio_title">പ്ലെയറും ഓഡിയോയും</string>
+    <string name="pref_persistent_queue_title">Persistent queue</string>
+    <string name="pref_audio_quality_title">ഓഡിയോ നിലവാരം</string>
+    <string name="audio_quality_auto">ഓട്ടോ</string>
+    <string name="audio_quality_high">ഉയർന്ന</string>
+    <string name="audio_quality_low">താഴ്ന്ന</string>
+    <string name="pref_equalizer_title">ഇക്വലൈസർ</string>
+
+    <string name="pref_cache_title">Cache</string>
+    <string name="pref_image_max_cache_size_title">Max image cache size</string>
+    <string name="pref_clear_image_cache_title">Clear image cache</string>
+    <string name="pref_song_max_cache_size_title">Max song cache size</string>
+    <string name="size_used">%s used</string>
+
+    <string name="pref_general_title">പൊതുവായ</string>
+    <string name="pref_auto_download_title">യാന്ത്രിക ഡൗൺലോഡ്</string>
+    <string name="pref_auto_download_summary">ലൈബ്രറിയിൽ ചേർക്കുമ്പോൾ പാട്ട് ഡൗൺലോഡ് ചെയ്യുക</string>
+    <string name="pref_auto_add_song_title">ലൈബ്രറിയിലേക്ക് പാട്ട് സ്വയമേവ ചേർക്കുക</string>
+    <string name="pref_auto_add_song_summary">നിങ്ങളുടെ ലൈബ്രറി പ്ലേ ചെയ്യുമ്പോൾ പാട്ട് ചേർക്കുക</string>
+    <string name="pref_expand_on_play_title">താഴെയുള്ള പ്ലേയർ വികസിപ്പിക്കുക</string>
+
+    <string name="pref_privacy_title">സ്വകാര്യത</string>
+    <string name="pref_pause_search_history_title">തിരയൽ ചരിത്രം താൽക്കാലികമായി നിർത്തുക</string>
+    <string name="pref_clear_search_history_title">തിരയൽ ചരിത്രം മായ്‌ക്കുക</string>
+    <string name="clear_search_history_question">എല്ലാ തിരയൽ ചരിത്രവും മായ്‌ക്കണമെന്ന് ഉറപ്പാണോ?</string>
+
+    <string name="pref_backup_restore_title">ബാക്കപ്പും വീണ്ടെടുക്കലും</string>
+    <string name="pref_backup_title">ബാക്കപ്പ്</string>
+    <string name="pref_restore_title">വീണ്ടെടുക്കൽ</string>
+
+    <string name="pref_about_title">കുറിച്ച്</string>
+    <string name="pref_app_version_title">അപ്ലിക്കേഷൻ പതിപ്പ്</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">സകുറ</string>
+    <string name="color_red">ചുവപ്പ്</string>
+    <string name="color_pink">പിങ്ക്</string>
+    <string name="color_purple">പർപ്പിൾ</string>
+    <string name="color_deep_purple">കടും പർപ്പിൾ</string>
+    <string name="color_indigo">ഇൻഡിഗോ</string>
+    <string name="color_blue">നീല</string>
+    <string name="color_light_blue">ഇളം നീല</string>
+    <string name="color_cyan">സിയാൻ</string>
+    <string name="color_teal">ടീൽ</string>
+    <string name="color_green">പച്ച</string>
+    <string name="color_light_green">ഇളം പച്ച</string>
+    <string name="color_lime">നാരങ്ങ</string>
+    <string name="color_yellow">മഞ്ഞ</string>
+    <string name="color_amber">ആമ്പർ</string>
+    <string name="color_orange">ഓറഞ്ച്</string>
+    <string name="color_deep_orange">കടും ഓറഞ്ച്</string>
+    <string name="color_brown">തവിട്ട്</string>
+    <string name="color_blue_grey">നീല ചാരനിറം</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search_title">തിരയുക</string>
+    <string name="search_yt_music">യൂട്യൂബ് സംഗീതം തിരയുക…</string>
+    <string name="search_library">തിരയൽ ലൈബ്രറി…</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">ഇഷ്ടപ്പെട്ട പാട്ടുകൾ</string>
+    <string name="downloaded_songs">ഡൗൺലോഡ് ചെയ്‌ത പാട്ടുകൾ</string>
+
+    <!-- Popup Menu -->
+    <string name="menu_details">Details</string>
+    <string name="menu_edit">എഡിറ്റ് ചെയ്യുക</string>
+    <string name="menu_start_radio">റേഡിയോ ആരംഭിക്കുക</string>
+    <string name="menu_play">പ്ലേ ചെയ്യുക</string>
+    <string name="menu_play_next">അടുത്തത് പ്ലേ ചെയ്യുക</string>
+    <string name="menu_add_to_queue">ക്യൂവിൽ ചേർക്കുക</string>
+    <string name="menu_add_to_library">ലൈബ്രറിയിലേക്ക് ചേർക്കുക</string>
+    <string name="menu_download">ഡൗൺലോഡ്</string>
+    <string name="menu_remove_download">ഡൗൺലോഡ് നീക്കം ചെയ്യുക</string>
+    <string name="menu_import_playlist">പ്ലേലിസ്റ്റ് ഇറക്കുമതി ചെയ്യുക</string>
+    <string name="menu_add_to_playlist">പ്ലേലിസ്റ്റിൽ ആഡ് ചെയ്യുക</string>
+    <string name="menu_view_artist">കലാകാരനെ കാണുക</string>
+    <string name="menu_view_album">ആൽബം കാണുക</string>
+    <string name="menu_refetch">വീണ്ടെടുക്കുക</string>
+    <string name="menu_share">പങ്കിടുക</string>
+    <string name="menu_delete">ഡിലീറ്റ്</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title_details">Details</string>
+    <string name="media_id">Media id</string>
+    <string name="mime_type">MIME type</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="sample_rate">Sample rate</string>
+    <string name="loudness">Loudness</string>
+    <string name="file_size">File size</string>
+    <string name="unknown">Unknown</string>
+
+    <string name="dialog_title_edit_song">ഗാനം എഡിറ്റ് ചെയ്യുക</string>
+    <string name="song_title">പാട്ടിന്റെ പേര്</string>
+    <string name="song_artists">പാട്ടുകാരൻ</string>
+    <string name="error_song_title_empty">ഗാനത്തിന്റെ പേര് ശൂന്യമാക്കാൻ കഴിയില്ല.</string>
+    <string name="error_song_artist_empty">പാട്ടുകാരൻ ശൂന്യമായിരിക്കാൻ കഴിയില്ല.</string>
+    <string name="dialog_button_save">സേവ്</string>
+
+    <string name="dialog_title_create_playlist">പ്ലേലിസ്റ്റ് സൃഷ്ടിക്കുക</string>
+    <string name="text_view_hint_playlist_name">പ്ലേലിസ്റ്റ് പേര്</string>
+    <string name="error_playlist_name_empty">പ്ലേലിസ്റ്റിന്റെ പേര് ശൂന്യമാക്കാൻ കഴിയില്ല.</string>
+
+    <string name="dialog_title_edit_artist">എഡിറ്റ് ആർട്ടിസ്റ്റ്</string>
+    <string name="text_view_hint_artist_name">കലാകാരന്റെ പേര്</string>
+    <string name="error_artist_name_empty">കലാകാരന്റെ പേര് ശൂന്യമാക്കാൻ കഴിയില്ല.</string>
+
+    <string name="dialog_title_duplicate_artist">ഡ്യൂപ്ലിക്കേറ്റ് ആർട്ടിസ്റ്റുകൾ</string>
+    <string name="dialog_msg_duplicate_artist">ആർട്ടിസ്റ്റ് %1$s ഇതിനകം നിലവിലുണ്ട്.</string>
+
+    <string name="dialog_title_choose_playlist">പ്ലേലിസ്റ്റ് തിരഞ്ഞെടുക്കുക</string>
+
+    <string name="dialog_title_edit_playlist">പ്ലേലിസ്റ്റ് എഡിറ്റ് ചെയ്യുക</string>
+
+    <string name="dialog_title_choose_backup_content">ബാക്കപ്പ് ഉള്ളടക്കം തിരഞ്ഞെടുക്കുക</string>
+    <string name="dialog_title_choose_restore_content">പുനഃസ്ഥാപന ഉള്ളടക്കം തിരഞ്ഞെടുക്കുക</string>
+    <string name="choice_preferences">മുൻഗണനകൾ</string>
+    <string name="choice_database">ഡാറ്റാബേസ്</string>
+    <string name="choice_downloaded_songs">ഡൗൺലോഡ് ചെയ്‌ത പാട്ടുകൾ</string>
+    <string name="message_backup_create_success">ബാക്കപ്പ് സൃഷ്‌ടിച്ചു</string>
+    <string name="message_backup_create_failed">ബാക്കപ്പ് സൃഷ്ടിക്കാൻ കഴിഞ്ഞില്ല</string>
+    <string name="message_restore_failed">ബാക്കപ്പ് പുനഃസ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">മ്യൂസിക് പ്ലെയർ</string>
+    <string name="channel_name_download">ഡൗൺലോഡ്</string>
+
+    <!-- Noun -->
+    <plurals name="song_count">
+        <item quantity="one">%d പാട്ട്</item>
+        <item quantity="other">%d പാട്ടുകൾ</item>
+    </plurals>
+    <plurals name="artist_count">
+        <item quantity="one">%d ആർട്ടിസ്റ്റ്</item>
+        <item quantity="other">%d ആർട്ടിസ്റ്റുകൾ</item>
+    </plurals>
+    <plurals name="album_count">
+        <item quantity="one">%d ആൽബം</item>
+        <item quantity="other">%d ആൽബങ്ങൾ</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d പ്ലേലിസ്റ്റ്</item>
+        <item quantity="other">%d പ്ലേലിസ്റ്റുകൾ</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">വീണ്ടും ശ്രമിക്കുക</string>
+    <string name="btn_play">പ്ലേ</string>
+    <string name="btn_play_all">എല്ലാം പ്ലേ ചെയ്യുക</string>
+    <string name="btn_radio">റേഡിയോ</string>
+    <string name="btn_shuffle">ഷഫിൾ</string>
+    <string name="btn_copy_stacktrace">സ്റ്റാക്ക്ട്രെയിസ് പകർത്തുക</string>
+    <string name="btn_report">റിപ്പോർട്ട് ചെയ്യുക</string>
+    <string name="btn_report_on_github">ജിറ്റ്ഹബിൽ റിപ്പോർട്ട് ചെയ്യുക</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_create_date">ചേർത്ത തീയതി</string>
+    <string name="sort_by_name">പേര്</string>
+    <string name="sort_by_artist">ആർട്ടിസ്റ്റ്</string>
+    <string name="sort_by_year">വർഷം</string>
+    <string name="sort_by_song_count">പാട്ടുകളുടെ എണ്ണം</string>
+    <string name="sort_by_length">ദൈർഘ്യം</string>
+    <string name="sort_by_play_time">Play time</string>
+
+    <!-- Snackbar -->
+    <plurals name="snackbar_delete_song">
+        <item quantity="one">%d പാട്ട് ഡിലീറ്റ് ചെയ്തു.</item>
+        <item quantity="other">%d പാട്ടുകൾ ഡിലീറ്റ് ചെയ്തു.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="one">%d തിരഞ്ഞെടുത്തു</item>
+        <item quantity="other">%d തിരഞ്ഞെടുത്തു</item>
+    </plurals>
+    <string name="snackbar_undo">പഴയപടി ആക്കുക</string>
+    <string name="snackbar_url_error">ഈ url തിരിച്ചറിയാൻ കഴിയുന്നില്ല.</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">പാട്ട് അടുത്തതായി പ്ലേ ചെയ്യും</item>
+        <item quantity="other">%d പാട്ടുകൾ അടുത്തതായി പ്ലേ ചെയ്യും</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">ആർട്ടിസ്റ്റ് അടുത്തതായി പ്ലേ ചെയ്യും</item>
+        <item quantity="other">%d ആർട്ടിസ്റ്റുകൾ അടുത്തതായി പ്ലേ ചെയ്യും</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">ആൽബം അടുത്തതായി പ്ലേ ചെയ്യും</item>
+        <item quantity="other">%d ആൽബങ്ങൾ അടുത്തതായി പ്ലേ ചെയ്യും</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">പ്ലേലിസ്റ്റ് അടുത്തതായി പ്ലേ ചെയ്യും</item>
+        <item quantity="other">%d പ്ലേലിസ്റ്റുകൾ അടുത്തതായി പ്ലേ ചെയ്യും</item>
+    </plurals>
+    <string name="snackbar_play_next">തിരഞ്ഞെടുത്തത് അടുത്തതായി പ്ലേ ചെയ്യും</string>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">പാട്ട് ക്യൂവിൽ ചേർത്തു</item>
+        <item quantity="other">%d പാട്ടുകൾ ക്യൂവിൽ ചേർത്തു</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">ആർട്ടിസ്റ്റ് ക്യൂവിൽ ചേർത്തു</item>
+        <item quantity="other">%d ആർട്ടിസ്റ്റുകൾ ക്യൂവിൽ ചേർത്തു</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">ആൽബം ക്യൂവിൽ ചേർത്തു</item>
+        <item quantity="other">%d ആൽബങ്ങൾ ക്യൂവിൽ ചേർത്തു</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">പ്ലേലിസ്റ്റ് ക്യൂവിൽ ചേർത്തു</item>
+        <item quantity="other">%d പ്ലേലിസ്റ്റുകൾ ക്യൂവിൽ ചേർത്തു</item>
+    </plurals>
+    <string name="snackbar_added_to_queue">തിരഞ്ഞെടുത്തത് ക്യൂവിൽ ചേർത്തു</string>
+    <string name="snackbar_added_to_library">ലൈബ്രറിയിൽ ചേർത്തു</string>
+    <string name="snackbar_removed_from_library">ലൈബ്രറിയിൽ നിന്ന് നീക്കം ചെയ്തു</string>
+    <string name="snackbar_playlist_imported">പ്ലേലിസ്റ്റ് ഇറക്കുമതി ചെയ്തു</string>
+    <string name="snackbar_added_to_playlist">%1$s-യിലേക്ക് ചേർത്തു</string>
+    <plurals name="snackbar_download_song">
+        <item quantity="one">പാട്ട് ഡൗൺലോഡ് ചെയ്യാൻ ആരംഭിക്കുക</item>
+        <item quantity="other">%d പാട്ടുകൾ ഡൗൺലോഡ് ചെയ്യാൻ ആരംഭിക്കുക</item>
+    </plurals>
+    <string name="snackbar_removed_download">ഡൗൺലോഡ് നീക്കം ചെയ്‌തു</string>
+    <string name="snackbar_action_view">കാണുക</string>
+
+    <!-- Custom Action -->
+    <string name="action_like">Like</string>
+    <string name="action_remove_like">Remove like</string>
+    <string name="action_add_to_library">ലൈബ്രറിയിലേക്ക് ചേർക്കുക</string>
+    <string name="action_remove_from_library">Remove from library</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">എല്ലാം</string>
+    <string name="search_filter_songs">പാട്ടുകൾ</string>
+    <string name="search_filter_videos">വീഡിയോകൾ</string>
+    <string name="search_filter_albums">ആൽബങ്ങൾ</string>
+    <string name="search_filter_artists">ആർട്ടിസ്റ്റുകൾ</string>
+    <string name="search_filter_playlists">പ്ലേലിസ്റ്റുകൾ</string>
+    <string name="search_filter_community_playlists">കമ്മ്യൂണിറ്റി പ്ലേലിസ്റ്റുകൾ</string>
+    <string name="search_filter_featured_playlists">തിരഞ്ഞെടുത്ത പ്ലേലിസ്റ്റുകൾ</string>
+
+    <string name="system_default">സിസ്റ്റം സ്ഥിരസ്ഥിതി</string>
+    <string name="header_from_your_library">നിങ്ങളുടെ ലൈബ്രറിയിൽ നിന്ന്</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">ക്ഷമിക്കണം, അങ്ങനെ സംഭവിക്കാൻ പാടില്ലായിരുന്നു.</string>
+    <string name="copied">ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തി</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">No stream available</string>
+    <string name="error_no_internet">No network connection</string>
+    <string name="error_timeout">Timeout</string>
+    <string name="error_unknown">Unknown error</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">All songs</string>
+    <string name="queue_searched_songs">Searched songs</string>
+</resources>

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.LocalItem
+import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.requireAppCompatActivity
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
 class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() {
     private val args: PlaylistSongsFragmentArgs by navArgs()
     private val playlistId by lazy { args.playlistId }
+    private lateinit var playlist: Playlist
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
@@ -107,6 +109,7 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
             if (adapter.currentList[position] !is LocalItem) return@addOnClickListener
 
             playbackViewModel.playQueue(requireActivity(), ListQueue(
+                title = playlist.playlist.name,
                 items = adapter.currentList.filterIsInstance<Song>().map { it.toMediaItem() },
                 startIndex = position - 1
             ))
@@ -114,6 +117,7 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
         adapter.itemTouchHelper = itemTouchHelper
         adapter.onShuffle = {
             playbackViewModel.playQueue(requireActivity(), ListQueue(
+                title = playlist.playlist.name,
                 items = adapter.currentList.filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
             ))
         }
@@ -146,7 +150,8 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
             }
 
         lifecycleScope.launch {
-            requireAppCompatActivity().title = SongRepository.getPlaylistById(playlistId).playlist.name
+            playlist = SongRepository.getPlaylistById(playlistId)
+            requireAppCompatActivity().title = playlist.playlist.name
             songsViewModel.getPlaylistSongsAsFlow(playlistId).collectLatest {
                 adapter.submitList(it, animation = false)
             }

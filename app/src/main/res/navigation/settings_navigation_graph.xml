@@ -20,6 +20,10 @@
         android:name="com.zionhuang.music.ui.fragments.settings.PlayerAudioSettingsFragment"
         android:label="@string/pref_player_audio_title" />
     <fragment
+        android:id="@+id/cacheSettingsFragment"
+        android:name="com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment"
+        android:label="@string/pref_cache_title" />
+    <fragment
         android:id="@+id/generalSettingsFragment"
         android:name="com.zionhuang.music.ui.fragments.settings.GeneralSettingsFragment"
         android:label="@string/pref_general_title" />

@@ -4,10 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.CONFLICT_ABORT
 import androidx.core.content.contentValuesOf
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zionhuang.music.db.daos.*
@@ -30,14 +27,18 @@ import java.util.*
         AlbumArtistMap::class,
         PlaylistSongMap::class,
         DownloadEntity::class,
-        SearchHistory::class
+        SearchHistory::class,
+        FormatEntity::class
     ],
     views = [
         SortedSongArtistMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 2,
-    exportSchema = true
+    version = 3,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 2, to = 3)
+    ]
 )
 @TypeConverters(Converters::class)
 abstract class MusicDatabase : RoomDatabase() {
@@ -47,6 +48,7 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract val playlistDao: PlaylistDao
     abstract val downloadDao: DownloadDao
     abstract val searchHistoryDao: SearchHistoryDao
+    abstract val formatDao: FormatDao
 
     companion object {
         const val DB_NAME = "song.db"
