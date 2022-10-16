@@ -1,3 +1,5 @@
+Music is now renamed to InnerTune!
+
 <b>New</b>
 
 - Player redesign
