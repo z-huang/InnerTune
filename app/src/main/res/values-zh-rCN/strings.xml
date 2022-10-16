@@ -22,7 +22,6 @@
     <string name="dark_theme_follow_system">跟随系统</string>
 
     <string name="pref_content_title">内容</string>
-    <string name="pref_app_language_title">应用语言</string>
     <string name="pref_content_language_title">默认内容语言</string>
     <string name="pref_default_content_country_title">默认内容国家</string>
     <string name="pref_enable_proxy_title">启用代理</string>

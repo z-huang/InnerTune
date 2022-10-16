@@ -3,10 +3,12 @@
     <style name="AppTheme" parent="Base.AppTheme" />
 
     <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">?isLightTheme</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?isLightTheme</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeTheme">@style/Widget.Material3.ActionBar.Solid</item>

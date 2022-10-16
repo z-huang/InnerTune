@@ -22,7 +22,6 @@
     <string name="dark_theme_follow_system">システムに従う</string>
 
     <string name="pref_content_title">コンテンツ</string>
-    <string name="pref_app_language_title">アプリの表示言語</string>
     <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>
     <string name="pref_default_content_country_title">デフォルトのコンテンツの国</string>
     <string name="pref_enable_proxy_title">プロキシを有効化</string>

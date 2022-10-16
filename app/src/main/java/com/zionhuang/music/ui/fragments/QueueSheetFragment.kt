@@ -42,6 +42,7 @@ import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.PlaybackViewModel
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
@@ -104,6 +105,11 @@ class QueueSheetFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        binding.content.applyInsetter {
+            type(statusBars = true, navigationBars = true) {
+                padding()
+            }
+        }
         binding.recyclerView.adapter = adapter
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())

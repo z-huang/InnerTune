@@ -21,6 +21,7 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.PlaybackViewModel
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -39,10 +40,15 @@ class BottomControlsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        binding.container!!.applyInsetter {
+            type(statusBars = true, navigationBars = true) {
+                padding()
+            }
+        }
         // Marquee
         binding.songTitle.isSelected = true
         binding.songArtist.isSelected = true
-
         binding.songArtist.setOnClickListener {
             val mediaMetadata = MediaSessionConnection.binder?.songPlayer?.currentMediaMetadata?.value ?: return@setOnClickListener
             if (mediaMetadata.artists.isNotEmpty()) {

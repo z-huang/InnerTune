@@ -67,8 +67,7 @@
         android:elevation="0dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.NeoBottomSheetBehavior"
-        app:paddingBottomSystemWindowInsets="false">
+        app:layout_behavior="com.google.android.material.bottomsheet.NeoBottomSheetBehavior">
 
         <FrameLayout
             android:id="@+id/bottom_controls_fragment"
@@ -89,8 +88,7 @@
             android:layout_height="match_parent"
             app:behavior_hideable="false"
             app:behavior_peekHeight="64dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.NeoBottomSheetBehavior"
-            app:paddingBottomSystemWindowInsets="false">
+            app:layout_behavior="com.google.android.material.bottomsheet.NeoBottomSheetBehavior">
 
             <FrameLayout
                 android:id="@+id/queue_fragment"

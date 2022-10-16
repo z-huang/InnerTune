@@ -142,6 +142,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
     implementation("androidx.transition:transition-ktx:1.4.1")
     implementation("com.google.android.material:material:1.8.0-alpha01")
+    implementation("dev.chrisbanes.insetter:insetter:0.6.1")
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
     // ExoPlayer

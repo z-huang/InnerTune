@@ -1,7 +1,6 @@
 package com.zionhuang.music
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -16,8 +15,6 @@ import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
 import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
-import com.zionhuang.music.utils.LanguageContextWrapper
-import com.zionhuang.music.utils.LocalizationUtils
 import java.net.Proxy
 import java.util.*
 
@@ -60,11 +57,6 @@ class App : Application(), ImageLoaderFactory {
                 putString(getString(R.string.pref_visitor_data), it)
             }
         }
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        val locale = LocalizationUtils.getAppLocale(newBase)
-        super.attachBaseContext(LanguageContextWrapper.wrap(newBase, locale))
     }
 
     override fun newImageLoader() = ImageLoader.Builder(this)
