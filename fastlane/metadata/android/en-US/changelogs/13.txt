@@ -1,0 +1,47 @@
+<b>New</b>
+
+- Player redesign
+- Queue redesign
+- Cache songs
+- Stats for nerds #304
+- Persistent queue #213
+- Add built-in playlist (liked, downloaded)
+- Set cache limits #266
+- Sort songs by play time #228
+- Customize navigation tabs #289
+
+<b>Improved</b>
+
+- Generate `visitorData` for each user to provide personal recommendation #251
+- Remove unnecessary string in search result
+- Provide restart app button in content settings
+- Collapse toolbar on scroll #227
+- Seamlessly start radio
+- Cache media
+- Show player error message
+- Add "library" and "like" buttons in player notification
+- Support proxy for streaming #221
+- Slide up queue in player bottom sheet #128 #252
+- Show song duration in queue
+- Improve bottom sheet player layout in landscape mode #227
+- Retain bottom sheet state
+- Expand bottom sheet when clicking the notification
+
+<b>Fixed</b>
+
+- Use BaseSettingsFragment #220
+- Fix delete album behavior
+- Fix player share button behavior #236
+- Fix navigate next icon color
+- Fix 400 error for some countries
+- Fix error when search result contains audio books #248
+- Fix seek bar not working when animation is disabled #103
+- Fix playing song should be the first in playlist when shuffle mode is enabled #37
+- Fix bottom sheet width doesn't fill screen in landscape mode #283
+
+<b>Translation</b>
+- Update Italian translation #218 #264
+- Add Persian translation #234 #258
+- Add Malayalam (India) translation #249
+- Update Japanese translation #257
+- Add Simplified Chinese translation #259 #275 #294 #303 #306 #309
