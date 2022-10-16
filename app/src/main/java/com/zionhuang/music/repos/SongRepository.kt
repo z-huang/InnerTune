@@ -265,9 +265,14 @@ object SongRepository : LocalRepository {
             YouTube.getQueue(chunk.map { it.id }).getOrThrow()
         }
         songDao.update(songItems.map { item ->
-            item.toSongEntity().copy(
-                downloadState = map[item.id]!!.song.downloadState,
-                createDate = map[item.id]!!.song.createDate
+            map[item.id]!!.song.copy(
+                id = item.id,
+                title = item.title,
+                duration = item.duration!!,
+                thumbnailUrl = item.thumbnails.last().url,
+                albumId = item.album?.navigationEndpoint?.browseId,
+                albumName = item.album?.text,
+                modifyDate = LocalDateTime.now()
             )
         })
         val songArtistMaps = songItems.flatMap { song ->
@@ -322,11 +327,19 @@ object SongRepository : LocalRepository {
     }
 
     override suspend fun updateSongTitle(song: Song, newTitle: String) = withContext(IO) {
-        songDao.update(song.song.copy(title = newTitle, modifyDate = LocalDateTime.now()))
+        songDao.update(song.song.copy(
+            title = newTitle,
+            modifyDate = LocalDateTime.now()
+        ))
     }
 
     override suspend fun toggleLiked(songs: List<Song>) = withContext(IO) {
-        songDao.update(songs.map { it.song.copy(liked = !it.song.liked, modifyDate = LocalDateTime.now()) })
+        songDao.update(songs.map {
+            it.song.copy(
+                liked = !it.song.liked,
+                modifyDate = LocalDateTime.now()
+            )
+        })
     }
 
     override suspend fun downloadSongs(songs: List<SongEntity>) = withContext(IO) {
