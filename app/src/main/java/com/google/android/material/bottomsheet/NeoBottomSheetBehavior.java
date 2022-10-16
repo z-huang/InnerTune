@@ -1600,13 +1600,14 @@ public class NeoBottomSheetBehavior<V extends View> extends CoordinatorLayout.Be
                         MarginLayoutParams mlp = (MarginLayoutParams) view.getLayoutParams();
                         boolean marginUpdated = false;
 
+                        // MODIFIED: Don't change left and right margin to let landscape mode look normal
                         if (marginLeftSystemWindowInsets && mlp.leftMargin != systemBarInsets.left) {
-                            mlp.leftMargin = systemBarInsets.left;
+//                            mlp.leftMargin = systemBarInsets.left;
                             marginUpdated = true;
                         }
 
                         if (marginRightSystemWindowInsets && mlp.rightMargin != systemBarInsets.right) {
-                            mlp.rightMargin = systemBarInsets.right;
+//                            mlp.rightMargin = systemBarInsets.right;
                             marginUpdated = true;
                         }
 

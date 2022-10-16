@@ -1,6 +1,7 @@
 package com.zionhuang.music.utils
 
 import android.content.Context
+import android.content.res.Configuration.ORIENTATION_UNDEFINED
 import android.util.DisplayMetrics
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +20,8 @@ object AdaptiveUtils {
     private const val MEDIUM_SCREEN_SIZE_UPPER_THRESHOLD = 840
     private const val LARGE_SCREEN_SIZE_UPPER_THRESHOLD = 1024
 
+    private val _orientation = MutableStateFlow(ORIENTATION_UNDEFINED)
+    val orientation: StateFlow<Int> = _orientation
     private val _screenSizeState = MutableStateFlow(ScreenSize.SMALL)
     val screenSizeState: StateFlow<ScreenSize> = _screenSizeState
 
@@ -42,5 +45,9 @@ object AdaptiveUtils {
         }
         if (_screenSizeState.value == newState) return
         _screenSizeState.value = newState
+    }
+
+    fun updateOrientation(context: Context) {
+        _orientation.value = context.resources.configuration.orientation
     }
 }

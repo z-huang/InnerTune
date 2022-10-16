@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
 import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.View
@@ -48,6 +49,7 @@ import com.zionhuang.music.ui.fragments.base.AbsRecyclerViewFragment
 import com.zionhuang.music.utils.AdaptiveUtils
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.NavigationTabHelper
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -112,6 +114,11 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
             true
         }
 
+        binding.container.applyInsetter {
+            type(statusBars = true, navigationBars = true) {
+                padding(right = true)
+            }
+        }
         binding.fab.setOnApplyWindowInsetsListener { v, insets ->
             v.updateLayoutParams<CoordinatorLayout.LayoutParams> {
                 bottomMargin = (16 * getDensity()).toInt() + insets.systemBarInsetsCompat.bottom
@@ -151,29 +158,28 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         lifecycleScope.launch {
             SongRepository.validateDownloads()
         }
-        AdaptiveUtils.updateScreenSize(this)
         lifecycleScope.launch {
-            AdaptiveUtils.screenSizeState.collectLatest {
+            AdaptiveUtils.orientation.collectLatest { orientation ->
                 binding.container.updateLayoutParams<CoordinatorLayout.LayoutParams> {
-                    bottomMargin = if (it == AdaptiveUtils.ScreenSize.SMALL) resources.getDimensionPixelSize(R.dimen.m3_bottom_nav_min_height) else 0
+                    bottomMargin = if (orientation == ORIENTATION_PORTRAIT) resources.getDimensionPixelSize(R.dimen.m3_bottom_nav_min_height) else 0
                 }
                 binding.container.updatePadding(bottom = if (bottomSheetBehavior.state == STATE_HIDDEN) 0 else dip(R.dimen.bottom_controls_sheet_peek_height))
-                binding.bottomNav.isVisible = it == AdaptiveUtils.ScreenSize.SMALL
-                binding.navigationRail.isVisible = it != AdaptiveUtils.ScreenSize.SMALL
+                binding.bottomNav.isVisible = orientation == ORIENTATION_PORTRAIT
+                binding.navigationRail.isVisible = orientation != ORIENTATION_PORTRAIT
                 bottomSheetBehavior.setPeekHeight(
-                    (if (it == AdaptiveUtils.ScreenSize.SMALL) dip(R.dimen.m3_bottom_nav_min_height) else 0) + dip(R.dimen.bottom_controls_sheet_peek_height),
+                    (if (orientation == ORIENTATION_PORTRAIT) dip(R.dimen.m3_bottom_nav_min_height) else 0) + dip(R.dimen.bottom_controls_sheet_peek_height),
                     true
                 )
                 onBottomSheetSlide(if (bottomSheetBehavior.state == STATE_EXPANDED) 1f else 0f)
             }
         }
-
+        AdaptiveUtils.updateOrientation(this)
         handleIntent(intent)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        AdaptiveUtils.updateScreenSize(this)
+        AdaptiveUtils.updateOrientation(this)
     }
 
     private fun onBottomSheetStateChanged(@State newState: Int) {
@@ -202,7 +208,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
     private fun onBottomSheetSlide(slideOffset: Float) {
         val progress = slideOffset.coerceIn(0f, 1f)
         binding.bottomNav.translationY = binding.bottomNav.height * progress
-        binding.bottomNav.isVisible = progress != 1f && AdaptiveUtils.screenSizeState.value == AdaptiveUtils.ScreenSize.SMALL
+        binding.bottomNav.isVisible = progress != 1f && AdaptiveUtils.orientation.value == ORIENTATION_PORTRAIT
         binding.miniPlayerFragment.alpha = (1 - progress * 4).coerceIn(0f, 1f) // mini player disappears after sliding 25%
         binding.bottomControlsFragment.alpha = ((progress - 0.25f) * 4).coerceIn(0f, 1f)
     }

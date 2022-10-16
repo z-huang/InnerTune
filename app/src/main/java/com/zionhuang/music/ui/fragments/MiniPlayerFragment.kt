@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.NeoBottomSheetBehavior.STATE_EXPA
 import com.zionhuang.music.databinding.FragmentMiniPlayerBinding
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.viewmodels.PlaybackViewModel
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,12 @@ class MiniPlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        binding.root.applyInsetter {
+            type(navigationBars = true) {
+                padding(horizontal = true)
+            }
+        }
         // Marquee
         binding.songTitle.isSelected = true
         binding.songArtist.isSelected = true

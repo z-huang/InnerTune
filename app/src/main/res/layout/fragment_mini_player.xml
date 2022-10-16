@@ -41,7 +41,7 @@
             <ImageView
                 android:id="@+id/thumbnail"
                 cornerRadius="@{@dimen/thumbnail_radius}"
-                srcUrl="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString()}"
+                srcUrl="@{viewModel.mediaMetadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)}"
                 thumbnailWidth="@{@dimen/list_thumbnail_size}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

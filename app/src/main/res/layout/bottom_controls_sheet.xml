@@ -48,7 +48,7 @@
 
                 <ImageView
                     android:id="@+id/thumbnail"
-                    srcUrl="@{viewModel.mediaMetadata.getText(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI).toString()}"
+                    srcUrl="@{viewModel.mediaMetadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_ICON_URI)}"
                     thumbnailWidth="@{512f}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -182,8 +182,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="28dp"
-            android:layout_marginBottom="92dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="80dp"
             android:orientation="horizontal">
 
             <ImageView
