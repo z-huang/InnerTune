@@ -7,7 +7,7 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: I am able to reproduce the bug with the [latest version](https://github.com/z-huang/music/releases/latest).
+        - label: I am able to reproduce the bug with the [latest version](https://github.com/z-huang/InnerTune/releases/latest).
           required: true
         - label: I've checked that there is no issue about this bug.
           required: true

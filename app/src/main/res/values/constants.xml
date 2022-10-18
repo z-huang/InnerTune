@@ -50,6 +50,11 @@
     <string name="pref_backup" translatable="false">BACKUP</string>
     <string name="pref_restore" translatable="false">RESTORE</string>
 
+    <string name="pref_app_version" translatable="false">APP_VERSION</string>
+    <string name="pref_github" translatable="false">GITHUB</string>
+    <string name="pref_github_title" translatable="false">GitHub</string>
+    <string name="pref_github_summary" translatable="false">z-huang/InnerTune</string>
+
     <string name="pref_song_sort_type" translatable="false">SONG_SORT_TYPE</string>
     <string name="pref_song_sort_descending" translatable="false">SONG_SORT_DESC</string>
     <string name="pref_artist_sort_type" translatable="false">ARTIST_SORT_TYPE</string>
@@ -58,10 +63,7 @@
     <string name="pref_album_sort_descending" translatable="false">ALBUM_SORT_DESC</string>
     <string name="pref_playlist_sort_type" translatable="false">PLAYLIST_SORT_TYPE</string>
     <string name="pref_playlist_sort_descending" translatable="false">PLAYLIST_SORT_DESC</string>
-    <string name="pref_app_version" translatable="false">APP_VERSION</string>
-    <string name="pref_github" translatable="false">GITHUB</string>
-    <string name="pref_github_title" translatable="false">GitHub</string>
-    <string name="pref_github_summary" translatable="false">z-huang/music</string>
+    <string name="pref_show_lyrics" translatable="false">SHOW_LYRICS</string>
 
     <string name="bullet" translatable="false">•</string>
 

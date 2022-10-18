@@ -2,7 +2,7 @@
 
 <br><b>메모:</b>
 
-그 프로젝트는 현재 불안정한 단계에 있습니다. 버그가 발생하면 <a href='https://github.com/z-huang/music'>GitHub</a>에서 이슈를 열어 보고해주세요.
+그 프로젝트는 현재 불안정한 단계에 있습니다. 버그가 발생하면 <a href='https://github.com/z-huang/InnerTune'>GitHub</a>에서 이슈를 열어 보고해주세요.
 
 <br><b>특징:</b>
 

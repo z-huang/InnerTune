@@ -1,15 +1,15 @@
 # InnerTune
 
-<img src="https://raw.githubusercontent.com/z-huang/music/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" height="72">
+<img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" height="72">
 
 Make your own music library with any song from YouTube Music.  
 No ads, free, and simple.
 
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music)
 
-[![Latest release](https://img.shields.io/github/v/release/z-huang/music?include_prereleases)](https://github.com/z-huang/music/releases)
-[![License](https://img.shields.io/github/license/z-huang/music)](https://www.gnu.org/licenses/gpl-3.0)
-[![Downloads](https://img.shields.io/github/downloads/z-huang/music/total)](https://github.com/z-huang/music/releases)
+[![Latest release](https://img.shields.io/github/v/release/z-huang/InnerTune?include_prereleases)](https://github.com/z-huang/music/releases)
+[![License](https://img.shields.io/github/license/z-huang/InnerTune)](https://www.gnu.org/licenses/gpl-3.0)
+[![Downloads](https://img.shields.io/github/downloads/z-huang/InnerTune/total)](https://github.com/z-huang/InnerTune/releases)
 
 > **Note**
 >
@@ -59,31 +59,31 @@ With this app, you're like getting a free music streaming service. You can liste
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="170" />
 </p>
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/07.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/08.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/music/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/07.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/08.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="170" />
 </p>
 
 ## Installation
 
 You can install _InnerTune_ using the following methods:
 
-1. Download the APK file from [GitHub Releases](https://github.com/z-huang/music/releases).
+1. Download the APK file from [GitHub Releases](https://github.com/z-huang/InnerTune/releases).
 2. Add [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music) to your F-Droid repos following the [instruction](https://apt.izzysoft.de/fdroid/index/info), and you can search for this app and receive updates.
-3. If you want to have bug fixes or enjoy new features quickly, install debug version from [GitHub Action](https://github.com/z-huang/music/actions) at your own risk and remember to backup your data more frequently.
+3. If you want to have bug fixes or enjoy new features quickly, install debug version from [GitHub Action](https://github.com/z-huang/InnerTune/actions) at your own risk and remember to backup your data more frequently.
 4. Clone this repository and build a debug APK.
 
 How to get updates?
 
 1. F-Droid application.
-2. [GitHub](https://github.com/z-huang/music)
+2. [GitHub](https://github.com/z-huang/InnerTune)
 
 ## Contribution
 

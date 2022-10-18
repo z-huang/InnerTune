@@ -2,7 +2,7 @@ Con quest'app, avrai un servizio di streaming musicale gratuito. Puoi ascoltare 
 
 <br><b>Nota:</b>
 
-Il progetto è attualmente in una fase instabile. Se trovi degli errori, per favore segnalali facendolo su <a href='https://github.com/z-huang/music'>GitHub</a>.
+Il progetto è attualmente in una fase instabile. Se trovi degli errori, per favore segnalali facendolo su <a href='https://github.com/z-huang/InnerTune'>GitHub</a>.
 
 <br><b>Caratteristiche:</b>
 
