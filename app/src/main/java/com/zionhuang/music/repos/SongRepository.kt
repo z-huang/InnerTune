@@ -366,6 +366,16 @@ object SongRepository : LocalRepository {
                         songDao.update(song.copy(downloadState = STATE_NOT_DOWNLOADED))
                         // TODO
                     } else {
+                        upsert(FormatEntity(
+                            id = song.id,
+                            itag = format.itag,
+                            mimeType = format.mimeType.split(";")[0],
+                            codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
+                            bitrate = format.bitrate,
+                            sampleRate = format.audioSampleRate,
+                            contentLength = format.contentLength!!,
+                            loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                        ))
                         songDao.update(song.copy(downloadState = STATE_DOWNLOADING))
                         val downloadManager = context.getSystemService<DownloadManager>()!!
                         val req = DownloadManager.Request(format.url.toUri())
