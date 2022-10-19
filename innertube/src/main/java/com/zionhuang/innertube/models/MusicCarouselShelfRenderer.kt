@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MusicCarouselShelfRenderer(
-    val header: Header,
+    val header: Header?,
     val contents: List<Content>,
     val itemSize: String,
     val numItemsPerColumn: Int?,
@@ -26,6 +26,11 @@ data class MusicCarouselShelfRenderer(
             val title: Runs,
             val thumbnail: ThumbnailRenderer?,
             val moreContentButton: Button?,
+        )
+
+        fun toHeader() = com.zionhuang.innertube.models.Header(
+            title = musicCarouselShelfBasicHeaderRenderer.title.toString(),
+            moreNavigationEndpoint = musicCarouselShelfBasicHeaderRenderer.moreContentButton?.buttonRenderer?.navigationEndpoint
         )
     }
 
