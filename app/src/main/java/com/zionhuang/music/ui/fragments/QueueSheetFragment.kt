@@ -88,7 +88,9 @@ class QueueSheetFragment : Fragment() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.mediaController?.removeQueueItem(adapter.getItem(viewHolder.absoluteAdapterPosition).description)
+            val index = viewHolder.absoluteAdapterPosition
+            adapter.removeItem(index)
+            MediaSessionConnection.binder?.songPlayer?.player?.removeMediaItem(index)
         }
     })
 
