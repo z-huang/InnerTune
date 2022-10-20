@@ -20,8 +20,16 @@ object YouTube {
         set(value) {
             innerTube.locale = value
         }
-
-    fun setProxy(proxy: Proxy) = innerTube.setProxy(proxy)
+    var visitorData: String
+        get() = innerTube.visitorData
+        set(value) {
+            innerTube.visitorData = value
+        }
+    var proxy: Proxy?
+        get() = innerTube.proxy
+        set(value) {
+            innerTube.proxy = value
+        }
 
     suspend fun getSearchSuggestions(query: String): Result<List<YTBaseItem>> = runCatching {
         innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents
@@ -38,7 +46,16 @@ object YouTube {
         BrowseResult(
             items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
                 .flatMap { it.toBaseItems() }
-                .map { if (it is Header) it.copy(moreNavigationEndpoint = null) else it },
+                .map {
+                    when (it) {
+                        is Header -> it.copy(moreNavigationEndpoint = null) // remove search type arrow link
+                        is SongItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        is AlbumItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        is PlaylistItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        is ArtistItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
+                        else -> it
+                    }
+                },
             continuations = null
         )
     }
@@ -125,14 +142,20 @@ object YouTube {
         playlistPanelRenderer.contents.lastOrNull()?.automixPreviewVideoRenderer?.content?.automixPlaylistVideoRenderer?.navigationEndpoint?.watchPlaylistEndpoint?.let { watchPlaylistEndpoint ->
             return@runCatching next(watchPlaylistEndpoint.toWatchEndpoint()).getOrThrow().let { result ->
                 result.copy(
+                    title = playlistPanelRenderer.title,
                     items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() } + result.items,
+                    lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(1)?.tabRenderer?.endpoint?.browseEndpoint,
+                    relatedEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(2)?.tabRenderer?.endpoint?.browseEndpoint,
                     currentIndex = playlistPanelRenderer.currentIndex
                 )
             }
         }
         NextResult(
+            title = playlistPanelRenderer.title,
             items = playlistPanelRenderer.contents.mapNotNull { it.playlistPanelVideoRenderer?.toSongItem() },
             currentIndex = playlistPanelRenderer.currentIndex,
+            lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(1)?.tabRenderer?.endpoint?.browseEndpoint,
+            relatedEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(2)?.tabRenderer?.endpoint?.browseEndpoint,
             continuation = playlistPanelRenderer.continuations?.getContinuation()
         )
     }

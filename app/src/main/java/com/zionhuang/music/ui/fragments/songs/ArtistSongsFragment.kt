@@ -11,6 +11,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.music.R
+import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.extensions.requireAppCompatActivity
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 
 class ArtistSongsFragment : RecyclerViewFragment<LocalItemAdapter>() {
     private val args: ArtistSongsFragmentArgs by navArgs()
+    private lateinit var artist: ArtistEntity
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
@@ -49,6 +51,7 @@ class ArtistSongsFragment : RecyclerViewFragment<LocalItemAdapter>() {
             if (adapter.currentList[position] !is Song) return@addOnClickListener
             playbackViewModel.playQueue(requireActivity(),
                 ListQueue(
+                    title = artist.name,
                     items = adapter.currentList.drop(1).filterIsInstance<Song>().map { it.toMediaItem() },
                     startIndex = position - 1
                 )
@@ -57,6 +60,7 @@ class ArtistSongsFragment : RecyclerViewFragment<LocalItemAdapter>() {
         adapter.onShuffle = {
             playbackViewModel.playQueue(requireActivity(),
                 ListQueue(
+                    title = artist.name,
                     items = adapter.currentList.drop(1).filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
                 )
             )
@@ -84,7 +88,8 @@ class ArtistSongsFragment : RecyclerViewFragment<LocalItemAdapter>() {
             }
 
         lifecycleScope.launch {
-            requireAppCompatActivity().title = SongRepository.getArtistById(args.artistId)!!.name
+            artist = SongRepository.getArtistById(args.artistId)!!
+            requireAppCompatActivity().title = artist.name
             songsViewModel.getArtistSongsAsFlow(args.artistId).collectLatest {
                 adapter.submitList(it)
             }

@@ -1,21 +1,26 @@
-<i>Musica</i> usa <a href='https://github.com/TeamNewPipe/NewPipeExtractor' target='_blank' rel='nofollow'>NewPipe Extractor</a> per ottenere le informazioni e riprodurre musica da YouTube/YouTube Music. È un riproduttore di musica, quindi puoi creare le tue playlist e organizzare i tuoi brani per artista. L'obiettivo dell'app è permettere a chiunque di ascoltare musica senza costi e con un'app priva di pubblicità, gratis, pratica e facile da usare .
+Con quest'app, avrai un servizio di streaming musicale gratuito. Puoi ascoltare musica da YouTube Music e crearti la tua libreria musicale personale. Inoltre, i brani possono essere scaricati per un ascolto offline. Puoi anche creare delle playlist per organizzare la tua musica. L'obiettivo di <i>Music</i> è quello di dare la possibilità a chiunque di ascoltare musica senza costi e facilmente, in maniera pratica e priva di pubblicità.
 
-<br><b>Note:</b>
+<br><b>Nota:</b>
 
 Il progetto è attualmente in una fase instabile. Se trovi degli errori, per favore segnalali facendolo su <a href='https://github.com/z-huang/music'>GitHub</a>.
 
 <br><b>Caratteristiche:</b>
 
-* Nessuna pubblicità
-* Cerca brani, video, playlist e canali da YouTube/YouTube Music
-* Carica automaticamente altri brani quando ascolti le ultime cinque canzoni in coda da YouTube
+* Ascolta brani senza nessuna pubblicità
+* Cerca brani, video, playlist e canali da YouTube Music
+* Apri link di YouTube Music
+* Salva brani, album e playlist in un database locale
+* Scarica musica per un ascolto offline
+* Modifica il titolo dei brani
+* Aggiungi collegamenti alle tue playlist preferite di YouTube Music
 * Riproduttore in Material Design
 * Riproduzione anche con lo schermo bloccato
 * Controlli in notifica
 * Passa al prossimo brano o a quello precedente
 * Modalità a ripetizione o casuale
 * Modifica la coda dei brani in riproduzione
-* Riproduci e salva brani da YouTube/YouTube Music
-* Scarica musica per un ascolto offline
-* Crea playlist in un database locale
-* Modifica il titolo o il nome dell'artista dei brani
+* Temi personalizzati
+* Tema scuro
+* Localizzazione
+* Proxy
+* Backup e ripristina

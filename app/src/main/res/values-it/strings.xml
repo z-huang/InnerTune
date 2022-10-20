@@ -3,47 +3,63 @@
     <string name="title_home">Home</string>
     <string name="title_songs">Brani</string>
     <string name="title_artists">Artisti</string>
-    <string name="title_albums">Albums</string>
+    <string name="title_albums">Album</string>
     <string name="title_playlists">Playlist</string>
     <string name="title_explore">Esplora</string>
     <string name="title_settings">Impostazioni</string>
     <string name="title_now_playing">In ascolto ora</string>
-    <string name="title_error_report">Error report</string>
+    <string name="title_error_report">Segnala errore</string>
 
     <!-- Preferenze -->
     <string name="pref_appearance_title">Aspetto</string>
     <string name="pref_follow_system_accent_title">Segui tema di sistema</string>
     <string name="pref_theme_color_title">Colore del tema</string>
     <string name="pref_dark_theme_title">Tema scuro</string>
-    <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="dark_theme_on">Attivato</string>
     <string name="dark_theme_off">Disattivato</string>
+    <string name="pref_default_open_tab_title">Scheda principale predefinita</string>
+    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
     <string name="dark_theme_follow_system">Segui sistema</string>
+
     <string name="pref_content_title">Contenuti</string>
+    <string name="pref_app_language_title">Lingua dell\'app</string>
     <string name="pref_content_language_title">Lingua predefinita dei contenuti</string>
     <string name="pref_default_content_country_title">Paese predefinito dei contenuti</string>
     <string name="pref_enable_proxy_title">Attiva proxy</string>
-    <string name="pref_proxy_type_title">Proxy type</string>
+    <string name="pref_proxy_type_title">Tipo di proxy</string>
     <string name="pref_proxy_url_title">URL proxy</string>
-    <string name="pref_player_audio_title">Player and audio</string>
-    <string name="pref_general_title">Gerenal</string>
-    <string name="pref_audio_quality_title">Audio quality</string>
-    <string name="audio_quality_auto">Auto</string>
-    <string name="audio_quality_high">High</string>
-    <string name="audio_quality_low">Low</string>
+    <string name="pref_restart_title">Riavvia l\'app per applicare le modifiche</string>
+
+    <string name="pref_player_audio_title">Riproduttore e audio</string>
+    <string name="pref_persistent_queue_title">Persistent queue</string>
+    <string name="pref_audio_quality_title">Qualità dell\'audio</string>
+    <string name="audio_quality_auto">Automatica</string>
+    <string name="audio_quality_high">Alta</string>
+    <string name="audio_quality_low">Bassa</string>
+    <string name="pref_equalizer_title">Equalizzatore</string>
+
+    <string name="pref_cache_title">Cache</string>
+    <string name="pref_image_max_cache_size_title">Max image cache size</string>
+    <string name="pref_clear_image_cache_title">Clear image cache</string>
+    <string name="pref_song_max_cache_size_title">Max song cache size</string>
+    <string name="size_used">%s used</string>
+
+    <string name="pref_general_title">Generale</string>
     <string name="pref_auto_download_title">Scaricamento automatico</string>
     <string name="pref_auto_download_summary">Scarica la canzone quando viene aggiunta alla libreria</string>
     <string name="pref_auto_add_song_title">Aggiunta automatica nella libreria</string>
     <string name="pref_auto_add_song_summary">Aggiungi la canzone nella tua libreria quando viene terminato l\'ascolto</string>
     <string name="pref_expand_on_play_title">Espandi il riproduttore in basso quando inizia un ascolto</string>
-    <string name="pref_equalizer_title">Equalizzatore</string>
+
     <string name="pref_privacy_title">Privacy</string>
-    <string name="pref_pause_search_history_title">Pause search history</string>
-    <string name="pref_clear_search_history_title">Clear search history</string>
-    <string name="clear_search_history_question">Are you sure to clear all search history?</string>
-    <string name="pref_backup_restore_title">Backup and restore</string>
+    <string name="pref_pause_search_history_title">Sospendi la cronologia delle ricerche</string>
+    <string name="pref_clear_search_history_title">Pulisci la cronologia delle ricerche</string>
+    <string name="clear_search_history_question">Sei sicuro di voler cancellare la cronologia delle ricerche?</string>
+
+    <string name="pref_backup_restore_title">Backup e ripristina</string>
     <string name="pref_backup_title">Backup</string>
-    <string name="pref_restore_title">Restore</string>
+    <string name="pref_restore_title">Ripristina</string>
+
     <string name="pref_about_title">Informazioni</string>
     <string name="pref_app_version_title">Versione dell\'app</string>
 
@@ -72,6 +88,10 @@
     <string name="menu_search_title">Cerca</string>
     <string name="search_yt_music">Cerca su YouTube Music…</string>
     <string name="search_library">Cerca nella libreria…</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">Brani piaciuti</string>
+    <string name="downloaded_songs">Brani scaricati</string>
 
     <!-- Popup -->
     <string name="menu_edit">Modifica</string>
@@ -113,14 +133,14 @@
 
     <string name="dialog_title_edit_playlist">Modifica playlist</string>
 
-    <string name="dialog_title_choose_backup_content">Choose backup content</string>
-    <string name="dialog_title_choose_restore_content">Choose restore content</string>
-    <string name="choice_preferences">Preferences</string>
+    <string name="dialog_title_choose_backup_content">Scegli cosa salvare</string>
+    <string name="dialog_title_choose_restore_content">Scegli cosa ripristinare</string>
+    <string name="choice_preferences">Preferenze</string>
     <string name="choice_database">Database</string>
-    <string name="choice_downloaded_songs">Downloaded songs</string>
-    <string name="message_backup_create_success">Backup created successfully</string>
-    <string name="message_backup_create_failed">Couldn\'t create backup</string>
-    <string name="message_restore_failed">Failed to restore backup</string>
+    <string name="choice_downloaded_songs">Brani scaricati</string>
+    <string name="message_backup_create_success">Backup creato con successo</string>
+    <string name="message_backup_create_failed">Impossibile fare il backup</string>
+    <string name="message_restore_failed">Impossibile eseguire il ripristino dal backup</string>
 
     <!-- Notifica -->
     <string name="channel_name_playback">Riproduttore</string>
@@ -150,9 +170,9 @@
     <string name="btn_play_all">Riproduci tutti</string>
     <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Mischia</string>
-    <string name="btn_copy_stacktrace">Copy stacktrace</string>
-    <string name="btn_report">Report</string>
-    <string name="btn_report_on_github">Report on GitHub</string>
+    <string name="btn_copy_stacktrace">Copia stacktrace</string>
+    <string name="btn_report">Segnala</string>
+    <string name="btn_report_on_github">Segnala su GitHub</string>
 
     <!-- Ordina per -->
     <string name="sort_by_create_date">Data di aggiunta</string>
@@ -161,6 +181,7 @@
     <string name="sort_by_year">Anno</string>
     <string name="sort_by_song_count">Numero brani</string>
     <string name="sort_by_length">Durata</string>
+    <string name="sort_by_play_time">Numero di riproduzioni</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
@@ -218,11 +239,11 @@
     <string name="snackbar_removed_download">Download rimosso</string>
     <string name="snackbar_action_view">Guarda</string>
 
-    <!-- Toast -->
-    <string name="toast_restart_to_take_effect">Riavvia l\'app per applicare le modifiche</string>
-
     <!-- Custom Action -->
-    <string name="custom_action_add_to_library">Aggiungi alla libreria</string>
+    <string name="action_like">Mi piace</string>
+    <string name="action_remove_like">Non mi piace più</string>
+    <string name="action_add_to_library">Aggiungi alla libreria</string>
+    <string name="action_remove_from_library">Rimuovi dalla libreria</string>
 
     <!-- Filtri di ricerca -->
     <string name="search_filter_all">Tutto</string>
@@ -238,6 +259,16 @@
     <string name="header_from_your_library">Dalla tua libreria</string>
 
     <!-- Error Activity -->
-    <string name="sorry_for_error">Sorry, that should not have happened.</string>
-    <string name="copied">Copied to clipboard</string>
+    <string name="sorry_for_error">Mi dispiace ma questo non doveva succedere.</string>
+    <string name="copied">Copiato negli appunti</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">No stream available</string>
+    <string name="error_no_internet">No network connection</string>
+    <string name="error_timeout">Timeout</string>
+    <string name="error_unknown">Unknown error</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">All songs</string>
+    <string name="queue_searched_songs">Searched songs</string>
 </resources>

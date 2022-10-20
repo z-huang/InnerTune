@@ -8,28 +8,34 @@ import android.os.IBinder
 import android.os.RemoteException
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.MediaSessionCompat.QueueItem
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.MutableLiveData
-import com.zionhuang.music.models.MediaSessionQueueData
 import com.zionhuang.music.playback.MusicService.MusicBinder
-import com.zionhuang.music.utils.livedata.SafeMutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 object MediaSessionConnection {
     var mediaController: MediaControllerCompat? = null
         private set
     val transportControls: MediaControllerCompat.TransportControls? get() = mediaController?.transportControls
     private val mediaControllerCallback = MediaControllerCallback()
-    private var serviceConnection: ServiceConnection? = null
 
-    val isConnected = SafeMutableLiveData(false)
-    val playbackState = MutableLiveData<PlaybackStateCompat?>(null)
-    val nowPlaying = MutableLiveData<MediaMetadataCompat?>(null)
-    val queueData = MutableLiveData(MediaSessionQueueData())
+    private val _isConnected = MutableStateFlow(false)
+    private val _playbackState = MutableStateFlow<PlaybackStateCompat?>(null)
+    private val _mediaMetadata = MutableStateFlow<MediaMetadataCompat?>(null)
+    private val _queueTitle = MutableStateFlow<String?>(null)
+    private val _queueItems = MutableStateFlow<List<QueueItem>>(emptyList())
+
+    val isConnected: StateFlow<Boolean> = _isConnected
+    val playbackState: StateFlow<PlaybackStateCompat?> = _playbackState
+    val mediaMetadata: StateFlow<MediaMetadataCompat?> = _mediaMetadata
+    val queueTitle: StateFlow<String?> = _queueTitle
+    val queueItems: StateFlow<List<QueueItem>> = _queueItems
 
     private var _binder: MusicBinder? = null
-    val binder: MusicBinder?
-        get() = _binder
+    val binder: MusicBinder? get() = _binder
+
+    private var serviceConnection: ServiceConnection? = null
 
     fun connect(context: Context) {
         serviceConnection = object : ServiceConnection {
@@ -40,15 +46,15 @@ object MediaSessionConnection {
                     mediaController = MediaControllerCompat(context, iBinder.sessionToken).apply {
                         registerCallback(mediaControllerCallback)
                     }
-                    isConnected.postValue(true)
-                } catch (e: RemoteException) {
+                    _isConnected.value = true
+                } catch (_: RemoteException) {
                 }
             }
 
             override fun onServiceDisconnected(name: ComponentName) {
                 _binder = null
                 mediaController?.unregisterCallback(mediaControllerCallback)
-                isConnected.postValue(false)
+                _isConnected.value = false
             }
         }.also {
             val intent = Intent(context, MusicService::class.java)
@@ -63,8 +69,20 @@ object MediaSessionConnection {
     }
 
     private class MediaControllerCallback : MediaControllerCompat.Callback() {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) = playbackState.postValue(state)
-        override fun onMetadataChanged(metadata: MediaMetadataCompat) = nowPlaying.postValue(metadata)
-        override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) = queueData.postValue(queueData.value!!.update(queue))
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+            _playbackState.value = state
+        }
+
+        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+            _mediaMetadata.value = metadata
+        }
+
+        override fun onQueueChanged(queue: List<QueueItem>) {
+            _queueItems.value = queue
+        }
+
+        override fun onQueueTitleChanged(title: CharSequence?) {
+            _queueTitle.value = title?.toString()
+        }
     }
 }

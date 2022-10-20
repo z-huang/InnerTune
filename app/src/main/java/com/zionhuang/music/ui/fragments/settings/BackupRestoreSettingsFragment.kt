@@ -16,6 +16,7 @@ import com.zionhuang.music.db.checkpoint
 import com.zionhuang.music.extensions.zipInputStream
 import com.zionhuang.music.extensions.zipOutputStream
 import com.zionhuang.music.ui.activities.MainActivity
+import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -25,7 +26,7 @@ import java.util.zip.ZipEntry
 import kotlin.system.exitProcess
 
 
-class BackupRestoreSettingsFragment : PreferenceFragmentCompat() {
+class BackupRestoreSettingsFragment : BaseSettingsFragment() {
     private val wantToBackup = mutableListOf(/* Preferences */ true, /* Database */ true)
     private val wantToRestore = mutableListOf(/* Preferences */ true, /* Database */ true)
     private val backupLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->

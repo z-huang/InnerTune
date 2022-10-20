@@ -5,11 +5,11 @@ import android.media.audiofx.AudioEffect.*
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import com.zionhuang.music.R
 import com.zionhuang.music.playback.MediaSessionConnection
+import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 
-class PlayerAudioSettingsFragment : PreferenceFragmentCompat() {
+class PlayerAudioSettingsFragment : BaseSettingsFragment() {
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

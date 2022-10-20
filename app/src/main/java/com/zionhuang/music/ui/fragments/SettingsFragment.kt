@@ -2,11 +2,11 @@ package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
 import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import com.zionhuang.music.R
+import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment : BaseSettingsFragment() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.pref_main)
 
@@ -20,6 +20,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         findPreference<PreferenceScreen>(getString(R.string.pref_player_audio))?.setOnPreferenceClickListener {
             findNavController().navigate(R.id.playerAudioSettingsFragment)
+            true
+        }
+        findPreference<PreferenceScreen>(getString(R.string.pref_cache))?.setOnPreferenceClickListener {
+            findNavController().navigate(R.id.cacheSettingsFragment)
             true
         }
         findPreference<PreferenceScreen>(getString(R.string.pref_general))?.setOnPreferenceClickListener {

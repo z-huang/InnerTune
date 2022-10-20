@@ -1,39 +1,27 @@
 package com.zionhuang.music.ui.listeners
 
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.transition.MaterialSharedAxis
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.QueueAddEndpoint
-import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
-import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
 import com.zionhuang.innertube.models.WatchPlaylistEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaConstants
-import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
-import com.zionhuang.music.constants.MediaSessionConstants
-import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.extensions.exceptionHandler
 import com.zionhuang.music.extensions.show
-import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
-import com.zionhuang.music.playback.MediaSessionConnection
-import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.ui.fragments.dialogs.ChoosePlaylistDialog
 import com.zionhuang.music.ui.fragments.dialogs.EditPlaylistDialog
-import com.zionhuang.music.ui.fragments.songs.PlaylistSongsFragmentArgs
 import com.zionhuang.music.utils.NavigationEndpointHandler
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 interface IPlaylistMenuListener {
     fun edit(playlist: Playlist)
@@ -55,12 +43,16 @@ interface IPlaylistMenuListener {
     fun delete(playlist: Playlist) = delete(listOf(playlist))
 }
 
-class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListener {
-    val context: Context
-        get() = fragment.requireContext()
-
-    val mainActivity: MainActivity
-        get() = fragment.requireActivity() as MainActivity
+class PlaylistMenuListener(override val fragment: Fragment) : BaseMenuListener<Playlist>(fragment), IPlaylistMenuListener {
+    override suspend fun getMediaMetadata(items: List<Playlist>): List<MediaMetadata> = withContext(IO) {
+        items.flatMap { playlist ->
+            if (playlist.playlist.isYouTubePlaylist) {
+                YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
+            } else {
+                SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
+            }
+        }
+    }
 
     override fun edit(playlist: Playlist) {
         EditPlaylistDialog().apply {
@@ -68,116 +60,26 @@ class PlaylistMenuListener(private val fragment: Fragment) : IPlaylistMenuListen
         }.show(context)
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun play(playlists: List<Playlist>) {
-        GlobalScope.launch(context.exceptionHandler) {
-            val songs = playlists.flatMap { playlist ->
-                if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaItem() }
-                } else {
-                    SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaItem() }
-                }
-            }
-            withContext(Dispatchers.Main) {
-                MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
-                    items = songs
-                ))
-            }
-        }
-    }
-
-    override fun play(playlist: Playlist) {
-        if (playlist.playlist.isYouTubePlaylist) {
-            NavigationEndpointHandler(fragment).handle(WatchPlaylistEndpoint(playlistId = playlist.id))
+        if (playlists.size == 1 && playlists[0].playlist.isYouTubePlaylist) {
+            NavigationEndpointHandler(fragment).handle(WatchPlaylistEndpoint(playlistId = playlists[0].id))
         } else {
-            play(listOf(playlist))
+            playAll(if (playlists.size == 1) playlists[0].playlist.name else "", playlists)
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun playNext(playlists: List<Playlist>) {
-        val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch(context.exceptionHandler) {
-            val songs = playlists.flatMap { playlist ->
-                if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
-                } else {
-                    SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
-                }
-            }
-            MediaSessionConnection.mediaController?.sendCommand(
-                COMMAND_PLAY_NEXT,
-                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
-                null
-            )
-            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, playlists.size, playlists.size), LENGTH_SHORT).show()
-        }
+        playNext(playlists, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, playlists.size, playlists.size))
     }
 
-    override fun playNext(playlist: Playlist) {
-        val mainContent = mainActivity.binding.mainContent
-        if (playlist.playlist.isYouTubePlaylist) {
-            NavigationEndpointHandler(fragment).handle(QueueAddEndpoint(
-                queueInsertPosition = INSERT_AFTER_CURRENT_VIDEO,
-                queueTarget = QueueAddEndpoint.QueueTarget(
-                    playlistId = playlist.id
-                )
-            ))
-            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_play_next, 1, 1), LENGTH_SHORT).show()
-        } else {
-            playNext(listOf(playlist))
-        }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
     override fun addToQueue(playlists: List<Playlist>) {
-        val mainContent = mainActivity.binding.mainContent
-        GlobalScope.launch(context.exceptionHandler) {
-            val songs = playlists.flatMap { playlist ->
-                if (playlist.playlist.isYouTubePlaylist) {
-                    YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
-                } else {
-                    SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
-                }
-            }
-            MediaSessionConnection.mediaController?.sendCommand(
-                MediaSessionConstants.COMMAND_ADD_TO_QUEUE,
-                bundleOf(EXTRA_MEDIA_METADATA_ITEMS to songs.toTypedArray()),
-                null
-            )
-            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, playlists.size, playlists.size), LENGTH_SHORT).show()
-        }
+        addToQueue(playlists, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, playlists.size, playlists.size))
     }
 
-    override fun addToQueue(playlist: Playlist) {
-        val mainContent = mainActivity.binding.mainContent
-        if (playlist.playlist.isYouTubePlaylist) {
-            NavigationEndpointHandler(fragment).handle(QueueAddEndpoint(
-                queueInsertPosition = INSERT_AT_END,
-                queueTarget = QueueAddEndpoint.QueueTarget(
-                    playlistId = playlist.id
-                )
-            ))
-            Snackbar.make(mainContent, context.resources.getQuantityString(R.plurals.snackbar_playlist_added_to_queue, 1, 1), LENGTH_SHORT).show()
-        } else {
-            addToQueue(listOf(playlist))
-        }
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
     override fun addToPlaylist(playlists: List<Playlist>) {
-        val mainContent = mainActivity.binding.mainContent
-        ChoosePlaylistDialog { playlist ->
-            GlobalScope.launch(context.exceptionHandler) {
-                SongRepository.addToPlaylist(playlist, playlists)
-                Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
-                    .setAction(R.string.snackbar_action_view) {
-                        fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
-                        fragment.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false).addTarget(R.id.fragment_content)
-                        fragment.findNavController().navigate(R.id.playlistSongsFragment, PlaylistSongsFragmentArgs.Builder(playlist.id).build().toBundle())
-                    }.show()
-            }
-        }.show(fragment.childFragmentManager, null)
+        addToPlaylist { playlist ->
+            SongRepository.addToPlaylist(playlist, playlists)
+        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)

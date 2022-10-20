@@ -8,7 +8,7 @@ data class SortInfo<T : SortType>(
 interface SortType
 
 enum class SongSortType : SortType {
-    CREATE_DATE, NAME, ARTIST
+    CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
 enum class ArtistSortType : SortType {

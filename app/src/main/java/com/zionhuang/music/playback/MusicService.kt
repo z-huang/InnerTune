@@ -9,16 +9,13 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
+import androidx.core.content.ContextCompat.startForegroundService
 import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.google.android.exoplayer2.upstream.cache.Cache
 
 class MusicService : LifecycleMediaBrowserService() {
-    companion object {
-        private const val TAG = "MusicService"
-    }
-
     private val binder = MusicBinder()
     private lateinit var songPlayer: SongPlayer
 
@@ -31,6 +28,7 @@ class MusicService : LifecycleMediaBrowserService() {
 
             override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
                 if (ongoing) {
+                    startForegroundService(this@MusicService, Intent(this@MusicService, MusicService::class.java))
                     startForeground(notificationId, notification)
                 } else {
                     stopForeground(0)
@@ -42,16 +40,12 @@ class MusicService : LifecycleMediaBrowserService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        Log.d(TAG, "onStartCommand: ${intent?.action}")
-        if (intent == null) {
-            return START_STICKY
-        }
         MediaButtonReceiver.handleIntent(songPlayer.mediaSession, intent)
         return START_STICKY
     }
 
     override fun onDestroy() {
-        songPlayer.release()
+        songPlayer.onDestroy()
         super.onDestroy()
     }
 
@@ -69,8 +63,12 @@ class MusicService : LifecycleMediaBrowserService() {
 
         val songPlayer: SongPlayer
             get() = this@MusicService.songPlayer
+
+        val cache: Cache
+            get() = this@MusicService.songPlayer.cache
     }
 
+    // TODO: Support Android Auto
     private val ROOT_ID = "root"
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot = BrowserRoot(ROOT_ID, null)

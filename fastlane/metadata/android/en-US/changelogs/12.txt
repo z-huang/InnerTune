@@ -1,4 +1,4 @@
-<br><b>New</b>
+<b>New</b>
 
 * Start radio from library songs
 * Default open tab setting #92
@@ -6,7 +6,7 @@
 * Pause or clear search history
 * Backup and restore #57
 
-<br><b>Improved</b>
+<b>Improved</b>
 
 * Reduce error message text size
 * Use material dialogs in the preferences #195
@@ -19,7 +19,7 @@
 * Support minimum API 24 #210
 * Remove in-app updater
 
-<br><b>Fixed</b>
+<b>Fixed</b>
 
 * Fix delete album action
 * Fix not found by other 3rd party equalizer apps #33

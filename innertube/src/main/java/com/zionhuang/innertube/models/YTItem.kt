@@ -1,18 +1,8 @@
 package com.zionhuang.innertube.models
 
-import android.os.Parcelable
 import com.zionhuang.innertube.utils.TimeParser
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-
-@Parcelize
-sealed class YTBaseItem : Parcelable {
-    abstract val id: String
-
-    enum class ViewType {
-        LIST, BLOCK
-    }
-}
 
 @Parcelize
 sealed class YTItem : YTBaseItem() {
@@ -132,7 +122,8 @@ data class AlbumItem(
             return AlbumItem(
                 id = item.navigationEndpoint!!.browseEndpoint!!.browseId,
                 playlistId = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
-                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.playNextEndpoint?.queueAddEndpoint?.queueTarget?.playlistId!!,
                 title = item.getTitle(),
                 subtitle = item.getSubtitle(),
                 year = item.flexColumns.getOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.lastOrNull()?.text?.toIntOrNull(),
@@ -147,7 +138,8 @@ data class AlbumItem(
             return AlbumItem(
                 id = item.navigationEndpoint.browseEndpoint!!.browseId,
                 playlistId = menu.shuffleEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
-                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")!!,
+                    ?: menu.radioEndpoint?.watchPlaylistEndpoint?.playlistId?.removePrefix("RDAMPL")
+                    ?: menu.playNextEndpoint?.queueAddEndpoint?.queueTarget?.playlistId!!,
                 title = item.title.toString(),
                 subtitle = item.subtitle.toString(),
                 thumbnails = item.thumbnailRenderer.getThumbnails(),

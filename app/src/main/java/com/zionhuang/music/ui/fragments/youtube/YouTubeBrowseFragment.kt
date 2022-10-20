@@ -75,28 +75,30 @@ class YouTubeBrowseFragment : PagingRecyclerViewFragment<YouTubeItemPagingAdapte
 
         if (args.endpoint.isAlbumEndpoint) {
             adapter.onPlayAlbum = {
-                viewModel.getAlbumSongs()?.let { songs ->
+                viewModel.albumSongs?.let { songs ->
                     MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                        title = viewModel.albumName,
                         items = songs.map { it.toMediaItem() }
                     ))
                 }
             }
             adapter.onShuffleAlbum = {
-                viewModel.getAlbumSongs()?.let { songs ->
+                viewModel.albumSongs?.let { songs ->
                     MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                        title = viewModel.albumName,
                         items = songs.shuffled().map { it.toMediaItem() }
                     ))
                 }
             }
             binding.recyclerView.addOnClickListener { position, _ ->
                 (adapter.getItemAt(position) as? SongItem)?.let { item ->
-                    viewModel.getAlbumSongs()?.let { songs ->
+                    viewModel.albumSongs?.let { songs ->
                         MediaSessionConnection.binder?.songPlayer?.playQueue(ListQueue(
+                            title = viewModel.albumName,
                             items = songs.map { it.toMediaItem() },
                             startIndex = songs.indexOfFirst { it.id == item.id }
                         ))
                     }
-
                 }
             }
         }

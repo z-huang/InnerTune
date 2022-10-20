@@ -28,9 +28,18 @@ class InnerTube {
         gl = Locale.getDefault().country,
         hl = Locale.getDefault().toLanguageTag()
     )
+    private var _proxy: Proxy? = null
+    var proxy: Proxy?
+        get() = _proxy
+        set(value) {
+            _proxy = value
+            httpClient.close()
+            httpClient = createClient()
+        }
+    var visitorData: String = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
 
     @OptIn(ExperimentalSerializationApi::class)
-    private fun createClient(proxy: Proxy? = null) = HttpClient(OkHttp) {
+    private fun createClient() = HttpClient(OkHttp) {
         expectSuccess = true
 
         install(ContentNegotiation) {
@@ -47,20 +56,15 @@ class InnerTube {
             deflate(0.8F)
         }
 
-        if (proxy != null) {
+        if (_proxy != null) {
             engine {
-                this.proxy = proxy
+                this.proxy = _proxy
             }
         }
 
         defaultRequest {
             url("https://music.youtube.com/youtubei/v1/")
         }
-    }
-
-    fun setProxy(proxy: Proxy) {
-        httpClient.close()
-        httpClient = createClient(proxy)
     }
 
     private fun HttpRequestBuilder.configYTClient(client: YouTubeClient) {
@@ -86,7 +90,7 @@ class InnerTube {
     ) = httpClient.post("search") {
         configYTClient(client)
         setBody(SearchBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             query = query,
             params = params
         ))
@@ -101,7 +105,7 @@ class InnerTube {
     ) = httpClient.post("player") {
         configYTClient(client)
         setBody(PlayerBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             videoId = videoId,
             playlistId = playlistId
         ))
@@ -115,7 +119,7 @@ class InnerTube {
     ) = httpClient.post("browse") {
         configYTClient(client)
         setBody(BrowseBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             browseId = browseId,
             params = params
         ))
@@ -137,7 +141,7 @@ class InnerTube {
     ) = httpClient.post("next") {
         configYTClient(client)
         setBody(NextBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             videoId = videoId,
             playlistId = playlistId,
             playlistSetVideoId = playlistSetVideoId,
@@ -153,7 +157,7 @@ class InnerTube {
     ) = httpClient.post("music/get_search_suggestions") {
         configYTClient(client)
         setBody(GetSearchSuggestionsBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             input = input
         ))
     }
@@ -165,7 +169,7 @@ class InnerTube {
     ) = httpClient.post("music/get_queue") {
         configYTClient(client)
         setBody(GetQueueBody(
-            context = client.toContext(locale),
+            context = client.toContext(locale, visitorData),
             videoIds = videoIds,
             playlistId = playlistId
         ))

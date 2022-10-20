@@ -26,10 +26,11 @@ data class BrowseResponse(
             else -> throw UnsupportedOperationException("Unknown continuation type")
         }
         contents != null -> BrowseResult(
-            items = contents.singleColumnBrowseResultsRenderer!!.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents.flatMap { it.toBaseItems() },
+            items = contents.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.flatMap { it.toBaseItems() } ?: emptyList(),
+            lyrics = contents.sectionListRenderer?.contents?.firstOrNull()?.musicDescriptionShelfRenderer?.description?.runs?.firstOrNull()?.text,
             urlCanonical = microformat?.microformatDataRenderer?.urlCanonical,
-            continuations = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicPlaylistShelfRenderer?.continuations?.getContinuations().orEmpty()
-                    + contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.continuations?.getContinuations().orEmpty()
+            continuations = contents.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()?.musicPlaylistShelfRenderer?.continuations?.getContinuations().orEmpty()
+                    + contents.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.continuations?.getContinuations().orEmpty()
         )
         else -> BrowseResult(
             items = emptyList(),
@@ -83,7 +84,7 @@ data class BrowseResponse(
                     id = menu.playNextEndpoint?.queueAddEndpoint?.queueTarget?.playlistId
                         ?: menu.addToQueueEndpoint?.queueAddEndpoint?.queueTarget?.playlistId!!,
                     name = musicDetailHeaderRenderer.title.toString(),
-                    subtitle = musicDetailHeaderRenderer.subtitle.toString(),
+                    subtitle = musicDetailHeaderRenderer.subtitle.runs.drop(2).asString(),
                     secondSubtitle = musicDetailHeaderRenderer.secondSubtitle.toString(),
                     description = musicDetailHeaderRenderer.description?.toString(),
                     artists = subtitle.getOrNull(1)?.oddElements(),

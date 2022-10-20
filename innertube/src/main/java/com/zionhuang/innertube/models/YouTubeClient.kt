@@ -1,5 +1,6 @@
 package com.zionhuang.innertube.models
 
+import android.util.Base64
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,9 +10,8 @@ data class YouTubeClient(
     val api_key: String,
     val userAgent: String,
     val referer: String? = null,
-    val visitorData: String? = null, // TODO better management
 ) {
-    fun toContext(locale: YouTubeLocale) = Context(
+    fun toContext(locale: YouTubeLocale, visitorData: String?) = Context(
         client = Context.Client(
             clientName = clientName,
             clientVersion = clientVersion,
@@ -22,6 +22,27 @@ data class YouTubeClient(
     )
 
     companion object {
+        fun generateVisitorData(): String {
+            val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_".toList()
+            var id = ""
+            for (i in 1..11) {
+                id += alphabet.random()
+            }
+            val timestamp = System.currentTimeMillis() / 1000
+            return generateVisitorData(id, timestamp.toInt())
+        }
+
+        fun generateVisitorData(id: String, timestamp: Int): String {
+            val visitorData = VisitorData.visitorData.newBuilder()
+                .setId(id)
+                .setTimestamp(timestamp)
+                .build()
+            return Base64.encodeToString(visitorData.toByteArray(), Base64.NO_WRAP)
+                .replace("==", "%3D%3D")
+                .replace("+", "-")
+                .replace("/", "_")
+        }
+
         private const val REFERER_YOUTUBE_MUSIC = "https://music.youtube.com/"
 
         private const val USER_AGENT_WEB = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36"
@@ -46,8 +67,7 @@ data class YouTubeClient(
             clientVersion = "1.20220606.03.00",
             api_key = "AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30",
             userAgent = USER_AGENT_WEB,
-            referer = REFERER_YOUTUBE_MUSIC,
-            visitorData = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
+            referer = REFERER_YOUTUBE_MUSIC
         )
     }
 }

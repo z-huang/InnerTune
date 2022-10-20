@@ -15,35 +15,51 @@
     <string name="pref_follow_system_accent_title">跟隨系統主題</string>
     <string name="pref_theme_color_title">主題顏色</string>
     <string name="pref_dark_theme_title">深色主題</string>
-    <string name="pref_default_open_tab_title">預設啟動標籤</string>
     <string name="dark_theme_on">開</string>
     <string name="dark_theme_off">關</string>
+    <string name="pref_default_open_tab_title">預設啟動標籤</string>
+    <string name="pref_customize_navigation_tabs">自訂導覽列</string>
     <string name="dark_theme_follow_system">跟隨系統</string>
+
     <string name="pref_content_title">內容</string>
+    <string name="pref_app_language_title">應用程式語言</string>
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="pref_enable_proxy_title">啟用 Proxy</string>
     <string name="pref_proxy_type_title">Proxy 種類</string>
     <string name="pref_proxy_url_title">Proxy URL</string>
+    <string name="pref_restart_title">重啟以套用變更</string>
+
     <string name="pref_player_audio_title">播放與音訊</string>
-    <string name="pref_general_title">一般</string>
+    <string name="pref_persistent_queue_title">保留播放佇列</string>
     <string name="pref_audio_quality_title">音質</string>
     <string name="audio_quality_auto">自動</string>
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
+    <string name="pref_equalizer_title">等化器</string>
+
+    <string name="pref_cache_title">快取</string>
+    <string name="pref_image_max_cache_size_title">圖片快取大小</string>
+    <string name="pref_clear_image_cache_title">清除圖片快取</string>
+    <string name="pref_song_max_cache_size_title">歌曲快取大小</string>
+    <string name="size_used">已使用 %s</string>
+
+    <string name="pref_general_title">一般</string>
     <string name="pref_auto_download_title">自動下載</string>
     <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
-    <string name="pref_equalizer_title">等化器</string>
+
     <string name="pref_privacy_title">隱私</string>
     <string name="pref_pause_search_history_title">暫停搜尋紀錄</string>
     <string name="pref_clear_search_history_title">清除搜尋紀錄</string>
     <string name="clear_search_history_question">您確定要清除所有搜尋紀錄嗎？</string>
+
     <string name="pref_backup_restore_title">備份與還原</string>
     <string name="pref_backup_title">備份</string>
     <string name="pref_restore_title">還原</string>
+
     <string name="pref_about_title">關於</string>
     <string name="pref_app_version_title">應用程式版本</string>
 
@@ -72,6 +88,10 @@
     <string name="menu_search_title">搜尋</string>
     <string name="search_yt_music">搜尋 YouTube Music…</string>
     <string name="search_library">搜尋媒體庫…</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">喜歡的歌曲</string>
+    <string name="downloaded_songs">已下載的歌曲</string>
 
     <!-- Popup Menu -->
     <string name="menu_edit">編輯</string>
@@ -157,6 +177,7 @@
     <string name="sort_by_year">年份</string>
     <string name="sort_by_song_count">歌曲總數</string>
     <string name="sort_by_length">長度</string>
+    <string name="sort_by_play_time">播放時間</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
@@ -212,11 +233,11 @@
     <string name="snackbar_removed_download">已移除下載</string>
     <string name="snackbar_action_view">查看</string>
 
-    <!-- Toast -->
-    <string name="toast_restart_to_take_effect">重啟以套用變更</string>
-
     <!-- Custom Action -->
-    <string name="custom_action_add_to_library">加入音樂庫</string>
+    <string name="action_like">喜歡</string>
+    <string name="action_remove_like">取消喜歡</string>
+    <string name="action_add_to_library">加入音樂庫</string>
+    <string name="action_remove_from_library">從音樂庫中移除</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">全部</string>
@@ -234,4 +255,14 @@
     <!-- Error Activity -->
     <string name="sorry_for_error">抱歉，這不該發生的</string>
     <string name="copied">已複製至剪貼簿</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">沒有可用的音源</string>
+    <string name="error_no_internet">沒有網路連線</string>
+    <string name="error_timeout">連線逾時</string>
+    <string name="error_unknown">未知的錯誤</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">全部歌曲</string>
+    <string name="queue_searched_songs">搜尋的歌曲</string>
 </resources>

@@ -52,12 +52,14 @@ class SongsFragment : RecyclerViewFragment<LocalItemAdapter>(), MenuProvider {
             if (adapter.currentList[position] !is LocalItem) return@addOnClickListener
 
             playbackViewModel.playQueue(requireActivity(), ListQueue(
+                title = getString(R.string.queue_all_songs),
                 items = adapter.currentList.filterIsInstance<Song>().map { it.toMediaItem() },
                 startIndex = position - 1
             ))
         }
         adapter.onShuffle = {
             playbackViewModel.playQueue(requireActivity(), ListQueue(
+                title = getString(R.string.queue_all_songs),
                 items = adapter.currentList.filterIsInstance<Song>().shuffled().map { it.toMediaItem() }
             ))
         }
