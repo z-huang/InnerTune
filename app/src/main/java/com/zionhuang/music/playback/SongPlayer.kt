@@ -303,7 +303,7 @@ class SongPlayer(
         }
         if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {
             runCatching {
-                context.filesDir.resolve(PERSIST_QUEUE_FILE).inputStream().use { fis ->
+                context.filesDir.resolve(PERSISTENT_QUEUE_FILE).inputStream().use { fis ->
                     ObjectInputStream(fis).use { oos ->
                         oos.readObject() as PersistQueue
                     }
@@ -586,7 +586,7 @@ class SongPlayer(
 
     private fun saveQueueToDisk() {
         if (player.playbackState == STATE_IDLE) {
-            context.filesDir.resolve(PERSIST_QUEUE_FILE).delete()
+            context.filesDir.resolve(PERSISTENT_QUEUE_FILE).delete()
             return
         }
         val persistQueue = PersistQueue(
@@ -596,7 +596,7 @@ class SongPlayer(
             position = player.currentPosition
         )
         runCatching {
-            context.filesDir.resolve(PERSIST_QUEUE_FILE).outputStream().use { fos ->
+            context.filesDir.resolve(PERSISTENT_QUEUE_FILE).outputStream().use { fos ->
                 ObjectOutputStream(fos).use { oos ->
                     oos.writeObject(persistQueue)
                 }
@@ -630,7 +630,7 @@ class SongPlayer(
         const val NOTIFICATION_ID = 888
         const val ERROR_CODE_NO_STREAM = 1000001
         const val CHUNK_LENGTH = 512 * 1024L
-        const val PERSIST_QUEUE_FILE = "persist_queue.data"
+        const val PERSISTENT_QUEUE_FILE = "persistent_queue.data"
 
         fun createPendingIntent(context: Context, action: String, instanceId: Int): PendingIntent = PendingIntent.getBroadcast(
             context,
