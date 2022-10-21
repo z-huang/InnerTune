@@ -18,7 +18,8 @@ import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Ignore
 import org.junit.Test
 
@@ -120,8 +121,6 @@ class YouTubeTest {
         assertTrue(nextResult.items.isNotEmpty())
         nextResult = youTube.next(WatchEndpoint(videoId = "jF4KKOsoyDs", playlistId = "PLaHh1PiehjvqOXm1J7b2QGy2iAvN84Azb")).getOrThrow()
         assertTrue(nextResult.items.isNotEmpty())
-        val playlistSongInfo = youTube.getPlaylistSongInfo(videoId = VIDEO_IDS.random()).getOrThrow()
-        assertNotNull(playlistSongInfo.lyricsEndpoint)
     }
 
     @Test

@@ -26,7 +26,7 @@ data class BrowseResponse(
             else -> throw UnsupportedOperationException("Unknown continuation type")
         }
         contents != null -> BrowseResult(
-            items = contents.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.flatMap { it.toBaseItems() } ?: emptyList(),
+            items = contents.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.flatMap { it.toBaseItems() }.orEmpty(),
             lyrics = contents.sectionListRenderer?.contents?.firstOrNull()?.musicDescriptionShelfRenderer?.description?.runs?.firstOrNull()?.text,
             urlCanonical = microformat?.microformatDataRenderer?.urlCanonical,
             continuations = contents.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()?.musicPlaylistShelfRenderer?.continuations?.getContinuations().orEmpty()

@@ -44,9 +44,9 @@ object YouTube {
     suspend fun searchAllType(query: String): Result<BrowseResult> = runCatching {
         val response = innerTube.search(WEB_REMIX, query).body<SearchResponse>()
         BrowseResult(
-            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents
-                .flatMap { it.toBaseItems() }
-                .map {
+            items = response.contents?.tabbedSearchResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents
+                ?.flatMap { it.toBaseItems() }
+                ?.map {
                     when (it) {
                         is Header -> it.copy(moreNavigationEndpoint = null) // remove search type arrow link
                         is SongItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
@@ -55,7 +55,7 @@ object YouTube {
                         is ArtistItem -> it.copy(subtitle = it.subtitle.substringAfter(" • "))
                         else -> it
                     }
-                },
+                }.orEmpty(),
             continuations = null
         )
     }
@@ -63,8 +63,8 @@ object YouTube {
     suspend fun search(query: String, filter: SearchFilter): Result<BrowseResult> = runCatching {
         val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
         BrowseResult(
-            items = response.contents!!.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.contents!!.mapNotNull { it.toItem() },
-            continuations = response.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer!!.contents[0].musicShelfRenderer!!.continuations?.getContinuations()
+            items = response.contents?.tabbedSearchResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()?.musicShelfRenderer?.contents?.mapNotNull { it.toItem() }.orEmpty(),
+            continuations = response.contents?.tabbedSearchResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()?.musicShelfRenderer?.continuations?.getContinuations()
         )
     }
 
@@ -114,25 +114,6 @@ object YouTube {
                 continuations = it.continuations.orEmpty() + continuations.drop(1)
             )
         }
-
-
-    /**
-     * Calling "next" endpoint without continuation
-     * @return lyricsEndpoint, relatedEndpoint
-     */
-    suspend fun getPlaylistSongInfo(
-        videoId: String,
-        playlistId: String? = null,
-        playlistSetVideoId: String? = null,
-        index: Int? = null,
-        params: String? = null,
-    ): Result<PlaylistSongInfo> = runCatching {
-        val response = innerTube.next(WEB_REMIX, videoId, playlistId, playlistSetVideoId, index, params).body<NextResponse>()
-        PlaylistSongInfo(
-            lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[1].tabRenderer.endpoint!!.browseEndpoint!!,
-            relatedEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs[2].tabRenderer.endpoint!!.browseEndpoint!!,
-        )
-    }
 
     suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): Result<NextResult> = runCatching {
         val response = innerTube.next(WEB_REMIX, endpoint.videoId, endpoint.playlistId, endpoint.playlistSetVideoId, endpoint.index, endpoint.params, continuation).body<NextResponse>()
