@@ -93,7 +93,7 @@
     <string name="downloaded_songs">Letöltött dalok</string>
 
     <!-- Popup Menu -->
-    <string name="menu_details">Details</string>
+    <string name="menu_details">Részletek</string>
     <string name="menu_edit">Szerkeszt</string>
     <string name="menu_start_radio">Rádió indítás</string>
     <string name="menu_play">Lejátszás</string>
@@ -111,19 +111,19 @@
     <string name="menu_delete">Törlés</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">Details</string>
-    <string name="media_id">Media id</string>
-    <string name="mime_type">MIME type</string>
-    <string name="codecs">Codecs</string>
-    <string name="bitrate">Bitrate</string>
-    <string name="sample_rate">Sample rate</string>
-    <string name="loudness">Loudness</string>
-    <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
+    <string name="dialog_title_details">Részletek</string>
+    <string name="media_id">Média id</string>
+    <string name="mime_type">MIME típus</string>
+    <string name="codecs">Kodekek</string>
+    <string name="bitrate">Bitráta</string>
+    <string name="sample_rate">Mintavétel</string>
+    <string name="loudness">Hangerősség</string>
+    <string name="file_size">Fájl méret</string>
+    <string name="unknown">Ismeretlen</string>
 
     <string name="dialog_title_edit_song">Dal szerkesztése</string>
     <string name="song_title">Dal címe</string>
-    <string name="song_artists">Song artists</string>
+    <string name="song_artists">Dal előadói</string>
     <string name="error_song_title_empty">A cím nem lehet üres.</string>
     <string name="error_song_artist_empty">Az előadó nem lehet üres.</string>
     <string name="dialog_button_save">Ment</string>
