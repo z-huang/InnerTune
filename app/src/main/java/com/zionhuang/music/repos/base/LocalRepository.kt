@@ -124,4 +124,17 @@ interface LocalRepository {
     suspend fun insertSearchHistory(query: String)
     suspend fun deleteSearchHistory(query: String)
     suspend fun clearSearchHistory()
+
+    /**
+     * Format
+     */
+    fun getSongFormat(songId: String?): DataWrapper<FormatEntity?>
+    suspend fun upsert(format: FormatEntity)
+
+    /**
+     * Lyrics
+     */
+    fun getLyrics(songId: String?): Flow<LyricsEntity?>
+    suspend fun hasLyrics(songId: String): Boolean
+    suspend fun upsert(lyrics: LyricsEntity)
 }

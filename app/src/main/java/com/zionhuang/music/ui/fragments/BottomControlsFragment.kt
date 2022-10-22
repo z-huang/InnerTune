@@ -16,6 +16,7 @@ import com.zionhuang.innertube.models.BrowseLocalArtistSongsEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
+import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -24,6 +25,7 @@ import com.zionhuang.music.viewmodels.PlaybackViewModel
 import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 class BottomControlsFragment : Fragment() {
     lateinit var binding: BottomControlsSheetBinding
@@ -78,8 +80,14 @@ class BottomControlsFragment : Fragment() {
         })
         binding.slider.addOnChangeListener { _, value, _ ->
             binding.position.text = makeTimeString((value).toLong())
+            if (sliderIsTracking) {
+                binding.lyricsView.updateTime(value.toLong(), animate = false)
+            }
         }
-
+        binding.lyricsView.setDraggable(true) { time ->
+            viewModel.mediaController?.transportControls?.seekTo(time)
+            true
+        }
         lifecycleScope.launch {
             viewModel.playbackState.collect { playbackState ->
                 if (playbackState.state != PlaybackStateCompat.STATE_NONE && playbackState.state != PlaybackStateCompat.STATE_STOPPED) {
@@ -90,15 +98,11 @@ class BottomControlsFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            viewModel.currentSong.collectLatest { song ->
-                binding.btnFavorite.setImageResource(if (song?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
-            }
-        }
-        lifecycleScope.launch {
             viewModel.position.collect { position ->
                 if (!sliderIsTracking && binding.slider.isEnabled) {
                     binding.slider.value = position.toFloat().coerceIn(binding.slider.valueFrom, binding.slider.valueTo)
                     binding.position.text = makeTimeString(position)
+                    binding.lyricsView.updateTime(position, animate = true)
                 }
             }
         }
@@ -111,6 +115,20 @@ class BottomControlsFragment : Fragment() {
                     binding.slider.isEnabled = true
                     binding.slider.valueTo = duration.toFloat()
                     binding.duration.text = makeTimeString(duration)
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.currentSong.collectLatest { song ->
+                binding.btnFavorite.setImageResource(if (song?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.currentLyrics.collectLatest { lyrics ->
+                if (lyrics == null || lyrics.lyrics == LyricsEntity.LYRICS_NOT_FOUND) {
+                    binding.lyricsView.reset()
+                } else {
+                    binding.lyricsView.loadLyrics(lyrics.lyrics)
                 }
             }
         }

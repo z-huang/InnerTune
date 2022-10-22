@@ -59,12 +59,12 @@ protobuf {
     }
 }
 
-val ktor_version: String by project
-val logback_version: String by project
-
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions.freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
 }
+
+val ktor_version: String by project
+val logback_version: String by project
 
 dependencies {
     implementation("io.ktor:ktor-client-core:$ktor_version")

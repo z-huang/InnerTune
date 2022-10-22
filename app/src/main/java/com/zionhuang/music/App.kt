@@ -11,6 +11,7 @@ import coil.disk.DiskCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.models.YouTubeLocale
+import com.zionhuang.kugou.KuGou
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
@@ -37,6 +38,9 @@ class App : Application(), ImageLoaderFactory {
                 ?: languageTag.takeIf { it in languageCodes }
                 ?: "en"
         )
+        if (languageTag == "zh-TW") {
+            KuGou.useTraditionalChinese = true
+        }
         Log.d("App", "${YouTube.locale}")
 
         if (sharedPreferences.getBoolean(getString(R.string.pref_proxy_enabled), false)) {

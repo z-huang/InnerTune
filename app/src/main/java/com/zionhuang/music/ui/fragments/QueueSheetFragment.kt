@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -126,6 +127,12 @@ class QueueSheetFragment : Fragment() {
         }
         binding.btnCollapse.setOnClickListener {
             mainActivity.queueSheetBehavior.state = STATE_COLLAPSED
+        }
+        binding.btnLyrics.setOnClickListener {
+            val sharedPreferences = requireContext().sharedPreferences
+            sharedPreferences.edit {
+                putBoolean(getString(R.string.pref_show_lyrics), !sharedPreferences.getBoolean(getString(R.string.pref_show_lyrics), false))
+            }
         }
         binding.btnAddToLibrary.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIBRARY, null)

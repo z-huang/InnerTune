@@ -47,6 +47,7 @@ object SongRepository : LocalRepository {
     private val downloadDao = database.downloadDao
     private val searchHistoryDao = database.searchHistoryDao
     private val formatDao = database.formatDao
+    private val lyricsDao = database.lyricsDao
 
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private var autoDownload by context.preference(R.string.pref_auto_download, false)
@@ -700,12 +701,26 @@ object SongRepository : LocalRepository {
     /**
      * Format
      */
-    suspend fun getSongFormat(songId: String?): DataWrapper<FormatEntity?> = DataWrapper(
+    override fun getSongFormat(songId: String?): DataWrapper<FormatEntity?> = DataWrapper(
         getValueAsync = { withContext(IO) { formatDao.getSongFormat(songId) } },
         getFlow = { formatDao.getSongFormatAsFlow(songId) }
     )
 
-    suspend fun upsert(format: FormatEntity) = withContext(IO) {
+    override suspend fun upsert(format: FormatEntity) = withContext(IO) {
         formatDao.upsert(format)
+    }
+
+    /**
+     * Lyrics
+     */
+    override fun getLyrics(songId: String?): Flow<LyricsEntity?> =
+        lyricsDao.getLyricsAsFlow(songId)
+
+    override suspend fun hasLyrics(songId: String): Boolean = withContext(IO) {
+        lyricsDao.hasLyrics(songId)
+    }
+
+    override suspend fun upsert(lyrics: LyricsEntity) = withContext(IO) {
+        lyricsDao.upsert(lyrics)
     }
 }

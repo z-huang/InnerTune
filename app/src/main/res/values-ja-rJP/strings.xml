@@ -275,4 +275,7 @@
     <!-- Queue Title -->
     <string name="queue_all_songs">All songs</string>
     <string name="queue_searched_songs">Searched songs</string>
+
+    <!-- Lyrics View -->
+    <string name="lyrics_not_found">Lyrics not found</string>
 </resources>

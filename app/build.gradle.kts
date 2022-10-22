@@ -163,6 +163,8 @@ dependencies {
     testImplementation("androidx.room:room-testing:2.4.3")
     // YouTube API
     implementation(project(mapOf("path" to ":innertube")))
+    // KuGou
+    implementation(project(mapOf("path" to ":kugou")))
     // Apache Utils
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")

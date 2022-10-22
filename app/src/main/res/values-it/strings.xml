@@ -281,4 +281,7 @@
     <!-- Queue Title -->
     <string name="queue_all_songs">Tutti i brani</string>
     <string name="queue_searched_songs">Brani cercati</string>
+
+    <!-- Lyrics View -->
+    <string name="lyrics_not_found">Lyrics not found</string>
 </resources>

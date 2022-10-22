@@ -60,7 +60,7 @@
                     android:layout_height="match_parent"
                     android:alpha=".75"
                     android:background="#000000"
-                    android:visibility="@{viewModel.playbackState.errorCode != 0 ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{(viewModel.playbackState.errorCode != 0 || viewModel.showLyrics) ? View.VISIBLE : View.GONE}"
                     tools:visibility="gone" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,13 +97,31 @@
                         tools:text="Error message" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <com.zionhuang.music.ui.widgets.LyricsView
+                    android:id="@+id/lyricsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="@{(viewModel.showLyrics &amp;&amp; viewModel.currentLyrics != null) ? View.VISIBLE : View.GONE}"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    app:lrcCurrentTextColor="?colorPrimary"
+                    app:lrcLabel="@string/lyrics_not_found"
+                    app:lrcNormalTextColor="?android:textColorSecondaryInverse"
+                    app:lrcNormalTextSize="20sp"
+                    app:lrcPadding="16dp"
+                    app:lrcTextGravity="center"
+                    app:lrcTextSize="24sp"
+                    app:lrcTimelineColor="#00000000"
+                    app:lrcTimelineTextColor="?android:textColorSecondaryInverse"
+                    app:lrcUnsyncedTextColor="?android:textColorPrimaryInverse"
+                    tools:visibility="visible" />
+
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/load_indicator"
                     style="@style/Widget.Material3.CircularProgressIndicator.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:alpha="@{viewModel.playbackState.state == PlaybackState.STATE_BUFFERING ? 1 : 0}"
+                    android:alpha="@{(viewModel.playbackState.state == PlaybackState.STATE_BUFFERING || (viewModel.showLyrics &amp;&amp; viewModel.currentLyrics == null)) ? 1 : 0}"
                     android:indeterminate="true" />
             </com.google.android.material.card.MaterialCardView>
 

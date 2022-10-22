@@ -126,6 +126,18 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <ImageView
+                android:id="@+id/btn_lyrics"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="8dp"
+                android:alpha="@{viewModel.showLyrics ? 1f : .5f}"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="center"
+                android:src="@drawable/ic_lyrics" />
+
+            <ImageView
                 android:id="@+id/btn_add_to_library"
                 android:layout_width="32dp"
                 android:layout_height="32dp"

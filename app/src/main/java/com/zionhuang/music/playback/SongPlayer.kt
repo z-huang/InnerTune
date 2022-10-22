@@ -18,6 +18,8 @@ import android.util.Pair
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import androidx.core.util.component1
+import androidx.core.util.component2
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.PlaybackException.*
 import com.google.android.exoplayer2.Player.*
@@ -59,8 +61,13 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_QUEUE_INDEX
 import com.zionhuang.music.db.entities.FormatEntity
+import com.zionhuang.music.db.entities.LyricsEntity
+import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.lyrics.KuGouLyricsProvider
+import com.zionhuang.music.lyrics.LyricsProvider
+import com.zionhuang.music.lyrics.YouTubeLyricsProvider
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.ListQueue
@@ -74,8 +81,7 @@ import com.zionhuang.music.utils.InfoCache
 import com.zionhuang.music.utils.preference.enumPreference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import okhttp3.OkHttpClient
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -96,8 +102,10 @@ class SongPlayer(
     private val localRepository = SongRepository
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private val bitmapProvider = BitmapProvider(context)
+
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
     private var audioQuality by enumPreference(context, R.string.pref_audio_quality, AudioQuality.AUTO)
+
     private var currentQueue: Queue = EmptyQueue()
 
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
@@ -105,6 +113,9 @@ class SongPlayer(
         localRepository.getSongById(mediaMetadata?.id).getFlow()
     }
     var currentSong: Song? = null
+
+    private val showLyrics = context.sharedPreferences.booleanFlow(context.getString(R.string.pref_show_lyrics), false)
+    private val lyricProviders: List<LyricsProvider> = listOf(KuGouLyricsProvider, YouTubeLyricsProvider)
 
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
@@ -290,6 +301,18 @@ class SongPlayer(
             setUseFastForwardAction(false)
         }
 
+    private suspend fun loadLyrics(mediaMetadata: MediaMetadata) {
+        lyricProviders.forEach { provider ->
+            provider.getLyrics(mediaMetadata.id, mediaMetadata.title, mediaMetadata.artists.joinToString { it.name }, mediaMetadata.duration).onSuccess { lyrics ->
+                localRepository.upsert(LyricsEntity(mediaMetadata.id, lyrics))
+                return
+            }.onFailure {
+                it.printStackTrace()
+            }
+        }
+        localRepository.upsert(LyricsEntity(mediaMetadata.id, LYRICS_NOT_FOUND))
+    }
+
     init {
         scope.launch {
             currentSongFlow.collect {
@@ -298,6 +321,16 @@ class SongPlayer(
                 if (shouldInvalidate) {
                     mediaSessionConnector.invalidateMediaSessionPlaybackState()
                     playerNotificationManager.invalidate()
+                }
+            }
+        }
+        scope.launch {
+            combine(currentMediaMetadata.distinctUntilChangedBy { it?.id }, showLyrics) { mediaMetadata, showLyrics ->
+                Pair(mediaMetadata, showLyrics)
+            }.collectLatest { pair ->
+                val (mediaMetadata, showLyrics) = pair
+                if (showLyrics && mediaMetadata != null && !localRepository.hasLyrics(mediaMetadata.id)) {
+                    loadLyrics(mediaMetadata)
                 }
             }
         }

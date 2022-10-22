@@ -275,4 +275,7 @@
     <!-- Queue Title -->
     <string name="queue_all_songs">全部歌曲</string>
     <string name="queue_searched_songs">搜尋的歌曲</string>
+
+    <!-- Lyrics View -->
+    <string name="lyrics_not_found">沒有歌詞</string>
 </resources>
