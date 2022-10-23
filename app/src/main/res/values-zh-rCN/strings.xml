@@ -20,10 +20,10 @@
     <string name="dark_theme_follow_system">跟随系统</string>
     <string name="pref_default_open_tab_title">默认启动选项卡</string>
     <string name="pref_customize_navigation_tabs">自定义导航选项卡</string>
-    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <string name="pref_lyrics_text_position_title">歌词文字位置</string>
+    <string name="align_left">靠左</string>
+    <string name="align_center">置中</string>
+    <string name="align_right">靠右</string>
 
     <string name="pref_content_title">内容</string>
     <string name="pref_content_language_title">默认内容语言</string>
@@ -58,7 +58,7 @@
     <string name="pref_pause_search_history_title">暂停搜索记录</string>
     <string name="pref_clear_search_history_title">清除搜索记录</string>
     <string name="clear_search_history_question">您确定要清除所有搜索记录吗？</string>
-    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
+    <string name="pref_enable_kugou_title">使用酷狗音乐提供歌词</string>
 
     <string name="pref_backup_restore_title">备份与还原</string>
     <string name="pref_backup_title">备份</string>
@@ -282,5 +282,5 @@
     <string name="queue_searched_songs">搜索的歌曲</string>
 
     <!-- Lyrics View -->
-    <string name="lyrics_not_found">Lyrics not found</string>
+    <string name="lyrics_not_found">无歌词</string>
 </resources>
