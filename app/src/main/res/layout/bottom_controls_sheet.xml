@@ -113,6 +113,7 @@
                     app:lrcTimelineColor="#00000000"
                     app:lrcTimelineTextColor="@color/m3_dark_default_color_secondary_text"
                     app:lrcUnsyncedTextColor="@color/m3_dark_default_color_primary_text"
+                    tools:ignore="PrivateResource"
                     tools:visibility="visible" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -196,10 +197,11 @@
                 tools:text="4:00" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="80dp"
             android:orientation="horizontal">
@@ -209,18 +211,24 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="12dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:padding="4dp"
-                android:src="@drawable/ic_favorite" />
+                android:src="@drawable/ic_favorite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_previous"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.zionhuang.music.ui.widgets.SkipPreviousButton
                 android:id="@+id/btn_previous"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="12dp"
                 android:onClick="@{()->viewModel.transportControls.skipToPrevious()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_play_pause"
+                app:layout_constraintStart_toEndOf="@id/btn_favorite"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck"
                 tools:src="@drawable/ic_skip_previous" />
 
@@ -229,11 +237,14 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="12dp"
                 android:background="@drawable/btn_play_pause_background"
                 android:onClick="@{()->viewModel.togglePlayPause()}"
                 android:padding="16dp"
                 android:tint="?colorOnPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_next"
+                app:layout_constraintStart_toEndOf="@id/btn_previous"
+                app:layout_constraintTop_toTopOf="parent"
                 app:playPauseButtonTint="?colorOnPrimary"
                 app:playState="@{viewModel.playbackState.state}"
                 tools:ignore="SpeakableTextPresentCheck"
@@ -244,9 +255,12 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="12dp"
                 android:onClick="@{()->viewModel.transportControls.skipToNext()}"
                 app:enabled="@{(viewModel.playbackState.actions &amp; PlaybackState.ACTION_SKIP_TO_NEXT) != 0}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_repeat"
+                app:layout_constraintStart_toEndOf="@id/btn_play_pause"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck"
                 tools:src="@drawable/ic_skip_next" />
 
@@ -255,14 +269,17 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="12dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="@{()->viewModel.toggleRepeatMode()}"
                 android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_next"
+                app:layout_constraintTop_toTopOf="parent"
                 app:repeatMode="@{viewModel.playbackState.repeatMode}"
                 tools:ignore="SpeakableTextPresentCheck"
                 tools:src="@drawable/ic_repeat" />
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </layout>
