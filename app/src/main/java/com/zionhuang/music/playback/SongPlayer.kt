@@ -303,11 +303,13 @@ class SongPlayer(
 
     private suspend fun loadLyrics(mediaMetadata: MediaMetadata) {
         lyricProviders.forEach { provider ->
-            provider.getLyrics(mediaMetadata.id, mediaMetadata.title, mediaMetadata.artists.joinToString { it.name }, mediaMetadata.duration).onSuccess { lyrics ->
-                localRepository.upsert(LyricsEntity(mediaMetadata.id, lyrics))
-                return
-            }.onFailure {
-                it.printStackTrace()
+            if (provider.isEnabled(context)) {
+                provider.getLyrics(mediaMetadata.id, mediaMetadata.title, mediaMetadata.artists.joinToString { it.name }, mediaMetadata.duration).onSuccess { lyrics ->
+                    localRepository.upsert(LyricsEntity(mediaMetadata.id, lyrics))
+                    return
+                }.onFailure {
+                    it.printStackTrace()
+                }
             }
         }
         localRepository.upsert(LyricsEntity(mediaMetadata.id, LYRICS_NOT_FOUND))

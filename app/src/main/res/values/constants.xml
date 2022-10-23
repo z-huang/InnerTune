@@ -47,6 +47,7 @@
 
     <string name="pref_pause_search_history" translatable="false">PAUSE_SEARCH_HISTORY</string>
     <string name="pref_clear_search_history" translatable="false">CLEAR_SEARCH_HISTORY</string>
+    <string name="pref_enable_kugou" translatable="false">ENABLE_KUGOU</string>
 
     <string name="pref_backup" translatable="false">BACKUP</string>
     <string name="pref_restore" translatable="false">RESTORE</string>

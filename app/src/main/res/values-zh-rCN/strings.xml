@@ -58,6 +58,7 @@
     <string name="pref_pause_search_history_title">暂停搜索记录</string>
     <string name="pref_clear_search_history_title">清除搜索记录</string>
     <string name="clear_search_history_question">您确定要清除所有搜索记录吗？</string>
+    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
 
     <string name="pref_backup_restore_title">备份与还原</string>
     <string name="pref_backup_title">备份</string>

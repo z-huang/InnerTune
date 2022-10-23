@@ -58,6 +58,7 @@
     <string name="pref_pause_search_history_title">Sospendi la cronologia delle ricerche</string>
     <string name="pref_clear_search_history_title">Pulisci la cronologia delle ricerche</string>
     <string name="clear_search_history_question">Sei sicuro di voler cancellare la cronologia delle ricerche?</string>
+    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
 
     <string name="pref_backup_restore_title">Backup e ripristina</string>
     <string name="pref_backup_title">Backup</string>
