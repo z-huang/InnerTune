@@ -105,14 +105,14 @@
                     app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
                     app:lrcCurrentTextColor="?colorPrimary"
                     app:lrcLabel="@string/lyrics_not_found"
-                    app:lrcNormalTextColor="?android:textColorSecondaryInverse"
+                    app:lrcNormalTextColor="@color/m3_dark_default_color_secondary_text"
                     app:lrcNormalTextSize="20sp"
                     app:lrcPadding="16dp"
                     app:lrcTextGravity="center"
                     app:lrcTextSize="24sp"
                     app:lrcTimelineColor="#00000000"
-                    app:lrcTimelineTextColor="?android:textColorSecondaryInverse"
-                    app:lrcUnsyncedTextColor="?android:textColorPrimaryInverse"
+                    app:lrcTimelineTextColor="@color/m3_dark_default_color_secondary_text"
+                    app:lrcUnsyncedTextColor="@color/m3_dark_default_color_primary_text"
                     tools:visibility="visible" />
 
                 <com.google.android.material.progressindicator.CircularProgressIndicator
