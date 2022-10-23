@@ -20,10 +20,10 @@
     <string name="dark_theme_follow_system">Rendszer szerint</string>
     <string name="pref_default_open_tab_title">Alapért. nyitott lap</string>
     <string name="pref_customize_navigation_tabs">A navigációs lapok testreszabása</string>
-    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <string name="pref_lyrics_text_position_title">Dalszöveg szöveg pozíció</string>
+    <string name="align_left">Balra</string>
+    <string name="align_center">Középre</string>
+    <string name="align_right">Jobbra</string>
 
     <string name="pref_content_title">Tartalom</string>
     <string name="pref_content_language_title">A tartalom alapért. nyelve</string>
@@ -42,9 +42,9 @@
     <string name="pref_equalizer_title">Equalizer</string>
 
     <string name="pref_cache_title">Gyorsítótár</string>
-    <string name="pref_image_max_cache_size_title">Max. kép gyors.tár</string>
+    <string name="pref_image_max_cache_size_title">Max. kép gyorsítótár</string>
     <string name="pref_clear_image_cache_title">Kép gyors.tár törlés</string>
-    <string name="pref_song_max_cache_size_title">Max. dal gyors.tár</string>
+    <string name="pref_song_max_cache_size_title">Max. dal gyorsítótár</string>
     <string name="size_used">%s használva</string>
 
     <string name="pref_general_title">Általános</string>
@@ -84,7 +84,7 @@
     <string name="color_yellow">Sárga</string>
     <string name="color_amber">Amber</string>
     <string name="color_orange">Narancs</string>
-    <string name="color_deep_orange">Mély narancs</string>
+    <string name="color_deep_orange">Sötét narancs</string>
     <string name="color_brown">Barna</string>
     <string name="color_blue_grey">Kékesszürke</string>
 
@@ -288,5 +288,5 @@
     <string name="queue_searched_songs">Keresett dalok</string>
 
     <!-- Lyrics View -->
-    <string name="lyrics_not_found">Lyrics not found</string>
+    <string name="lyrics_not_found">A dalszöveg nem található</string>
 </resources>
