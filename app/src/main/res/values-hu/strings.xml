@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">Sötét téma</string>
     <string name="dark_theme_on">Be</string>
     <string name="dark_theme_off">Ki</string>
+    <string name="dark_theme_follow_system">Rendszer szerint</string>
     <string name="pref_default_open_tab_title">Alapért. nyitott lap</string>
     <string name="pref_customize_navigation_tabs">A navigációs lapok testreszabása</string>
-    <string name="dark_theme_follow_system">Rendszer szerint</string>
+    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
 
     <string name="pref_content_title">Tartalom</string>
     <string name="pref_content_language_title">A tartalom alapért. nyelve</string>

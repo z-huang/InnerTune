@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">Modo oscuro</string>
     <string name="dark_theme_on">Encendido</string>
     <string name="dark_theme_off">Apagado</string>
+    <string name="dark_theme_follow_system">Predeterminado del sistema</string>
     <string name="pref_default_open_tab_title">Default open tab</string>
     <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="dark_theme_follow_system">Predeterminado del sistema</string>
+    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
 
     <string name="pref_content_title">Contenido</string>
     <string name="pref_content_language_title">Idioma por defecto del contenido</string>

@@ -21,6 +21,7 @@ import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.makeTimeString
+import com.zionhuang.music.utils.preference.PreferenceLiveData
 import com.zionhuang.music.viewmodels.PlaybackViewModel
 import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.collectLatest
@@ -87,6 +88,10 @@ class BottomControlsFragment : Fragment() {
         binding.lyricsView.setDraggable(true) { time ->
             viewModel.mediaController?.transportControls?.seekTo(time)
             true
+        }
+        PreferenceLiveData(requireContext(), R.string.pref_lyrics_text_position, "1").observe(viewLifecycleOwner) {
+            binding.lyricsView.setTextGravity(it.toIntOrNull() ?: 1)
+            binding.lyricsView.invalidate()
         }
         lifecycleScope.launch {
             viewModel.playbackState.collect { playbackState ->

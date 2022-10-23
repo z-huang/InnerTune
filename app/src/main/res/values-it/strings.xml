@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">Tema scuro</string>
     <string name="dark_theme_on">Attivato</string>
     <string name="dark_theme_off">Disattivato</string>
+    <string name="dark_theme_follow_system">Segui sistema</string>
     <string name="pref_default_open_tab_title">Scheda principale predefinita</string>
     <string name="pref_customize_navigation_tabs">Personalizza schede di navigazione</string>
-    <string name="dark_theme_follow_system">Segui sistema</string>
+    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
 
     <string name="pref_content_title">Contenuti</string>
     <string name="pref_content_language_title">Lingua predefinita dei contenuti</string>

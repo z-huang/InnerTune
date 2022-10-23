@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">深色主題</string>
     <string name="dark_theme_on">開</string>
     <string name="dark_theme_off">關</string>
+    <string name="dark_theme_follow_system">跟隨系統</string>
     <string name="pref_default_open_tab_title">預設啟動標籤</string>
     <string name="pref_customize_navigation_tabs">自訂導覽列</string>
-    <string name="dark_theme_follow_system">跟隨系統</string>
+    <string name="pref_lyrics_text_position_title">歌詞文字位置</string>
+    <string name="align_left">靠左</string>
+    <string name="align_center">置中</string>
+    <string name="align_right">靠右</string>
 
     <string name="pref_content_title">內容</string>
     <string name="pref_content_language_title">預設內容語言</string>

@@ -30,8 +30,8 @@ data class LyricsEntry(
     override fun compareTo(other: LyricsEntry): Int = (time - other.time).toInt()
 
     companion object {
-        const val GRAVITY_CENTER = 0
-        const val GRAVITY_LEFT = 1
+        const val GRAVITY_LEFT = 0
+        const val GRAVITY_CENTER = 1
         const val GRAVITY_RIGHT = 2
     }
 }

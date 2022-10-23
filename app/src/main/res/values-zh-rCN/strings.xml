@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">深色主题</string>
     <string name="dark_theme_on">开</string>
     <string name="dark_theme_off">关</string>
+    <string name="dark_theme_follow_system">跟随系统</string>
     <string name="pref_default_open_tab_title">默认启动选项卡</string>
     <string name="pref_customize_navigation_tabs">自定义导航选项卡</string>
-    <string name="dark_theme_follow_system">跟随系统</string>
+    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
 
     <string name="pref_content_title">内容</string>
     <string name="pref_content_language_title">默认内容语言</string>

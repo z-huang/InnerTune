@@ -32,4 +32,12 @@
         android:icon="@drawable/ic_view_column"
         android:key="@string/pref_nav_tab_config"
         android:title="@string/pref_customize_navigation_tabs" />
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/lyrics_position_texts"
+        android:entryValues="@array/lyrics_position_values"
+        android:icon="@drawable/ic_lyrics"
+        android:key="@string/pref_lyrics_text_position"
+        android:summary="%s"
+        android:title="@string/pref_lyrics_text_position_title" />
 </PreferenceScreen>

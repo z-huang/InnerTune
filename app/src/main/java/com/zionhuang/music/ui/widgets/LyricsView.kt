@@ -220,6 +220,7 @@ class LyricsView @JvmOverloads constructor(
 
     fun setTextGravity(gravity: Int) {
         textGravity = gravity
+        initEntryList()
         postInvalidate()
     }
 

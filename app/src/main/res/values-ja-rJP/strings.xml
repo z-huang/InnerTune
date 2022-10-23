@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">ダークテーマ</string>
     <string name="dark_theme_on">オン</string>
     <string name="dark_theme_off">オフ</string>
+    <string name="dark_theme_follow_system">システムに従う</string>
     <string name="pref_default_open_tab_title">起動時に開くタブ</string>
     <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="dark_theme_follow_system">システムに従う</string>
+    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
 
     <string name="pref_content_title">コンテンツ</string>
     <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>

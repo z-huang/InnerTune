@@ -23,6 +23,7 @@
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
     <string name="pref_default_open_tab" translatable="false">DEFAULT_OPEN_TAB</string>
     <string name="pref_nav_tab_config" translatable="false">NAV_TAB_CONFIG</string>
+    <string name="pref_lyrics_text_position" translatable="false">LRC_TEXT_POS</string>
 
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
@@ -137,6 +138,18 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+    </string-array>
+
+    <string-array name="lyrics_position_texts" translatable="false">
+        <item>@string/align_left</item>
+        <item>@string/align_center</item>
+        <item>@string/align_right</item>
+    </string-array>
+
+    <string-array name="lyrics_position_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="proxy_types" translatable="false">
