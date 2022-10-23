@@ -1,6 +1,7 @@
 package com.zionhuang.music.extensions
 
 import android.app.Activity
+import android.view.WindowManager
 import androidx.annotation.DimenRes
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
@@ -18,4 +19,12 @@ fun AppCompatActivity.replaceFragment(@IdRes id: Int, fragment: Fragment, tag: S
 
 fun Activity.dip(@DimenRes id: Int): Int {
     return resources.getDimensionPixelSize(id)
+}
+
+fun AppCompatActivity.keepScreenOn(keepScreenOn: Boolean) {
+    if (keepScreenOn) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    } else {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
 }

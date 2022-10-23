@@ -158,6 +158,9 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         lifecycleScope.launch {
             SongRepository.validateDownloads()
         }
+        preferenceLiveData(R.string.pref_show_lyrics, false).observe(this) { showLyrics ->
+            keepScreenOn(showLyrics && bottomSheetBehavior.state == STATE_EXPANDED)
+        }
         lifecycleScope.launch {
             AdaptiveUtils.orientation.collectLatest { orientation ->
                 binding.container.updateLayoutParams<CoordinatorLayout.LayoutParams> {
@@ -202,6 +205,11 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
         if (newState == STATE_HIDDEN) {
             MediaSessionConnection.mediaController?.transportControls?.stop()
+        }
+        if (newState == STATE_COLLAPSED || newState == STATE_HIDDEN) {
+            keepScreenOn(false)
+        } else if (newState == STATE_EXPANDED && sharedPreferences.getBoolean(getString(R.string.pref_show_lyrics), false)) {
+            keepScreenOn(true)
         }
     }
 
