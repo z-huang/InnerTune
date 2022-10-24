@@ -219,6 +219,9 @@ class LyricsView @JvmOverloads constructor(
     }
 
     fun setTextGravity(gravity: Int) {
+        if (textGravity == gravity) {
+            return
+        }
         textGravity = gravity
         lrcEntryList.forEach { lrcEntry ->
             lrcEntry.init(lrcPaint, lrcWidth.toInt(), textGravity)
