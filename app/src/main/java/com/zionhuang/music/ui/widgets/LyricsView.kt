@@ -220,7 +220,9 @@ class LyricsView @JvmOverloads constructor(
 
     fun setTextGravity(gravity: Int) {
         textGravity = gravity
-        initEntryList()
+        lrcEntryList.forEach { lrcEntry ->
+            lrcEntry.init(lrcPaint, lrcWidth.toInt(), textGravity)
+        }
         postInvalidate()
     }
 
@@ -228,9 +230,9 @@ class LyricsView @JvmOverloads constructor(
         runOnUi {
             reset()
             viewScope.launch(Dispatchers.IO) {
-                val entries = if (lyrics.startsWith("[")) {
+                val entries = if (lyrics.startsWith("[")) { // synced
                     listOf(LyricsEntry(0L, "")) + LyricsUtils.parseLyrics(lyrics)
-                } else {
+                } else { // unsynced
                     lyrics.lines().mapIndexed { index, line -> LyricsEntry(index * 100L, line) }
                 }
                 isSyncedLyrics = lyrics.startsWith("[")
@@ -252,11 +254,9 @@ class LyricsView @JvmOverloads constructor(
             if (line != currentLine) {
                 previousLine = currentLine
                 currentLine = line
+                updateCurrentTextSize(animate)
                 if (!isFling && !inActive) {
                     smoothScrollTo(line, if (animate) animationDuration else 0)
-                    updateCurrentTextSize(animate)
-                } else {
-                    invalidate()
                 }
             }
         }

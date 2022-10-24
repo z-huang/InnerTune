@@ -91,7 +91,6 @@ class BottomControlsFragment : Fragment() {
         }
         PreferenceLiveData(requireContext(), R.string.pref_lyrics_text_position, "1").observe(viewLifecycleOwner) {
             binding.lyricsView.setTextGravity(it.toIntOrNull() ?: 1)
-            binding.lyricsView.invalidate()
         }
         lifecycleScope.launch {
             viewModel.playbackState.collect { playbackState ->
