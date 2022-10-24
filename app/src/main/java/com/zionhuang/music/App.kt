@@ -65,6 +65,7 @@ class App : Application(), ImageLoaderFactory {
 
     override fun newImageLoader() = ImageLoader.Builder(this)
         .crossfade(true)
+        .respectCacheHeaders(false)
         .diskCache(
             DiskCache.Builder()
                 .directory(cacheDir.resolve("coil"))
