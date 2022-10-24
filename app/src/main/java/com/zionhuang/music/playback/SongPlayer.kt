@@ -13,7 +13,7 @@ import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Pair
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
@@ -23,6 +23,7 @@ import androidx.core.util.component2
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.PlaybackException.*
 import com.google.android.exoplayer2.Player.*
+import com.google.android.exoplayer2.Player.State
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.analytics.PlaybackStats
 import com.google.android.exoplayer2.analytics.PlaybackStatsListener
@@ -145,8 +146,13 @@ class SongPlayer(
         setPlayer(player)
         setPlaybackPreparer(object : MediaSessionConnector.PlaybackPreparer {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
-            override fun getSupportedPrepareActions(): Long = 0L
-            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {}
+            override fun getSupportedPrepareActions(): Long = ACTION_PREPARE or
+                    ACTION_PREPARE_FROM_MEDIA_ID or
+                    ACTION_PLAY_FROM_MEDIA_ID
+
+            override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
+            }
+
             override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {}
             override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) {}
             override fun onPrepare(playWhenReady: Boolean) {
@@ -191,8 +197,8 @@ class SongPlayer(
                     toggleLike()
                 }
 
-                override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction? = if (currentMediaMetadata.value != null) {
-                    PlaybackStateCompat.CustomAction.Builder(
+                override fun getCustomAction(player: Player) = if (currentMediaMetadata.value != null) {
+                    CustomAction.Builder(
                         ACTION_TOGGLE_LIKE,
                         context.getString(if (currentSong?.song?.liked == true) R.string.action_remove_like else R.string.action_like),
                         if (currentSong?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border
@@ -204,8 +210,8 @@ class SongPlayer(
                     toggleLibrary()
                 }
 
-                override fun getCustomAction(player: Player): PlaybackStateCompat.CustomAction? = if (currentMediaMetadata.value != null) {
-                    PlaybackStateCompat.CustomAction.Builder(
+                override fun getCustomAction(player: Player) = if (currentMediaMetadata.value != null) {
+                    CustomAction.Builder(
                         ACTION_TOGGLE_LIBRARY,
                         context.getString(if (currentSong != null) R.string.action_remove_from_library else R.string.action_add_to_library),
                         if (currentSong != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add
@@ -255,24 +261,16 @@ class SongPlayer(
         .setCustomActionReceiver(object : CustomActionReceiver {
             override fun createCustomActions(context: Context, instanceId: Int): Map<String, NotificationCompat.Action> = mapOf(
                 ACTION_ADD_TO_LIBRARY to NotificationCompat.Action.Builder(
-                    R.drawable.ic_library_add,
-                    context.getString(R.string.action_add_to_library),
-                    createPendingIntent(context, ACTION_ADD_TO_LIBRARY, instanceId)
+                    R.drawable.ic_library_add, context.getString(R.string.action_add_to_library), createPendingIntent(context, ACTION_ADD_TO_LIBRARY, instanceId)
                 ).build(),
                 ACTION_REMOVE_FROM_LIBRARY to NotificationCompat.Action.Builder(
-                    R.drawable.ic_library_add_check,
-                    context.getString(R.string.action_remove_from_library),
-                    createPendingIntent(context, ACTION_REMOVE_FROM_LIBRARY, instanceId)
+                    R.drawable.ic_library_add_check, context.getString(R.string.action_remove_from_library), createPendingIntent(context, ACTION_REMOVE_FROM_LIBRARY, instanceId)
                 ).build(),
                 ACTION_LIKE to NotificationCompat.Action.Builder(
-                    R.drawable.ic_favorite_border,
-                    context.getString(R.string.action_like),
-                    createPendingIntent(context, ACTION_LIKE, instanceId)
+                    R.drawable.ic_favorite_border, context.getString(R.string.action_like), createPendingIntent(context, ACTION_LIKE, instanceId)
                 ).build(),
                 ACTION_UNLIKE to NotificationCompat.Action.Builder(
-                    R.drawable.ic_favorite,
-                    context.getString(R.string.action_remove_like),
-                    createPendingIntent(context, ACTION_UNLIKE, instanceId)
+                    R.drawable.ic_favorite, context.getString(R.string.action_remove_like), createPendingIntent(context, ACTION_UNLIKE, instanceId)
                 ).build()
             )
 
