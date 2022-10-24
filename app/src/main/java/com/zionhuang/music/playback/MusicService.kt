@@ -12,9 +12,6 @@ import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.net.toUri
@@ -96,14 +93,12 @@ class MusicService : LifecycleMediaBrowserService() {
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot = BrowserRoot(ROOT, null)
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) = runBlocking {
-        Toast.makeText(this@MusicService, "parentId: $parentId", LENGTH_SHORT).show()
-        Log.d("DBG", "parentId: $parentId")
         when (parentId) {
             ROOT -> result.sendResult(mutableListOf(
-                MediaBrowserItem(SONG, getString(R.string.title_songs), null, drawableUri(R.drawable.ic_music_note)),
-                MediaBrowserItem(ARTIST, getString(R.string.title_artists), null, drawableUri(R.drawable.ic_artist)),
-                MediaBrowserItem(ALBUM, getString(R.string.title_albums), null, drawableUri(R.drawable.ic_album)),
-                MediaBrowserItem(PLAYLIST, getString(R.string.title_playlists), null, drawableUri(R.drawable.ic_queue_music))
+                mediaBrowserItem(SONG, getString(R.string.title_songs), null, drawableUri(R.drawable.ic_music_note)),
+                mediaBrowserItem(ARTIST, getString(R.string.title_artists), null, drawableUri(R.drawable.ic_artist)),
+                mediaBrowserItem(ALBUM, getString(R.string.title_albums), null, drawableUri(R.drawable.ic_album)),
+                mediaBrowserItem(PLAYLIST, getString(R.string.title_playlists), null, drawableUri(R.drawable.ic_queue_music))
             ))
             SONG -> {
                 result.detach()
@@ -114,13 +109,13 @@ class MusicService : LifecycleMediaBrowserService() {
             ARTIST -> {
                 result.detach()
                 result.sendResult(SongRepository.getAllArtists(ArtistSortInfoPreference).flow.first().map { artist ->
-                    MediaBrowserItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.song_count, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri())
+                    mediaBrowserItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.song_count, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri())
                 }.toMutableList())
             }
             ALBUM -> {
                 result.detach()
                 result.sendResult(SongRepository.getAllAlbums(AlbumSortInfoPreference).flow.first().map { album ->
-                    MediaBrowserItem("$ALBUM/${album.id}", album.album.title, album.artists.joinToString(), album.album.thumbnailUrl?.toUri())
+                    mediaBrowserItem("$ALBUM/${album.id}", album.album.title, album.artists.joinToString(), album.album.thumbnailUrl?.toUri())
                 }.toMutableList())
             }
             PLAYLIST -> {
@@ -128,10 +123,10 @@ class MusicService : LifecycleMediaBrowserService() {
                 val likedSongCount = SongRepository.getLikedSongCount().first()
                 val downloadedSongCount = SongRepository.getDownloadedSongCount().first()
                 result.sendResult((listOf(
-                    MediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.song_count, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
-                    MediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.song_count, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
+                    mediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.song_count, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
+                    mediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.song_count, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
                 ) + SongRepository.getAllPlaylists(PlaylistSortInfoPreference).flow.first().filter { it.playlist.isLocalPlaylist }.map { playlist ->
-                    MediaBrowserItem(playlist.id, playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.playlist.thumbnailUrl?.toUri() ?: playlist.thumbnails.firstOrNull()?.toUri())
+                    mediaBrowserItem(playlist.id, playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.playlist.thumbnailUrl?.toUri() ?: playlist.thumbnails.firstOrNull()?.toUri())
                 }).toMutableList())
             }
             else -> when {
@@ -171,7 +166,7 @@ class MusicService : LifecycleMediaBrowserService() {
         .appendPath(resources.getResourceEntryName(id))
         .build()
 
-    private fun MediaBrowserItem(id: String, title: String, subtitle: String?, iconUri: Uri?, flags: Int = FLAG_BROWSABLE) =
+    private fun mediaBrowserItem(id: String, title: String, subtitle: String?, iconUri: Uri?, flags: Int = FLAG_BROWSABLE) =
         MediaBrowserCompat.MediaItem(
             MediaDescriptionCompat.Builder()
                 .setMediaId(id)
