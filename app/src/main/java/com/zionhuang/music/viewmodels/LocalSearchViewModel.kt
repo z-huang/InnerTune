@@ -17,9 +17,8 @@ class LocalSearchViewModel(application: Application) : AndroidViewModel(applicat
     val query = SafeMutableLiveData("")
     val filter = SafeMutableLiveData(Filter.ALL)
     val result: Flow<List<LocalBaseItem>> = query.asFlow().combine(filter.asFlow()) { query: String, filter: Filter ->
-        Pair(query, filter)
-    }.flatMapLatest {
-        val (query, filter) = it
+        query to filter
+    }.flatMapLatest { (query, filter) ->
         if (query.isEmpty()) {
             emptyFlow()
         } else {

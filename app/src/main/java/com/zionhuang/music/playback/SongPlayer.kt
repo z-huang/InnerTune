@@ -96,6 +96,8 @@ import java.io.ObjectOutputStream
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.roundToInt
 
 /**
@@ -116,9 +118,13 @@ class SongPlayer(
 
     private var currentQueue: Queue = EmptyQueue()
 
+    val playerVolume = MutableStateFlow(1f)
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
     private val currentSongFlow = currentMediaMetadata.flatMapLatest { mediaMetadata ->
-        localRepository.getSongById(mediaMetadata?.id).getFlow()
+        localRepository.getSongById(mediaMetadata?.id).flow
+    }
+    private val currentFormat = currentMediaMetadata.flatMapLatest { mediaMetadata ->
+        localRepository.getSongFormat(mediaMetadata?.id).flow
     }
     var currentSong: Song? = null
 
@@ -379,8 +385,7 @@ class SongPlayer(
         scope.launch {
             combine(currentMediaMetadata.distinctUntilChangedBy { it?.id }, showLyrics) { mediaMetadata, showLyrics ->
                 Pair(mediaMetadata, showLyrics)
-            }.collectLatest { pair ->
-                val (mediaMetadata, showLyrics) = pair
+            }.collectLatest { (mediaMetadata, showLyrics) ->
                 if (showLyrics && mediaMetadata != null && !localRepository.hasLyrics(mediaMetadata.id)) {
                     loadLyrics(mediaMetadata)
                 }
@@ -389,6 +394,17 @@ class SongPlayer(
         scope.launch {
             context.sharedPreferences.booleanFlow(context.getString(R.string.pref_skip_silence), true).collectLatest {
                 player.skipSilenceEnabled = it
+            }
+        }
+        scope.launch {
+            combine(currentFormat, context.sharedPreferences.booleanFlow(context.getString(R.string.pref_audio_normalization), true)) { format, normalizeAudio ->
+                format to normalizeAudio
+            }.collectLatest { (format, normalizeAudio) ->
+                player.volume = if (normalizeAudio && format?.loudnessDb != null) {
+                    min(10f.pow(-format.loudnessDb.toFloat() / 20), 1f)
+                } else {
+                    1f
+                }
             }
         }
         if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {
@@ -658,6 +674,10 @@ class SongPlayer(
         scope.launch {
             localRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
         }
+    }
+
+    override fun onVolumeChanged(volume: Float) {
+        playerVolume.value = volume
     }
 
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {

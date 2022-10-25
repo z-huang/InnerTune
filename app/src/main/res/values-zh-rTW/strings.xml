@@ -40,6 +40,7 @@
     <string name="audio_quality_low">低</string>
     <string name="pref_persistent_queue_title">保留播放佇列</string>
     <string name="pref_skip_silence_title">跳過歌曲頭尾無聲片段</string>
+    <string name="pref_audio_normalization_title">標準化音量</string>
     <string name="pref_equalizer_title">等化器</string>
 
     <string name="pref_cache_title">快取</string>
@@ -123,7 +124,8 @@
     <string name="codecs">編碼</string>
     <string name="bitrate">位元速率</string>
     <string name="sample_rate">採樣率</string>
-    <string name="loudness">音量</string>
+    <string name="loudness">響度</string>
+    <string name="volume">音量</string>
     <string name="file_size">檔案大小</string>
     <string name="unknown">未知</string>
 

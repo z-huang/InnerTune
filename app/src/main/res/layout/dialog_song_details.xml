@@ -157,6 +157,24 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/volume"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="18sp"
+            tools:text="90%" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/file_size"
             android:textColor="?android:textColorSecondary"
             android:textSize="12sp" />

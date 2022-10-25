@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.fragments.dialogs
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -24,6 +25,7 @@ class SongDetailsDialog : AppCompatDialogFragment() {
     private lateinit var binding: DialogSongDetailsBinding
     private val viewModel by activityViewModels<PlaybackViewModel>()
 
+    @SuppressLint("SetTextI18n")
     private fun setupUI() {
         listOf(binding.songTitle, binding.songArtist, binding.mediaId, binding.mimeType, binding.codecs, binding.bitrate, binding.sampleRate, binding.loudness, binding.fileSize).forEach { textView ->
             textView.setOnClickListener {
@@ -48,6 +50,11 @@ class SongDetailsDialog : AppCompatDialogFragment() {
                 binding.sampleRate.text = format?.sampleRate?.let { "$it Hz" } ?: getString(R.string.unknown)
                 binding.loudness.text = format?.loudnessDb?.let { "$it dB" } ?: getString(R.string.unknown)
                 binding.fileSize.text = format?.contentLength?.let { Formatter.formatShortFileSize(requireContext(), it) }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.playerVolume.collectLatest { volume ->
+                binding.volume.text = "${(volume * 100).toInt()}%"
             }
         }
     }

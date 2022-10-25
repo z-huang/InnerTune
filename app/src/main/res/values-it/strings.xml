@@ -40,6 +40,7 @@
     <string name="audio_quality_low">Bassa</string>
     <string name="pref_persistent_queue_title">Coda persistente</string>
     <string name="pref_skip_silence_title">Skip silence</string>
+    <string name="pref_audio_normalization_title">Audio normalization</string>
     <string name="pref_equalizer_title">Equalizzatore</string>
 
     <string name="pref_cache_title">Cache</string>
@@ -124,6 +125,7 @@
     <string name="bitrate">Bitrate</string>
     <string name="sample_rate">Frequenza di campionamento</string>
     <string name="loudness">Volume</string>
+    <string name="volume">Volume</string>
     <string name="file_size">Dimensioni</string>
     <string name="unknown">Sconosciuto</string>
 
