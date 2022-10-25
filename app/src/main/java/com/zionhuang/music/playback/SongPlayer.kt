@@ -15,6 +15,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Pair
+import android.view.KeyEvent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -142,6 +143,7 @@ class SongPlayer(
         else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
     }
     val cache = SimpleCache(context.cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(context))
+    private val seekInrementTime = 2000L
     val player: ExoPlayer = ExoPlayer.Builder(context)
         .setMediaSourceFactory(createMediaSourceFactory())
         .setAudioAttributes(AudioAttributes.Builder()
@@ -149,6 +151,9 @@ class SongPlayer(
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build(), true)
         .setHandleAudioBecomingNoisy(true)
+        .setWakeMode(C.WAKE_MODE_LOCAL)
+        .setSeekBackIncrementMs(seekInrementTime)
+        .setSeekForwardIncrementMs(seekInrementTime)
         .build()
         .apply {
             addListener(this@SongPlayer)
@@ -222,6 +227,123 @@ class SongPlayer(
             override fun onPrepare(playWhenReady: Boolean) {
                 player.playWhenReady = playWhenReady
                 player.prepare()
+            }
+        })
+        setMediaButtonEventHandler(object: MediaSessionConnector.MediaButtonEventHandler {
+            private var nextButtonTimer: Long = 0L
+            private var prevButtonTimer: Long = 0L
+            private var delayButtonThreshold: Long = 500L
+            private var delayLongPressButton: Long = 200L
+            private var fastForwardJob: Job? = null
+            private var fastBackwardJob: Job? = null
+
+            fun longPressFastForward(): Job {
+                return CoroutineScope(Dispatchers.Main).launch {
+                    while (isActive) {
+                        delay(delayLongPressButton)
+                        player.seekForward()
+                    }
+                }
+            }
+            fun longPressFastBackward(): Job {
+                return CoroutineScope(Dispatchers.Main).launch {
+                    while (isActive) {
+                        delay(delayLongPressButton)
+                        player.seekBack()
+                    }
+                }
+            }
+            fun onFastForward(isLongPress: Boolean) {
+                player.seekForward()
+                if (isLongPress) {
+                    fastForwardJob?.cancel()
+                    fastForwardJob = longPressFastForward()
+                }
+            }
+            fun onFastBackward(isLongPress: Boolean) {
+                player.seekBack()
+                if (isLongPress) {
+                    fastBackwardJob?.cancel()
+                    fastBackwardJob = longPressFastBackward()
+                }
+            }
+
+            override fun onMediaButtonEvent(player: Player, mediaButtonEvent: Intent): Boolean {
+                val event: KeyEvent = mediaButtonEvent.getParcelableExtra(Intent.EXTRA_KEY_EVENT) ?: return false
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    when (event.keyCode) {
+                        KeyEvent.KEYCODE_MEDIA_PLAY, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
+                            if (player.isPlaying) {
+                                player.pause()
+                            } else {
+                                player.play()
+                            }
+                        }
+                        KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
+                            if (player.contentPosition + player.seekForwardIncrement <= player.contentDuration) {
+                                onFastForward(event.isLongPress)
+                            } else {
+                                player.seekToNext()
+                            }
+                        }
+                        KeyEvent.KEYCODE_MEDIA_REWIND -> {
+                            if (player.contentPosition - player.seekBackIncrement >= 0) {
+                                onFastBackward(event.isLongPress)
+                            } else {
+                                player.seekTo(0)
+                            }
+                        }
+                        KeyEvent.KEYCODE_MEDIA_NEXT -> {
+                            if (nextButtonTimer == 0L) {
+                                nextButtonTimer = System.currentTimeMillis()
+                            }
+                            if ((System.currentTimeMillis() - nextButtonTimer >= delayButtonThreshold) or event.isLongPress) {
+                                if (player.contentPosition + player.seekForwardIncrement <= player.contentDuration) {
+                                    onFastForward(event.isLongPress)
+                                } else {
+                                    player.seekToNext()
+                                }
+                            }
+                        }
+                        KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                            if (prevButtonTimer == 0L) {
+                                prevButtonTimer = System.currentTimeMillis()
+                            }
+                            if ((System.currentTimeMillis() - prevButtonTimer >= delayButtonThreshold) or event.isLongPress) {
+                                if (player.contentPosition - player.seekBackIncrement >= 0) {
+                                    onFastBackward(event.isLongPress)
+                                } else {
+                                    player.seekTo(0)
+                                }
+                            }
+                        }
+                    }
+                }
+                if (event.action == KeyEvent.ACTION_UP) {
+                    when (event.keyCode) {
+                        KeyEvent.KEYCODE_MEDIA_NEXT -> {
+                            if (System.currentTimeMillis() - nextButtonTimer < delayButtonThreshold) {
+                                player.seekToNext()
+                            }
+                            fastForwardJob?.cancel()
+                            nextButtonTimer = 0L
+                        }
+                        KeyEvent.KEYCODE_MEDIA_PREVIOUS -> {
+                            if (System.currentTimeMillis() - prevButtonTimer < delayButtonThreshold) {
+                                player.seekToPrevious()
+                            }
+                            fastBackwardJob?.cancel()
+                            prevButtonTimer = 0L
+                        }
+                        KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
+                            fastForwardJob?.cancel()
+                        }
+                        KeyEvent.KEYCODE_MEDIA_REWIND -> {
+                            fastBackwardJob?.cancel()
+                        }
+                    }
+                }
+                return true
             }
         })
         registerCustomCommandReceiver { player, command, extras, _ ->
