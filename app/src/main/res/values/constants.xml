@@ -66,6 +66,7 @@
     <string name="pref_playlist_sort_type" translatable="false">PLAYLIST_SORT_TYPE</string>
     <string name="pref_playlist_sort_descending" translatable="false">PLAYLIST_SORT_DESC</string>
     <string name="pref_show_lyrics" translatable="false">SHOW_LYRICS</string>
+    <string name="pref_skip_silence" translatable="false">SKIP_SILENCE</string>
 
     <string name="bullet" translatable="false">•</string>
 

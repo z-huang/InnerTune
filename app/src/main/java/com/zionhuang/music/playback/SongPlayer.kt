@@ -153,10 +153,7 @@ class SongPlayer(
         setPlayer(player)
         setPlaybackPreparer(object : MediaSessionConnector.PlaybackPreparer {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
-            override fun getSupportedPrepareActions(): Long = ACTION_PREPARE or
-                    ACTION_PREPARE_FROM_MEDIA_ID or
-                    ACTION_PLAY_FROM_MEDIA_ID
-
+            override fun getSupportedPrepareActions(): Long = ACTION_PREPARE or ACTION_PREPARE_FROM_MEDIA_ID or ACTION_PLAY_FROM_MEDIA_ID
             override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
                 scope.launch {
                     val path = mediaId.split("/")
@@ -254,10 +251,7 @@ class SongPlayer(
         }
         setCustomActionProviders(
             object : MediaSessionConnector.CustomActionProvider {
-                override fun onCustomAction(player: Player, action: String, extras: Bundle?) {
-                    toggleLike()
-                }
-
+                override fun onCustomAction(player: Player, action: String, extras: Bundle?) = toggleLike()
                 override fun getCustomAction(player: Player) = if (currentMediaMetadata.value != null) {
                     CustomAction.Builder(
                         ACTION_TOGGLE_LIKE,
@@ -267,10 +261,7 @@ class SongPlayer(
                 } else null
             },
             object : MediaSessionConnector.CustomActionProvider {
-                override fun onCustomAction(player: Player, action: String, extras: Bundle?) {
-                    toggleLibrary()
-                }
-
+                override fun onCustomAction(player: Player, action: String, extras: Bundle?) = toggleLibrary()
                 override fun getCustomAction(player: Player) = if (currentMediaMetadata.value != null) {
                     CustomAction.Builder(
                         ACTION_TOGGLE_LIBRARY,
@@ -376,9 +367,9 @@ class SongPlayer(
 
     init {
         scope.launch {
-            currentSongFlow.collect {
-                val shouldInvalidate = currentSong == null || it == null || currentSong?.song?.liked != it.song.liked
-                currentSong = it
+            currentSongFlow.collect { song ->
+                val shouldInvalidate = currentSong == null || song == null || currentSong?.song?.liked != song.song.liked
+                currentSong = song
                 if (shouldInvalidate) {
                     mediaSessionConnector.invalidateMediaSessionPlaybackState()
                     playerNotificationManager.invalidate()
@@ -393,6 +384,11 @@ class SongPlayer(
                 if (showLyrics && mediaMetadata != null && !localRepository.hasLyrics(mediaMetadata.id)) {
                     loadLyrics(mediaMetadata)
                 }
+            }
+        }
+        scope.launch {
+            context.sharedPreferences.booleanFlow(context.getString(R.string.pref_skip_silence), true).collectLatest {
+                player.skipSilenceEnabled = it
             }
         }
         if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {
