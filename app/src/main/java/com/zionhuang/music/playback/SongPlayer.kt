@@ -143,7 +143,7 @@ class SongPlayer(
         else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
     }
     val cache = SimpleCache(context.cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(context))
-    private val seekInrementTime = 2000L
+    private val seekIncrementTime = 2000L
     val player: ExoPlayer = ExoPlayer.Builder(context)
         .setMediaSourceFactory(createMediaSourceFactory())
         .setAudioAttributes(AudioAttributes.Builder()
@@ -152,8 +152,8 @@ class SongPlayer(
             .build(), true)
         .setHandleAudioBecomingNoisy(true)
         .setWakeMode(C.WAKE_MODE_LOCAL)
-        .setSeekBackIncrementMs(seekInrementTime)
-        .setSeekForwardIncrementMs(seekInrementTime)
+        .setSeekBackIncrementMs(seekIncrementTime)
+        .setSeekForwardIncrementMs(seekIncrementTime)
         .build()
         .apply {
             addListener(this@SongPlayer)
