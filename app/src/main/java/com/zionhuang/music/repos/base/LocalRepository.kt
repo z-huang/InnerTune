@@ -85,6 +85,7 @@ interface LocalRepository {
     suspend fun addAlbums(albums: List<AlbumItem>)
     suspend fun refetchAlbum(album: AlbumEntity) = refetchAlbums(listOf(album))
     suspend fun refetchAlbums(albums: List<AlbumEntity>)
+    suspend fun getAlbum(albumId: String): AlbumEntity?
     suspend fun deleteAlbums(albums: List<Album>)
 
     /**

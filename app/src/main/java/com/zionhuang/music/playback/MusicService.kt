@@ -103,7 +103,7 @@ class MusicService : LifecycleMediaBrowserService() {
             SONG -> {
                 result.detach()
                 result.sendResult(SongRepository.getAllSongs(SongSortInfoPreference).flow.first().map {
-                    MediaBrowserCompat.MediaItem(it.toMediaMetadata().toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                    MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                 }.toMutableList())
             }
             ARTIST -> {
@@ -126,20 +126,20 @@ class MusicService : LifecycleMediaBrowserService() {
                     mediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.song_count, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
                     mediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.song_count, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
                 ) + SongRepository.getAllPlaylists(PlaylistSortInfoPreference).flow.first().filter { it.playlist.isLocalPlaylist }.map { playlist ->
-                    mediaBrowserItem(playlist.id, playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.playlist.thumbnailUrl?.toUri() ?: playlist.thumbnails.firstOrNull()?.toUri())
+                    mediaBrowserItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.playlist.thumbnailUrl?.toUri() ?: playlist.thumbnails.firstOrNull()?.toUri())
                 }).toMutableList())
             }
             else -> when {
                 parentId.startsWith("$ARTIST/") -> {
                     result.detach()
                     result.sendResult(SongRepository.getArtistSongs(parentId.removePrefix("$ARTIST/"), SongSortInfoPreference).flow.first().map {
-                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$ALBUM/") -> {
                     result.detach()
                     result.sendResult(SongRepository.getAlbumSongs(parentId.removePrefix("$ALBUM/")).map {
-                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$PLAYLIST/") -> {
@@ -149,7 +149,7 @@ class MusicService : LifecycleMediaBrowserService() {
                         DOWNLOADED_PLAYLIST_ID -> SongRepository.getDownloadedSongs(SongSortInfoPreference)
                         else -> SongRepository.getPlaylistSongs(playlistId)
                     }.flow.first().map {
-                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 else -> {

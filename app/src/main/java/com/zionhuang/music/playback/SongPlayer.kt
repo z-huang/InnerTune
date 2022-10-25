@@ -49,6 +49,8 @@ import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CU
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.Constants.ACTION_SHOW_BOTTOM_SHEET
+import com.zionhuang.music.constants.Constants.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.constants.Constants.LIKED_PLAYLIST_ID
 import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
 import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
@@ -70,6 +72,11 @@ import com.zionhuang.music.lyrics.KuGouLyricsProvider
 import com.zionhuang.music.lyrics.LyricsProvider
 import com.zionhuang.music.lyrics.YouTubeLyricsProvider
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
+import com.zionhuang.music.playback.MusicService.Companion.ALBUM
+import com.zionhuang.music.playback.MusicService.Companion.ARTIST
+import com.zionhuang.music.playback.MusicService.Companion.PLAYLIST
+import com.zionhuang.music.playback.MusicService.Companion.SONG
 import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
@@ -151,6 +158,60 @@ class SongPlayer(
                     ACTION_PLAY_FROM_MEDIA_ID
 
             override fun onPrepareFromMediaId(mediaId: String, playWhenReady: Boolean, extras: Bundle?) {
+                scope.launch {
+                    val path = mediaId.split("/")
+                    when (path.firstOrNull()) {
+                        SONG -> {
+                            val songId = path.getOrNull(1) ?: return@launch
+                            val allSongs = SongRepository.getAllSongs(SongSortInfoPreference).flow.first()
+                            playQueue(ListQueue(
+                                title = context.getString(R.string.queue_all_songs),
+                                items = allSongs.map { it.toMediaItem() },
+                                startIndex = allSongs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
+                            ), playWhenReady)
+                        }
+                        ARTIST -> {
+                            val songId = path.getOrNull(2) ?: return@launch
+                            val artistId = path.getOrNull(1) ?: return@launch
+                            val artist = SongRepository.getArtistById(artistId) ?: return@launch
+                            val songs = SongRepository.getArtistSongs(artistId, SongSortInfoPreference).flow.first()
+                            playQueue(ListQueue(
+                                title = artist.name,
+                                items = songs.map { it.toMediaItem() },
+                                startIndex = songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
+                            ), playWhenReady)
+                        }
+                        ALBUM -> {
+                            val songId = path.getOrNull(2) ?: return@launch
+                            val albumId = path.getOrNull(1) ?: return@launch
+                            val album = SongRepository.getAlbum(albumId) ?: return@launch
+                            val songs = SongRepository.getAlbumSongs(albumId)
+                            playQueue(ListQueue(
+                                title = album.title,
+                                items = songs.map { it.toMediaItem() },
+                                startIndex = songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
+                            ), playWhenReady)
+                        }
+                        PLAYLIST -> {
+                            val songId = path.getOrNull(2) ?: return@launch
+                            val playlistId = path.getOrNull(1) ?: return@launch
+                            val songs = when (playlistId) {
+                                LIKED_PLAYLIST_ID -> SongRepository.getLikedSongs(SongSortInfoPreference).flow.first()
+                                DOWNLOADED_PLAYLIST_ID -> SongRepository.getDownloadedSongs(SongSortInfoPreference).flow.first()
+                                else -> SongRepository.getPlaylistSongs(playlistId).getList()
+                            }
+                            playQueue(ListQueue(
+                                title = when (playlistId) {
+                                    LIKED_PLAYLIST_ID -> context.getString(R.string.liked_songs)
+                                    DOWNLOADED_PLAYLIST_ID -> context.getString(R.string.downloaded_songs)
+                                    else -> SongRepository.getPlaylistById(playlistId).playlist.name
+                                },
+                                items = songs.map { it.toMediaItem() },
+                                startIndex = songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
+                            ), playWhenReady)
+                        }
+                    }
+                }
             }
 
             override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) {}

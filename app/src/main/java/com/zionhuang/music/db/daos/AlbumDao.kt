@@ -30,6 +30,9 @@ interface AlbumDao {
     @Query("SELECT * FROM album WHERE title LIKE '%' || :query || '%' LIMIT :previewSize")
     fun searchAlbumsPreview(query: String, previewSize: Int): Flow<List<Album>>
 
+    @Query("SELECT * FROM album WHERE id = :id")
+    suspend fun getAlbumById(id: String): AlbumEntity?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(album: AlbumEntity): Long
 

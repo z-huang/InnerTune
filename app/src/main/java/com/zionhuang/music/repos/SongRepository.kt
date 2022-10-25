@@ -532,6 +532,10 @@ object SongRepository : LocalRepository {
         }
     }
 
+    override suspend fun getAlbum(albumId: String) = withContext(IO) {
+        albumDao.getAlbumById(albumId)
+    }
+
     override suspend fun deleteAlbums(albums: List<Album>) = withContext(IO) {
         albums.forEach { album ->
             val songs = songDao.getAlbumSongs(album.id).map { it.copy(album = null) }
