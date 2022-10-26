@@ -11,6 +11,7 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.util.AttributeSet
+import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
@@ -67,9 +68,17 @@ class LyricsView @JvmOverloads constructor(
     private var isFling = false
     private var textGravity = 0 // left/center/right
     private var isSyncedLyrics = true
+    var isPlaying = false
+        set(value) {
+            if (field == value) return
+            field = value
+            if (value && !isFling && !inActive) {
+                smoothScrollTo(currentLine)
+            }
+        }
     private val hideTimelineRunnable = Runnable {
-        if (hasLyrics() && isSyncedLyrics && inActive) {
-            inActive = false
+        inActive = false
+        if (hasLyrics() && isSyncedLyrics && isPlaying) {
             smoothScrollTo(currentLine)
         }
     }
@@ -121,10 +130,10 @@ class LyricsView @JvmOverloads constructor(
                 if (onLyricsClickListener?.onLyricsClick(lineTime) == true) {
                     inActive = false
                     removeCallbacks(hideTimelineRunnable)
-                    previousLine = if (line != currentLine) line else -1
-                    currentLine = line
-                    updateCurrentTextSize()
-                    smoothScrollTo(line)
+//                    previousLine = if (line != currentLine) line else -1
+//                    currentLine = line
+//                    updateCurrentTextSize()
+//                    smoothScrollTo(line)
                     return true
                 }
             } else {
@@ -249,6 +258,7 @@ class LyricsView @JvmOverloads constructor(
     fun hasLyrics(): Boolean = lrcEntryList.isNotEmpty()
 
     fun updateTime(time: Long, animate: Boolean = true) {
+        Log.d("DBG", "update time: $time, animate: $animate")
         runOnUi {
             if (!hasLyrics() || !isSyncedLyrics) {
                 return@runOnUi
@@ -323,7 +333,7 @@ class LyricsView @JvmOverloads constructor(
         }
     }
 
-    fun updateCurrentTextSize(animate: Boolean = true) {
+    private fun updateCurrentTextSize(animate: Boolean = true) {
         if (animate) {
             ValueAnimator.ofFloat(normalTextSize, currentTextSize).apply {
                 interpolator = FastOutSlowInInterpolator()
@@ -344,7 +354,6 @@ class LyricsView @JvmOverloads constructor(
         if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
             isTouching = false
             if (hasLyrics() && isSyncedLyrics && !isFling) {
-                adjustCenter()
                 postDelayed(hideTimelineRunnable, TIMELINE_KEEP_TIME)
             }
         }
@@ -359,7 +368,6 @@ class LyricsView @JvmOverloads constructor(
         if (isFling && scroller.isFinished) {
             isFling = false
             if (hasLyrics() && isSyncedLyrics && !isTouching) {
-                adjustCenter()
                 postDelayed(hideTimelineRunnable, TIMELINE_KEEP_TIME)
             }
         }
@@ -400,10 +408,6 @@ class LyricsView @JvmOverloads constructor(
         previousLine = -1
         currentLine = 0
         invalidate()
-    }
-
-    private fun adjustCenter() {
-        smoothScrollTo(getCenterLine(), ADJUST_DURATION)
     }
 
     private fun smoothScrollTo(line: Int, duration: Long = animationDuration) {
@@ -485,7 +489,6 @@ class LyricsView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val ADJUST_DURATION = 300L
         private const val TIMELINE_KEEP_TIME = 4 * SECOND_IN_MILLIS
     }
 

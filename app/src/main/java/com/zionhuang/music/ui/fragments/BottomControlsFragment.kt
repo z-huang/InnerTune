@@ -1,7 +1,7 @@
 package com.zionhuang.music.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,11 +94,12 @@ class BottomControlsFragment : Fragment() {
         }
         lifecycleScope.launch {
             viewModel.playbackState.collect { playbackState ->
-                if (playbackState.state != PlaybackStateCompat.STATE_NONE && playbackState.state != PlaybackStateCompat.STATE_STOPPED) {
+                if (playbackState.state != STATE_NONE && playbackState.state != STATE_STOPPED) {
                     if (mainActivity.bottomSheetBehavior.state == STATE_HIDDEN) {
                         mainActivity.bottomSheetBehavior.state = STATE_COLLAPSED
                     }
                 }
+                binding.lyricsView.isPlaying = playbackState.state == STATE_PLAYING || playbackState.state == STATE_BUFFERING
             }
         }
         lifecycleScope.launch {
