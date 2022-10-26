@@ -21,6 +21,7 @@ import androidx.core.net.toUri
 import androidx.core.util.component1
 import androidx.core.util.component2
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.PlaybackException.*
 import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.Player.State
@@ -144,11 +145,12 @@ class SongPlayer(
     val cache = SimpleCache(context.cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(context))
     val player: ExoPlayer = ExoPlayer.Builder(context)
         .setMediaSourceFactory(createMediaSourceFactory())
+        .setHandleAudioBecomingNoisy(true)
+        .setWakeMode(WAKE_MODE_NETWORK)
         .setAudioAttributes(AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build(), true)
-        .setHandleAudioBecomingNoisy(true)
         .build()
         .apply {
             addListener(this@SongPlayer)
