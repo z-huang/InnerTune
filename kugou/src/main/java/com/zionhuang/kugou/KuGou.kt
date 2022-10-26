@@ -17,6 +17,7 @@ import io.ktor.util.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import java.lang.Character.UnicodeScript
+import java.lang.Integer.min
 import kotlin.math.abs
 
 /**
@@ -124,7 +125,16 @@ object KuGou {
     private fun String.toTraditionalChinese(useTraditionalChinese: Boolean) = if (useTraditionalChinese) ZhConverterUtil.toTraditional(this) else this
 
     private fun String.normalize(title: String, artist: String): String = lines().filterNot { line ->
-        line.endsWith("]") || BANNED_WORDS.any { line.contains(it) } || line.endsWith("].")
+        line.endsWith("]")
+    }.let {
+        var cutLine = 0
+        for (i in min(30, it.lastIndex) downTo 0) {
+            if (it[i] matches BANNED_REGEX) {
+                cutLine = i + 1
+                break
+            }
+        }
+        it.drop(cutLine)
     }.let { lines ->
         val firstLine = lines.firstOrNull()?.toSimplifiedChinese() ?: return@let lines
         if (title.toSimplifiedChinese() in firstLine ||
@@ -138,17 +148,7 @@ object KuGou {
         UnicodeScript.of(c.code) in JapaneseUnicodeScript
     })
 
-    private val BANNED_WORDS = listOf(
-        "]词:", "]词：", "]作词:", "]作词：",
-        "]曲:", "]曲：", "]作曲:", "]作曲：",
-        "]编曲：", "]编曲 Arrangement：",
-        "]Producer：", "]制作人 Producer：",
-        "]Drums：",
-        "]Guitar：",
-        "]Strings：",
-        "]Mixer：",
-        "]Mastering  Engineer："
-    )
+    private val BANNED_REGEX = ".+].+[:：].+".toRegex()
 
     private val JapaneseUnicodeScript = hashSetOf(
         UnicodeScript.HIRAGANA,
