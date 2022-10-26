@@ -124,7 +124,7 @@
     <string name="codecs">编码</string>
     <string name="bitrate">比特率</string>
     <string name="sample_rate">采样率</string>
-    <string name="loudness">音量</string>
+    <string name="loudness">响度</string>
     <string name="volume">音量</string>
     <string name="file_size">文件大小</string>
     <string name="unknown">未知</string>
