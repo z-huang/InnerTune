@@ -28,7 +28,9 @@ import com.google.android.exoplayer2.Player.State
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.analytics.PlaybackStats
 import com.google.android.exoplayer2.analytics.PlaybackStatsListener
-import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.audio.*
+import com.google.android.exoplayer2.audio.DefaultAudioSink.*
+import com.google.android.exoplayer2.audio.SilenceSkippingAudioProcessor.DEFAULT_SILENCE_THRESHOLD_LEVEL
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
@@ -145,6 +147,7 @@ class SongPlayer(
     val cache = SimpleCache(context.cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(context))
     val player: ExoPlayer = ExoPlayer.Builder(context)
         .setMediaSourceFactory(createMediaSourceFactory())
+        .setRenderersFactory(createRenderersFactory())
         .setHandleAudioBecomingNoisy(true)
         .setWakeMode(WAKE_MODE_NETWORK)
         .setAudioAttributes(AudioAttributes.Builder()
@@ -423,8 +426,6 @@ class SongPlayer(
                     startIndex = queue.mediaItemIndex,
                     position = queue.position
                 ), playWhenReady = false)
-            }.onFailure { e ->
-                e.printStackTrace()
             }
         }
     }
@@ -501,6 +502,21 @@ class SongPlayer(
             }
         }
     })
+
+    private fun createRenderersFactory() = object : DefaultRenderersFactory(context) {
+        override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioTrackPlaybackParams: Boolean, enableOffload: Boolean) =
+            DefaultAudioSink.Builder()
+                .setAudioCapabilities(AudioCapabilities.getCapabilities(context))
+                .setEnableFloatOutput(enableFloatOutput)
+                .setEnableAudioTrackPlaybackParams(enableAudioTrackPlaybackParams)
+                .setOffloadMode(if (enableOffload) OFFLOAD_MODE_ENABLED_GAPLESS_REQUIRED else OFFLOAD_MODE_DISABLED)
+                .setAudioProcessorChain(DefaultAudioProcessorChain(
+                    emptyArray(),
+                    SilenceSkippingAudioProcessor(2_000_000, 20_000, DEFAULT_SILENCE_THRESHOLD_LEVEL),
+                    SonicAudioProcessor()
+                ))
+                .build()
+    }
 
     fun playQueue(queue: Queue, playWhenReady: Boolean = true) {
         currentQueue = queue
