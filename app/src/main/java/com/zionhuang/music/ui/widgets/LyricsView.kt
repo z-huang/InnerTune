@@ -268,7 +268,10 @@ class LyricsView @JvmOverloads constructor(
                 previousLine = currentLine
                 currentLine = line
                 updateCurrentTextSize(animate)
-                if (!isFling && !inActive) {
+                if (!animate) {
+                    scroller.forceFinished(true)
+                }
+                if ((!isFling && !inActive) || !animate) { // !animate means the user is dragging the seekbar
                     smoothScrollTo(line, if (animate) animationDuration else 0)
                 }
             }
