@@ -23,7 +23,9 @@ class CacheSettingsFragment : BaseSettingsFragment() {
             if (iBinder !is MusicService.MusicBinder) return
             findPreference<NeoSeekBarPreference>(getString(R.string.pref_song_max_cache_size))?.apply {
                 MediaSessionConnection.binder?.cache?.let { cache ->
-                    summary = getString(R.string.size_used, Formatter.formatShortFileSize(context, tryOrNull { cache.cacheSpace } ?: 0))
+                    tryOrNull { cache.cacheSpace }?.let { used ->
+                        summary = getString(R.string.size_used, Formatter.formatShortFileSize(context, used))
+                    }
                 }
             }
         }
