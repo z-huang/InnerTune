@@ -1,6 +1,7 @@
 package com.zionhuang.music
 
 import android.app.Application
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -66,6 +67,7 @@ class App : Application(), ImageLoaderFactory {
     override fun newImageLoader() = ImageLoader.Builder(this)
         .crossfade(true)
         .respectCacheHeaders(false)
+        .allowHardware(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
         .diskCache(
             DiskCache.Builder()
                 .directory(cacheDir.resolve("coil"))
