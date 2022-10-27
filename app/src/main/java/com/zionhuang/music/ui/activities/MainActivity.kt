@@ -156,7 +156,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
 
         lifecycleScope.launch {
-            SongRepository.validateDownloads()
+            SongRepository(this@MainActivity).validateDownloads()
         }
         preferenceLiveData(R.string.pref_show_lyrics, false).observe(this) { showLyrics ->
             keepScreenOn(showLyrics && bottomSheetBehavior.state == STATE_EXPANDED)

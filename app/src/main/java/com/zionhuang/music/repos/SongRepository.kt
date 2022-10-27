@@ -1,6 +1,7 @@
 package com.zionhuang.music.repos
 
 import android.app.DownloadManager
+import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -37,8 +38,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDateTime
 
-object SongRepository : LocalRepository {
-    private val context = getApplication()
+class SongRepository(val context: Context) : LocalRepository {
     private val database = MusicDatabase.getInstance(context)
     private val songDao = database.songDao
     private val artistDao = database.artistDao

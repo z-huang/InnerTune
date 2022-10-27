@@ -244,7 +244,7 @@ class YouTubeSuggestionViewHolder(
         if (item.source == LOCAL) {
             binding.deleteBtn.setOnClickListener {
                 GlobalScope.launch {
-                    SongRepository.deleteSearchHistory(item.query)
+                    SongRepository(binding.context).deleteSearchHistory(item.query)
                     onRefreshSuggestions()
                 }
             }

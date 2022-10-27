@@ -88,7 +88,7 @@ class ArtistSongsFragment : RecyclerViewFragment<LocalItemAdapter>() {
             }
 
         lifecycleScope.launch {
-            artist = SongRepository.getArtistById(args.artistId)!!
+            artist = SongRepository(requireContext()).getArtistById(args.artistId)!!
             requireAppCompatActivity().title = artist.name
             songsViewModel.getArtistSongsAsFlow(args.artistId).collectLatest {
                 adapter.submitList(it)

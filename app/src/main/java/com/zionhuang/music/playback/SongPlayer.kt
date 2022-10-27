@@ -112,7 +112,7 @@ class SongPlayer(
     private val scope: CoroutineScope,
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Listener, PlaybackStatsListener.Callback {
-    private val localRepository = SongRepository
+    private val songRepository = SongRepository(context)
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private val bitmapProvider = BitmapProvider(context)
 
@@ -124,10 +124,10 @@ class SongPlayer(
     val playerVolume = MutableStateFlow(1f)
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
     private val currentSongFlow = currentMediaMetadata.flatMapLatest { mediaMetadata ->
-        localRepository.getSongById(mediaMetadata?.id).flow
+        songRepository.getSongById(mediaMetadata?.id).flow
     }
     private val currentFormat = currentMediaMetadata.flatMapLatest { mediaMetadata ->
-        localRepository.getSongFormat(mediaMetadata?.id).flow
+        songRepository.getSongFormat(mediaMetadata?.id).flow
     }
     var currentSong: Song? = null
 
@@ -171,7 +171,7 @@ class SongPlayer(
                     when (path.firstOrNull()) {
                         SONG -> {
                             val songId = path.getOrNull(1) ?: return@launch
-                            val allSongs = SongRepository.getAllSongs(SongSortInfoPreference).flow.first()
+                            val allSongs = songRepository.getAllSongs(SongSortInfoPreference).flow.first()
                             playQueue(ListQueue(
                                 title = context.getString(R.string.queue_all_songs),
                                 items = allSongs.map { it.toMediaItem() },
@@ -181,8 +181,8 @@ class SongPlayer(
                         ARTIST -> {
                             val songId = path.getOrNull(2) ?: return@launch
                             val artistId = path.getOrNull(1) ?: return@launch
-                            val artist = SongRepository.getArtistById(artistId) ?: return@launch
-                            val songs = SongRepository.getArtistSongs(artistId, SongSortInfoPreference).flow.first()
+                            val artist = songRepository.getArtistById(artistId) ?: return@launch
+                            val songs = songRepository.getArtistSongs(artistId, SongSortInfoPreference).flow.first()
                             playQueue(ListQueue(
                                 title = artist.name,
                                 items = songs.map { it.toMediaItem() },
@@ -192,8 +192,8 @@ class SongPlayer(
                         ALBUM -> {
                             val songId = path.getOrNull(2) ?: return@launch
                             val albumId = path.getOrNull(1) ?: return@launch
-                            val album = SongRepository.getAlbum(albumId) ?: return@launch
-                            val songs = SongRepository.getAlbumSongs(albumId)
+                            val album = songRepository.getAlbum(albumId) ?: return@launch
+                            val songs = songRepository.getAlbumSongs(albumId)
                             playQueue(ListQueue(
                                 title = album.title,
                                 items = songs.map { it.toMediaItem() },
@@ -204,15 +204,15 @@ class SongPlayer(
                             val songId = path.getOrNull(2) ?: return@launch
                             val playlistId = path.getOrNull(1) ?: return@launch
                             val songs = when (playlistId) {
-                                LIKED_PLAYLIST_ID -> SongRepository.getLikedSongs(SongSortInfoPreference).flow.first()
-                                DOWNLOADED_PLAYLIST_ID -> SongRepository.getDownloadedSongs(SongSortInfoPreference).flow.first()
-                                else -> SongRepository.getPlaylistSongs(playlistId).getList()
+                                LIKED_PLAYLIST_ID -> songRepository.getLikedSongs(SongSortInfoPreference).flow.first()
+                                DOWNLOADED_PLAYLIST_ID -> songRepository.getDownloadedSongs(SongSortInfoPreference).flow.first()
+                                else -> songRepository.getPlaylistSongs(playlistId).getList()
                             }
                             playQueue(ListQueue(
                                 title = when (playlistId) {
                                     LIKED_PLAYLIST_ID -> context.getString(R.string.liked_songs)
                                     DOWNLOADED_PLAYLIST_ID -> context.getString(R.string.downloaded_songs)
-                                    else -> SongRepository.getPlaylistById(playlistId).playlist.name
+                                    else -> songRepository.getPlaylistById(playlistId).playlist.name
                                 },
                                 items = songs.map { it.toMediaItem() },
                                 startIndex = songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
@@ -366,14 +366,14 @@ class SongPlayer(
         lyricProviders.forEach { provider ->
             if (provider.isEnabled(context)) {
                 provider.getLyrics(mediaMetadata.id, mediaMetadata.title, mediaMetadata.artists.joinToString { it.name }, mediaMetadata.duration).onSuccess { lyrics ->
-                    localRepository.upsert(LyricsEntity(mediaMetadata.id, lyrics))
+                    songRepository.upsert(LyricsEntity(mediaMetadata.id, lyrics))
                     return
                 }.onFailure {
                     it.printStackTrace()
                 }
             }
         }
-        localRepository.upsert(LyricsEntity(mediaMetadata.id, LYRICS_NOT_FOUND))
+        songRepository.upsert(LyricsEntity(mediaMetadata.id, LYRICS_NOT_FOUND))
     }
 
     init {
@@ -391,7 +391,7 @@ class SongPlayer(
             combine(currentMediaMetadata.distinctUntilChangedBy { it?.id }, showLyrics) { mediaMetadata, showLyrics ->
                 Pair(mediaMetadata, showLyrics)
             }.collectLatest { (mediaMetadata, showLyrics) ->
-                if (showLyrics && mediaMetadata != null && !localRepository.hasLyrics(mediaMetadata.id)) {
+                if (showLyrics && mediaMetadata != null && !songRepository.hasLyrics(mediaMetadata.id)) {
                     loadLyrics(mediaMetadata)
                 }
             }
@@ -452,9 +452,9 @@ class SongPlayer(
 
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
-            val playedFormat = localRepository.getSongFormat(mediaId).getValueAsync()
-            if (playedFormat != null && localRepository.getSongById(mediaId).getValueAsync()?.song?.downloadState == STATE_DOWNLOADED) {
-                return@runBlocking dataSpec.withUri(localRepository.getSongFile(mediaId).toUri())
+            val playedFormat = songRepository.getSongFormat(mediaId).getValueAsync()
+            if (playedFormat != null && songRepository.getSongById(mediaId).getValueAsync()?.song?.downloadState == STATE_DOWNLOADED) {
+                return@runBlocking dataSpec.withUri(songRepository.getSongFile(mediaId).toUri())
             }
 
             withContext(IO) {
@@ -479,7 +479,7 @@ class SongPlayer(
                             }
                         }
                 } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
-                localRepository.upsert(FormatEntity(
+                songRepository.upsert(FormatEntity(
                     id = mediaId,
                     itag = format.itag,
                     mimeType = format.mimeType.split(";")[0],
@@ -598,9 +598,9 @@ class SongPlayer(
             val song = currentSong
             val mediaMetadata = currentMediaMetadata.value ?: return@launch
             if (song == null) {
-                localRepository.addSong(mediaMetadata)
+                songRepository.addSong(mediaMetadata)
             } else {
-                localRepository.deleteSong(song)
+                songRepository.deleteSong(song)
             }
         }
     }
@@ -610,19 +610,19 @@ class SongPlayer(
             val song = currentSong
             val mediaMetadata = currentMediaMetadata.value ?: return@launch
             if (song == null) {
-                localRepository.addSong(mediaMetadata)
-                localRepository.getSongById(mediaMetadata.id).getValueAsync()?.let {
-                    localRepository.toggleLiked(it)
+                songRepository.addSong(mediaMetadata)
+                songRepository.getSongById(mediaMetadata.id).getValueAsync()?.let {
+                    songRepository.toggleLiked(it)
                 }
             } else {
-                localRepository.toggleLiked(song)
+                songRepository.toggleLiked(song)
             }
         }
     }
 
     private fun addToLibrary(mediaMetadata: MediaMetadata) {
         scope.launch(context.exceptionHandler) {
-            localRepository.addSong(mediaMetadata)
+            songRepository.addSong(mediaMetadata)
         }
     }
 
@@ -690,7 +690,7 @@ class SongPlayer(
     override fun onPlaybackStatsReady(eventTime: AnalyticsListener.EventTime, playbackStats: PlaybackStats) {
         val mediaItem = eventTime.timeline.getWindow(eventTime.windowIndex, Timeline.Window()).mediaItem
         scope.launch {
-            localRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
+            songRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
         }
     }
 

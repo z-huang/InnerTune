@@ -54,7 +54,8 @@ class EditArtistDialog : AppCompatDialogFragment() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
-            val existedArtist = SongRepository.getArtistByName(name)
+            val songRepository = SongRepository(requireContext())
+            val existedArtist = songRepository.getArtistByName(name)
             if (existedArtist != null && existedArtist.id != artist.id) {
                 // name exists
                 withContext(Dispatchers.Main) {
@@ -65,7 +66,7 @@ class EditArtistDialog : AppCompatDialogFragment() {
                         .show()
                 }
             } else {
-                SongRepository.updateArtist(artist.copy(name = name))
+                songRepository.updateArtist(artist.copy(name = name))
                 dismiss()
             }
         }

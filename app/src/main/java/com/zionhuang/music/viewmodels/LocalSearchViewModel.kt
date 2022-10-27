@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LocalSearchViewModel(application: Application) : AndroidViewModel(application) {
+    private val songRepository = SongRepository(application)
     val query = SafeMutableLiveData("")
     val filter = SafeMutableLiveData(Filter.ALL)
     val result: Flow<List<LocalBaseItem>> = query.asFlow().combine(filter.asFlow()) { query: String, filter: Filter ->
@@ -23,11 +24,11 @@ class LocalSearchViewModel(application: Application) : AndroidViewModel(applicat
             emptyFlow()
         } else {
             when (filter) {
-                Filter.ALL -> SongRepository.searchAll(query)
-                Filter.SONG -> SongRepository.searchSongs(query)
-                Filter.ALBUM -> SongRepository.searchAlbums(query)
-                Filter.ARTIST -> SongRepository.searchArtists(query)
-                Filter.PLAYLIST -> SongRepository.searchPlaylists(query)
+                Filter.ALL -> songRepository.searchAll(query)
+                Filter.SONG -> songRepository.searchSongs(query)
+                Filter.ALBUM -> songRepository.searchAlbums(query)
+                Filter.ARTIST -> songRepository.searchArtists(query)
+                Filter.PLAYLIST -> songRepository.searchPlaylists(query)
             }
         }
     }

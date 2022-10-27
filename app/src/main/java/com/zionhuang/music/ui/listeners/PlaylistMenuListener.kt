@@ -44,12 +44,14 @@ interface IPlaylistMenuListener {
 }
 
 class PlaylistMenuListener(override val fragment: Fragment) : BaseMenuListener<Playlist>(fragment), IPlaylistMenuListener {
+    private val songRepository by lazy { SongRepository(fragment.requireContext()) }
+
     override suspend fun getMediaMetadata(items: List<Playlist>): List<MediaMetadata> = withContext(IO) {
         items.flatMap { playlist ->
             if (playlist.playlist.isYouTubePlaylist) {
                 YouTube.getQueue(playlistId = playlist.id).getOrThrow().map { it.toMediaMetadata() }
             } else {
-                SongRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
+                songRepository.getPlaylistSongs(playlist.id).getList().map { it.toMediaMetadata() }
             }
         }
     }
@@ -78,14 +80,14 @@ class PlaylistMenuListener(override val fragment: Fragment) : BaseMenuListener<P
 
     override fun addToPlaylist(playlists: List<Playlist>) {
         addToPlaylist { playlist ->
-            SongRepository.addToPlaylist(playlist, playlists)
+            songRepository.addToPlaylist(playlist, playlists)
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun download(playlists: List<Playlist>) {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.downloadPlaylists(playlists)
+            songRepository.downloadPlaylists(playlists)
         }
     }
 
@@ -103,14 +105,14 @@ class PlaylistMenuListener(override val fragment: Fragment) : BaseMenuListener<P
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(playlists: List<Playlist>) {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.refetchPlaylists(playlists)
+            songRepository.refetchPlaylists(playlists)
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun delete(playlists: List<Playlist>) {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.deletePlaylists(playlists.map { it.playlist })
+            songRepository.deletePlaylists(playlists.map { it.playlist })
         }
     }
 }

@@ -132,7 +132,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
     private fun search(query: String) {
         if (!requireContext().sharedPreferences.getBoolean(getString(R.string.pref_pause_search_history), false)) {
             GlobalScope.launch {
-                SongRepository.insertSearchHistory(query)
+                SongRepository(requireContext()).insertSearchHistory(query)
             }
         }
         exitTransition = null

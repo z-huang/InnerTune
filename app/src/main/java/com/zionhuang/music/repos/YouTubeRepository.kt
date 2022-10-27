@@ -1,5 +1,6 @@
 package com.zionhuang.music.repos
 
+import android.content.Context
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.zionhuang.innertube.YouTube
@@ -15,7 +16,9 @@ import com.zionhuang.music.utils.InfoCache.checkCache
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
-object YouTubeRepository {
+class YouTubeRepository(val context: Context) {
+    private val songRepository = SongRepository(context)
+
     fun searchAll(query: String) = object : PagingSource<List<String>, YTBaseItem>() {
         override suspend fun load(params: LoadParams<List<String>>) = withContext(IO) {
             try {
@@ -64,7 +67,7 @@ object YouTubeRepository {
                         // inject library artist songs preview
                         browseResult.copy(
                             items = browseResult.items.toMutableList().apply {
-                                addAll(if (browseResult.items.firstOrNull() is ArtistHeader) 1 else 0, SongRepository.getArtistSongsPreview(endpoint.browseId).getOrThrow())
+                                addAll(if (browseResult.items.firstOrNull() is ArtistHeader) 1 else 0, songRepository.getArtistSongsPreview(endpoint.browseId).getOrThrow())
                             }
                         )
                     } else {

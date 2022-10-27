@@ -120,7 +120,7 @@ class ArtistViewHolder(
         binding.selectedIndicator.isVisible = isSelected
         if (artist.artist.bannerUrl == null || Duration.between(artist.artist.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)) {
             GlobalScope.launch(binding.context.exceptionHandler) {
-                SongRepository.refetchArtist(artist.artist)
+                SongRepository(binding.context).refetchArtist(artist.artist)
             }
         }
     }
@@ -164,7 +164,7 @@ class AlbumViewHolder(
         binding.selectedIndicator.isVisible = isSelected
         if (album.album.thumbnailUrl == null || album.album.year == null) {
             GlobalScope.launch(binding.context.exceptionHandler) {
-                SongRepository.refetchAlbum(album.album)
+                SongRepository(binding.context).refetchAlbum(album.album)
             }
         }
     }

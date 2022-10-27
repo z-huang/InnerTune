@@ -11,7 +11,6 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.format.DateUtils.SECOND_IN_MILLIS
 import android.util.AttributeSet
-import android.util.Log
 import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
@@ -258,7 +257,6 @@ class LyricsView @JvmOverloads constructor(
     fun hasLyrics(): Boolean = lrcEntryList.isNotEmpty()
 
     fun updateTime(time: Long, animate: Boolean = true) {
-        Log.d("DBG", "update time: $time, animate: $animate")
         runOnUi {
             if (!hasLyrics() || !isSyncedLyrics) {
                 return@runOnUi

@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
+    private val songRepository = SongRepository(application)
     val transportControls: TransportControls? get() = MediaSessionConnection.transportControls
 
     val mediaMetadata = MediaSessionConnection.mediaMetadata
@@ -38,13 +39,13 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         MediaSessionConnection.binder?.songPlayer?.playerVolume ?: emptyFlow()
     }
     val currentSong = mediaMetadata.flatMapLatest { mediaMetadata ->
-        SongRepository.getSongById(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).flow
+        songRepository.getSongById(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).flow
     }
     val currentSongFormat = mediaMetadata.flatMapLatest { mediaMetadata ->
-        SongRepository.getSongFormat(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).getFlow()
+        songRepository.getSongFormat(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).getFlow()
     }
     val currentLyrics = mediaMetadata.flatMapLatest { mediaMetadata ->
-        SongRepository.getLyrics(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID))
+        songRepository.getLyrics(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID))
     }.stateIn(viewModelScope, SharingStarted.Lazily, null)
     val showLyrics = preferenceLiveData(R.string.pref_show_lyrics, false)
 

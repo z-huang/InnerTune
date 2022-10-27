@@ -33,6 +33,7 @@ import kotlinx.coroutines.runBlocking
 
 class MusicService : LifecycleMediaBrowserService() {
     private val binder = MusicBinder()
+    private val songRepository by lazy { SongRepository(this) }
     private lateinit var songPlayer: SongPlayer
 
     override fun onCreate() {
@@ -102,52 +103,52 @@ class MusicService : LifecycleMediaBrowserService() {
             ))
             SONG -> {
                 result.detach()
-                result.sendResult(SongRepository.getAllSongs(SongSortInfoPreference).flow.first().map {
+                result.sendResult(songRepository.getAllSongs(SongSortInfoPreference).flow.first().map {
                     MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                 }.toMutableList())
             }
             ARTIST -> {
                 result.detach()
-                result.sendResult(SongRepository.getAllArtists(ArtistSortInfoPreference).flow.first().map { artist ->
+                result.sendResult(songRepository.getAllArtists(ArtistSortInfoPreference).flow.first().map { artist ->
                     mediaBrowserItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.song_count, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri())
                 }.toMutableList())
             }
             ALBUM -> {
                 result.detach()
-                result.sendResult(SongRepository.getAllAlbums(AlbumSortInfoPreference).flow.first().map { album ->
+                result.sendResult(songRepository.getAllAlbums(AlbumSortInfoPreference).flow.first().map { album ->
                     mediaBrowserItem("$ALBUM/${album.id}", album.album.title, album.artists.joinToString(), album.album.thumbnailUrl?.toUri())
                 }.toMutableList())
             }
             PLAYLIST -> {
                 result.detach()
-                val likedSongCount = SongRepository.getLikedSongCount().first()
-                val downloadedSongCount = SongRepository.getDownloadedSongCount().first()
+                val likedSongCount = songRepository.getLikedSongCount().first()
+                val downloadedSongCount = songRepository.getDownloadedSongCount().first()
                 result.sendResult((listOf(
                     mediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.song_count, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
                     mediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.song_count, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
-                ) + SongRepository.getAllPlaylists(PlaylistSortInfoPreference).flow.first().filter { it.playlist.isLocalPlaylist }.map { playlist ->
+                ) + songRepository.getAllPlaylists(PlaylistSortInfoPreference).flow.first().filter { it.playlist.isLocalPlaylist }.map { playlist ->
                     mediaBrowserItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.playlist.thumbnailUrl?.toUri() ?: playlist.thumbnails.firstOrNull()?.toUri())
                 }).toMutableList())
             }
             else -> when {
                 parentId.startsWith("$ARTIST/") -> {
                     result.detach()
-                    result.sendResult(SongRepository.getArtistSongs(parentId.removePrefix("$ARTIST/"), SongSortInfoPreference).flow.first().map {
+                    result.sendResult(songRepository.getArtistSongs(parentId.removePrefix("$ARTIST/"), SongSortInfoPreference).flow.first().map {
                         MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$ALBUM/") -> {
                     result.detach()
-                    result.sendResult(SongRepository.getAlbumSongs(parentId.removePrefix("$ALBUM/")).map {
+                    result.sendResult(songRepository.getAlbumSongs(parentId.removePrefix("$ALBUM/")).map {
                         MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$PLAYLIST/") -> {
                     result.detach()
                     result.sendResult(when (val playlistId = parentId.removePrefix("$PLAYLIST/")) {
-                        LIKED_PLAYLIST_ID -> SongRepository.getLikedSongs(SongSortInfoPreference)
-                        DOWNLOADED_PLAYLIST_ID -> SongRepository.getDownloadedSongs(SongSortInfoPreference)
-                        else -> SongRepository.getPlaylistSongs(playlistId)
+                        LIKED_PLAYLIST_ID -> songRepository.getLikedSongs(SongSortInfoPreference)
+                        DOWNLOADED_PLAYLIST_ID -> songRepository.getDownloadedSongs(SongSortInfoPreference)
+                        else -> songRepository.getPlaylistSongs(playlistId)
                     }.flow.first().map {
                         MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())

@@ -28,6 +28,7 @@ interface IYTItemBatchMenuListener {
 }
 
 class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener {
+    private val songRepository by lazy { SongRepository(fragment.requireContext()) }
     val context: Context
         get() = fragment.requireContext()
 
@@ -98,9 +99,9 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
     override fun addToLibrary(items: List<YTItem>) {
         val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.safeAddSongs(items.filterIsInstance<SongItem>())
-            SongRepository.addAlbums(items.filterIsInstance<AlbumItem>())
-            SongRepository.addPlaylists(items.filterIsInstance<PlaylistItem>())
+            songRepository.safeAddSongs(items.filterIsInstance<SongItem>())
+            songRepository.addAlbums(items.filterIsInstance<AlbumItem>())
+            songRepository.addPlaylists(items.filterIsInstance<PlaylistItem>())
             Snackbar.make(mainContent, R.string.snackbar_added_to_library, LENGTH_SHORT).show()
         }
     }
@@ -110,7 +111,7 @@ class YTItemBatchMenuListener(val fragment: Fragment) : IYTItemBatchMenuListener
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch(context.exceptionHandler) {
-                SongRepository.addYouTubeItemsToPlaylist(playlist, items)
+                songRepository.addYouTubeItemsToPlaylist(playlist, items)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)

@@ -10,12 +10,13 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.repos.YouTubeRepository
 
 class YouTubeSearchViewModel(application: Application, query: String) : AndroidViewModel(application) {
+    private val youTubeRepository = YouTubeRepository(application)
     val filter = MutableLiveData<YouTube.SearchFilter>(null)
 
     val pagingData = Pager(PagingConfig(pageSize = 20)) {
         filter.value.let {
-            if (it == null) YouTubeRepository.searchAll(query)
-            else YouTubeRepository.search(query, it)
+            if (it == null) youTubeRepository.searchAll(query)
+            else youTubeRepository.search(query, it)
         }
     }.flow.cachedIn(viewModelScope)
 }
