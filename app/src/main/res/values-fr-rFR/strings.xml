@@ -213,6 +213,7 @@
     <plurals name="n_selected">
         <item quantity="one">%d sélectionné</item>
         <item quantity="many">%d sélectionné</item>
+        <item quantity="other">%d sélectionné</item>
     </plurals>
     <string name="snackbar_undo">Annuler</string>
     <string name="snackbar_url_error">Can\'t identify this url.</string>
