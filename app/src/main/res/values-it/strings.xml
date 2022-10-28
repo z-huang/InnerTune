@@ -43,6 +43,8 @@
     <string name="pref_audio_normalization_title">Audio normalization</string>
     <string name="pref_equalizer_title">Equalizzatore</string>
 
+    <string name="pref_storage_title">Storage</string>
+    <string name="pref_open_saf_title">View downloaded files in SAF</string>
     <string name="pref_cache_title">Cache</string>
     <string name="pref_image_max_cache_size_title">Grandezza massima della cache delle immagini</string>
     <string name="pref_clear_image_cache_title">Pulisci cache delle immagini</string>

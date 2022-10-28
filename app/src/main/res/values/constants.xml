@@ -12,7 +12,7 @@
     <string name="pref_appearance" translatable="false">APPEARANCE</string>
     <string name="pref_content" translatable="false">CONTENT</string>
     <string name="pref_player_audio" translatable="false">PLAYER_AUDIO</string>
-    <string name="pref_cache" translatable="false">CACHE</string>
+    <string name="pref_storage" translatable="false">STORAGE</string>
     <string name="pref_general" translatable="false">GENERAL</string>
     <string name="pref_privacy" translatable="false">PRIVACY</string>
     <string name="pref_backup_restore" translatable="false">BACKUP_RESTORE</string>
@@ -40,6 +40,7 @@
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
     <string name="pref_equalizer" translatable="false">EQUALIZER</string>
 
+    <string name="pref_open_saf" translatable="false">OPEN_SAF</string>
     <string name="pref_image_max_cache_size" translatable="false">IMAGE_MAX_CACHE_SIZE</string>
     <string name="pref_clear_image_cache" translatable="false">CLEAR_IMAGE_CACHE</string>
     <string name="pref_song_max_cache_size" translatable="false">SONG_MAX_CACHE_SIZE</string>

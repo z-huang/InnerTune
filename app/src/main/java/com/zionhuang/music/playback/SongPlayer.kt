@@ -87,7 +87,7 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
-import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
+import com.zionhuang.music.ui.fragments.settings.StorageSettingsFragment.Companion.VALUE_TO_MB
 import com.zionhuang.music.utils.InfoCache
 import com.zionhuang.music.utils.preference.enumPreference
 import kotlinx.coroutines.*

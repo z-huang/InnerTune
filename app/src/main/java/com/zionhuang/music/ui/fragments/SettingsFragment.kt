@@ -22,8 +22,8 @@ class SettingsFragment : BaseSettingsFragment() {
             findNavController().navigate(R.id.playerAudioSettingsFragment)
             true
         }
-        findPreference<PreferenceScreen>(getString(R.string.pref_cache))?.setOnPreferenceClickListener {
-            findNavController().navigate(R.id.cacheSettingsFragment)
+        findPreference<PreferenceScreen>(getString(R.string.pref_storage))?.setOnPreferenceClickListener {
+            findNavController().navigate(R.id.storageSettingsFragment)
             true
         }
         findPreference<PreferenceScreen>(getString(R.string.pref_general))?.setOnPreferenceClickListener {

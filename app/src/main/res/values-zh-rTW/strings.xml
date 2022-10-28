@@ -39,10 +39,12 @@
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
     <string name="pref_persistent_queue_title">保留播放佇列</string>
-    <string name="pref_skip_silence_title">跳過歌曲頭尾無聲片段</string>
+    <string name="pref_skip_silence_title">跳過無聲片段</string>
     <string name="pref_audio_normalization_title">標準化音量</string>
     <string name="pref_equalizer_title">等化器</string>
 
+    <string name="pref_storage_title">儲存</string>
+    <string name="pref_open_saf_title">檢視已下載的歌曲</string>
     <string name="pref_cache_title">快取</string>
     <string name="pref_image_max_cache_size_title">圖片快取大小</string>
     <string name="pref_clear_image_cache_title">清除圖片快取</string>

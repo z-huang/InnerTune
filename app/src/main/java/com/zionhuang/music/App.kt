@@ -16,7 +16,7 @@ import com.zionhuang.kugou.KuGou
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
-import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
+import com.zionhuang.music.ui.fragments.settings.StorageSettingsFragment.Companion.VALUE_TO_MB
 import java.net.Proxy
 import java.util.*
 
