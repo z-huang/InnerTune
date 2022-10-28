@@ -33,7 +33,8 @@ class SongsProvider : DocumentsProvider() {
                 .add(Root.COLUMN_TITLE, context!!.getString(R.string.app_name))
                 .add(Root.COLUMN_ICON, R.drawable.ic_launcher_foreground)
                 .add(Root.COLUMN_MIME_TYPES, "*/*")
-                .add(Root.COLUMN_FLAGS, Root.FLAG_SUPPORTS_SEARCH)
+                .add(Root.COLUMN_AVAILABLE_BYTES, context!!.filesDir.freeSpace)
+                .add(Root.COLUMN_FLAGS, Root.FLAG_SUPPORTS_SEARCH or Root.FLAG_SUPPORTS_IS_CHILD)
         }
 
     override fun queryDocument(documentId: String, projection: Array<String>?): Cursor = runBlocking {
@@ -41,7 +42,7 @@ class SongsProvider : DocumentsProvider() {
         when (documentId) {
             ROOT_DOC -> cursor.newRow()
                 .add(Document.COLUMN_DOCUMENT_ID, documentId)
-                .add(Document.COLUMN_DISPLAY_NAME, "Root")
+                .add(Document.COLUMN_DISPLAY_NAME, context!!.getString(R.string.app_name))
                 .add(Document.COLUMN_MIME_TYPE, MIME_TYPE_DIR)
 //                .add(Document.COLUMN_FLAGS, FLAG_SUPPORTS_THUMBNAIL)
             else -> {
@@ -79,9 +80,14 @@ class SongsProvider : DocumentsProvider() {
         cursor
     }
 
-    override fun openDocument(documentId: String, mode: String?, signal: CancellationSignal?): ParcelFileDescriptor = runBlocking {
+    override fun openDocument(documentId: String, mode: String, signal: CancellationSignal?): ParcelFileDescriptor = runBlocking {
         val file = songRepository.getSongFile(documentId)
         ParcelFileDescriptor.open(file, ParcelFileDescriptor.parseMode(mode))
+    }
+
+    override fun isChildDocument(parentDocumentId: String, documentId: String): Boolean = runBlocking {
+        val song = songRepository.getSongById(documentId).getValueAsync()
+        song != null && parentDocumentId == ROOT_DOC
     }
 
     private fun mimeToExt(mimeType: String) = when (FileTypes.inferFileTypeFromMimeType(mimeType)) {
@@ -109,17 +115,17 @@ class SongsProvider : DocumentsProvider() {
         const val ROOT = "root"
         const val ROOT_DOC = "root_dir"
 
-        private val DEFAULT_ROOT_PROJECTION: Array<String> = arrayOf(
+        private val DEFAULT_ROOT_PROJECTION = arrayOf(
             Root.COLUMN_ROOT_ID,
             Root.COLUMN_DOCUMENT_ID,
             Root.COLUMN_TITLE,
             Root.COLUMN_SUMMARY,
             Root.COLUMN_ICON,
             Root.COLUMN_MIME_TYPES,
-            Root.COLUMN_FLAGS,
-            Root.COLUMN_AVAILABLE_BYTES
+            Root.COLUMN_AVAILABLE_BYTES,
+            Root.COLUMN_FLAGS
         )
-        private val DEFAULT_DOCUMENT_PROJECTION: Array<String> = arrayOf(
+        private val DEFAULT_DOCUMENT_PROJECTION = arrayOf(
             Document.COLUMN_DOCUMENT_ID,
             Document.COLUMN_DISPLAY_NAME,
             Document.COLUMN_MIME_TYPE,
