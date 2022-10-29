@@ -38,6 +38,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:animateLayoutChanges="true"
                 app:cardCornerRadius="@dimen/thumbnail_radius"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
@@ -109,7 +110,7 @@
                     app:lrcNormalTextSize="20sp"
                     app:lrcPadding="16dp"
                     app:lrcTextGravity="center"
-                    app:lrcTextSize="24sp"
+                    app:lrcTextSize="2sp"
                     app:lrcTimelineColor="#00000000"
                     app:lrcTimelineTextColor="@color/m3_dark_default_color_secondary_text"
                     app:lrcUnsyncedTextColor="@color/m3_dark_default_color_primary_text"
