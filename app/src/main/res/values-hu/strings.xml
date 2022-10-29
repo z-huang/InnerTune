@@ -39,13 +39,13 @@
     <string name="audio_quality_high">Magas</string>
     <string name="audio_quality_low">Gyenge</string>
     <string name="pref_persistent_queue_title">Állandó várósor</string>
-    <string name="pref_skip_silence_title">Skip silence</string>
-    <string name="pref_audio_normalization_title">Audio normalization</string>
+    <string name="pref_skip_silence_title">A csend átugrása</string>
+    <string name="pref_audio_normalization_title">Hang normalizálása</string>
     <string name="pref_equalizer_title">Equalizer</string>
 
-    <string name="pref_storage_title">Storage</string>
-    <string name="pref_open_saf_title">View downloaded files in SAF</string>
-    <string name="pref_open_saf_summary">This may not work in some devices</string>
+    <string name="pref_storage_title">Tárhely</string>
+    <string name="pref_open_saf_title">A letöltött fájlok megtekintése SAF-ben</string>
+    <string name="pref_open_saf_summary">Előfordulhat, hogy ez egyes eszközökön nem működik</string>
     <string name="pref_cache_title">Gyorsítótár</string>
     <string name="pref_image_max_cache_size_title">Max. kép gyorsítótár</string>
     <string name="pref_clear_image_cache_title">Kép gyors.tár törlés</string>
@@ -63,7 +63,7 @@
     <string name="pref_pause_search_history_title">Keresési előzmények szüneteltetése</string>
     <string name="pref_clear_search_history_title">Keresési előzmények törlése</string>
     <string name="clear_search_history_question">Biztosan töröl minden keresési előzményt?</string>
-    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
+    <string name="pref_enable_kugou_title">A KuGou dalszövegszolgáltató engedélyezése</string>
 
     <string name="pref_backup_restore_title">Bizt.mentés és visszaállítás</string>
     <string name="pref_backup_title">Bizt.mentés</string>
@@ -127,8 +127,8 @@
     <string name="codecs">Kodekek</string>
     <string name="bitrate">Bitráta</string>
     <string name="sample_rate">Mintavétel</string>
-    <string name="loudness">Hangerősség</string>
-    <string name="volume">Volume</string>
+    <string name="loudness">Hangosság</string>
+    <string name="volume">Hangerő</string>
     <string name="file_size">Fájl méret</string>
     <string name="unknown">Ismeretlen</string>
 
@@ -150,7 +150,7 @@
     <string name="dialog_title_duplicate_artist">Duplikált előadók</string>
     <string name="dialog_msg_duplicate_artist">%1$s előadó már létezik.</string>
 
-    <string name="dialog_title_choose_playlist">Válassz lejátszási listát</string>
+    <string name="dialog_title_choose_playlist">Válasszon lejátszási listát</string>
 
     <string name="dialog_title_edit_playlist">Lejátszólista szerkesztés</string>
 
@@ -216,19 +216,19 @@
     <string name="snackbar_undo">Visszavon</string>
     <string name="snackbar_url_error">Az URL nem azonosítható.</string>
     <plurals name="snackbar_song_play_next">
-        <item quantity="one">Dal szól legközelebb</item>
+        <item quantity="one">dal szól legközelebb</item>
         <item quantity="other">%d dal szól legközelebb</item>
     </plurals>
     <plurals name="snackbar_artist_play_next">
-        <item quantity="one">Előadó szól legközelebb</item>
+        <item quantity="one">előadó szól legközelebb</item>
         <item quantity="other">%d előadó szól legközelebb</item>
     </plurals>
     <plurals name="snackbar_album_play_next">
-        <item quantity="one">Album szól legközelebb</item>
+        <item quantity="one">album szól legközelebb</item>
         <item quantity="other">%d album szól legközelebb</item>
     </plurals>
     <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">Lista szól legközelebb</item>
+        <item quantity="one">lista szól legközelebb</item>
         <item quantity="other">%d lista szól legközelebb</item>
     </plurals>
     <string name="snackbar_play_next">A kiválasztottak szólnak legközelebb</string>
