@@ -18,8 +18,6 @@ import com.zionhuang.innertube.models.SuggestionTextItem.SuggestionSource.LOCAL
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.extensions.context
-import com.zionhuang.music.extensions.fadeIn
-import com.zionhuang.music.extensions.fadeOut
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
@@ -165,8 +163,7 @@ class YouTubeListItemViewHolder(
     }
 
     fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
