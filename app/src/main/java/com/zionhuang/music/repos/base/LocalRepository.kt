@@ -41,6 +41,7 @@ interface LocalRepository {
      */
     fun searchAll(query: String): Flow<List<LocalBaseItem>>
     fun searchSongs(query: String): Flow<List<Song>>
+    fun searchDownloadedSongs(query: String): Flow<List<Song>>
     fun searchArtists(query: String): Flow<List<Artist>>
     fun searchAlbums(query: String): Flow<List<Album>>
     fun searchPlaylists(query: String): Flow<List<Playlist>>

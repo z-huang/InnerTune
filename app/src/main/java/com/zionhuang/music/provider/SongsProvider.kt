@@ -38,46 +38,62 @@ class SongsProvider : DocumentsProvider() {
         }
 
     override fun queryDocument(documentId: String, projection: Array<String>?): Cursor = runBlocking {
-        val cursor = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
-        when (documentId) {
-            ROOT_DOC -> cursor.newRow()
-                .add(Document.COLUMN_DOCUMENT_ID, documentId)
-                .add(Document.COLUMN_DISPLAY_NAME, context!!.getString(R.string.app_name))
-                .add(Document.COLUMN_MIME_TYPE, MIME_TYPE_DIR)
-//                .add(Document.COLUMN_FLAGS, FLAG_SUPPORTS_THUMBNAIL)
-            else -> {
-                val song = songRepository.getSongById(documentId).getValueAsync() ?: throw FileNotFoundException()
-                val format = songRepository.getSongFormat(documentId).getValueAsync() ?: throw FileNotFoundException()
-                cursor.newRow()
+        MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION).apply {
+            when (documentId) {
+                ROOT_DOC -> newRow()
                     .add(Document.COLUMN_DOCUMENT_ID, documentId)
-                    .add(Document.COLUMN_DISPLAY_NAME, song.song.title)
-                    .add(Document.COLUMN_MIME_TYPE, format.mimeType)
-                    .add(Document.COLUMN_SIZE, format.contentLength)
-                    .add(Document.COLUMN_LAST_MODIFIED, song.song.modifyDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli())
-//                    .add(Document.COLUMN_FLAGS, FLAG_SUPPORTS_THUMBNAIL)
-            }
-        }
-        cursor
-    }
-
-    override fun queryChildDocuments(parentDocumentId: String, projection: Array<String>?, sortOrder: String?): Cursor = runBlocking {
-        val cursor = MatrixCursor(DEFAULT_DOCUMENT_PROJECTION)
-        when (parentDocumentId) {
-            ROOT_DOC -> songRepository.getDownloadedSongs(SongSortInfoPreference).flow.first().forEach { song ->
-                val format = songRepository.getSongFormat(song.id).getValueAsync()
-                if (format != null) {
-                    cursor.newRow()
-                        .add(Document.COLUMN_DOCUMENT_ID, song.id)
-                        .add(Document.COLUMN_DISPLAY_NAME, "${song.song.title}${mimeToExt(format.mimeType)}")
+                    .add(Document.COLUMN_DISPLAY_NAME, context!!.getString(R.string.app_name))
+                    .add(Document.COLUMN_MIME_TYPE, MIME_TYPE_DIR)
+                else -> {
+                    val song = songRepository.getSongById(documentId).getValueAsync() ?: throw FileNotFoundException()
+                    val format = songRepository.getSongFormat(documentId).getValueAsync() ?: throw FileNotFoundException()
+                    newRow()
+                        .add(Document.COLUMN_DOCUMENT_ID, documentId)
+                        .add(Document.COLUMN_DISPLAY_NAME, song.song.title)
                         .add(Document.COLUMN_MIME_TYPE, format.mimeType)
                         .add(Document.COLUMN_SIZE, format.contentLength)
                         .add(Document.COLUMN_LAST_MODIFIED, song.song.modifyDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli())
-//                        .add(Document.COLUMN_FLAGS, FLAG_SUPPORTS_THUMBNAIL)
                 }
             }
-            else -> {}
         }
-        cursor
+    }
+
+    override fun queryChildDocuments(parentDocumentId: String, projection: Array<String>?, sortOrder: String?): Cursor = runBlocking {
+        MatrixCursor(DEFAULT_DOCUMENT_PROJECTION).apply {
+            when (parentDocumentId) {
+                ROOT_DOC -> songRepository.getDownloadedSongs(SongSortInfoPreference).flow.first().forEach { song ->
+                    val format = songRepository.getSongFormat(song.id).getValueAsync()
+                    if (format != null) {
+                        newRow()
+                            .add(Document.COLUMN_DOCUMENT_ID, song.id)
+                            .add(Document.COLUMN_DISPLAY_NAME, "${song.song.title}${mimeToExt(format.mimeType)}")
+                            .add(Document.COLUMN_MIME_TYPE, format.mimeType)
+                            .add(Document.COLUMN_SIZE, format.contentLength)
+                            .add(Document.COLUMN_LAST_MODIFIED, song.song.modifyDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli())
+                    }
+                }
+            }
+        }
+    }
+
+    override fun querySearchDocuments(rootId: String, query: String, projection: Array<String>?): Cursor = runBlocking {
+        MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION).apply {
+            when (rootId) {
+                ROOT -> {
+                    songRepository.searchDownloadedSongs(query).first().forEach { song ->
+                        val format = songRepository.getSongFormat(song.id).getValueAsync()
+                        if (format != null) {
+                            newRow()
+                                .add(Document.COLUMN_DOCUMENT_ID, song.id)
+                                .add(Document.COLUMN_DISPLAY_NAME, "${song.song.title}${mimeToExt(format.mimeType)}")
+                                .add(Document.COLUMN_MIME_TYPE, format.mimeType)
+                                .add(Document.COLUMN_SIZE, format.contentLength)
+                                .add(Document.COLUMN_LAST_MODIFIED, song.song.modifyDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli())
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun openDocument(documentId: String, mode: String, signal: CancellationSignal?): ParcelFileDescriptor = runBlocking {

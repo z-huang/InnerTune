@@ -81,6 +81,11 @@ interface SongDao {
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM song WHERE download_state = $STATE_DOWNLOADED AND title LIKE '%' || :query || '%'")
+    fun searchDownloadedSongs(query: String): Flow<List<Song>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash LIMIT :previewSize")
     fun searchSongsPreview(query: String, previewSize: Int): Flow<List<Song>>
 

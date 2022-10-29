@@ -202,6 +202,7 @@ class SongRepository(val context: Context) : LocalRepository {
     ) { songResult, artistResult, albumResult, playlistResult -> songResult + artistResult + albumResult + playlistResult }
 
     override fun searchSongs(query: String) = songDao.searchSongs(query)
+    override fun searchDownloadedSongs(query: String) = songDao.searchDownloadedSongs(query)
     override fun searchArtists(query: String) = artistDao.searchArtists(query)
     override fun searchAlbums(query: String) = albumDao.searchAlbums(query)
     override fun searchPlaylists(query: String) = playlistDao.searchPlaylists(query)
