@@ -86,3 +86,4 @@ lint/tmp/
 # lint/reports/
 
 .DS_Store
+/app/release/output-metadata.json
