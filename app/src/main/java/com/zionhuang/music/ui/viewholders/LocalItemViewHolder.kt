@@ -80,8 +80,7 @@ open class SongViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -126,8 +125,7 @@ class ArtistViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -170,8 +168,7 @@ class AlbumViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -222,8 +219,7 @@ class PlaylistViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -287,8 +283,7 @@ class CustomPlaylistViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
