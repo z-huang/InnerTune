@@ -45,6 +45,7 @@
 
     <string name="pref_storage_title">存储</string>
     <string name="pref_open_saf_title">查看已下载的歌曲</string>
+    <string name="pref_open_saf_summary">This may not work in some devices</string>
     <string name="pref_cache_title">缓存</string>
     <string name="pref_image_max_cache_size_title">最大图像缓存大小</string>
     <string name="pref_clear_image_cache_title">清除图像缓存</string>

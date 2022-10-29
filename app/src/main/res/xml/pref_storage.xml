@@ -5,6 +5,7 @@
         <Preference
             android:icon="@drawable/ic_folder"
             android:key="@string/pref_open_saf"
+            android:summary="@string/pref_open_saf_summary"
             android:title="@string/pref_open_saf_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_cache_title">
