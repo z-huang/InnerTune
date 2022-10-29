@@ -16,7 +16,7 @@ import com.zionhuang.innertube.models.BrowseLocalArtistSongsEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
-import com.zionhuang.music.db.entities.LyricsEntity
+import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -130,10 +130,10 @@ class BottomControlsFragment : Fragment() {
         }
         lifecycleScope.launch {
             viewModel.currentLyrics.collectLatest { lyrics ->
-                if (lyrics == null || lyrics.lyrics == LyricsEntity.LYRICS_NOT_FOUND) {
+                if (lyrics == null) {
                     binding.lyricsView.reset()
                 } else {
-                    binding.lyricsView.loadLyrics(lyrics.lyrics)
+                    binding.lyricsView.loadLyrics(lyrics.lyrics.takeIf { it != LYRICS_NOT_FOUND } ?: getString(R.string.lyrics_not_found))
                 }
             }
         }

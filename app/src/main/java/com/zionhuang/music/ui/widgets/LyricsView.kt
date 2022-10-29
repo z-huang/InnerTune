@@ -54,6 +54,7 @@ class LyricsView @JvmOverloads constructor(
     private var drawableWidth = 0
     private var timeTextWidth = 0
     private var defaultLabel: String = ""
+    private var showLabel: Boolean = false
     private var lrcPadding = 0f
     private var onLyricsClickListener: OnLyricsClickListener? = null
     private var animator: ValueAnimator? = null
@@ -290,7 +291,7 @@ class LyricsView @JvmOverloads constructor(
         super.onDraw(canvas)
         val centerY = height / 2
 
-        if (!hasLyrics()) {
+        if (!hasLyrics() && showLabel) {
             lrcPaint.color = currentTextColor
             val staticLayout = StaticLayout.Builder.obtain(defaultLabel, 0, defaultLabel.length, lrcPaint, lrcWidth.toInt())
                 .setAlignment(Layout.Alignment.ALIGN_CENTER)
