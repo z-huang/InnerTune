@@ -36,17 +36,21 @@ With this app, you're like getting a free music streaming service. You can liste
 
 - Save songs, albums and playlists in local database
 - Download music for offline playback
-- Edit song title
+- Like songs
+- local playlist management
 - Add links to your favorite YouTube Music playlists
+- Export downloaded songs via SAF
 
 ### Player
 
 - Material design player
 - Lockscreen playback
-- Media controls in notification
-- Skip to next/previous song
-- Repeat/shuffle mode
-- Edit now-playing queue
+- Cache songs
+- (Synchronized) lyrics
+- Skip silence
+- Audio normalization
+- Stat for nerds
+- Persistent queue
 
 ### Other
 
@@ -55,6 +59,7 @@ With this app, you're like getting a free music streaming service. You can liste
 - Localization
 - Proxy
 - Backup & restore
+- Support Android Auto
 
 ## Screenshots
 
