@@ -110,7 +110,7 @@
                     app:lrcNormalTextSize="20sp"
                     app:lrcPadding="16dp"
                     app:lrcTextGravity="center"
-                    app:lrcTextSize="2sp"
+                    app:lrcTextSize="24sp"
                     app:lrcTimelineColor="#00000000"
                     app:lrcTimelineTextColor="@color/m3_dark_default_color_secondary_text"
                     app:lrcUnsyncedTextColor="@color/m3_dark_default_color_primary_text"
