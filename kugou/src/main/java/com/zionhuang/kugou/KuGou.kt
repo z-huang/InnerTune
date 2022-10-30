@@ -53,15 +53,27 @@ object KuGou {
     }
 
     suspend fun getLyrics(title: String, artist: String, duration: Int): Result<String> = runCatching {
-        getLyricsCandidate(title, artist, duration)?.let { candidate ->
-            downloadLyrics(candidate.id, candidate.accesskey).content.decodeBase64String().normalize(normalizeTitle(title), normalizeArtist(artist))
+        val keyword = generateKeyword(title, artist)
+        getLyricsCandidate(keyword, duration)?.let { candidate ->
+            downloadLyrics(candidate.id, candidate.accesskey).content.decodeBase64String().normalize(keyword)
         } ?: throw IllegalStateException("No lyrics candidate")
     }
 
-    suspend fun getLyricsCandidate(title: String, artist: String, duration: Int): SearchLyricsResponse.Candidate? {
+    suspend fun getAllLyrics(title: String, artist: String, duration: Int): Result<List<String>> = runCatching {
         val keyword = generateKeyword(title, artist)
+        val candidates = searchSongs(keyword).data.info
+            .filter { abs(it.duration - duration) <= DURATION_TOLERANCE }
+            .mapNotNull {
+                searchLyricsByHash(it.hash).candidates.firstOrNull()
+            } + searchLyricsByKeyword(keyword, duration).candidates
+        candidates.map {
+            downloadLyrics(it.id, it.accesskey).content.decodeBase64String().normalize(keyword)
+        }
+    }
+
+    suspend fun getLyricsCandidate(keyword: Pair<String, String>, duration: Int): SearchLyricsResponse.Candidate? {
         searchSongs(keyword).data.info.forEach { song ->
-            if (abs(song.duration - duration) <= 8) {
+            if (abs(song.duration - duration) <= DURATION_TOLERANCE) {
                 val candidate = searchLyricsByHash(song.hash).candidates.firstOrNull()
                 if (candidate != null) return candidate
             }
@@ -69,17 +81,17 @@ object KuGou {
         return searchLyricsByKeyword(keyword, duration).candidates.firstOrNull()
     }
 
-    private suspend fun searchSongs(keyword: String) = client.get("https://mobileservice.kugou.com/api/v3/search/song") {
+    private suspend fun searchSongs(keyword: Pair<String, String>) = client.get("https://mobileservice.kugou.com/api/v3/search/song") {
         parameter("version", 9108)
         parameter("plat", 0)
-        parameter("keyword", keyword)
+        parameter("keyword", "${keyword.first} - ${keyword.second}")
     }.body<SearchSongResponse>()
 
-    private suspend fun searchLyricsByKeyword(keyword: String, duration: Int) = client.get("https://lyrics.kugou.com/search") {
+    private suspend fun searchLyricsByKeyword(keyword: Pair<String, String>, duration: Int) = client.get("https://lyrics.kugou.com/search") {
         parameter("ver", 1)
         parameter("man", "yes")
         parameter("client", "pc")
-        parameter("keyword", keyword)
+        parameter("keyword", "${keyword.first} - ${keyword.second}")
         parameter("duration", duration * 1000)
     }.body<SearchLyricsResponse>()
 
@@ -117,14 +129,12 @@ object KuGou {
         .replace("\\(.*\\)".toRegex(), "")
         .replace("（.*）".toRegex(), "")
 
-    private fun generateKeyword(title: String, artist: String): String {
-        return "${normalizeTitle(title)} - ${normalizeArtist(artist)}"
-    }
+    private fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
 
     private fun String.toSimplifiedChinese() = ZhConverterUtil.toSimple(this)
     private fun String.toTraditionalChinese(useTraditionalChinese: Boolean) = if (useTraditionalChinese) ZhConverterUtil.toTraditional(this) else this
 
-    private fun String.normalize(title: String, artist: String): String = lines().filterNot { line ->
+    private fun String.normalize(keyword: Pair<String, String>): String = lines().filterNot { line ->
         line.endsWith("]")
     }.let {
         var cutLine = 0
@@ -137,6 +147,7 @@ object KuGou {
         it.drop(cutLine)
     }.let { lines ->
         val firstLine = lines.firstOrNull()?.toSimplifiedChinese() ?: return@let lines
+        val (title, artist) = keyword
         if (title.toSimplifiedChinese() in firstLine ||
             artist.split("、").any {
                 it.toSimplifiedChinese() in firstLine
@@ -154,4 +165,6 @@ object KuGou {
         UnicodeScript.HIRAGANA,
         UnicodeScript.KATAKANA,
     )
+
+    private const val DURATION_TOLERANCE = 8
 }

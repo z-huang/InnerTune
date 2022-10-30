@@ -94,7 +94,7 @@
     <string name="color_blue_grey">藍灰</string>
 
     <!-- Nav Menu -->
-    <string name="menu_search_title">搜尋</string>
+    <string name="menu_search">搜尋</string>
     <string name="search_yt_music">搜尋 YouTube Music…</string>
     <string name="search_library">搜尋媒體庫…</string>
 
@@ -119,6 +119,7 @@
     <string name="menu_refetch">更新資料</string>
     <string name="menu_share">分享</string>
     <string name="menu_delete">移除</string>
+    <string name="menu_choose_lyrics">切換其他歌詞</string>
 
     <!-- Dialog -->
     <string name="dialog_title_details">詳細資訊</string>
@@ -131,6 +132,9 @@
     <string name="volume">音量</string>
     <string name="file_size">檔案大小</string>
     <string name="unknown">未知</string>
+
+    <string name="dialog_title_edit_lyrics">編輯歌詞</string>
+    <string name="dialog_title_choose_lyrics">選擇歌詞</string>
 
     <string name="dialog_title_edit_song">編輯歌曲</string>
     <string name="song_title">歌名</string>

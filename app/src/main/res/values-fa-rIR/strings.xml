@@ -94,7 +94,7 @@
     <string name="color_blue_grey">خاکستری آبی</string>
 
     <!-- Nav Menu -->
-    <string name="menu_search_title">جستجو</string>
+    <string name="menu_search">جستجو</string>
     <string name="search_yt_music">جستجو در یوتیوب موزیک…</string>
     <string name="search_library">جستجوی کتاب‌خانه…</string>
 
@@ -119,6 +119,7 @@
     <string name="menu_refetch">نوسازی</string>
     <string name="menu_share">هم‌رسانی</string>
     <string name="menu_delete">حذف</string>
+    <string name="menu_choose_lyrics">Choose other lyrics</string>
 
     <!-- Dialog -->
     <string name="dialog_title_details">Details</string>
@@ -131,6 +132,9 @@
     <string name="volume">Volume</string>
     <string name="file_size">File size</string>
     <string name="unknown">Unknown</string>
+
+    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
+    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
 
     <string name="dialog_title_edit_song">ویرایش آهنگ</string>
     <string name="song_title">عنوان آهنگ</string>

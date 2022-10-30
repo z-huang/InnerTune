@@ -94,7 +94,7 @@
     <string name="color_blue_grey">Gris azulado</string>
 
     <!-- Nav Menu -->
-    <string name="menu_search_title">Buscar</string>
+    <string name="menu_search">Buscar</string>
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
 
@@ -119,6 +119,7 @@
     <string name="menu_refetch">Refetch</string>
     <string name="menu_share">Share</string>
     <string name="menu_delete">Eliminar</string>
+    <string name="menu_choose_lyrics">Choose other lyrics</string>
 
     <!-- Dialog -->
     <string name="dialog_title_details">Details</string>
@@ -131,6 +132,9 @@
     <string name="volume">Volume</string>
     <string name="file_size">File size</string>
     <string name="unknown">Unknown</string>
+
+    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
+    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
 
     <string name="dialog_title_edit_song">Editar canción</string>
     <string name="song_title">Título</string>

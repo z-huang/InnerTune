@@ -94,7 +94,7 @@
     <string name="color_blue_grey">Blu grigio</string>
 
     <!-- Navigazione -->
-    <string name="menu_search_title">Cerca</string>
+    <string name="menu_search">Cerca</string>
     <string name="search_yt_music">Cerca su YouTube Music…</string>
     <string name="search_library">Cerca nella libreria…</string>
 
@@ -119,6 +119,7 @@
     <string name="menu_refetch">Riottieni</string>
     <string name="menu_share">Condividi</string>
     <string name="menu_delete">Elimina</string>
+    <string name="menu_choose_lyrics">Choose other lyrics</string>
 
     <!-- Dialoghi -->
     <string name="dialog_title_details">Dettagli</string>
@@ -131,6 +132,9 @@
     <string name="volume">Volume</string>
     <string name="file_size">Dimensioni</string>
     <string name="unknown">Sconosciuto</string>
+
+    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
+    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
 
     <string name="dialog_title_edit_song">Modifica brano</string>
     <string name="song_title">Titolo</string>

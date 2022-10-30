@@ -94,7 +94,7 @@
     <string name="color_blue_grey">നീല ചാരനിറം</string>
 
     <!-- Nav Menu -->
-    <string name="menu_search_title">തിരയുക</string>
+    <string name="menu_search">തിരയുക</string>
     <string name="search_yt_music">യൂട്യൂബ് സംഗീതം തിരയുക…</string>
     <string name="search_library">തിരയൽ ലൈബ്രറി…</string>
 
@@ -119,6 +119,7 @@
     <string name="menu_refetch">വീണ്ടെടുക്കുക</string>
     <string name="menu_share">പങ്കിടുക</string>
     <string name="menu_delete">ഡിലീറ്റ്</string>
+    <string name="menu_choose_lyrics">Choose other lyrics</string>
 
     <!-- Dialog -->
     <string name="dialog_title_details">Details</string>
@@ -131,6 +132,9 @@
     <string name="volume">Volume</string>
     <string name="file_size">File size</string>
     <string name="unknown">Unknown</string>
+
+    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
+    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
 
     <string name="dialog_title_edit_song">ഗാനം എഡിറ്റ് ചെയ്യുക</string>
     <string name="song_title">പാട്ടിന്റെ പേര്</string>

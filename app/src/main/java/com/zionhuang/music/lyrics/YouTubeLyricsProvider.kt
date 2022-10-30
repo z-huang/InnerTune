@@ -5,6 +5,7 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.WatchEndpoint
 
 object YouTubeLyricsProvider : LyricsProvider {
+    override val name = "YouTube Music"
     override fun isEnabled(context: Context) = true
     override suspend fun getLyrics(id: String, title: String, artist: String, duration: Int): Result<String> =
         YouTube.next(WatchEndpoint(videoId = id)).mapCatching { nextResult ->
@@ -13,4 +14,6 @@ object YouTubeLyricsProvider : LyricsProvider {
             browseResult.lyrics ?: throw IllegalStateException("Lyrics unavailable")
         }
 
+    override suspend fun getAllLyrics(id: String, title: String, artist: String, duration: Int): Result<List<String>> =
+        getLyrics(id, title, artist, duration).map { listOf(it) }
 }

@@ -67,13 +67,8 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_QUEUE_INDEX
 import com.zionhuang.music.db.entities.FormatEntity
-import com.zionhuang.music.db.entities.LyricsEntity
-import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
-import com.zionhuang.music.lyrics.KuGouLyricsProvider
-import com.zionhuang.music.lyrics.LyricsProvider
-import com.zionhuang.music.lyrics.YouTubeLyricsProvider
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.playback.MusicService.Companion.ALBUM
@@ -89,6 +84,7 @@ import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import com.zionhuang.music.ui.fragments.settings.StorageSettingsFragment.Companion.VALUE_TO_MB
 import com.zionhuang.music.utils.InfoCache
+import com.zionhuang.music.utils.lyrics.LyricsHelper
 import com.zionhuang.music.utils.preference.enumPreference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -132,7 +128,6 @@ class SongPlayer(
     var currentSong: Song? = null
 
     private val showLyrics = context.sharedPreferences.booleanFlow(context.getString(R.string.pref_show_lyrics), false)
-    private val lyricProviders: List<LyricsProvider> = listOf(KuGouLyricsProvider, YouTubeLyricsProvider)
 
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
@@ -362,20 +357,6 @@ class SongPlayer(
             setUseFastForwardAction(false)
         }
 
-    private suspend fun loadLyrics(mediaMetadata: MediaMetadata) {
-        lyricProviders.forEach { provider ->
-            if (provider.isEnabled(context)) {
-                provider.getLyrics(mediaMetadata.id, mediaMetadata.title, mediaMetadata.artists.joinToString { it.name }, mediaMetadata.duration).onSuccess { lyrics ->
-                    songRepository.upsert(LyricsEntity(mediaMetadata.id, lyrics))
-                    return
-                }.onFailure {
-                    it.printStackTrace()
-                }
-            }
-        }
-        songRepository.upsert(LyricsEntity(mediaMetadata.id, LYRICS_NOT_FOUND))
-    }
-
     init {
         scope.launch {
             currentSongFlow.collect { song ->
@@ -392,7 +373,7 @@ class SongPlayer(
                 Pair(mediaMetadata, showLyrics)
             }.collectLatest { (mediaMetadata, showLyrics) ->
                 if (showLyrics && mediaMetadata != null && !songRepository.hasLyrics(mediaMetadata.id)) {
-                    loadLyrics(mediaMetadata)
+                    LyricsHelper.loadLyrics(context, mediaMetadata)
                 }
             }
         }

@@ -38,7 +38,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDateTime
 
-class SongRepository(val context: Context) : LocalRepository {
+class SongRepository(private val context: Context) : LocalRepository {
     private val database = MusicDatabase.getInstance(context)
     private val songDao = database.songDao
     private val artistDao = database.artistDao
