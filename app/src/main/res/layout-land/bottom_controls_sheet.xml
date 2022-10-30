@@ -47,7 +47,7 @@
                     android:id="@+id/card_view"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:visibility="@{viewModel.showLyrics ? View.GONE : View.VISIBLE}"
+                    android:visibility="@{(viewModel.showLyrics &amp;&amp; viewModel.playbackState.state != PlaybackState.STATE_ERROR) ? View.GONE : View.VISIBLE}"
                     app:cardCornerRadius="@dimen/thumbnail_radius"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
@@ -137,7 +137,7 @@
                     android:fadingEdge="vertical"
                     android:fadingEdgeLength="20dp"
                     android:requiresFadingEdge="vertical"
-                    android:visibility="@{(viewModel.showLyrics &amp;&amp; viewModel.currentLyrics != null) ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{(viewModel.showLyrics &amp;&amp; viewModel.currentLyrics != null &amp;&amp; viewModel.playbackState.state != PlaybackState.STATE_ERROR) ? View.VISIBLE : View.GONE}"
                     app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
                     app:lrcCurrentTextColor="?colorPrimary"
                     app:lrcLabel="@string/lyrics_not_found"
@@ -163,7 +163,7 @@
                 android:focusable="true"
                 android:padding="4dp"
                 android:src="@drawable/ic_more_horiz"
-                android:visibility="@{viewModel.showLyrics ? View.VISIBLE : View.GONE}"
+                android:visibility="@{(viewModel.showLyrics &amp;&amp; viewModel.playbackState.state != PlaybackState.STATE_ERROR) ? View.VISIBLE : View.GONE}"
                 tools:ignore="SpeakableTextPresentCheck" />
         </FrameLayout>
 
