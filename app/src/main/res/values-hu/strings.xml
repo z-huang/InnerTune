@@ -99,7 +99,7 @@
     <string name="search_library">Keresés könyvtárban…</string>
 
     <!-- Built-in playlist -->
-    <string name="liked_songs">Tetszett dalok</string>
+    <string name="liked_songs">Lájkolt dalok</string>
     <string name="downloaded_songs">Letöltött dalok</string>
 
     <!-- Popup Menu -->
@@ -119,7 +119,7 @@
     <string name="menu_refetch">Újrahív</string>
     <string name="menu_share">Megosztás</string>
     <string name="menu_delete">Törlés</string>
-    <string name="menu_choose_lyrics">Choose other lyrics</string>
+    <string name="menu_choose_lyrics">Válasszon más dalszövegeket</string>
 
     <!-- Dialog -->
     <string name="dialog_title_details">Részletek</string>
@@ -133,8 +133,8 @@
     <string name="file_size">Fájl méret</string>
     <string name="unknown">Ismeretlen</string>
 
-    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
-    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
+    <string name="dialog_title_edit_lyrics">Dalszöveg szerkesztése</string>
+    <string name="dialog_title_choose_lyrics">Válassza ki a dalszövegeket</string>
 
     <string name="dialog_title_edit_song">Dal szerkesztése</string>
     <string name="song_title">Dal címe</string>
@@ -266,7 +266,7 @@
 
     <!-- Custom Action -->
     <string name="action_like">Tetszik</string>
-    <string name="action_remove_like">Tetszik eltávolítása</string>
+    <string name="action_remove_like">Lájk eltávolítása</string>
     <string name="action_add_to_library">Könyvtárhoz ad</string>
     <string name="action_remove_from_library">Eltávolít a könyvtárból</string>
 
