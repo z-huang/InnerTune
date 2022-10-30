@@ -131,12 +131,10 @@ object KuGou {
 
     private fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
 
-    private fun String.toSimplifiedChinese() = ZhConverterUtil.toSimple(this)
-    private fun String.toTraditionalChinese(useTraditionalChinese: Boolean) = if (useTraditionalChinese) ZhConverterUtil.toTraditional(this) else this
-
-    private fun String.normalize(keyword: Pair<String, String>): String = lines().filterNot { line ->
-        line.endsWith("]")
+    private fun String.normalize(keyword: Pair<String, String>): String = lines().filter { line ->
+        line matches ACCEPTED_REGEX
     }.let {
+        // Remove useless information such as singer, writer, composer, guitar, etc.
         var cutLine = 0
         for (i in min(30, it.lastIndex) downTo 0) {
             if (it[i] matches BANNED_REGEX) {
@@ -149,16 +147,23 @@ object KuGou {
         val firstLine = lines.firstOrNull()?.toSimplifiedChinese() ?: return@let lines
         val (title, artist) = keyword
         if (title.toSimplifiedChinese() in firstLine ||
-            artist.split("、").any {
-                it.toSimplifiedChinese() in firstLine
-            }
+            artist.split("、").any { it.toSimplifiedChinese() in firstLine }
         ) {
             lines.drop(1)
         } else lines
-    }.joinToString(separator = "\n").toTraditionalChinese(useTraditionalChinese && none { c ->
-        UnicodeScript.of(c.code) in JapaneseUnicodeScript
-    })
+    }.joinToString(separator = "\n").let {
+        if (useTraditionalChinese) it.normalizeForTraditionalChinese()
+        else it
+    }
 
+    private fun String.normalizeForTraditionalChinese() =
+        if (none { c -> UnicodeScript.of(c.code) in JapaneseUnicodeScript }) toTraditionalChinese()
+        else this
+
+    private fun String.toSimplifiedChinese() = ZhConverterUtil.toSimple(this)
+    private fun String.toTraditionalChinese() = ZhConverterUtil.toTraditional(this)
+
+    private val ACCEPTED_REGEX = "\\[(\\d\\d):(\\d\\d)\\.(\\d{2,3})\\].*".toRegex()
     private val BANNED_REGEX = ".+].+[:：].+".toRegex()
 
     private val JapaneseUnicodeScript = hashSetOf(
