@@ -58,6 +58,8 @@
     <string name="pref_auto_add_song_title">Lägg till låt i biblioteket automatiskt</string>
     <string name="pref_auto_add_song_summary">Lägg till låten i biblioteket efter det spelats klart</string>
     <string name="pref_expand_on_play_title">Utöka bottenspelaren vid låtspel</string>
+    <string name="pref_notification_more_action_title">More actions in notification</string>
+    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
 
     <string name="pref_privacy_title">Privacy</string>
     <string name="pref_pause_search_history_title">Pause search history</string>

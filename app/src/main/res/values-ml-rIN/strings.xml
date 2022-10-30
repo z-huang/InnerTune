@@ -58,6 +58,8 @@
     <string name="pref_auto_add_song_title">ലൈബ്രറിയിലേക്ക് പാട്ട് സ്വയമേവ ചേർക്കുക</string>
     <string name="pref_auto_add_song_summary">നിങ്ങളുടെ ലൈബ്രറി പ്ലേ ചെയ്യുമ്പോൾ പാട്ട് ചേർക്കുക</string>
     <string name="pref_expand_on_play_title">താഴെയുള്ള പ്ലേയർ വികസിപ്പിക്കുക</string>
+    <string name="pref_notification_more_action_title">More actions in notification</string>
+    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
 
     <string name="pref_privacy_title">സ്വകാര്യത</string>
     <string name="pref_pause_search_history_title">തിരയൽ ചരിത്രം താൽക്കാലികമായി നിർത്തുക</string>

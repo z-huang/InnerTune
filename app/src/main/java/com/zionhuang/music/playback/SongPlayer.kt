@@ -334,7 +334,7 @@ class SongPlayer(
 
             override fun getCustomActions(player: Player): List<String> {
                 val actions = mutableListOf<String>()
-                if (player.currentMetadata != null) {
+                if (player.currentMetadata != null && context.sharedPreferences.getBoolean(context.getString(R.string.pref_notification_more_action), true)) {
                     actions.add(if (currentSong == null) ACTION_ADD_TO_LIBRARY else ACTION_REMOVE_FROM_LIBRARY)
                     actions.add(if (currentSong?.song?.liked == true) ACTION_UNLIKE else ACTION_LIKE)
                 }
@@ -391,6 +391,11 @@ class SongPlayer(
                 } else {
                     1f
                 }
+            }
+        }
+        scope.launch {
+            context.sharedPreferences.booleanFlow(context.getString(R.string.pref_notification_more_action), true).collectLatest {
+                playerNotificationManager.invalidate()
             }
         }
         if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {

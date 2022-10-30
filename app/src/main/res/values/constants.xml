@@ -38,6 +38,7 @@
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
+    <string name="pref_notification_more_action" translatable="false">NOTIFICATION_MORE_ACTION</string>
     <string name="pref_equalizer" translatable="false">EQUALIZER</string>
 
     <string name="pref_open_saf" translatable="false">OPEN_SAF</string>

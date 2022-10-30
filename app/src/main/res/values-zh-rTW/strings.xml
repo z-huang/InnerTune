@@ -58,6 +58,8 @@
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
+    <string name="pref_notification_more_action_title">在通知顯示更多按鈕</string>
+    <string name="pref_notification_more_action_summary">顯示「加入媒體庫」和「喜歡」按鈕</string>
 
     <string name="pref_privacy_title">隱私</string>
     <string name="pref_pause_search_history_title">暫停搜尋紀錄</string>

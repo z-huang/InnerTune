@@ -58,6 +58,8 @@
     <string name="pref_auto_add_song_title">Ajout automatique de chansons à la bibliothèque</string>
     <string name="pref_auto_add_song_summary">Add song to your library when it completes playing</string>
     <string name="pref_expand_on_play_title">Ajouter la chanson à votre bibliothèque lorsqu\'elle est terminée.</string>
+    <string name="pref_notification_more_action_title">More actions in notification</string>
+    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
 
     <string name="pref_privacy_title">Privacy</string>
     <string name="pref_pause_search_history_title">Pause search history</string>

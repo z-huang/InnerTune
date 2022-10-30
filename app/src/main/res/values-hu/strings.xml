@@ -58,6 +58,8 @@
     <string name="pref_auto_add_song_title">Dal auto. hozzáadása a könyvtárhoz</string>
     <string name="pref_auto_add_song_summary">Adja hozzá a dalt a könyvtárához, amikor a lejátszás befejeződött</string>
     <string name="pref_expand_on_play_title">Bontsa ki az alsó lejátszót lejátszás közben</string>
+    <string name="pref_notification_more_action_title">More actions in notification</string>
+    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
 
     <string name="pref_privacy_title">Adatvédelem</string>
     <string name="pref_pause_search_history_title">Keresési előzmények szüneteltetése</string>
