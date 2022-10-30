@@ -15,10 +15,12 @@
         android:title="@string/pref_persistent_queue_title" />
     <SwitchPreference
         android:defaultValue="true"
+        android:icon="@drawable/ic_skip_next"
         android:key="@string/pref_skip_silence"
         android:title="@string/pref_skip_silence_title" />
     <SwitchPreference
         android:defaultValue="true"
+        android:icon="@drawable/ic_volume_up"
         android:key="@string/pref_audio_normalization"
         android:title="@string/pref_audio_normalization_title" />
     <Preference
