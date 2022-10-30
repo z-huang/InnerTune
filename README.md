@@ -88,7 +88,17 @@ You can install _InnerTune_ using the following methods:
 How to get updates?
 
 1. F-Droid application.
-2. [GitHub](https://github.com/z-huang/InnerTune)
+2. [GitHub](https://github.com/z-huang/InnerTune) + [Obtainium (beta)](https://github.com/ImranR98/Obtainium)
+
+## FAQ
+
+### Q: How to scrobble music to LastFM, LibreFM, ListenBrainz or GNU FM?
+
+Use other music scrobbler apps. I recommend [Pano Scrobbler](https://play.google.com/store/apps/details?id=com.arn.scrobble).
+
+### Q: How to export downloaded song files?
+
+*InnerTune* support SAF. You can find the provider in Android native file manager. You can also use [Material Files](https://play.google.com/store/apps/details?id=me.zhanghai.android.files) with [instruction](https://github.com/z-huang/InnerTune/issues/117#issuecomment-1295090708) (recommended).
 
 ## Contribution
 
