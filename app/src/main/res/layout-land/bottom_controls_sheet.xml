@@ -23,27 +23,31 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="64dp"
         android:clickable="true"
         android:fitsSystemWindows="true"
         android:focusable="true"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="horizontal">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4">
+            android:layout_weight="4"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/card_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:paddingVertical="12dp">
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_view"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:visibility="@{viewModel.showLyrics ? View.GONE : View.VISIBLE}"
                     app:cardCornerRadius="@dimen/thumbnail_radius"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
@@ -58,6 +62,7 @@
                         thumbnailWidth="@{512f}"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:visibility="@{viewModel.showLyrics ? View.GONE : View.VISIBLE}"
                         tools:src="@tools:sample/avatars" />
 
                     <View
@@ -66,7 +71,7 @@
                         android:layout_height="match_parent"
                         android:alpha=".75"
                         android:background="#000000"
-                        android:visibility="@{(viewModel.playbackState.errorCode != 0 || viewModel.showLyrics) ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{viewModel.playbackState.errorCode != 0 ? View.VISIBLE : View.GONE}"
                         tools:visibility="gone" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,41 +107,74 @@
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="Error message" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <com.zionhuang.music.ui.widgets.LyricsView
-                        android:id="@+id/lyricsView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="@{(viewModel.showLyrics &amp;&amp; viewModel.currentLyrics != null) ? View.VISIBLE : View.GONE}"
-                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                        app:lrcCurrentTextColor="?colorPrimary"
-                        app:lrcLabel="@string/lyrics_not_found"
-                        app:lrcNormalTextColor="?android:textColorSecondaryInverse"
-                        app:lrcNormalTextSize="20sp"
-                        app:lrcPadding="16dp"
-                        app:lrcTextGravity="center"
-                        app:lrcTextSize="24sp"
-                        app:lrcTimelineColor="#00000000"
-                        app:lrcTimelineTextColor="?android:textColorSecondaryInverse"
-                        tools:visibility="visible" />
-
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:id="@+id/load_indicator"
-                        style="@style/Widget.Material3.CircularProgressIndicator.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:alpha="@{(viewModel.playbackState.state == PlaybackState.STATE_BUFFERING || (viewModel.showLyrics &amp;&amp; viewModel.currentLyrics == null)) ? 1 : 0}"
-                        android:indeterminate="true" />
                 </com.google.android.material.card.MaterialCardView>
 
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/load_indicator"
+                    style="@style/Widget.Material3.CircularProgressIndicator.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:alpha="@{(viewModel.playbackState.state == PlaybackState.STATE_BUFFERING || (viewModel.showLyrics &amp;&amp; viewModel.currentLyrics == null)) ? 1 : 0}"
+                    android:indeterminate="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+
+            <com.bosphere.fadingedgelayout.FadingEdgeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:fel_edge="top|bottom"
+                app:fel_size_bottom="64dp"
+                app:fel_size_top="64dp">
+
+                <com.zionhuang.music.ui.widgets.LyricsView
+                    android:id="@+id/lyricsView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadingEdge="vertical"
+                    android:fadingEdgeLength="20dp"
+                    android:requiresFadingEdge="vertical"
+                    android:visibility="@{(viewModel.showLyrics &amp;&amp; viewModel.currentLyrics != null) ? View.VISIBLE : View.GONE}"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    app:lrcCurrentTextColor="?colorPrimary"
+                    app:lrcLabel="@string/lyrics_not_found"
+                    app:lrcNormalTextColor="?android:textColorHint"
+                    app:lrcNormalTextSize="20sp"
+                    app:lrcPadding="16dp"
+                    app:lrcTextGravity="center"
+                    app:lrcTextSize="24sp"
+                    app:lrcTimelineColor="#00000000"
+                    app:lrcTimelineTextColor="?android:textColorHint"
+                    app:lrcUnsyncedTextColor="?android:textColorPrimary"
+                    tools:visibility="visible" />
+            </com.bosphere.fadingedgelayout.FadingEdgeLayout>
+
+            <ImageView
+                android:id="@+id/btn_lyrics_action"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="start|bottom"
+                android:layout_marginStart="6dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="4dp"
+                android:src="@drawable/ic_more_horiz"
+                android:visibility="@{viewModel.showLyrics ? View.VISIBLE : View.GONE}"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/right_part"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="6">
+            android:layout_marginBottom="64dp"
+            android:layout_weight="6"
+            android:paddingStart="8dp"
+            android:paddingEnd="16dp">
 
             <TextView
                 android:id="@+id/song_title"

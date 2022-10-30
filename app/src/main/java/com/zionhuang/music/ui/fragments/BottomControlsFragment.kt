@@ -17,6 +17,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
+import com.zionhuang.music.extensions.systemBarInsetsCompat
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.utils.NavigationEndpointHandler
@@ -45,6 +46,20 @@ class BottomControlsFragment : Fragment() {
         binding.viewModel = viewModel
 
         binding.root.applyInsetter {
+            type(navigationBars = true) {
+                padding()
+            }
+        }
+        binding.cardViewContainer.applyInsetter {
+            type(statusBars = true) {
+                padding()
+            }
+        }
+        binding.lyricsView.setOnApplyWindowInsetsListener { _, insets ->
+            binding.lyricsView.immersivePaddingTop = insets.systemBarInsetsCompat.top
+            insets
+        }
+        binding.rightPart?.applyInsetter {
             type(statusBars = true, navigationBars = true) {
                 padding()
             }

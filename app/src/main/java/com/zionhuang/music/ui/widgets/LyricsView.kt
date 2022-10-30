@@ -68,6 +68,7 @@ class LyricsView @JvmOverloads constructor(
     private var isFling = false
     private var textGravity = 0 // left/center/right
     private var isSyncedLyrics = true
+    var immersivePaddingTop = 0
     var isPlaying = false
         set(value) {
             if (field == value) return
@@ -455,8 +456,8 @@ class LyricsView @JvmOverloads constructor(
         var line = 0
         var minDistance = Float.MAX_VALUE
         for (i in lrcEntryList.indices) {
-            if (abs(offset - getOffset(i)) < minDistance) {
-                minDistance = abs(offset - getOffset(i))
+            if (abs(offset + immersivePaddingTop - getOffset(i)) < minDistance) {
+                minDistance = abs(offset + immersivePaddingTop - getOffset(i))
                 line = i
             }
         }
@@ -466,7 +467,7 @@ class LyricsView @JvmOverloads constructor(
     private fun getOffset(line: Int): Float {
         if (lrcEntryList.isEmpty()) return 0F
         if (lrcEntryList[line].offset == Float.MIN_VALUE) {
-            var offset = (height / 2).toFloat()
+            var offset = ((height + immersivePaddingTop) / 2).toFloat()
             for (i in 1..line) {
                 offset -= (lrcEntryList[i - 1].height + lrcEntryList[i].height) / 2 + dividerHeight
             }
