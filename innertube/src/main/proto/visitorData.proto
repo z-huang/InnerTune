@@ -1,9 +1,0 @@
-syntax = "proto2";
-
-option java_package = "com.zionhuang.innertube.models";
-option java_outer_classname = "VisitorData";
-
-message visitorData {
-  required string id = 1;
-  required int32 timestamp = 5;
-}

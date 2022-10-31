@@ -6,7 +6,12 @@ import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
 import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
 import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonPrimitive
 import java.net.Proxy
 
 /**
@@ -148,6 +153,14 @@ object YouTube {
         }
         innerTube.getQueue(WEB_REMIX, videoIds, playlistId).body<GetQueueResponse>().queueDatas
             .mapNotNull { it.content.playlistPanelVideoRenderer?.toSongItem() }
+    }
+
+    suspend fun generateVisitorData() = runCatching {
+        Json.parseToJsonElement(innerTube.httpClient.get("https://music.youtube.com/sw.js_data").bodyAsText().substring(5))
+            .jsonArray[0]
+            .jsonArray[2]
+            .jsonArray[6]
+            .jsonPrimitive.content
     }
 
     @JvmInline
