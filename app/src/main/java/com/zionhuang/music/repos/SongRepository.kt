@@ -542,6 +542,7 @@ class SongRepository(private val context: Context) : LocalRepository {
             val songs = songDao.getAlbumSongs(album.id).map { it.copy(album = null) }
             albumDao.delete(album.album)
             deleteSongs(songs)
+            artistDao.delete(album.artists.filter { artistDao.getArtistSongCount(it.id) == 0 })
         }
     }
 
