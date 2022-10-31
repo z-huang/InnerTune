@@ -158,6 +158,8 @@ object KuGou {
 
     private fun String.normalizeForTraditionalChinese() =
         if (none { c -> UnicodeScript.of(c.code) in JapaneseUnicodeScript }) toTraditionalChinese()
+            .replace('着', '著')
+            .replace('羣', '群')
         else this
 
     private fun String.toSimplifiedChinese() = ZhConverterUtil.toSimple(this)
