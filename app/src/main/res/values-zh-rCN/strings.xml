@@ -58,8 +58,8 @@
     <string name="pref_auto_add_song_title">自动将音乐添加到媒体库</string>
     <string name="pref_auto_add_song_summary">播放结束时添加到媒体库</string>
     <string name="pref_expand_on_play_title">播放音乐时展开播放器</string>
-    <string name="pref_notification_more_action_title">More actions in notification</string>
-    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
+    <string name="pref_notification_more_action_title">在通知显示更多按钮</string>
+    <string name="pref_notification_more_action_summary">显示“添加到媒体库”和“喜欢”按钮</string>
 
     <string name="pref_privacy_title">隐私</string>
     <string name="pref_pause_search_history_title">暂停搜索记录</string>
@@ -154,7 +154,7 @@
     <string name="error_artist_name_empty">音乐人名称不能为空</string>
 
     <string name="dialog_title_duplicate_artist">重复的音乐人</string>
-    <string name="dialog_msg_duplicate_artist">音乐人 %1$s 已存在。</string>
+    <string name="dialog_msg_duplicate_artist">音乐人“%1$s”已存在。</string>
 
     <string name="dialog_title_choose_playlist">选择播放列表</string>
 
@@ -252,7 +252,7 @@
     <string name="snackbar_added_to_library">已添加到媒体库</string>
     <string name="snackbar_removed_from_library">已从媒体库中移除</string>
     <string name="snackbar_playlist_imported">已导入此播放列表</string>
-    <string name="snackbar_added_to_playlist">已添加到 %1$s</string>
+    <string name="snackbar_added_to_playlist">已添加到“%1$s”</string>
     <plurals name="snackbar_download_song" tools:ignore="UnusedQuantity">
         <item quantity="one">正在下载此歌曲</item>
         <item quantity="other">正在下载此 %d 首歌曲</item>
