@@ -24,6 +24,7 @@
 - Sistemato ActivityNotFoundException nella ricerca vocale #362
 - Sistemato eccezione di hardware bitmap #360
 - Sistemata l'eliminazione automatica degli artisti privi di brani #381
+- Sistemato "Dalla tua libreria" che viene mostrata nella pagina degli album di un artista #386
 
 <b>Aggiornamenti della traduzione</b>
 
