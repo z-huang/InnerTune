@@ -135,14 +135,23 @@ object KuGou {
         line matches ACCEPTED_REGEX
     }.let {
         // Remove useless information such as singer, writer, composer, guitar, etc.
-        var cutLine = 0
+        var headCutLine = 0
         for (i in min(30, it.lastIndex) downTo 0) {
             if (it[i] matches BANNED_REGEX) {
-                cutLine = i + 1
+                headCutLine = i + 1
                 break
             }
         }
-        it.drop(cutLine)
+        it.drop(headCutLine)
+    }.let {
+        var tailCutLine = 0
+        for (i in min(it.size - 30, it.lastIndex) downTo 0) {
+            if (it[it.lastIndex - i] matches BANNED_REGEX) {
+                tailCutLine = i + 1
+                break
+            }
+        }
+        it.dropLast(tailCutLine)
     }.let { lines ->
         val firstLine = lines.firstOrNull()?.toSimplifiedChinese() ?: return@let lines
         val (title, artist) = keyword
