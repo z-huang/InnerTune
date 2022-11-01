@@ -36,11 +36,13 @@ class YouTubeHeaderViewHolder(
 ) : YouTubeViewHolder<ItemYoutubeHeaderBinding>(viewGroup, R.layout.item_youtube_header) {
     fun bind(header: Header) {
         binding.header = header
-        header.moreNavigationEndpoint?.let { endpoint ->
-            binding.root.isClickable = true
+        binding.root.isClickable = header.moreNavigationEndpoint != null
+        if (header.moreNavigationEndpoint != null) {
             binding.root.setOnClickListener {
-                navigationEndpointHandler.handle(endpoint)
+                navigationEndpointHandler.handle(header.moreNavigationEndpoint)
             }
+        } else {
+            binding.root.setOnClickListener(null)
         }
     }
 }
