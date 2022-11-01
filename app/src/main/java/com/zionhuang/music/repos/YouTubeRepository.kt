@@ -63,7 +63,7 @@ class YouTubeRepository(val context: Context) {
                                 )
                             ) + browseResult.items
                         )
-                    } else if (endpoint.isArtistEndpoint) {
+                    } else if (endpoint.isArtistEndpoint && endpoint.params == null) {
                         // inject library artist songs preview
                         browseResult.copy(
                             items = browseResult.items.toMutableList().apply {
