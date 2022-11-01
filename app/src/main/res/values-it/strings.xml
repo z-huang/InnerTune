@@ -121,7 +121,7 @@
     <string name="menu_refetch">Riottieni</string>
     <string name="menu_share">Condividi</string>
     <string name="menu_delete">Elimina</string>
-    <string name="menu_search_online">Search online</string>
+    <string name="menu_search_online">Cerca online</string>
     <string name="menu_choose_lyrics">Scegli un altro testo</string>
 
     <!-- Dialoghi -->
@@ -137,7 +137,7 @@
     <string name="unknown">Sconosciuto</string>
 
     <string name="dialog_title_edit_lyrics">Modifica testo</string>
-    <string name="dialog_title_search_lyrics">Search lyrics</string>
+    <string name="dialog_title_search_lyrics">Cerca testo</string>
     <string name="dialog_title_choose_lyrics">Scegli testo</string>
 
     <string name="dialog_title_edit_song">Modifica brano</string>
