@@ -24,6 +24,7 @@
 - Fix ActivityNotFoundException in voice search #362
 - Fix hardware bitmap exception #360
 - Fix artists with no song may not be deleted automatically #381
+- Fix "From your library" displaying in artist album page #386
 
 <b>Translation</b>
 
