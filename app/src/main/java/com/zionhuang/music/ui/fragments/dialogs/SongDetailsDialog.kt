@@ -44,12 +44,13 @@ class SongDetailsDialog : AppCompatDialogFragment() {
         }
         lifecycleScope.launch {
             viewModel.currentSongFormat.collectLatest { format ->
+                binding.itag.text = format?.itag?.toString() ?: getString(R.string.unknown)
                 binding.mimeType.text = format?.mimeType ?: getString(R.string.unknown)
                 binding.codecs.text = format?.codecs ?: getString(R.string.unknown)
                 binding.bitrate.text = format?.bitrate?.let { "${it / 1000} Kbps" } ?: getString(R.string.unknown)
                 binding.sampleRate.text = format?.sampleRate?.let { "$it Hz" } ?: getString(R.string.unknown)
                 binding.loudness.text = format?.loudnessDb?.let { "$it dB" } ?: getString(R.string.unknown)
-                binding.fileSize.text = format?.contentLength?.let { Formatter.formatShortFileSize(requireContext(), it) }
+                binding.fileSize.text = format?.contentLength?.let { Formatter.formatShortFileSize(requireContext(), it) } ?: getString(R.string.unknown)
             }
         }
         lifecycleScope.launch {
