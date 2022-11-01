@@ -62,7 +62,7 @@ object KuGou {
     suspend fun getAllLyrics(title: String, artist: String, duration: Int): Result<List<String>> = runCatching {
         val keyword = generateKeyword(title, artist)
         val candidates = searchSongs(keyword).data.info
-            .filter { abs(it.duration - duration) <= DURATION_TOLERANCE }
+            .filter { duration == -1 || abs(it.duration - duration) <= DURATION_TOLERANCE } // if duration == -1, we don't care duration
             .mapNotNull {
                 searchLyricsByHash(it.hash).candidates.firstOrNull()
             } + searchLyricsByKeyword(keyword, duration).candidates
@@ -73,7 +73,7 @@ object KuGou {
 
     suspend fun getLyricsCandidate(keyword: Pair<String, String>, duration: Int): SearchLyricsResponse.Candidate? {
         searchSongs(keyword).data.info.forEach { song ->
-            if (abs(song.duration - duration) <= DURATION_TOLERANCE) {
+            if (duration == -1 || abs(song.duration - duration) <= DURATION_TOLERANCE) { // if duration == -1, we don't care duration
                 val candidate = searchLyricsByHash(song.hash).candidates.firstOrNull()
                 if (candidate != null) return candidate
             }
@@ -92,7 +92,7 @@ object KuGou {
         parameter("man", "yes")
         parameter("client", "pc")
         parameter("keyword", "${keyword.first} - ${keyword.second}")
-        parameter("duration", duration * 1000)
+        parameter("duration", duration.takeIf { it != -1 }?.times(1000)) // if duration == -1, we don't care duration
     }.body<SearchLyricsResponse>()
 
     private suspend fun searchLyricsByHash(hash: String) = client.get("https://lyrics.kugou.com/search") {

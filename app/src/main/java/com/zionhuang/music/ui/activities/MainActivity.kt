@@ -165,7 +165,7 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         lifecycleScope.launch {
             AdaptiveUtils.orientation.collectLatest { orientation ->
                 binding.queueSheet.updateLayoutParams {
-                    width = if (orientation == ORIENTATION_LANDSCAPE) (resources.displayMetrics.widthPixels * 0.6).toInt() else resources.displayMetrics.widthPixels
+                    width = if (orientation == ORIENTATION_LANDSCAPE) (resources.displayMetrics.widthPixels * 0.5).toInt() else resources.displayMetrics.widthPixels
                 }
                 binding.container.updateLayoutParams<CoordinatorLayout.LayoutParams> {
                     bottomMargin = if (orientation == ORIENTATION_PORTRAIT) resources.getDimensionPixelSize(R.dimen.m3_bottom_nav_min_height) else 0

@@ -136,6 +136,7 @@
     <string name="unknown">Desconhecido</string>
 
     <string name="dialog_title_edit_lyrics">Edit lyrics</string>
+    <string name="dialog_title_search_lyrics">Search lyrics</string>
     <string name="dialog_title_choose_lyrics">Choose lyrics</string>
 
     <string name="dialog_title_edit_song">Editar música</string>

@@ -31,7 +31,7 @@
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="1"
             android:paddingStart="16dp"
             android:paddingEnd="8dp">
 
@@ -143,7 +143,7 @@
                     app:lrcLabel="@string/lyrics_not_found"
                     app:lrcNormalTextColor="?android:textColorHint"
                     app:lrcNormalTextSize="20sp"
-                    app:lrcPadding="16dp"
+                    app:lrcPadding="28dp"
                     app:lrcTextGravity="center"
                     app:lrcTextSize="24sp"
                     app:lrcTimelineColor="#00000000"
@@ -172,15 +172,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="64dp"
-            android:layout_weight="6"
+            android:layout_weight="1"
             android:paddingStart="8dp"
+            android:paddingTop="32dp"
             android:paddingEnd="16dp">
 
             <TextView
                 android:id="@+id/song_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:scrollHorizontally="true"

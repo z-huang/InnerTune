@@ -136,6 +136,7 @@
     <string name="unknown">Sconosciuto</string>
 
     <string name="dialog_title_edit_lyrics">Modifica testo</string>
+    <string name="dialog_title_search_lyrics">Search lyrics</string>
     <string name="dialog_title_choose_lyrics">Scegli testo</string>
 
     <string name="dialog_title_edit_song">Modifica brano</string>

@@ -141,7 +141,7 @@
                     app:lrcLabel="@string/lyrics_not_found"
                     app:lrcNormalTextColor="?android:textColorHint"
                     app:lrcNormalTextSize="20sp"
-                    app:lrcPadding="16dp"
+                    app:lrcPadding="28dp"
                     app:lrcTextGravity="center"
                     app:lrcTextSize="24sp"
                     app:lrcTimelineColor="#00000000"

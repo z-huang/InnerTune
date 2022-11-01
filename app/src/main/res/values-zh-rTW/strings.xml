@@ -136,6 +136,7 @@
     <string name="unknown">未知</string>
 
     <string name="dialog_title_edit_lyrics">編輯歌詞</string>
+    <string name="dialog_title_search_lyrics">搜尋歌詞</string>
     <string name="dialog_title_choose_lyrics">選擇歌詞</string>
 
     <string name="dialog_title_edit_song">編輯歌曲</string>

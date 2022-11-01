@@ -39,21 +39,19 @@ object LyricsHelper {
         songRepository.upsert(LyricsEntity(mediaMetadata.id, LyricsEntity.LYRICS_NOT_FOUND))
     }
 
-    suspend fun getAllLyrics(context: Context, mediaMetadata: MediaMetadata): List<LyricsResult> = cache.get(mediaMetadata.id) ?: lyricsProviders.flatMap { provider ->
-        if (provider.isEnabled(context)) {
-            provider.getAllLyrics(
-                mediaMetadata.id,
-                mediaMetadata.title,
-                mediaMetadata.artists.joinToString { it.name },
-                mediaMetadata.duration
-            ).getOrNull().orEmpty().map {
-                LyricsResult(provider.name, it)
+    suspend fun getAllLyrics(context: Context, mediaId: String?, songTitle: String, songArtists: String, duration: Int): List<LyricsResult> {
+        val cacheKey = "$songArtists-$songTitle".replace(" ", "")
+        return cache.get(cacheKey) ?: lyricsProviders.flatMap { provider ->
+            if (provider.isEnabled(context)) {
+                provider.getAllLyrics(mediaId, songTitle, songArtists, duration).getOrNull().orEmpty().map {
+                    LyricsResult(provider.name, it)
+                }
+            } else {
+                emptyList()
             }
-        } else {
-            emptyList()
+        }.also {
+            cache.put(cacheKey, it)
         }
-    }.also {
-        cache.put(mediaMetadata.id, it)
     }
 
     data class LyricsResult(

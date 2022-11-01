@@ -136,6 +136,7 @@
     <string name="unknown">Ismeretlen</string>
 
     <string name="dialog_title_edit_lyrics">Dalszöveg szerkesztése</string>
+    <string name="dialog_title_search_lyrics">Search lyrics</string>
     <string name="dialog_title_choose_lyrics">Válassza ki a dalszövegeket</string>
 
     <string name="dialog_title_edit_song">Dal szerkesztése</string>

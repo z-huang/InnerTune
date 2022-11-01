@@ -9,7 +9,6 @@ import android.support.v4.media.session.PlaybackStateCompat.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +19,6 @@ import com.google.android.material.slider.Slider
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.BrowseLocalArtistSongsEndpoint
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.databinding.BottomControlsSheetBinding
 import com.zionhuang.music.databinding.DialogEditLyricsBinding
@@ -31,7 +29,7 @@ import com.zionhuang.music.extensions.systemBarInsetsCompat
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.activities.MainActivity
-import com.zionhuang.music.ui.fragments.dialogs.ChooseLyricsDialog
+import com.zionhuang.music.ui.fragments.dialogs.SearchLyricsDialog
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.utils.lyrics.LyricsHelper
 import com.zionhuang.music.utils.makeTimeString
@@ -160,9 +158,7 @@ class BottomControlsFragment : Fragment() {
                         }
                         R.id.action_choose -> {
                             val mediaMetadata = MediaSessionConnection.binder?.songPlayer?.currentMediaMetadata?.value ?: return@setOnMenuItemClickListener
-                            ChooseLyricsDialog().apply {
-                                arguments = bundleOf(EXTRA_MEDIA_METADATA to mediaMetadata)
-                            }.show(requireContext())
+                            SearchLyricsDialog(mediaMetadata).show(requireContext())
                         }
                     }
                 }
