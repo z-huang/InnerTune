@@ -1,0 +1,34 @@
+<b>New</b>
+
+- Lyrics #76
+- Support Android Auto #125
+- Skip silence
+- Audio normalization #24
+- Export downloaded songs via SAF #117
+
+<b>Improvement</b>
+
+- Improve player view layout
+- Add wake lock for player
+- Option to hide buttons in player notification
+- Delete persistent queue when restoring database
+- Show itag in stats for nerds
+
+<b>Fixed</b>
+
+- Fix crash in cache settings #315
+- Fix can't play downloaded songs #329
+- Fix missing field error in InnerTube #334
+- Fix display error when removing current song in queue #323
+- Fix cached image being redownloaded
+- Fix ActivityNotFoundException in voice search #362
+- Fix hardware bitmap exception #360
+- Fix artists with no song may not be deleted automatically #381
+
+<b>Translation</b>
+
+- Add Hungarian translation
+- Update Brazilian Portuguese translation
+- Update Simplified Chinese translation
+- Update Hungarian translation
+- Update Italian translation
