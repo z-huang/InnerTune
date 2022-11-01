@@ -121,6 +121,7 @@
     <string name="menu_refetch">更新資料</string>
     <string name="menu_share">分享</string>
     <string name="menu_delete">移除</string>
+    <string name="menu_search_online">線上搜尋</string>
     <string name="menu_choose_lyrics">切換其他歌詞</string>
 
     <!-- Dialog -->

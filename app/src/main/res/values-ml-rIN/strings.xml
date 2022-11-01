@@ -121,6 +121,7 @@
     <string name="menu_refetch">വീണ്ടെടുക്കുക</string>
     <string name="menu_share">പങ്കിടുക</string>
     <string name="menu_delete">ഡിലീറ്റ്</string>
+    <string name="menu_search_online">Search online</string>
     <string name="menu_choose_lyrics">Choose other lyrics</string>
 
     <!-- Dialog -->

@@ -121,6 +121,7 @@
     <string name="menu_refetch">نوسازی</string>
     <string name="menu_share">هم‌رسانی</string>
     <string name="menu_delete">حذف</string>
+    <string name="menu_search_online">Search online</string>
     <string name="menu_choose_lyrics">Choose other lyrics</string>
 
     <!-- Dialog -->

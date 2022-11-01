@@ -121,6 +121,7 @@
     <string name="menu_refetch">Újrahív</string>
     <string name="menu_share">Megosztás</string>
     <string name="menu_delete">Törlés</string>
+    <string name="menu_search_online">Search online</string>
     <string name="menu_choose_lyrics">Válasszon más dalszövegeket</string>
 
     <!-- Dialog -->
