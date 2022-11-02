@@ -98,7 +98,7 @@ Use other music scrobbler apps. I recommend [Pano Scrobbler](https://play.google
 
 ### Q: How to export downloaded song files?
 
-*InnerTune* support SAF. You can find the provider in Android native file manager. You can also use [Material Files](https://play.google.com/store/apps/details?id=me.zhanghai.android.files) with [instruction](https://github.com/z-huang/InnerTune/issues/117#issuecomment-1295090708) (recommended).
+*InnerTune* supports SAF. You can find the provider in Android native file manager. You can also use [Material Files](https://play.google.com/store/apps/details?id=me.zhanghai.android.files) with [instruction](https://github.com/z-huang/InnerTune/issues/117#issuecomment-1295090708) (recommended).
 
 ## Contribution
 
