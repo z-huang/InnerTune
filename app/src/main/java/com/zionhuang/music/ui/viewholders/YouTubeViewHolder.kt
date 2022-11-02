@@ -18,8 +18,6 @@ import com.zionhuang.innertube.models.SuggestionTextItem.SuggestionSource.LOCAL
 import com.zionhuang.music.R
 import com.zionhuang.music.databinding.*
 import com.zionhuang.music.extensions.context
-import com.zionhuang.music.extensions.fadeIn
-import com.zionhuang.music.extensions.fadeOut
 import com.zionhuang.music.extensions.show
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.YouTubeItemAdapter
@@ -38,11 +36,13 @@ class YouTubeHeaderViewHolder(
 ) : YouTubeViewHolder<ItemYoutubeHeaderBinding>(viewGroup, R.layout.item_youtube_header) {
     fun bind(header: Header) {
         binding.header = header
-        header.moreNavigationEndpoint?.let { endpoint ->
-            binding.root.isClickable = true
+        binding.root.isClickable = header.moreNavigationEndpoint != null
+        if (header.moreNavigationEndpoint != null) {
             binding.root.setOnClickListener {
-                navigationEndpointHandler.handle(endpoint)
+                navigationEndpointHandler.handle(header.moreNavigationEndpoint)
             }
+        } else {
+            binding.root.setOnClickListener(null)
         }
     }
 }
@@ -165,8 +165,7 @@ class YouTubeListItemViewHolder(
     }
 
     fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -244,7 +243,7 @@ class YouTubeSuggestionViewHolder(
         if (item.source == LOCAL) {
             binding.deleteBtn.setOnClickListener {
                 GlobalScope.launch {
-                    SongRepository.deleteSearchHistory(item.query)
+                    SongRepository(binding.context).deleteSearchHistory(item.query)
                     onRefreshSuggestions()
                 }
             }

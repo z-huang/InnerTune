@@ -113,8 +113,7 @@
     </fragment>
     <fragment
         android:id="@+id/customPlaylistFragment"
-        android:name="com.zionhuang.music.ui.fragments.songs.CustomPlaylistFragment"
-        android:label="CustomPlaylistFragment">
+        android:name="com.zionhuang.music.ui.fragments.songs.CustomPlaylistFragment">
         <argument
             android:name="playlistId"
             app:argType="string" />

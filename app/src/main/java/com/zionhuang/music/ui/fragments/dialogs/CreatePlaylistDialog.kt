@@ -67,7 +67,7 @@ class CreatePlaylistDialog() : AppCompatDialogFragment() {
             name = name
         )
         GlobalScope.launch(requireContext().exceptionHandler) {
-            SongRepository.insertPlaylist(playlist)
+            SongRepository(requireContext()).insertPlaylist(playlist)
             listener?.invoke(playlist)
         }
         dismiss()

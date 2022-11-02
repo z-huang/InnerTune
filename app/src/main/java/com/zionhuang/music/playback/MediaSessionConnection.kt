@@ -75,6 +75,10 @@ object MediaSessionConnection {
 
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             _mediaMetadata.value = metadata
+            // force update playback state
+            mediaController?.let {
+                _playbackState.value = it.playbackState
+            }
         }
 
         override fun onQueueChanged(queue: List<QueueItem>) {

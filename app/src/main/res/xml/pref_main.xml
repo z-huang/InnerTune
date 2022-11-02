@@ -14,8 +14,8 @@
         android:title="@string/pref_player_audio_title" />
     <PreferenceScreen
         android:icon="@drawable/ic_storage"
-        android:key="@string/pref_cache"
-        android:title="@string/pref_cache_title" />
+        android:key="@string/pref_storage"
+        android:title="@string/pref_storage_title" />
     <PreferenceScreen
         android:icon="@drawable/ic_testing"
         android:key="@string/pref_general"

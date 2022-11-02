@@ -18,6 +18,7 @@
         android:title="@string/menu_add_to_playlist" />
     <item
         android:id="@+id/action_download"
+        android:enabled="false"
         android:icon="@drawable/ic_file_download"
         android:title="@string/menu_download" />
 </menu>

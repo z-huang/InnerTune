@@ -41,6 +41,7 @@ interface LocalRepository {
      */
     fun searchAll(query: String): Flow<List<LocalBaseItem>>
     fun searchSongs(query: String): Flow<List<Song>>
+    fun searchDownloadedSongs(query: String): Flow<List<Song>>
     fun searchArtists(query: String): Flow<List<Artist>>
     fun searchAlbums(query: String): Flow<List<Album>>
     fun searchPlaylists(query: String): Flow<List<Playlist>>
@@ -85,6 +86,7 @@ interface LocalRepository {
     suspend fun addAlbums(albums: List<AlbumItem>)
     suspend fun refetchAlbum(album: AlbumEntity) = refetchAlbums(listOf(album))
     suspend fun refetchAlbums(albums: List<AlbumEntity>)
+    suspend fun getAlbum(albumId: String): AlbumEntity?
     suspend fun deleteAlbums(albums: List<Album>)
 
     /**
@@ -124,4 +126,17 @@ interface LocalRepository {
     suspend fun insertSearchHistory(query: String)
     suspend fun deleteSearchHistory(query: String)
     suspend fun clearSearchHistory()
+
+    /**
+     * Format
+     */
+    fun getSongFormat(songId: String?): DataWrapper<FormatEntity?>
+    suspend fun upsert(format: FormatEntity)
+
+    /**
+     * Lyrics
+     */
+    fun getLyrics(songId: String?): Flow<LyricsEntity?>
+    suspend fun hasLyrics(songId: String): Boolean
+    suspend fun upsert(lyrics: LyricsEntity)
 }

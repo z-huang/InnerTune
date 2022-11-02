@@ -3,11 +3,14 @@ package com.zionhuang.music.viewmodels
 import android.app.Activity
 import android.app.Application
 import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaControllerCompat.TransportControls
 import android.support.v4.media.session.PlaybackStateCompat.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.zionhuang.music.R
+import com.zionhuang.music.extensions.preferenceLiveData
 import com.zionhuang.music.models.PlaybackStateData
 import com.zionhuang.music.playback.MediaSessionConnection
 import com.zionhuang.music.playback.queues.Queue
@@ -21,6 +24,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlaybackViewModel(application: Application) : AndroidViewModel(application) {
+    private val songRepository = SongRepository(application)
     val transportControls: TransportControls? get() = MediaSessionConnection.transportControls
 
     val mediaMetadata = MediaSessionConnection.mediaMetadata
@@ -31,12 +35,19 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     val queueTitle = MediaSessionConnection.queueTitle
     val queueItems = MediaSessionConnection.queueItems
 
+    val playerVolume: Flow<Float> = MediaSessionConnection.isConnected.flatMapLatest {
+        MediaSessionConnection.binder?.songPlayer?.playerVolume ?: emptyFlow()
+    }
     val currentSong = mediaMetadata.flatMapLatest { mediaMetadata ->
-        SongRepository.getSongById(mediaMetadata?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)).flow
+        songRepository.getSongById(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).flow
     }
     val currentSongFormat = mediaMetadata.flatMapLatest { mediaMetadata ->
-        SongRepository.getSongFormat(mediaMetadata?.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)).getFlow()
+        songRepository.getSongFormat(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).getFlow()
     }
+    val currentLyrics = mediaMetadata.flatMapLatest { mediaMetadata ->
+        songRepository.getLyrics(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID))
+    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val showLyrics = preferenceLiveData(R.string.pref_show_lyrics, false)
 
     val position = MutableStateFlow(0L)
     val duration = MutableStateFlow(0L)

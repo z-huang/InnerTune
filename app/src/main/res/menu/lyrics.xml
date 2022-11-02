@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_refetch"
+        android:icon="@drawable/ic_cached"
+        android:title="@string/menu_refetch" />
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/menu_edit" />
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/menu_search_online" />
+    <item
+        android:id="@+id/action_choose"
+        android:icon="@drawable/ic_more_horiz"
+        android:title="@string/menu_choose_lyrics" />
+</menu>

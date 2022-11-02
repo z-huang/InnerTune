@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class YouTubeBrowseViewModel(application: Application, private val browseEndpoint: BrowseEndpoint) : AndroidViewModel(application) {
+    private val youTubeRepository = YouTubeRepository(application)
     private var _albumName: String? = null
     val albumName: String? get() = _albumName
     private var _albumSongs: List<SongItem>? = null
@@ -43,7 +44,7 @@ class YouTubeBrowseViewModel(application: Application, private val browseEndpoin
                 override fun getRefreshKey(state: PagingState<List<String>, YTBaseItem>): List<String>? = null
             }
         } else {
-            YouTubeRepository.browse(browseEndpoint)
+            youTubeRepository.browse(browseEndpoint)
         }
     }.flow.cachedIn(viewModelScope)
 }

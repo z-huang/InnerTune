@@ -86,6 +86,7 @@
             style="@style/CustomBottomSheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="end"
             app:behavior_hideable="false"
             app:behavior_peekHeight="64dp"
             app:layout_behavior="com.google.android.material.bottomsheet.NeoBottomSheetBehavior">

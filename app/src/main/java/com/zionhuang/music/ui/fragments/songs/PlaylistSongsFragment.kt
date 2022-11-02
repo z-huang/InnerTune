@@ -45,6 +45,7 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
 
     private val playbackViewModel by activityViewModels<PlaybackViewModel>()
     private val songsViewModel by activityViewModels<SongsViewModel>()
+    private val songRepository by lazy { SongRepository(requireContext()) }
     private val menuListener = SongMenuListener(this)
     override val adapter = DraggableLocalItemAdapter().apply {
         songMenuListener = menuListener
@@ -73,7 +74,7 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
             ViewCompat.setElevation(viewHolder.itemView, 0f)
             lifecycleScope.launch {
                 move?.let {
-                    SongRepository.movePlaylistItems(playlistId, it.first, it.second)
+                    songRepository.movePlaylistItems(playlistId, it.first, it.second)
                     move = null
                 }
             }
@@ -90,7 +91,7 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val position = viewHolder.absoluteAdapterPosition - 1
             lifecycleScope.launch {
-                SongRepository.removeSongFromPlaylist(playlistId, position)
+                songRepository.removeSongFromPlaylist(playlistId, position)
             }
         }
     })
@@ -150,7 +151,7 @@ class PlaylistSongsFragment : RecyclerViewFragment<DraggableLocalItemAdapter>() 
             }
 
         lifecycleScope.launch {
-            playlist = SongRepository.getPlaylistById(playlistId)
+            playlist = songRepository.getPlaylistById(playlistId)
             requireAppCompatActivity().title = playlist.playlist.name
             songsViewModel.getPlaylistSongsAsFlow(playlistId).collectLatest {
                 adapter.submitList(it, animation = false)

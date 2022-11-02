@@ -12,7 +12,6 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlin_version")
         classpath("dev.rikka.tools.materialthemebuilder:gradle-plugin:1.3.2")
-        classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.19")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

@@ -3,7 +3,7 @@
 
 <br><b>注意:</b>
 
-現在、プロジェクトはまだ安定しない段階です。もし不具合が発生したら、<a href='https://github.com/z-huang/music'>GitHub</a>からissueを報告してください。
+現在、プロジェクトはまだ安定しない段階です。もし不具合が発生したら、<a href='https://github.com/z-huang/InnerTune'>GitHub</a>からissueを報告してください。
 
 <br><b>機能:</b>
 

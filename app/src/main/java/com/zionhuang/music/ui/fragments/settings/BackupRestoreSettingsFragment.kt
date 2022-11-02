@@ -7,7 +7,6 @@ import android.widget.Toast.LENGTH_SHORT
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.R
 import com.zionhuang.music.db.MusicDatabase
@@ -15,6 +14,7 @@ import com.zionhuang.music.db.MusicDatabase.Companion.DB_NAME
 import com.zionhuang.music.db.checkpoint
 import com.zionhuang.music.extensions.zipInputStream
 import com.zionhuang.music.extensions.zipOutputStream
+import com.zionhuang.music.playback.SongPlayer.Companion.PERSISTENT_QUEUE_FILE
 import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.fragments.base.BaseSettingsFragment
 import java.io.File
@@ -79,6 +79,7 @@ class BackupRestoreSettingsFragment : BaseSettingsFragment() {
                     entry = inputStream.nextEntry
                 }
             }
+            requireContext().filesDir.resolve(PERSISTENT_QUEUE_FILE).delete()
             requireContext().startActivity(Intent(requireContext(), MainActivity::class.java))
             exitProcess(0)
         }.onFailure {

@@ -30,6 +30,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
         get() = fragment.requireActivity() as MainActivity
     val context: Context
         get() = fragment.requireContext()
+    private val songRepository by lazy { SongRepository(fragment.requireContext()) }
 
     fun handle(navigationEndpoint: NavigationEndpoint?, item: YTItem? = null) = navigationEndpoint?.endpoint?.let { handle(it, item) }
 
@@ -92,9 +93,9 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
         val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch(context.exceptionHandler) {
             when (item) {
-                is SongItem -> SongRepository.safeAddSong(item)
-                is AlbumItem -> SongRepository.addAlbum(item)
-                is PlaylistItem -> SongRepository.addPlaylist(item)
+                is SongItem -> songRepository.safeAddSong(item)
+                is AlbumItem -> songRepository.addAlbum(item)
+                is PlaylistItem -> songRepository.addPlaylist(item)
                 else -> {}
             }
             Snackbar.make(mainContent, R.string.snackbar_added_to_library, LENGTH_SHORT).show()
@@ -104,7 +105,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
     fun importPlaylist(playlist: PlaylistItem) {
         val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.importPlaylist(playlist)
+            songRepository.importPlaylist(playlist)
             Snackbar.make(mainContent, R.string.snackbar_playlist_imported, LENGTH_SHORT).show()
         }
     }
@@ -113,7 +114,7 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
         val mainContent = mainActivity.binding.mainContent
         ChoosePlaylistDialog { playlist ->
             GlobalScope.launch(context.exceptionHandler) {
-                SongRepository.addYouTubeItemToPlaylist(playlist, item)
+                songRepository.addYouTubeItemToPlaylist(playlist, item)
                 Snackbar.make(mainContent, fragment.getString(R.string.snackbar_added_to_playlist, playlist.name), LENGTH_SHORT)
                     .setAction(R.string.snackbar_action_view) {
                         fragment.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)

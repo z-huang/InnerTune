@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">ダークテーマ</string>
     <string name="dark_theme_on">オン</string>
     <string name="dark_theme_off">オフ</string>
+    <string name="dark_theme_follow_system">システムに従う</string>
     <string name="pref_default_open_tab_title">起動時に開くタブ</string>
     <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="dark_theme_follow_system">システムに従う</string>
+    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
+    <string name="align_left">Left</string>
+    <string name="align_center">Center</string>
+    <string name="align_right">Right</string>
 
     <string name="pref_content_title">コンテンツ</string>
     <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>
@@ -30,13 +34,18 @@
     <string name="pref_restart_title">再起動して反映</string>
 
     <string name="pref_player_audio_title">プレイヤーとオーディオ</string>
-    <string name="pref_persistent_queue_title">Persistent queue</string>
     <string name="pref_audio_quality_title">オーディオ品質</string>
     <string name="audio_quality_auto">自動</string>
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
+    <string name="pref_persistent_queue_title">Persistent queue</string>
+    <string name="pref_skip_silence_title">Skip silence</string>
+    <string name="pref_audio_normalization_title">Audio normalization</string>
     <string name="pref_equalizer_title">イコライザー</string>
 
+    <string name="pref_storage_title">Storage</string>
+    <string name="pref_open_saf_title">View downloaded files in SAF</string>
+    <string name="pref_open_saf_summary">This may not work in some devices</string>
     <string name="pref_cache_title">Cache</string>
     <string name="pref_image_max_cache_size_title">Max image cache size</string>
     <string name="pref_clear_image_cache_title">Clear image cache</string>
@@ -49,11 +58,14 @@
     <string name="pref_auto_add_song_title">曲を自動でライブラリに追加</string>
     <string name="pref_auto_add_song_summary">再生が終了したら曲をライブラリに追加する</string>
     <string name="pref_expand_on_play_title">再生時にボトムプレイヤーを展開する</string>
+    <string name="pref_notification_more_action_title">More actions in notification</string>
+    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
 
     <string name="pref_privacy_title">プライバシー</string>
     <string name="pref_pause_search_history_title">履歴の記録を一時停止</string>
     <string name="pref_clear_search_history_title">履歴を削除</string>
     <string name="clear_search_history_question">すべての検索履歴を削除しますか？</string>
+    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
 
     <string name="pref_backup_restore_title">バックアップとリストア</string>
     <string name="pref_backup_title">バックアップ</string>
@@ -84,7 +96,7 @@
     <string name="color_blue_grey">ブルーグレー</string>
 
     <!-- Nav Menu -->
-    <string name="menu_search_title">検索</string>
+    <string name="menu_search">検索</string>
     <string name="search_yt_music">YouTube Musicを検索…</string>
     <string name="search_library">ライブラリを検索…</string>
 
@@ -109,6 +121,8 @@
     <string name="menu_refetch">再取得</string>
     <string name="menu_share">共有</string>
     <string name="menu_delete">削除</string>
+    <string name="menu_search_online">Search online</string>
+    <string name="menu_choose_lyrics">Choose other lyrics</string>
 
     <!-- Dialog -->
     <string name="dialog_title_details">Details</string>
@@ -118,8 +132,13 @@
     <string name="bitrate">Bitrate</string>
     <string name="sample_rate">Sample rate</string>
     <string name="loudness">Loudness</string>
+    <string name="volume">Volume</string>
     <string name="file_size">File size</string>
     <string name="unknown">Unknown</string>
+
+    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
+    <string name="dialog_title_search_lyrics">Search lyrics</string>
+    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
 
     <string name="dialog_title_edit_song">曲を編集</string>
     <string name="song_title">曲名</string>
@@ -275,4 +294,7 @@
     <!-- Queue Title -->
     <string name="queue_all_songs">All songs</string>
     <string name="queue_searched_songs">Searched songs</string>
+
+    <!-- Lyrics View -->
+    <string name="lyrics_not_found">Lyrics not found</string>
 </resources>

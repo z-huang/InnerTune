@@ -38,6 +38,11 @@ class QueueItemAdapter(private val itemTouchHelper: ItemTouchHelper) : RecyclerV
         notifyItemMoved(from, to)
     }
 
+    fun removeItem(index: Int) {
+        currentList.removeAt(index)
+        notifyItemRemoved(index)
+    }
+
     suspend fun submitData(newList: List<QueueItem>) {
         val oldList: List<QueueItem> = currentList
         val result = withContext(IO) {
@@ -60,8 +65,7 @@ class QueueItemAdapter(private val itemTouchHelper: ItemTouchHelper) : RecyclerV
         override fun areItemsTheSame(oldItem: QueueItem, newItem: QueueItem): Boolean = oldItem.description.mediaId == newItem.description.mediaId
         override fun areContentsTheSame(oldItem: QueueItem, newItem: QueueItem): Boolean =
             oldItem.description.title.toString() == newItem.description.title.toString() &&
-                    oldItem.description.subtitle.toString() == newItem.description.subtitle.toString() &&
-                    oldItem.description.iconUri == newItem.description.iconUri
+                    oldItem.description.subtitle.toString() == newItem.description.subtitle.toString()
     }
 
 }

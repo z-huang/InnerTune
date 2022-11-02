@@ -17,7 +17,7 @@ class DownloadBroadcastReceiver : BroadcastReceiver() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(context: Context, intent: Intent) {
         val downloadManager = context.getSystemService<DownloadManager>()!!
-        val songRepository = SongRepository
+        val songRepository = SongRepository(context)
 
         when (intent.action) {
             ACTION_DOWNLOAD_COMPLETE -> {

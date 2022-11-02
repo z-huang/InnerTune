@@ -1,6 +1,7 @@
 package com.zionhuang.music.ui.fragments.youtube
 
 import android.app.Activity.RESULT_OK
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -83,7 +84,10 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
             }
         }
         binding.btnVoice.setOnClickListener {
-            voiceResultLauncher.launch(Intent(ACTION_RECOGNIZE_SPEECH))
+            try {
+                voiceResultLauncher.launch(Intent(ACTION_RECOGNIZE_SPEECH))
+            } catch (_: ActivityNotFoundException) {
+            }
         }
         setupSearchView()
         showKeyboard()
@@ -128,7 +132,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
     private fun search(query: String) {
         if (!requireContext().sharedPreferences.getBoolean(getString(R.string.pref_pause_search_history), false)) {
             GlobalScope.launch {
-                SongRepository.insertSearchHistory(query)
+                SongRepository(requireContext()).insertSearchHistory(query)
             }
         }
         exitTransition = null

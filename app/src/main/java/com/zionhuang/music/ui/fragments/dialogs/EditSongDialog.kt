@@ -69,7 +69,7 @@ class EditSongDialog : AppCompatDialogFragment() {
         val title = binding.songTitle.editText?.text.toString()
         // TODO
         GlobalScope.launch {
-            SongRepository.updateSongTitle(song, title)
+            SongRepository(requireContext()).updateSongTitle(song, title)
         }
         dismiss()
     }

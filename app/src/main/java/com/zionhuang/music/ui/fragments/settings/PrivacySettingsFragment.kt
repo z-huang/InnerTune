@@ -20,7 +20,7 @@ class PrivacySettingsFragment : BaseSettingsFragment() {
                 .setMessage(R.string.clear_search_history_question)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     GlobalScope.launch {
-                        SongRepository.clearSearchHistory()
+                        SongRepository(requireContext()).clearSearchHistory()
                     }
                 }
                 .setNegativeButton(android.R.string.cancel, null)

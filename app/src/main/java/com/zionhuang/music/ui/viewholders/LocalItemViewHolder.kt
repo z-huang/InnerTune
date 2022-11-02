@@ -80,8 +80,7 @@ open class SongViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -120,14 +119,13 @@ class ArtistViewHolder(
         binding.selectedIndicator.isVisible = isSelected
         if (artist.artist.bannerUrl == null || Duration.between(artist.artist.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)) {
             GlobalScope.launch(binding.context.exceptionHandler) {
-                SongRepository.refetchArtist(artist.artist)
+                SongRepository(binding.context).refetchArtist(artist.artist)
             }
         }
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -164,14 +162,13 @@ class AlbumViewHolder(
         binding.selectedIndicator.isVisible = isSelected
         if (album.album.thumbnailUrl == null || album.album.year == null) {
             GlobalScope.launch(binding.context.exceptionHandler) {
-                SongRepository.refetchAlbum(album.album)
+                SongRepository(binding.context).refetchAlbum(album.album)
             }
         }
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -222,8 +219,7 @@ class PlaylistViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 
@@ -287,8 +283,7 @@ class CustomPlaylistViewHolder(
     }
 
     override fun onSelectionChanged(isSelected: Boolean) {
-        if (isSelected) binding.selectedIndicator.fadeIn(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
-        else binding.selectedIndicator.fadeOut(binding.context.resources.getInteger(R.integer.motion_duration_small).toLong())
+        binding.selectedIndicator.isVisible = isSelected
     }
 }
 

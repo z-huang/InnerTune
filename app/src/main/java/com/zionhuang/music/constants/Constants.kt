@@ -16,8 +16,8 @@ object Constants {
     const val LIKED_PLAYLIST_ID = "LP_LIKED"
     const val DOWNLOADED_PLAYLIST_ID = "LP_DOWNLOADED"
 
-    const val GITHUB_URL = "https://github.com/z-huang/music"
-    const val GITHUB_ISSUE_URL = "https://github.com/z-huang/music/issues"
+    const val GITHUB_URL = "https://github.com/z-huang/InnerTune"
+    const val GITHUB_ISSUE_URL = "https://github.com/z-huang/InnerTune/issues"
 
     const val ERROR_INFO = "error_info"
 }

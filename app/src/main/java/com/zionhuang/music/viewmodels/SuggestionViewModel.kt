@@ -12,20 +12,37 @@ import com.zionhuang.music.repos.YouTubeRepository
 import kotlinx.coroutines.launch
 
 class SuggestionViewModel(application: Application) : AndroidViewModel(application) {
+    private val songRepository = SongRepository(application)
+    private val youTubeRepository = YouTubeRepository(application)
     val suggestions = MutableLiveData<List<YTBaseItem>>(emptyList())
 
     fun fetchSuggestions(query: String?) = viewModelScope.launch {
         if (query.isNullOrEmpty()) {
-            suggestions.postValue(SongRepository.getAllSearchHistory().map { SuggestionTextItem(it.query, LOCAL) })
+            suggestions.postValue(songRepository.getAllSearchHistory().map { SuggestionTextItem(it.query, LOCAL) })
         } else {
-            try {
-                val history = SongRepository.getSearchHistory(query).map { SuggestionTextItem(it.query, LOCAL) }
-                suggestions.postValue(history + YouTubeRepository.getSuggestions(query).filter { item ->
-                    item !is SuggestionTextItem || history.find { it.query == item.query } == null
-                })
-            } catch (e: Exception) {
-                // TODO
+            val history = songRepository.getSearchHistory(query).map {
+                SuggestionTextItem(it.query, LOCAL)
             }
+            val ytSuggestions = try {
+                youTubeRepository.getSuggestions(query).filter { item ->
+                    item !is SuggestionTextItem || history.find { it.query == item.query } == null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Fix incorrect visitorData
+                // comment out because now YouTube Music doesn't give us suggestions if we're not logged in
+//                if (e is MissingFieldException) {
+//                    // Reset visitorData
+//                    YouTube.generateVisitorData().getOrNull()?.let {
+//                        getApplication<Application>().sharedPreferences.edit {
+//                            putString(getApplication<Application>().getString(R.string.pref_visitor_data), it)
+//                        }
+//                        YouTube.visitorData = it
+//                    }
+//                }
+                emptyList()
+            }
+            suggestions.postValue(history + ytSuggestions)
         }
     }
 }

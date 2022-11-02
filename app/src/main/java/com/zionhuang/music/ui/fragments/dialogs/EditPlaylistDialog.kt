@@ -56,7 +56,7 @@ class EditPlaylistDialog : AppCompatDialogFragment() {
         if (binding.textInput.editText?.text.isNullOrEmpty()) return
         val name = binding.textInput.editText?.text.toString()
         GlobalScope.launch {
-            SongRepository.updatePlaylist(playlist.copy(name = name))
+            SongRepository(requireContext()).updatePlaylist(playlist.copy(name = name))
         }
         dismiss()
     }

@@ -1,6 +1,7 @@
 package com.zionhuang.music.repos
 
 import android.app.DownloadManager
+import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -37,8 +38,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDateTime
 
-object SongRepository : LocalRepository {
-    private val context = getApplication()
+class SongRepository(private val context: Context) : LocalRepository {
     private val database = MusicDatabase.getInstance(context)
     private val songDao = database.songDao
     private val artistDao = database.artistDao
@@ -47,6 +47,7 @@ object SongRepository : LocalRepository {
     private val downloadDao = database.downloadDao
     private val searchHistoryDao = database.searchHistoryDao
     private val formatDao = database.formatDao
+    private val lyricsDao = database.lyricsDao
 
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private var autoDownload by context.preference(R.string.pref_auto_download, false)
@@ -201,6 +202,7 @@ object SongRepository : LocalRepository {
     ) { songResult, artistResult, albumResult, playlistResult -> songResult + artistResult + albumResult + playlistResult }
 
     override fun searchSongs(query: String) = songDao.searchSongs(query)
+    override fun searchDownloadedSongs(query: String) = songDao.searchDownloadedSongs(query)
     override fun searchArtists(query: String) = artistDao.searchArtists(query)
     override fun searchAlbums(query: String) = albumDao.searchAlbums(query)
     override fun searchPlaylists(query: String) = playlistDao.searchPlaylists(query)
@@ -366,6 +368,16 @@ object SongRepository : LocalRepository {
                         songDao.update(song.copy(downloadState = STATE_NOT_DOWNLOADED))
                         // TODO
                     } else {
+                        upsert(FormatEntity(
+                            id = song.id,
+                            itag = format.itag,
+                            mimeType = format.mimeType.split(";")[0],
+                            codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
+                            bitrate = format.bitrate,
+                            sampleRate = format.audioSampleRate,
+                            contentLength = format.contentLength!!,
+                            loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                        ))
                         songDao.update(song.copy(downloadState = STATE_DOWNLOADING))
                         val downloadManager = context.getSystemService<DownloadManager>()!!
                         val req = DownloadManager.Request(format.url.toUri())
@@ -521,11 +533,16 @@ object SongRepository : LocalRepository {
         }
     }
 
+    override suspend fun getAlbum(albumId: String) = withContext(IO) {
+        albumDao.getAlbumById(albumId)
+    }
+
     override suspend fun deleteAlbums(albums: List<Album>) = withContext(IO) {
         albums.forEach { album ->
             val songs = songDao.getAlbumSongs(album.id).map { it.copy(album = null) }
             albumDao.delete(album.album)
             deleteSongs(songs)
+            artistDao.delete(album.artists.filter { artistDao.getArtistSongCount(it.id) == 0 })
         }
     }
 
@@ -690,12 +707,26 @@ object SongRepository : LocalRepository {
     /**
      * Format
      */
-    suspend fun getSongFormat(songId: String?): DataWrapper<FormatEntity?> = DataWrapper(
+    override fun getSongFormat(songId: String?): DataWrapper<FormatEntity?> = DataWrapper(
         getValueAsync = { withContext(IO) { formatDao.getSongFormat(songId) } },
         getFlow = { formatDao.getSongFormatAsFlow(songId) }
     )
 
-    suspend fun upsert(format: FormatEntity) = withContext(IO) {
+    override suspend fun upsert(format: FormatEntity) = withContext(IO) {
         formatDao.upsert(format)
+    }
+
+    /**
+     * Lyrics
+     */
+    override fun getLyrics(songId: String?): Flow<LyricsEntity?> =
+        lyricsDao.getLyricsAsFlow(songId)
+
+    override suspend fun hasLyrics(songId: String): Boolean = withContext(IO) {
+        lyricsDao.hasLyrics(songId)
+    }
+
+    override suspend fun upsert(lyrics: LyricsEntity) = withContext(IO) {
+        lyricsDao.upsert(lyrics)
     }
 }

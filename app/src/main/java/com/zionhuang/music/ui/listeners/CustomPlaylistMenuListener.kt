@@ -14,8 +14,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class LikedPlaylistMenuListener(override val fragment: Fragment) : BaseMenuListener<LikedPlaylist>(fragment) {
+    private val songRepository by lazy { SongRepository(fragment.requireContext()) }
+
     override suspend fun getMediaMetadata(items: List<LikedPlaylist>): List<MediaMetadata> =
-        SongRepository.getLikedSongs(SongSortInfoPreference).getList().map { it.toMediaMetadata() }
+        songRepository.getLikedSongs(SongSortInfoPreference).getList().map { it.toMediaMetadata() }
 
     fun play() {
         playAll(context.getString(R.string.liked_songs), emptyList())
@@ -31,21 +33,23 @@ class LikedPlaylistMenuListener(override val fragment: Fragment) : BaseMenuListe
 
     fun addToPlaylist() {
         addToPlaylist { playlist ->
-            SongRepository.addToPlaylist(playlist, SongRepository.getLikedSongs(SongSortInfoPreference).getList())
+            songRepository.addToPlaylist(playlist, songRepository.getLikedSongs(SongSortInfoPreference).getList())
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun download() {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.downloadSongs(SongRepository.getLikedSongs(SongSortInfoPreference).getList().map { it.song })
+            songRepository.downloadSongs(songRepository.getLikedSongs(SongSortInfoPreference).getList().map { it.song })
         }
     }
 }
 
 class DownloadedPlaylistMenuListener(override val fragment: Fragment) : BaseMenuListener<DownloadedPlaylist>(fragment) {
+    private val songRepository by lazy { SongRepository(fragment.requireContext()) }
+
     override suspend fun getMediaMetadata(items: List<DownloadedPlaylist>): List<MediaMetadata> =
-        SongRepository.getDownloadedSongs(SongSortInfoPreference).getList().map { it.toMediaMetadata() }
+        songRepository.getDownloadedSongs(SongSortInfoPreference).getList().map { it.toMediaMetadata() }
 
     fun play() {
         playAll(context.getString(R.string.downloaded_songs), emptyList())
@@ -61,7 +65,7 @@ class DownloadedPlaylistMenuListener(override val fragment: Fragment) : BaseMenu
 
     fun addToPlaylist() {
         addToPlaylist { playlist ->
-            SongRepository.addToPlaylist(playlist, SongRepository.getLikedSongs(SongSortInfoPreference).getList())
+            songRepository.addToPlaylist(playlist, songRepository.getLikedSongs(SongSortInfoPreference).getList())
         }
     }
 }

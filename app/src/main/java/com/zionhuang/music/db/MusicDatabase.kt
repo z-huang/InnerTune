@@ -28,16 +28,18 @@ import java.util.*
         PlaylistSongMap::class,
         DownloadEntity::class,
         SearchHistory::class,
-        FormatEntity::class
+        FormatEntity::class,
+        LyricsEntity::class
     ],
     views = [
         SortedSongArtistMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
     autoMigrations = [
-        AutoMigration(from = 2, to = 3)
+        AutoMigration(from = 2, to = 3),
+        AutoMigration(from = 3, to = 4)
     ]
 )
 @TypeConverters(Converters::class)
@@ -49,6 +51,7 @@ abstract class MusicDatabase : RoomDatabase() {
     abstract val downloadDao: DownloadDao
     abstract val searchHistoryDao: SearchHistoryDao
     abstract val formatDao: FormatDao
+    abstract val lyricsDao: LyricsDao
 
     companion object {
         const val DB_NAME = "song.db"

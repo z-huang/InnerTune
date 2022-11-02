@@ -17,9 +17,13 @@
     <string name="pref_dark_theme_title">深色主題</string>
     <string name="dark_theme_on">開</string>
     <string name="dark_theme_off">關</string>
+    <string name="dark_theme_follow_system">跟隨系統</string>
     <string name="pref_default_open_tab_title">預設啟動標籤</string>
     <string name="pref_customize_navigation_tabs">自訂導覽列</string>
-    <string name="dark_theme_follow_system">跟隨系統</string>
+    <string name="pref_lyrics_text_position_title">歌詞文字位置</string>
+    <string name="align_left">靠左</string>
+    <string name="align_center">置中</string>
+    <string name="align_right">靠右</string>
 
     <string name="pref_content_title">內容</string>
     <string name="pref_content_language_title">預設內容語言</string>
@@ -30,13 +34,18 @@
     <string name="pref_restart_title">重啟以套用變更</string>
 
     <string name="pref_player_audio_title">播放與音訊</string>
-    <string name="pref_persistent_queue_title">保留播放佇列</string>
     <string name="pref_audio_quality_title">音質</string>
     <string name="audio_quality_auto">自動</string>
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
+    <string name="pref_persistent_queue_title">保留播放佇列</string>
+    <string name="pref_skip_silence_title">跳過無聲片段</string>
+    <string name="pref_audio_normalization_title">標準化音量</string>
     <string name="pref_equalizer_title">等化器</string>
 
+    <string name="pref_storage_title">儲存</string>
+    <string name="pref_open_saf_title">檢視已下載的歌曲</string>
+    <string name="pref_open_saf_summary">在某些裝置可能無法開啟</string>
     <string name="pref_cache_title">快取</string>
     <string name="pref_image_max_cache_size_title">圖片快取大小</string>
     <string name="pref_clear_image_cache_title">清除圖片快取</string>
@@ -49,11 +58,14 @@
     <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
     <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
     <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
+    <string name="pref_notification_more_action_title">在通知顯示更多按鈕</string>
+    <string name="pref_notification_more_action_summary">顯示「加入媒體庫」和「喜歡」按鈕</string>
 
     <string name="pref_privacy_title">隱私</string>
     <string name="pref_pause_search_history_title">暫停搜尋紀錄</string>
     <string name="pref_clear_search_history_title">清除搜尋紀錄</string>
     <string name="clear_search_history_question">您確定要清除所有搜尋紀錄嗎？</string>
+    <string name="pref_enable_kugou_title">使用酷狗音樂提供歌詞</string>
 
     <string name="pref_backup_restore_title">備份與還原</string>
     <string name="pref_backup_title">備份</string>
@@ -84,7 +96,7 @@
     <string name="color_blue_grey">藍灰</string>
 
     <!-- Nav Menu -->
-    <string name="menu_search_title">搜尋</string>
+    <string name="menu_search">搜尋</string>
     <string name="search_yt_music">搜尋 YouTube Music…</string>
     <string name="search_library">搜尋媒體庫…</string>
 
@@ -109,6 +121,8 @@
     <string name="menu_refetch">更新資料</string>
     <string name="menu_share">分享</string>
     <string name="menu_delete">移除</string>
+    <string name="menu_search_online">線上搜尋</string>
+    <string name="menu_choose_lyrics">切換其他歌詞</string>
 
     <!-- Dialog -->
     <string name="dialog_title_details">詳細資訊</string>
@@ -117,9 +131,14 @@
     <string name="codecs">編碼</string>
     <string name="bitrate">位元速率</string>
     <string name="sample_rate">採樣率</string>
-    <string name="loudness">音量</string>
+    <string name="loudness">響度</string>
+    <string name="volume">音量</string>
     <string name="file_size">檔案大小</string>
     <string name="unknown">未知</string>
+
+    <string name="dialog_title_edit_lyrics">編輯歌詞</string>
+    <string name="dialog_title_search_lyrics">搜尋歌詞</string>
+    <string name="dialog_title_choose_lyrics">選擇歌詞</string>
 
     <string name="dialog_title_edit_song">編輯歌曲</string>
     <string name="song_title">歌名</string>
@@ -275,4 +294,7 @@
     <!-- Queue Title -->
     <string name="queue_all_songs">全部歌曲</string>
     <string name="queue_searched_songs">搜尋的歌曲</string>
+
+    <!-- Lyrics View -->
+    <string name="lyrics_not_found">沒有歌詞</string>
 </resources>

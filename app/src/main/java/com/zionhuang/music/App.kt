@@ -1,6 +1,7 @@
 package com.zionhuang.music
 
 import android.app.Application
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
@@ -9,16 +10,20 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.models.YouTubeLocale
+import com.zionhuang.kugou.KuGou
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
-import com.zionhuang.music.ui.fragments.settings.CacheSettingsFragment.Companion.VALUE_TO_MB
+import com.zionhuang.music.ui.fragments.settings.StorageSettingsFragment.Companion.VALUE_TO_MB
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.net.Proxy
 import java.util.*
 
 class App : Application(), ImageLoaderFactory {
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
@@ -37,6 +42,9 @@ class App : Application(), ImageLoaderFactory {
                 ?: languageTag.takeIf { it in languageCodes }
                 ?: "en"
         )
+        if (languageTag == "zh-TW") {
+            KuGou.useTraditionalChinese = true
+        }
         Log.d("App", "${YouTube.locale}")
 
         if (sharedPreferences.getBoolean(getString(R.string.pref_proxy_enabled), false)) {
@@ -52,15 +60,22 @@ class App : Application(), ImageLoaderFactory {
             }
         }
 
-        YouTube.visitorData = sharedPreferences.getString(getString(R.string.pref_visitor_data), null) ?: YouTubeClient.generateVisitorData().also {
-            sharedPreferences.edit {
-                putString(getString(R.string.pref_visitor_data), it)
+        GlobalScope.launch {
+            val visitorData = sharedPreferences.getString(getString(R.string.pref_visitor_data), null) ?: YouTube.generateVisitorData().getOrNull()?.also {
+                sharedPreferences.edit {
+                    putString(getString(R.string.pref_visitor_data), it)
+                }
+            }
+            visitorData?.let {
+                YouTube.visitorData = it
             }
         }
     }
 
     override fun newImageLoader() = ImageLoader.Builder(this)
         .crossfade(true)
+        .respectCacheHeaders(false)
+        .allowHardware(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
         .diskCache(
             DiskCache.Builder()
                 .directory(cacheDir.resolve("coil"))

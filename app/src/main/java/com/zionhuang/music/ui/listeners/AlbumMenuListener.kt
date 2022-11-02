@@ -31,8 +31,10 @@ interface IAlbumMenuListener {
 }
 
 class AlbumMenuListener(override val fragment: Fragment) : BaseMenuListener<Album>(fragment), IAlbumMenuListener {
+    private val songRepository by lazy { SongRepository(fragment.requireContext()) }
+
     override suspend fun getMediaMetadata(items: List<Album>): List<MediaMetadata> = items.flatMap { album ->
-        SongRepository.getAlbumSongs(album.id)
+        songRepository.getAlbumSongs(album.id)
     }.map {
         it.toMediaMetadata()
     }
@@ -47,7 +49,7 @@ class AlbumMenuListener(override val fragment: Fragment) : BaseMenuListener<Albu
 
     override fun addToPlaylist(albums: List<Album>) {
         addToPlaylist { playlist ->
-            SongRepository.addToPlaylist(playlist, albums)
+            songRepository.addToPlaylist(playlist, albums)
         }
     }
 
@@ -69,14 +71,14 @@ class AlbumMenuListener(override val fragment: Fragment) : BaseMenuListener<Albu
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(albums: List<Album>) {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.refetchAlbums(albums.map { it.album })
+            songRepository.refetchAlbums(albums.map { it.album })
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun delete(albums: List<Album>) {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.deleteAlbums(albums)
+            songRepository.deleteAlbums(albums)
         }
     }
 }

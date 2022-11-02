@@ -2,26 +2,18 @@ With this app, you're like getting a free music streaming service. You can liste
 
 <br><b>Note:</b>
 
-The project is currently in an unstable stage. If you encounter bugs, please report by opening an issue on <a href='https://github.com/z-huang/music'>GitHub</a>.
+The project is currently in an unstable stage. If you encounter bugs, please report by opening an issue on <a href='https://github.com/z-huang/InnerTune'>GitHub</a>.
 
 <br><b>Features:</b>
 
 * Play songs without ads
-* Browse almost any YouTube Music page
-* Search songs, albums, videos and playlists from YouTube Music
-* Open YouTube Music links
-* Save songs, albums and playlists in local database
 * Download music for offline playback
-* Edit song title
-* Add links to your favorite YouTube Music playlists
-* Material design player
-* Lockscreen playback
-* Media controls in notification
-* Skip to next/previous song
-* Repeat/shuffle mode
-* Edit now-playing queue
-* Custom themes
-* Dark theme
-* Localization
-* Proxy
+* Local library management
+* Export downloaded songs via SAF
+* Cache songs
+* (Synchronized) lyrics
+* Audio normalization
+* Skip silence
 * Backup & restore
+* Support proxy
+* Support Android Auto

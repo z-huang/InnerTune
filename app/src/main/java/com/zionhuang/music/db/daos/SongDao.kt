@@ -81,13 +81,18 @@ interface SongDao {
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
+    @Query("SELECT * FROM song WHERE download_state = $STATE_DOWNLOADED AND title LIKE '%' || :query || '%'")
+    fun searchDownloadedSongs(query: String): Flow<List<Song>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND NOT isTrash LIMIT :previewSize")
     fun searchSongsPreview(query: String, previewSize: Int): Flow<List<Song>>
 
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id = :songId)")
     suspend fun hasSong(songId: String): Boolean
 
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id=:songId)")
+    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id = :songId)")
     fun hasSongAsLiveData(songId: String): LiveData<Boolean>
 
     @Query("UPDATE song SET totalPlayTime = totalPlayTime + :playTime WHERE id = :songId")

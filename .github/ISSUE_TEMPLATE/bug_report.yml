@@ -1,13 +1,13 @@
 name: Bug report
 description: Create a bug report to help us improve
-labels: [bug]
+labels: [ bug ]
 body:
   - type: checkboxes
     id: checklist
     attributes:
       label: Checklist
       options:
-        - label: I am able to reproduce the bug with the [latest version](https://github.com/z-huang/music/releases/latest).
+        - label: I am able to reproduce the bug with the [latest DEBUG version](https://github.com/z-huang/InnerTune/actions).
           required: true
         - label: I've checked that there is no issue about this bug.
           required: true
@@ -65,7 +65,7 @@ body:
       label: Logs
       description: |
         If your bug includes a crash, please use `adb logcat` or other ways to provide logs.
-  
+
   - type: input
     id: music-version
     attributes:

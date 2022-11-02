@@ -15,8 +15,8 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 24
         targetSdk = 32
-        versionCode = 13
-        versionName = "0.4.2"
+        versionCode = 14
+        versionName = "0.4.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -143,6 +143,7 @@ dependencies {
     implementation("androidx.transition:transition-ktx:1.4.1")
     implementation("com.google.android.material:material:1.8.0-alpha01")
     implementation("dev.chrisbanes.insetter:insetter:0.6.1")
+    implementation("com.github.bosphere.android-fadingedgelayout:fadingedgelayout:1.0.0")
     // Gson
     implementation("com.google.code.gson:gson:2.9.0")
     // ExoPlayer
@@ -163,6 +164,8 @@ dependencies {
     testImplementation("androidx.room:room-testing:2.4.3")
     // YouTube API
     implementation(project(mapOf("path" to ":innertube")))
+    // KuGou
+    implementation(project(mapOf("path" to ":kugou")))
     // Apache Utils
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")

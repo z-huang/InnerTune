@@ -12,7 +12,7 @@
     <string name="pref_appearance" translatable="false">APPEARANCE</string>
     <string name="pref_content" translatable="false">CONTENT</string>
     <string name="pref_player_audio" translatable="false">PLAYER_AUDIO</string>
-    <string name="pref_cache" translatable="false">CACHE</string>
+    <string name="pref_storage" translatable="false">STORAGE</string>
     <string name="pref_general" translatable="false">GENERAL</string>
     <string name="pref_privacy" translatable="false">PRIVACY</string>
     <string name="pref_backup_restore" translatable="false">BACKUP_RESTORE</string>
@@ -23,6 +23,7 @@
     <string name="pref_dark_theme" translatable="false">DARK_THEME</string>
     <string name="pref_default_open_tab" translatable="false">DEFAULT_OPEN_TAB</string>
     <string name="pref_nav_tab_config" translatable="false">NAV_TAB_CONFIG</string>
+    <string name="pref_lyrics_text_position" translatable="false">LRC_TEXT_POS</string>
 
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
@@ -37,8 +38,10 @@
     <string name="pref_auto_download" translatable="false">AUTO_DOWNLOAD</string>
     <string name="pref_auto_add_song" translatable="false">AUTO_ADD_SONG</string>
     <string name="pref_expand_on_play" translatable="false">EXPAND_ON_PLAY</string>
+    <string name="pref_notification_more_action" translatable="false">NOTIFICATION_MORE_ACTION</string>
     <string name="pref_equalizer" translatable="false">EQUALIZER</string>
 
+    <string name="pref_open_saf" translatable="false">OPEN_SAF</string>
     <string name="pref_image_max_cache_size" translatable="false">IMAGE_MAX_CACHE_SIZE</string>
     <string name="pref_clear_image_cache" translatable="false">CLEAR_IMAGE_CACHE</string>
     <string name="pref_song_max_cache_size" translatable="false">SONG_MAX_CACHE_SIZE</string>
@@ -46,9 +49,15 @@
 
     <string name="pref_pause_search_history" translatable="false">PAUSE_SEARCH_HISTORY</string>
     <string name="pref_clear_search_history" translatable="false">CLEAR_SEARCH_HISTORY</string>
+    <string name="pref_enable_kugou" translatable="false">ENABLE_KUGOU</string>
 
     <string name="pref_backup" translatable="false">BACKUP</string>
     <string name="pref_restore" translatable="false">RESTORE</string>
+
+    <string name="pref_app_version" translatable="false">APP_VERSION</string>
+    <string name="pref_github" translatable="false">GITHUB</string>
+    <string name="pref_github_title" translatable="false">GitHub</string>
+    <string name="pref_github_summary" translatable="false">z-huang/InnerTune</string>
 
     <string name="pref_song_sort_type" translatable="false">SONG_SORT_TYPE</string>
     <string name="pref_song_sort_descending" translatable="false">SONG_SORT_DESC</string>
@@ -58,10 +67,9 @@
     <string name="pref_album_sort_descending" translatable="false">ALBUM_SORT_DESC</string>
     <string name="pref_playlist_sort_type" translatable="false">PLAYLIST_SORT_TYPE</string>
     <string name="pref_playlist_sort_descending" translatable="false">PLAYLIST_SORT_DESC</string>
-    <string name="pref_app_version" translatable="false">APP_VERSION</string>
-    <string name="pref_github" translatable="false">GITHUB</string>
-    <string name="pref_github_title" translatable="false">GitHub</string>
-    <string name="pref_github_summary" translatable="false">z-huang/music</string>
+    <string name="pref_show_lyrics" translatable="false">SHOW_LYRICS</string>
+    <string name="pref_skip_silence" translatable="false">SKIP_SILENCE</string>
+    <string name="pref_audio_normalization" translatable="false">AUDIO_NORMALIZE</string>
 
     <string name="bullet" translatable="false">•</string>
 
@@ -135,6 +143,18 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+    </string-array>
+
+    <string-array name="lyrics_position_texts" translatable="false">
+        <item>@string/align_left</item>
+        <item>@string/align_center</item>
+        <item>@string/align_right</item>
+    </string-array>
+
+    <string-array name="lyrics_position_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="proxy_types" translatable="false">

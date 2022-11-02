@@ -52,6 +52,8 @@ interface ISongMenuListener {
 }
 
 class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>(fragment), ISongMenuListener {
+    private val songRepository by lazy { SongRepository(fragment.requireContext()) }
+
     override suspend fun getMediaMetadata(items: List<Song>): List<MediaMetadata> = items.map { it.toMediaMetadata() }
 
     override fun editSong(song: Song) {
@@ -63,7 +65,7 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
     @OptIn(DelicateCoroutinesApi::class)
     override fun toggleLike(song: Song) {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.toggleLiked(song)
+            songRepository.toggleLiked(song)
         }
     }
 
@@ -81,7 +83,7 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
 
     override fun addToPlaylist(songs: List<Song>) {
         addToPlaylist { playlist ->
-            SongRepository.addToPlaylist(playlist, songs)
+            songRepository.addToPlaylist(playlist, songs)
         }
     }
 
@@ -89,7 +91,7 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
     override fun download(songs: List<Song>) {
         GlobalScope.launch(context.exceptionHandler) {
             Snackbar.make(mainActivity.binding.mainContent, context.resources.getQuantityString(R.plurals.snackbar_download_song, songs.size, songs.size), LENGTH_SHORT).show()
-            SongRepository.downloadSongs(songs.map { it.song })
+            songRepository.downloadSongs(songs.map { it.song })
         }
     }
 
@@ -97,7 +99,7 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
     override fun removeDownload(songs: List<Song>) {
         val mainContent = mainActivity.binding.mainContent
         GlobalScope.launch {
-            SongRepository.removeDownloads(songs)
+            songRepository.removeDownloads(songs)
             Snackbar.make(mainContent, R.string.snackbar_removed_download, LENGTH_SHORT).show()
         }
     }
@@ -122,7 +124,7 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
     @OptIn(DelicateCoroutinesApi::class)
     override fun refetch(songs: List<Song>) {
         GlobalScope.launch(context.exceptionHandler) {
-            SongRepository.refetchSongs(songs)
+            songRepository.refetchSongs(songs)
         }
     }
 
@@ -138,7 +140,7 @@ class SongMenuListener(override val fragment: Fragment) : BaseMenuListener<Song>
     @OptIn(DelicateCoroutinesApi::class)
     override fun delete(songs: List<Song>) {
         GlobalScope.launch {
-            SongRepository.deleteSongs(songs)
+            songRepository.deleteSongs(songs)
         }
     }
 }

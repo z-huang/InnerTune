@@ -22,7 +22,7 @@ import java.util.*
  * For making HTTP requests, not parsing response.
  */
 class InnerTube {
-    private var httpClient = createClient()
+    var httpClient = createClient()
 
     var locale = YouTubeLocale(
         gl = Locale.getDefault().country,

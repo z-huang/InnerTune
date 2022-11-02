@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.EXTRA_TEXT
 import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.view.ActionMode
@@ -156,10 +157,16 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
 
         lifecycleScope.launch {
-            SongRepository.validateDownloads()
+            SongRepository(this@MainActivity).validateDownloads()
+        }
+        preferenceLiveData(R.string.pref_show_lyrics, false).observe(this) { showLyrics ->
+            keepScreenOn(showLyrics && bottomSheetBehavior.state == STATE_EXPANDED)
         }
         lifecycleScope.launch {
             AdaptiveUtils.orientation.collectLatest { orientation ->
+                binding.queueSheet.updateLayoutParams {
+                    width = if (orientation == ORIENTATION_LANDSCAPE) (resources.displayMetrics.widthPixels * 0.5).toInt() else resources.displayMetrics.widthPixels
+                }
                 binding.container.updateLayoutParams<CoordinatorLayout.LayoutParams> {
                     bottomMargin = if (orientation == ORIENTATION_PORTRAIT) resources.getDimensionPixelSize(R.dimen.m3_bottom_nav_min_height) else 0
                 }
@@ -202,6 +209,11 @@ class MainActivity : ThemedBindingActivity<ActivityMainBinding>(), NavController
         }
         if (newState == STATE_HIDDEN) {
             MediaSessionConnection.mediaController?.transportControls?.stop()
+        }
+        if (newState == STATE_COLLAPSED || newState == STATE_HIDDEN) {
+            keepScreenOn(false)
+        } else if (newState == STATE_EXPANDED && sharedPreferences.getBoolean(getString(R.string.pref_show_lyrics), false)) {
+            keepScreenOn(true)
         }
     }
 

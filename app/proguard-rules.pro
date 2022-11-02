@@ -80,9 +80,6 @@
 # @Serializable and @Polymorphic are used at runtime for polymorphic serialization.
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
 
-# Protobuf
--keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
-
 -dontwarn javax.servlet.ServletContainerInitializer
 -dontwarn org.bouncycastle.jsse.BCSSLParameters
 -dontwarn org.bouncycastle.jsse.BCSSLSocket

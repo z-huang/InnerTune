@@ -1,0 +1,35 @@
+<b>Novità</b>
+
+- Testi dei brani #76
+- Supporto ad Android Auto #125
+- Salta il silenzio
+- Normalizzazione dell'audio #24
+- Esporta brani scaricati via SAF #117
+
+<b>Miglioramenti</b>
+
+- Migliorato il formato del lettore
+- Aggiunto blocco sveglia per il lettore
+- Opzione per nascondere i bottoni nella notifica
+- Elimina la coda persistente quando si ripristina il database
+- Mostra itag nelle statistiche per nerd
+
+<b>Sistemato</b>
+
+- Sistemata la chiusura inaspettata dell'app nelle impostazioni della cache #315
+- Sistemata l'impossibilità di riprodurre i brani scaricati #329
+- Sistemato l'errore dei campi mancanti in InnerTube #334
+- Sistemato errore che veniva mostrato quando si rimuoveva il brano corrente dalla coda #323
+- Sistemato il riscaricamento delle immagini nella cache
+- Sistemato ActivityNotFoundException nella ricerca vocale #362
+- Sistemato eccezione di hardware bitmap #360
+- Sistemata l'eliminazione automatica degli artisti privi di brani #381
+- Sistemato "Dalla tua libreria" che viene mostrata nella pagina degli album di un artista #386
+
+<b>Aggiornamenti della traduzione</b>
+
+- Aggiunta traduzione in ungherese
+- Aggiornata traduzione in portoghese brasiliano
+- Aggiornata traduzione in cinese semplificato
+- Aggiornata traduzione in ungherese
+- Aggiornata traduzione in italiano

@@ -52,13 +52,10 @@ data class SectionListRenderer(
         val gridRenderer: GridRenderer?,
     ) {
         fun toBaseItems(): List<YTBaseItem> = when {
-            musicCarouselShelfRenderer != null -> listOf(
-                Header(
-                    title = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
-                    moreNavigationEndpoint = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.moreContentButton?.buttonRenderer?.navigationEndpoint
-                ),
+            musicCarouselShelfRenderer != null -> listOfNotNull(
+                musicCarouselShelfRenderer.header?.toHeader(),
                 CarouselSection(
-                    id = musicCarouselShelfRenderer.header.musicCarouselShelfBasicHeaderRenderer.title.toString(),
+                    id = musicCarouselShelfRenderer.header?.musicCarouselShelfBasicHeaderRenderer?.title.toString(),
                     items = musicCarouselShelfRenderer.contents.mapNotNull { it.toBaseItem() },
                     numItemsPerColumn = musicCarouselShelfRenderer.numItemsPerColumn ?: 1,
                     itemViewType = musicCarouselShelfRenderer.getViewType()

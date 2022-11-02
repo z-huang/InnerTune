@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -88,10 +89,13 @@ class QueueSheetFragment : Fragment() {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.mediaController?.removeQueueItem(adapter.getItem(viewHolder.absoluteAdapterPosition).description)
+            val index = viewHolder.absoluteAdapterPosition
+            adapter.removeItem(index)
+            MediaSessionConnection.binder?.songPlayer?.player?.removeMediaItem(index)
         }
     })
 
+    private val songRepository by lazy { SongRepository(requireContext()) }
     private val adapter: QueueItemAdapter = QueueItemAdapter(itemTouchHelper)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -125,6 +129,12 @@ class QueueSheetFragment : Fragment() {
         binding.btnCollapse.setOnClickListener {
             mainActivity.queueSheetBehavior.state = STATE_COLLAPSED
         }
+        binding.btnLyrics.setOnClickListener {
+            val sharedPreferences = requireContext().sharedPreferences
+            sharedPreferences.edit {
+                putBoolean(getString(R.string.pref_show_lyrics), !sharedPreferences.getBoolean(getString(R.string.pref_show_lyrics), false))
+            }
+        }
         binding.btnAddToLibrary.setOnClickListener {
             viewModel.transportControls?.sendCustomAction(ACTION_TOGGLE_LIBRARY, null)
         }
@@ -156,8 +166,8 @@ class QueueSheetFragment : Fragment() {
                             val mainContent = mainActivity.binding.mainContent
                             ChoosePlaylistDialog { playlist ->
                                 GlobalScope.launch(requireContext().exceptionHandler) {
-                                    if (song != null) SongRepository.addToPlaylist(playlist, song)
-                                    else SongRepository.addMediaItemToPlaylist(playlist, mediaMetadata)
+                                    if (song != null) songRepository.addToPlaylist(playlist, song)
+                                    else songRepository.addMediaItemToPlaylist(playlist, mediaMetadata)
                                     Snackbar.make(mainContent, getString(R.string.snackbar_added_to_playlist, playlist.name), BaseTransientBottomBar.LENGTH_SHORT)
                                         .setAction(R.string.snackbar_action_view) {
                                             mainActivity.currentFragment?.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true).addTarget(R.id.fragment_content)
@@ -169,7 +179,7 @@ class QueueSheetFragment : Fragment() {
                         }
                         R.id.action_download -> {
                             GlobalScope.launch(requireContext().exceptionHandler) {
-                                SongRepository.downloadSong(song?.song ?: SongRepository.addSong(mediaMetadata))
+                                songRepository.downloadSong(song?.song ?: songRepository.addSong(mediaMetadata))
                             }
                         }
                         R.id.action_view_artist -> {
