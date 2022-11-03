@@ -61,6 +61,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_REMOVE_FROM_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
+import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_SHUFFLE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_UNLIKE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
@@ -275,6 +276,18 @@ class SongPlayer(
                         if (currentSong != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add
                     ).build()
                 } else null
+            },
+            object : MediaSessionConnector.CustomActionProvider {
+                override fun onCustomAction(player: Player, action: String, extras: Bundle?) {
+                    player.shuffleModeEnabled = !player.shuffleModeEnabled
+                }
+
+                override fun getCustomAction(player: Player) =
+                    CustomAction.Builder(
+                        ACTION_TOGGLE_SHUFFLE,
+                        context.getString(R.string.btn_shuffle),
+                        if (player.shuffleModeEnabled) R.drawable.ic_shuffle_on else R.drawable.ic_shuffle
+                    ).build()
             }
         )
         setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription(context) }
