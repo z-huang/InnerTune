@@ -130,7 +130,6 @@ class QueueSheetFragment : Fragment() {
             mainActivity.queueSheetBehavior.state = STATE_COLLAPSED
         }
         binding.btnLyrics.setOnClickListener {
-            val sharedPreferences = requireContext().sharedPreferences
             sharedPreferences.edit {
                 putBoolean(getString(R.string.pref_show_lyrics), !sharedPreferences.getBoolean(getString(R.string.pref_show_lyrics), false))
             }

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <Preference
+        android:icon="@drawable/ic_person"
+        android:key="@string/pref_account"
+        tools:title="Not logged in" />
     <ListPreference
         android:defaultValue="@string/default_localization_key"
         android:entries="@array/language_names"

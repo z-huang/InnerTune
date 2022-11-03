@@ -26,6 +26,7 @@
     <string name="align_right">Right</string>
 
     <string name="pref_content_title">Conteúdo</string>
+    <string name="login">Login</string>
     <string name="pref_content_language_title">Idioma padrão do conteúdo</string>
     <string name="pref_default_content_country_title">País padrão do conteúdo</string>
     <string name="pref_enable_proxy_title">Ativar proxy</string>

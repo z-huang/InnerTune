@@ -20,4 +20,9 @@ object Constants {
     const val GITHUB_ISSUE_URL = "https://github.com/z-huang/InnerTune/issues"
 
     const val ERROR_INFO = "error_info"
+
+    const val VISITOR_DATA = "visitor_data"
+    const val INNERTUBE_COOKIE = "innertube_cookie"
+    const val ACCOUNT_NAME = "account_name"
+    const val ACCOUNT_EMAIL = "account_email"
 }

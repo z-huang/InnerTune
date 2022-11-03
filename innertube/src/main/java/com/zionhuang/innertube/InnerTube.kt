@@ -4,6 +4,8 @@ import com.zionhuang.innertube.encoder.brotli
 import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.innertube.models.body.*
+import com.zionhuang.innertube.utils.parseCookieString
+import com.zionhuang.innertube.utils.sha1
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
@@ -22,21 +24,26 @@ import java.util.*
  * For making HTTP requests, not parsing response.
  */
 class InnerTube {
-    var httpClient = createClient()
+    private var httpClient = createClient()
 
     var locale = YouTubeLocale(
         gl = Locale.getDefault().country,
         hl = Locale.getDefault().toLanguageTag()
     )
-    private var _proxy: Proxy? = null
-    var proxy: Proxy?
-        get() = _proxy
+    var visitorData: String = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
+    var cookie: String? = null
         set(value) {
-            _proxy = value
+            field = value
+            cookieMap = if (value == null) emptyMap() else parseCookieString(value)
+        }
+    private var cookieMap = emptyMap<String, String>()
+
+    var proxy: Proxy? = null
+        set(value) {
+            field = value
             httpClient.close()
             httpClient = createClient()
         }
-    var visitorData: String = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
 
     @OptIn(ExperimentalSerializationApi::class)
     private fun createClient() = HttpClient(OkHttp) {
@@ -56,9 +63,9 @@ class InnerTube {
             deflate(0.8F)
         }
 
-        if (_proxy != null) {
+        if (proxy != null) {
             engine {
-                this.proxy = _proxy
+                proxy = this@InnerTube.proxy
             }
         }
 
@@ -73,8 +80,16 @@ class InnerTube {
             append("X-Goog-Api-Format-Version", "1")
             append("X-YouTube-Client-Name", client.clientName)
             append("X-YouTube-Client-Version", client.clientVersion)
+            append("x-origin", "https://music.youtube.com")
             if (client.referer != null) {
                 append("Referer", client.referer)
+            }
+            cookie?.let { cookie ->
+                append("cookie", cookie)
+                if ("SAPISID" !in cookieMap) return@let
+                val currentTime = System.currentTimeMillis() / 1000
+                val sapisidHash = sha1("$currentTime ${cookieMap["SAPISID"]} https://music.youtube.com")
+                append("Authorization", "SAPISIDHASH ${currentTime}_${sapisidHash}")
             }
         }
         userAgent(client.userAgent)
@@ -173,5 +188,12 @@ class InnerTube {
             videoIds = videoIds,
             playlistId = playlistId
         ))
+    }
+
+    suspend fun getSwJsData() = httpClient.get("https://music.youtube.com/sw.js_data")
+
+    suspend fun accountMenu(client: YouTubeClient) = httpClient.post("account/account_menu") {
+        configYTClient(client)
+        setBody(AccountMenuBody(client.toContext(locale, visitorData)))
     }
 }

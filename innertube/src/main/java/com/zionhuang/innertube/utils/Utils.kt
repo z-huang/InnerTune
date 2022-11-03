@@ -3,6 +3,18 @@ package com.zionhuang.innertube.utils
 import java.io.UnsupportedEncodingException
 import java.net.URL
 import java.net.URLDecoder
+import java.security.MessageDigest
+
+fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
+
+fun sha1(str: String): String = MessageDigest.getInstance("SHA-1").digest(str.toByteArray()).toHex()
+
+fun parseCookieString(cookie: String): Map<String, String> =
+    cookie.split("; ").associate {
+        val (key, value) = it.split("=")
+        key to value
+    }
+
 
 fun isHTTP(url: URL): Boolean {
     // Make sure it's HTTP or HTTPS
