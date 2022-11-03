@@ -131,7 +131,7 @@ object KuGou {
 
     private fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
 
-    private fun String.normalize(keyword: Pair<String, String>): String = lines().filter { line ->
+    private fun String.normalize(keyword: Pair<String, String>): String = replace("&apos;", "'").lines().filter { line ->
         line matches ACCEPTED_REGEX
     }.let {
         // Remove useless information such as singer, writer, composer, guitar, etc.
