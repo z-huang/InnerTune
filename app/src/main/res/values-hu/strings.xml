@@ -26,7 +26,7 @@
     <string name="align_right">Jobbra</string>
 
     <string name="pref_content_title">Tartalom</string>
-    <string name="login">Login</string>
+    <string name="login">Bejelentkezés</string>
     <string name="pref_content_language_title">A tartalom alapért. nyelve</string>
     <string name="pref_default_content_country_title">A tartalom alapért.t országa</string>
     <string name="pref_enable_proxy_title">Proxy bekapcsolása</string>
@@ -122,7 +122,7 @@
     <string name="menu_refetch">Újrahív</string>
     <string name="menu_share">Megosztás</string>
     <string name="menu_delete">Törlés</string>
-    <string name="menu_search_online">Search online</string>
+    <string name="menu_search_online">Keresés online</string>
     <string name="menu_choose_lyrics">Válasszon más dalszövegeket</string>
 
     <!-- Dialog -->
@@ -138,7 +138,7 @@
     <string name="unknown">Ismeretlen</string>
 
     <string name="dialog_title_edit_lyrics">Dalszöveg szerkesztése</string>
-    <string name="dialog_title_search_lyrics">Search lyrics</string>
+    <string name="dialog_title_search_lyrics">Dalszöveg keresése</string>
     <string name="dialog_title_choose_lyrics">Válassza ki a dalszövegeket</string>
 
     <string name="dialog_title_edit_song">Dal szerkesztése</string>
