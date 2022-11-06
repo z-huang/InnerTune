@@ -100,6 +100,12 @@ Use other music scrobbler apps. I recommend [Pano Scrobbler](https://play.google
 
 *InnerTune* supports SAF. You can find the provider in Android native file manager. You can also use [Material Files](https://play.google.com/store/apps/details?id=me.zhanghai.android.files) with [instruction](https://github.com/z-huang/InnerTune/issues/117#issuecomment-1295090708) (recommended).
 
+### Q: Why InnerTune isn't showing in Android Auto?
+
+1. Go to Android Auto's settings and tap multiple times on the version in the bottom to enable developer settings
+2. In the three dots menu at the top-right of the screen, click "Developer settings"
+3. Enable "Unknown sources"
+
 ## Contribution
 
 ### Contributing Translations
