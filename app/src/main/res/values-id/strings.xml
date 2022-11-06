@@ -1,0 +1,306 @@
+<resources>
+    <!-- Title -->
+    <string name="title_home">Beranda</string>
+    <string name="title_songs">Lagu</string>
+    <string name="title_artists">Artis</string>
+    <string name="title_albums">Album</string>
+    <string name="title_playlists">Daftar putar</string>
+    <string name="title_explore">Jelajah</string>
+    <string name="title_settings">Pengaturan</string>
+    <string name="title_now_playing">Sedang diputar</string>
+    <string name="title_error_report">Laporkan kesalahan</string>
+
+    <!-- Preference Title -->
+    <string name="pref_appearance_title">Tampilan</string>
+    <string name="pref_follow_system_accent_title">Ikuti tema sistem</string>
+    <string name="pref_theme_color_title">Warna tema</string>
+    <string name="pref_dark_theme_title">Tema gelap</string>
+    <string name="dark_theme_on">Aktif</string>
+    <string name="dark_theme_off">Tidak aktif</string>
+    <string name="dark_theme_follow_system">Ikuti sistem</string>
+    <string name="pref_default_open_tab_title">Tab buka bawaan</string>
+    <string name="pref_customize_navigation_tabs">Sesuaikan tab navigasi</string>
+    <string name="pref_lyrics_text_position_title">Posisi teks lirik</string>
+    <string name="align_left">Kiri</string>
+    <string name="align_center">Tengah</string>
+    <string name="align_right">Kanan</string>
+
+    <string name="pref_content_title">Konten</string>
+    <string name="login">Masuk</string>
+    <string name="pref_content_language_title">Bahasa konten bawaan</string>
+    <string name="pref_default_content_country_title">Negara konten bawaan</string>
+    <string name="pref_enable_proxy_title">Aktifkan proxy</string>
+    <string name="pref_proxy_type_title">Tipe proxy</string>
+    <string name="pref_proxy_url_title">URL proxy</string>
+    <string name="pref_restart_title">Mulai ulang agar berlaku</string>
+
+    <string name="pref_player_audio_title">Pemutar dan audio</string>
+    <string name="pref_audio_quality_title">Kualitas audio</string>
+    <string name="audio_quality_auto">Otomatis</string>
+    <string name="audio_quality_high">Tinggi</string>
+    <string name="audio_quality_low">Rendah</string>
+    <string name="pref_persistent_queue_title">Dalam antrian</string>
+    <string name="pref_skip_silence_title">Lewati keheningan</string>
+    <string name="pref_audio_normalization_title">Normalisasi audio</string>
+    <string name="pref_equalizer_title">Ekualiser</string>
+
+    <string name="pref_storage_title">Penyimpanan</string>
+    <string name="pref_open_saf_title">Lihat file yang diunduh di SAF</string>
+    <string name="pref_open_saf_summary">Ini mungkin tidak berfungsi di beberapa perangkat</string>
+    <string name="pref_cache_title">Data sementara (cache)</string>
+    <string name="pref_image_max_cache_size_title">Ukuran gambar data sementara (cache) maksimum</string>
+    <string name="pref_clear_image_cache_title">Bersihkan gambar data sementara (cache)</string>
+    <string name="pref_song_max_cache_size_title">Ukuran lagu data sementara (cache) maksimum</string>
+    <string name="size_used">%s digunakan</string>
+
+    <string name="pref_general_title">Umum</string>
+    <string name="pref_auto_download_title">Unduh secara otomatis</string>
+    <string name="pref_auto_download_summary">Unduh lagu saat ditambahkan ke perpustakaan</string>
+    <string name="pref_auto_add_song_title">Tambahkan lagu secara otomatis ke perpustakaan</string>
+    <string name="pref_auto_add_song_summary">Tambahkan lagu ke perpustakaan Anda saat selesai diputar</string>
+    <string name="pref_expand_on_play_title">Perluas pemutar bawah saat diputar</string>
+    <string name="pref_notification_more_action_title">Lebih banyak tindakan dalam pemberitahuan</string>
+    <string name="pref_notification_more_action_summary">Tampilkan tombol tambahkan ke perpustakaan dan suka</string>
+
+    <string name="pref_privacy_title">Privasi</string>
+    <string name="pref_pause_search_history_title">Jeda riwayat pencarian</string>
+    <string name="pref_clear_search_history_title">Bersihkan riwayat pencarian</string>
+    <string name="clear_search_history_question">Apakah anda yakin untuk menghapus semua riwayat penelusuran?</string>
+    <string name="pref_enable_kugou_title">Aktifkan penyedia lirik KuGou</string>
+
+    <string name="pref_backup_restore_title">Cadangkan dan pulihkan</string>
+    <string name="pref_backup_title">Cadangkan</string>
+    <string name="pref_restore_title">Pulihkan</string>
+
+    <string name="pref_about_title">Tentang</string>
+    <string name="pref_app_version_title">Versi aplikasi</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Merah</string>
+    <string name="color_pink">Merah muda</string>
+    <string name="color_purple">Ungu</string>
+    <string name="color_deep_purple">Ungu gelap</string>
+    <string name="color_indigo">Nila</string>
+    <string name="color_blue">Biru</string>
+    <string name="color_light_blue">Biru terang</string>
+    <string name="color_cyan">Biru Kehijau-hijauan</string>
+    <string name="color_teal">Hijau laut</string>
+    <string name="color_green">Hijau</string>
+    <string name="color_light_green">Hijau terang</string>
+    <string name="color_lime">Hijau kekuningan</string>
+    <string name="color_yellow">Kuning</string>
+    <string name="color_amber">Kuning lulur</string>
+    <string name="color_orange">Jingga</string>
+    <string name="color_deep_orange">Jingga gelap</string>
+    <string name="color_brown">Cokelat</string>
+    <string name="color_blue_grey">Biru keabu-abuan</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search">Caru</string>
+    <string name="search_yt_music">Cari di YouTube Music…</string>
+    <string name="search_library">Cari di perpustakaan…</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">Lagu yang disukai</string>
+    <string name="downloaded_songs">Lagu yang diunduh</string>
+
+    <!-- Popup Menu -->
+    <string name="menu_details">Rincian</string>
+    <string name="menu_edit">Sunting</string>
+    <string name="menu_start_radio">Putar radio</string>
+    <string name="menu_play">Putar</string>
+    <string name="menu_play_next">Putar selanjutnya</string>
+    <string name="menu_add_to_queue">Tambahkan ke antrian</string>
+    <string name="menu_add_to_library">Tambahkan ke perpustakaan</string>
+    <string name="menu_download">Unduh</string>
+    <string name="menu_remove_download">Hapus unduhan</string>
+    <string name="menu_import_playlist">Pindahkan ke daftar putar</string>
+    <string name="menu_add_to_playlist">Tambahkan ke daftar putar</string>
+    <string name="menu_view_artist">Lihat artis</string>
+    <string name="menu_view_album">Lihat album</string>
+    <string name="menu_refetch">Ambil kembali</string>
+    <string name="menu_share">Bagikan</string>
+    <string name="menu_delete">Hapus</string>
+    <string name="menu_search_online">Cari secara online</string>
+    <string name="menu_choose_lyrics">Pilih lirik lain</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title_details">Rincian</string>
+    <string name="media_id">ID media</string>
+    <string name="mime_type">Tipe MIME</string>
+    <string name="codecs">Codecs</string>
+    <string name="bitrate">Kecepatan bit</string>
+    <string name="sample_rate">Tingkat sampel</string>
+    <string name="loudness">Kekerasan</string>
+    <string name="volume">Volume</string>
+    <string name="file_size">Ukuran berkas</string>
+    <string name="unknown">Tidak diketahui</string>
+
+    <string name="dialog_title_edit_lyrics">Sunting lirik</string>
+    <string name="dialog_title_search_lyrics">Cari lirik</string>
+    <string name="dialog_title_choose_lyrics">Pilih lirik</string>
+
+    <string name="dialog_title_edit_song">Sunting lagu</string>
+    <string name="song_title">Judul lagu</string>
+    <string name="song_artists">Artis lagu</string>
+    <string name="error_song_title_empty">Judul lagu wajib diisi.</string>
+    <string name="error_song_artist_empty">Artis lagu wajib diisi.</string>
+    <string name="dialog_button_save">Simpan</string>
+
+    <string name="dialog_title_create_playlist">Buat daftar putar</string>
+    <string name="text_view_hint_playlist_name">Nama daftar putar</string>
+    <string name="error_playlist_name_empty">Nama daftar putar wajib diisi.</string>
+
+    <string name="dialog_title_edit_artist">Sunting artis</string>
+    <string name="text_view_hint_artist_name">Nama artis</string>
+    <string name="error_artist_name_empty">Nama artis wajib diisi.</string>
+
+    <string name="dialog_title_duplicate_artist">Artis duplikat</string>
+    <string name="dialog_msg_duplicate_artist">Artis %1$s sudah ada.</string>
+
+    <string name="dialog_title_choose_playlist">Pilih daftar putar</string>
+
+    <string name="dialog_title_edit_playlist">Sunting daftar putar</string>
+
+    <string name="dialog_title_choose_backup_content">Pilih cadangan konten</string>
+    <string name="dialog_title_choose_restore_content">Pilih pulihkan konten</string>
+    <string name="choice_preferences">Preferensi</string>
+    <string name="choice_database">Basis Data</string>
+    <string name="choice_downloaded_songs">Lagu yang telah diunduh</string>
+    <string name="message_backup_create_success">Cadangan berhasil dibuat</string>
+    <string name="message_backup_create_failed">Tidak dapat membuat cadangan</string>
+    <string name="message_restore_failed">Gagal untuk memulihkan cadangan</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Pemutar Musik</string>
+    <string name="channel_name_download">Unduh</string>
+
+    <!-- Noun -->
+    <plurals name="song_count">
+        <item quantity="one">%d lagu</item>
+        <item quantity="other">%d lagu</item>
+    </plurals>
+    <plurals name="artist_count">
+        <item quantity="one">%d artis</item>
+        <item quantity="other">%d artis</item>
+    </plurals>
+    <plurals name="album_count">
+        <item quantity="one">%d album</item>
+        <item quantity="other">%d album</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d daftar putar</item>
+        <item quantity="other">%d daftar putar</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Mencoba kembali</string>
+    <string name="btn_play">Putar</string>
+    <string name="btn_play_all">Putar semua</string>
+    <string name="btn_radio">Radio</string>
+    <string name="btn_shuffle">Acak</string>
+    <string name="btn_copy_stacktrace">Salin stacktrace</string>
+    <string name="btn_report">Laporkan</string>
+    <string name="btn_report_on_github">Laporkan di GitHub</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_create_date">Tanggal ditambahkan</string>
+    <string name="sort_by_name">Nama</string>
+    <string name="sort_by_artist">Artis</string>
+    <string name="sort_by_year">Tahun</string>
+    <string name="sort_by_song_count">Hitungan lagu</string>
+    <string name="sort_by_length">Ukuran</string>
+    <string name="sort_by_play_time">Waktu dimainkan</string>
+
+    <!-- Snackbar -->
+    <plurals name="snackbar_delete_song">
+        <item quantity="one">%d lagu telah dihapus.</item>
+        <item quantity="other">%d lagu telah dihapus.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">%d dipilih</item>
+    </plurals>
+    <string name="snackbar_undo">Kembali</string>
+    <string name="snackbar_url_error">Tidak dapat mengidentifikasi url ini.</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">%d lagu akan diputar selanjutnya</item>
+        <item quantity="other">%d lagu akan diputar selanjutnya</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">%d artis akan diputar selanjutnya</item>
+        <item quantity="other">%d artis akan diputar selanjutnya</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">%d album akan diputar selanjutnya</item>
+        <item quantity="other">%d album akan diputar selanjutnya</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">%d daftar putar akan diputar selanjutnya</item>
+        <item quantity="other">%d daftar putar akan diputar selanjutnya</item>
+    </plurals>
+    <string name="snackbar_play_next">Dipilih akan diputar selanjutnya</string>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">%d lagu ditambahkan ke antrian</item>
+        <item quantity="other">%d lagu ditambahkan ke antrian</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">%d artis ditambahkan ke antrian</item>
+        <item quantity="other">%d artis ditambahkan ke antrian</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">%d album ditambahkan ke antrian</item>
+        <item quantity="other">%d album ditambahkan ke antrian</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">%d daftar putar ditambahkan ke antrian</item>
+        <item quantity="other">%d daftar putar ditambahkan ke antrian</item>
+    </plurals>
+    <string name="snackbar_added_to_queue">Dipilih ditambahkan ke antrean</string>
+    <string name="snackbar_added_to_library">Ditambahkan ke perpustakaan</string>
+    <string name="snackbar_removed_from_library">Dihapus dari perpustakaan</string>
+    <string name="snackbar_playlist_imported">Daftar putar dipindahkan</string>
+    <string name="snackbar_added_to_playlist">Ditambahkan ke %1$s</string>
+    <plurals name="snackbar_download_song">
+        <item quantity="one">Mulai mengunduh %d lagu</item>
+        <item quantity="other">Mulai mengunduh %d lagu</item>
+    </plurals>
+    <string name="snackbar_removed_download">Unduhan dihapus</string>
+    <string name="snackbar_action_view">Lihat</string>
+
+    <!-- Custom Action -->
+    <string name="action_like">Suka</string>
+    <string name="action_remove_like">Hapus suka</string>
+    <string name="action_add_to_library">Tambahkan ke perpustakaan</string>
+    <string name="action_remove_from_library">Hapus dari perpustakaan</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Semua</string>
+    <string name="search_filter_songs">Lagu</string>
+    <string name="search_filter_videos">Video</string>
+    <string name="search_filter_albums">Album</string>
+    <string name="search_filter_artists">Artis</string>
+    <string name="search_filter_playlists">Daftar putar</string>
+    <string name="search_filter_community_playlists">Daftar putar komunitas</string>
+    <string name="search_filter_featured_playlists">Daftar putar unggulan</string>
+
+    <string name="system_default">System default</string>
+    <string name="header_from_your_library">Dari perpustakaan anda</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Maaf, itu seharusnya tidak terjadi.</string>
+    <string name="copied">Disalin ke papan klip</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">Tidak ada stream yang tersedia</string>
+    <string name="error_no_internet">Tidak ada koneksi jaringan</string>
+    <string name="error_timeout">Waktu habis</string>
+    <string name="error_unknown">Kesalahan yang tidak diketahui</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">Semua lagu</string>
+    <string name="queue_searched_songs">Lagu yang telah dicari</string>
+
+    <!-- Lyrics View -->
+    <string name="lyrics_not_found">Lirik tidak ditemukan</string>
+</resources>
