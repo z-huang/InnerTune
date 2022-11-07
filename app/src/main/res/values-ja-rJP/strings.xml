@@ -19,14 +19,14 @@
     <string name="dark_theme_off">オフ</string>
     <string name="dark_theme_follow_system">システムに従う</string>
     <string name="pref_default_open_tab_title">起動時に開くタブ</string>
-    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <string name="pref_customize_navigation_tabs">ナビゲーションタブのカスタマイズ</string>
+    <string name="pref_lyrics_text_position_title">歌詞テキストの位置</string>
+    <string name="align_left">左</string>
+    <string name="align_center">中央</string>
+    <string name="align_right">右</string>
 
     <string name="pref_content_title">コンテンツ</string>
-    <string name="login">Login</string>
+    <string name="login">ログイン</string>
     <string name="pref_content_language_title">デフォルトのコンテンツの言語</string>
     <string name="pref_default_content_country_title">デフォルトのコンテンツの国</string>
     <string name="pref_enable_proxy_title">プロキシを有効化</string>
@@ -39,34 +39,34 @@
     <string name="audio_quality_auto">自動</string>
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
-    <string name="pref_persistent_queue_title">Persistent queue</string>
-    <string name="pref_skip_silence_title">Skip silence</string>
-    <string name="pref_audio_normalization_title">Audio normalization</string>
+    <string name="pref_persistent_queue_title">再生キューを保持</string>
+    <string name="pref_skip_silence_title">無音部分をスキップ</string>
+    <string name="pref_audio_normalization_title">オーディオノーマライゼーション</string>
     <string name="pref_equalizer_title">イコライザー</string>
 
-    <string name="pref_storage_title">Storage</string>
-    <string name="pref_open_saf_title">View downloaded files in SAF</string>
-    <string name="pref_open_saf_summary">This may not work in some devices</string>
-    <string name="pref_cache_title">Cache</string>
-    <string name="pref_image_max_cache_size_title">Max image cache size</string>
-    <string name="pref_clear_image_cache_title">Clear image cache</string>
-    <string name="pref_song_max_cache_size_title">Max song cache size</string>
-    <string name="size_used">%s used</string>
+    <string name="pref_storage_title">ストレージ</string>
+    <string name="pref_open_saf_title">SAFにダウンロードされたファイルを表示</string>
+    <string name="pref_open_saf_summary">一部の端末では動作しない場合があります</string>
+    <string name="pref_cache_title">キャッシュ</string>
+    <string name="pref_image_max_cache_size_title">画像の最大キャッシュサイズ</string>
+    <string name="pref_clear_image_cache_title">画像のキャッシュを削除</string>
+    <string name="pref_song_max_cache_size_title">曲の最大キャッシュサイズ</string>
+    <string name="size_used">%s 使用中</string>
 
     <string name="pref_general_title">一般</string>
     <string name="pref_auto_download_title">自動ダウンロード</string>
     <string name="pref_auto_download_summary">ライブラリに追加したら曲をダウンロードする</string>
     <string name="pref_auto_add_song_title">曲を自動でライブラリに追加</string>
     <string name="pref_auto_add_song_summary">再生が終了したら曲をライブラリに追加する</string>
-    <string name="pref_expand_on_play_title">再生時にボトムプレイヤーを展開する</string>
-    <string name="pref_notification_more_action_title">More actions in notification</string>
-    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
+    <string name="pref_expand_on_play_title">プレイヤーを再生時に展開</string>
+    <string name="pref_notification_more_action_title">通知にもっとアクションを表示</string>
+    <string name="pref_notification_more_action_summary">「ライブラリに追加」と「いいね」ボタンを表示する</string>
 
     <string name="pref_privacy_title">プライバシー</string>
     <string name="pref_pause_search_history_title">履歴の記録を一時停止</string>
     <string name="pref_clear_search_history_title">履歴を削除</string>
     <string name="clear_search_history_question">すべての検索履歴を削除しますか？</string>
-    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
+    <string name="pref_enable_kugou_title">酷狗からの歌詞取得を有効化</string>
 
     <string name="pref_backup_restore_title">バックアップとリストア</string>
     <string name="pref_backup_title">バックアップ</string>
@@ -76,24 +76,24 @@
     <string name="pref_app_version_title">アプリのバージョン</string>
 
     <!-- Colors -->
-    <string name="color_sakura">桜色</string>
-    <string name="color_red">赤</string>
+    <string name="color_sakura">サクラ</string>
+    <string name="color_red">レッド</string>
     <string name="color_pink">ピンク</string>
-    <string name="color_purple">紫</string>
-    <string name="color_deep_purple">深紫</string>
-    <string name="color_indigo">藍</string>
-    <string name="color_blue">青</string>
+    <string name="color_purple">パープル</string>
+    <string name="color_deep_purple">ディープパープル</string>
+    <string name="color_indigo">インディゴ</string>
+    <string name="color_blue">ブルー</string>
     <string name="color_light_blue">ライトブルー</string>
     <string name="color_cyan">シアン</string>
-    <string name="color_teal">青緑</string>
-    <string name="color_green">緑</string>
+    <string name="color_teal">ティール</string>
+    <string name="color_green">グリーン</string>
     <string name="color_light_green">ライトグリーン</string>
-    <string name="color_lime">黄緑</string>
-    <string name="color_yellow">黄</string>
+    <string name="color_lime">ライム</string>
+    <string name="color_yellow">イエロー</string>
     <string name="color_amber">アンバー</string>
     <string name="color_orange">オレンジ</string>
-    <string name="color_deep_orange">深いオレンジ</string>
-    <string name="color_brown">茶</string>
+    <string name="color_deep_orange">ディープオレンジ</string>
+    <string name="color_brown">ブラウン</string>
     <string name="color_blue_grey">ブルーグレー</string>
 
     <!-- Nav Menu -->
@@ -102,8 +102,8 @@
     <string name="search_library">ライブラリを検索…</string>
 
     <!-- Built-in playlist -->
-    <string name="liked_songs">Liked songs</string>
-    <string name="downloaded_songs">Downloaded songs</string>
+    <string name="liked_songs">いいねした曲</string>
+    <string name="downloaded_songs">ダウンロードした曲</string>
 
     <!-- Popup Menu -->
     <string name="menu_details">Details</string>
@@ -122,24 +122,24 @@
     <string name="menu_refetch">再取得</string>
     <string name="menu_share">共有</string>
     <string name="menu_delete">削除</string>
-    <string name="menu_search_online">Search online</string>
-    <string name="menu_choose_lyrics">Choose other lyrics</string>
+    <string name="menu_search_online">オンラインで検索</string>
+    <string name="menu_choose_lyrics">ほかの歌詞を選択</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">Details</string>
-    <string name="media_id">Media id</string>
-    <string name="mime_type">MIME type</string>
-    <string name="codecs">Codecs</string>
-    <string name="bitrate">Bitrate</string>
-    <string name="sample_rate">Sample rate</string>
-    <string name="loudness">Loudness</string>
-    <string name="volume">Volume</string>
-    <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
+    <string name="dialog_title_details">詳細</string>
+    <string name="media_id">メディアID</string>
+    <string name="mime_type">MIMEタイプ</string>
+    <string name="codecs">コーデック</string>
+    <string name="bitrate">ビットレート</string>
+    <string name="sample_rate">サンプリングレート</string>
+    <string name="loudness">ラウドネス</string>
+    <string name="volume">ボリューム</string>
+    <string name="file_size">ファイルサイズ</string>
+    <string name="unknown">不明</string>
 
-    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
-    <string name="dialog_title_search_lyrics">Search lyrics</string>
-    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
+    <string name="dialog_title_edit_lyrics">歌詞を編集</string>
+    <string name="dialog_title_search_lyrics">歌詞を検索</string>
+    <string name="dialog_title_choose_lyrics">歌詞を選択</string>
 
     <string name="dialog_title_edit_song">曲を編集</string>
     <string name="song_title">曲名</string>
@@ -264,10 +264,10 @@
     <string name="snackbar_action_view">見る</string>
 
     <!-- Custom Action -->
-    <string name="action_like">Like</string>
-    <string name="action_remove_like">Remove like</string>
+    <string name="action_like">いいね</string>
+    <string name="action_remove_like">いいねを削除</string>
     <string name="action_add_to_library">ライブラリに追加</string>
-    <string name="action_remove_from_library">Remove from library</string>
+    <string name="action_remove_from_library">ライブラリから削除</string>
 
     <!-- Search Filter -->
     <string name="search_filter_all">すべて</string>
@@ -287,15 +287,15 @@
     <string name="copied">クリップボードにコピー</string>
 
     <!-- Player Error Message -->
-    <string name="error_no_stream">No stream available</string>
-    <string name="error_no_internet">No network connection</string>
-    <string name="error_timeout">Timeout</string>
-    <string name="error_unknown">Unknown error</string>
+    <string name="error_no_stream">ストリームが利用できません</string>
+    <string name="error_no_internet">ネットワーク接続がありません</string>
+    <string name="error_timeout">タイムアウトしました</string>
+    <string name="error_unknown">不明なエラーです</string>
 
     <!-- Queue Title -->
-    <string name="queue_all_songs">All songs</string>
-    <string name="queue_searched_songs">Searched songs</string>
+    <string name="queue_all_songs">すべての曲</string>
+    <string name="queue_searched_songs">検索した曲</string>
 
     <!-- Lyrics View -->
-    <string name="lyrics_not_found">Lyrics not found</string>
+    <string name="lyrics_not_found">歌詞が見つかりません</string>
 </resources>
