@@ -205,7 +205,7 @@
     <string name="btn_report_on_github">Jelentés GitHub-on</string>
 
     <!-- Sort Menu -->
-    <string name="sort_by_create_date">Dátum hozzáadva</string>
+    <string name="sort_by_create_date">Létrehozás dátuma</string>
     <string name="sort_by_name">Név</string>
     <string name="sort_by_artist">Előadó</string>
     <string name="sort_by_year">Év</string>
