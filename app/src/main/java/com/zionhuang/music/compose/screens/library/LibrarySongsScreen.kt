@@ -166,9 +166,9 @@ fun LibrarySongsScreen(
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = LocalPlayerAwareWindowInsets.current
-                    .asPaddingValues()
-                    .calculateBottomPadding())
+                .padding(LocalPlayerAwareWindowInsets.current
+                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.End)
+                    .asPaddingValues())
                 .padding(16.dp),
             onClick = {
                 playerConnection.playQueue(ListQueue(
