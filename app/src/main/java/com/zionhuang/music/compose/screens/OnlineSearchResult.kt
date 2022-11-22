@@ -92,7 +92,11 @@ fun OnlineSearchResult(
                     is YTItem -> {
                         YouTubeListItem(
                             item = item,
-                            playingIndicator = mediaMetadata?.id == item.id,
+                            playingIndicator = when (item) {
+                                is SongItem -> mediaMetadata?.id == item.id
+                                is AlbumItem -> mediaMetadata?.album?.id == item.id
+                                else -> false
+                            },
                             playWhenReady = playWhenReady,
                             modifier = Modifier
                                 .clickable {
