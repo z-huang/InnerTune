@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.music.R
@@ -48,7 +49,7 @@ class MusicService : LifecycleMediaBrowserService() {
                     startForegroundService(this@MusicService, Intent(this@MusicService, MusicService::class.java))
                     startForeground(notificationId, notification)
                 } else {
-                    stopForeground(0)
+                    stopForeground(STOP_FOREGROUND_DETACH)
                 }
             }
         })
@@ -82,6 +83,9 @@ class MusicService : LifecycleMediaBrowserService() {
     inner class MusicBinder : Binder() {
         val sessionToken: MediaSessionCompat.Token
             get() = songPlayer.mediaSession.sessionToken
+
+        val player: Player
+            get() = this@MusicService.songPlayer.player
 
         val songPlayer: SongPlayer
             get() = this@MusicService.songPlayer

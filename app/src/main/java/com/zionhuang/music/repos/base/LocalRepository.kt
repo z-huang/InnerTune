@@ -86,7 +86,7 @@ interface LocalRepository {
     suspend fun addAlbums(albums: List<AlbumItem>)
     suspend fun refetchAlbum(album: AlbumEntity) = refetchAlbums(listOf(album))
     suspend fun refetchAlbums(albums: List<AlbumEntity>)
-    suspend fun getAlbum(albumId: String): AlbumEntity?
+    suspend fun getAlbum(albumId: String): Album?
     suspend fun deleteAlbums(albums: List<Album>)
 
     /**
@@ -121,8 +121,8 @@ interface LocalRepository {
     /**
      * Search history
      */
-    suspend fun getAllSearchHistory(): List<SearchHistory>
-    suspend fun getSearchHistory(query: String): List<SearchHistory>
+    fun getAllSearchHistory(): Flow<List<SearchHistory>>
+    fun getSearchHistory(query: String): Flow<List<SearchHistory>>
     suspend fun insertSearchHistory(query: String)
     suspend fun deleteSearchHistory(query: String)
     suspend fun clearSearchHistory()

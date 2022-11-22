@@ -1,7 +1,9 @@
 package com.zionhuang.music.db.entities
 
+import androidx.compose.runtime.Immutable
 import androidx.room.Embedded
 
+@Immutable
 data class Artist(
     @Embedded
     val artist: ArtistEntity,

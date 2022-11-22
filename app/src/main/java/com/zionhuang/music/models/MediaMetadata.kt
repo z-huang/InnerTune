@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat.*
+import androidx.compose.runtime.Immutable
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.zionhuang.innertube.models.SongItem
@@ -15,6 +16,7 @@ import kotlinx.parcelize.Parcelize
 import java.io.Serializable
 import kotlin.math.roundToInt
 
+@Immutable
 @Parcelize
 data class MediaMetadata(
     val id: String,

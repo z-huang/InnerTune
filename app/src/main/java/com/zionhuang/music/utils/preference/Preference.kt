@@ -5,6 +5,7 @@ package com.zionhuang.music.utils.preference
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
+import androidx.core.content.edit
 import com.zionhuang.music.extensions.*
 import kotlin.reflect.KProperty
 
@@ -35,6 +36,6 @@ inline fun <reified T : Any> serializablePreference(context: Context, keyId: Int
 inline fun <reified E : Enum<E>> enumPreference(context: Context, keyId: Int, defaultValue: E): Preference<E> = object : Preference<E>(context, keyId, defaultValue) {
     override fun getPreferenceValue(): E = sharedPreferences.getEnum(key, defaultValue)
     override fun setPreferenceValue(value: E) {
-        sharedPreferences.putEnum(key, value)
+        sharedPreferences.edit { putEnum(key, value) }
     }
 }

@@ -52,10 +52,13 @@ interface ArtistDao {
     suspend fun insert(artist: ArtistEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertArtists(artists: List<ArtistEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songArtistMap: SongArtistMap): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(songArtistMaps: List<SongArtistMap>)
+    suspend fun insertSongArtistMaps(songArtistMaps: List<SongArtistMap>)
 
     @Update
     suspend fun update(artist: ArtistEntity)

@@ -8,8 +8,8 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.color.DynamicColors
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.sharedPreferences
-import com.zionhuang.music.utils.livedata.ThemeUtil
-import com.zionhuang.music.utils.livedata.ThemeUtil.DEFAULT_THEME
+import com.zionhuang.music.utils.ThemeUtil
+import com.zionhuang.music.utils.ThemeUtil.DEFAULT_THEME
 
 abstract class ThemedBindingActivity<T : ViewBinding> : BindingActivity<T>(), SharedPreferences.OnSharedPreferenceChangeListener {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,12 +1,14 @@
 package com.zionhuang.music.db.entities
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import org.apache.commons.lang3.RandomStringUtils
 import java.time.LocalDateTime
 
+@Immutable
 @Parcelize
 @Entity(tableName = "artist")
 data class ArtistEntity(

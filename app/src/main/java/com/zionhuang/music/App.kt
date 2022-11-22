@@ -13,8 +13,8 @@ import coil.disk.DiskCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.kugou.KuGou
-import com.zionhuang.music.constants.Constants.INNERTUBE_COOKIE
-import com.zionhuang.music.constants.Constants.VISITOR_DATA
+import com.zionhuang.music.constants.INNERTUBE_COOKIE
+import com.zionhuang.music.constants.VISITOR_DATA
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress

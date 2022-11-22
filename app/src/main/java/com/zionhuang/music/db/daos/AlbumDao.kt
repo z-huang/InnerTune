@@ -2,10 +2,7 @@ package com.zionhuang.music.db.daos
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.zionhuang.music.db.entities.Album
-import com.zionhuang.music.db.entities.AlbumArtistMap
-import com.zionhuang.music.db.entities.AlbumEntity
-import com.zionhuang.music.db.entities.SongAlbumMap
+import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.models.sortInfo.AlbumSortType
 import com.zionhuang.music.models.sortInfo.ISortInfo
@@ -30,8 +27,13 @@ interface AlbumDao {
     @Query("SELECT * FROM album WHERE title LIKE '%' || :query || '%' LIMIT :previewSize")
     fun searchAlbumsPreview(query: String, previewSize: Int): Flow<List<Album>>
 
+    @Transaction
     @Query("SELECT * FROM album WHERE id = :id")
-    suspend fun getAlbumById(id: String): AlbumEntity?
+    suspend fun getAlbumById(id: String): Album?
+
+    @Transaction
+    @Query("SELECT * FROM album WHERE id = :id")
+    suspend fun getAlbumWithSongs(id: String): AlbumWithSongs?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(album: AlbumEntity): Long
@@ -40,7 +42,10 @@ interface AlbumDao {
     suspend fun insert(albumArtistMap: AlbumArtistMap): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(songAlbumMaps: List<SongAlbumMap>): List<Long>
+    suspend fun insertAlbumArtistMaps(albumArtistMaps: List<AlbumArtistMap>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertSongAlbumMaps(songAlbumMaps: List<SongAlbumMap>): List<Long>
 
     @Update
     suspend fun update(album: AlbumEntity)
@@ -49,7 +54,7 @@ interface AlbumDao {
     suspend fun update(songAlbumMaps: List<SongAlbumMap>)
 
     suspend fun upsert(songAlbumMaps: List<SongAlbumMap>) {
-        insert(songAlbumMaps)
+        insertSongAlbumMaps(songAlbumMaps)
             .withIndex()
             .mapNotNull { if (it.value == -1L) songAlbumMaps[it.index] else null }
             .let { update(it) }

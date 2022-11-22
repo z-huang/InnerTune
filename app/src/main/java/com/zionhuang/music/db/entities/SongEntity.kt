@@ -1,6 +1,7 @@
 package com.zionhuang.music.db.entities
 
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -8,6 +9,7 @@ import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
+@Immutable
 @Parcelize
 @Entity(tableName = "song")
 data class SongEntity(

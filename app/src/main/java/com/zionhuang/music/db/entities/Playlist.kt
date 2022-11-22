@@ -1,9 +1,11 @@
 package com.zionhuang.music.db.entities
 
+import androidx.compose.runtime.Immutable
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
+@Immutable
 data class Playlist(
     @Embedded
     val playlist: PlaylistEntity,

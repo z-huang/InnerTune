@@ -1,15 +1,15 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
+    kotlin("android")
     id("kotlin-parcelize")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs")
-    id("kotlinx-serialization")
-    id("dev.rikka.tools.materialthemebuilder")
+    @Suppress("DSL_SCOPE_VIOLATION")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     buildToolsVersion = "30.0.3"
     defaultConfig {
         applicationId = "com.zionhuang.music"
@@ -54,6 +54,10 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packagingOptions {
         resources {
@@ -84,46 +88,34 @@ android {
     }
 }
 
-materialThemeBuilder {
-    themes {
-        for ((name, color) in listOf(
-            "Red" to "F44336",
-            "Pink" to "E91E63",
-            "Purple" to "9C27B0",
-            "DeepPurple" to "673AB7",
-            "Indigo" to "3F51B5",
-            "Blue" to "2196F3",
-            "LightBlue" to "03A9F4",
-            "Cyan" to "00BCD4",
-            "Teal" to "009688",
-            "Green" to "4FAF50",
-            "LightGreen" to "8BC3A4",
-            "Lime" to "CDDC39",
-            "Yellow" to "FFEB3B",
-            "Amber" to "FFC107",
-            "Orange" to "FF9800",
-            "DeepOrange" to "FF5722",
-            "Brown" to "795548",
-            "BlueGrey" to "607D8F",
-            "Sakura" to "FF9CA8"
-        )) {
-            create("Material$name") {
-                lightThemeFormat = "ThemeOverlay.Light.%s"
-                lightThemeParent = "AppTheme"
-                darkThemeFormat = "ThemeOverlay.Dark.%s"
-                darkThemeParent = "AppTheme"
-                primaryColor = "#$color"
-            }
-        }
-    }
-}
-
 dependencies {
     // Kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    // Compose
+    implementation(libs.compose.runtime)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.util)
+    implementation(libs.compose.ui.tooling)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.viewmodel)
+    implementation(libs.compose.livedata)
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.animation)
+    implementation(libs.compose.animation.graphics)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material.windowsize)
+    implementation(libs.compose.material.icon.core)
+    implementation(libs.compose.material.icon.extended)
+    implementation(projects.materialThemeBuilder)
+
+    implementation(libs.compose.shimmer)
+
+    implementation(libs.palette)
+    implementation(libs.systemUiController)
     // AndroidX
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.5.1")
@@ -155,6 +147,7 @@ dependencies {
     implementation("androidx.test:monitor:1.5.0")
     testImplementation("androidx.paging:paging-common-ktx:3.1.1")
     implementation("androidx.paging:paging-rxjava3:3.1.1")
+    implementation(libs.paging.compose)
     // Room
     implementation("androidx.room:room-runtime:2.4.3")
     kapt("androidx.room:room-compiler:2.4.3")
@@ -163,16 +156,16 @@ dependencies {
     implementation("androidx.room:room-paging:2.4.3")
     testImplementation("androidx.room:room-testing:2.4.3")
     // YouTube API
-    implementation(project(mapOf("path" to ":innertube")))
+    implementation(projects.innertube)
     // KuGou
-    implementation(project(mapOf("path" to ":kugou")))
+    implementation(projects.kugou)
     // Apache Utils
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.apache.commons:commons-text:1.9")
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     // Coil
-    implementation("io.coil-kt:coil:2.2.1")
+    implementation(libs.coil)
     // Fast Scroll
     implementation("me.zhanghai.android.fastscroll:library:1.1.8")
     // Markdown

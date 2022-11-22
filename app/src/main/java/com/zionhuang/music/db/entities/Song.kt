@@ -1,11 +1,17 @@
 package com.zionhuang.music.db.entities
 
+import android.content.Context
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.music.extensions.toSongEntity
+import com.zionhuang.music.repos.SongRepository
 import kotlinx.parcelize.Parcelize
 
+@Immutable
 @Parcelize
 data class Song @JvmOverloads constructor(
     @Embedded val song: SongEntity,
@@ -31,8 +37,21 @@ data class Song @JvmOverloads constructor(
         )
     )
     val album: AlbumEntity? = null,
-    val position: Int? = -1,
 ) : LocalItem(), Parcelable {
     override val id: String
         get() = song.id
 }
+
+suspend fun SongItem.toSong(context: Context): Song =
+    Song(
+        song = toSongEntity(),
+        artists = artists.map { run ->
+            ArtistEntity(
+                id = run.navigationEndpoint?.browseEndpoint?.browseId
+                    ?: SongRepository(context).getArtistByName(run.text)?.id
+                    ?: ArtistEntity.generateArtistId(),
+                name = run.text
+            )
+        },
+        album = null
+    )

@@ -106,6 +106,10 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun playQueue( queue: Queue) {
+        MediaSessionConnection.binder?.songPlayer?.playQueue(queue)
+    }
+
     fun playQueue(activity: Activity, queue: Queue) {
         MediaSessionConnection.binder?.songPlayer?.playQueue(queue)
         (activity as? MainActivity)?.showBottomSheet()

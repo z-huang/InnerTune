@@ -30,6 +30,8 @@ import com.zionhuang.music.repos.base.LocalRepository
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import com.zionhuang.music.utils.md5
 import com.zionhuang.music.utils.preference.enumPreference
+import com.zionhuang.music.youtube.YouTubeAlbum
+import com.zionhuang.music.youtube.getYouTubeAlbum
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -249,7 +251,7 @@ class SongRepository(private val context: Context) : LocalRepository {
             }
         }
         songDao.insert(songs)
-        artistDao.insert(songArtistMaps)
+        artistDao.insertSongArtistMaps(songArtistMaps)
         if (autoDownload) downloadSongs(songs)
         return@withContext songs
     }
@@ -293,7 +295,7 @@ class SongRepository(private val context: Context) : LocalRepository {
             }
         }
         artistDao.deleteSongArtists(songs.map { it.id })
-        artistDao.insert(songArtistMaps)
+        artistDao.insertSongArtistMaps(songArtistMaps)
         artistDao.delete(songs
             .flatMap { it.artists }
             .distinctBy { it.id }
@@ -483,40 +485,30 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Album
      */
+    suspend fun addAlbum(youTubeAlbum: YouTubeAlbum) = withContext(IO) {
+        val (album, artists, songs) = youTubeAlbum
+        albumDao.insert(album)
+        addSongs(songs)
+        albumDao.upsert(songs.mapIndexed { index, songItem ->
+            SongAlbumMap(
+                songId = songItem.id,
+                albumId = album.id,
+                index = index
+            )
+        })
+        artistDao.insertArtists(artists)
+        albumDao.insertAlbumArtistMaps(artists.mapIndexed { index, artist ->
+            AlbumArtistMap(
+                albumId = album.id,
+                artistId = artist.id,
+                order = index
+            )
+        })
+    }
+
     override suspend fun addAlbums(albums: List<AlbumItem>) = withContext(IO) {
         albums.forEach { album ->
-            val ids = YouTube.browse(BrowseEndpoint(browseId = "VL" + album.playlistId)).getOrThrow().items.filterIsInstance<SongItem>().map { it.id }
-            YouTube.getQueue(videoIds = ids).getOrThrow().let { songs ->
-                albumDao.insert(AlbumEntity(
-                    id = album.id,
-                    title = album.title,
-                    year = album.year,
-                    thumbnailUrl = album.thumbnails.last().url,
-                    songCount = songs.size,
-                    duration = songs.sumOf { it.duration ?: 0 }
-                ))
-                addSongs(songs)
-                albumDao.upsert(songs.mapIndexed { index, songItem ->
-                    SongAlbumMap(
-                        songId = songItem.id,
-                        albumId = album.id,
-                        index = index
-                    )
-                })
-            }
-            (YouTube.browse(BrowseEndpoint(browseId = album.id)).getOrThrow().items.firstOrNull() as? AlbumOrPlaylistHeader)?.artists?.forEachIndexed { index, run ->
-                val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
-                    artistDao.insert(ArtistEntity(
-                        id = it,
-                        name = run.text
-                    ))
-                }
-                albumDao.insert(AlbumArtistMap(
-                    albumId = album.id,
-                    artistId = artistId,
-                    order = index
-                ))
-            }
+            addAlbum(album.getYouTubeAlbum(context))
         }
     }
 
@@ -535,6 +527,10 @@ class SongRepository(private val context: Context) : LocalRepository {
 
     override suspend fun getAlbum(albumId: String) = withContext(IO) {
         albumDao.getAlbumById(albumId)
+    }
+
+    suspend fun getAlbumWithSongs(albumId: String) = withContext(IO) {
+        albumDao.getAlbumWithSongs(albumId)
     }
 
     override suspend fun deleteAlbums(albums: List<Album>) = withContext(IO) {
@@ -684,13 +680,9 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Search history
      */
-    override suspend fun getAllSearchHistory() = withContext(IO) {
-        searchHistoryDao.getAllHistory()
-    }
+    override fun getAllSearchHistory() = searchHistoryDao.getAllHistory()
 
-    override suspend fun getSearchHistory(query: String) = withContext(IO) {
-        searchHistoryDao.getHistory(query)
-    }
+    override fun getSearchHistory(query: String) = searchHistoryDao.getHistory(query)
 
     override suspend fun insertSearchHistory(query: String) = withContext(IO) {
         searchHistoryDao.insert(SearchHistory(query = query))

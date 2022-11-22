@@ -5,14 +5,15 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.zionhuang.music.db.entities.SearchHistory
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SearchHistoryDao {
     @Query("SELECT * FROM search_history ORDER BY id DESC")
-    suspend fun getAllHistory(): List<SearchHistory>
+    fun getAllHistory(): Flow<List<SearchHistory>>
 
     @Query("SELECT * FROM search_history WHERE `query` LIKE :query || '%' ORDER BY id DESC")
-    suspend fun getHistory(query: String): List<SearchHistory>
+    fun getHistory(query: String): Flow<List<SearchHistory>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(searchHistory: SearchHistory)

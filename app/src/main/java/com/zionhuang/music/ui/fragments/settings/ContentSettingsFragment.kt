@@ -11,8 +11,8 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.SwitchPreferenceCompat
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.Constants.ACCOUNT_EMAIL
-import com.zionhuang.music.constants.Constants.ACCOUNT_NAME
+import com.zionhuang.music.constants.ACCOUNT_EMAIL
+import com.zionhuang.music.constants.ACCOUNT_NAME
 import com.zionhuang.music.extensions.preferenceLiveData
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.ui.activities.MainActivity

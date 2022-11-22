@@ -1,6 +1,9 @@
 package com.zionhuang.music.extensions
 
 import android.content.SharedPreferences
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
@@ -25,7 +28,7 @@ inline fun <reified E : Enum<E>> SharedPreferences.getEnum(key: String, defaultV
     }
 } ?: defaultValue
 
-inline fun <reified T : Enum<T>> SharedPreferences.putEnum(key: String, value: T) = edit().putString(key, value.name).apply()
+inline fun <reified T : Enum<T>> SharedPreferences.Editor.putEnum(key: String, value: T) = putString(key, value.name)
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> SharedPreferences.get(key: String, defaultValue: T): T = when (defaultValue::class) {
@@ -65,6 +68,9 @@ fun SharedPreferences.booleanFlow(key: String, defaultValue: Boolean) = keyFlow
     .onStart { emit("init trigger") }
     .map { getBoolean(key, defaultValue) }
     .conflate()
+
+@Composable
+fun preferenceState(key: String, defaultValue: Boolean) = LocalContext.current.sharedPreferences.booleanFlow(key, defaultValue).collectAsState(initial = defaultValue)
 
 inline fun <reified E : Enum<E>> SharedPreferences.enumFlow(key: String, defaultValue: E) = keyFlow
     .filter { it == key || it == null }

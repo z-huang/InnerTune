@@ -111,12 +111,13 @@ class SongPlayer(
 ) : Listener, PlaybackStatsListener.Callback {
     private val songRepository = SongRepository(context)
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
-    private val bitmapProvider = BitmapProvider(context)
+    val bitmapProvider = BitmapProvider(context)
 
     private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
     private var audioQuality by enumPreference(context, R.string.pref_audio_quality, AudioQuality.AUTO)
 
     private var currentQueue: Queue = EmptyQueue()
+    var queueTitle: String? = null
 
     val playerVolume = MutableStateFlow(1f)
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
@@ -191,7 +192,7 @@ class SongPlayer(
                             val album = songRepository.getAlbum(albumId) ?: return@launch
                             val songs = songRepository.getAlbumSongs(albumId)
                             playQueue(ListQueue(
-                                title = album.title,
+                                title = album.album.title,
                                 items = songs.map { it.toMediaItem() },
                                 startIndex = songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
                             ), playWhenReady)
@@ -517,16 +518,20 @@ class SongPlayer(
                 .build()
     }
 
+    fun updateQueueTitle(title: String?) {
+        mediaSession.setQueueTitle(title)
+        queueTitle = title
+    }
+
     fun playQueue(queue: Queue, playWhenReady: Boolean = true) {
         currentQueue = queue
-        mediaSession.setQueueTitle(null)
-        player.clearMediaItems()
+        updateQueueTitle(null)
         player.shuffleModeEnabled = false
 
         scope.launch(context.exceptionHandler) {
             val initialStatus = withContext(IO) { queue.getInitialStatus() }
             initialStatus.title?.let { queueTitle ->
-                mediaSession.setQueueTitle(queueTitle)
+                updateQueueTitle(queueTitle)
             }
             player.setMediaItems(initialStatus.items, if (initialStatus.index > 0) initialStatus.index else 0, initialStatus.position)
             player.prepare()
@@ -544,7 +549,7 @@ class SongPlayer(
             val radioQueue = YouTubeQueue(endpoint = WatchEndpoint(videoId = currentMediaMetadata.id))
             val initialStatus = radioQueue.getInitialStatus()
             initialStatus.title?.let { queueTitle ->
-                mediaSession.setQueueTitle(queueTitle)
+                updateQueueTitle(queueTitle)
             }
             player.addMediaItems(initialStatus.items.drop(1))
             currentQueue = radioQueue
@@ -647,13 +652,17 @@ class SongPlayer(
      * Auto load more
      */
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        if (reason == MEDIA_ITEM_TRANSITION_REASON_REPEAT ||
-            player.playbackState == STATE_IDLE ||
-            player.mediaItemCount - player.currentMediaItemIndex > 5 ||
-            !currentQueue.hasNextPage()
-        ) return
-        scope.launch(context.exceptionHandler) {
-            player.addMediaItems(currentQueue.nextPage())
+        if (reason != MEDIA_ITEM_TRANSITION_REASON_REPEAT &&
+            player.playbackState != STATE_IDLE &&
+            player.mediaItemCount - player.currentMediaItemIndex <= 5 &&
+            currentQueue.hasNextPage()
+        ) {
+            scope.launch(context.exceptionHandler) {
+                player.addMediaItems(currentQueue.nextPage())
+            }
+        }
+        if (mediaItem == null) {
+            bitmapProvider.onBitmapChanged(null)
         }
     }
 
