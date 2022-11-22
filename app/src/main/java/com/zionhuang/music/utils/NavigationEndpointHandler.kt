@@ -36,11 +36,11 @@ open class NavigationEndpointHandler(val fragment: Fragment) {
 
     fun handle(endpoint: Endpoint, item: YTItem? = null) = when (endpoint) {
         is WatchEndpoint -> {
-            MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint, item))
+            MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint, null))
             (fragment.requireActivity() as? MainActivity)?.showBottomSheet()
         }
         is WatchPlaylistEndpoint -> {
-            MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint.toWatchEndpoint(), item))
+            MediaSessionConnection.binder?.songPlayer?.playQueue(YouTubeQueue(endpoint.toWatchEndpoint(), null))
             (fragment.requireActivity() as? MainActivity)?.showBottomSheet()
         }
         is BrowseEndpoint -> {

@@ -2,16 +2,19 @@ package com.zionhuang.music.playback.queues
 
 import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
-import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.models.toMediaMetadata
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class YouTubeQueue(
     private val endpoint: WatchEndpoint,
-    item: YTItem? = null,
+    item: SongItem? = null,
 ) : Queue {
+    override val preloadItem: MediaMetadata? = item?.toMediaMetadata()
     private var continuation: String? = null
 
     override suspend fun getInitialStatus(): Queue.Status {

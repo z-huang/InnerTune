@@ -97,10 +97,10 @@ fun OnlineSearchResult(
                                 .clickable {
                                     when (val endpoint = item.navigationEndpoint.endpoint) {
                                         is WatchEndpoint -> {
-                                            playerConnection.playQueue(YouTubeQueue(endpoint, item))
+                                            playerConnection.playQueue(YouTubeQueue(endpoint, item as? SongItem))
                                         }
                                         is WatchPlaylistEndpoint -> {
-                                            playerConnection.playQueue(YouTubeQueue(endpoint.toWatchEndpoint(), item))
+                                            playerConnection.playQueue(YouTubeQueue(endpoint.toWatchEndpoint(), item as? SongItem))
                                         }
                                         is BrowseEndpoint -> {}
                                         is SearchEndpoint -> {}
@@ -121,7 +121,7 @@ fun OnlineSearchResult(
         item {
             ShimmerHost {
                 repeat(when {
-                    items.loadState.refresh is LoadState.Loading -> 10
+                    items.loadState.refresh is LoadState.Loading -> 8
                     items.loadState.append is LoadState.Loading -> 3
                     else -> 0
                 }) {

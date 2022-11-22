@@ -51,6 +51,7 @@ import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
 import com.zionhuang.music.R
+import com.zionhuang.music.compose.ComposeActivity
 import com.zionhuang.music.constants.Constants.ACTION_SHOW_BOTTOM_SHEET
 import com.zionhuang.music.constants.Constants.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.constants.Constants.LIKED_PLAYLIST_ID
@@ -81,7 +82,6 @@ import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.ui.activities.MainActivity
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import com.zionhuang.music.ui.fragments.settings.StorageSettingsFragment.Companion.VALUE_TO_MB
 import com.zionhuang.music.utils.InfoCache
@@ -324,7 +324,7 @@ class SongPlayer(
                 }
 
             override fun createCurrentContentIntent(player: Player): PendingIntent? =
-                PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java).apply {
+                PendingIntent.getActivity(context, 0, Intent(context, ComposeActivity::class.java).apply {
                     action = ACTION_SHOW_BOTTOM_SHEET
                 }, FLAG_IMMUTABLE)
         })
@@ -527,16 +527,23 @@ class SongPlayer(
         currentQueue = queue
         updateQueueTitle(null)
         player.shuffleModeEnabled = false
+        if (queue.preloadItem != null) {
+            player.setMediaItem(queue.preloadItem!!.toMediaItem())
+            player.prepare()
+            player.playWhenReady = playWhenReady
+        }
 
         scope.launch(context.exceptionHandler) {
             val initialStatus = withContext(IO) { queue.getInitialStatus() }
             initialStatus.title?.let { queueTitle ->
                 updateQueueTitle(queueTitle)
             }
-            player.setMediaItems(initialStatus.items, if (initialStatus.index > 0) initialStatus.index else 0, initialStatus.position)
-            player.prepare()
-            if (playWhenReady) {
-                player.playWhenReady = true
+            if (queue.preloadItem != null) {
+                player.addMediaItems(initialStatus.items.drop(1))
+            } else {
+                player.setMediaItems(initialStatus.items, if (initialStatus.index > 0) initialStatus.index else 0, initialStatus.position)
+                player.prepare()
+                player.playWhenReady = playWhenReady
             }
         }
     }
