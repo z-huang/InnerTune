@@ -18,11 +18,13 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
 import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
@@ -100,6 +102,7 @@ fun Lyrics(
     }
 
     BoxWithConstraints(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 12.dp)
@@ -151,7 +154,7 @@ fun Lyrics(
                 )
             }
 
-            if (lyrics.isNullOrEmpty()) {
+            if (lyrics == null) {
                 item {
                     ShimmerHost {
                         repeat(10) {
@@ -172,6 +175,25 @@ fun Lyrics(
                     }
                 }
             }
+        }
+
+        if (lyrics == LYRICS_NOT_FOUND) {
+            Text(
+                text = stringResource(R.string.lyrics_not_found),
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = when (lyricsTextPosition) {
+                    0 -> TextAlign.Left
+                    1 -> TextAlign.Center
+                    2 -> TextAlign.Right
+                    else -> TextAlign.Center
+                },
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 8.dp)
+                    .alpha(0.5f)
+            )
         }
     }
 }
