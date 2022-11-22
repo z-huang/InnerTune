@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,6 +27,8 @@ import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.SHOW_LYRICS
 import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.utils.joinByBullet
+import com.zionhuang.music.utils.makeTimeString
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -41,6 +40,9 @@ fun Queue(
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
     val queueTitle by playerConnection.queueTitle.collectAsState(initial = null)
     val queueItems by playerConnection.queueItems.collectAsState(initial = emptyList())
+    val queueLength = remember(queueItems) {
+        queueItems.sumOf { it.mediaItem.metadata!!.duration }
+    }
     val currentWindowIndex by playerConnection.currentWindowIndex.collectAsState(initial = 0)
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
 
@@ -144,7 +146,10 @@ fun Queue(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = pluralStringResource(R.plurals.song_count, queueItems.size, queueItems.size),
+                    text = listOf(
+                        makeTimeString(queueLength * 1000L),
+                        pluralStringResource(R.plurals.song_count, queueItems.size, queueItems.size)
+                    ).joinByBullet(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
