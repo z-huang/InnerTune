@@ -131,7 +131,7 @@ fun Queue(
                     .surfaceColorAtElevation(NavigationBarDefaults.Elevation)
                     .copy(alpha = 0.95f))
                 .padding(WindowInsets.systemBars
-                    .only(WindowInsetsSides.Top + WindowInsetsSides.End)
+                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                     .asPaddingValues())
         ) {
             Row(
@@ -169,7 +169,7 @@ fun Queue(
                     sheetState.collapseSoft()
                 }
                 .padding(WindowInsets.systemBars
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.End)
+                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
                     .asPaddingValues())
                 .padding(12.dp)
         ) {

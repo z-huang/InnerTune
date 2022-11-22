@@ -14,9 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.R
-import com.zionhuang.music.compose.component.AlbumListItem
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
+import com.zionhuang.music.compose.component.AlbumListItem
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.models.sortInfo.AlbumSortType
@@ -41,8 +41,7 @@ fun LibraryAlbumsScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            contentPadding = LocalPlayerAwareWindowInsets.current
-                .only(WindowInsetsSides.Vertical + WindowInsetsSides.End).asPaddingValues()
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item(
                 key = "header",

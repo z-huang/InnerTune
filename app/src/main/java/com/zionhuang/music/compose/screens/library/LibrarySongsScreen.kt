@@ -53,7 +53,6 @@ fun LibrarySongsScreen(
     ) {
         LazyColumn(
             contentPadding = WindowInsets.systemBars
-                .only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
                 .add(WindowInsets(
                     top = AppBarHeight.dp,
                     bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
@@ -167,7 +166,7 @@ fun LibrarySongsScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(LocalPlayerAwareWindowInsets.current
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.End)
+                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
                     .asPaddingValues())
                 .padding(16.dp),
             onClick = {

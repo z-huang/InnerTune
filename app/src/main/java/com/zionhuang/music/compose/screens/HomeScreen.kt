@@ -45,8 +45,7 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            contentPadding = LocalPlayerAwareWindowInsets.current
-                .only(WindowInsetsSides.Vertical + WindowInsetsSides.End).asPaddingValues()
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             items(
                 items = items

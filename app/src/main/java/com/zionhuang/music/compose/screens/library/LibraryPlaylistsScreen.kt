@@ -48,8 +48,7 @@ fun LibraryPlaylistsScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            contentPadding = LocalPlayerAwareWindowInsets.current
-                .only(WindowInsetsSides.Vertical + WindowInsetsSides.End).asPaddingValues()
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item(
                 key = "header",

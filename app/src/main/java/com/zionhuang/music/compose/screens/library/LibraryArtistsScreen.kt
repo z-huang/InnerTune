@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zionhuang.music.R
-import com.zionhuang.music.compose.component.ArtistListItem
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
+import com.zionhuang.music.compose.component.ArtistListItem
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.ARTIST_SORT_DESCENDING
 import com.zionhuang.music.constants.ARTIST_SORT_TYPE
@@ -37,8 +37,7 @@ fun LibraryArtistsScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            contentPadding = LocalPlayerAwareWindowInsets.current
-                .only(WindowInsetsSides.Vertical + WindowInsetsSides.End).asPaddingValues()
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item(
                 key = "header",

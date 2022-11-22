@@ -64,7 +64,6 @@ fun OnlineSearchResult(
     LazyColumn(
         state = lazyListState,
         contentPadding = WindowInsets.systemBars
-            .only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
             .add(WindowInsets(
                 top = AppBarHeight.dp + SearchFilterHeight.dp,
                 bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
@@ -146,7 +145,6 @@ fun OnlineSearchResult(
     Row(
         modifier = Modifier
             .padding(WindowInsets.systemBars
-                .only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
                 .add(WindowInsets(top = AppBarHeight.dp))
                 .asPaddingValues())
             .fillMaxWidth()

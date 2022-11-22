@@ -86,7 +86,6 @@ fun SearchScreen(
 
     LazyColumn(
         contentPadding = WindowInsets.systemBars
-            .only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
             .add(WindowInsets(
                 top = AppBarHeight.dp,
                 bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp

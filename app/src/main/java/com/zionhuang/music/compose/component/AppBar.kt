@@ -86,7 +86,7 @@ fun AppBar(
     Box(
         modifier = Modifier
             .padding(WindowInsets.systemBars
-                .only(WindowInsetsSides.Top + WindowInsetsSides.End)
+                .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                 .asPaddingValues())
             .fillMaxWidth()
             .height(AppBarHeight.dp)
