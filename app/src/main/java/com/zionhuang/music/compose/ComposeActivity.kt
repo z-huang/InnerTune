@@ -20,12 +20,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -52,13 +54,13 @@ import com.zionhuang.music.compose.screens.library.LibrarySongsScreen
 import com.zionhuang.music.compose.theme.ColorSaver
 import com.zionhuang.music.compose.theme.DefaultThemeColor
 import com.zionhuang.music.compose.theme.InnerTuneTheme
-import com.zionhuang.music.constants.AppBarHeight
-import com.zionhuang.music.constants.MiniPlayerHeight
-import com.zionhuang.music.constants.NavigationBarHeight
+import com.zionhuang.music.compose.utils.rememberPreference
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.NavigationTabHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -207,9 +209,28 @@ class ComposeActivity : ComponentActivity() {
                                 TextFieldValue("")
                             )
                         }
+                        var searchSource by rememberPreference(SEARCH_SOURCE, ONLINE)
                         val appBarState = remember(navBackStackEntry) {
-                            val route = navBackStackEntry?.destination?.route
-                                ?: return@remember AppBarState(navigationIcon = R.drawable.ic_search)
+                            val route = navBackStackEntry?.destination?.route ?: return@remember AppBarState(navigationIcon = R.drawable.ic_search)
+                            if (navigationItems.any { it.route == route }) {
+                                return@remember AppBarState(
+                                    title = {
+                                        Text(
+                                            text = stringResource(R.string.menu_search),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier
+                                                .alpha(0.6f)
+                                                .weight(1f)
+                                        )
+                                    },
+                                    navigationIcon = R.drawable.ic_search,
+                                    onNavigationButtonClick = {
+                                        navController.navigate("search")
+                                    },
+                                    canSearch = true
+                                )
+                            }
                             navigationItems.forEach { screen ->
                                 if (route == screen.route) {
                                     return@remember screen.appBarState.copy(
@@ -221,16 +242,35 @@ class ComposeActivity : ComponentActivity() {
                             }
                             when {
                                 route == "search" -> AppBarState(
-                                    title = "",
                                     onNavigationButtonClick = {
                                         navController.navigateUp()
                                         onTextFieldValueChange(TextFieldValue(""))
                                     },
                                     canSearch = true,
-                                    searchExpanded = true
+                                    searchExpanded = true,
+                                    actions = {
+                                        IconButton(
+                                            onClick = {
+                                                searchSource = if (searchSource == ONLINE) LOCAL else ONLINE
+                                            },
+                                            modifier = Modifier.padding(horizontal = 4.dp)
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(if (searchSource == ONLINE) R.drawable.ic_language else R.drawable.ic_library_music),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    }
                                 )
                                 route.startsWith("search/") -> AppBarState(
-                                    title = textFieldValue.text,
+                                    title = {
+                                        Text(
+                                            text = textFieldValue.text,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    },
                                     navigationIcon = R.drawable.ic_arrow_back,
                                     onNavigationButtonClick = {
                                         navController.navigateUp()
@@ -252,12 +292,12 @@ class ComposeActivity : ComponentActivity() {
                             }
                         }
                         val onSearch: (String) -> Unit = { query ->
-                            onTextFieldValueChange(androidx.compose.ui.text.input.TextFieldValue(
+                            onTextFieldValueChange(TextFieldValue(
                                 text = query,
-                                selection = androidx.compose.ui.text.TextRange(query.length)
+                                selection = TextRange(query.length)
                             ))
                             coroutineScope.launch {
-                                com.zionhuang.music.repos.SongRepository(this@ComposeActivity).insertSearchHistory(query)
+                                SongRepository(this@ComposeActivity).insertSearchHistory(query)
                             }
                             navController.navigate("search/$query")
                         }
@@ -313,14 +353,21 @@ class ComposeActivity : ComponentActivity() {
                                 }
 
                                 composable(
-                                    route = "album/{albumId}",
+                                    route = "album/{albumId}?playlistId={playlistId}",
                                     arguments = listOf(
                                         navArgument("albumId") {
                                             type = NavType.StringType
+                                        },
+                                        navArgument("playlistId") {
+                                            type = NavType.StringType
+                                            nullable = true
                                         }
                                     )
                                 ) { backStackEntry ->
-                                    AlbumScreen(backStackEntry.arguments?.getString("albumId")!!)
+                                    AlbumScreen(
+                                        albumId = backStackEntry.arguments?.getString("albumId")!!,
+                                        playlistId = backStackEntry.arguments?.getString("playlistId"),
+                                    )
                                 }
 
                                 composable("search") {
@@ -339,7 +386,10 @@ class ComposeActivity : ComponentActivity() {
                                         }
                                     )
                                 ) { backStackEntry ->
-                                    OnlineSearchResult(backStackEntry.arguments?.getString("query")!!)
+                                    OnlineSearchResult(
+                                        query = backStackEntry.arguments?.getString("query")!!,
+                                        navController = navController
+                                    )
                                 }
                             }
 

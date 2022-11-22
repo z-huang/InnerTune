@@ -25,6 +25,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -122,24 +123,7 @@ fun AppBar(
                         )
                     }
 
-                    if (appBarState.title == null) {
-                        Text(
-                            text = "Search",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .alpha(0.6f)
-                                .weight(1f)
-                        )
-                    } else {
-                        Text(
-                            text = appBarState.title,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .weight(1f)
-                        )
-                    }
+                    appBarState.title(this)
                 }
             }
 
@@ -184,7 +168,7 @@ fun AppBar(
                             ) {
                                 if (textFieldValue.text.isEmpty()) {
                                     Text(
-                                        text = "Search",
+                                        text = stringResource(R.string.menu_search),
                                         textAlign = TextAlign.Start,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
@@ -202,7 +186,6 @@ fun AppBar(
 
                     if (textFieldValue.text.isNotEmpty()) {
                         IconButton(
-                            modifier = Modifier.padding(horizontal = 4.dp),
                             onClick = {
                                 onTextFieldValueChange(TextFieldValue(""))
                             }
@@ -213,6 +196,8 @@ fun AppBar(
                             )
                         }
                     }
+
+                    appBarState.actions(this)
                 }
             }
         }
@@ -236,13 +221,9 @@ fun AppBar(
                     )
                 }
 
-                Text(
-                    text = appBarState.title.orEmpty(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier
-                        .weight(1f)
-                )
+                appBarState.title(this)
+
+                appBarState.actions(this)
             }
         }
     }
@@ -250,7 +231,7 @@ fun AppBar(
 
 @Immutable
 data class AppBarState(
-    val title: String? = null,
+    val title: @Composable RowScope.() -> Unit = {},
     @DrawableRes val navigationIcon: Int = R.drawable.ic_arrow_back,
     val onNavigationButtonClick: () -> Unit = {},
     val canSearch: Boolean = true,

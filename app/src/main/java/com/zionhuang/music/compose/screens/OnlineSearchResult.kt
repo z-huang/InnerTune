@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnlineSearchResult(
     query: String,
+    navController: NavController,
     viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(
         repository = YouTubeRepository(LocalContext.current),
         query = query
@@ -95,6 +97,16 @@ fun OnlineSearchResult(
                             playWhenReady = playWhenReady,
                             modifier = Modifier
                                 .clickable {
+                                    when (item) {
+                                        is SongItem -> {
+                                            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item))
+                                        }
+                                        is AlbumItem -> {
+                                            navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                                        }
+                                        is ArtistItem -> TODO()
+                                        is PlaylistItem -> TODO()
+                                    }
                                     when (val endpoint = item.navigationEndpoint.endpoint) {
                                         is WatchEndpoint -> {
                                             playerConnection.playQueue(YouTubeQueue(endpoint, item as? SongItem))

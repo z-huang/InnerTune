@@ -9,6 +9,10 @@ const val ALBUM_SORT_DESCENDING = "ALBUM_SORT_DESC"
 const val PLAYLIST_SORT_TYPE = "PLAYLIST_SORT_TYPE"
 const val PLAYLIST_SORT_DESCENDING = "PLAYLIST_SORT_DESC"
 
+const val SEARCH_SOURCE = "SEARCH_SOURCE"
+const val LOCAL = "LOCAL"
+const val ONLINE = "ONLINE"
+
 const val VISITOR_DATA = "visitor_data"
 const val INNERTUBE_COOKIE = "innertube_cookie"
 const val ACCOUNT_NAME = "account_name"
