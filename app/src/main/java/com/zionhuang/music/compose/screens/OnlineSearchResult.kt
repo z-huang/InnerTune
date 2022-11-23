@@ -107,22 +107,8 @@ fun OnlineSearchResult(
                                         is AlbumItem -> {
                                             navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
                                         }
-                                        is ArtistItem -> TODO()
-                                        is PlaylistItem -> TODO()
-                                    }
-                                    when (val endpoint = item.navigationEndpoint.endpoint) {
-                                        is WatchEndpoint -> {
-                                            playerConnection.playQueue(YouTubeQueue(endpoint, item as? SongItem))
-                                        }
-                                        is WatchPlaylistEndpoint -> {
-                                            playerConnection.playQueue(YouTubeQueue(endpoint.toWatchEndpoint(), item as? SongItem))
-                                        }
-                                        is BrowseEndpoint -> {}
-                                        is SearchEndpoint -> {}
-                                        is QueueAddEndpoint -> playerConnection.songPlayer?.handleQueueAddEndpoint(endpoint, item)
-                                        is ShareEntityEndpoint -> {}
-                                        is BrowseLocalArtistSongsEndpoint -> {}
-                                        null -> {}
+                                        is ArtistItem -> {}
+                                        is PlaylistItem -> {}
                                     }
                                 }
                                 .animateItemPlacement()
