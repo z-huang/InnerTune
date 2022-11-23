@@ -1,6 +1,7 @@
 package com.zionhuang.music.compose.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,6 +24,10 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.SongListItem
+import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
+import com.zionhuang.music.compose.component.shimmer.ShimmerHost
+import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
+import com.zionhuang.music.constants.AlbumThumbnailSize
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.extensions.toMediaItem
@@ -43,18 +48,19 @@ fun AlbumScreen(
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
 
-    var albumWithSongs: AlbumWithSongs? by remember { mutableStateOf(null) }
+    val (albumWithSongs, onAlbumWithSongsChange) = remember { mutableStateOf<AlbumWithSongs?>(null) }
     LaunchedEffect(Unit) {
-        albumWithSongs = SongRepository(context).getAlbumWithSongs(albumId)
+        onAlbumWithSongsChange(SongRepository(context).getAlbumWithSongs(albumId)
             ?: playlistId?.let {
                 YouTube.getAlbumWithSongs(context, albumId, it)
-            }
+            })
     }
 
-    albumWithSongs?.let { albumWithSongs ->
-        LazyColumn(
-            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
-        ) {
+
+    LazyColumn(
+        contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
+    ) {
+        if (albumWithSongs != null) {
             item {
                 Column(
                     modifier = Modifier.padding(12.dp)
@@ -66,7 +72,7 @@ fun AlbumScreen(
                             model = albumWithSongs.album.thumbnailUrl,
                             contentDescription = null,
                             modifier = Modifier
-                                .size(144.dp)
+                                .size(AlbumThumbnailSize.dp)
                                 .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
                         )
 
@@ -171,6 +177,36 @@ fun AlbumScreen(
                         }
                         .animateItemPlacement()
                 )
+            }
+        } else {
+            item {
+                ShimmerHost {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        Spacer(
+                            modifier = Modifier
+                                .size(AlbumThumbnailSize.dp)
+                                .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
+                                .background(MaterialTheme.colorScheme.onSurface)
+                        )
+
+                        Spacer(Modifier.width(16.dp))
+
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            TextPlaceholder()
+                            TextPlaceholder()
+                            TextPlaceholder()
+                        }
+                    }
+
+                    repeat(6) {
+                        ListItemPlaceHolder()
+                    }
+                }
             }
         }
     }
