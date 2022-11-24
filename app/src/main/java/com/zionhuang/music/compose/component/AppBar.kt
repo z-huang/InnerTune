@@ -3,8 +3,10 @@ package com.zionhuang.music.compose.component
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -119,9 +121,10 @@ fun AppBar(
                 .clip(RoundedCornerShape(cornerShapePercent))
                 .background(background)
                 .clickable(
-                    enabled = appBarConfig.canSearch && !appBarConfig.searchExpanded
+                    indication = if (appBarConfig.canSearch && !appBarConfig.searchExpanded) LocalIndication.current else null,
+                    interactionSource = remember { MutableInteractionSource() }
                 ) {
-                    if (appBarConfig.canSearch) {
+                    if (appBarConfig.canSearch && !appBarConfig.searchExpanded) {
                         scrollBehavior.state.heightOffset = 0f
                         onExpandSearch()
                     }
