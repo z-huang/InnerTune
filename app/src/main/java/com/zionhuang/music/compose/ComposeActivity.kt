@@ -22,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,7 +44,8 @@ import com.valentinilk.shimmer.LocalShimmerTheme
 import com.valentinilk.shimmer.defaultShimmerTheme
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.component.AppBar
-import com.zionhuang.music.compose.component.AppBarState
+import com.zionhuang.music.compose.component.AppBarConfig
+import com.zionhuang.music.compose.component.appBarScrollBehavior
 import com.zionhuang.music.compose.component.rememberBottomSheetState
 import com.zionhuang.music.compose.player.BottomSheetPlayer
 import com.zionhuang.music.compose.screens.*
@@ -199,6 +201,9 @@ class ComposeActivity : ComponentActivity() {
                     ) {
                         val navController = rememberNavController()
                         val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val route = remember(navBackStackEntry) {
+                            navBackStackEntry?.destination?.route
+                        }
 
                         val navigationItems = listOf(Screen.Home, Screen.Songs, Screen.Artists, Screen.Albums, Screen.Playlists)
                         val defaultNavIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
@@ -210,10 +215,10 @@ class ComposeActivity : ComponentActivity() {
                             )
                         }
                         var searchSource by rememberPreference(SEARCH_SOURCE, ONLINE)
-                        val appBarState = remember(navBackStackEntry) {
-                            val route = navBackStackEntry?.destination?.route ?: return@remember AppBarState(navigationIcon = R.drawable.ic_search)
+                        val appBarConfig = remember(route) {
+                            route ?: return@remember AppBarConfig(navigationIcon = R.drawable.ic_search)
                             if (navigationItems.any { it.route == route }) {
-                                return@remember AppBarState(
+                                return@remember AppBarConfig(
                                     title = {
                                         Text(
                                             text = stringResource(R.string.menu_search),
@@ -231,17 +236,8 @@ class ComposeActivity : ComponentActivity() {
                                     canSearch = true
                                 )
                             }
-                            navigationItems.forEach { screen ->
-                                if (route == screen.route) {
-                                    return@remember screen.appBarState.copy(
-                                        onNavigationButtonClick = {
-                                            navController.navigate("search")
-                                        }
-                                    )
-                                }
-                            }
                             when {
-                                route == "search" -> AppBarState(
+                                route == "search" -> AppBarConfig(
                                     onNavigationButtonClick = {
                                         navController.navigateUp()
                                         onTextFieldValueChange(TextFieldValue(""))
@@ -262,7 +258,7 @@ class ComposeActivity : ComponentActivity() {
                                         }
                                     }
                                 )
-                                route.startsWith("search/") -> AppBarState(
+                                route.startsWith("search/") -> AppBarConfig(
                                     title = {
                                         Text(
                                             text = textFieldValue.text,
@@ -282,13 +278,13 @@ class ComposeActivity : ComponentActivity() {
                                     canSearch = true,
                                     searchExpanded = false
                                 )
-                                route.startsWith("album/") -> AppBarState(
+                                route.startsWith("album/") -> AppBarConfig(
                                     onNavigationButtonClick = {
                                         navController.navigateUp()
                                     },
                                     canSearch = false
                                 )
-                                else -> AppBarState()
+                                else -> AppBarConfig()
                             }
                         }
                         val onSearch: (String) -> Unit = { query ->
@@ -302,6 +298,9 @@ class ComposeActivity : ComponentActivity() {
                             navController.navigate("search/$query")
                         }
 
+                        val scrollBehavior = appBarScrollBehavior(
+                            canScroll = { route?.startsWith("search/") == false }
+                        )
                         Scaffold(
                             bottomBar = {
                                 NavigationBar(
@@ -332,7 +331,8 @@ class ComposeActivity : ComponentActivity() {
                                         )
                                     }
                                 }
-                            }
+                            },
+                            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
                         ) { innerPaddingModifier ->
 //                            NavHost(navController, startDestination = navigationItems[defaultNavIndex].route) {
                             NavHost(navController, startDestination = Screen.Songs.route) {
@@ -394,8 +394,9 @@ class ComposeActivity : ComponentActivity() {
                             }
 
                             AppBar(
+                                scrollBehavior = scrollBehavior,
                                 navController = navController,
-                                appBarState = appBarState,
+                                appBarConfig = appBarConfig,
                                 textFieldValue = textFieldValue,
                                 onTextFieldValueChange = onTextFieldValueChange,
                                 onExpandSearch = {

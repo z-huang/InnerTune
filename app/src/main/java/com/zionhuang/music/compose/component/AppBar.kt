@@ -1,13 +1,8 @@
 package com.zionhuang.music.compose.component
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.animateInt
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,7 +18,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -37,19 +36,22 @@ import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AppBarHeight
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior,
     navController: NavController,
-    appBarState: AppBarState,
+    appBarConfig: AppBarConfig,
     textFieldValue: TextFieldValue,
     onTextFieldValueChange: (TextFieldValue) -> Unit,
     onExpandSearch: () -> Unit,
     onSearch: (String) -> Unit,
 ) {
     val topInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
-    val transition = updateTransition(targetState = appBarState.canSearch && !appBarState.searchExpanded, "canSearch")
+    val transition = updateTransition(targetState = appBarConfig.canSearch && !appBarConfig.searchExpanded, "canSearch")
     val horizontalPadding by transition.animateDp(label = "") {
         if (it) 12.dp else 0.dp
     }
@@ -62,175 +64,202 @@ fun AppBar(
     val percent by transition.animateFloat(label = "") {
         if (it) 0f else 1f
     }
+    val background by animateColorAsState(if (appBarConfig.canSearch) {
+        MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+    } else {
+        MaterialTheme.colorScheme.background
+    })
 
     val focusRequester = remember {
         FocusRequester()
     }
 
-    LaunchedEffect(appBarState.searchExpanded) {
-        if (appBarState.searchExpanded) {
+    LaunchedEffect(appBarConfig.searchExpanded) {
+        if (appBarConfig.searchExpanded) {
             delay(300)
             focusRequester.requestFocus()
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(topInset)
-            .background(MaterialTheme.colorScheme
-                .surfaceColorAtElevation(6.dp)
-                .copy(alpha = percent))
-    )
+    val heightOffsetLimit = with(LocalDensity.current) { -(AppBarHeight.dp + topInset).toPx() }
+    SideEffect {
+        if (scrollBehavior.state.heightOffsetLimit != heightOffsetLimit) {
+            scrollBehavior.state.heightOffsetLimit = heightOffsetLimit
+        }
+    }
 
     Box(
-        modifier = Modifier
-            .padding(WindowInsets.systemBars
-                .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
-                .asPaddingValues())
-            .fillMaxWidth()
-            .height(AppBarHeight.dp)
-            .padding(horizontal = horizontalPadding, vertical = verticalPadding)
-            .clip(RoundedCornerShape(cornerShapePercent))
-            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
-            .clickable {
-                if (appBarState.canSearch) {
-                    onExpandSearch()
-                }
+        modifier = Modifier.offset(
+            y = with(LocalDensity.current) {
+                scrollBehavior.state.heightOffset.roundToInt().toDp()
             }
+        )
     ) {
-        AnimatedVisibility(
-            visible = appBarState.canSearch,
-            enter = fadeIn(),
-            exit = fadeOut()
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(topInset)
+                .background(if (appBarConfig.canSearch) {
+                    MaterialTheme.colorScheme
+                        .surfaceColorAtElevation(6.dp)
+                        .copy(alpha = percent)
+                } else {
+                    MaterialTheme.colorScheme.background
+                })
+        )
+
+        Box(
+            modifier = Modifier
+                .padding(WindowInsets.systemBars
+                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                    .asPaddingValues())
+                .fillMaxWidth()
+                .height(AppBarHeight.dp)
+                .padding(horizontal = horizontalPadding, vertical = verticalPadding)
+                .clip(RoundedCornerShape(cornerShapePercent))
+                .background(background)
+                .clickable(
+                    enabled = appBarConfig.canSearch && !appBarConfig.searchExpanded
+                ) {
+                    if (appBarConfig.canSearch) {
+                        scrollBehavior.state.heightOffset = 0f
+                        onExpandSearch()
+                    }
+                }
         ) {
             AnimatedVisibility(
-                visible = !appBarState.searchExpanded,
+                visible = appBarConfig.canSearch,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize()
+                AnimatedVisibility(
+                    visible = !appBarConfig.searchExpanded,
+                    enter = fadeIn(),
+                    exit = fadeOut()
                 ) {
-                    IconButton(
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        onClick = appBarState.onNavigationButtonClick
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Icon(
-                            painter = painterResource(appBarState.navigationIcon),
-                            contentDescription = null
-                        )
-                    }
-
-                    appBarState.title(this)
-                }
-            }
-
-            AnimatedVisibility(
-                visible = appBarState.searchExpanded,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    IconButton(
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        onClick = {
-                            navController.navigateUp()
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(appBarState.navigationIcon),
-                            contentDescription = null
-                        )
-                    }
-
-                    BasicTextField(
-                        value = textFieldValue,
-                        onValueChange = onTextFieldValueChange,
-                        textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
-                        singleLine = true,
-                        maxLines = 1,
-                        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(
-                            onSearch = {
-                                onSearch(textFieldValue.text)
-                            }
-                        ),
-                        decorationBox = { innerTextField ->
-                            Box(
-                                modifier = Modifier.fillMaxHeight(),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                if (textFieldValue.text.isEmpty()) {
-                                    Text(
-                                        text = stringResource(R.string.menu_search),
-                                        textAlign = TextAlign.Start,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        modifier = Modifier
-                                            .alpha(0.6f)
-                                    )
-                                }
-                                innerTextField()
-                            }
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .focusRequester(focusRequester)
-                    )
-
-                    if (textFieldValue.text.isNotEmpty()) {
                         IconButton(
-                            onClick = {
-                                onTextFieldValueChange(TextFieldValue(""))
-                            }
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            onClick = appBarConfig.onNavigationButtonClick
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_close),
+                                painter = painterResource(appBarConfig.navigationIcon),
                                 contentDescription = null
                             )
                         }
-                    }
 
-                    appBarState.actions(this)
+                        appBarConfig.title(this)
+                    }
+                }
+
+                AnimatedVisibility(
+                    visible = appBarConfig.searchExpanded,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        IconButton(
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            onClick = {
+                                navController.navigateUp()
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(appBarConfig.navigationIcon),
+                                contentDescription = null
+                            )
+                        }
+
+                        BasicTextField(
+                            value = textFieldValue,
+                            onValueChange = onTextFieldValueChange,
+                            textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
+                            singleLine = true,
+                            maxLines = 1,
+                            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Search),
+                            keyboardActions = KeyboardActions(
+                                onSearch = {
+                                    onSearch(textFieldValue.text)
+                                }
+                            ),
+                            decorationBox = { innerTextField ->
+                                Box(
+                                    modifier = Modifier.fillMaxHeight(),
+                                    contentAlignment = Alignment.CenterStart
+                                ) {
+                                    if (textFieldValue.text.isEmpty()) {
+                                        Text(
+                                            text = stringResource(R.string.menu_search),
+                                            textAlign = TextAlign.Start,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier
+                                                .alpha(0.6f)
+                                        )
+                                    }
+                                    innerTextField()
+                                }
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .focusRequester(focusRequester)
+                        )
+
+                        if (textFieldValue.text.isNotEmpty()) {
+                            IconButton(
+                                onClick = {
+                                    onTextFieldValueChange(TextFieldValue(""))
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_close),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+
+                        appBarConfig.actions(this)
+                    }
                 }
             }
-        }
 
-        AnimatedVisibility(
-            visible = !appBarState.canSearch,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxSize()
+            AnimatedVisibility(
+                visible = !appBarConfig.canSearch,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                IconButton(
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    onClick = appBarState.onNavigationButtonClick
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Icon(
-                        painter = painterResource(appBarState.navigationIcon),
-                        contentDescription = null
-                    )
+                    IconButton(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        onClick = appBarConfig.onNavigationButtonClick
+                    ) {
+                        Icon(
+                            painter = painterResource(appBarConfig.navigationIcon),
+                            contentDescription = null
+                        )
+                    }
+
+                    appBarConfig.title(this)
+
+                    appBarConfig.actions(this)
                 }
-
-                appBarState.title(this)
-
-                appBarState.actions(this)
             }
         }
     }
 }
 
 @Immutable
-data class AppBarState(
+data class AppBarConfig(
     val title: @Composable RowScope.() -> Unit = {},
     @DrawableRes val navigationIcon: Int = R.drawable.ic_arrow_back,
     val onNavigationButtonClick: () -> Unit = {},
@@ -239,3 +268,43 @@ data class AppBarState(
     val actions: @Composable RowScope.() -> Unit = {},
     val transparentBackground: Boolean = false,
 )
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun appBarScrollBehavior(
+    state: TopAppBarState = rememberTopAppBarState(),
+    canScroll: () -> Boolean = { true },
+    snapAnimationSpec: AnimationSpec<Float>? = spring(stiffness = Spring.StiffnessMediumLow),
+    flingAnimationSpec: DecayAnimationSpec<Float>? = rememberSplineBasedDecay(),
+): TopAppBarScrollBehavior =
+    AppBarScrollBehavior(
+        state = state,
+        snapAnimationSpec = snapAnimationSpec,
+        flingAnimationSpec = flingAnimationSpec,
+        canScroll = canScroll
+    )
+
+@ExperimentalMaterial3Api
+class AppBarScrollBehavior constructor(
+    override val state: TopAppBarState,
+    override val snapAnimationSpec: AnimationSpec<Float>?,
+    override val flingAnimationSpec: DecayAnimationSpec<Float>?,
+    val canScroll: () -> Boolean = { true },
+) : TopAppBarScrollBehavior {
+    override val isPinned: Boolean = false
+    override var nestedScrollConnection = object : NestedScrollConnection {
+        override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+            if (!canScroll()) return Offset.Zero
+            state.contentOffset += consumed.y
+            if (state.heightOffset == 0f || state.heightOffset == state.heightOffsetLimit) {
+                if (consumed.y == 0f && available.y > 0f) {
+                    // Reset the total content offset to zero when scrolling all the way down.
+                    // This will eliminate some float precision inaccuracies.
+                    state.contentOffset = 0f
+                }
+            }
+            state.heightOffset += consumed.y
+            return Offset.Zero
+        }
+    }
+}
