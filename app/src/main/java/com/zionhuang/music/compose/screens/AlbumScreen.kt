@@ -196,27 +196,42 @@ fun AlbumScreen(
                 ShimmerHost(
                     modifier = Modifier.animateItemPlacement()
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .animateItemPlacement()
-                    ) {
-                        Spacer(
-                            modifier = Modifier
-                                .size(AlbumThumbnailSize.dp)
-                                .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
-                                .background(MaterialTheme.colorScheme.onSurface)
-                        )
+                    Column(Modifier.padding(12.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Spacer(
+                                modifier = Modifier
+                                    .size(AlbumThumbnailSize.dp)
+                                    .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
+                                    .background(MaterialTheme.colorScheme.onSurface)
+                            )
 
-                        Spacer(Modifier.width(16.dp))
+                            Spacer(Modifier.width(16.dp))
 
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            TextPlaceholder()
-                            TextPlaceholder()
-                            TextPlaceholder()
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                TextPlaceholder()
+                                TextPlaceholder()
+                                TextPlaceholder()
+                            }
+                        }
+
+                        Spacer(Modifier.padding(8.dp))
+
+                        Row {
+                            Spacer(Modifier
+                                .weight(1f)
+                                .height(ButtonDefaults.MinHeight)
+                                .clip(RoundedCornerShape(50))
+                                .background(MaterialTheme.colorScheme.onSurface))
+
+                            Spacer(Modifier.width(12.dp))
+
+                            Spacer(Modifier
+                                .weight(1f)
+                                .height(ButtonDefaults.MinHeight)
+                                .clip(RoundedCornerShape(50))
+                                .background(MaterialTheme.colorScheme.onSurface))
                         }
                     }
 
