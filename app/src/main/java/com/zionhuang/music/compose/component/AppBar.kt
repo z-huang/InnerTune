@@ -104,7 +104,7 @@ fun AppBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(topInset)
-                .background(if (appBarConfig.canSearch) {
+                .background(if (appBarConfig.canSearch && appBarConfig.searchExpanded) {
                     MaterialTheme.colorScheme
                         .surfaceColorAtElevation(6.dp)
                         .copy(alpha = percent)
