@@ -35,6 +35,7 @@ import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.YouTubeListItem
 import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
+import com.zionhuang.music.compose.utils.rememberLazyListState
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.YouTubeRepository
@@ -62,7 +63,7 @@ fun OnlineSearchResult(
     val searchFilter by viewModel.filter.observeAsState()
 
     LazyColumn(
-        state = lazyListState,
+        state = items.rememberLazyListState(),
         contentPadding = WindowInsets.systemBars
             .add(WindowInsets(
                 top = AppBarHeight.dp + SearchFilterHeight.dp,
@@ -119,14 +120,16 @@ fun OnlineSearchResult(
             }
         }
 
-        item {
-            ShimmerHost {
-                repeat(when {
-                    items.loadState.refresh is LoadState.Loading -> 8
-                    items.loadState.append is LoadState.Loading -> 3
-                    else -> 0
-                }) {
-                    ListItemPlaceHolder()
+        if (items.loadState.refresh is LoadState.Loading || items.loadState.append is LoadState.Loading) {
+            item {
+                ShimmerHost {
+                    repeat(when {
+                        items.loadState.refresh is LoadState.Loading -> 8
+                        items.loadState.append is LoadState.Loading -> 3
+                        else -> 0
+                    }) {
+                        ListItemPlaceHolder()
+                    }
                 }
             }
         }
