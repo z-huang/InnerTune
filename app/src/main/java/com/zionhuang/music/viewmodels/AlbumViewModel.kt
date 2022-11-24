@@ -6,7 +6,6 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.youtube.getAlbumWithSongs
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AlbumViewModel(
@@ -18,7 +17,6 @@ class AlbumViewModel(
 
     init {
         viewModelScope.launch {
-            delay(200)
             albumWithSongs.value = SongRepository(context).getAlbumWithSongs(albumId)
                 ?: playlistId?.let {
                     YouTube.getAlbumWithSongs(context, albumId, it)

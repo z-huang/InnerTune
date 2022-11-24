@@ -70,7 +70,9 @@ fun AlbumScreen(
                 key = "header"
             ) {
                 Column(
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .animateItemPlacement()
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
@@ -191,7 +193,9 @@ fun AlbumScreen(
                 key = "shimmer",
                 contentType = CONTENT_TYPE_SHIMMER
             ) {
-                ShimmerHost {
+                ShimmerHost(
+                    modifier = Modifier.animateItemPlacement()
+                ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
