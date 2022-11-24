@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -20,7 +17,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
@@ -28,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -210,80 +205,15 @@ class ComposeActivity : ComponentActivity() {
                         val enabledNavItems = NavigationTabHelper.getConfig(this@ComposeActivity)
 
                         val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
-                            mutableStateOf(
-                                TextFieldValue("")
-                            )
+                            mutableStateOf(TextFieldValue(""))
                         }
-                        var searchSource by rememberPreference(SEARCH_SOURCE, ONLINE)
+                        val searchSource = rememberPreference(SEARCH_SOURCE, ONLINE)
                         val appBarConfig = remember(route) {
-                            route ?: return@remember AppBarConfig(navigationIcon = R.drawable.ic_search)
-                            if (navigationItems.any { it.route == route }) {
-                                return@remember AppBarConfig(
-                                    title = {
-                                        Text(
-                                            text = stringResource(R.string.menu_search),
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            modifier = Modifier
-                                                .alpha(0.6f)
-                                                .weight(1f)
-                                        )
-                                    },
-                                    navigationIcon = R.drawable.ic_search,
-                                    onNavigationButtonClick = {
-                                        navController.navigate("search")
-                                    },
-                                    canSearch = true
-                                )
-                            }
                             when {
-                                route == "search" -> AppBarConfig(
-                                    onNavigationButtonClick = {
-                                        navController.navigateUp()
-                                        onTextFieldValueChange(TextFieldValue(""))
-                                    },
-                                    canSearch = true,
-                                    searchExpanded = true,
-                                    actions = {
-                                        IconButton(
-                                            onClick = {
-                                                searchSource = if (searchSource == ONLINE) LOCAL else ONLINE
-                                            },
-                                            modifier = Modifier.padding(horizontal = 4.dp)
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(if (searchSource == ONLINE) R.drawable.ic_language else R.drawable.ic_library_music),
-                                                contentDescription = null
-                                            )
-                                        }
-                                    }
-                                )
-                                route.startsWith("search/") -> AppBarConfig(
-                                    title = {
-                                        Text(
-                                            text = textFieldValue.text,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis,
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                    },
-                                    navigationIcon = R.drawable.ic_arrow_back,
-                                    onNavigationButtonClick = {
-                                        navController.navigateUp()
-                                        if (navController.currentDestination?.route == "search") {
-                                            navController.navigateUp()
-                                        }
-                                        onTextFieldValueChange(TextFieldValue(""))
-                                    },
-                                    canSearch = true,
-                                    searchExpanded = false
-                                )
-                                route.startsWith("album/") -> AppBarConfig(
-                                    onNavigationButtonClick = {
-                                        navController.navigateUp()
-                                    },
-                                    canSearch = false
-                                )
+                                route == null || navigationItems.any { it.route == route } -> defaultAppBarConfig(navController)
+                                route == "search" -> searchAppBarConfig(navController, searchSource, onTextFieldValueChange)
+                                route.startsWith("search/") -> onlineSearchResultAppBarConfig(navController, textFieldValue, onTextFieldValueChange)
+                                route.startsWith("album/") -> albumAppBarConfig(navController)
                                 else -> AppBarConfig()
                             }
                         }
@@ -301,6 +231,16 @@ class ComposeActivity : ComponentActivity() {
                         val scrollBehavior = appBarScrollBehavior(
                             canScroll = { route?.startsWith("search/") == false }
                         )
+                        LaunchedEffect(route) {
+                            val heightOffset = scrollBehavior.state.heightOffset
+                            animate(
+                                initialValue = heightOffset,
+                                targetValue = 0f
+                            ) { value, velocity ->
+                                scrollBehavior.state.heightOffset = value
+                            }
+                        }
+
                         Scaffold(
                             bottomBar = {
                                 NavigationBar(

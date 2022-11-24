@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -68,6 +69,8 @@ fun AppBar(
     }
     val background by animateColorAsState(if (appBarConfig.canSearch) {
         MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+    } else if (appBarConfig.transparentBackground) {
+        Color.Transparent
     } else {
         MaterialTheme.colorScheme.background
     })
@@ -125,7 +128,6 @@ fun AppBar(
                     interactionSource = remember { MutableInteractionSource() }
                 ) {
                     if (appBarConfig.canSearch && !appBarConfig.searchExpanded) {
-                        scrollBehavior.state.heightOffset = 0f
                         onExpandSearch()
                     }
                 }
