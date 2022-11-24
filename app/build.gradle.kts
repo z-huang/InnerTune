@@ -9,6 +9,7 @@ plugins {
 }
 
 android {
+    namespace = "com.zionhuang.music"
     compileSdk = 33
     buildToolsVersion = "30.0.3"
     defaultConfig {

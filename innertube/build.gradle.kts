@@ -7,14 +7,13 @@ plugins {
 }
 
 android {
+    namespace = "com.zionhuang.innertube"
     compileSdk = 32
-
     defaultConfig {
         minSdk = 24
         targetSdk = 31
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
