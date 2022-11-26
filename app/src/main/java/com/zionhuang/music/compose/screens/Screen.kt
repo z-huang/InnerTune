@@ -2,7 +2,6 @@ package com.zionhuang.music.compose.screens
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -13,7 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.component.AppBarConfig
@@ -65,8 +63,7 @@ fun searchAppBarConfig(
         IconButton(
             onClick = {
                 searchSource.value = if (searchSource.value == ONLINE) LOCAL else ONLINE
-            },
-            modifier = Modifier.padding(horizontal = 4.dp)
+            }
         ) {
             Icon(
                 painter = painterResource(if (searchSource.value == ONLINE) R.drawable.ic_language else R.drawable.ic_library_music),
