@@ -17,6 +17,7 @@ const val GridItemWidth = 168
 const val SuggestionItemHeight = 56
 const val SearchFilterHeight = 48
 const val ListThumbnailSize = 48
+const val GridThumbnailSize = 144
 const val AlbumThumbnailSize = 144
 
 const val ThumbnailCornerRadius = 6

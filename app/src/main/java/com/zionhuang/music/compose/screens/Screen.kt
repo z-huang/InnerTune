@@ -104,3 +104,10 @@ fun albumAppBarConfig(navController: NavController) = AppBarConfig(
     },
     canSearch = false
 )
+
+fun artistAppBarConfig(navController: NavController) = AppBarConfig(
+    onNavigationButtonClick = {
+        navController.navigateUp()
+    },
+    canSearch = false
+)

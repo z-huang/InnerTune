@@ -102,13 +102,9 @@ fun OnlineSearchResult(
                             modifier = Modifier
                                 .clickable {
                                     when (item) {
-                                        is SongItem -> {
-                                            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item))
-                                        }
-                                        is AlbumItem -> {
-                                            navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
-                                        }
-                                        is ArtistItem -> {}
+                                        is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item))
+                                        is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                                        is ArtistItem -> navController.navigate("artist/${item.id}")
                                         is PlaylistItem -> {}
                                     }
                                 }

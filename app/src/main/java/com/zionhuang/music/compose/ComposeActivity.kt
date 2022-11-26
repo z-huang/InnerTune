@@ -38,7 +38,6 @@ import com.valentinilk.shimmer.LocalShimmerTheme
 import com.valentinilk.shimmer.defaultShimmerTheme
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.component.AppBar
-import com.zionhuang.music.compose.component.AppBarConfig
 import com.zionhuang.music.compose.component.appBarScrollBehavior
 import com.zionhuang.music.compose.component.rememberBottomSheetState
 import com.zionhuang.music.compose.player.BottomSheetPlayer
@@ -59,7 +58,6 @@ import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.NavigationTabHelper
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ComposeActivity : ComponentActivity() {
@@ -206,7 +204,8 @@ class ComposeActivity : ComponentActivity() {
                                 route == "search" -> searchAppBarConfig(navController, searchSource, onTextFieldValueChange)
                                 route.startsWith("search/") -> onlineSearchResultAppBarConfig(navController, textFieldValue, onTextFieldValueChange)
                                 route.startsWith("album/") -> albumAppBarConfig(navController)
-                                else -> AppBarConfig()
+                                route.startsWith("artist/") -> artistAppBarConfig(navController)
+                                else -> defaultAppBarConfig(navController)
                             }
                         }
                         val onSearch: (String) -> Unit = { query ->
@@ -299,6 +298,20 @@ class ComposeActivity : ComponentActivity() {
                                     AlbumScreen(
                                         albumId = backStackEntry.arguments?.getString("albumId")!!,
                                         playlistId = backStackEntry.arguments?.getString("playlistId"),
+                                    )
+                                }
+
+                                composable(
+                                    route = "artist/{artistId}",
+                                    arguments = listOf(
+                                        navArgument("artistId") {
+                                            type = NavType.StringType
+                                        }
+                                    )
+                                ) { backStackEntry ->
+                                    ArtistScreen(
+                                        navController = navController,
+                                        artistId = backStackEntry.arguments?.getString("artistId")!!
                                     )
                                 }
 

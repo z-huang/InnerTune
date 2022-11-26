@@ -32,9 +32,7 @@ import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.ListItemHeight
-import com.zionhuang.music.constants.ListThumbnailSize
-import com.zionhuang.music.constants.ThumbnailCornerRadius
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.db.entities.Playlist
@@ -155,7 +153,10 @@ fun GridItem(
     subtitle: String,
     modifier: Modifier = Modifier,
     thumbnailUrl: String? = null,
+    thumbnailRatio: Float = 1f,
     thumbnailShape: Shape = CircleShape,
+    playingIndicator: Boolean = false,
+    playWhenReady: Boolean = false,
 ) = GridItem(
     title = title,
     subtitle = subtitle,
@@ -164,11 +165,43 @@ fun GridItem(
             model = thumbnailUrl,
             contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
+                .width(GridThumbnailSize.dp * thumbnailRatio)
+                .height(GridThumbnailSize.dp)
                 .clip(thumbnailShape)
         )
+        AnimatedVisibility(
+            visible = playingIndicator,
+            enter = fadeIn(tween(500)),
+            exit = fadeOut(tween(500))
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .width(GridThumbnailSize.dp * thumbnailRatio)
+                    .height(GridThumbnailSize.dp)
+                    .background(
+                        color = Color.Black.copy(alpha = 0.4f),
+                        shape = thumbnailShape
+                    )
+            ) {
+                if (playWhenReady) {
+                    PlayingIndicator(
+                        color = Color.White,
+                        modifier = Modifier.height(24.dp)
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_play),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            }
+        }
     },
     modifier = modifier
+        .padding(12.dp)
+        .width(GridThumbnailSize.dp * thumbnailRatio)
 )
 
 @Composable
@@ -179,9 +212,11 @@ fun GridItem(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.padding(12.dp)
+        modifier = modifier
     ) {
-        thumbnailContent()
+        Box {
+            thumbnailContent()
+        }
 
         Spacer(modifier = Modifier.height(6.dp))
 
@@ -374,10 +409,18 @@ fun YouTubeListItem(
 fun YouTubeGridItem(
     item: YTItem,
     modifier: Modifier = Modifier,
+    playingIndicator: Boolean = false,
+    playWhenReady: Boolean = false,
 ) = GridItem(
     title = item.title,
     subtitle = item.subtitle.orEmpty(),
     thumbnailUrl = item.thumbnails.lastOrNull()?.url,
+    thumbnailRatio = item.thumbnails.lastOrNull()?.let {
+        if (it.width != null && it.height != null) it.width!!.toFloat() / it.height!!
+        else 1f
+    } ?: 1f,
     thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius.dp),
+    playingIndicator = playingIndicator,
+    playWhenReady = playWhenReady,
     modifier = modifier
 )
