@@ -33,7 +33,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.palette.graphics.Palette
 import com.google.android.exoplayer2.Player.STATE_IDLE
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.valentinilk.shimmer.defaultShimmerTheme
@@ -51,6 +50,7 @@ import com.zionhuang.music.compose.screens.library.LibrarySongsScreen
 import com.zionhuang.music.compose.theme.ColorSaver
 import com.zionhuang.music.compose.theme.DefaultThemeColor
 import com.zionhuang.music.compose.theme.InnerTuneTheme
+import com.zionhuang.music.compose.theme.extractThemeColorFromBitmap
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.sharedPreferences
@@ -102,16 +102,8 @@ class ComposeActivity : ComponentActivity() {
             DisposableEffect(playerConnection.binder, isSystemInDarkTheme) {
                 playerConnection.onBitmapChanged = { bitmap ->
                     if (bitmap != null) {
-                        coroutineScope.launch(Dispatchers.IO) {
-                            val palette = Palette.from(bitmap).maximumColorCount(8).generate()
-                            val defaultHsl = palette.dominantSwatch!!.hsl
-                            val hsl = defaultHsl.takeIf { it[1] >= 0.08 }
-                                ?: palette.swatches
-                                    .map { it.hsl }
-                                    .filter { it[1] != 0f }
-                                    .maxByOrNull { it[1] }
-                                ?: defaultHsl
-                            themeColor = Color.hsl(hsl[0], hsl[1], hsl[2])
+                        coroutineScope.launch {
+                            themeColor = extractThemeColorFromBitmap(bitmap)
                         }
                     } else {
                         themeColor = DefaultThemeColor
