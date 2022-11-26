@@ -220,7 +220,7 @@ class ComposeActivity : ComponentActivity() {
                         }
 
                         val scrollBehavior = appBarScrollBehavior(
-                            canScroll = { route?.startsWith("search/") == false }
+                            canScroll = { route?.startsWith("search/") == false && (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed) }
                         )
                         LaunchedEffect(route) {
                             val heightOffset = scrollBehavior.state.heightOffset
