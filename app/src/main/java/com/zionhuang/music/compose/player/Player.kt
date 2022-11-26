@@ -148,7 +148,7 @@ fun BottomSheetPlayer(
                 )
 
                 BasicText(
-                    text = duration.takeIf { it != C.TIME_UNSET }?.let { makeTimeString(duration) }.orEmpty(),
+                    text = if (duration != C.TIME_UNSET) makeTimeString(duration) else "",
                     style = MaterialTheme.typography.labelMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
