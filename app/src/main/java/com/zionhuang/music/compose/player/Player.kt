@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player.*
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
@@ -53,6 +54,9 @@ fun BottomSheetPlayer(
     var position by rememberSaveable(playbackState) {
         mutableStateOf(playerConnection.player?.currentPosition ?: 0L)
     }
+    val duration by rememberSaveable(playbackState) {
+        mutableStateOf(playerConnection.player?.duration ?: 0L)
+    }
     var sliderPosition by remember {
         mutableStateOf<Long?>(null)
     }
@@ -84,7 +88,8 @@ fun BottomSheetPlayer(
                 mediaMetadata = mediaMetadata,
                 playbackState = playbackState,
                 playWhenReady = playWhenReady,
-                position = position
+                position = position,
+                duration = duration
             )
         }
     ) {
@@ -143,7 +148,7 @@ fun BottomSheetPlayer(
                 )
 
                 BasicText(
-                    text = mediaMetadata?.duration?.times(1000L)?.let { makeTimeString(it) }.orEmpty(),
+                    text = duration.takeIf { it != C.TIME_UNSET }?.let { makeTimeString(duration) }.orEmpty(),
                     style = MaterialTheme.typography.labelMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

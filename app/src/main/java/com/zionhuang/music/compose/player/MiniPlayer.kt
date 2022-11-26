@@ -33,6 +33,7 @@ fun MiniPlayer(
     playbackState: Int,
     playWhenReady: Boolean,
     position: Long,
+    duration: Long,
     modifier: Modifier = Modifier,
 ) {
     val playerConnection = LocalPlayerConnection.current
@@ -48,9 +49,7 @@ fun MiniPlayer(
     ) {
         LinearProgressIndicator(
             indeterminate = playbackState == STATE_BUFFERING,
-            progress = mediaMetadata?.duration?.let { duration ->
-                position.toFloat() / (duration * 1000)
-            } ?: 0f,
+            progress = (position.toFloat() / duration).coerceIn(0f, 1f),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(2.dp)
