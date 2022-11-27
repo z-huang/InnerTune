@@ -75,12 +75,11 @@ fun searchAppBarConfig(
 
 fun onlineSearchResultAppBarConfig(
     navController: NavController,
-    textFieldValue: TextFieldValue,
-    onTextFieldValueChange: (TextFieldValue) -> Unit,
+    query: String,
 ) = AppBarConfig(
     title = {
         Text(
-            text = textFieldValue.text,
+            text = query,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)
@@ -92,7 +91,6 @@ fun onlineSearchResultAppBarConfig(
         if (navController.currentDestination?.route == "search") {
             navController.navigateUp()
         }
-        onTextFieldValueChange(TextFieldValue(""))
     },
     canSearch = true,
     searchExpanded = false

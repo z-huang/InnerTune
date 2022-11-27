@@ -193,11 +193,14 @@ class ComposeActivity : ComponentActivity() {
                             mutableStateOf(TextFieldValue(""))
                         }
                         val searchSource = rememberPreference(SEARCH_SOURCE, ONLINE)
-                        val appBarConfig = remember(route) {
+                        val appBarConfig = remember(navBackStackEntry) {
                             when {
-                                route == null || navigationItems.any { it.route == route } -> defaultAppBarConfig(navController)
+                                route == null || navigationItems.any { it.route == route } -> {
+                                    onTextFieldValueChange(TextFieldValue(""))
+                                    defaultAppBarConfig(navController)
+                                }
                                 route == "search" -> searchAppBarConfig(navController, searchSource, onTextFieldValueChange)
-                                route.startsWith("search/") -> onlineSearchResultAppBarConfig(navController, textFieldValue, onTextFieldValueChange)
+                                route.startsWith("search/") -> onlineSearchResultAppBarConfig(navController, navBackStackEntry?.arguments?.getString("query").orEmpty())
                                 route.startsWith("album/") -> albumAppBarConfig(navController)
                                 route.startsWith("artist/") -> artistAppBarConfig(navController)
                                 else -> defaultAppBarConfig(navController)
