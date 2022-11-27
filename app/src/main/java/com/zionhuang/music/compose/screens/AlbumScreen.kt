@@ -21,12 +21,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
+import com.zionhuang.music.compose.component.AutoResizeText
+import com.zionhuang.music.compose.component.FontSizeRange
 import com.zionhuang.music.compose.component.SongListItem
 import com.zionhuang.music.compose.component.shimmer.ButtonPlaceholder
 import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
@@ -91,9 +96,12 @@ fun AlbumScreen(
                         Column(
                             verticalArrangement = Arrangement.Center,
                         ) {
-                            Text(
+                            AutoResizeText(
                                 text = albumWithSongs.album.title,
-                                style = MaterialTheme.typography.titleLarge
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                fontSizeRange = FontSizeRange(16.sp, 22.sp)
                             )
                             Text(
                                 text = listOf(
