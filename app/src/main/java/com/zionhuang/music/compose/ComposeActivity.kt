@@ -17,7 +17,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -35,11 +34,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.android.exoplayer2.Player.STATE_IDLE
 import com.valentinilk.shimmer.LocalShimmerTheme
-import com.valentinilk.shimmer.defaultShimmerTheme
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.component.AppBar
 import com.zionhuang.music.compose.component.appBarScrollBehavior
 import com.zionhuang.music.compose.component.rememberBottomSheetState
+import com.zionhuang.music.compose.component.shimmer.ShimmerTheme
 import com.zionhuang.music.compose.player.BottomSheetPlayer
 import com.zionhuang.music.compose.screens.*
 import com.zionhuang.music.compose.screens.library.LibraryAlbumsScreen
@@ -156,28 +155,10 @@ class ComposeActivity : ComponentActivity() {
                         }
                     }
 
-                    val shimmerTheme = remember {
-                        defaultShimmerTheme.copy(
-                            animationSpec = infiniteRepeatable(
-                                animation = tween(
-                                    durationMillis = 800,
-                                    easing = LinearEasing,
-                                    delayMillis = 250,
-                                ),
-                                repeatMode = RepeatMode.Restart
-                            ),
-                            shaderColors = listOf(
-                                Color.Unspecified.copy(alpha = 0.25f),
-                                Color.Unspecified.copy(alpha = 0.50f),
-                                Color.Unspecified.copy(alpha = 0.25f),
-                            ),
-                        )
-                    }
-
                     CompositionLocalProvider(
                         LocalPlayerConnection provides playerConnection,
                         LocalPlayerAwareWindowInsets provides playerAwareWindowInsets,
-                        LocalShimmerTheme provides shimmerTheme
+                        LocalShimmerTheme provides ShimmerTheme
                     ) {
                         val navController = rememberNavController()
                         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -218,7 +199,9 @@ class ComposeActivity : ComponentActivity() {
                         }
 
                         val scrollBehavior = appBarScrollBehavior(
-                            canScroll = { route?.startsWith("search/") == false && (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed) }
+                            canScroll = {
+                                route?.startsWith("search/") == false && (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed)
+                            }
                         )
                         LaunchedEffect(route) {
                             val heightOffset = scrollBehavior.state.heightOffset
