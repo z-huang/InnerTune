@@ -7,14 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -86,31 +86,79 @@ fun ArtistScreen(
     ) {
         if (artistHeader != null) {
             item(key = "header") {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(4f / 3)
-                ) {
-                    AsyncImage(
-                        model = artistHeader.bannerThumbnails?.lastOrNull()?.url?.resize(1200, 900),
-                        contentDescription = null,
-                        modifier = Modifier.fadingEdge(
-                            top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding() + AppBarHeight.dp,
-                            bottom = 108.dp
-                        )
-                    )
-                    AutoResizeText(
-                        text = artistHeader.name,
-                        style = MaterialTheme.typography.displayLarge,
-                        fontSizeRange = FontSizeRange(36.sp, 58.sp),
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center,
+                Column {
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(horizontal = 48.dp)
-                    )
+                            .fillMaxWidth()
+                            .aspectRatio(4f / 3)
+                    ) {
+                        AsyncImage(
+                            model = artistHeader.bannerThumbnails?.lastOrNull()?.url?.resize(1200, 900),
+                            contentDescription = null,
+                            modifier = Modifier.fadingEdge(
+                                top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding() + AppBarHeight.dp,
+                                bottom = 108.dp
+                            )
+                        )
+                        AutoResizeText(
+                            text = artistHeader.name,
+                            style = MaterialTheme.typography.displayLarge,
+                            fontSizeRange = FontSizeRange(36.sp, 58.sp),
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(horizontal = 48.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        artistHeader.shuffleEndpoint?.watchEndpoint?.let { shuffleEndpoint ->
+                            Button(
+                                onClick = {
+                                    playerConnection.playQueue(YouTubeQueue(shuffleEndpoint))
+                                },
+                                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_shuffle),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                                )
+                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                Text(
+                                    text = stringResource(R.string.btn_shuffle)
+                                )
+                            }
+                        }
+
+                        if (artistHeader.shuffleEndpoint != null && artistHeader.radioEndpoint != null) {
+                            Spacer(Modifier.width(12.dp))
+                        }
+
+                        artistHeader.radioEndpoint?.watchEndpoint?.let { radioEndpoint ->
+                            OutlinedButton(
+                                onClick = {
+                                    playerConnection.playQueue(YouTubeQueue(radioEndpoint))
+                                },
+                                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_radio),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                                )
+                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                Text(stringResource(R.string.btn_radio))
+                            }
+                        }
+                    }
                 }
             }
         }
