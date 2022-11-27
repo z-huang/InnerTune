@@ -52,6 +52,7 @@ import com.zionhuang.music.compose.theme.InnerTuneTheme
 import com.zionhuang.music.compose.theme.extractThemeColorFromBitmap
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
+import com.zionhuang.music.extensions.preferenceState
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.playback.MusicService.MusicBinder
@@ -93,6 +94,7 @@ class ComposeActivity : ComponentActivity() {
         setContent {
             val coroutineScope = rememberCoroutineScope()
             val isSystemInDarkTheme = isSystemInDarkTheme()
+            val followSystemAccent by preferenceState(FOLLOW_SYSTEM_ACCENT, true)
             var themeColor by rememberSaveable(stateSaver = ColorSaver) {
                 mutableStateOf(DefaultThemeColor)
             }
@@ -115,7 +117,7 @@ class ComposeActivity : ComponentActivity() {
 
             InnerTuneTheme(
                 darkTheme = isSystemInDarkTheme,
-                dynamicColor = sharedPreferences.getBoolean(getString(R.string.pref_follow_system_accent), true),
+                dynamicColor = followSystemAccent,
                 themeColor = themeColor
             ) {
                 BoxWithConstraints(
@@ -145,18 +147,11 @@ class ComposeActivity : ComponentActivity() {
 
                     val playerAwareWindowInsets by remember(bottomInset, playerBottomSheetState.value) {
                         derivedStateOf {
-//                        val bottom = if (playerBottomSheetState.isDismissed) {
-//                            NavigationBarHeight.dp + bottomInset
-//                        } else {
-//                            playerBottomSheetState.collapsedBound
-//                        }
-                            val bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight.dp + bottomInset, playerBottomSheetState.collapsedBound)
-
                             windowsInsets
                                 .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
                                 .add(WindowInsets(
                                     top = AppBarHeight.dp,
-                                    bottom = bottom
+                                    bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight.dp + bottomInset, playerBottomSheetState.collapsedBound)
                                 ))
                         }
                     }
@@ -274,7 +269,7 @@ class ComposeActivity : ComponentActivity() {
                                     LibrarySongsScreen()
                                 }
                                 composable(Screen.Artists.route) {
-                                    LibraryArtistsScreen(innerPaddingModifier)
+                                    LibraryArtistsScreen(navController)
                                 }
                                 composable(Screen.Albums.route) {
                                     LibraryAlbumsScreen(navController, innerPaddingModifier)
@@ -310,8 +305,9 @@ class ComposeActivity : ComponentActivity() {
                                     )
                                 ) { backStackEntry ->
                                     ArtistScreen(
+                                        artistId = backStackEntry.arguments?.getString("artistId")!!,
                                         navController = navController,
-                                        artistId = backStackEntry.arguments?.getString("artistId")!!
+                                        appBarConfig = appBarConfig
                                     )
                                 }
 

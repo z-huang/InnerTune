@@ -95,7 +95,7 @@ fun resizeThumbnailUrl(url: String, width: Int?, height: Int?): String {
         var h = height
         if (w != null && h == null) h = (w / W) * H
         if (w == null && h != null) w = (h / H) * W
-        return "$url-w$w-h$h"
+        return "${url.split("=w")[0]}=w$w-h$h-p-l90-rj"
     }
     if (url matches "https://yt3\\.ggpht\\.com/.*=s(\\d+)".toRegex()) {
         return "$url-s${width ?: height}"

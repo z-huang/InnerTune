@@ -12,18 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.Lyrics
 import com.zionhuang.music.constants.SHOW_LYRICS
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.extensions.preferenceState
-import com.zionhuang.music.extensions.sharedPreferences
 
 @Composable
 fun Thumbnail(
@@ -33,10 +29,7 @@ fun Thumbnail(
 ) {
     val playerConnection = LocalPlayerConnection.current
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
-    val showLyrics by preferenceState(
-        SHOW_LYRICS,
-        LocalContext.current.sharedPreferences.getBoolean(stringResource(R.string.pref_show_lyrics), false)
-    )
+    val showLyrics by preferenceState(SHOW_LYRICS, false)
     val lyrics by playerConnection.currentLyrics.collectAsState(initial = null)
 
     val currentView = LocalView.current

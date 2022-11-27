@@ -100,18 +100,24 @@ fun AppBar(
             }
         )
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(topInset)
-                .background(if (appBarConfig.canSearch && appBarConfig.searchExpanded) {
-                    MaterialTheme.colorScheme
-                        .surfaceColorAtElevation(6.dp)
-                        .copy(alpha = percent)
-                } else {
-                    MaterialTheme.colorScheme.background
-                })
-        )
+        AnimatedVisibility(
+            visible = !appBarConfig.transparentBackground,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(topInset)
+                    .background(if (appBarConfig.canSearch && appBarConfig.searchExpanded) {
+                        MaterialTheme.colorScheme
+                            .surfaceColorAtElevation(6.dp)
+                            .copy(alpha = percent)
+                    } else {
+                        MaterialTheme.colorScheme.background
+                    })
+            )
+        }
 
         Box(
             modifier = Modifier
@@ -263,16 +269,24 @@ fun AppBar(
     }
 }
 
-@Immutable
-data class AppBarConfig(
-    val title: @Composable RowScope.() -> Unit = {},
-    @DrawableRes val navigationIcon: Int = R.drawable.ic_arrow_back,
-    val onNavigationButtonClick: () -> Unit = {},
-    val canSearch: Boolean = true,
-    val searchExpanded: Boolean = false,
-    val actions: @Composable RowScope.() -> Unit = {},
-    val transparentBackground: Boolean = false,
-)
+@Stable
+class AppBarConfig(
+    title: @Composable RowScope.() -> Unit = {},
+    @DrawableRes navigationIcon: Int = R.drawable.ic_arrow_back,
+    onNavigationButtonClick: () -> Unit = {},
+    canSearch: Boolean = true,
+    searchExpanded: Boolean = false,
+    actions: @Composable RowScope.() -> Unit = {},
+    transparentBackground: Boolean = false,
+) {
+    var title by mutableStateOf(title)
+    var navigationIcon by mutableStateOf(navigationIcon)
+    var onNavigationButtonClick by mutableStateOf(onNavigationButtonClick)
+    var canSearch by mutableStateOf(canSearch)
+    var searchExpanded by mutableStateOf(searchExpanded)
+    var actions by mutableStateOf(actions)
+    var transparentBackground by mutableStateOf(transparentBackground)
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

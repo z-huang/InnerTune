@@ -28,8 +28,8 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
 import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
+import com.zionhuang.music.compose.utils.fadingEdge
 import com.zionhuang.music.compose.utils.rememberPreference
-import com.zionhuang.music.compose.utils.verticalFadingEdge
 import com.zionhuang.music.constants.LRC_TEXT_POS
 import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import kotlinx.coroutines.delay
@@ -106,7 +106,7 @@ fun Lyrics(
         modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 12.dp)
-            .verticalFadingEdge()
+            .fadingEdge(vertical = 64.dp)
     ) {
         LazyColumn(
             state = lazyListState,

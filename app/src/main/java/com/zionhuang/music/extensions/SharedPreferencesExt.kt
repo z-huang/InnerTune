@@ -70,7 +70,10 @@ fun SharedPreferences.booleanFlow(key: String, defaultValue: Boolean) = keyFlow
     .conflate()
 
 @Composable
-fun preferenceState(key: String, defaultValue: Boolean) = LocalContext.current.sharedPreferences.booleanFlow(key, defaultValue).collectAsState(initial = defaultValue)
+fun preferenceState(key: String, defaultValue: Boolean) =
+    LocalContext.current.sharedPreferences.booleanFlow(key, defaultValue).collectAsState(
+        initial = LocalContext.current.sharedPreferences.getBoolean(key, defaultValue)
+    )
 
 inline fun <reified E : Enum<E>> SharedPreferences.enumFlow(key: String, defaultValue: E) = keyFlow
     .filter { it == key || it == null }

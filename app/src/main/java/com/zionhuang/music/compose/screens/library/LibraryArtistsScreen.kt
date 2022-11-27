@@ -4,7 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.component.ArtistListItem
@@ -26,12 +27,12 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibraryArtistsScreen(
-    paddingModifier: PaddingValues,
+    navController: NavController,
     viewModel: SongsViewModel = viewModel(),
 ) {
     val sortType by rememberPreference(ARTIST_SORT_TYPE, ArtistSortType.CREATE_DATE)
     val sortDescending by rememberPreference(ARTIST_SORT_DESCENDING, true)
-    val items by viewModel.allArtistsFlow.collectAsState(emptyList())
+    val artists by viewModel.allArtistsFlow.collectAsState(emptyList())
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -52,17 +53,17 @@ fun LibraryArtistsScreen(
                 }
             }
 
-            itemsIndexed(
-                items = items,
-                key = { _, item -> item.id },
-                contentType = { _, _ -> CONTENT_TYPE_ARTIST }
-            ) { index, artist ->
+            items(
+                items = artists,
+                key = { it.id },
+                contentType = { CONTENT_TYPE_ARTIST }
+            ) { artist ->
                 ArtistListItem(
                     artist = artist,
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-
+                            navController.navigate("artist/${artist.id}")
                         }
                         .animateItemPlacement()
                 )
