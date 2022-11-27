@@ -1,6 +1,7 @@
 package com.zionhuang.music.compose.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,10 +24,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.valentinilk.shimmer.shimmer
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
+import com.zionhuang.music.compose.component.shimmer.ButtonPlaceholder
+import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
+import com.zionhuang.music.compose.component.shimmer.ShimmerHost
+import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
 import com.zionhuang.music.compose.utils.fadingEdge
 import com.zionhuang.music.compose.utils.resize
 import com.zionhuang.music.constants.AppBarHeight
@@ -255,6 +261,50 @@ fun ArtistScreen(
                     )
                 }
                 else -> {}
+            }
+        }
+
+        if (artistHeader == null) {
+            item(key = "shimmer") {
+                ShimmerHost {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(4f / 3)
+                    ) {
+                        Spacer(
+                            modifier = Modifier
+                                .shimmer()
+                                .background(MaterialTheme.colorScheme.onSurface)
+                                .fadingEdge(
+                                    top = WindowInsets.systemBars
+                                        .asPaddingValues()
+                                        .calculateTopPadding() + AppBarHeight.dp,
+                                    bottom = 108.dp
+                                )
+                        )
+                        TextPlaceholder(
+                            height = 56.dp,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(horizontal = 48.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.padding(12.dp)
+                    ) {
+                        ButtonPlaceholder(Modifier.weight(1f))
+
+                        Spacer(Modifier.width(12.dp))
+
+                        ButtonPlaceholder(Modifier.weight(1f))
+                    }
+
+                    repeat(6) {
+                        ListItemPlaceHolder()
+                    }
+                }
             }
         }
     }

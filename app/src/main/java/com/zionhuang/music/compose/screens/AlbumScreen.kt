@@ -28,6 +28,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.SongListItem
+import com.zionhuang.music.compose.component.shimmer.ButtonPlaceholder
 import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
 import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
@@ -219,19 +220,11 @@ fun AlbumScreen(
                         Spacer(Modifier.padding(8.dp))
 
                         Row {
-                            Spacer(Modifier
-                                .weight(1f)
-                                .height(ButtonDefaults.MinHeight)
-                                .clip(RoundedCornerShape(50))
-                                .background(MaterialTheme.colorScheme.onSurface))
+                            ButtonPlaceholder(Modifier.weight(1f))
 
                             Spacer(Modifier.width(12.dp))
 
-                            Spacer(Modifier
-                                .weight(1f)
-                                .height(ButtonDefaults.MinHeight)
-                                .clip(RoundedCornerShape(50))
-                                .background(MaterialTheme.colorScheme.onSurface))
+                            ButtonPlaceholder(Modifier.weight(1f))
                         }
                     }
 
