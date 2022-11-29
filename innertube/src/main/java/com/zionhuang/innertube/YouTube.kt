@@ -43,12 +43,12 @@ object YouTube {
 
     suspend fun getSearchSuggestions(query: String): Result<List<YTBaseItem>> = runCatching {
         innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents
-            .flatMap { section ->
+            ?.flatMap { section ->
                 section.searchSuggestionsSectionRenderer.contents.mapNotNull { it.toItem() }
             }
-            .insertSeparator { before, after ->
+            ?.insertSeparator { before, after ->
                 if ((before is SuggestionTextItem && after !is SuggestionTextItem) || (before !is SuggestionTextItem && after is SuggestionTextItem)) Separator else null
-            }
+            }.orEmpty()
     }
 
     suspend fun searchAllType(query: String): Result<BrowseResult> = runCatching {
