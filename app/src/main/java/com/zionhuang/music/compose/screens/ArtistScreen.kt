@@ -86,9 +86,12 @@ fun ArtistScreen(
 
     LazyColumn(
         state = lazyListState,
-        contentPadding = PaddingValues(
-            bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
-        )
+        contentPadding = WindowInsets.systemBars
+            .only(WindowInsetsSides.Bottom)
+            .add(WindowInsets(
+                bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
+            ))
+            .asPaddingValues()
     ) {
         if (artistHeader != null) {
             item(key = "header") {
@@ -103,7 +106,7 @@ fun ArtistScreen(
                             contentDescription = null,
                             modifier = Modifier.fadingEdge(
                                 top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding() + AppBarHeight.dp,
-                                bottom = 108.dp
+                                bottom = 64.dp
                             )
                         )
                         AutoResizeText(
