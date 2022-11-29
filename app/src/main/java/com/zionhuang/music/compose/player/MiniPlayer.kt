@@ -78,6 +78,7 @@ fun MiniPlayer(
             ) {
                 Text(
                     text = mediaMetadata?.title.orEmpty(),
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
