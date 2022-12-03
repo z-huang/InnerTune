@@ -37,6 +37,7 @@ import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
 import com.zionhuang.music.compose.utils.rememberLazyListState
 import com.zionhuang.music.constants.*
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.YouTubeRepository
 import com.zionhuang.music.viewmodels.SearchViewModel
@@ -102,7 +103,7 @@ fun OnlineSearchResult(
                             modifier = Modifier
                                 .clickable {
                                     when (item) {
-                                        is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item))
+                                        is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                                         is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
                                         is ArtistItem -> navController.navigate("artist/${item.id}")
                                         is PlaylistItem -> {}
