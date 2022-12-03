@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.media.session.MediaButtonReceiver
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
@@ -84,7 +85,7 @@ class MusicService : LifecycleMediaBrowserService() {
         val sessionToken: MediaSessionCompat.Token
             get() = songPlayer.mediaSession.sessionToken
 
-        val player: Player
+        val player: ExoPlayer
             get() = this@MusicService.songPlayer.player
 
         val songPlayer: SongPlayer

@@ -2,8 +2,8 @@ package com.zionhuang.music.playback
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.Timeline
 import com.zionhuang.music.extensions.currentMetadata
@@ -23,7 +23,7 @@ class PlayerConnection(context: Context) : Listener {
     val songRepository by lazy { SongRepository(context) }
     var binder: MusicBinder? = null
     val songPlayer: SongPlayer? get() = binder?.songPlayer
-    val player: Player? get() = binder?.player
+    val player: ExoPlayer? get() = binder?.player
 
     val playbackState = MutableStateFlow(STATE_IDLE)
     val playWhenReady = MutableStateFlow(false)
@@ -73,6 +73,16 @@ class PlayerConnection(context: Context) : Listener {
 
     fun playQueue(queue: Queue) {
         binder?.songPlayer?.playQueue(queue)
+    }
+
+    fun playNext(item: MediaItem) = playNext(listOf(item))
+    fun playNext(items: List<MediaItem>) {
+        binder?.songPlayer?.playNext(items)
+    }
+
+    fun addToQueue(item: MediaItem) = addToQueue(listOf(item))
+    fun addToQueue(items: List<MediaItem>) {
+        binder?.songPlayer?.addToQueue(items)
     }
 
     fun toggleRepeatMode() {
