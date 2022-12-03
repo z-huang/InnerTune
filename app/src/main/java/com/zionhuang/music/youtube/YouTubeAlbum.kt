@@ -18,13 +18,13 @@ data class YouTubeAlbum(
     val songs: List<SongItem>,
 )
 
-suspend fun YouTube.getAlbumWithSongs(context: Context, browseId: String, playlistId: String): AlbumWithSongs {
-    val songIds = browse(BrowseEndpoint(browseId = "VL$playlistId")).getOrThrow()
+suspend fun YouTube.getAlbumWithSongs(context: Context, browseId: String, playlistId: String? = null): AlbumWithSongs {
+    val header = browse(BrowseEndpoint(browseId = browseId)).getOrThrow().items.firstOrNull() as? AlbumOrPlaylistHeader ?: throw IllegalStateException("Album header not found")
+    val songIds = browse(BrowseEndpoint(browseId = "VL${playlistId ?: header.id}")).getOrThrow()
         .items
         .filterIsInstance<SongItem>()
         .map { it.id }
     val songs = getQueue(videoIds = songIds).getOrThrow()
-    val header = browse(BrowseEndpoint(browseId = browseId)).getOrThrow().items.firstOrNull() as? AlbumOrPlaylistHeader ?: throw IllegalStateException("Album header not found")
     return AlbumWithSongs(
         album = AlbumEntity(
             id = browseId,

@@ -18,9 +18,7 @@ class AlbumViewModel(
     init {
         viewModelScope.launch {
             albumWithSongs.value = SongRepository(context).getAlbumWithSongs(albumId)
-                ?: playlistId?.let {
-                    YouTube.getAlbumWithSongs(context, albumId, it)
-                }
+                ?: YouTube.getAlbumWithSongs(context, albumId, playlistId)
         }
     }
 }

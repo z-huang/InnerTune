@@ -32,7 +32,7 @@ data class ArtistHeader(
 
 @Parcelize
 data class AlbumOrPlaylistHeader(
-    override val id: String,
+    override val id: String, // playlistId
     val name: String,
     val subtitle: String,
     val secondSubtitle: String,
