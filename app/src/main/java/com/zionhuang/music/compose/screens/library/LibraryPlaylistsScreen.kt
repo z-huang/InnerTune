@@ -1,7 +1,6 @@
 package com.zionhuang.music.compose.screens.library
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,10 +12,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
@@ -68,17 +65,9 @@ fun LibraryPlaylistsScreen(
                 contentType = CONTENT_TYPE_PLAYLIST
             ) {
                 ListItem(
-                    thumbnailContent = {
-                        Image(
-                            painter = painterResource(R.drawable.ic_favorite),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(48.dp)
-                                .height(48.dp)
-                        )
-                    },
                     title = stringResource(R.string.liked_songs),
                     subtitle = pluralStringResource(R.plurals.song_count, likedSongCount, likedSongCount),
+                    thumbnailDrawable = R.drawable.ic_favorite,
                     modifier = Modifier
                         .combinedClickable {
 
@@ -92,17 +81,9 @@ fun LibraryPlaylistsScreen(
                 contentType = CONTENT_TYPE_PLAYLIST
             ) {
                 ListItem(
-                    thumbnailContent = {
-                        Image(
-                            painter = painterResource(R.drawable.ic_save_alt),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(48.dp)
-                                .height(48.dp)
-                        )
-                    },
                     title = stringResource(R.string.downloaded_songs),
                     subtitle = pluralStringResource(R.plurals.song_count, downloadedSongCount, downloadedSongCount),
+                    thumbnailDrawable = R.drawable.ic_save_alt,
                     modifier = Modifier
                         .combinedClickable {
 

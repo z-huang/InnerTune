@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -18,6 +19,7 @@ import com.zionhuang.music.compose.component.AppBarConfig
 import com.zionhuang.music.constants.LOCAL
 import com.zionhuang.music.constants.ONLINE
 
+@Immutable
 sealed class Screen(
     @StringRes val titleId: Int,
     @DrawableRes val iconId: Int,

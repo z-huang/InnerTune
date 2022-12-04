@@ -29,12 +29,12 @@ android {
         resValue("string", "app_version", versionName)
     }
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-        getByName("debug") {
+        debug {
             isMinifyEnabled = false
             applicationIdSuffix = ".debug"
         }
@@ -90,11 +90,6 @@ android {
 }
 
 dependencies {
-    // Kotlin
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     // Compose
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
@@ -108,15 +103,11 @@ dependencies {
     implementation(libs.compose.animation)
     implementation(libs.compose.animation.graphics)
     implementation(libs.compose.material3)
-    implementation(libs.compose.material.windowsize)
-    implementation(libs.compose.material.icon.core)
-    implementation(libs.compose.material.icon.extended)
     implementation(projects.materialThemeBuilder)
 
     implementation(libs.compose.shimmer)
 
     implementation(libs.palette)
-    implementation(libs.systemUiController)
     // AndroidX
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.appcompat:appcompat:1.5.1")
@@ -169,8 +160,6 @@ dependencies {
     implementation(libs.coil)
     // Fast Scroll
     implementation("me.zhanghai.android.fastscroll:library:1.1.8")
-    // Markdown
-    implementation("org.commonmark:commonmark:0.18.2")
     // Desugaring
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     // Test

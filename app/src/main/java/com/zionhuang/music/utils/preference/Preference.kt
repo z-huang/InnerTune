@@ -26,13 +26,6 @@ open class Preference<T : Any>(
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = setPreferenceValue(value)
 }
 
-inline fun <reified T : Any> serializablePreference(context: Context, keyId: Int, defaultValue: T): Preference<T> = object : Preference<T>(context, keyId, defaultValue) {
-    override fun getPreferenceValue(): T = sharedPreferences.getSerializable(key, defaultValue)!!
-    override fun setPreferenceValue(value: T) {
-        sharedPreferences.putSerializable(key, value)
-    }
-}
-
 inline fun <reified E : Enum<E>> enumPreference(context: Context, keyId: Int, defaultValue: E): Preference<E> = object : Preference<E>(context, keyId, defaultValue) {
     override fun getPreferenceValue(): E = sharedPreferences.getEnum(key, defaultValue)
     override fun setPreferenceValue(value: E) {

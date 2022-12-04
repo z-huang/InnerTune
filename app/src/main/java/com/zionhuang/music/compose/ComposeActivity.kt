@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
@@ -23,7 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEach
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavType
@@ -32,12 +35,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.android.exoplayer2.Player.STATE_IDLE
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.music.R
-import com.zionhuang.music.compose.component.AppBar
-import com.zionhuang.music.compose.component.appBarScrollBehavior
-import com.zionhuang.music.compose.component.rememberBottomSheetState
+import com.zionhuang.music.compose.component.*
 import com.zionhuang.music.compose.component.shimmer.ShimmerTheme
 import com.zionhuang.music.compose.player.BottomSheetPlayer
 import com.zionhuang.music.compose.screens.*
@@ -61,16 +63,17 @@ import com.zionhuang.music.utils.NavigationTabHelper
 import kotlinx.coroutines.launch
 
 class ComposeActivity : ComponentActivity() {
-    private val playerConnection = PlayerConnection(this)
+    private var playerConnection by mutableStateOf<PlayerConnection?>(null)
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             if (service is MusicBinder) {
-                playerConnection.init(service)
+                playerConnection = PlayerConnection(this@ComposeActivity, service)
             }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            playerConnection.dispose()
+            playerConnection?.dispose()
+            playerConnection = null
         }
     }
 
@@ -98,8 +101,8 @@ class ComposeActivity : ComponentActivity() {
                 mutableStateOf(DefaultThemeColor)
             }
 
-            DisposableEffect(playerConnection.binder, isSystemInDarkTheme) {
-                playerConnection.onBitmapChanged = { bitmap ->
+            DisposableEffect(playerConnection?.binder, isSystemInDarkTheme) {
+                playerConnection?.onBitmapChanged = { bitmap ->
                     if (bitmap != null) {
                         coroutineScope.launch {
                             themeColor = extractThemeColorFromBitmap(bitmap)
@@ -110,7 +113,7 @@ class ComposeActivity : ComponentActivity() {
                 }
 
                 onDispose {
-                    playerConnection.onBitmapChanged = {}
+                    playerConnection?.onBitmapChanged = {}
                 }
             }
 
@@ -131,9 +134,10 @@ class ComposeActivity : ComponentActivity() {
                         expandedBound = maxHeight,
                     )
 
-                    val playbackState by playerConnection.playbackState.collectAsState(STATE_IDLE)
-                    LaunchedEffect(playbackState) {
-                        if (playbackState == STATE_IDLE) {
+                    DisposableEffect(playerConnection) {
+                        val player = playerConnection?.player ?: return@DisposableEffect onDispose { }
+
+                        if (player.currentMediaItem == null) {
                             if (!playerBottomSheetState.isDismissed) {
                                 playerBottomSheetState.dismiss()
                             }
@@ -142,6 +146,17 @@ class ComposeActivity : ComponentActivity() {
                                 playerBottomSheetState.collapseSoft()
                             }
                         }
+
+                        val listener = object : Player.Listener {
+                            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED && mediaItem != null) {
+                                    playerBottomSheetState.collapseSoft()
+                                }
+                            }
+                        }
+                        player.addListener(listener)
+
+                        onDispose { player.removeListener(listener) }
                     }
 
                     val playerAwareWindowInsets by remember(bottomInset, playerBottomSheetState.value) {
@@ -156,6 +171,7 @@ class ComposeActivity : ComponentActivity() {
                     }
 
                     CompositionLocalProvider(
+                        LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.background),
                         LocalPlayerConnection provides playerConnection,
                         LocalPlayerAwareWindowInsets provides playerAwareWindowInsets,
                         LocalShimmerTheme provides ShimmerTheme
@@ -166,9 +182,14 @@ class ComposeActivity : ComponentActivity() {
                             navBackStackEntry?.destination?.route
                         }
 
-                        val navigationItems = listOf(Screen.Home, Screen.Songs, Screen.Artists, Screen.Albums, Screen.Playlists)
+                        val navigationItems = remember {
+                            val enabledNavItems = NavigationTabHelper.getConfig(this@ComposeActivity)
+                            listOf(Screen.Home, Screen.Songs, Screen.Artists, Screen.Albums, Screen.Playlists)
+                                .filterIndexed { index, _ ->
+                                    enabledNavItems[index]
+                                }
+                        }
                         val defaultNavIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
-                        val enabledNavItems = NavigationTabHelper.getConfig(this@ComposeActivity)
 
                         val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
                             mutableStateOf(TextFieldValue(""))
@@ -217,11 +238,11 @@ class ComposeActivity : ComponentActivity() {
                             bottomBar = {
                                 NavigationBar(
                                     modifier = Modifier
-                                        .offset(y = ((NavigationBarHeight.dp + bottomInset) * with(playerBottomSheetState) {
-                                            (value - collapsedBound) / (expandedBound - collapsedBound)
-                                        }.coerceIn(0f, 1f)))
+                                        .offset {
+                                            IntOffset(x = 0, y = ((NavigationBarHeight.dp + bottomInset) * playerBottomSheetState.progress).roundToPx())
+                                        }
                                 ) {
-                                    navigationItems.filterIndexed { index, _ -> enabledNavItems[index] }.forEach { screen ->
+                                    navigationItems.fastForEach { screen ->
                                         NavigationBarItem(
                                             selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == screen.route } == true,
                                             icon = {
@@ -252,7 +273,7 @@ class ComposeActivity : ComponentActivity() {
                                     HomeScreen()
                                 }
                                 composable(Screen.Songs.route) {
-                                    LibrarySongsScreen()
+                                    LibrarySongsScreen(navController)
                                 }
                                 composable(Screen.Artists.route) {
                                     LibraryArtistsScreen(navController)
@@ -333,8 +354,16 @@ class ComposeActivity : ComponentActivity() {
                                 onSearch = onSearch
                             )
 
-                            BottomSheetPlayer(playerBottomSheetState)
+                            BottomSheetPlayer(
+                                state = playerBottomSheetState,
+                                navController = navController
+                            )
                         }
+
+                        BottomSheetMenu(
+                            state = LocalMenuState.current,
+                            modifier = Modifier.align(Alignment.BottomCenter)
+                        )
                     }
                 }
             }
@@ -342,5 +371,5 @@ class ComposeActivity : ComponentActivity() {
     }
 }
 
-val LocalPlayerConnection = staticCompositionLocalOf<PlayerConnection> { error("No PlayerConnection provided") }
+val LocalPlayerConnection = staticCompositionLocalOf<PlayerConnection?> { error("No PlayerConnection provided") }
 val LocalPlayerAwareWindowInsets = compositionLocalOf<WindowInsets> { error("No WindowInsets provided") }

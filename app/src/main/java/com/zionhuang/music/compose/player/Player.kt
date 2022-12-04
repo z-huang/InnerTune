@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player.*
 import com.zionhuang.music.R
@@ -37,10 +38,11 @@ import kotlinx.coroutines.isActive
 
 @Composable
 fun BottomSheetPlayer(
-    bottomSheetState: BottomSheetState,
+    state: BottomSheetState,
+    navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    val playerConnection = LocalPlayerConnection.current
+    val playerConnection = LocalPlayerConnection.current ?: return
 
     val playbackState by playerConnection.playbackState.collectAsState(initial = STATE_IDLE)
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
@@ -52,10 +54,10 @@ fun BottomSheetPlayer(
     val canSkipNext by playerConnection.canSkipNext.collectAsState(initial = true)
 
     var position by rememberSaveable(playbackState) {
-        mutableStateOf(playerConnection.player?.currentPosition ?: 0L)
+        mutableStateOf(playerConnection.player.currentPosition)
     }
     val duration by rememberSaveable(playbackState) {
-        mutableStateOf(playerConnection.player?.duration ?: 0L)
+        mutableStateOf(playerConnection.player.duration)
     }
     var sliderPosition by remember {
         mutableStateOf<Long?>(null)
@@ -64,24 +66,24 @@ fun BottomSheetPlayer(
     LaunchedEffect(playbackState) {
         if (playbackState == STATE_READY) {
             while (isActive) {
-                delay(100)
-                position = playerConnection.player?.currentPosition ?: 0L
+                delay(500)
+                position = playerConnection.player.currentPosition
             }
         }
     }
 
     val queueSheetState = rememberBottomSheetState(
         dismissedBound = QueuePeekHeight.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding(),
-        expandedBound = bottomSheetState.expandedBound,
+        expandedBound = state.expandedBound,
     )
 
     BottomSheet(
-        state = bottomSheetState,
+        state = state,
         modifier = modifier,
         backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(NavigationBarDefaults.Elevation),
         onDismiss = {
-            playerConnection.player?.stop()
-            playerConnection.player?.clearMediaItems()
+            playerConnection.player.stop()
+            playerConnection.player.clearMediaItems()
         },
         collapsedContent = {
             MiniPlayer(
@@ -125,7 +127,7 @@ fun BottomSheetPlayer(
                 },
                 onValueChangeFinished = {
                     sliderPosition?.let {
-                        playerConnection.player?.seekTo(it)
+                        playerConnection.player.seekTo(it)
                         position = it
                     }
                     sliderPosition = null
@@ -171,9 +173,7 @@ fun BottomSheetPlayer(
                             .size(32.dp)
                             .padding(4.dp)
                             .align(Alignment.Center),
-                        onClick = {
-                            playerConnection.toggleLike()
-                        }
+                        onClick = playerConnection::toggleLike
                     )
                 }
 
@@ -184,9 +184,7 @@ fun BottomSheetPlayer(
                         modifier = Modifier
                             .size(32.dp)
                             .align(Alignment.Center),
-                        onClick = {
-                            playerConnection.player?.seekToPrevious()
-                        }
+                        onClick = playerConnection.player::seekToPrevious
                     )
                 }
 
@@ -197,9 +195,7 @@ fun BottomSheetPlayer(
                         .size(72.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .clickable {
-                            playerConnection.player?.togglePlayPause()
-                        }
+                        .clickable(onClick = playerConnection.player::togglePlayPause)
                 ) {
                     Image(
                         painter = painterResource(if (playWhenReady) R.drawable.ic_pause else R.drawable.ic_play),
@@ -220,9 +216,7 @@ fun BottomSheetPlayer(
                         modifier = Modifier
                             .size(32.dp)
                             .align(Alignment.Center),
-                        onClick = {
-                            playerConnection.player?.seekToNext()
-                        }
+                        onClick = playerConnection.player::seekToNext
                     )
                 }
 
@@ -238,9 +232,7 @@ fun BottomSheetPlayer(
                             .padding(4.dp)
                             .align(Alignment.Center)
                             .alpha(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f),
-                        onClick = {
-                            playerConnection.toggleRepeatMode()
-                        }
+                        onClick = playerConnection::toggleRepeatMode
                     )
                 }
             }
@@ -262,7 +254,7 @@ fun BottomSheetPlayer(
                         Thumbnail(
                             position = position,
                             sliderPosition = sliderPosition,
-                            modifier = Modifier.nestedScroll(bottomSheetState.preUpPostDownNestedScrollConnection)
+                            modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
                         )
                     }
 
@@ -298,7 +290,7 @@ fun BottomSheetPlayer(
                         Thumbnail(
                             position = position,
                             sliderPosition = sliderPosition,
-                            modifier = Modifier.nestedScroll(bottomSheetState.preUpPostDownNestedScrollConnection)
+                            modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
                         )
                     }
 
@@ -310,7 +302,9 @@ fun BottomSheetPlayer(
         }
 
         Queue(
-            sheetState = queueSheetState
+            state = queueSheetState,
+            playerBottomSheetState = state,
+            navController = navController
         )
     }
 }

@@ -7,18 +7,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-
-inline fun <reified T> SharedPreferences.getSerializable(key: String, defaultValue: T): T? = getString(key, null)?.let {
-    Json.decodeFromString(it) as? T
-} ?: defaultValue
-
-inline fun <reified T> SharedPreferences.putSerializable(key: String, value: T) {
-    val jsonString = Json.encodeToString(value)
-    edit().putString(key, jsonString).apply()
-}
 
 inline fun <reified E : Enum<E>> SharedPreferences.getEnum(key: String, defaultValue: E): E = getString(key, null)?.let {
     try {

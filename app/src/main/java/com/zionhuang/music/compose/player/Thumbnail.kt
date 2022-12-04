@@ -27,7 +27,7 @@ fun Thumbnail(
     sliderPosition: Long?,
     modifier: Modifier = Modifier,
 ) {
-    val playerConnection = LocalPlayerConnection.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
     val showLyrics by preferenceState(SHOW_LYRICS, false)
     val lyrics by playerConnection.currentLyrics.collectAsState(initial = null)

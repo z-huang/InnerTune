@@ -42,7 +42,7 @@ fun Lyrics(
     sliderPosition: Long?,
     modifier: Modifier = Modifier,
 ) {
-    val playerConnection = LocalPlayerConnection.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val lines = remember(lyrics) {
         if (lyrics == null || lyrics == LYRICS_NOT_FOUND) emptyList()
         else if (lyrics.startsWith("[")) listOf(LyricsEntry(0L, "")) + parseLyrics(lyrics)
@@ -103,7 +103,7 @@ fun Lyrics(
 
     BoxWithConstraints(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(bottom = 12.dp)
             .fadingEdge(vertical = 64.dp)
@@ -146,7 +146,7 @@ fun Lyrics(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(enabled = isSynced) {
-                            playerConnection.player?.seekTo(item.time)
+                            playerConnection.player.seekTo(item.time)
                             lastPreviewTime = 0L
                         }
                         .padding(horizontal = 24.dp, vertical = 8.dp)

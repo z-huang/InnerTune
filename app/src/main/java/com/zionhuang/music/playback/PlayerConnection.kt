@@ -2,7 +2,6 @@ package com.zionhuang.music.playback
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.Timeline
@@ -19,11 +18,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class PlayerConnection(context: Context) : Listener {
+class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
     val songRepository by lazy { SongRepository(context) }
-    var binder: MusicBinder? = null
-    val songPlayer: SongPlayer? get() = binder?.songPlayer
-    val player: ExoPlayer? get() = binder?.player
+    val songPlayer = binder.songPlayer
+    val player = binder.player
 
     val playbackState = MutableStateFlow(STATE_IDLE)
     val playWhenReady = MutableStateFlow(false)
@@ -55,8 +53,7 @@ class PlayerConnection(context: Context) : Listener {
             binder?.songPlayer?.bitmapProvider?.onBitmapChanged = value
         }
 
-    fun init(binder: MusicBinder) {
-        this.binder = binder
+    init {
         binder.player.addListener(this)
         binder.songPlayer.bitmapProvider.onBitmapChanged = onBitmapChanged
 
@@ -156,8 +153,7 @@ class PlayerConnection(context: Context) : Listener {
     }
 
     fun dispose() {
-        binder?.songPlayer?.bitmapProvider?.onBitmapChanged = {}
-        binder?.songPlayer?.player?.removeListener(this)
-        binder = null
+        songPlayer.bitmapProvider.onBitmapChanged = {}
+        player.removeListener(this)
     }
 }

@@ -5,12 +5,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,62 +44,8 @@ import com.zionhuang.music.utils.makeTimeString
 fun ListItem(
     title: String,
     subtitle: String,
-    modifier: Modifier = Modifier,
-    thumbnailUrl: String? = null,
-    thumbnailShape: Shape = CircleShape,
-    @DrawableRes thumbnailPlaceHolder: Int? = null,
-    playingIndicator: Boolean = false,
-    playWhenReady: Boolean = false,
-) = ListItem(
-    title = title,
-    subtitle = subtitle,
-    thumbnailContent = {
-        AsyncImage(
-            model = thumbnailUrl,
-            contentDescription = null,
-            placeholder = thumbnailPlaceHolder?.let { painterResource(it) },
-            error = thumbnailPlaceHolder?.let { painterResource(it) },
-            modifier = Modifier
-                .size(ListThumbnailSize.dp)
-                .clip(thumbnailShape)
-        )
-        AnimatedVisibility(
-            visible = playingIndicator,
-            enter = fadeIn(tween(500)),
-            exit = fadeOut(tween(500))
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(ListThumbnailSize.dp)
-                    .background(
-                        color = Color.Black.copy(alpha = 0.4f),
-                        shape = thumbnailShape
-                    )
-            ) {
-                if (playWhenReady) {
-                    PlayingIndicator(
-                        color = Color.White,
-                        modifier = Modifier.height(24.dp)
-                    )
-                } else {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_play),
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
-            }
-        }
-    },
-    modifier = modifier
-)
-
-@Composable
-fun ListItem(
-    title: String,
-    subtitle: String,
     thumbnailContent: @Composable () -> Unit,
+    trailingContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -138,12 +83,116 @@ fun ListItem(
                 )
             }
         }
-        IconButton(onClick = {}) {
+
+        trailingContent()
+    }
+}
+
+@Composable
+fun ListItem(
+    title: String,
+    subtitle: String,
+    modifier: Modifier = Modifier,
+    @DrawableRes thumbnailDrawable: Int? = null,
+    thumbnailUrl: String? = null,
+    thumbnailShape: Shape = CircleShape,
+    @DrawableRes thumbnailPlaceHolder: Int? = null,
+    trailingContent: (@Composable () -> Unit)? = null,
+    onShowMenu: () -> Unit = {},
+    playingIndicator: Boolean = false,
+    playWhenReady: Boolean = false,
+) = ListItem(
+    title = title,
+    subtitle = subtitle,
+    thumbnailContent = {
+        if (thumbnailDrawable != null) {
+            Image(
+                painter = painterResource(thumbnailDrawable),
+                contentDescription = null,
+                modifier = Modifier.size(ListThumbnailSize.dp)
+            )
+        } else {
+            AsyncImage(
+                model = thumbnailUrl,
+                contentDescription = null,
+                placeholder = thumbnailPlaceHolder?.let { painterResource(it) },
+                error = thumbnailPlaceHolder?.let { painterResource(it) },
+                modifier = Modifier
+                    .size(ListThumbnailSize.dp)
+                    .clip(thumbnailShape)
+            )
+        }
+        AnimatedVisibility(
+            visible = playingIndicator,
+            enter = fadeIn(tween(500)),
+            exit = fadeOut(tween(500))
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(ListThumbnailSize.dp)
+                    .background(
+                        color = Color.Black.copy(alpha = 0.4f),
+                        shape = thumbnailShape
+                    )
+            ) {
+                if (playWhenReady) {
+                    PlayingIndicator(
+                        color = Color.White,
+                        modifier = Modifier.height(24.dp)
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_play),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            }
+        }
+    },
+    trailingContent = trailingContent ?: {
+        IconButton(onClick = onShowMenu) {
             Icon(
-                imageVector = Icons.Filled.MoreVert,
+                painter = painterResource(R.drawable.ic_more_vert),
                 contentDescription = null
             )
         }
+    },
+    modifier = modifier
+)
+
+@Composable
+fun GridItem(
+    title: String,
+    subtitle: String,
+    thumbnailContent: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+    ) {
+        Box {
+            thumbnailContent()
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.secondary,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
@@ -205,43 +254,11 @@ fun GridItem(
 )
 
 @Composable
-fun GridItem(
-    title: String,
-    subtitle: String,
-    thumbnailContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Box {
-            thumbnailContent()
-        }
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        Text(
-            text = subtitle,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
-
-@Composable
 fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
+    trailingContent: (@Composable () -> Unit)? = null,
+    onShowMenu: () -> Unit = {},
     playingIndicator: Boolean = false,
     playWhenReady: Boolean = false,
 ) = ListItem(
@@ -254,6 +271,8 @@ fun SongListItem(
     thumbnailUrl = song.song.thumbnailUrl,
     thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius.dp),
     thumbnailPlaceHolder = R.drawable.ic_music_note,
+    trailingContent = trailingContent,
+    onShowMenu = onShowMenu,
     playingIndicator = playingIndicator,
     playWhenReady = playWhenReady,
     modifier = modifier

@@ -36,7 +36,8 @@ fun MiniPlayer(
     duration: Long,
     modifier: Modifier = Modifier,
 ) {
-    val playerConnection = LocalPlayerConnection.current
+    mediaMetadata ?: return
+    val playerConnection = LocalPlayerConnection.current ?: return
     val canSkipNext by playerConnection.canSkipNext.collectAsState(initial = true)
 
     Box(
@@ -63,11 +64,10 @@ fun MiniPlayer(
         ) {
             Box(modifier = Modifier.padding(6.dp)) {
                 AsyncImage(
-                    model = mediaMetadata?.thumbnailUrl,
+                    model = mediaMetadata.thumbnailUrl,
                     contentDescription = null,
                     modifier = Modifier
-                        .width(48.dp)
-                        .height(48.dp)
+                        .size(48.dp)
                         .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
                 )
             }
@@ -77,7 +77,7 @@ fun MiniPlayer(
                     .padding(horizontal = 6.dp)
             ) {
                 Text(
-                    text = mediaMetadata?.title.orEmpty(),
+                    text = mediaMetadata.title,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
@@ -85,7 +85,7 @@ fun MiniPlayer(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = mediaMetadata?.artists?.joinToString { it.name }.orEmpty(),
+                    text = mediaMetadata.artists.joinToString { it.name },
                     color = MaterialTheme.colorScheme.secondary,
                     fontSize = 12.sp,
                     maxLines = 1,
@@ -94,9 +94,7 @@ fun MiniPlayer(
             }
 
             IconButton(
-                onClick = {
-                    playerConnection.player?.togglePlayPause()
-                }
+                onClick = playerConnection.player::togglePlayPause
             ) {
                 Icon(
                     painter = painterResource(if (playWhenReady) R.drawable.ic_pause else R.drawable.ic_play),
@@ -105,9 +103,7 @@ fun MiniPlayer(
             }
             IconButton(
                 enabled = canSkipNext,
-                onClick = {
-                    playerConnection.player?.seekToNext()
-                }
+                onClick = playerConnection.player::seekToNext
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_skip_next),

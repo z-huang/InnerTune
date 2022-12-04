@@ -59,7 +59,7 @@ fun AlbumScreen(
         playlistId = playlistId
     )),
 ) {
-    val playerConnection = LocalPlayerConnection.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
 
