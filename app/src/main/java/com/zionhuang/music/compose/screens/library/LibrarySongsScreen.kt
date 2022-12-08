@@ -29,44 +29,39 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
-import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.models.toMediaMetadata
+import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.viewmodels.SongsViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibrarySongsScreen(
     navController: NavController,
     viewModel: SongsViewModel = viewModel(),
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val songRepository = SongRepository(context)
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
 
-    var sortType by rememberPreference(SONG_SORT_TYPE, SongSortType.CREATE_DATE)
-    var sortDescending by rememberPreference(SONG_SORT_DESCENDING, true)
+    val (sortType, onSortTypeChange) = mutablePreferenceState(SONG_SORT_TYPE, SongSortType.CREATE_DATE)
+    val (sortDescending, onSortDescendingChange) = mutablePreferenceState(SONG_SORT_DESCENDING, true)
+    val (sortTypeMenuExpanded, onSortTypeMenuExpandedChange) = remember { mutableStateOf(false) }
+
     val items by viewModel.allSongsFlow.collectAsState(initial = emptyList())
 
     val queueTitle = stringResource(R.string.queue_all_songs)
-    var sortTypeMenuExpanded by remember { mutableStateOf(false) }
-
-    val onShowSongMenu = remember {
-        { originalSong: Song ->
-            menuState.show {
-                val songState = songRepository.getSongById(originalSong.id).flow.collectAsState(initial = originalSong)
-                val song = songState.value ?: originalSong
 
                 SongListItem(
                     song = song,
@@ -201,80 +196,15 @@ fun LibrarySongsScreen(
                 key = "header",
                 contentType = CONTENT_TYPE_HEADER
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(when (sortType) {
-                            SongSortType.CREATE_DATE -> R.string.sort_by_create_date
-                            SongSortType.NAME -> R.string.sort_by_name
-                            SongSortType.ARTIST -> R.string.sort_by_artist
-                            SongSortType.PLAY_TIME -> R.string.sort_by_play_time
-                        }),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = rememberRipple(bounded = false)
-                            ) {
-                                sortTypeMenuExpanded = !sortTypeMenuExpanded
-                            }
-                            .padding(8.dp)
-                    )
-
-                    DropdownMenu(
-                        expanded = sortTypeMenuExpanded,
-                        onDismissRequest = { sortTypeMenuExpanded = false },
-                        modifier = Modifier.widthIn(min = 172.dp)
-                    ) {
-                        listOf(
-                            SongSortType.CREATE_DATE to R.string.sort_by_create_date,
-                            SongSortType.NAME to R.string.sort_by_name,
-                            SongSortType.ARTIST to R.string.sort_by_artist,
-                            SongSortType.PLAY_TIME to R.string.sort_by_play_time
-                        ).forEach { (type, text) ->
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(text),
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Normal
-                                    )
-                                },
-                                trailingIcon = {
-                                    Icon(
-                                        painter = painterResource(if (sortType == type) R.drawable.ic_radio_button_checked else R.drawable.ic_radio_button_unchecked),
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    sortType = type
-                                    sortTypeMenuExpanded = false
-                                }
-                            )
-                        }
-                    }
-
-                    ResizableIconButton(
-                        icon = if (sortDescending) R.drawable.ic_arrow_downward else R.drawable.ic_arrow_upward,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(8.dp),
-                        onClick = { sortDescending = !sortDescending }
-                    )
-
-                    Spacer(Modifier.weight(1f))
-
-                    Text(
-                        text = pluralStringResource(R.plurals.song_count, items.size, items.size),
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                }
+                SongHeader(
+                    sortType = sortType,
+                    onSortTypeChange = onSortTypeChange,
+                    sortDescending = sortDescending,
+                    onSortDescendingChange = onSortDescendingChange,
+                    menuExpanded = sortTypeMenuExpanded,
+                    onMenuExpandedChange = onSortTypeMenuExpandedChange,
+                    songCount = items.size
+                )
             }
 
             itemsIndexed(
@@ -286,7 +216,17 @@ fun LibrarySongsScreen(
                     song = song,
                     playingIndicator = song.id == mediaMetadata?.id,
                     playWhenReady = playWhenReady,
-                    onShowMenu = { onShowSongMenu(song) },
+                    onShowMenu = {
+                        menuState.show {
+                            SongMenu(
+                                originalSong = song,
+                                navController = navController,
+                                playerConnection = playerConnection,
+                                coroutineScope = coroutineScope,
+                                onDismiss = menuState::dismiss
+                            )
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
@@ -319,6 +259,222 @@ fun LibrarySongsScreen(
                 painter = painterResource(R.drawable.ic_shuffle),
                 contentDescription = null
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun SongHeader(
+    sortType: SongSortType,
+    onSortTypeChange: (SongSortType) -> Unit,
+    sortDescending: Boolean,
+    onSortDescendingChange: (Boolean) -> Unit,
+    menuExpanded: Boolean,
+    onMenuExpandedChange: (Boolean) -> Unit,
+    songCount: Int,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = stringResource(when (sortType) {
+                SongSortType.CREATE_DATE -> R.string.sort_by_create_date
+                SongSortType.NAME -> R.string.sort_by_name
+                SongSortType.ARTIST -> R.string.sort_by_artist
+                SongSortType.PLAY_TIME -> R.string.sort_by_play_time
+            }),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(bounded = false)
+                ) {
+                    onMenuExpandedChange(!menuExpanded)
+                }
+                .padding(8.dp)
+        )
+
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { onMenuExpandedChange(false) },
+            modifier = Modifier.widthIn(min = 172.dp)
+        ) {
+            listOf(
+                SongSortType.CREATE_DATE to R.string.sort_by_create_date,
+                SongSortType.NAME to R.string.sort_by_name,
+                SongSortType.ARTIST to R.string.sort_by_artist,
+                SongSortType.PLAY_TIME to R.string.sort_by_play_time
+            ).forEach { (type, text) ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(text),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+                    },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(if (sortType == type) R.drawable.ic_radio_button_checked else R.drawable.ic_radio_button_unchecked),
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+                        onSortTypeChange(type)
+                        onMenuExpandedChange(false)
+                    }
+                )
+            }
+        }
+
+        ResizableIconButton(
+            icon = if (sortDescending) R.drawable.ic_arrow_downward else R.drawable.ic_arrow_upward,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .size(32.dp)
+                .padding(8.dp),
+            onClick = { onSortDescendingChange(!sortDescending) }
+        )
+
+        Spacer(Modifier.weight(1f))
+
+        Text(
+            text = pluralStringResource(R.plurals.song_count, songCount, songCount),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
+
+@Composable
+fun SongMenu(
+    originalSong: Song,
+    navController: NavController,
+    playerConnection: PlayerConnection,
+    coroutineScope: CoroutineScope,
+    onDismiss: () -> Unit,
+) {
+    val context = LocalContext.current
+    val songRepository = SongRepository(context)
+    val songState = songRepository.getSongById(originalSong.id).flow.collectAsState(initial = originalSong)
+    val song = songState.value ?: originalSong
+
+    SongListItem(
+        song = song,
+        trailingContent = {
+            IconButton(
+                onClick = {
+                    coroutineScope.launch {
+                        songRepository.toggleLiked(song)
+                    }
+                }
+            ) {
+                Icon(
+                    painter = painterResource(if (song.song.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
+                    tint = MaterialTheme.colorScheme.error,
+                    contentDescription = null
+                )
+            }
+        }
+    )
+
+    Divider()
+
+    GridMenu(
+        contentPadding = PaddingValues(
+            start = 8.dp,
+            top = 8.dp,
+            end = 8.dp,
+            bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+        )
+    ) {
+        GridMenuItem(
+            icon = R.drawable.ic_radio,
+            title = R.string.menu_start_radio
+        ) {
+            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_playlist_play,
+            title = R.string.menu_play_next
+        ) {
+            playerConnection.playNext(song.toMediaItem())
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_queue_music,
+            title = R.string.menu_add_to_queue
+        ) {
+            playerConnection.addToQueue((song.toMediaItem()))
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_edit,
+            title = R.string.menu_edit
+        ) {
+
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_playlist_add,
+            title = R.string.menu_add_to_playlist
+        ) {
+
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_file_download,
+            title = R.string.menu_download
+        ) {
+
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_artist,
+            title = R.string.menu_view_artist
+        ) {
+
+        }
+        if (song.song.albumId != null) {
+            GridMenuItem(
+                icon = R.drawable.ic_album,
+                title = R.string.menu_view_album
+            ) {
+                navController.navigate("album/${song.song.albumId}")
+                onDismiss()
+            }
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_share,
+            title = R.string.menu_share
+        ) {
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${song.id}")
+            }
+            context.startActivity(Intent.createChooser(intent, null))
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_cached,
+            title = R.string.menu_refetch
+        ) {
+            coroutineScope.launch {
+                songRepository.refetchSong(song)
+            }
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_delete,
+            title = R.string.menu_delete
+        ) {
+            coroutineScope.launch {
+                songRepository.deleteSong(song)
+            }
+            onDismiss()
         }
     }
 }

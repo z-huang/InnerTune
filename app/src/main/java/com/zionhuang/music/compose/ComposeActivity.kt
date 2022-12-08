@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,8 +54,7 @@ import com.zionhuang.music.compose.theme.InnerTuneTheme
 import com.zionhuang.music.compose.theme.extractThemeColorFromBitmap
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.extensions.preferenceState
-import com.zionhuang.music.extensions.sharedPreferences
+import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
@@ -171,6 +171,8 @@ class ComposeActivity : ComponentActivity() {
                     }
 
                     CompositionLocalProvider(
+                        LocalSharedPreferences provides LocalContext.current.sharedPreferences,
+                        LocalSharedPreferencesKeyFlow provides LocalContext.current.sharedPreferences.keyFlow,
                         LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.background),
                         LocalPlayerConnection provides playerConnection,
                         LocalPlayerAwareWindowInsets provides playerAwareWindowInsets,

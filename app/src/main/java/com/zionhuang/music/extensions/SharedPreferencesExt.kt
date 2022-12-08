@@ -1,8 +1,7 @@
 package com.zionhuang.music.extensions
 
 import android.content.SharedPreferences
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
 import kotlinx.coroutines.channels.awaitClose
@@ -68,3 +67,52 @@ inline fun <reified E : Enum<E>> SharedPreferences.enumFlow(key: String, default
     .onStart { emit("init trigger") }
     .map { getEnum(key, defaultValue) }
     .conflate()
+
+
+val LocalSharedPreferences = staticCompositionLocalOf<SharedPreferences> { error("SharedPreferences not provided") }
+val LocalSharedPreferencesKeyFlow = staticCompositionLocalOf<Flow<String?>> { error("SharedPreferences key flow not provided") }
+
+class PerferenceMutableState<T>(
+    val state: State<T>,
+    val onChange: (T) -> Unit,
+) : MutableState<T> {
+    override var value: T = state.value
+    override fun component1(): T = state.value
+    override fun component2(): (T) -> Unit = onChange
+}
+
+@Composable
+fun mutablePreferenceState(key: String, defaultValue: Boolean): PerferenceMutableState<Boolean> {
+    val sharedPreferences = LocalSharedPreferences.current
+    val keyFlow = LocalSharedPreferencesKeyFlow.current
+    return PerferenceMutableState(
+        state = produceState(initialValue = LocalSharedPreferences.current.getBoolean(key, defaultValue)) {
+            keyFlow.filter { it == null || it == key }.collect {
+                value = sharedPreferences.getBoolean(key, defaultValue)
+            }
+        },
+        onChange = { value ->
+            sharedPreferences.edit {
+                putBoolean(key, value)
+            }
+        }
+    )
+}
+
+@Composable
+inline fun <reified T : Enum<T>> mutablePreferenceState(key: String, defaultValue: T): PerferenceMutableState<T> {
+    val sharedPreferences = LocalSharedPreferences.current
+    val keyFlow = LocalSharedPreferencesKeyFlow.current
+    return PerferenceMutableState(
+        state = produceState(initialValue = LocalSharedPreferences.current.getEnum(key, defaultValue)) {
+            keyFlow.filter { it == null || it == key }.collect {
+                value = sharedPreferences.getEnum(key, defaultValue)
+            }
+        },
+        onChange = { value ->
+            sharedPreferences.edit {
+                putEnum(key, value)
+            }
+        }
+    )
+}
