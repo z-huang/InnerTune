@@ -2,29 +2,28 @@ package com.zionhuang.music.compose.player
 
 import android.content.Intent
 import android.media.audiofx.AudioEffect
+import android.text.format.Formatter
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
@@ -58,53 +57,62 @@ fun Queue(
     }
     val currentWindowIndex by playerConnection.currentWindowIndex.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
+    if (mediaMetadata == null) return
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
+    val currentFormat by playerConnection.currentFormat.collectAsState(initial = null)
 
     var showLyrics by rememberPreference(SHOW_LYRICS, defaultValue = false)
 
-    val menuItems = remember(mediaMetadata) {
-        listOf(
-            MenuItem(R.string.menu_start_radio, R.drawable.ic_radio) {
+    var openDetailsDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
 
+    if (openDetailsDialog) {
+        AlertDialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            onDismissRequest = { openDetailsDialog = false },
+            icon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_info),
+                    contentDescription = null
+                )
             },
-            MenuItem(R.string.menu_add_to_playlist, R.drawable.ic_playlist_add) {
-
-            },
-            MenuItem(R.string.menu_download, R.drawable.ic_file_download) {
-
-            },
-            MenuItem(R.string.menu_view_artist, R.drawable.ic_artist) {
-
-            },
-            MenuItem(R.string.menu_view_album, R.drawable.ic_album, enabled = mediaMetadata?.album != null) {
-                mediaMetadata?.album?.id?.let { albumId ->
-                    navController.navigate("album/$albumId")
-                    playerBottomSheetState.collapseSoft()
-                    menuState.hide()
+            confirmButton = {
+                TextButton(
+                    onClick = { openDetailsDialog = false }
+                ) {
+                    Text(stringResource(android.R.string.ok))
                 }
             },
-            MenuItem(R.string.menu_share, R.drawable.ic_share, enabled = mediaMetadata != null) {
-                mediaMetadata?.id?.let { mediaId ->
-                    val intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${mediaId}")
+            text = {
+                Column(
+                    modifier = Modifier
+                        .sizeIn(minWidth = 280.dp, maxWidth = 560.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    listOf(
+                        stringResource(R.string.song_title) to mediaMetadata?.title,
+                        stringResource(R.string.song_artists) to mediaMetadata?.artists?.joinToString { it.name },
+                        stringResource(R.string.media_id) to mediaMetadata?.id,
+                        "Itag" to currentFormat?.itag?.toString(),
+                        stringResource(R.string.mime_type) to currentFormat?.mimeType,
+                        stringResource(R.string.codecs) to currentFormat?.codecs,
+                        stringResource(R.string.bitrate) to currentFormat?.bitrate?.let { "$it Kbps" },
+                        stringResource(R.string.sample_rate) to currentFormat?.sampleRate?.let { "$it Hz" },
+                        stringResource(R.string.loudness) to currentFormat?.loudnessDb?.let { "$it dB" },
+                        stringResource(R.string.volume) to "${(playerConnection.player.volume * 100).toInt()}%",
+                        stringResource(R.string.file_size) to currentFormat?.contentLength?.let { Formatter.formatShortFileSize(context, it) }
+                    ).forEach { (label, text) ->
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                        Text(
+                            text = text ?: stringResource(R.string.unknown),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(Modifier.height(8.dp))
                     }
-                    context.startActivity(Intent.createChooser(intent, null))
-                    menuState.hide()
-                }
-            },
-            MenuItem(R.string.menu_details, R.drawable.ic_info) {
-
-            },
-            MenuItem(R.string.pref_equalizer_title, R.drawable.ic_equalizer) {
-                val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                    putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playerConnection.player.audioSessionId)
-                    putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-                    putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                }
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    activityResultLauncher.launch(intent)
                 }
             }
         )
@@ -146,47 +154,76 @@ fun Queue(
                 IconButton(
                     onClick = {
                         menuState.show {
-                            menuItems.filter { it.enabled }.chunked(3).forEach { row ->
-                                Row(
-                                    horizontalArrangement = Arrangement.Center,
-                                    modifier = Modifier
-                                        .height(96.dp)
-                                        .clip(ShapeDefaults.Large)
-                                        .padding(horizontal = 8.dp)
+                            GridMenu(
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            ) {
+                                GridMenuItem(
+                                    icon = R.drawable.ic_radio,
+                                    title = R.string.menu_start_radio
                                 ) {
-                                    row.forEach { item ->
-                                        Column(
-                                            modifier = Modifier
-                                                .clip(ShapeDefaults.Large)
-                                                .weight(1f)
-                                                .clickable(onClick = item.onClick)
-                                                .padding(12.dp)
-                                        ) {
-                                            Box(
-                                                contentAlignment = Alignment.Center,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .weight(1f)
-                                            ) {
-                                                Icon(
-                                                    painter = painterResource(item.icon),
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.onSurface
-                                                )
-                                            }
-                                            Text(
-                                                text = stringResource(item.title),
-                                                style = MaterialTheme.typography.labelLarge,
-                                                textAlign = TextAlign.Center,
-                                                maxLines = 1,
-                                                modifier = Modifier.fillMaxWidth()
-                                            )
-                                        }
-                                    }
+                                    playerConnection.songPlayer.startRadioSeamlessly()
+                                    menuState.dismiss()
+                                }
+                                GridMenuItem(
+                                    icon = R.drawable.ic_playlist_add,
+                                    title = R.string.menu_add_to_playlist
+                                ) {
 
-                                    repeat(3 - row.size) {
-                                        Spacer(Modifier.weight(1f))
+                                }
+                                GridMenuItem(
+                                    icon = R.drawable.ic_file_download,
+                                    title = R.string.menu_download
+                                ) {
+
+                                }
+                                GridMenuItem(
+                                    icon = R.drawable.ic_artist,
+                                    title = R.string.menu_view_artist
+                                ) {
+
+                                }
+                                if (mediaMetadata?.album != null) {
+                                    GridMenuItem(
+                                        icon = R.drawable.ic_album,
+                                        title = R.string.menu_view_album
+                                    ) {
+                                        navController.navigate("album/${mediaMetadata!!.album!!.id}")
+                                        playerBottomSheetState.collapseSoft()
+                                        menuState.dismiss()
                                     }
+                                }
+                                GridMenuItem(
+                                    icon = R.drawable.ic_share,
+                                    title = R.string.menu_share
+                                ) {
+                                    val intent = Intent().apply {
+                                        action = Intent.ACTION_SEND
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${mediaMetadata!!.id}")
+                                    }
+                                    context.startActivity(Intent.createChooser(intent, null))
+                                    menuState.dismiss()
+                                }
+                                GridMenuItem(
+                                    icon = R.drawable.ic_info,
+                                    title = R.string.menu_details
+                                ) {
+                                    openDetailsDialog = true
+                                    menuState.dismiss()
+                                }
+                                GridMenuItem(
+                                    icon = R.drawable.ic_equalizer,
+                                    title = R.string.pref_equalizer_title
+                                ) {
+                                    val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                                        putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playerConnection.player.audioSessionId)
+                                        putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                                        putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+                                    }
+                                    if (intent.resolveActivity(context.packageManager) != null) {
+                                        activityResultLauncher.launch(intent)
+                                    }
+                                    menuState.dismiss()
                                 }
                             }
                         }

@@ -239,7 +239,7 @@ class ComposeActivity : ComponentActivity() {
                                 NavigationBar(
                                     modifier = Modifier
                                         .offset {
-                                            IntOffset(x = 0, y = ((NavigationBarHeight.dp + bottomInset) * playerBottomSheetState.progress).roundToPx())
+                                            IntOffset(x = 0, y = ((NavigationBarHeight.dp + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx())
                                         }
                                 ) {
                                     navigationItems.fastForEach { screen ->

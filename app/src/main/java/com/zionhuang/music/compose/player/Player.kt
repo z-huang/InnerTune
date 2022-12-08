@@ -28,7 +28,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.BottomSheet
 import com.zionhuang.music.compose.component.BottomSheetState
-import com.zionhuang.music.compose.component.IconButton
+import com.zionhuang.music.compose.component.ResizableIconButton
 import com.zionhuang.music.compose.component.rememberBottomSheetState
 import com.zionhuang.music.constants.QueuePeekHeight
 import com.zionhuang.music.extensions.togglePlayPause
@@ -166,7 +166,7 @@ fun BottomSheetPlayer(
                     .padding(horizontal = 16.dp)
             ) {
                 Box(modifier = Modifier.weight(1f)) {
-                    IconButton(
+                    ResizableIconButton(
                         icon = if (currentSong?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
@@ -178,7 +178,7 @@ fun BottomSheetPlayer(
                 }
 
                 Box(modifier = Modifier.weight(1f)) {
-                    IconButton(
+                    ResizableIconButton(
                         icon = R.drawable.ic_skip_previous,
                         enabled = canSkipPrevious,
                         modifier = Modifier
@@ -210,7 +210,7 @@ fun BottomSheetPlayer(
                 Spacer(Modifier.width(8.dp))
 
                 Box(modifier = Modifier.weight(1f)) {
-                    IconButton(
+                    ResizableIconButton(
                         icon = R.drawable.ic_skip_next,
                         enabled = canSkipNext,
                         modifier = Modifier
@@ -221,7 +221,7 @@ fun BottomSheetPlayer(
                 }
 
                 Box(modifier = Modifier.weight(1f)) {
-                    IconButton(
+                    ResizableIconButton(
                         icon = when (repeatMode) {
                             REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.ic_repeat
                             REPEAT_MODE_ONE -> R.drawable.ic_repeat_one

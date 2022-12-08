@@ -20,7 +20,7 @@ class SearchLyricsDialog() : AppCompatDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mediaMetadata = arguments?.getParcelable(EXTRA_MEDIA_METADATA)
+//        mediaMetadata = arguments?.getParcelable(EXTRA_MEDIA_METADATA)
     }
 
     private fun setupUI() {
