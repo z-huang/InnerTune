@@ -52,6 +52,7 @@ interface LocalRepository {
     suspend fun addSong(mediaMetadata: MediaMetadata): SongEntity
     suspend fun safeAddSong(song: SongItem) = safeAddSongs(listOf(song))
     suspend fun safeAddSongs(songs: List<SongItem>): List<SongEntity>
+    suspend fun refetchSong(song: Song) = refetchSongs(listOf(song))
     suspend fun refetchSongs(songs: List<Song>)
     fun getSongById(songId: String?): DataWrapper<Song?>
     fun getSongFile(songId: String): File

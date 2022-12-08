@@ -7,7 +7,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
@@ -29,6 +28,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
+import com.zionhuang.music.compose.utils.plus
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.Song
@@ -63,36 +63,35 @@ fun LibrarySongsScreen(
     var sortTypeMenuExpanded by remember { mutableStateOf(false) }
 
     val onShowSongMenu = remember {
-        { song: Song ->
+        { originalSong: Song ->
             menuState.show {
-                GridMenu(
-                    contentPadding = PaddingValues(horizontal = 8.dp)
-                ) {
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        SongListItem(
-                            song = song,
-                            trailingContent = {
-                                IconButton(
-                                    onClick = {
-                                        coroutineScope.launch {
-                                            songRepository.toggleLiked(song)
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(if (song.song.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
-                                        tint = MaterialTheme.colorScheme.error,
-                                        contentDescription = null
-                                    )
+                val songState = songRepository.getSongById(originalSong.id).flow.collectAsState(initial = originalSong)
+                val song = songState.value ?: originalSong
+
+                SongListItem(
+                    song = song,
+                    trailingContent = {
+                        IconButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    songRepository.toggleLiked(song)
                                 }
                             }
-                        )
+                        ) {
+                            Icon(
+                                painter = painterResource(if (song.song.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
+                                tint = MaterialTheme.colorScheme.error,
+                                contentDescription = null
+                            )
+                        }
                     }
+                )
 
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        Divider(Modifier.padding(top = 6.dp, bottom = 8.dp))
-                    }
+                Divider()
 
+                GridMenu(
+                    contentPadding = PaddingValues(8.dp) + WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+                ) {
                     GridMenuItem(
                         icon = R.drawable.ic_radio,
                         title = R.string.menu_start_radio
@@ -163,13 +162,19 @@ fun LibrarySongsScreen(
                         icon = R.drawable.ic_cached,
                         title = R.string.menu_refetch
                     ) {
-
+                        coroutineScope.launch {
+                            songRepository.refetchSong(song)
+                        }
+                        menuState.dismiss()
                     }
                     GridMenuItem(
                         icon = R.drawable.ic_delete,
                         title = R.string.menu_delete
                     ) {
-
+                        coroutineScope.launch {
+                            songRepository.deleteSong(song)
+                        }
+                        menuState.dismiss()
                     }
                 }
             }

@@ -22,12 +22,12 @@ val LocalMenuState = compositionLocalOf { MenuState() }
 @Stable
 class MenuState(
     isVisible: Boolean = false,
-    content: @Composable BoxScope.() -> Unit = {},
+    content: @Composable ColumnScope.() -> Unit = {},
 ) {
     var isVisible by mutableStateOf(isVisible)
     var content by mutableStateOf(content)
 
-    fun show(content: @Composable BoxScope.() -> Unit) {
+    fun show(content: @Composable ColumnScope.() -> Unit) {
         isVisible = true
         this.content = content
     }
@@ -70,14 +70,12 @@ fun BottomSheetMenu(
         exit = slideOutVertically { it },
         modifier = modifier
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 48.dp)
                 .clip(ShapeDefaults.Large.top())
                 .background(background)
-                .padding(vertical = 8.dp)
-                .navigationBarsPadding()
         ) {
             state.content(this)
         }

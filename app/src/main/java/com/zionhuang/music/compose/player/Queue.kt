@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
+import com.zionhuang.music.compose.utils.plus
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.SHOW_LYRICS
@@ -169,7 +170,7 @@ fun Queue(
                     onClick = {
                         menuState.show {
                             GridMenu(
-                                modifier = Modifier.padding(horizontal = 8.dp)
+                                contentPadding = PaddingValues(8.dp) + WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues()
                             ) {
                                 GridMenuItem(
                                     icon = R.drawable.ic_radio,
