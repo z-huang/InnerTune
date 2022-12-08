@@ -97,7 +97,7 @@ fun Queue(
                         "Itag" to currentFormat?.itag?.toString(),
                         stringResource(R.string.mime_type) to currentFormat?.mimeType,
                         stringResource(R.string.codecs) to currentFormat?.codecs,
-                        stringResource(R.string.bitrate) to currentFormat?.bitrate?.let { "$it Kbps" },
+                        stringResource(R.string.bitrate) to currentFormat?.bitrate?.let { "${it / 1000} Kbps" },
                         stringResource(R.string.sample_rate) to currentFormat?.sampleRate?.let { "$it Hz" },
                         stringResource(R.string.loudness) to currentFormat?.loudnessDb?.let { "$it dB" },
                         stringResource(R.string.volume) to "${(playerConnection.player.volume * 100).toInt()}%",
