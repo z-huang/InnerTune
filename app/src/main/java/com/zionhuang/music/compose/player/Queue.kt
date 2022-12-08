@@ -32,7 +32,6 @@ import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
-import com.zionhuang.music.compose.utils.plus
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.SHOW_LYRICS
@@ -69,14 +68,14 @@ fun Queue(
 
     var showLyrics by rememberPreference(SHOW_LYRICS, defaultValue = false)
 
-    var openDetailsDialog by rememberSaveable {
+    var showDetailsDialog by rememberSaveable {
         mutableStateOf(false)
     }
 
-    if (openDetailsDialog) {
+    if (showDetailsDialog) {
         AlertDialog(
             properties = DialogProperties(usePlatformDefaultWidth = false),
-            onDismissRequest = { openDetailsDialog = false },
+            onDismissRequest = { showDetailsDialog = false },
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.ic_info),
@@ -85,7 +84,7 @@ fun Queue(
             },
             confirmButton = {
                 TextButton(
-                    onClick = { openDetailsDialog = false }
+                    onClick = { showDetailsDialog = false }
                 ) {
                     Text(stringResource(android.R.string.ok))
                 }
@@ -170,7 +169,12 @@ fun Queue(
                     onClick = {
                         menuState.show {
                             GridMenu(
-                                contentPadding = PaddingValues(8.dp) + WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+                                contentPadding = PaddingValues(
+                                    start = 8.dp,
+                                    top = 8.dp,
+                                    end = 8.dp,
+                                    bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+                                )
                             ) {
                                 GridMenuItem(
                                     icon = R.drawable.ic_radio,
@@ -223,7 +227,7 @@ fun Queue(
                                     icon = R.drawable.ic_info,
                                     title = R.string.menu_details
                                 ) {
-                                    openDetailsDialog = true
+                                    showDetailsDialog = true
                                     menuState.dismiss()
                                 }
                                 GridMenuItem(

@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -28,7 +29,6 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
-import com.zionhuang.music.compose.utils.plus
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.Song
@@ -90,7 +90,12 @@ fun LibrarySongsScreen(
                 Divider()
 
                 GridMenu(
-                    contentPadding = PaddingValues(8.dp) + WindowInsets.systemBars.only(WindowInsetsSides.Bottom).asPaddingValues()
+                    contentPadding = PaddingValues(
+                        start = 8.dp,
+                        top = 8.dp,
+                        end = 8.dp,
+                        bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+                    )
                 ) {
                     GridMenuItem(
                         icon = R.drawable.ic_radio,
