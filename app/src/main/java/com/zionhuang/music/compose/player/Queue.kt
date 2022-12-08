@@ -3,9 +3,11 @@ package com.zionhuang.music.compose.player
 import android.content.Intent
 import android.media.audiofx.AudioEffect
 import android.text.format.Formatter
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,10 +20,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
@@ -45,6 +49,7 @@ fun Queue(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
     val menuState = LocalMenuState.current
     val activityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
@@ -103,13 +108,22 @@ fun Queue(
                         stringResource(R.string.volume) to "${(playerConnection.player.volume * 100).toInt()}%",
                         stringResource(R.string.file_size) to currentFormat?.contentLength?.let { Formatter.formatShortFileSize(context, it) }
                     ).forEach { (label, text) ->
+                        val displayText = text ?: stringResource(R.string.unknown)
                         Text(
                             text = label,
                             style = MaterialTheme.typography.labelMedium
                         )
                         Text(
-                            text = text ?: stringResource(R.string.unknown),
-                            style = MaterialTheme.typography.titleMedium
+                            text = displayText,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = {
+                                    clipboardManager.setText(AnnotatedString(displayText))
+                                    Toast.makeText(context, R.string.copied, Toast.LENGTH_SHORT).show()
+                                }
+                            )
                         )
                         Spacer(Modifier.height(8.dp))
                     }
