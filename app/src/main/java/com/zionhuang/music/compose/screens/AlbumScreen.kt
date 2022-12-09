@@ -87,8 +87,8 @@ fun AlbumScreen(
                             model = albumWithSongs.album.thumbnailUrl,
                             contentDescription = null,
                             modifier = Modifier
-                                .size(AlbumThumbnailSize.dp)
-                                .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
+                                .size(AlbumThumbnailSize)
+                                .clip(RoundedCornerShape(ThumbnailCornerRadius))
                         )
 
                         Spacer(Modifier.width(16.dp))
@@ -209,8 +209,8 @@ fun AlbumScreen(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Spacer(
                                 modifier = Modifier
-                                    .size(AlbumThumbnailSize.dp)
-                                    .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
+                                    .size(AlbumThumbnailSize)
+                                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
                                     .background(MaterialTheme.colorScheme.onSurface)
                             )
 

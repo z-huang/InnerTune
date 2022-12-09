@@ -89,7 +89,7 @@ fun ArtistScreen(
         contentPadding = WindowInsets.systemBars
             .only(WindowInsetsSides.Bottom)
             .add(WindowInsets(
-                bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
+                bottom = NavigationBarHeight + MiniPlayerHeight
             ))
             .asPaddingValues()
     ) {
@@ -105,7 +105,7 @@ fun ArtistScreen(
                             model = artistHeader.bannerThumbnails?.lastOrNull()?.url?.resize(1200, 900),
                             contentDescription = null,
                             modifier = Modifier.fadingEdge(
-                                top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding() + AppBarHeight.dp,
+                                top = WindowInsets.systemBars.asPaddingValues().calculateTopPadding() + AppBarHeight,
                                 bottom = 64.dp
                             )
                         )
@@ -282,7 +282,7 @@ fun ArtistScreen(
                                 .fadingEdge(
                                     top = WindowInsets.systemBars
                                         .asPaddingValues()
-                                        .calculateTopPadding() + AppBarHeight.dp,
+                                        .calculateTopPadding() + AppBarHeight,
                                     bottom = 108.dp
                                 )
                         )

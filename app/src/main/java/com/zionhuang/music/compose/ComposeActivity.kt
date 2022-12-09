@@ -130,7 +130,7 @@ class ComposeActivity : ComponentActivity() {
                     val bottomInset = with(density) { windowsInsets.getBottom(density).toDp() }
                     val playerBottomSheetState = rememberBottomSheetState(
                         dismissedBound = 0.dp,
-                        collapsedBound = NavigationBarHeight.dp + MiniPlayerHeight.dp + bottomInset,
+                        collapsedBound = NavigationBarHeight + MiniPlayerHeight + bottomInset,
                         expandedBound = maxHeight,
                     )
 
@@ -164,8 +164,8 @@ class ComposeActivity : ComponentActivity() {
                             windowsInsets
                                 .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
                                 .add(WindowInsets(
-                                    top = AppBarHeight.dp,
-                                    bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight.dp + bottomInset, playerBottomSheetState.collapsedBound)
+                                    top = AppBarHeight,
+                                    bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight + bottomInset, playerBottomSheetState.collapsedBound)
                                 ))
                         }
                     }
@@ -241,7 +241,7 @@ class ComposeActivity : ComponentActivity() {
                                 NavigationBar(
                                     modifier = Modifier
                                         .offset {
-                                            IntOffset(x = 0, y = ((NavigationBarHeight.dp + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx())
+                                            IntOffset(x = 0, y = ((NavigationBarHeight + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx())
                                         }
                                 ) {
                                     navigationItems.fastForEach { screen ->

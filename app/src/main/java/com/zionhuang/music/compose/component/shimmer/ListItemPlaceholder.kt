@@ -17,18 +17,18 @@ import com.zionhuang.music.constants.ThumbnailCornerRadius
 @Composable
 fun ListItemPlaceHolder(
     modifier: Modifier = Modifier,
-    thumbnailShape: Shape = RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape: Shape = RoundedCornerShape(ThumbnailCornerRadius),
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .height(ListItemHeight.dp)
+            .height(ListItemHeight)
             .padding(horizontal = 6.dp),
     ) {
         Spacer(
             modifier = Modifier
                 .padding(6.dp)
-                .size(ListThumbnailSize.dp)
+                .size(ListThumbnailSize)
                 .clip(thumbnailShape)
                 .background(MaterialTheme.colorScheme.onSurface)
         )

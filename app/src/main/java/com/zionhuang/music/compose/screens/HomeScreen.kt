@@ -68,7 +68,7 @@ fun HomeScreen(
                                     is YTItem -> if (ytBaseItem.itemViewType == YTBaseItem.ViewType.BLOCK) {
                                         YouTubeGridItem(
                                             item = item,
-                                            modifier = Modifier.width(GridItemWidth.dp)
+                                            modifier = Modifier.width(GridItemWidth)
                                         )
                                     } else {
                                         YouTubeListItem(

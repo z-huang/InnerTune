@@ -28,7 +28,7 @@ fun PlayingIndicator(
     modifier: Modifier = Modifier,
     bars: Int = 3,
     barWidth: Dp = 4.dp,
-    cornerRadius: Dp = ThumbnailCornerRadius.dp,
+    cornerRadius: Dp = ThumbnailCornerRadius,
 ) {
     val animatables = remember {
         List(bars) {

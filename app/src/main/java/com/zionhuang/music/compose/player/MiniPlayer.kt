@@ -43,7 +43,7 @@ fun MiniPlayer(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(MiniPlayerHeight.dp)
+            .height(MiniPlayerHeight)
             .padding(WindowInsets.systemBars
                 .only(WindowInsetsSides.Horizontal)
                 .asPaddingValues())
@@ -68,7 +68,7 @@ fun MiniPlayer(
                     contentDescription = null,
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
+                        .clip(RoundedCornerShape(ThumbnailCornerRadius))
                 )
             }
             Column(

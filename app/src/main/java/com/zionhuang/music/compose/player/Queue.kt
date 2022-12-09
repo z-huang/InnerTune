@@ -10,6 +10,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
@@ -26,7 +27,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.zionhuang.music.R
@@ -37,6 +41,8 @@ import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.SHOW_LYRICS
 import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 
@@ -51,7 +57,6 @@ fun Queue(
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
     val menuState = LocalMenuState.current
-    val activityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
@@ -168,83 +173,14 @@ fun Queue(
                 IconButton(
                     onClick = {
                         menuState.show {
-                            GridMenu(
-                                contentPadding = PaddingValues(
-                                    start = 8.dp,
-                                    top = 8.dp,
-                                    end = 8.dp,
-                                    bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                                )
-                            ) {
-                                GridMenuItem(
-                                    icon = R.drawable.ic_radio,
-                                    title = R.string.menu_start_radio
-                                ) {
-                                    playerConnection.songPlayer.startRadioSeamlessly()
-                                    menuState.dismiss()
-                                }
-                                GridMenuItem(
-                                    icon = R.drawable.ic_playlist_add,
-                                    title = R.string.menu_add_to_playlist
-                                ) {
-
-                                }
-                                GridMenuItem(
-                                    icon = R.drawable.ic_file_download,
-                                    title = R.string.menu_download
-                                ) {
-
-                                }
-                                GridMenuItem(
-                                    icon = R.drawable.ic_artist,
-                                    title = R.string.menu_view_artist
-                                ) {
-
-                                }
-                                if (mediaMetadata?.album != null) {
-                                    GridMenuItem(
-                                        icon = R.drawable.ic_album,
-                                        title = R.string.menu_view_album
-                                    ) {
-                                        navController.navigate("album/${mediaMetadata!!.album!!.id}")
-                                        playerBottomSheetState.collapseSoft()
-                                        menuState.dismiss()
-                                    }
-                                }
-                                GridMenuItem(
-                                    icon = R.drawable.ic_share,
-                                    title = R.string.menu_share
-                                ) {
-                                    val intent = Intent().apply {
-                                        action = Intent.ACTION_SEND
-                                        type = "text/plain"
-                                        putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${mediaMetadata!!.id}")
-                                    }
-                                    context.startActivity(Intent.createChooser(intent, null))
-                                    menuState.dismiss()
-                                }
-                                GridMenuItem(
-                                    icon = R.drawable.ic_info,
-                                    title = R.string.menu_details
-                                ) {
-                                    showDetailsDialog = true
-                                    menuState.dismiss()
-                                }
-                                GridMenuItem(
-                                    icon = R.drawable.ic_equalizer,
-                                    title = R.string.pref_equalizer_title
-                                ) {
-                                    val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                                        putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playerConnection.player.audioSessionId)
-                                        putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-                                        putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                                    }
-                                    if (intent.resolveActivity(context.packageManager) != null) {
-                                        activityResultLauncher.launch(intent)
-                                    }
-                                    menuState.dismiss()
-                                }
-                            }
+                            PlayerMenu(
+                                mediaMetadata = mediaMetadata,
+                                navController = navController,
+                                playerBottomSheetState = playerBottomSheetState,
+                                playerConnection = playerConnection,
+                                onShowDetailsDialog = { showDetailsDialog = true },
+                                onDismiss = menuState::dismiss
+                            )
                         }
                     }
                 ) {
@@ -263,8 +199,8 @@ fun Queue(
         LazyColumn(
             state = lazyListState,
             contentPadding = WindowInsets.systemBars.add(WindowInsets(
-                top = ListItemHeight.dp,
-                bottom = ListItemHeight.dp)
+                top = ListItemHeight,
+                bottom = ListItemHeight)
             ).asPaddingValues(),
             modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
         ) {
@@ -303,7 +239,7 @@ fun Queue(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .height(ListItemHeight.dp)
+                    .height(ListItemHeight)
                     .padding(12.dp)
             ) {
                 Text(
@@ -327,7 +263,7 @@ fun Queue(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f))
                 .fillMaxWidth()
-                .height(ListItemHeight.dp + WindowInsets.systemBars
+                .height(ListItemHeight + WindowInsets.systemBars
                     .asPaddingValues()
                     .calculateBottomPadding())
                 .align(Alignment.BottomCenter)
@@ -358,6 +294,143 @@ fun Queue(
                 contentDescription = null,
                 modifier = Modifier.align(Alignment.Center)
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun PlayerMenu(
+    mediaMetadata: MediaMetadata?,
+    navController: NavController,
+    playerBottomSheetState: BottomSheetState,
+    playerConnection: PlayerConnection,
+    onShowDetailsDialog: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    mediaMetadata ?: return
+    val context = LocalContext.current
+    val activityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
+
+    var showSelectArtistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    if (showSelectArtistDialog) {
+        ListDialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            onDismissRequest = { showSelectArtistDialog = false }
+        ) {
+            items(
+                items = mediaMetadata.artists,
+                key = { it.id }
+            ) { artist ->
+                Box(
+                    contentAlignment = Alignment.CenterStart,
+                    modifier = Modifier
+                        .fillParentMaxWidth()
+                        .height(ListItemHeight)
+                        .clickable {
+                            navController.navigate("artist/${artist.id}")
+                            showSelectArtistDialog = false
+                            playerBottomSheetState.collapseSoft()
+                            onDismiss()
+                        }
+                        .padding(horizontal = 24.dp),
+                ) {
+                    Text(
+                        text = artist.name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        }
+    }
+
+    GridMenu(
+        contentPadding = PaddingValues(
+            start = 8.dp,
+            top = 8.dp,
+            end = 8.dp,
+            bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+        )
+    ) {
+        GridMenuItem(
+            icon = R.drawable.ic_radio,
+            title = R.string.menu_start_radio
+        ) {
+            playerConnection.songPlayer.startRadioSeamlessly()
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_playlist_add,
+            title = R.string.menu_add_to_playlist
+        ) {
+
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_file_download,
+            title = R.string.menu_download
+        ) {
+
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_artist,
+            title = R.string.menu_view_artist
+        ) {
+            if (mediaMetadata.artists.size == 1) {
+                navController.navigate("artist/${mediaMetadata.artists[0].id}")
+                playerBottomSheetState.collapseSoft()
+                onDismiss()
+            } else {
+                showSelectArtistDialog = true
+            }
+        }
+        if (mediaMetadata.album != null) {
+            GridMenuItem(
+                icon = R.drawable.ic_album,
+                title = R.string.menu_view_album
+            ) {
+                navController.navigate("album/${mediaMetadata.album.id}")
+                playerBottomSheetState.collapseSoft()
+                onDismiss()
+            }
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_share,
+            title = R.string.menu_share
+        ) {
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${mediaMetadata.id}")
+            }
+            context.startActivity(Intent.createChooser(intent, null))
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_info,
+            title = R.string.menu_details
+        ) {
+            onShowDetailsDialog()
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_equalizer,
+            title = R.string.pref_equalizer_title
+        ) {
+            val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playerConnection.player.audioSessionId)
+                putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+            }
+            if (intent.resolveActivity(context.packageManager) != null) {
+                activityResultLauncher.launch(intent)
+            }
+            onDismiss()
         }
     }
 }

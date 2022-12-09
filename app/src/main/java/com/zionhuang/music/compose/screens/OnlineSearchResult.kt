@@ -67,8 +67,8 @@ fun OnlineSearchResult(
         state = items.rememberLazyListState(),
         contentPadding = WindowInsets.systemBars
             .add(WindowInsets(
-                top = AppBarHeight.dp + SearchFilterHeight.dp,
-                bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
+                top = AppBarHeight + SearchFilterHeight,
+                bottom = NavigationBarHeight + MiniPlayerHeight
             ))
             .asPaddingValues()
     ) {
@@ -80,7 +80,7 @@ fun OnlineSearchResult(
                             contentAlignment = Alignment.CenterStart,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(ListItemHeight.dp)
+                                .height(ListItemHeight)
                                 .padding(12.dp)
                                 .animateItemPlacement()
                         ) {
@@ -135,7 +135,7 @@ fun OnlineSearchResult(
     Row(
         modifier = Modifier
             .padding(WindowInsets.systemBars
-                .add(WindowInsets(top = AppBarHeight.dp))
+                .add(WindowInsets(top = AppBarHeight))
                 .asPaddingValues())
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())

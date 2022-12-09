@@ -51,7 +51,7 @@ fun ListItem(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .height(ListItemHeight.dp)
+            .height(ListItemHeight)
             .padding(horizontal = 6.dp),
     ) {
         Box(
@@ -109,7 +109,7 @@ fun ListItem(
             Image(
                 painter = painterResource(thumbnailDrawable),
                 contentDescription = null,
-                modifier = Modifier.size(ListThumbnailSize.dp)
+                modifier = Modifier.size(ListThumbnailSize)
             )
         } else {
             AsyncImage(
@@ -118,7 +118,7 @@ fun ListItem(
                 placeholder = thumbnailPlaceHolder?.let { painterResource(it) },
                 error = thumbnailPlaceHolder?.let { painterResource(it) },
                 modifier = Modifier
-                    .size(ListThumbnailSize.dp)
+                    .size(ListThumbnailSize)
                     .clip(thumbnailShape)
             )
         }
@@ -130,7 +130,7 @@ fun ListItem(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(ListThumbnailSize.dp)
+                    .size(ListThumbnailSize)
                     .background(
                         color = Color.Black.copy(alpha = 0.4f),
                         shape = thumbnailShape
@@ -214,8 +214,8 @@ fun GridItem(
             model = thumbnailUrl,
             contentDescription = null,
             modifier = Modifier
-                .width(GridThumbnailSize.dp * thumbnailRatio)
-                .height(GridThumbnailSize.dp)
+                .width(GridThumbnailSize * thumbnailRatio)
+                .height(GridThumbnailSize)
                 .clip(thumbnailShape)
         )
         AnimatedVisibility(
@@ -226,8 +226,8 @@ fun GridItem(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .width(GridThumbnailSize.dp * thumbnailRatio)
-                    .height(GridThumbnailSize.dp)
+                    .width(GridThumbnailSize * thumbnailRatio)
+                    .height(GridThumbnailSize)
                     .background(
                         color = Color.Black.copy(alpha = 0.4f),
                         shape = thumbnailShape
@@ -250,7 +250,7 @@ fun GridItem(
     },
     modifier = modifier
         .padding(12.dp)
-        .width(GridThumbnailSize.dp * thumbnailRatio)
+        .width(GridThumbnailSize * thumbnailRatio)
 )
 
 @Composable
@@ -269,7 +269,7 @@ fun SongListItem(
         makeTimeString(song.song.duration * 1000L)
     ).joinByBullet(),
     thumbnailUrl = song.song.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
     thumbnailPlaceHolder = R.drawable.ic_music_note,
     trailingContent = trailingContent,
     onShowMenu = onShowMenu,
@@ -329,7 +329,7 @@ fun PlaylistListItem(
     title = playlist.playlist.name,
     subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
     thumbnailUrl = playlist.playlist.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
     thumbnailPlaceHolder = R.drawable.ic_queue_music,
     playingIndicator = playingIndicator,
     playWhenReady = playWhenReady,
@@ -344,7 +344,7 @@ fun SongGridItem(
     title = song.song.title,
     subtitle = song.artists.joinToString { it.name },
     thumbnailUrl = song.song.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
     modifier = Modifier
 )
 
@@ -388,7 +388,7 @@ fun PlaylistGridItem(
     title = playlist.playlist.name,
     subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
     thumbnailUrl = playlist.playlist.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
     modifier = modifier
 )
 
@@ -402,7 +402,7 @@ fun MediaMetadataListItem(
     title = mediaMetadata.title,
     subtitle = mediaMetadata.artists.joinToString { it.name },
     thumbnailUrl = mediaMetadata.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
     playingIndicator = playingIndicator,
     playWhenReady = playWhenReady,
     modifier = modifier
@@ -418,7 +418,7 @@ fun YouTubeListItem(
     title = item.title,
     subtitle = item.subtitle.orEmpty(),
     thumbnailUrl = item.thumbnails.lastOrNull()?.url,
-    thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius),
     playingIndicator = playingIndicator,
     playWhenReady = playWhenReady,
     modifier = modifier
@@ -438,7 +438,7 @@ fun YouTubeGridItem(
         if (it.width != null && it.height != null) it.width!!.toFloat() / it.height!!
         else 1f
     } ?: 1f,
-    thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius.dp),
+    thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius),
     playingIndicator = playingIndicator,
     playWhenReady = playWhenReady,
     modifier = modifier

@@ -87,8 +87,8 @@ fun SearchScreen(
     LazyColumn(
         contentPadding = WindowInsets.systemBars
             .add(WindowInsets(
-                top = AppBarHeight.dp,
-                bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
+                top = AppBarHeight,
+                bottom = NavigationBarHeight + MiniPlayerHeight
             ))
             .asPaddingValues()
     ) {
@@ -172,7 +172,7 @@ fun SuggestionItem(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .height(SuggestionItemHeight.dp)
+            .height(SuggestionItemHeight)
             .clickable(
                 onClick = onClick
             )

@@ -59,7 +59,7 @@ fun Thumbnail(
                     model = mediaMetadata?.thumbnailUrl,
                     contentDescription = null,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(ThumbnailCornerRadius.dp))
+                        .clip(RoundedCornerShape(ThumbnailCornerRadius))
                         .fillMaxWidth()
                         .align(Alignment.Center)
                 )

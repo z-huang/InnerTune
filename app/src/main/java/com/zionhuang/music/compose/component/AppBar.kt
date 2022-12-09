@@ -86,7 +86,7 @@ fun AppBar(
         }
     }
 
-    val heightOffsetLimit = with(LocalDensity.current) { -(AppBarHeight.dp + topInset).toPx() }
+    val heightOffsetLimit = with(LocalDensity.current) { -(AppBarHeight + topInset).toPx() }
     SideEffect {
         if (scrollBehavior.state.heightOffsetLimit != heightOffsetLimit) {
             scrollBehavior.state.heightOffsetLimit = heightOffsetLimit
@@ -125,7 +125,7 @@ fun AppBar(
                     .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                     .asPaddingValues())
                 .fillMaxWidth()
-                .height(AppBarHeight.dp)
+                .height(AppBarHeight)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding)
                 .clip(RoundedCornerShape(cornerShapePercent))
                 .background(background)

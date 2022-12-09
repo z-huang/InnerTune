@@ -7,7 +7,9 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,15 +17,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
@@ -63,132 +69,14 @@ fun LibrarySongsScreen(
 
     val queueTitle = stringResource(R.string.queue_all_songs)
 
-                SongListItem(
-                    song = song,
-                    trailingContent = {
-                        IconButton(
-                            onClick = {
-                                coroutineScope.launch {
-                                    songRepository.toggleLiked(song)
-                                }
-                            }
-                        ) {
-                            Icon(
-                                painter = painterResource(if (song.song.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
-                                tint = MaterialTheme.colorScheme.error,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                )
-
-                Divider()
-
-                GridMenu(
-                    contentPadding = PaddingValues(
-                        start = 8.dp,
-                        top = 8.dp,
-                        end = 8.dp,
-                        bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-                    )
-                ) {
-                    GridMenuItem(
-                        icon = R.drawable.ic_radio,
-                        title = R.string.menu_start_radio
-                    ) {
-                        playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
-                        menuState.dismiss()
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_playlist_play,
-                        title = R.string.menu_play_next
-                    ) {
-                        playerConnection.playNext(song.toMediaItem())
-                        menuState.dismiss()
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_queue_music,
-                        title = R.string.menu_add_to_queue
-                    ) {
-                        playerConnection.addToQueue((song.toMediaItem()))
-                        menuState.dismiss()
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_edit,
-                        title = R.string.menu_edit
-                    ) {
-
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_playlist_add,
-                        title = R.string.menu_add_to_playlist
-                    ) {
-
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_file_download,
-                        title = R.string.menu_download
-                    ) {
-
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_artist,
-                        title = R.string.menu_view_artist
-                    ) {
-
-                    }
-                    if (song.song.albumId != null) {
-                        GridMenuItem(
-                            icon = R.drawable.ic_album,
-                            title = R.string.menu_view_album
-                        ) {
-                            navController.navigate("album/${song.song.albumId}")
-                            menuState.dismiss()
-                        }
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_share,
-                        title = R.string.menu_share
-                    ) {
-                        val intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            type = "text/plain"
-                            putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${song.id}")
-                        }
-                        context.startActivity(Intent.createChooser(intent, null))
-                        menuState.dismiss()
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_cached,
-                        title = R.string.menu_refetch
-                    ) {
-                        coroutineScope.launch {
-                            songRepository.refetchSong(song)
-                        }
-                        menuState.dismiss()
-                    }
-                    GridMenuItem(
-                        icon = R.drawable.ic_delete,
-                        title = R.string.menu_delete
-                    ) {
-                        coroutineScope.launch {
-                            songRepository.deleteSong(song)
-                        }
-                        menuState.dismiss()
-                    }
-                }
-            }
-        }
-    }
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
             contentPadding = WindowInsets.systemBars
                 .add(WindowInsets(
-                    top = AppBarHeight.dp,
-                    bottom = NavigationBarHeight.dp + MiniPlayerHeight.dp
+                    top = AppBarHeight,
+                    bottom = NavigationBarHeight + MiniPlayerHeight
                 ))
                 .asPaddingValues()
         ) {
@@ -350,6 +238,7 @@ fun SongHeader(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SongMenu(
     originalSong: Song,
@@ -362,6 +251,59 @@ fun SongMenu(
     val songRepository = SongRepository(context)
     val songState = songRepository.getSongById(originalSong.id).flow.collectAsState(initial = originalSong)
     val song = songState.value ?: originalSong
+
+    var showSelectArtistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    if (showSelectArtistDialog) {
+        ListDialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            onDismissRequest = { showSelectArtistDialog = false }
+        ) {
+            items(
+                items = song.artists,
+                key = { it.id }
+            ) { artist ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .height(ListItemHeight)
+                        .clickable {
+                            navController.navigate("artist/${artist.id}")
+                            showSelectArtistDialog = false
+                            onDismiss()
+                        }
+                        .padding(horizontal = 12.dp),
+                ) {
+                    Box(
+                        modifier = Modifier.padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        AsyncImage(
+                            model = artist.thumbnailUrl,
+                            contentDescription = null,
+                            placeholder = painterResource(R.drawable.ic_artist),
+                            error = painterResource(R.drawable.ic_artist),
+                            modifier = Modifier
+                                .size(ListThumbnailSize)
+                                .clip(CircleShape)
+                        )
+                    }
+                    Text(
+                        text = artist.name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 8.dp)
+                    )
+                }
+            }
+        }
+    }
 
     SongListItem(
         song = song,
@@ -435,7 +377,12 @@ fun SongMenu(
             icon = R.drawable.ic_artist,
             title = R.string.menu_view_artist
         ) {
-
+            if (song.artists.size == 1) {
+                navController.navigate("artist/${song.artists[0].id}")
+                onDismiss()
+            } else {
+                showSelectArtistDialog = true
+            }
         }
         if (song.song.albumId != null) {
             GridMenuItem(
