@@ -268,7 +268,7 @@ class ComposeActivity : ComponentActivity() {
                                 }
                             },
                             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
-                        ) { innerPaddingModifier ->
+                        ) {
 //                            NavHost(navController, startDestination = navigationItems[defaultNavIndex].route) {
                             NavHost(navController, startDestination = Screen.Songs.route) {
                                 composable(Screen.Home.route) {
@@ -281,10 +281,10 @@ class ComposeActivity : ComponentActivity() {
                                     LibraryArtistsScreen(navController)
                                 }
                                 composable(Screen.Albums.route) {
-                                    LibraryAlbumsScreen(navController, innerPaddingModifier)
+                                    LibraryAlbumsScreen(navController)
                                 }
                                 composable(Screen.Playlists.route) {
-                                    LibraryPlaylistsScreen(innerPaddingModifier)
+                                    LibraryPlaylistsScreen()
                                 }
 
                                 composable(

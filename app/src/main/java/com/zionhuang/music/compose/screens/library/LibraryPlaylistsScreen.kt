@@ -32,7 +32,6 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LibraryPlaylistsScreen(
-    paddingModifier: PaddingValues,
     viewModel: SongsViewModel = viewModel(),
 ) {
     val sortType by rememberPreference(PLAYLIST_SORT_TYPE, PlaylistSortType.CREATE_DATE)

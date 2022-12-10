@@ -26,7 +26,6 @@ import com.zionhuang.music.viewmodels.SongsViewModel
 @Composable
 fun LibraryAlbumsScreen(
     navController: NavController,
-    paddingModifier: PaddingValues,
     viewModel: SongsViewModel = viewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
