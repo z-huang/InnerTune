@@ -324,6 +324,7 @@ class ComposeActivity : ComponentActivity() {
                                     SearchScreen(
                                         query = textFieldValue.text,
                                         onTextFieldValueChange = onTextFieldValueChange,
+                                        navController = navController,
                                         onSearch = onSearch
                                     )
                                 }

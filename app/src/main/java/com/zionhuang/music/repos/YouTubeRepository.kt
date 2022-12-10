@@ -84,7 +84,7 @@ class YouTubeRepository(val context: Context) {
         override fun getRefreshKey(state: PagingState<List<String>, YTBaseItem>): List<String>? = null
     }
 
-    suspend fun getSuggestions(query: String): List<YTBaseItem> = withContext(IO) {
+    suspend fun getSuggestions(query: String): SearchSuggestions = withContext(IO) {
         checkCache("SU$query") {
             YouTube.getSearchSuggestions(query).getOrThrow()
         }

@@ -89,7 +89,7 @@ class YouTubeTest {
     @Test
     fun `Check 'get_search_suggestion' endpoint`() = runBlocking {
         val suggestions = youTube.getSearchSuggestions(SEARCH_QUERY).getOrThrow()
-        assertTrue(suggestions.isNotEmpty())
+        assertTrue(suggestions.queries.isNotEmpty())
     }
 
     @Test

@@ -23,11 +23,14 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.zionhuang.innertube.models.SuggestionTextItem
-import com.zionhuang.innertube.models.YTItem
+import androidx.navigation.NavController
+import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
+import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.YouTubeListItem
 import com.zionhuang.music.constants.*
+import com.zionhuang.music.models.toMediaMetadata
+import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.YouTubeRepository
 import kotlinx.coroutines.delay
@@ -39,19 +42,21 @@ import kotlinx.coroutines.launch
 fun SearchScreen(
     query: String,
     onTextFieldValueChange: (TextFieldValue) -> Unit,
+    navController: NavController,
     onSearch: (String) -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val playerConnection = LocalPlayerConnection.current
 
     val history = rememberSaveable {
         mutableStateOf(emptyList<String>())
     }
-    val suggestions = rememberSaveable {
+    val queries = rememberSaveable {
         mutableStateOf(emptyList<String>())
     }
-    val onlineSuggestions = rememberSaveable(suggestions.value, history.value) {
-        suggestions.value.filter {
+    val onlineQueries = rememberSaveable(queries.value, history.value) {
+        queries.value.filter {
             it !in history.value
         }
     }
@@ -75,12 +80,12 @@ fun SearchScreen(
     LaunchedEffect(query) {
         delay(200)
         if (query.isEmpty()) {
-            suggestions.value = emptyList()
+            queries.value = emptyList()
             items.value = emptyList()
         } else {
             val result = YouTubeRepository(context).getSuggestions(query)
-            suggestions.value = result.filterIsInstance<SuggestionTextItem>().map { it.query }
-            items.value = result.filterIsInstance<YTItem>()
+            queries.value = result.queries
+            items.value = result.recommendedItems
         }
     }
 
@@ -118,7 +123,7 @@ fun SearchScreen(
         }
 
         items(
-            items = onlineSuggestions,
+            items = onlineQueries,
             key = { it }
         ) { query ->
             SuggestionItem(
@@ -151,7 +156,12 @@ fun SearchScreen(
                 item = item,
                 modifier = Modifier
                     .clickable {
-
+                        when (item) {
+                            is SongItem -> playerConnection?.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                            is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                            is ArtistItem -> navController.navigate("artist/${item.id}")
+                            is PlaylistItem -> {}
+                        }
                     }
                     .animateItemPlacement()
             )

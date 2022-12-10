@@ -4,7 +4,6 @@ import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.YouTubeClient.Companion.ANDROID_MUSIC
 import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
 import com.zionhuang.innertube.models.response.*
-import com.zionhuang.innertube.utils.insertSeparator
 import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -41,14 +40,16 @@ object YouTube {
             innerTube.proxy = value
         }
 
-    suspend fun getSearchSuggestions(query: String): Result<List<YTBaseItem>> = runCatching {
-        innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>().contents
-            ?.flatMap { section ->
-                section.searchSuggestionsSectionRenderer.contents.mapNotNull { it.toItem() }
-            }
-            ?.insertSeparator { before, after ->
-                if ((before is SuggestionTextItem && after !is SuggestionTextItem) || (before !is SuggestionTextItem && after is SuggestionTextItem)) Separator else null
+    suspend fun getSearchSuggestions(query: String): Result<SearchSuggestions> = runCatching {
+        val response = innerTube.getSearchSuggestions(ANDROID_MUSIC, query).body<GetSearchSuggestionsResponse>()
+        SearchSuggestions(
+            queries = response.contents?.getOrNull(0)?.searchSuggestionsSectionRenderer?.contents?.mapNotNull { content ->
+                content.searchSuggestionRenderer?.suggestion?.toString()
+            }.orEmpty(),
+            recommendedItems = response.contents?.getOrNull(1)?.searchSuggestionsSectionRenderer?.contents?.mapNotNull { content ->
+                content.musicTwoColumnItemRenderer?.toItem()
             }.orEmpty()
+        )
     }
 
     suspend fun searchAllType(query: String): Result<BrowseResult> = runCatching {
