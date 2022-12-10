@@ -35,7 +35,7 @@ fun LibraryAlbumsScreen(
 
     val sortType by rememberPreference(ALBUM_SORT_TYPE, AlbumSortType.CREATE_DATE)
     val sortDescending by rememberPreference(ALBUM_SORT_DESCENDING, true)
-    val items by viewModel.allAlbumsFlow.collectAsState(initial = emptyList())
+    val items by viewModel.allAlbumsFlow.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()

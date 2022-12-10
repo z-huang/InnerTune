@@ -65,7 +65,7 @@ fun LibrarySongsScreen(
     val (sortDescending, onSortDescendingChange) = mutablePreferenceState(SONG_SORT_DESCENDING, true)
     val (sortTypeMenuExpanded, onSortTypeMenuExpandedChange) = remember { mutableStateOf(false) }
 
-    val items by viewModel.allSongsFlow.collectAsState(initial = emptyList())
+    val items by viewModel.allSongsFlow.collectAsState()
 
     val queueTitle = stringResource(R.string.queue_all_songs)
 

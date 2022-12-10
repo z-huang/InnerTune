@@ -39,7 +39,7 @@ fun LibraryPlaylistsScreen(
     val sortDescending by rememberPreference(PLAYLIST_SORT_DESCENDING, true)
     val likedSongCount by viewModel.likedSongCount.collectAsState(initial = 0)
     val downloadedSongCount by viewModel.downloadedSongCount.collectAsState(initial = 0)
-    val items by viewModel.allPlaylistsFlow.collectAsState(initial = emptyList())
+    val items by viewModel.allPlaylistsFlow.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()

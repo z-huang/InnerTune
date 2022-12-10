@@ -32,7 +32,7 @@ fun LibraryArtistsScreen(
 ) {
     val sortType by rememberPreference(ARTIST_SORT_TYPE, ArtistSortType.CREATE_DATE)
     val sortDescending by rememberPreference(ARTIST_SORT_DESCENDING, true)
-    val artists by viewModel.allArtistsFlow.collectAsState(emptyList())
+    val artists by viewModel.allArtistsFlow.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()
