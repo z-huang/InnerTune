@@ -128,11 +128,25 @@ class ComposeActivity : ComponentActivity() {
                     val density = LocalDensity.current
                     val windowsInsets = WindowInsets.systemBars
                     val bottomInset = with(density) { windowsInsets.getBottom(density).toDp() }
+
                     val playerBottomSheetState = rememberBottomSheetState(
                         dismissedBound = 0.dp,
                         collapsedBound = NavigationBarHeight + MiniPlayerHeight + bottomInset,
                         expandedBound = maxHeight,
                     )
+
+                    val playerAwareWindowInsets by remember(bottomInset) {
+                        derivedStateOf {
+                            val bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight + bottomInset, playerBottomSheetState.collapsedBound)
+
+                            windowsInsets
+                                .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                                .add(WindowInsets(
+                                    top = AppBarHeight,
+                                    bottom = bottom
+                                ))
+                        }
+                    }
 
                     DisposableEffect(playerConnection) {
                         val player = playerConnection?.player ?: return@DisposableEffect onDispose { }
@@ -157,17 +171,6 @@ class ComposeActivity : ComponentActivity() {
                         player.addListener(listener)
 
                         onDispose { player.removeListener(listener) }
-                    }
-
-                    val playerAwareWindowInsets by remember(bottomInset, playerBottomSheetState.value) {
-                        derivedStateOf {
-                            windowsInsets
-                                .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-                                .add(WindowInsets(
-                                    top = AppBarHeight,
-                                    bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight + bottomInset, playerBottomSheetState.collapsedBound)
-                                ))
-                        }
                     }
 
                     val navController = rememberNavController()
