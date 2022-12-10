@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -18,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -94,28 +95,28 @@ fun AppBar(
     }
 
     Box(
-        modifier = Modifier.offset(
-            y = with(LocalDensity.current) {
-                scrollBehavior.state.heightOffset.roundToInt().toDp()
-            }
-        )
+        modifier = Modifier.offset {
+            IntOffset(x = 0, y = scrollBehavior.state.heightOffset.roundToInt())
+        }
     ) {
         AnimatedVisibility(
             visible = !appBarConfig.transparentBackground,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
+            val statusBarColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
+            val backgroundColor = MaterialTheme.colorScheme.background
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(topInset)
-                    .background(if (appBarConfig.canSearch && appBarConfig.searchExpanded) {
-                        MaterialTheme.colorScheme
-                            .surfaceColorAtElevation(6.dp)
-                            .copy(alpha = percent)
-                    } else {
-                        MaterialTheme.colorScheme.background
-                    })
+                    .drawBehind {
+                        drawRect(if (appBarConfig.canSearch && appBarConfig.searchExpanded) {
+                            statusBarColor.copy(alpha = percent)
+                        } else {
+                            backgroundColor
+                        })
+                    }
             )
         }
 
@@ -128,7 +129,9 @@ fun AppBar(
                 .height(AppBarHeight)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding)
                 .clip(RoundedCornerShape(cornerShapePercent))
-                .background(background)
+                .drawBehind {
+                    drawRect(background)
+                }
                 .clickable(
                     indication = if (appBarConfig.canSearch && !appBarConfig.searchExpanded) LocalIndication.current else null,
                     interactionSource = remember { MutableInteractionSource() }
