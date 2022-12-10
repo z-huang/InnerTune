@@ -170,6 +170,64 @@ class ComposeActivity : ComponentActivity() {
                         }
                     }
 
+                    val navController = rememberNavController()
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val route = remember(navBackStackEntry) {
+                        navBackStackEntry?.destination?.route
+                    }
+
+                    val navigationItems = remember {
+                        val enabledNavItems = NavigationTabHelper.getConfig(this@ComposeActivity)
+                        listOf(Screen.Home, Screen.Songs, Screen.Artists, Screen.Albums, Screen.Playlists)
+                            .filterIndexed { index, _ ->
+                                enabledNavItems[index]
+                            }
+                    }
+                    val defaultNavIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
+
+                    val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
+                        mutableStateOf(TextFieldValue(""))
+                    }
+                    val searchSource = rememberPreference(SEARCH_SOURCE, ONLINE)
+                    val appBarConfig = remember(navBackStackEntry) {
+                        when {
+                            route == null || navigationItems.any { it.route == route } -> {
+                                onTextFieldValueChange(TextFieldValue(""))
+                                defaultAppBarConfig(navController)
+                            }
+                            route == "search" -> searchAppBarConfig(navController, searchSource, onTextFieldValueChange)
+                            route.startsWith("search/") -> onlineSearchResultAppBarConfig(navController, navBackStackEntry?.arguments?.getString("query").orEmpty())
+                            route.startsWith("album/") -> albumAppBarConfig(navController)
+                            route.startsWith("artist/") -> artistAppBarConfig(navController)
+                            else -> defaultAppBarConfig(navController)
+                        }
+                    }
+                    val onSearch: (String) -> Unit = { query ->
+                        onTextFieldValueChange(TextFieldValue(
+                            text = query,
+                            selection = TextRange(query.length)
+                        ))
+                        coroutineScope.launch {
+                            SongRepository(this@ComposeActivity).insertSearchHistory(query)
+                        }
+                        navController.navigate("search/$query")
+                    }
+
+                    val scrollBehavior = appBarScrollBehavior(
+                        canScroll = {
+                            route?.startsWith("search/") == false && (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed)
+                        }
+                    )
+                    LaunchedEffect(route) {
+                        val heightOffset = scrollBehavior.state.heightOffset
+                        animate(
+                            initialValue = heightOffset,
+                            targetValue = 0f
+                        ) { value, velocity ->
+                            scrollBehavior.state.heightOffset = value
+                        }
+                    }
+
                     CompositionLocalProvider(
                         LocalSharedPreferences provides LocalContext.current.sharedPreferences,
                         LocalSharedPreferencesKeyFlow provides LocalContext.current.sharedPreferences.keyFlow,
@@ -178,189 +236,127 @@ class ComposeActivity : ComponentActivity() {
                         LocalPlayerAwareWindowInsets provides playerAwareWindowInsets,
                         LocalShimmerTheme provides ShimmerTheme
                     ) {
-                        val navController = rememberNavController()
-                        val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val route = remember(navBackStackEntry) {
-                            navBackStackEntry?.destination?.route
-                        }
-
-                        val navigationItems = remember {
-                            val enabledNavItems = NavigationTabHelper.getConfig(this@ComposeActivity)
-                            listOf(Screen.Home, Screen.Songs, Screen.Artists, Screen.Albums, Screen.Playlists)
-                                .filterIndexed { index, _ ->
-                                    enabledNavItems[index]
-                                }
-                        }
-                        val defaultNavIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
-
-                        val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
-                            mutableStateOf(TextFieldValue(""))
-                        }
-                        val searchSource = rememberPreference(SEARCH_SOURCE, ONLINE)
-                        val appBarConfig = remember(navBackStackEntry) {
-                            when {
-                                route == null || navigationItems.any { it.route == route } -> {
-                                    onTextFieldValueChange(TextFieldValue(""))
-                                    defaultAppBarConfig(navController)
-                                }
-                                route == "search" -> searchAppBarConfig(navController, searchSource, onTextFieldValueChange)
-                                route.startsWith("search/") -> onlineSearchResultAppBarConfig(navController, navBackStackEntry?.arguments?.getString("query").orEmpty())
-                                route.startsWith("album/") -> albumAppBarConfig(navController)
-                                route.startsWith("artist/") -> artistAppBarConfig(navController)
-                                else -> defaultAppBarConfig(navController)
-                            }
-                        }
-                        val onSearch: (String) -> Unit = { query ->
-                            onTextFieldValueChange(TextFieldValue(
-                                text = query,
-                                selection = TextRange(query.length)
-                            ))
-                            coroutineScope.launch {
-                                SongRepository(this@ComposeActivity).insertSearchHistory(query)
-                            }
-                            navController.navigate("search/$query")
-                        }
-
-                        val scrollBehavior = appBarScrollBehavior(
-                            canScroll = {
-                                route?.startsWith("search/") == false && (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed)
-                            }
-                        )
-                        LaunchedEffect(route) {
-                            val heightOffset = scrollBehavior.state.heightOffset
-                            animate(
-                                initialValue = heightOffset,
-                                targetValue = 0f
-                            ) { value, velocity ->
-                                scrollBehavior.state.heightOffset = value
-                            }
-                        }
-
-                        Scaffold(
-                            bottomBar = {
-                                NavigationBar(
-                                    modifier = Modifier
-                                        .offset {
-                                            IntOffset(x = 0, y = ((NavigationBarHeight + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx())
-                                        }
-                                ) {
-                                    navigationItems.fastForEach { screen ->
-                                        NavigationBarItem(
-                                            selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == screen.route } == true,
-                                            icon = {
-                                                Icon(
-                                                    painter = painterResource(screen.iconId),
-                                                    contentDescription = null
-                                                )
-                                            },
-                                            label = { Text(stringResource(screen.titleId)) },
-                                            onClick = {
-                                                navController.navigate(screen.route) {
-                                                    popUpTo(navController.graph.startDestinationId) {
-                                                        saveState = true
-                                                    }
-                                                    launchSingleTop = true
-                                                    restoreState = true
-                                                }
-                                            }
-                                        )
-                                    }
-                                }
-                            },
+                        NavHost(
+                            navController = navController,
+                            startDestination = Screen.Songs.route,
+//                            startDestination = navigationItems[defaultNavIndex].route,
                             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
                         ) {
-//                            NavHost(navController, startDestination = navigationItems[defaultNavIndex].route) {
-                            NavHost(navController, startDestination = Screen.Songs.route) {
-                                composable(Screen.Home.route) {
-                                    HomeScreen()
-                                }
-                                composable(Screen.Songs.route) {
-                                    LibrarySongsScreen(navController)
-                                }
-                                composable(Screen.Artists.route) {
-                                    LibraryArtistsScreen(navController)
-                                }
-                                composable(Screen.Albums.route) {
-                                    LibraryAlbumsScreen(navController)
-                                }
-                                composable(Screen.Playlists.route) {
-                                    LibraryPlaylistsScreen()
-                                }
-
-                                composable(
-                                    route = "album/{albumId}?playlistId={playlistId}",
-                                    arguments = listOf(
-                                        navArgument("albumId") {
-                                            type = NavType.StringType
-                                        },
-                                        navArgument("playlistId") {
-                                            type = NavType.StringType
-                                            nullable = true
-                                        }
-                                    )
-                                ) { backStackEntry ->
-                                    AlbumScreen(
-                                        albumId = backStackEntry.arguments?.getString("albumId")!!,
-                                        playlistId = backStackEntry.arguments?.getString("playlistId"),
-                                    )
-                                }
-
-                                composable(
-                                    route = "artist/{artistId}",
-                                    arguments = listOf(
-                                        navArgument("artistId") {
-                                            type = NavType.StringType
-                                        }
-                                    )
-                                ) { backStackEntry ->
-                                    ArtistScreen(
-                                        artistId = backStackEntry.arguments?.getString("artistId")!!,
-                                        navController = navController,
-                                        appBarConfig = appBarConfig
-                                    )
-                                }
-
-                                composable("search") {
-                                    SearchScreen(
-                                        query = textFieldValue.text,
-                                        onTextFieldValueChange = onTextFieldValueChange,
-                                        navController = navController,
-                                        onSearch = onSearch
-                                    )
-                                }
-
-                                composable(
-                                    route = "search/{query}",
-                                    arguments = listOf(
-                                        navArgument("query") {
-                                            type = NavType.StringType
-                                        }
-                                    )
-                                ) { backStackEntry ->
-                                    OnlineSearchResult(
-                                        query = backStackEntry.arguments?.getString("query")!!,
-                                        navController = navController
-                                    )
-                                }
+                            composable(Screen.Home.route) {
+                                HomeScreen()
                             }
+                            composable(Screen.Songs.route) {
+                                LibrarySongsScreen(navController)
+                            }
+                            composable(Screen.Artists.route) {
+                                LibraryArtistsScreen(navController)
+                            }
+                            composable(Screen.Albums.route) {
+                                LibraryAlbumsScreen(navController)
+                            }
+                            composable(Screen.Playlists.route) {
+                                LibraryPlaylistsScreen()
+                            }
+                            composable(
+                                route = "album/{albumId}?playlistId={playlistId}",
+                                arguments = listOf(
+                                    navArgument("albumId") {
+                                        type = NavType.StringType
+                                    },
+                                    navArgument("playlistId") {
+                                        type = NavType.StringType
+                                        nullable = true
+                                    }
+                                )
+                            ) { backStackEntry ->
+                                AlbumScreen(
+                                    albumId = backStackEntry.arguments?.getString("albumId")!!,
+                                    playlistId = backStackEntry.arguments?.getString("playlistId"),
+                                )
+                            }
+                            composable(
+                                route = "artist/{artistId}",
+                                arguments = listOf(
+                                    navArgument("artistId") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) { backStackEntry ->
+                                ArtistScreen(
+                                    artistId = backStackEntry.arguments?.getString("artistId")!!,
+                                    navController = navController,
+                                    appBarConfig = appBarConfig
+                                )
+                            }
+                            composable("search") {
+                                SearchScreen(
+                                    query = textFieldValue.text,
+                                    onTextFieldValueChange = onTextFieldValueChange,
+                                    navController = navController,
+                                    onSearch = onSearch
+                                )
+                            }
+                            composable(
+                                route = "search/{query}",
+                                arguments = listOf(
+                                    navArgument("query") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) { backStackEntry ->
+                                OnlineSearchResult(
+                                    query = backStackEntry.arguments?.getString("query")!!,
+                                    navController = navController
+                                )
+                            }
+                        }
 
-                            AppBar(
-                                scrollBehavior = scrollBehavior,
-                                navController = navController,
-                                appBarConfig = appBarConfig,
-                                textFieldValue = textFieldValue,
-                                onTextFieldValueChange = onTextFieldValueChange,
-                                onExpandSearch = {
-                                    onTextFieldValueChange(textFieldValue.copy(selection = TextRange(textFieldValue.text.length)))
-                                    navController.navigate("search")
-                                },
-                                onSearch = onSearch
-                            )
+                        AppBar(
+                            scrollBehavior = scrollBehavior,
+                            navController = navController,
+                            appBarConfig = appBarConfig,
+                            textFieldValue = textFieldValue,
+                            onTextFieldValueChange = onTextFieldValueChange,
+                            onExpandSearch = {
+                                onTextFieldValueChange(textFieldValue.copy(selection = TextRange(textFieldValue.text.length)))
+                                navController.navigate("search")
+                            },
+                            onSearch = onSearch
+                        )
 
-                            BottomSheetPlayer(
-                                state = playerBottomSheetState,
-                                navController = navController
-                            )
+                        BottomSheetPlayer(
+                            state = playerBottomSheetState,
+                            navController = navController
+                        )
+
+                        NavigationBar(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .offset {
+                                    IntOffset(x = 0, y = ((NavigationBarHeight + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx())
+                                }
+                        ) {
+                            navigationItems.fastForEach { screen ->
+                                NavigationBarItem(
+                                    selected = navBackStackEntry?.destination?.hierarchy?.any { it.route == screen.route } == true,
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(screen.iconId),
+                                            contentDescription = null
+                                        )
+                                    },
+                                    label = { Text(stringResource(screen.titleId)) },
+                                    onClick = {
+                                        navController.navigate(screen.route) {
+                                            popUpTo(navController.graph.startDestinationId) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    }
+                                )
+                            }
                         }
 
                         BottomSheetMenu(
