@@ -52,7 +52,6 @@ import com.zionhuang.music.compose.theme.ColorSaver
 import com.zionhuang.music.compose.theme.DefaultThemeColor
 import com.zionhuang.music.compose.theme.InnerTuneTheme
 import com.zionhuang.music.compose.theme.extractThemeColorFromBitmap
-import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.MusicService
@@ -170,7 +169,9 @@ class ComposeActivity : ComponentActivity() {
                         }
                         player.addListener(listener)
 
-                        onDispose { player.removeListener(listener) }
+                        onDispose {
+                            player.removeListener(listener)
+                        }
                     }
 
                     val navController = rememberNavController()
@@ -191,18 +192,16 @@ class ComposeActivity : ComponentActivity() {
                     val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
                         mutableStateOf(TextFieldValue(""))
                     }
-                    val searchSource = rememberPreference(SEARCH_SOURCE, ONLINE)
                     val appBarConfig = remember(navBackStackEntry) {
                         when {
                             route == null || navigationItems.any { it.route == route } -> {
                                 onTextFieldValueChange(TextFieldValue(""))
-                                defaultAppBarConfig(navController)
+                                defaultAppBarConfig()
                             }
-                            route == "search" -> searchAppBarConfig(navController, searchSource, onTextFieldValueChange)
-                            route.startsWith("search/") -> onlineSearchResultAppBarConfig(navController, navBackStackEntry?.arguments?.getString("query").orEmpty())
-                            route.startsWith("album/") -> albumAppBarConfig(navController)
-                            route.startsWith("artist/") -> artistAppBarConfig(navController)
-                            else -> defaultAppBarConfig(navController)
+                            route.startsWith("search/") -> onlineSearchResultAppBarConfig(navBackStackEntry?.arguments?.getString("query").orEmpty())
+                            route.startsWith("album/") -> albumAppBarConfig()
+                            route.startsWith("artist/") -> artistAppBarConfig()
+                            else -> defaultAppBarConfig()
                         }
                     }
                     val onSearch: (String) -> Unit = { query ->
@@ -221,12 +220,13 @@ class ComposeActivity : ComponentActivity() {
                             route?.startsWith("search/") == false && (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed)
                         }
                     )
+
                     LaunchedEffect(route) {
                         val heightOffset = scrollBehavior.state.heightOffset
                         animate(
                             initialValue = heightOffset,
                             targetValue = 0f
-                        ) { value, velocity ->
+                        ) { value, _ ->
                             scrollBehavior.state.heightOffset = value
                         }
                     }
@@ -291,14 +291,6 @@ class ComposeActivity : ComponentActivity() {
                                     appBarConfig = appBarConfig
                                 )
                             }
-                            composable("search") {
-                                SearchScreen(
-                                    query = textFieldValue.text,
-                                    onTextFieldValueChange = onTextFieldValueChange,
-                                    navController = navController,
-                                    onSearch = onSearch
-                                )
-                            }
                             composable(
                                 route = "search/{query}",
                                 arguments = listOf(
@@ -315,16 +307,24 @@ class ComposeActivity : ComponentActivity() {
                         }
 
                         AppBar(
-                            scrollBehavior = scrollBehavior,
-                            navController = navController,
                             appBarConfig = appBarConfig,
                             textFieldValue = textFieldValue,
                             onTextFieldValueChange = onTextFieldValueChange,
-                            onExpandSearch = {
-                                onTextFieldValueChange(textFieldValue.copy(selection = TextRange(textFieldValue.text.length)))
-                                navController.navigate("search")
+                            scrollBehavior = scrollBehavior,
+                            navController = navController,
+                            localSearchScreen = { query, onDismiss ->
+
                             },
-                            onSearch = onSearch
+                            onlineSearchScreen = { query, onDismiss ->
+                                SearchScreen(
+                                    query = query,
+                                    onTextFieldValueChange = onTextFieldValueChange,
+                                    navController = navController,
+                                    onSearch = onSearch,
+                                    onDismiss = onDismiss
+                                )
+                            },
+                            onSearchOnline = onSearch
                         )
 
                         BottomSheetPlayer(

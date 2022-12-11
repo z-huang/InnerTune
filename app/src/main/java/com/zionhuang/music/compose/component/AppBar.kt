@@ -1,9 +1,9 @@
 package com.zionhuang.music.compose.component
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -38,59 +39,86 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zionhuang.music.R
+import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
+import com.zionhuang.music.compose.utils.canNavigateUp
 import com.zionhuang.music.constants.AppBarHeight
+import com.zionhuang.music.constants.LOCAL
+import com.zionhuang.music.constants.ONLINE
+import com.zionhuang.music.constants.SEARCH_SOURCE
+import com.zionhuang.music.extensions.mutablePreferenceState
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
-    modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior,
-    navController: NavController,
     appBarConfig: AppBarConfig,
     textFieldValue: TextFieldValue,
     onTextFieldValueChange: (TextFieldValue) -> Unit,
-    onExpandSearch: () -> Unit,
-    onSearch: (String) -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    background: Color = MaterialTheme.colorScheme.background,
+    searchBarBackground: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
+    navController: NavController,
+    localSearchScreen: @Composable (query: String, onDismiss: () -> Unit) -> Unit,
+    onlineSearchScreen: @Composable (query: String, onDismiss: () -> Unit) -> Unit,
+    onSearchOnline: (String) -> Unit,
 ) {
-    val topInset = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
-    val transition = updateTransition(targetState = appBarConfig.canSearch && !appBarConfig.searchExpanded, "canSearch")
-    val horizontalPadding by transition.animateDp(label = "") {
-        if (it) 12.dp else 0.dp
+    val density = LocalDensity.current
+    val topInset = with(density) { WindowInsets.systemBars.getTop(density).toDp() }
+    val heightOffsetLimit = with(density) { -(AppBarHeight + topInset).toPx() }
+    SideEffect {
+        if (scrollBehavior.state.heightOffsetLimit != heightOffsetLimit) {
+            scrollBehavior.state.heightOffsetLimit = heightOffsetLimit
+        }
     }
-    val verticalPadding by transition.animateDp(label = "") {
-        if (it) 8.dp else 0.dp
-    }
-    val cornerShapePercent by transition.animateInt(label = "") {
-        if (it) 50 else 0
-    }
-    val percent by transition.animateFloat(label = "") {
-        if (it) 0f else 1f
-    }
-    val background by animateColorAsState(if (appBarConfig.canSearch) {
-        MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
-    } else if (appBarConfig.transparentBackground) {
-        Color.Transparent
-    } else {
-        MaterialTheme.colorScheme.background
+
+    var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+    val (searchSource, onSearchSourceChange) = mutablePreferenceState(SEARCH_SOURCE, ONLINE)
+
+    val expandTransition = updateTransition(targetState = isSearchExpanded || !appBarConfig.searchable, "searchExpanded")
+    val searchTransitionProgress by expandTransition.animateFloat(label = "") { if (it) 1f else 0f }
+    val horizontalPadding by expandTransition.animateDp(label = "") { if (it) 0.dp else 12.dp }
+    val verticalPadding by expandTransition.animateDp(label = "") { if (it) 0.dp else 8.dp }
+    val cornerShapePercent by expandTransition.animateInt(label = "") { if (it) 0 else 50 }
+
+    val barBackground by animateColorAsState(when {
+        appBarConfig.searchable -> searchBarBackground
+        appBarConfig.transparentBackground -> Color.Transparent
+        else -> MaterialTheme.colorScheme.background
     })
 
     val focusRequester = remember {
         FocusRequester()
     }
 
-    LaunchedEffect(appBarConfig.searchExpanded) {
-        if (appBarConfig.searchExpanded) {
+    LaunchedEffect(isSearchExpanded) {
+        if (isSearchExpanded) {
             delay(300)
             focusRequester.requestFocus()
         }
     }
 
-    val heightOffsetLimit = with(LocalDensity.current) { -(AppBarHeight + topInset).toPx() }
-    SideEffect {
-        if (scrollBehavior.state.heightOffsetLimit != heightOffsetLimit) {
-            scrollBehavior.state.heightOffsetLimit = heightOffsetLimit
+    AnimatedVisibility(
+        visible = isSearchExpanded,
+        enter = fadeIn() + slideInVertically(tween()) { with(density) { -AppBarHeight.toPx().roundToInt() } },
+        exit = fadeOut()
+    ) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(LocalPlayerAwareWindowInsets.current.asPaddingValues())
+            .background(MaterialTheme.colorScheme.background)
+        ) {
+            if (searchSource == ONLINE) {
+                onlineSearchScreen(
+                    query = textFieldValue.text,
+                    onDismiss = { isSearchExpanded = false }
+                )
+            } else {
+                localSearchScreen(
+                    query = textFieldValue.text,
+                    onDismiss = { isSearchExpanded = false }
+                )
+            }
         }
     }
 
@@ -104,17 +132,15 @@ fun AppBar(
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            val statusBarColor = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)
-            val backgroundColor = MaterialTheme.colorScheme.background
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(topInset)
                     .drawBehind {
-                        drawRect(if (appBarConfig.canSearch && appBarConfig.searchExpanded) {
-                            statusBarColor.copy(alpha = percent)
+                        drawRect(if (appBarConfig.searchable && isSearchExpanded) {
+                            searchBarBackground.copy(alpha = searchTransitionProgress)
                         } else {
-                            backgroundColor
+                            background
                         })
                     }
             )
@@ -129,67 +155,48 @@ fun AppBar(
                 .height(AppBarHeight)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding)
                 .clip(RoundedCornerShape(cornerShapePercent))
-                .drawBehind {
-                    drawRect(background)
-                }
+                .background(barBackground)
                 .clickable(
-                    indication = if (appBarConfig.canSearch && !appBarConfig.searchExpanded) LocalIndication.current else null,
+                    indication = if (appBarConfig.searchable && !isSearchExpanded) LocalIndication.current else null,
                     interactionSource = remember { MutableInteractionSource() }
                 ) {
-                    if (appBarConfig.canSearch && !appBarConfig.searchExpanded) {
-                        onExpandSearch()
+                    if (appBarConfig.searchable && !isSearchExpanded) {
+                        isSearchExpanded = true
                     }
                 }
         ) {
             AnimatedVisibility(
-                visible = appBarConfig.canSearch,
+                visible = appBarConfig.searchable,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                AnimatedVisibility(
-                    visible = !appBarConfig.searchExpanded,
-                    enter = fadeIn(),
-                    exit = fadeOut()
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        IconButton(
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            onClick = appBarConfig.onNavigationButtonClick
-                        ) {
-                            Icon(
-                                painter = painterResource(appBarConfig.navigationIcon),
-                                contentDescription = null
-                            )
-                        }
-
-                        appBarConfig.title(this)
-                    }
-                }
-
-                AnimatedVisibility(
-                    visible = appBarConfig.searchExpanded,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        IconButton(
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            onClick = {
-                                navController.navigateUp()
+                    IconButton(
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        onClick = {
+                            when {
+                                isSearchExpanded -> isSearchExpanded = false
+                                !appBarConfig.isRootDestination && navController.canNavigateUp -> navController.navigateUp()
+                                else -> isSearchExpanded = true
                             }
-                        ) {
-                            Icon(
-                                painter = painterResource(appBarConfig.navigationIcon),
-                                contentDescription = null
-                            )
                         }
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                if (isSearchExpanded || !appBarConfig.isRootDestination && navController.canNavigateUp) {
+                                    R.drawable.ic_arrow_back
+                                } else {
+                                    R.drawable.ic_search
+                                }
+                            ),
+                            contentDescription = null
+                        )
+                    }
 
+                    if (isSearchExpanded) {
                         BasicTextField(
                             value = textFieldValue,
                             onValueChange = onTextFieldValueChange,
@@ -200,7 +207,8 @@ fun AppBar(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Search),
                             keyboardActions = KeyboardActions(
                                 onSearch = {
-                                    onSearch(textFieldValue.text)
+                                    isSearchExpanded = false
+                                    onSearchOnline(textFieldValue.text)
                                 }
                             ),
                             decorationBox = { innerTextField ->
@@ -210,7 +218,7 @@ fun AppBar(
                                 ) {
                                     if (textFieldValue.text.isEmpty()) {
                                         Text(
-                                            text = stringResource(R.string.menu_search),
+                                            text = stringResource(if (searchSource == ONLINE) R.string.search_yt_music else R.string.search_library),
                                             textAlign = TextAlign.Start,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
@@ -225,7 +233,11 @@ fun AppBar(
                                 .weight(1f)
                                 .focusRequester(focusRequester)
                         )
+                    } else {
+                        appBarConfig.title(this)
+                    }
 
+                    if (isSearchExpanded) {
                         if (textFieldValue.text.isNotEmpty()) {
                             IconButton(
                                 onClick = {
@@ -239,13 +251,22 @@ fun AppBar(
                             }
                         }
 
-                        appBarConfig.actions(this)
+                        IconButton(
+                            onClick = {
+                                onSearchSourceChange(if (searchSource == ONLINE) LOCAL else ONLINE)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(if (searchSource == ONLINE) R.drawable.ic_language else R.drawable.ic_library_music),
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
 
             AnimatedVisibility(
-                visible = !appBarConfig.canSearch,
+                visible = !appBarConfig.searchable,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -255,10 +276,22 @@ fun AppBar(
                 ) {
                     IconButton(
                         modifier = Modifier.padding(horizontal = 4.dp),
-                        onClick = appBarConfig.onNavigationButtonClick
+                        onClick = {
+                            when {
+                                isSearchExpanded -> isSearchExpanded = false
+                                !appBarConfig.isRootDestination && navController.canNavigateUp -> navController.navigateUp()
+                                else -> isSearchExpanded = true
+                            }
+                        }
                     ) {
                         Icon(
-                            painter = painterResource(appBarConfig.navigationIcon),
+                            painter = painterResource(
+                                if (isSearchExpanded || !appBarConfig.isRootDestination && navController.canNavigateUp) {
+                                    R.drawable.ic_arrow_back
+                                } else {
+                                    R.drawable.ic_search
+                                }
+                            ),
                             contentDescription = null
                         )
                     }
@@ -274,19 +307,14 @@ fun AppBar(
 
 @Stable
 class AppBarConfig(
+    val isRootDestination: Boolean = false,
     title: @Composable RowScope.() -> Unit = {},
-    @DrawableRes navigationIcon: Int = R.drawable.ic_arrow_back,
-    onNavigationButtonClick: () -> Unit = {},
-    canSearch: Boolean = true,
-    searchExpanded: Boolean = false,
+    searchable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     transparentBackground: Boolean = false,
 ) {
     var title by mutableStateOf(title)
-    var navigationIcon by mutableStateOf(navigationIcon)
-    var onNavigationButtonClick by mutableStateOf(onNavigationButtonClick)
-    var canSearch by mutableStateOf(canSearch)
-    var searchExpanded by mutableStateOf(searchExpanded)
+    var searchable by mutableStateOf(searchable)
     var actions by mutableStateOf(actions)
     var transparentBackground by mutableStateOf(transparentBackground)
 }

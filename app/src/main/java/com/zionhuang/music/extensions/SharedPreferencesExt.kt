@@ -100,6 +100,24 @@ fun mutablePreferenceState(key: String, defaultValue: Boolean): PerferenceMutabl
 }
 
 @Composable
+fun mutablePreferenceState(key: String, defaultValue: String): PerferenceMutableState<String> {
+    val sharedPreferences = LocalSharedPreferences.current
+    val keyFlow = LocalSharedPreferencesKeyFlow.current
+    return PerferenceMutableState(
+        state = produceState(initialValue = LocalSharedPreferences.current.getString(key, defaultValue)!!) {
+            keyFlow.filter { it == null || it == key }.collect {
+                value = sharedPreferences.getString(key, defaultValue)!!
+            }
+        },
+        onChange = { value ->
+            sharedPreferences.edit {
+                putString(key, value)
+            }
+        }
+    )
+}
+
+@Composable
 inline fun <reified T : Enum<T>> mutablePreferenceState(key: String, defaultValue: T): PerferenceMutableState<T> {
     val sharedPreferences = LocalSharedPreferences.current
     val keyFlow = LocalSharedPreferencesKeyFlow.current

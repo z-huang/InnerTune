@@ -44,6 +44,7 @@ fun SearchScreen(
     onTextFieldValueChange: (TextFieldValue) -> Unit,
     navController: NavController,
     onSearch: (String) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -89,14 +90,7 @@ fun SearchScreen(
         }
     }
 
-    LazyColumn(
-        contentPadding = WindowInsets.systemBars
-            .add(WindowInsets(
-                top = AppBarHeight,
-                bottom = NavigationBarHeight + MiniPlayerHeight
-            ))
-            .asPaddingValues()
-    ) {
+    LazyColumn {
         items(
             items = history.value,
             key = { it }
@@ -106,6 +100,7 @@ fun SearchScreen(
                 online = false,
                 onClick = {
                     onSearch(query)
+                    onDismiss()
                 },
                 onDelete = {
                     coroutineScope.launch {
@@ -131,6 +126,7 @@ fun SearchScreen(
                 online = true,
                 onClick = {
                     onSearch(query)
+                    onDismiss()
                 },
                 onFillTextField = {
                     onTextFieldValueChange(TextFieldValue(
