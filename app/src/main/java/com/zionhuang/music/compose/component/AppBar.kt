@@ -48,6 +48,7 @@ import com.zionhuang.music.constants.ONLINE
 import com.zionhuang.music.constants.SEARCH_SOURCE
 import com.zionhuang.music.extensions.mutablePreferenceState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,9 +94,20 @@ fun AppBar(
     }
 
     LaunchedEffect(isSearchExpanded) {
-        if (isSearchExpanded) {
-            delay(300)
-            focusRequester.requestFocus()
+        launch {
+            if (isSearchExpanded) {
+                delay(300)
+                focusRequester.requestFocus()
+            }
+        }
+        launch {
+            val heightOffset = scrollBehavior.state.heightOffset
+            animate(
+                initialValue = heightOffset,
+                targetValue = 0f
+            ) { value, _ ->
+                scrollBehavior.state.heightOffset = value
+            }
         }
     }
 
