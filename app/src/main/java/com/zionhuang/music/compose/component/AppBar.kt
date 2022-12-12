@@ -1,5 +1,6 @@
 package com.zionhuang.music.compose.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.LocalIndication
@@ -103,6 +104,10 @@ fun AppBar(
         enter = fadeIn() + slideInVertically(tween()) { with(density) { -AppBarHeight.toPx().roundToInt() } },
         exit = fadeOut()
     ) {
+        BackHandler {
+            isSearchExpanded = false
+        }
+
         Box(modifier = Modifier
             .fillMaxSize()
             .padding(LocalPlayerAwareWindowInsets.current.asPaddingValues())

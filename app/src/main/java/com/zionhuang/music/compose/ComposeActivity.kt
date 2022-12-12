@@ -217,7 +217,8 @@ class ComposeActivity : ComponentActivity() {
 
                     val scrollBehavior = appBarScrollBehavior(
                         canScroll = {
-                            route?.startsWith("search/") == false && (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed)
+                            route?.startsWith("search/") == false &&
+                                    (playerBottomSheetState.isCollapsed || playerBottomSheetState.isDismissed)
                         }
                     )
 
@@ -316,7 +317,7 @@ class ComposeActivity : ComponentActivity() {
 
                             },
                             onlineSearchScreen = { query, onDismiss ->
-                                SearchScreen(
+                                OnlineSearchScreen(
                                     query = query,
                                     onTextFieldValueChange = onTextFieldValueChange,
                                     navController = navController,

@@ -1,18 +1,17 @@
 package com.zionhuang.music.compose.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +27,7 @@ import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.YouTubeListItem
-import com.zionhuang.music.constants.*
+import com.zionhuang.music.constants.SuggestionItemHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
@@ -37,9 +36,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchScreen(
+fun OnlineSearchScreen(
     query: String,
     onTextFieldValueChange: (TextFieldValue) -> Unit,
     navController: NavController,
@@ -50,18 +48,18 @@ fun SearchScreen(
     val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current
 
-    val history = rememberSaveable {
+    var history by rememberSaveable {
         mutableStateOf(emptyList<String>())
     }
-    val queries = rememberSaveable {
+    var queries by rememberSaveable {
         mutableStateOf(emptyList<String>())
     }
-    val onlineQueries = rememberSaveable(queries.value, history.value) {
-        queries.value.filter {
-            it !in history.value
+    val onlineQueries = rememberSaveable(queries, history) {
+        queries.filter {
+            it !in history
         }
     }
-    val items = rememberSaveable {
+    var items by rememberSaveable {
         mutableStateOf(emptyList<YTItem>())
     }
 
@@ -69,30 +67,29 @@ fun SearchScreen(
         delay(200)
         if (query.isEmpty()) {
             SongRepository(context).getAllSearchHistory().collectLatest { list ->
-                history.value = list.map { it.query }
+                history = list.map { it.query }
             }
         } else {
             SongRepository(context).getSearchHistory(query).collectLatest { list ->
-                history.value = list.map { it.query }.take(3)
+                history = list.map { it.query }.take(3)
             }
         }
     }
 
     LaunchedEffect(query) {
-        delay(200)
         if (query.isEmpty()) {
-            queries.value = emptyList()
-            items.value = emptyList()
+            queries = emptyList()
+            items = emptyList()
         } else {
             val result = YouTubeRepository(context).getSuggestions(query)
-            queries.value = result.queries
-            items.value = result.recommendedItems
+            queries = result.queries
+            items = result.recommendedItems
         }
     }
 
     LazyColumn {
         items(
-            items = history.value,
+            items = history,
             key = { it }
         ) { query ->
             SuggestionItem(
@@ -112,8 +109,7 @@ fun SearchScreen(
                         text = query,
                         selection = TextRange(query.length)
                     ))
-                },
-                modifier = Modifier.animateItemPlacement()
+                }
             )
         }
 
@@ -133,19 +129,18 @@ fun SearchScreen(
                         text = query,
                         selection = TextRange(query.length)
                     ))
-                },
-                modifier = Modifier.animateItemPlacement()
+                }
             )
         }
 
-        if (items.value.isNotEmpty()) {
+        if (items.isNotEmpty() && (history.isNotEmpty() || onlineQueries.isNotEmpty())) {
             item {
                 Divider()
             }
         }
 
         items(
-            items = items.value,
+            items = items,
             key = { it.id }
         ) { item ->
             YouTubeListItem(
@@ -159,7 +154,6 @@ fun SearchScreen(
                             is PlaylistItem -> {}
                         }
                     }
-                    .animateItemPlacement()
             )
         }
     }
