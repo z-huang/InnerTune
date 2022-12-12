@@ -298,4 +298,7 @@
 
     <!-- Lyrics View -->
     <string name="lyrics_not_found">无歌词</string>
+
+    <!-- Search Result -->
+    <string name="no_results_found">No results found</string>
 </resources>

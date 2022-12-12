@@ -1,12 +1,9 @@
 package com.zionhuang.music.compose.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,6 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -113,6 +111,30 @@ fun OnlineSearchResult(
                         )
                     }
                     else -> {}
+                }
+            }
+
+            if (items.itemCount == 0) {
+                item {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(12.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_search),
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp)
+                        )
+
+                        Spacer(Modifier.height(12.dp))
+
+                        Text(
+                            text = stringResource(R.string.no_results_found),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
                 }
             }
         }

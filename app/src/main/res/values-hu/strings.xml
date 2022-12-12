@@ -304,4 +304,7 @@
 
     <!-- Lyrics View -->
     <string name="lyrics_not_found">A dalszöveg nem található</string>
+
+    <!-- Search Result -->
+    <string name="no_results_found">No results found</string>
 </resources>

@@ -10,6 +10,7 @@ import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -122,7 +123,9 @@ class ComposeActivity : ComponentActivity() {
                 themeColor = themeColor
             ) {
                 BoxWithConstraints(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
                 ) {
                     val density = LocalDensity.current
                     val windowsInsets = WindowInsets.systemBars
@@ -134,17 +137,14 @@ class ComposeActivity : ComponentActivity() {
                         expandedBound = maxHeight,
                     )
 
-                    val playerAwareWindowInsets by remember(bottomInset) {
-                        derivedStateOf {
-                            val bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight + bottomInset, playerBottomSheetState.collapsedBound)
-
-                            windowsInsets
-                                .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-                                .add(WindowInsets(
-                                    top = AppBarHeight,
-                                    bottom = bottom
-                                ))
-                        }
+                    val playerAwareWindowInsets = remember(bottomInset, playerBottomSheetState.isDismissed) {
+//                        val bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight + bottomInset, playerBottomSheetState.collapsedBound)
+                        windowsInsets
+                            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                            .add(WindowInsets(
+                                top = AppBarHeight,
+                                bottom = if (playerBottomSheetState.isDismissed) NavigationBarHeight + bottomInset else playerBottomSheetState.collapsedBound
+                            ))
                     }
 
                     DisposableEffect(playerConnection) {
