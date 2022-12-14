@@ -252,8 +252,8 @@ fun BottomSheetPlayer(
                         modifier = Modifier.weight(1f)
                     ) {
                         Thumbnail(
-                            position = position,
-                            sliderPosition = sliderPosition,
+                            mediaMetadata = mediaMetadata,
+                            sliderPositionProvider = { sliderPosition },
                             modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
                         )
                     }
@@ -288,8 +288,8 @@ fun BottomSheetPlayer(
                         modifier = Modifier.weight(1f)
                     ) {
                         Thumbnail(
-                            position = position,
-                            sliderPosition = sliderPosition,
+                            mediaMetadata = mediaMetadata,
+                            sliderPositionProvider = { sliderPosition },
                             modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
                         )
                     }

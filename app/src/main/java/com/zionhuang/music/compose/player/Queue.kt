@@ -318,8 +318,7 @@ fun PlayerMenu(
 
     if (showSelectArtistDialog) {
         ListDialog(
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            onDismissRequest = { showSelectArtistDialog = false }
+            onDismiss = { showSelectArtistDialog = false }
         ) {
             items(
                 items = mediaMetadata.artists,

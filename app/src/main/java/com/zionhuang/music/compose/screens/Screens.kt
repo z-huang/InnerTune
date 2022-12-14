@@ -2,12 +2,14 @@ package com.zionhuang.music.compose.screens
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.component.AppBarConfig
 
@@ -43,6 +45,7 @@ fun onlineSearchResultAppBarConfig(query: String) = AppBarConfig(
     title = {
         Text(
             text = query,
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f)

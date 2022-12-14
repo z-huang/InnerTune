@@ -20,15 +20,16 @@ import com.zionhuang.music.compose.component.Lyrics
 import com.zionhuang.music.constants.SHOW_LYRICS
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.extensions.preferenceState
+import com.zionhuang.music.models.MediaMetadata
 
 @Composable
 fun Thumbnail(
-    position: Long,
-    sliderPosition: Long?,
+    mediaMetadata: MediaMetadata?,
+    sliderPositionProvider: () -> Long?,
     modifier: Modifier = Modifier,
 ) {
+    mediaMetadata ?: return
     val playerConnection = LocalPlayerConnection.current ?: return
-    val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
     val showLyrics by preferenceState(SHOW_LYRICS, false)
     val lyrics by playerConnection.currentLyrics.collectAsState(initial = null)
 
@@ -56,7 +57,7 @@ fun Thumbnail(
                         .asPaddingValues())
             ) {
                 AsyncImage(
-                    model = mediaMetadata?.thumbnailUrl,
+                    model = mediaMetadata.thumbnailUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .clip(RoundedCornerShape(ThumbnailCornerRadius))
@@ -75,9 +76,8 @@ fun Thumbnail(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Lyrics(
-                    lyrics = lyrics?.lyrics,
-                    playerPosition = position,
-                    sliderPosition = sliderPosition
+                    sliderPositionProvider = sliderPositionProvider,
+                    mediaMetadataProvider = { mediaMetadata }
                 )
             }
         }

@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -17,9 +17,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
@@ -31,18 +35,35 @@ import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
 import com.zionhuang.music.compose.utils.fadingEdge
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.LRC_TEXT_POS
+import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
+import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.utils.lyrics.LyricsHelper
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun Lyrics(
-    lyrics: String?,
-    playerPosition: Long,
-    sliderPosition: Long?,
+    sliderPositionProvider: () -> Long?,
+    mediaMetadataProvider: () -> MediaMetadata,
     modifier: Modifier = Modifier,
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
+    val menuState = LocalMenuState.current
+    val density = LocalDensity.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val lyricsTextPosition by rememberPreference(LRC_TEXT_POS, 1)
+
+    val lyricsEntity by playerConnection.currentLyrics.collectAsState(initial = null)
+    val lyrics = remember(lyricsEntity) {
+        lyricsEntity?.lyrics
+    }
+
     val lines = remember(lyrics) {
         if (lyrics == null || lyrics == LYRICS_NOT_FOUND) emptyList()
         else if (lyrics.startsWith("[")) listOf(LyricsEntry(0L, "")) + parseLyrics(lyrics)
@@ -51,17 +72,9 @@ fun Lyrics(
     val isSynced = remember(lyrics) {
         !lyrics.isNullOrEmpty() && lyrics.startsWith("[")
     }
-    val lyricsTextPosition by rememberPreference(LRC_TEXT_POS, 1)
 
-    val position = sliderPosition ?: playerPosition
-    val currentLineIndex = rememberSaveable(position, lyrics) {
-        if (lyrics.isNullOrEmpty() || !lyrics.startsWith("[")) {
-            return@rememberSaveable -1
-        }
-        lines.forEachIndexed { index, line ->
-            if (line.time >= position + animateScrollDuration) return@rememberSaveable index - 1
-        }
-        lines.lastIndex
+    var currentLineIndex by remember {
+        mutableStateOf(-1)
     }
     // Because LaunchedEffect has delay, which leads to inconsistent with current line color and scroll animation,
     // we use deferredCurrentLineIndex when user is scrolling
@@ -69,30 +82,43 @@ fun Lyrics(
         mutableStateOf(0)
     }
 
-    val density = LocalDensity.current
-    val lazyListState = rememberLazyListState()
-
     var lastPreviewTime by rememberSaveable {
         mutableStateOf(0L)
     }
-
-    if (sliderPosition != null) {
-        lastPreviewTime = 0L
+    var isSeeking by remember {
+        mutableStateOf(false)
     }
 
-    LaunchedEffect(lastPreviewTime) {
-        if (lastPreviewTime != 0L) {
+    LaunchedEffect(lyrics) {
+        if (lyrics.isNullOrEmpty() || !lyrics.startsWith("[")) {
+            currentLineIndex = -1
+            return@LaunchedEffect
+        }
+        while (isActive) {
+            delay(50)
+            val sliderPosition = sliderPositionProvider()
+            isSeeking = sliderPosition != null
+            currentLineIndex = findCurrentLineIndex(lines, sliderPosition ?: playerConnection.player.currentPosition)
+        }
+    }
+
+    LaunchedEffect(isSeeking, lastPreviewTime) {
+        if (isSeeking) {
+            lastPreviewTime = 0L
+        } else if (lastPreviewTime != 0L) {
             delay(LyricsPreviewTime)
             lastPreviewTime = 0L
         }
     }
+
+    val lazyListState = rememberLazyListState()
 
     LaunchedEffect(currentLineIndex, lastPreviewTime) {
         if (!isSynced) return@LaunchedEffect
         if (currentLineIndex != -1) {
             deferredCurrentLineIndex = currentLineIndex
             if (lastPreviewTime == 0L) {
-                if (sliderPosition != null) {
+                if (isSeeking) {
                     lazyListState.scrollToItem(currentLineIndex, with(density) { 36.dp.toPx().toInt() })
                 } else {
                     lazyListState.animateScrollToItem(currentLineIndex, with(density) { 36.dp.toPx().toInt() })
@@ -106,7 +132,6 @@ fun Lyrics(
         modifier = modifier
             .fillMaxSize()
             .padding(bottom = 12.dp)
-            .fadingEdge(vertical = 64.dp)
     ) {
         LazyColumn(
             state = lazyListState,
@@ -114,21 +139,23 @@ fun Lyrics(
                 .only(WindowInsetsSides.Top)
                 .add(WindowInsets(top = maxHeight / 2, bottom = maxHeight / 2))
                 .asPaddingValues(),
-            modifier = Modifier.nestedScroll(remember {
-                object : NestedScrollConnection {
-                    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
-                        lastPreviewTime = System.currentTimeMillis()
-                        return super.onPostScroll(consumed, available, source)
-                    }
+            modifier = Modifier
+                .fadingEdge(vertical = 64.dp)
+                .nestedScroll(remember {
+                    object : NestedScrollConnection {
+                        override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                            lastPreviewTime = System.currentTimeMillis()
+                            return super.onPostScroll(consumed, available, source)
+                        }
 
-                    override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
-                        lastPreviewTime = System.currentTimeMillis()
-                        return super.onPostFling(consumed, available)
+                        override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                            lastPreviewTime = System.currentTimeMillis()
+                            return super.onPostFling(consumed, available)
+                        }
                     }
-                }
-            })
+                })
         ) {
-            val displayedCurrentLineIndex = if (sliderPosition != null) deferredCurrentLineIndex else currentLineIndex
+            val displayedCurrentLineIndex = if (isSeeking) deferredCurrentLineIndex else currentLineIndex
             itemsIndexed(
                 items = lines
             ) { index, item ->
@@ -195,6 +222,135 @@ fun Lyrics(
                     .alpha(0.5f)
             )
         }
+
+        IconButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp),
+            onClick = {
+                menuState.show {
+                    LyricsMenu(
+                        lyricsProvider = { lyricsEntity?.lyrics },
+                        mediaMetadataProvider = mediaMetadataProvider,
+                        coroutineScope = coroutineScope,
+                        onDismiss = menuState::dismiss
+                    )
+                }
+            }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_more_horiz),
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LyricsMenu(
+    lyricsProvider: () -> String?,
+    mediaMetadataProvider: () -> MediaMetadata,
+    coroutineScope: CoroutineScope,
+    onDismiss: () -> Unit,
+) {
+    val context = LocalContext.current
+
+    var showEditDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+    val (textFieldValue, onTextFieldValueChange) = rememberSaveable(showEditDialog, stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue(
+                text = lyricsProvider().orEmpty()
+            )
+        )
+    }
+
+    if (showEditDialog) {
+        DefaultDialog(
+            onDismiss = { showEditDialog = false },
+            icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
+            buttons = {
+                TextButton(
+                    onClick = {
+                        showEditDialog = false
+                    }
+                ) {
+                    Text(text = stringResource(android.R.string.cancel))
+                }
+
+                TextButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            SongRepository(context).upsert(LyricsEntity(
+                                id = mediaMetadataProvider().id,
+                                lyrics = textFieldValue.text
+                            ))
+                        }
+                        showEditDialog = false
+                        onDismiss()
+                    }
+                ) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
+            }
+        ) {
+            TextField(
+                value = textFieldValue,
+                onValueChange = onTextFieldValueChange,
+                maxLines = 10,
+                colors = TextFieldDefaults.outlinedTextFieldColors(),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.None),
+                modifier = Modifier
+                    .padding(all = 16.dp)
+                    .weight(weight = 1f, fill = false)
+            )
+        }
+    }
+
+    var showSearchDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    if (showSearchDialog) {
+        DefaultDialog(
+            onDismiss = { showSearchDialog = false },
+            icon = { Icon(painter = painterResource(R.drawable.ic_search), contentDescription = null) }
+        ) {
+
+        }
+    }
+
+    GridMenu(
+        contentPadding = PaddingValues(
+            start = 8.dp,
+            top = 8.dp,
+            end = 8.dp,
+            bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+        )
+    ) {
+        GridMenuItem(
+            icon = R.drawable.ic_edit,
+            title = R.string.menu_edit
+        ) {
+            showEditDialog = true
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_cached,
+            title = R.string.menu_refetch
+        ) {
+            coroutineScope.launch {
+                LyricsHelper.loadLyrics(context, mediaMetadataProvider())
+            }
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.ic_search,
+            title = R.string.menu_search
+        ) {
+            showSearchDialog = true
+        }
     }
 }
 
@@ -234,6 +390,15 @@ data class LyricsEntry(
     val text: String,
 ) : Comparable<LyricsEntry> {
     override fun compareTo(other: LyricsEntry): Int = (time - other.time).toInt()
+}
+
+fun findCurrentLineIndex(lines: List<LyricsEntry>, position: Long): Int {
+    for (index in lines.indices) {
+        if (lines[index].time >= position + animateScrollDuration) {
+            return index - 1
+        }
+    }
+    return lines.lastIndex
 }
 
 const val animateScrollDuration = 300L

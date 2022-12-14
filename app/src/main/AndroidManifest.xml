@@ -31,7 +31,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.InnerTune"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
