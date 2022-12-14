@@ -17,7 +17,7 @@ dependencyResolutionManagement {
             version("compose-compiler", "1.3.2")
             version("compose", "1.3.0")
             version("material2", "1.0.0-alpha08")
-            version("material3", "1.1.0-alpha01")
+            version("material3", "1.1.0-alpha03")
 
             library("compose-runtime", "androidx.compose.runtime", "runtime").versionRef("compose")
             library("compose-foundation", "androidx.compose.foundation", "foundation").versionRef("compose")
