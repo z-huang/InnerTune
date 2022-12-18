@@ -32,8 +32,6 @@ import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.YouTubeRepository
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,39 +49,27 @@ fun OnlineSearchScreen(
     var history by rememberSaveable {
         mutableStateOf(emptyList<String>())
     }
-    var queries by rememberSaveable {
+    var suggestions by rememberSaveable {
         mutableStateOf(emptyList<String>())
-    }
-    val onlineQueries = rememberSaveable(queries, history) {
-        queries.filter {
-            it !in history
-        }
     }
     var items by rememberSaveable {
         mutableStateOf(emptyList<YTItem>())
     }
 
     LaunchedEffect(query) {
-        delay(200)
         if (query.isEmpty()) {
-            SongRepository(context).getAllSearchHistory().collectLatest { list ->
+            SongRepository(context).getAllSearchHistory().collect { list ->
                 history = list.map { it.query }
+                suggestions = emptyList()
+                items = emptyList()
             }
-        } else {
-            SongRepository(context).getSearchHistory(query).collectLatest { list ->
-                history = list.map { it.query }.take(3)
-            }
-        }
-    }
-
-    LaunchedEffect(query) {
-        if (query.isEmpty()) {
-            queries = emptyList()
-            items = emptyList()
         } else {
             val result = YouTubeRepository(context).getSuggestions(query)
-            queries = result.queries
-            items = result.recommendedItems
+            SongRepository(context).getSearchHistory(query).collect { list ->
+                history = list.map { it.query }.take(3)
+                suggestions = result.queries.filter { it !in history }
+                items = result.recommendedItems
+            }
         }
     }
 
@@ -114,7 +100,7 @@ fun OnlineSearchScreen(
         }
 
         items(
-            items = onlineQueries,
+            items = suggestions,
             key = { it }
         ) { query ->
             SuggestionItem(
@@ -133,7 +119,7 @@ fun OnlineSearchScreen(
             )
         }
 
-        if (items.isNotEmpty() && (history.isNotEmpty() || onlineQueries.isNotEmpty())) {
+        if (items.isNotEmpty() && history.size + suggestions.size > 0) {
             item {
                 Divider()
             }
@@ -148,9 +134,18 @@ fun OnlineSearchScreen(
                 modifier = Modifier
                     .clickable {
                         when (item) {
-                            is SongItem -> playerConnection?.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
-                            is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
-                            is ArtistItem -> navController.navigate("artist/${item.id}")
+                            is SongItem -> {
+                                playerConnection?.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                                onDismiss()
+                            }
+                            is AlbumItem -> {
+                                navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                                onDismiss()
+                            }
+                            is ArtistItem -> {
+                                navController.navigate("artist/${item.id}")
+                                onDismiss()
+                            }
                             is PlaylistItem -> {}
                         }
                     }
