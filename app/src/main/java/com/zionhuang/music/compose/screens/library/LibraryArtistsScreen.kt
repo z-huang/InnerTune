@@ -7,9 +7,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -22,7 +24,10 @@ import com.zionhuang.music.constants.ARTIST_SORT_TYPE
 import com.zionhuang.music.constants.CONTENT_TYPE_ARTIST
 import com.zionhuang.music.constants.CONTENT_TYPE_HEADER
 import com.zionhuang.music.models.sortInfo.ArtistSortType
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.viewmodels.SongsViewModel
+import java.time.Duration
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -30,9 +35,19 @@ fun LibraryArtistsScreen(
     navController: NavController,
     viewModel: SongsViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
     val sortType by rememberPreference(ARTIST_SORT_TYPE, ArtistSortType.CREATE_DATE)
     val sortDescending by rememberPreference(ARTIST_SORT_DESCENDING, true)
     val artists by viewModel.allArtistsFlow.collectAsState()
+
+    LaunchedEffect(artists) {
+        SongRepository(context).refetchArtists(
+            artists.map { it.artist }
+                .filter {
+                    it.bannerUrl == null || Duration.between(it.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)
+                }
+        )
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
