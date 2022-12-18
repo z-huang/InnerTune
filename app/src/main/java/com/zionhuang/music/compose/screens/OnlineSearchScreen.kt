@@ -32,6 +32,7 @@ import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.repos.YouTubeRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,6 +58,7 @@ fun OnlineSearchScreen(
     }
 
     LaunchedEffect(query) {
+        delay(200)
         if (query.isEmpty()) {
             SongRepository(context).getAllSearchHistory().collect { list ->
                 history = list.map { it.query }

@@ -3,10 +3,9 @@ package com.zionhuang.music.compose.component
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -39,6 +38,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.utils.canNavigateUp
@@ -91,6 +91,11 @@ fun AppBar(
 
     val focusRequester = remember {
         FocusRequester()
+    }
+
+    val backStateEntry by navController.currentBackStackEntryAsState()
+    val canNavigateUp = remember(backStateEntry) {
+        navController.canNavigateUp
     }
 
     LaunchedEffect(isSearchExpanded) {
@@ -173,14 +178,6 @@ fun AppBar(
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding)
                 .clip(RoundedCornerShape(cornerShapePercent))
                 .background(barBackground)
-                .clickable(
-                    indication = if (appBarConfig.searchable && !isSearchExpanded) LocalIndication.current else null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    if (appBarConfig.searchable && !isSearchExpanded) {
-                        isSearchExpanded = true
-                    }
-                }
         ) {
             AnimatedVisibility(
                 visible = appBarConfig.searchable,
@@ -189,21 +186,26 @@ fun AppBar(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clickable(enabled = appBarConfig.searchable && !isSearchExpanded) {
+                            isSearchExpanded = true
+                        }
+                        .focusable()
                 ) {
                     IconButton(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         onClick = {
                             when {
                                 isSearchExpanded -> isSearchExpanded = false
-                                !appBarConfig.isRootDestination && navController.canNavigateUp -> navController.navigateUp()
+                                !appBarConfig.isRootDestination && canNavigateUp -> navController.navigateUp()
                                 else -> isSearchExpanded = true
                             }
                         }
                     ) {
                         Icon(
                             painter = painterResource(
-                                if (isSearchExpanded || !appBarConfig.isRootDestination && navController.canNavigateUp) {
+                                if (isSearchExpanded || (!appBarConfig.isRootDestination && canNavigateUp)) {
                                     R.drawable.ic_arrow_back
                                 } else {
                                     R.drawable.ic_search
@@ -296,14 +298,14 @@ fun AppBar(
                         onClick = {
                             when {
                                 isSearchExpanded -> isSearchExpanded = false
-                                !appBarConfig.isRootDestination && navController.canNavigateUp -> navController.navigateUp()
+                                !appBarConfig.isRootDestination && canNavigateUp -> navController.navigateUp()
                                 else -> isSearchExpanded = true
                             }
                         }
                     ) {
                         Icon(
                             painter = painterResource(
-                                if (isSearchExpanded || !appBarConfig.isRootDestination && navController.canNavigateUp) {
+                                if (isSearchExpanded || !appBarConfig.isRootDestination && canNavigateUp) {
                                     R.drawable.ic_arrow_back
                                 } else {
                                     R.drawable.ic_search
