@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEachIndexed
 import androidx.navigation.NavController
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player.*
@@ -32,6 +33,7 @@ import com.zionhuang.music.compose.component.ResizableIconButton
 import com.zionhuang.music.compose.component.rememberBottomSheetState
 import com.zionhuang.music.constants.QueuePeekHeight
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.utils.makeTimeString
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -95,9 +97,9 @@ fun BottomSheetPlayer(
             )
         }
     ) {
-        val controlsContent: @Composable ColumnScope.() -> Unit = {
+        val controlsContent: @Composable ColumnScope.(MediaMetadata) -> Unit = { mediaMetadata ->
             Text(
-                text = mediaMetadata?.title.orEmpty(),
+                text = mediaMetadata.title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
@@ -107,21 +109,39 @@ fun BottomSheetPlayer(
 
             Spacer(Modifier.height(6.dp))
 
-            Text(
-                text = mediaMetadata?.artists?.joinToString { it.name }.orEmpty(),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.secondary,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                mediaMetadata.artists.fastForEachIndexed { index, artist ->
+                    Text(
+                        text = artist.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.secondary,
+                        maxLines = 1,
+                        modifier = Modifier.clickable {
+                            navController.navigate("artist/${artist.id}")
+                            state.collapseSoft()
+                        }
+                    )
+
+                    if (index != mediaMetadata.artists.lastIndex) {
+                        Text(
+                            text = ", ",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                }
+            }
 
             Spacer(Modifier.height(12.dp))
 
             Slider(
                 value = (sliderPosition ?: position).toFloat(),
-                valueRange = 0f..(mediaMetadata?.duration?.times(1000f) ?: 0f),
-                enabled = mediaMetadata?.duration != null,
+                valueRange = 0f..(if (duration == C.TIME_UNSET) 0f else duration.toFloat()),
                 onValueChange = {
                     sliderPosition = it.toLong()
                 },
@@ -268,7 +288,9 @@ fun BottomSheetPlayer(
                     ) {
                         Spacer(Modifier.weight(1f))
 
-                        controlsContent()
+                        mediaMetadata?.let {
+                            controlsContent(it)
+                        }
 
                         Spacer(Modifier.weight(1f))
                     }
@@ -294,7 +316,9 @@ fun BottomSheetPlayer(
                         )
                     }
 
-                    controlsContent()
+                    mediaMetadata?.let {
+                        controlsContent(it)
+                    }
 
                     Spacer(Modifier.height(24.dp))
                 }
