@@ -140,4 +140,5 @@ interface LocalRepository {
     fun getLyrics(songId: String?): Flow<LyricsEntity?>
     suspend fun hasLyrics(songId: String): Boolean
     suspend fun upsert(lyrics: LyricsEntity)
+    suspend fun deleteLyrics(songId: String)
 }

@@ -340,8 +340,10 @@ fun LyricsMenu(
             icon = R.drawable.ic_cached,
             title = R.string.menu_refetch
         ) {
+            val mediaMetadata = mediaMetadataProvider()
             coroutineScope.launch {
-                LyricsHelper.loadLyrics(context, mediaMetadataProvider())
+                SongRepository(context).deleteLyrics(mediaMetadata.id)
+                LyricsHelper.loadLyrics(context, mediaMetadata)
             }
             onDismiss()
         }

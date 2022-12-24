@@ -721,4 +721,6 @@ class SongRepository(private val context: Context) : LocalRepository {
     override suspend fun upsert(lyrics: LyricsEntity) = withContext(IO) {
         lyricsDao.upsert(lyrics)
     }
+
+    override suspend fun deleteLyrics(songId: String) = lyricsDao.deleteLyrics(songId)
 }

@@ -26,4 +26,7 @@ interface LyricsDao {
             update(lyrics)
         }
     }
+
+    @Query("DELETE FROM lyrics WHERE id = :songId")
+    suspend fun deleteLyrics(songId: String)
 }
