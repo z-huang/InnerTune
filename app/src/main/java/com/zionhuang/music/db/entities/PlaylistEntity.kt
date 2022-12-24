@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 @Parcelize
 @Entity(tableName = "playlist")
 data class PlaylistEntity(
-    @PrimaryKey val id: String,
+    @PrimaryKey val id: String = generatePlaylistId(),
     val name: String,
     val author: String? = null,
     val authorId: String? = null,
