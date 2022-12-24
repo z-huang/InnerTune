@@ -1,8 +1,6 @@
 package com.zionhuang.music.compose.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -33,6 +31,9 @@ import com.zionhuang.music.compose.component.shimmer.ButtonPlaceholder
 import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
 import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
+import com.zionhuang.music.compose.menu.YouTubeAlbumMenu
+import com.zionhuang.music.compose.menu.YouTubeArtistMenu
+import com.zionhuang.music.compose.menu.YouTubeSongMenu
 import com.zionhuang.music.compose.utils.fadingEdge
 import com.zionhuang.music.compose.utils.resize
 import com.zionhuang.music.constants.AppBarHeight
@@ -42,6 +43,7 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.viewmodels.ArtistViewModel
 import com.zionhuang.music.viewmodels.ArtistViewModelFactory
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ArtistScreen(
     artistId: String,
@@ -52,6 +54,7 @@ fun ArtistScreen(
         artistId = artistId
     )),
 ) {
+    val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
@@ -218,6 +221,30 @@ fun ArtistScreen(
                             else -> false
                         },
                         playWhenReady = playWhenReady,
+                        onShowMenu = {
+                            menuState.show {
+                                when (item) {
+                                    is SongItem -> YouTubeSongMenu(
+                                        song = item,
+                                        navController = navController,
+                                        playerConnection = playerConnection,
+                                        onDismiss = menuState::dismiss
+                                    )
+                                    is AlbumItem -> YouTubeAlbumMenu(
+                                        album = item,
+                                        navController = navController,
+                                        playerConnection = playerConnection,
+                                        onDismiss = menuState::dismiss
+                                    )
+                                    is ArtistItem -> YouTubeArtistMenu(
+                                        artist = item,
+                                        playerConnection = playerConnection,
+                                        onDismiss = menuState::dismiss
+                                    )
+                                    is PlaylistItem -> {}
+                                }
+                            }
+                        },
                         modifier = Modifier
                             .clickable {
                                 when (item) {
@@ -242,14 +269,40 @@ fun ArtistScreen(
                                     },
                                     playWhenReady = playWhenReady,
                                     modifier = Modifier
-                                        .clickable {
-                                            when (item) {
-                                                is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id)))
-                                                is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
-                                                is ArtistItem -> navController.navigate("artist/${item.id}")
-                                                is PlaylistItem -> {}
+                                        .combinedClickable(
+                                            onClick = {
+                                                when (item) {
+                                                    is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id)))
+                                                    is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                                                    is ArtistItem -> navController.navigate("artist/${item.id}")
+                                                    is PlaylistItem -> {}
+                                                }
+                                            },
+                                            onLongClick = {
+                                                menuState.show {
+                                                    when (item) {
+                                                        is SongItem -> YouTubeSongMenu(
+                                                            song = item,
+                                                            navController = navController,
+                                                            playerConnection = playerConnection,
+                                                            onDismiss = menuState::dismiss
+                                                        )
+                                                        is AlbumItem -> YouTubeAlbumMenu(
+                                                            album = item,
+                                                            navController = navController,
+                                                            playerConnection = playerConnection,
+                                                            onDismiss = menuState::dismiss
+                                                        )
+                                                        is ArtistItem -> YouTubeArtistMenu(
+                                                            artist = item,
+                                                            playerConnection = playerConnection,
+                                                            onDismiss = menuState::dismiss
+                                                        )
+                                                        is PlaylistItem -> {}
+                                                    }
+                                                }
                                             }
-                                        }
+                                        )
                                 )
                             }
                         }

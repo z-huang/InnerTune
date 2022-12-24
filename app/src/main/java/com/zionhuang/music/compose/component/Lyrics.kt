@@ -347,7 +347,8 @@ fun LyricsMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_search,
-            title = R.string.menu_search
+            title = R.string.menu_search,
+            enabled = false
         ) {
             showSearchDialog = true
         }

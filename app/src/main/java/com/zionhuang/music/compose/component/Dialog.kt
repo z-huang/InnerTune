@@ -145,9 +145,7 @@ fun TextFieldDialog(
         icon = icon,
         title = title,
         buttons = {
-            TextButton(
-                onClick = onDismiss
-            ) {
+            TextButton(onClick = onDismiss) {
                 Text(text = stringResource(android.R.string.cancel))
             }
 

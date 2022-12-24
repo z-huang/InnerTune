@@ -354,19 +354,22 @@ fun SongMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_edit,
-            title = R.string.menu_edit
+            title = R.string.menu_edit,
+            enabled = false
         ) {
 
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_add,
-            title = R.string.menu_add_to_playlist
+            title = R.string.menu_add_to_playlist,
+            enabled = false
         ) {
 
         }
         GridMenuItem(
             icon = R.drawable.ic_file_download,
-            title = R.string.menu_download
+            title = R.string.menu_download,
+            enabled = false
         ) {
 
         }

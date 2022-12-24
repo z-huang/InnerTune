@@ -1,24 +1,21 @@
 package com.zionhuang.music.compose.screens
 
-import android.content.Intent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
@@ -33,15 +30,16 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
-import com.zionhuang.music.compose.component.*
+import com.zionhuang.music.compose.component.LocalMenuState
+import com.zionhuang.music.compose.component.YouTubeListItem
 import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
+import com.zionhuang.music.compose.menu.YouTubeAlbumMenu
+import com.zionhuang.music.compose.menu.YouTubeArtistMenu
+import com.zionhuang.music.compose.menu.YouTubeSongMenu
 import com.zionhuang.music.compose.utils.rememberLazyListState
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.extensions.toMediaItem
-import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
-import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.YouTubeRepository
 import com.zionhuang.music.viewmodels.SearchViewModel
@@ -216,283 +214,6 @@ fun OnlineSearchResult(
                 }
             )
             Spacer(Modifier.width(8.dp))
-        }
-    }
-}
-
-@Composable
-fun YouTubeSongMenu(
-    song: SongItem,
-    navController: NavController,
-    playerConnection: PlayerConnection,
-    onDismiss: () -> Unit,
-) {
-    val context = LocalContext.current
-    val artists = remember {
-        song.artists.mapNotNull {
-            it.navigationEndpoint?.browseEndpoint?.browseId?.let { artistId ->
-                MediaMetadata.Artist(id = artistId, name = it.text)
-            }
-        }
-    }
-
-    var showSelectArtistDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    if (showSelectArtistDialog) {
-        ListDialog(
-            onDismiss = { showSelectArtistDialog = false }
-        ) {
-            items(
-                items = artists,
-                key = { it.id }
-            ) { artist ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(ListItemHeight)
-                        .clickable {
-                            navController.navigate("artist/${artist.id}")
-                            showSelectArtistDialog = false
-                            onDismiss()
-                        }
-                        .padding(horizontal = 12.dp),
-                ) {
-                    Box(
-                        contentAlignment = Alignment.CenterStart,
-                        modifier = Modifier
-                            .fillParentMaxWidth()
-                            .height(ListItemHeight)
-                            .clickable {
-                                navController.navigate("artist/${artist.id}")
-                                showSelectArtistDialog = false
-                                onDismiss()
-                            }
-                            .padding(horizontal = 24.dp),
-                    ) {
-                        Text(
-                            text = artist.name,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    GridMenu(
-        contentPadding = PaddingValues(
-            start = 8.dp,
-            top = 8.dp,
-            end = 8.dp,
-            bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-        )
-    ) {
-        GridMenuItem(
-            icon = R.drawable.ic_radio,
-            title = R.string.menu_start_radio
-        ) {
-            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
-            onDismiss()
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_playlist_play,
-            title = R.string.menu_play_next
-        ) {
-            playerConnection.playNext(song.toMediaItem())
-            onDismiss()
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_queue_music,
-            title = R.string.menu_add_to_queue
-        ) {
-            playerConnection.addToQueue((song.toMediaItem()))
-            onDismiss()
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_library_add,
-            title = R.string.action_add_to_library
-        ) {
-
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_playlist_add,
-            title = R.string.menu_add_to_playlist
-        ) {
-
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_file_download,
-            title = R.string.menu_download
-        ) {
-
-        }
-        if (artists.isNotEmpty()) {
-            GridMenuItem(
-                icon = R.drawable.ic_artist,
-                title = R.string.menu_view_artist
-            ) {
-                if (artists.size == 1) {
-                    navController.navigate("artist/${artists[0].id}")
-                    onDismiss()
-                } else {
-                    showSelectArtistDialog = true
-                }
-            }
-        }
-        song.album?.let { album ->
-            GridMenuItem(
-                icon = R.drawable.ic_album,
-                title = R.string.menu_view_album
-            ) {
-                navController.navigate("album/${album.navigationEndpoint.browseId}")
-                onDismiss()
-            }
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_share,
-            title = R.string.menu_share
-        ) {
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, song.shareLink)
-            }
-            context.startActivity(Intent.createChooser(intent, null))
-            onDismiss()
-        }
-    }
-}
-
-@Composable
-fun YouTubeAlbumMenu(
-    album: AlbumItem,
-    navController: NavController,
-    playerConnection: PlayerConnection,
-    onDismiss: () -> Unit,
-) {
-    val context = LocalContext.current
-
-    GridMenu(
-        contentPadding = PaddingValues(
-            start = 8.dp,
-            top = 8.dp,
-            end = 8.dp,
-            bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-        )
-    ) {
-        album.menu.radioEndpoint?.watchPlaylistEndpoint?.toWatchEndpoint()?.let { watchEndpoint ->
-            GridMenuItem(
-                icon = R.drawable.ic_radio,
-                title = R.string.menu_start_radio
-            ) {
-                playerConnection.playQueue(YouTubeQueue(watchEndpoint))
-                onDismiss()
-            }
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_playlist_play,
-            title = R.string.menu_play_next
-        ) {
-            onDismiss()
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_queue_music,
-            title = R.string.menu_add_to_queue
-        ) {
-            onDismiss()
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_library_add,
-            title = R.string.action_add_to_library
-        ) {
-
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_playlist_add,
-            title = R.string.menu_add_to_playlist
-        ) {
-
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_file_download,
-            title = R.string.menu_download
-        ) {
-
-        }
-        album.menu.artistEndpoint?.browseEndpoint?.let { browseEndpoint ->
-            GridMenuItem(
-                icon = R.drawable.ic_artist,
-                title = R.string.menu_view_artist
-            ) {
-                navController.navigate("artist/${browseEndpoint.browseId}")
-                onDismiss()
-            }
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_share,
-            title = R.string.menu_share
-        ) {
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, album.shareLink)
-            }
-            context.startActivity(Intent.createChooser(intent, null))
-            onDismiss()
-        }
-    }
-}
-
-@Composable
-fun YouTubeArtistMenu(
-    artist: ArtistItem,
-    playerConnection: PlayerConnection,
-    onDismiss: () -> Unit,
-) {
-    val context = LocalContext.current
-
-    GridMenu(
-        contentPadding = PaddingValues(
-            start = 8.dp,
-            top = 8.dp,
-            end = 8.dp,
-            bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-        )
-    ) {
-        artist.menu.radioEndpoint?.watchPlaylistEndpoint?.toWatchEndpoint()?.let { watchEndpoint ->
-            GridMenuItem(
-                icon = R.drawable.ic_radio,
-                title = R.string.menu_start_radio
-            ) {
-                playerConnection.playQueue(YouTubeQueue(watchEndpoint))
-                onDismiss()
-            }
-        }
-        artist.menu.shuffleEndpoint?.watchPlaylistEndpoint?.toWatchEndpoint()?.let { watchEndpoint ->
-            GridMenuItem(
-                icon = R.drawable.ic_shuffle,
-                title = R.string.btn_shuffle
-            ) {
-                playerConnection.playQueue(YouTubeQueue(watchEndpoint))
-                onDismiss()
-            }
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_share,
-            title = R.string.menu_share
-        ) {
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, artist.shareLink)
-            }
-            context.startActivity(Intent.createChooser(intent, null))
-            onDismiss()
         }
     }
 }

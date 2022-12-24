@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +51,7 @@ fun LazyGridScope.GridMenuItem(
                     enabled = enabled,
                     onClick = onClick
                 )
+                .alpha(if (enabled) 1f else 0.5f)
                 .padding(12.dp)
         ) {
             Box(
