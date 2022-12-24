@@ -38,6 +38,7 @@ fun LazyGridScope.GridMenuItem(
     modifier: Modifier = Modifier,
     @DrawableRes icon: Int,
     @StringRes title: Int,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     item {
@@ -45,7 +46,10 @@ fun LazyGridScope.GridMenuItem(
             modifier = modifier
                 .clip(ShapeDefaults.Large)
                 .height(GridMenuItemHeight)
-                .clickable(onClick = onClick)
+                .clickable(
+                    enabled = enabled,
+                    onClick = onClick
+                )
                 .padding(12.dp)
         ) {
             Box(

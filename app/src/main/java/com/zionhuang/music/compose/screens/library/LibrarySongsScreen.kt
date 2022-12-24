@@ -237,7 +237,6 @@ fun SongHeader(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SongMenu(
     originalSong: Song,

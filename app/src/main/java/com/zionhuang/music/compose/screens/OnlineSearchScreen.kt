@@ -58,8 +58,8 @@ fun OnlineSearchScreen(
     }
 
     LaunchedEffect(query) {
-        delay(200)
         if (query.isEmpty()) {
+            delay(200)
             SongRepository(context).getAllSearchHistory().collect { list ->
                 history = list.map { it.query }
                 suggestions = emptyList()

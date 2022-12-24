@@ -411,6 +411,7 @@ fun MediaMetadataListItem(
 @Composable
 fun YouTubeListItem(
     item: YTItem,
+    onShowMenu: () -> Unit = {},
     modifier: Modifier = Modifier,
     playingIndicator: Boolean = false,
     playWhenReady: Boolean = false,
@@ -419,6 +420,7 @@ fun YouTubeListItem(
     subtitle = item.subtitle.orEmpty(),
     thumbnailUrl = item.thumbnails.lastOrNull()?.url,
     thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius),
+    onShowMenu = onShowMenu,
     playingIndicator = playingIndicator,
     playWhenReady = playWhenReady,
     modifier = modifier
