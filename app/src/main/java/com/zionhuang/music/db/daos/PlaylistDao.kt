@@ -30,6 +30,10 @@ interface PlaylistDao {
     suspend fun getPlaylistById(playlistId: String): Playlist
 
     @Transaction
+    @Query("$QUERY_ALL_PLAYLIST WHERE id = :playlistId")
+    fun getPlaylist(playlistId: String): Flow<Playlist>
+
+    @Transaction
     @Query("$QUERY_ALL_PLAYLIST WHERE name LIKE '%' || :query || '%'")
     fun searchPlaylists(query: String): Flow<List<Playlist>>
 

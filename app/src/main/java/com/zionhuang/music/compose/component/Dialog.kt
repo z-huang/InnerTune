@@ -152,8 +152,8 @@ fun TextFieldDialog(
             TextButton(
                 enabled = isInputValid(textFieldValue.text),
                 onClick = {
-                    onDone(textFieldValue.text)
                     onDismiss()
+                    onDone(textFieldValue.text)
                 }
             ) {
                 Text(text = stringResource(android.R.string.ok))

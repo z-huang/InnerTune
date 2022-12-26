@@ -21,12 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEachIndexed
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.YTItem
@@ -42,11 +44,11 @@ import com.zionhuang.music.utils.makeTimeString
 
 @Composable
 fun ListItem(
-    title: String,
-    subtitle: String,
-    thumbnailContent: @Composable () -> Unit,
-    trailingContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String = "",
+    thumbnailContent: @Composable () -> Unit,
+    trailingContent: @Composable RowScope.() -> Unit = {},
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -90,73 +92,85 @@ fun ListItem(
 
 @Composable
 fun ListItem(
-    title: String,
-    subtitle: String,
     modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String = "",
+    thumbnailContent: (@Composable () -> Unit)? = null,
     @DrawableRes thumbnailDrawable: Int? = null,
     thumbnailUrl: String? = null,
     thumbnailShape: Shape = CircleShape,
     @DrawableRes thumbnailPlaceHolder: Int? = null,
-    trailingContent: (@Composable () -> Unit)? = null,
+    showMenuButton: Boolean = true,
     onShowMenu: () -> Unit = {},
+    trailingContent: (@Composable RowScope.() -> Unit)? = null,
     playingIndicator: Boolean = false,
     playWhenReady: Boolean = false,
 ) = ListItem(
     title = title,
     subtitle = subtitle,
     thumbnailContent = {
-        if (thumbnailDrawable != null) {
-            Image(
-                painter = painterResource(thumbnailDrawable),
-                contentDescription = null,
-                modifier = Modifier.size(ListThumbnailSize)
-            )
+        if (thumbnailContent != null) {
+            thumbnailContent()
         } else {
-            AsyncImage(
-                model = thumbnailUrl,
-                contentDescription = null,
-                placeholder = thumbnailPlaceHolder?.let { painterResource(it) },
-                error = thumbnailPlaceHolder?.let { painterResource(it) },
-                modifier = Modifier
-                    .size(ListThumbnailSize)
-                    .clip(thumbnailShape)
-            )
-        }
-        AnimatedVisibility(
-            visible = playingIndicator,
-            enter = fadeIn(tween(500)),
-            exit = fadeOut(tween(500))
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(ListThumbnailSize)
-                    .background(
-                        color = Color.Black.copy(alpha = 0.4f),
-                        shape = thumbnailShape
-                    )
+            if (thumbnailDrawable != null) {
+                Image(
+                    painter = painterResource(thumbnailDrawable),
+                    contentDescription = null,
+                    modifier = Modifier.size(ListThumbnailSize)
+                )
+            } else {
+                AsyncImage(
+                    model = thumbnailUrl,
+                    contentDescription = null,
+                    placeholder = thumbnailPlaceHolder?.let { painterResource(it) },
+                    error = thumbnailPlaceHolder?.let { painterResource(it) },
+                    modifier = Modifier
+                        .size(ListThumbnailSize)
+                        .clip(thumbnailShape)
+                )
+            }
+            AnimatedVisibility(
+                visible = playingIndicator,
+                enter = fadeIn(tween(500)),
+                exit = fadeOut(tween(500))
             ) {
-                if (playWhenReady) {
-                    PlayingIndicator(
-                        color = Color.White,
-                        modifier = Modifier.height(24.dp)
-                    )
-                } else {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_play),
-                        contentDescription = null,
-                        tint = Color.White
-                    )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .size(ListThumbnailSize)
+                        .background(
+                            color = Color.Black.copy(alpha = 0.4f),
+                            shape = thumbnailShape
+                        )
+                ) {
+                    if (playWhenReady) {
+                        PlayingIndicator(
+                            color = Color.White,
+                            modifier = Modifier.height(24.dp)
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_play),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
+                    }
                 }
             }
         }
     },
-    trailingContent = trailingContent ?: {
-        IconButton(onClick = onShowMenu) {
-            Icon(
-                painter = painterResource(R.drawable.ic_more_vert),
-                contentDescription = null
-            )
+    trailingContent = {
+        if (showMenuButton) {
+            IconButton(onClick = onShowMenu) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_more_vert),
+                    contentDescription = null
+                )
+            }
+        }
+
+        if (trailingContent != null) {
+            trailingContent()
         }
     },
     modifier = modifier
@@ -257,7 +271,8 @@ fun GridItem(
 fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
-    trailingContent: (@Composable () -> Unit)? = null,
+    trailingContent: (@Composable RowScope.() -> Unit)? = null,
+    showMenuButton: Boolean = true,
     onShowMenu: () -> Unit = {},
     playingIndicator: Boolean = false,
     playWhenReady: Boolean = false,
@@ -272,6 +287,7 @@ fun SongListItem(
     thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
     thumbnailPlaceHolder = R.drawable.ic_music_note,
     trailingContent = trailingContent,
+    showMenuButton = showMenuButton,
     onShowMenu = onShowMenu,
     playingIndicator = playingIndicator,
     playWhenReady = playWhenReady,
@@ -323,16 +339,53 @@ fun AlbumListItem(
 fun PlaylistListItem(
     playlist: Playlist,
     modifier: Modifier = Modifier,
-    playingIndicator: Boolean = false,
-    playWhenReady: Boolean = false,
+    showMenuButton: Boolean = true,
+    onShowMenu: () -> Unit = {},
 ) = ListItem(
     title = playlist.playlist.name,
     subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
-    thumbnailUrl = playlist.playlist.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
-    thumbnailPlaceHolder = R.drawable.ic_queue_music,
-    playingIndicator = playingIndicator,
-    playWhenReady = playWhenReady,
+    thumbnailContent = {
+        if (playlist.thumbnails.isEmpty()) {
+            Image(
+                painter = painterResource(R.drawable.ic_queue_music),
+                contentDescription = null,
+                modifier = Modifier.size(ListThumbnailSize)
+            )
+        } else if (playlist.thumbnails.size == 1) {
+            AsyncImage(
+                model = playlist.thumbnails[0],
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(ListThumbnailSize)
+                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(ListThumbnailSize)
+                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
+            ) {
+                listOf(
+                    Alignment.TopStart,
+                    Alignment.TopEnd,
+                    Alignment.BottomStart,
+                    Alignment.BottomEnd
+                ).fastForEachIndexed { index, alignment ->
+                    AsyncImage(
+                        model = playlist.thumbnails.getOrNull(index),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .align(alignment)
+                            .size(ListThumbnailSize / 2)
+                    )
+                }
+            }
+        }
+    },
+    showMenuButton = showMenuButton,
+    onShowMenu = onShowMenu,
     modifier = modifier
 )
 
@@ -345,7 +398,7 @@ fun SongGridItem(
     subtitle = song.artists.joinToString { it.name },
     thumbnailUrl = song.song.thumbnailUrl,
     thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
-    modifier = Modifier
+    modifier = modifier
 )
 
 @OptIn(ExperimentalComposeUiApi::class)

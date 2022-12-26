@@ -35,9 +35,12 @@ import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
 import com.zionhuang.music.constants.*
+import com.zionhuang.music.db.entities.Playlist
+import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.models.sortInfo.PlaylistSortInfoPreference
 import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
@@ -54,6 +57,7 @@ fun LibrarySongsScreen(
     navController: NavController,
     viewModel: SongsViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -250,8 +254,72 @@ fun SongMenu(
     val songState = songRepository.getSongById(originalSong.id).flow.collectAsState(initial = originalSong)
     val song = songState.value ?: originalSong
 
+    var showChoosePlaylistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var showCreatePlaylistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     var showSelectArtistDialog by rememberSaveable {
         mutableStateOf(false)
+    }
+
+    var playlists by remember {
+        mutableStateOf(emptyList<Playlist>())
+    }
+
+    LaunchedEffect(Unit) {
+        SongRepository(context).getAllPlaylists(PlaylistSortInfoPreference).flow.collect {
+            playlists = it
+        }
+    }
+
+    if (showChoosePlaylistDialog) {
+        ListDialog(
+            onDismiss = { showChoosePlaylistDialog = false }
+        ) {
+            item {
+                ListItem(
+                    title = stringResource(R.string.dialog_title_create_playlist),
+                    thumbnailDrawable = R.drawable.ic_add,
+                    showMenuButton = false,
+                    modifier = Modifier.clickable {
+                        showCreatePlaylistDialog = true
+                    }
+                )
+            }
+
+            items(playlists) { playlist ->
+                PlaylistListItem(
+                    playlist = playlist,
+                    showMenuButton = false,
+                    modifier = Modifier.clickable {
+                        showChoosePlaylistDialog = false
+                        onDismiss()
+                        coroutineScope.launch {
+                            SongRepository(context).addToPlaylist(playlist.playlist, song)
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    if (showCreatePlaylistDialog) {
+        TextFieldDialog(
+            icon = { Icon(painter = painterResource(R.drawable.ic_add), contentDescription = null) },
+            title = { Text(text = stringResource(R.string.dialog_title_create_playlist)) },
+            onDismiss = { showCreatePlaylistDialog = false },
+            onDone = { playlistName ->
+                coroutineScope.launch {
+                    SongRepository(context).insertPlaylist(PlaylistEntity(
+                        name = playlistName
+                    ))
+                }
+            }
+        )
     }
 
     if (showSelectArtistDialog) {
@@ -304,6 +372,7 @@ fun SongMenu(
 
     SongListItem(
         song = song,
+        showMenuButton = false,
         trailingContent = {
             IconButton(
                 onClick = {
@@ -361,10 +430,9 @@ fun SongMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_add,
-            title = R.string.menu_add_to_playlist,
-            enabled = false
+            title = R.string.menu_add_to_playlist
         ) {
-
+            showChoosePlaylistDialog = true
         }
         GridMenuItem(
             icon = R.drawable.ic_file_download,

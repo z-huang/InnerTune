@@ -545,6 +545,7 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Playlist
      */
+    override fun getPlaylist(playlistId: String): Flow<Playlist> = playlistDao.getPlaylist(playlistId)
     override suspend fun insertPlaylist(playlist: PlaylistEntity): Unit = withContext(IO) { playlistDao.insert(playlist) }
     override suspend fun addPlaylists(playlists: List<PlaylistItem>) = withContext(IO) {
         playlists.forEach { playlist ->

@@ -93,6 +93,7 @@ interface LocalRepository {
     /**
      * Playlist
      */
+    fun getPlaylist(playlistId: String): Flow<Playlist>
     suspend fun insertPlaylist(playlist: PlaylistEntity)
     suspend fun addPlaylist(playlist: PlaylistItem) = addPlaylists(listOf(playlist))
     suspend fun addPlaylists(playlists: List<PlaylistItem>)

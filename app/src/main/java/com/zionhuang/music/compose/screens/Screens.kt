@@ -61,3 +61,7 @@ fun albumAppBarConfig() = AppBarConfig(
 fun artistAppBarConfig() = AppBarConfig(
     searchable = false
 )
+
+fun playlistAppBarConfig() = AppBarConfig(
+    searchable = false
+)

@@ -201,6 +201,7 @@ class ComposeActivity : ComponentActivity() {
                             route.startsWith("search/") -> onlineSearchResultAppBarConfig(navBackStackEntry?.arguments?.getString("query").orEmpty())
                             route.startsWith("album/") -> albumAppBarConfig()
                             route.startsWith("artist/") -> artistAppBarConfig()
+                            route.startsWith("playlist/") -> playlistAppBarConfig()
                             else -> defaultAppBarConfig()
                         }
                     }
@@ -259,7 +260,7 @@ class ComposeActivity : ComponentActivity() {
                                 LibraryAlbumsScreen(navController)
                             }
                             composable(Screen.Playlists.route) {
-                                LibraryPlaylistsScreen()
+                                LibraryPlaylistsScreen(navController)
                             }
                             composable(
                                 route = "album/{albumId}?playlistId={playlistId}",
@@ -290,6 +291,18 @@ class ComposeActivity : ComponentActivity() {
                                     artistId = backStackEntry.arguments?.getString("artistId")!!,
                                     navController = navController,
                                     appBarConfig = appBarConfig
+                                )
+                            }
+                            composable(
+                                route = "playlist/{playlistId}",
+                                arguments = listOf(
+                                    navArgument("playlistId") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) { backStackEntry ->
+                                LocalPlaylistScreen(
+                                    playlistId = backStackEntry.arguments?.getString("playlistId")!!
                                 )
                             }
                             composable(

@@ -1,11 +1,15 @@
 package com.zionhuang.music.compose.screens.library
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -17,6 +21,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.component.ListItem
@@ -35,9 +40,10 @@ import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.viewmodels.SongsViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LibraryPlaylistsScreen(
+    navController: NavController,
     viewModel: SongsViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -118,17 +124,17 @@ fun LibraryPlaylistsScreen(
                 )
             }
 
-            itemsIndexed(
+            items(
                 items = items,
-                key = { _, item -> item.id },
-                contentType = { _, _ -> CONTENT_TYPE_PLAYLIST }
-            ) { index, playlist ->
+                key = { it.id },
+                contentType = { CONTENT_TYPE_PLAYLIST }
+            ) { playlist ->
                 PlaylistListItem(
                     playlist = playlist,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .combinedClickable {
-
+                        .clickable {
+                            navController.navigate("playlist/${playlist.id}")
                         }
                         .animateItemPlacement()
                 )

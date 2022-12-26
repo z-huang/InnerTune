@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 
 class AlbumViewModel(
     context: Context,
-    val albumId: String,
-    val playlistId: String?,
+    albumId: String,
+    playlistId: String?,
 ) : ViewModel() {
     val albumWithSongs = MutableLiveData<AlbumWithSongs?>(null)
 
