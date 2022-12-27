@@ -5,6 +5,7 @@
     <Preference
         android:icon="@drawable/ic_person"
         android:key="@string/pref_account"
+        app:isPreferenceVisible="false"
         tools:title="Not logged in" />
     <ListPreference
         android:defaultValue="@string/default_localization_key"
