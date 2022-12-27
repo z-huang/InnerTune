@@ -10,7 +10,7 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 data class SectionListRenderer(
     val header: Header?,
-    val contents: List<Content>,
+    val contents: List<Content>?,
     val continuations: List<Continuation>?,
 ) {
     @Serializable

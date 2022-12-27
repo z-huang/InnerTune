@@ -53,35 +53,35 @@ data class SongItem(
             val menu = item.menu.toItemMenu()
             return SongItem(
                 id = item.playlistItemData?.videoId
-                    ?: item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint?.watchEndpoint?.videoId
+                    ?: item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text?.runs?.firstOrNull()?.navigationEndpoint?.watchEndpoint?.videoId
                     ?: menu.radioEndpoint?.watchEndpoint?.videoId
                     ?: return null,
                 title = item.getTitle(),
                 subtitle = item.getSubtitle(),
                 index = item.index?.toString(),
-                artists = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
-                    .filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
-                    .ifEmpty {
+                artists = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text?.runs
+                    ?.filter { it.navigationEndpoint?.getEndpointType() == ITEM_ARTIST }
+                    ?.ifEmpty {
                         listOfNotNull(
                             if (item.fixedColumns != null) {
                                 // Table style
-                                item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.getOrNull(0)
+                                item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text?.runs?.getOrNull(0)
                             } else {
                                 // From search
-                                item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.let {
+                                item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text?.runs?.let {
                                     it.getOrNull(it.lastIndex - 4) ?: it.getOrNull(it.lastIndex - 2)
                                 }
                             }
                         )
-                    },
-                album = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs
-                    .find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
+                    }.orEmpty(),
+                album = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text?.runs
+                    ?.find { it.navigationEndpoint?.getEndpointType() == ITEM_ALBUM }
                     ?.toLink(),
-                duration = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text.runs.lastOrNull()?.text?.let { TimeParser.parse(it) }
+                duration = item.flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text?.runs?.lastOrNull()?.text?.let { TimeParser.parse(it) }
                     ?: item.fixedColumns?.firstOrNull()?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull()?.text?.let { TimeParser.parse(it) },
                 thumbnails = item.thumbnail?.getThumbnails().orEmpty(),
                 menu = menu,
-                navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.runs[0].navigationEndpoint!!
+                navigationEndpoint = item.flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text?.runs?.firstOrNull()?.navigationEndpoint!!
             )
         }
 

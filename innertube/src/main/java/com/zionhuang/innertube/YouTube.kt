@@ -6,7 +6,6 @@ import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
 import com.zionhuang.innertube.models.response.*
 import com.zionhuang.innertube.utils.insertSeparator
 import io.ktor.client.call.*
-import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.serialization.json.Json
@@ -30,6 +29,11 @@ object YouTube {
         get() = innerTube.visitorData
         set(value) {
             innerTube.visitorData = value
+        }
+    var cookie: String?
+        get() = innerTube.cookie
+        set(value) {
+            innerTube.cookie = value
         }
     var proxy: Proxy?
         get() = innerTube.proxy
@@ -155,23 +159,27 @@ object YouTube {
             .mapNotNull { it.content.playlistPanelVideoRenderer?.toSongItem() }
     }
 
-    suspend fun generateVisitorData() = runCatching {
-        Json.parseToJsonElement(innerTube.httpClient.get("https://music.youtube.com/sw.js_data").bodyAsText().substring(5))
+    suspend fun generateVisitorData(): Result<String> = runCatching {
+        Json.parseToJsonElement(innerTube.getSwJsData().bodyAsText().substring(5))
             .jsonArray[0]
             .jsonArray[2]
             .jsonArray[6]
             .jsonPrimitive.content
     }
 
+    suspend fun getAccountInfo(): Result<AccountInfo?> = runCatching {
+        innerTube.accountMenu(WEB_REMIX).body<AccountMenuResponse>().actions[0].openPopupAction.popup.multiPageMenuRenderer.header?.activeAccountHeaderRenderer?.toAccountInfo()
+    }
+
     @JvmInline
     value class SearchFilter(val value: String) {
         companion object {
-            val FILTER_SONG = SearchFilter("EgWKAQIIAWoMEAMQDhAEEAkQChAF")
-            val FILTER_VIDEO = SearchFilter("EgWKAQIQAWoMEAMQDhAEEAkQChAF")
-            val FILTER_ALBUM = SearchFilter("EgWKAQIYAWoMEAMQDhAEEAkQChAF")
-            val FILTER_ARTIST = SearchFilter("EgWKAQIgAWoMEAMQDhAEEAkQChAF")
-            val FILTER_FEATURED_PLAYLIST = SearchFilter("EgeKAQQoADgBagwQAxAOEAQQCRAKEAU%3D")
-            val FILTER_COMMUNITY_PLAYLIST = SearchFilter("EgeKAQQoAEABagwQAxAOEAQQCRAKEAU%3D")
+            val FILTER_SONG = SearchFilter("EgWKAQIIAWoKEAkQBRAKEAMQBA%3D%3D")
+            val FILTER_VIDEO = SearchFilter("EgWKAQIQAWoKEAkQChAFEAMQBA%3D%3D")
+            val FILTER_ALBUM = SearchFilter("EgWKAQIYAWoKEAkQChAFEAMQBA%3D%3D")
+            val FILTER_ARTIST = SearchFilter("EgWKAQIgAWoKEAkQChAFEAMQBA%3D%3D")
+            val FILTER_FEATURED_PLAYLIST = SearchFilter("EgeKAQQoADgBagwQDhAKEAMQBRAJEAQ%3D")
+            val FILTER_COMMUNITY_PLAYLIST = SearchFilter("EgeKAQQoAEABagoQAxAEEAoQCRAF")
         }
     }
 
@@ -179,4 +187,6 @@ object YouTube {
     const val EXPLORE_BROWSE_ID = "FEmusic_explore"
 
     const val MAX_GET_QUEUE_SIZE = 1000
+
+    const val DEFAULT_VISITOR_DATA = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
 }
