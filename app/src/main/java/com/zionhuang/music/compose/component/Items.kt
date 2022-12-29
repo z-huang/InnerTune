@@ -47,6 +47,7 @@ fun ListItem(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String = "",
+    badges: (@Composable RowScope.() -> Unit)? = null,
     thumbnailContent: @Composable () -> Unit,
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) {
@@ -75,14 +76,22 @@ fun ListItem(
                 overflow = TextOverflow.Ellipsis
             )
 
-            if (subtitle.isNotEmpty()) {
-                Text(
-                    text = subtitle,
-                    color = MaterialTheme.colorScheme.secondary,
-                    fontSize = 12.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+            if (badges != null || subtitle.isNotEmpty()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (badges != null) {
+                        badges()
+                    }
+
+                    Text(
+                        text = subtitle,
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
 
@@ -95,6 +104,7 @@ fun ListItem(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String = "",
+    badges: (@Composable RowScope.() -> Unit)? = null,
     thumbnailContent: (@Composable () -> Unit)? = null,
     @DrawableRes thumbnailDrawable: Int? = null,
     thumbnailUrl: String? = null,
@@ -108,6 +118,7 @@ fun ListItem(
 ) = ListItem(
     title = title,
     subtitle = subtitle,
+    badges = badges,
     thumbnailContent = {
         if (thumbnailContent != null) {
             thumbnailContent()
@@ -271,6 +282,7 @@ fun GridItem(
 fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
+    showBadges: Boolean = true,
     trailingContent: (@Composable RowScope.() -> Unit)? = null,
     showMenuButton: Boolean = true,
     onShowMenu: () -> Unit = {},
@@ -283,6 +295,18 @@ fun SongListItem(
         song.album?.title,
         makeTimeString(song.song.duration * 1000L)
     ).joinByBullet(),
+    badges = {
+        if (showBadges && song.song.liked) {
+            Icon(
+                painter = painterResource(R.drawable.ic_favorite),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
+    },
     thumbnailUrl = song.song.thumbnailUrl,
     thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
     thumbnailPlaceHolder = R.drawable.ic_music_note,
