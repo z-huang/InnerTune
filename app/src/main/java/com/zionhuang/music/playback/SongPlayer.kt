@@ -535,6 +535,7 @@ class SongPlayer(
 
         scope.launch(context.exceptionHandler) {
             val initialStatus = withContext(IO) { queue.getInitialStatus() }
+            if (queue.preloadItem != null && player.playbackState == STATE_IDLE) return@launch
             initialStatus.title?.let { queueTitle ->
                 updateQueueTitle(queueTitle)
             }
@@ -665,7 +666,10 @@ class SongPlayer(
             currentQueue.hasNextPage()
         ) {
             scope.launch(context.exceptionHandler) {
-                player.addMediaItems(currentQueue.nextPage())
+                val mediaItems = currentQueue.nextPage()
+                if (player.playbackState != STATE_IDLE) {
+                    player.addMediaItems(mediaItems)
+                }
             }
         }
         if (mediaItem == null) {
