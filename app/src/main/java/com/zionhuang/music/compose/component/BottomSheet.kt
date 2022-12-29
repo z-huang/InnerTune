@@ -24,6 +24,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.unit.dp
+import com.zionhuang.music.constants.NavigationBarAnimationSpec
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -280,6 +282,9 @@ fun rememberBottomSheetState(
     var previousAnchor by rememberSaveable {
         mutableStateOf(initialAnchor)
     }
+    val animatable = remember {
+        Animatable(0.dp, Dp.VectorConverter)
+    }
 
     return remember(dismissedBound, expandedBound, collapsedBound, coroutineScope) {
         val initialValue = when (previousAnchor) {
@@ -289,8 +294,9 @@ fun rememberBottomSheetState(
             else -> error("Unknown BottomSheet anchor")
         }
 
-        val animatable = Animatable(initialValue, Dp.VectorConverter).also {
-            it.updateBounds(dismissedBound.coerceAtMost(expandedBound), expandedBound)
+        animatable.updateBounds(dismissedBound.coerceAtMost(expandedBound), expandedBound)
+        coroutineScope.launch {
+            animatable.animateTo(initialValue, NavigationBarAnimationSpec)
         }
 
         BottomSheetState(

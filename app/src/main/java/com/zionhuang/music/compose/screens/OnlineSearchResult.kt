@@ -29,6 +29,7 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
+import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.LocalMenuState
 import com.zionhuang.music.compose.component.YouTubeListItem
@@ -38,7 +39,9 @@ import com.zionhuang.music.compose.menu.YouTubeAlbumMenu
 import com.zionhuang.music.compose.menu.YouTubeArtistMenu
 import com.zionhuang.music.compose.menu.YouTubeSongMenu
 import com.zionhuang.music.compose.utils.rememberLazyListState
-import com.zionhuang.music.constants.*
+import com.zionhuang.music.constants.AppBarHeight
+import com.zionhuang.music.constants.ListItemHeight
+import com.zionhuang.music.constants.SearchFilterHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.YouTubeRepository
@@ -68,11 +71,8 @@ fun OnlineSearchResult(
 
     LazyColumn(
         state = items.rememberLazyListState(),
-        contentPadding = WindowInsets.systemBars
-            .add(WindowInsets(
-                top = AppBarHeight + SearchFilterHeight,
-                bottom = NavigationBarHeight + MiniPlayerHeight
-            ))
+        contentPadding = LocalPlayerAwareWindowInsets.current
+            .add(WindowInsets(top = SearchFilterHeight))
             .asPaddingValues()
     ) {
         if (items.loadState.refresh !is LoadState.Loading) {

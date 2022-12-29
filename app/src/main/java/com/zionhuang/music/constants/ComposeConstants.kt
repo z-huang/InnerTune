@@ -1,5 +1,8 @@
 package com.zionhuang.music.constants
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 const val CONTENT_TYPE_HEADER = 0
@@ -23,3 +26,5 @@ val GridThumbnailSize = 144.dp
 val AlbumThumbnailSize = 144.dp
 
 val ThumbnailCornerRadius = 6.dp
+
+val NavigationBarAnimationSpec = spring<Dp>(stiffness = Spring.StiffnessMediumLow)

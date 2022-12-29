@@ -28,6 +28,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -127,53 +128,6 @@ class ComposeActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    val density = LocalDensity.current
-                    val windowsInsets = WindowInsets.systemBars
-                    val bottomInset = with(density) { windowsInsets.getBottom(density).toDp() }
-
-                    val playerBottomSheetState = rememberBottomSheetState(
-                        dismissedBound = 0.dp,
-                        collapsedBound = NavigationBarHeight + MiniPlayerHeight + bottomInset,
-                        expandedBound = maxHeight,
-                    )
-
-                    val playerAwareWindowInsets = remember(bottomInset, playerBottomSheetState.isDismissed) {
-//                        val bottom = playerBottomSheetState.value.coerceIn(NavigationBarHeight + bottomInset, playerBottomSheetState.collapsedBound)
-                        windowsInsets
-                            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-                            .add(WindowInsets(
-                                top = AppBarHeight,
-                                bottom = if (playerBottomSheetState.isDismissed) NavigationBarHeight + bottomInset else playerBottomSheetState.collapsedBound
-                            ))
-                    }
-
-                    DisposableEffect(playerConnection) {
-                        val player = playerConnection?.player ?: return@DisposableEffect onDispose { }
-
-                        if (player.currentMediaItem == null) {
-                            if (!playerBottomSheetState.isDismissed) {
-                                playerBottomSheetState.dismiss()
-                            }
-                        } else {
-                            if (playerBottomSheetState.isDismissed) {
-                                playerBottomSheetState.collapseSoft()
-                            }
-                        }
-
-                        val listener = object : Player.Listener {
-                            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED && mediaItem != null) {
-                                    playerBottomSheetState.collapseSoft()
-                                }
-                            }
-                        }
-                        player.addListener(listener)
-
-                        onDispose {
-                            player.removeListener(listener)
-                        }
-                    }
-
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val route = remember(navBackStackEntry) {
@@ -189,13 +143,12 @@ class ComposeActivity : ComponentActivity() {
                     }
                     val defaultNavIndex = sharedPreferences.getString(getString(R.string.pref_default_open_tab), "0")!!.toInt()
 
-                    val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
-                        mutableStateOf(TextFieldValue(""))
-                    }
+                    val (isSearchExpanded, onSearchExpandedChange) = rememberSaveable { mutableStateOf(false) }
+                    val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue()) }
                     val appBarConfig = remember(navBackStackEntry) {
                         when {
                             route == null || navigationItems.any { it.route == route } -> {
-                                onTextFieldValueChange(TextFieldValue(""))
+                                onTextFieldValueChange(TextFieldValue())
                                 defaultAppBarConfig()
                             }
                             route.startsWith("search/") -> onlineSearchResultAppBarConfig(navBackStackEntry?.arguments?.getString("query").orEmpty())
@@ -205,15 +158,47 @@ class ComposeActivity : ComponentActivity() {
                             else -> defaultAppBarConfig()
                         }
                     }
-                    val onSearch: (String) -> Unit = { query ->
-                        onTextFieldValueChange(TextFieldValue(
-                            text = query,
-                            selection = TextRange(query.length)
-                        ))
-                        coroutineScope.launch {
-                            SongRepository(this@ComposeActivity).insertSearchHistory(query)
+                    val onSearch: (String) -> Unit = remember {
+                        { query ->
+                            onTextFieldValueChange(TextFieldValue(
+                                text = query,
+                                selection = TextRange(query.length)
+                            ))
+                            navController.navigate("search/$query")
+                            coroutineScope.launch {
+                                SongRepository(this@ComposeActivity).insertSearchHistory(query)
+                            }
                         }
-                        navController.navigate("search/$query")
+                    }
+
+                    val shouldShowNavigationBar = remember(navBackStackEntry, isSearchExpanded) {
+                        navigationItems.fastAny { it.route == route } && !isSearchExpanded
+                    }
+                    val navigationBarHeight by animateDpAsState(
+                        targetValue = if (shouldShowNavigationBar) NavigationBarHeight else 0.dp,
+                        animationSpec = NavigationBarAnimationSpec
+                    )
+
+                    val density = LocalDensity.current
+                    val windowsInsets = WindowInsets.systemBars
+                    val bottomInset = with(density) { windowsInsets.getBottom(density).toDp() }
+
+                    val playerBottomSheetState = rememberBottomSheetState(
+                        dismissedBound = 0.dp,
+                        collapsedBound = bottomInset + (if (shouldShowNavigationBar) NavigationBarHeight else 0.dp) + MiniPlayerHeight,
+                        expandedBound = maxHeight,
+                    )
+
+                    val playerAwareWindowInsets = remember(shouldShowNavigationBar, playerBottomSheetState.isDismissed) {
+                        var bottom = bottomInset
+                        if (shouldShowNavigationBar) bottom += NavigationBarHeight
+                        if (!playerBottomSheetState.isDismissed) bottom += MiniPlayerHeight
+                        windowsInsets
+                            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                            .add(WindowInsets(
+                                top = AppBarHeight,
+                                bottom = bottom
+                            ))
                     }
 
                     val scrollBehavior = appBarScrollBehavior(
@@ -224,12 +209,42 @@ class ComposeActivity : ComponentActivity() {
                     )
 
                     LaunchedEffect(route) {
+                        onSearchExpandedChange(false)
+
                         val heightOffset = scrollBehavior.state.heightOffset
                         animate(
                             initialValue = heightOffset,
                             targetValue = 0f
                         ) { value, _ ->
                             scrollBehavior.state.heightOffset = value
+                        }
+                    }
+
+                    LaunchedEffect(playerConnection) {
+                        val player = playerConnection?.player ?: return@LaunchedEffect
+                        if (player.currentMediaItem == null) {
+                            if (!playerBottomSheetState.isDismissed) {
+                                playerBottomSheetState.dismiss()
+                            }
+                        } else {
+                            if (playerBottomSheetState.isDismissed) {
+                                playerBottomSheetState.collapseSoft()
+                            }
+                        }
+                    }
+
+                    DisposableEffect(playerConnection, playerBottomSheetState) {
+                        val player = playerConnection?.player ?: return@DisposableEffect onDispose { }
+                        val listener = object : Player.Listener {
+                            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                                if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED && mediaItem != null) {
+                                    playerBottomSheetState.collapseSoft()
+                                }
+                            }
+                        }
+                        player.addListener(listener)
+                        onDispose {
+                            player.removeListener(listener)
                         }
                     }
 
@@ -324,6 +339,8 @@ class ComposeActivity : ComponentActivity() {
                             appBarConfig = appBarConfig,
                             textFieldValue = textFieldValue,
                             onTextFieldValueChange = onTextFieldValueChange,
+                            isSearchExpanded = isSearchExpanded,
+                            onSearchExpandedChange = onSearchExpandedChange,
                             scrollBehavior = scrollBehavior,
                             navController = navController,
                             localSearchScreen = { query, onDismiss ->
@@ -350,7 +367,14 @@ class ComposeActivity : ComponentActivity() {
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .offset {
-                                    IntOffset(x = 0, y = ((NavigationBarHeight + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx())
+                                    if (navigationBarHeight == 0.dp) {
+                                        IntOffset(x = 0, y = (bottomInset + NavigationBarHeight).roundToPx())
+                                    } else {
+                                        IntOffset(
+                                            x = 0,
+                                            y = ((NavigationBarHeight - navigationBarHeight) + (NavigationBarHeight + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx()
+                                        )
+                                    }
                                 }
                         ) {
                             navigationItems.fastForEach { screen ->

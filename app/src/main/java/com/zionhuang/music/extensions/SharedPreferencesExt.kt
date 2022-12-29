@@ -82,13 +82,41 @@ class PerferenceMutableState<T>(
 }
 
 @Composable
+fun mutablePreferenceState(key: String, defaultValue: Int): PerferenceMutableState<Int> {
+    val sharedPreferences = LocalSharedPreferences.current
+    val keyFlow = LocalSharedPreferencesKeyFlow.current
+    return PerferenceMutableState(
+        state = produceState(initialValue = LocalSharedPreferences.current.getInt(key, defaultValue)) {
+            keyFlow.filter { it == null || it == key }.collect {
+                value = try {
+                    sharedPreferences.getInt(key, defaultValue)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    defaultValue
+                }
+            }
+        },
+        onChange = { value ->
+            sharedPreferences.edit {
+                putInt(key, value)
+            }
+        }
+    )
+}
+
+@Composable
 fun mutablePreferenceState(key: String, defaultValue: Boolean): PerferenceMutableState<Boolean> {
     val sharedPreferences = LocalSharedPreferences.current
     val keyFlow = LocalSharedPreferencesKeyFlow.current
     return PerferenceMutableState(
         state = produceState(initialValue = LocalSharedPreferences.current.getBoolean(key, defaultValue)) {
             keyFlow.filter { it == null || it == key }.collect {
-                value = sharedPreferences.getBoolean(key, defaultValue)
+                value = try {
+                    sharedPreferences.getBoolean(key, defaultValue)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    defaultValue
+                }
             }
         },
         onChange = { value ->
@@ -106,7 +134,12 @@ fun mutablePreferenceState(key: String, defaultValue: String): PerferenceMutable
     return PerferenceMutableState(
         state = produceState(initialValue = LocalSharedPreferences.current.getString(key, defaultValue)!!) {
             keyFlow.filter { it == null || it == key }.collect {
-                value = sharedPreferences.getString(key, defaultValue)!!
+                value = try {
+                    sharedPreferences.getString(key, defaultValue)!!
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    defaultValue
+                }
             }
         },
         onChange = { value ->

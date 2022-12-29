@@ -1,6 +1,7 @@
 package com.zionhuang.music.constants
 
 const val FOLLOW_SYSTEM_ACCENT = "FOLLOW_SYSTEM_ACCENT"
+const val DEFAULT_OPEN_TAB = "DEFAULT_OPEN_TAB"
 
 const val SONG_SORT_TYPE = "SONG_SORT_TYPE"
 const val SONG_SORT_DESCENDING = "SONG_SORT_DESC"

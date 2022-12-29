@@ -25,6 +25,7 @@ import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
+import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.*
 import com.zionhuang.music.compose.component.shimmer.ButtonPlaceholder
@@ -37,8 +38,6 @@ import com.zionhuang.music.compose.menu.YouTubeSongMenu
 import com.zionhuang.music.compose.utils.fadingEdge
 import com.zionhuang.music.compose.utils.resize
 import com.zionhuang.music.constants.AppBarHeight
-import com.zionhuang.music.constants.MiniPlayerHeight
-import com.zionhuang.music.constants.NavigationBarHeight
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.viewmodels.ArtistViewModel
 import com.zionhuang.music.viewmodels.ArtistViewModelFactory
@@ -89,11 +88,8 @@ fun ArtistScreen(
 
     LazyColumn(
         state = lazyListState,
-        contentPadding = WindowInsets.systemBars
-            .only(WindowInsetsSides.Bottom)
-            .add(WindowInsets(
-                bottom = NavigationBarHeight + MiniPlayerHeight
-            ))
+        contentPadding = LocalPlayerAwareWindowInsets.current
+            .add(WindowInsets(top = -WindowInsets.systemBars.asPaddingValues().calculateTopPadding() - AppBarHeight))
             .asPaddingValues()
     ) {
         if (artistHeader != null) {

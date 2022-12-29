@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,15 +39,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.zionhuang.music.R
-import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.utils.canNavigateUp
 import com.zionhuang.music.constants.AppBarHeight
 import com.zionhuang.music.constants.LOCAL
 import com.zionhuang.music.constants.ONLINE
 import com.zionhuang.music.constants.SEARCH_SOURCE
 import com.zionhuang.music.extensions.mutablePreferenceState
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +53,8 @@ fun AppBar(
     appBarConfig: AppBarConfig,
     textFieldValue: TextFieldValue,
     onTextFieldValueChange: (TextFieldValue) -> Unit,
+    isSearchExpanded: Boolean = false,
+    onSearchExpandedChange: (Boolean) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     background: Color = MaterialTheme.colorScheme.background,
     searchBarBackground: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp),
@@ -74,7 +72,6 @@ fun AppBar(
         }
     }
 
-    var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
     val (searchSource, onSearchSourceChange) = mutablePreferenceState(SEARCH_SOURCE, ONLINE)
 
     val expandTransition = updateTransition(targetState = isSearchExpanded || !appBarConfig.searchable, "searchExpanded")
@@ -99,20 +96,15 @@ fun AppBar(
     }
 
     LaunchedEffect(isSearchExpanded) {
-        launch {
-            if (isSearchExpanded) {
-                delay(300)
-                focusRequester.requestFocus()
-            }
+        if (isSearchExpanded) {
+            focusRequester.requestFocus()
         }
-        launch {
-            val heightOffset = scrollBehavior.state.heightOffset
-            animate(
-                initialValue = heightOffset,
-                targetValue = 0f
-            ) { value, _ ->
-                scrollBehavior.state.heightOffset = value
-            }
+        val heightOffset = scrollBehavior.state.heightOffset
+        animate(
+            initialValue = heightOffset,
+            targetValue = 0f
+        ) { value, _ ->
+            scrollBehavior.state.heightOffset = value
         }
     }
 
@@ -122,23 +114,26 @@ fun AppBar(
         exit = fadeOut()
     ) {
         BackHandler {
-            isSearchExpanded = false
+            onSearchExpandedChange(false)
         }
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(LocalPlayerAwareWindowInsets.current.asPaddingValues())
-            .background(MaterialTheme.colorScheme.background)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(WindowInsets.systemBars
+                    .add(WindowInsets(top = AppBarHeight))
+                    .asPaddingValues())
         ) {
             if (searchSource == ONLINE) {
                 onlineSearchScreen(
                     query = textFieldValue.text,
-                    onDismiss = { isSearchExpanded = false }
+                    onDismiss = { onSearchExpandedChange(false) }
                 )
             } else {
                 localSearchScreen(
                     query = textFieldValue.text,
-                    onDismiss = { isSearchExpanded = false }
+                    onDismiss = { onSearchExpandedChange(false) }
                 )
             }
         }
@@ -189,7 +184,7 @@ fun AppBar(
                     modifier = Modifier
                         .fillMaxSize()
                         .clickable(enabled = appBarConfig.searchable && !isSearchExpanded) {
-                            isSearchExpanded = true
+                            onSearchExpandedChange(true)
                         }
                         .focusable()
                 ) {
@@ -197,9 +192,9 @@ fun AppBar(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         onClick = {
                             when {
-                                isSearchExpanded -> isSearchExpanded = false
+                                isSearchExpanded -> onSearchExpandedChange(false)
                                 !appBarConfig.isRootDestination && canNavigateUp -> navController.navigateUp()
-                                else -> isSearchExpanded = true
+                                else -> onSearchExpandedChange(true)
                             }
                         }
                     ) {
@@ -226,7 +221,7 @@ fun AppBar(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Search),
                             keyboardActions = KeyboardActions(
                                 onSearch = {
-                                    isSearchExpanded = false
+                                    onSearchExpandedChange(false)
                                     onSearchOnline(textFieldValue.text)
                                 }
                             ),
@@ -297,9 +292,9 @@ fun AppBar(
                         modifier = Modifier.padding(horizontal = 4.dp),
                         onClick = {
                             when {
-                                isSearchExpanded -> isSearchExpanded = false
+                                isSearchExpanded -> onSearchExpandedChange(false)
                                 !appBarConfig.isRootDestination && canNavigateUp -> navController.navigateUp()
-                                else -> isSearchExpanded = true
+                                else -> onSearchExpandedChange(true)
                             }
                         }
                     ) {
