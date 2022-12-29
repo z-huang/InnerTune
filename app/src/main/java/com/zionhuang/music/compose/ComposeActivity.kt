@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -61,9 +62,11 @@ import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.NavigationTabHelper
+import com.zionhuang.music.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
 class ComposeActivity : ComponentActivity() {
+    private val viewModel: MainViewModel by viewModels()
     private var playerConnection by mutableStateOf<PlayerConnection?>(null)
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -370,9 +373,11 @@ class ComposeActivity : ComponentActivity() {
                                     if (navigationBarHeight == 0.dp) {
                                         IntOffset(x = 0, y = (bottomInset + NavigationBarHeight).roundToPx())
                                     } else {
+                                        val slideOffset = (NavigationBarHeight + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)
+                                        val hideOffset = (bottomInset + NavigationBarHeight) * (1 - (navigationBarHeight / NavigationBarHeight))
                                         IntOffset(
                                             x = 0,
-                                            y = ((NavigationBarHeight - navigationBarHeight) + (NavigationBarHeight + bottomInset) * playerBottomSheetState.progress.coerceIn(0f, 1f)).roundToPx()
+                                            y = (slideOffset + hideOffset).roundToPx()
                                         )
                                     }
                                 }

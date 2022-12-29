@@ -69,7 +69,7 @@ fun LazyGridScope.GridMenuItem(
                 text = stringResource(title),
                 style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center,
-                maxLines = 1,
+                maxLines = 2,
                 modifier = Modifier.fillMaxWidth()
             )
         }

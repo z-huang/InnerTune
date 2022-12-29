@@ -50,7 +50,7 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
     var onBitmapChanged: (Bitmap?) -> Unit = {}
         set(value) {
             field = value
-            binder?.songPlayer?.bitmapProvider?.onBitmapChanged = value
+            binder.songPlayer.bitmapProvider.onBitmapChanged = value
         }
 
     init {
@@ -69,21 +69,21 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
     }
 
     fun playQueue(queue: Queue) {
-        binder?.songPlayer?.playQueue(queue)
+        binder.songPlayer.playQueue(queue)
     }
 
     fun playNext(item: MediaItem) = playNext(listOf(item))
     fun playNext(items: List<MediaItem>) {
-        binder?.songPlayer?.playNext(items)
+        binder.songPlayer.playNext(items)
     }
 
     fun addToQueue(item: MediaItem) = addToQueue(listOf(item))
     fun addToQueue(items: List<MediaItem>) {
-        binder?.songPlayer?.addToQueue(items)
+        binder.songPlayer.addToQueue(items)
     }
 
     fun toggleRepeatMode() {
-        binder?.player?.let {
+        binder.player.let {
             it.repeatMode = when (it.repeatMode) {
                 REPEAT_MODE_OFF -> REPEAT_MODE_ALL
                 REPEAT_MODE_ALL -> REPEAT_MODE_ONE
@@ -94,11 +94,11 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
     }
 
     fun toggleLike() {
-        binder?.songPlayer?.toggleLike()
+        binder.songPlayer.toggleLike()
     }
 
     fun toggleLibrary() {
-        binder?.songPlayer?.toggleLibrary()
+        binder.songPlayer.toggleLibrary()
     }
 
     override fun onPlaybackStateChanged(state: Int) {
@@ -111,23 +111,23 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
 
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         mediaMetadata.value = mediaItem?.metadata
-        currentMediaItemIndex.value = player?.currentMediaItemIndex ?: -1
-        currentWindowIndex.value = binder?.player?.getCurrentQueueIndex()!!
+        currentMediaItemIndex.value = player.currentMediaItemIndex
+        currentWindowIndex.value = binder.player.getCurrentQueueIndex()
         updateCanSkipPreviousAndNext()
     }
 
     override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-        queueItems.value = binder?.player?.getQueueWindows()!!
-        queueTitle.value = binder?.songPlayer?.queueTitle
-        currentMediaItemIndex.value = player?.currentMediaItemIndex ?: -1
-        currentWindowIndex.value = binder?.player?.getCurrentQueueIndex()!!
+        queueItems.value = binder.player.getQueueWindows()
+        queueTitle.value = binder.songPlayer.queueTitle
+        currentMediaItemIndex.value = player.currentMediaItemIndex
+        currentWindowIndex.value = binder.player.getCurrentQueueIndex()
         updateCanSkipPreviousAndNext()
     }
 
     override fun onShuffleModeEnabledChanged(enabled: Boolean) {
         shuffleModeEnabled.value = enabled
-        queueItems.value = binder?.player?.getQueueWindows()!!
-        currentWindowIndex.value = binder?.player?.getCurrentQueueIndex()!!
+        queueItems.value = binder.player.getQueueWindows()
+        currentWindowIndex.value = binder.player.getCurrentQueueIndex()
         updateCanSkipPreviousAndNext()
     }
 
@@ -137,18 +137,16 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
     }
 
     private fun updateCanSkipPreviousAndNext() {
-        player?.let { player ->
-            if (!player.currentTimeline.isEmpty) {
-                val window = player.currentTimeline.getWindow(player.currentMediaItemIndex, Timeline.Window())
-                canSkipPrevious.value = player.isCommandAvailable(COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM)
-                        || !window.isLive()
-                        || player.isCommandAvailable(COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM)
-                canSkipNext.value = window.isLive() && window.isDynamic
-                        || player.isCommandAvailable(COMMAND_SEEK_TO_NEXT_MEDIA_ITEM)
-            } else {
-                canSkipPrevious.value = false
-                canSkipNext.value = false
-            }
+        if (!player.currentTimeline.isEmpty) {
+            val window = player.currentTimeline.getWindow(player.currentMediaItemIndex, Timeline.Window())
+            canSkipPrevious.value = player.isCommandAvailable(COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM)
+                    || !window.isLive()
+                    || player.isCommandAvailable(COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM)
+            canSkipNext.value = window.isLive() && window.isDynamic
+                    || player.isCommandAvailable(COMMAND_SEEK_TO_NEXT_MEDIA_ITEM)
+        } else {
+            canSkipPrevious.value = false
+            canSkipNext.value = false
         }
     }
 

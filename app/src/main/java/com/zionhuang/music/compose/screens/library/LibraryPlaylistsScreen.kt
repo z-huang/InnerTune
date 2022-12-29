@@ -37,22 +37,22 @@ import com.zionhuang.music.constants.PLAYLIST_SORT_TYPE
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.models.sortInfo.PlaylistSortType
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.viewmodels.SongsViewModel
+import com.zionhuang.music.viewmodels.LibraryPlaylistsViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LibraryPlaylistsScreen(
     navController: NavController,
-    viewModel: SongsViewModel = viewModel(),
+    viewModel: LibraryPlaylistsViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val sortType by rememberPreference(PLAYLIST_SORT_TYPE, PlaylistSortType.CREATE_DATE)
     val sortDescending by rememberPreference(PLAYLIST_SORT_DESCENDING, true)
-    val likedSongCount by viewModel.likedSongCount.collectAsState(initial = 0)
-    val downloadedSongCount by viewModel.downloadedSongCount.collectAsState(initial = 0)
-    val items by viewModel.allPlaylistsFlow.collectAsState()
+    val likedSongCount by viewModel.likedSongCount.collectAsState()
+    val downloadedSongCount by viewModel.downloadedSongCount.collectAsState()
+    val items by viewModel.allPlaylists.collectAsState()
 
     var showAddPlaylistDialog by rememberSaveable {
         mutableStateOf(false)

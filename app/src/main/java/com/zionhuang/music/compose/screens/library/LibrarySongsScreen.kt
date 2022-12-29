@@ -47,7 +47,7 @@ import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.viewmodels.SongsViewModel
+import com.zionhuang.music.viewmodels.LibrarySongsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LibrarySongsScreen(
     navController: NavController,
-    viewModel: SongsViewModel = viewModel(),
+    viewModel: LibrarySongsViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -68,7 +68,7 @@ fun LibrarySongsScreen(
     val (sortDescending, onSortDescendingChange) = mutablePreferenceState(SONG_SORT_DESCENDING, true)
     val (sortTypeMenuExpanded, onSortTypeMenuExpandedChange) = remember { mutableStateOf(false) }
 
-    val items by viewModel.allSongsFlow.collectAsState()
+    val items by viewModel.allSongs.collectAsState()
 
     val queueTitle = stringResource(R.string.queue_all_songs)
 

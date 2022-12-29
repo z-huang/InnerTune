@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlaylistDao {
+    @Query("SELECT id FROM playlist")
+    fun getAllPlaylistId(): Flow<List<String>>
+
     @Transaction
     @Query(QUERY_ALL_PLAYLIST)
     suspend fun getAllPlaylistsAsList(): List<Playlist>

@@ -53,6 +53,7 @@ fun ArtistScreen(
     )),
 ) {
     val menuState = LocalMenuState.current
+    val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
@@ -223,12 +224,14 @@ fun ArtistScreen(
                                         song = item,
                                         navController = navController,
                                         playerConnection = playerConnection,
+                                        coroutineScope = coroutineScope,
                                         onDismiss = menuState::dismiss
                                     )
                                     is AlbumItem -> YouTubeAlbumMenu(
                                         album = item,
                                         navController = navController,
                                         playerConnection = playerConnection,
+                                        coroutineScope = coroutineScope,
                                         onDismiss = menuState::dismiss
                                     )
                                     is ArtistItem -> YouTubeArtistMenu(
@@ -280,12 +283,14 @@ fun ArtistScreen(
                                                             song = item,
                                                             navController = navController,
                                                             playerConnection = playerConnection,
+                                                            coroutineScope = coroutineScope,
                                                             onDismiss = menuState::dismiss
                                                         )
                                                         is AlbumItem -> YouTubeAlbumMenu(
                                                             album = item,
                                                             navController = navController,
                                                             playerConnection = playerConnection,
+                                                            coroutineScope = coroutineScope,
                                                             onDismiss = menuState::dismiss
                                                         )
                                                         is ArtistItem -> YouTubeArtistMenu(

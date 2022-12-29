@@ -20,13 +20,13 @@ import com.zionhuang.music.compose.component.AlbumListItem
 import com.zionhuang.music.compose.utils.rememberPreference
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.models.sortInfo.AlbumSortType
-import com.zionhuang.music.viewmodels.SongsViewModel
+import com.zionhuang.music.viewmodels.LibraryAlbumsViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibraryAlbumsScreen(
     navController: NavController,
-    viewModel: SongsViewModel = viewModel(),
+    viewModel: LibraryAlbumsViewModel = viewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
@@ -34,7 +34,7 @@ fun LibraryAlbumsScreen(
 
     val sortType by rememberPreference(ALBUM_SORT_TYPE, AlbumSortType.CREATE_DATE)
     val sortDescending by rememberPreference(ALBUM_SORT_DESCENDING, true)
-    val items by viewModel.allAlbumsFlow.collectAsState()
+    val items by viewModel.allAlbums.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()

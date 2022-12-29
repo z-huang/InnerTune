@@ -25,7 +25,7 @@ import com.zionhuang.music.constants.CONTENT_TYPE_ARTIST
 import com.zionhuang.music.constants.CONTENT_TYPE_HEADER
 import com.zionhuang.music.models.sortInfo.ArtistSortType
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.viewmodels.SongsViewModel
+import com.zionhuang.music.viewmodels.LibraryArtistsViewModel
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -33,12 +33,12 @@ import java.time.LocalDateTime
 @Composable
 fun LibraryArtistsScreen(
     navController: NavController,
-    viewModel: SongsViewModel = viewModel(),
+    viewModel: LibraryArtistsViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val sortType by rememberPreference(ARTIST_SORT_TYPE, ArtistSortType.CREATE_DATE)
     val sortDescending by rememberPreference(ARTIST_SORT_DESCENDING, true)
-    val artists by viewModel.allArtistsFlow.collectAsState()
+    val artists by viewModel.allArtists.collectAsState()
 
     LaunchedEffect(artists) {
         SongRepository(context).refetchArtists(

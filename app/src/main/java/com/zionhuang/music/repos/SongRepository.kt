@@ -55,6 +55,10 @@ class SongRepository(private val context: Context) : LocalRepository {
     private var autoDownload by context.preference(R.string.pref_auto_download, false)
     private var audioQuality by enumPreference(context, R.string.pref_audio_quality, SongPlayer.AudioQuality.AUTO)
 
+    override fun getAllSongId(): Flow<List<String>> = songDao.getAllSongId()
+    override fun getAllAlbumId(): Flow<List<String>> = albumDao.getAllAlbumId()
+    override fun getAllPlaylistId(): Flow<List<String>> = playlistDao.getAllPlaylistId()
+
     /**
      * Browse
      */
@@ -431,6 +435,10 @@ class SongRepository(private val context: Context) : LocalRepository {
         songDao.update(songs.map { it.song.copy(isTrash = false) })
     }
 
+    override suspend fun deleteSong(songId: String) {
+        songDao.delete(songId)
+    }
+
     override suspend fun deleteSongs(songs: List<Song>) = withContext(IO) {
         val deletableSongs = songs.filter { it.album == null }
         val renewPlaylists = playlistDao.getPlaylistSongMaps(deletableSongs.map { it.id }).groupBy { it.playlistId }.mapValues { entry ->
@@ -527,6 +535,10 @@ class SongRepository(private val context: Context) : LocalRepository {
 
     override suspend fun getAlbum(albumId: String) = withContext(IO) {
         albumDao.getAlbumById(albumId)
+    }
+
+    override suspend fun deleteAlbum(albumId: String) = withContext(IO) {
+        albumDao.delete(albumId)
     }
 
     suspend fun getAlbumWithSongs(albumId: String) = withContext(IO) {

@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface LocalRepository {
+    fun getAllSongId(): Flow<List<String>>
+    fun getAllAlbumId(): Flow<List<String>>
+    fun getAllPlaylistId(): Flow<List<String>>
+
     /**
      * Browse
      */
@@ -68,6 +72,7 @@ interface LocalRepository {
     suspend fun removeDownloads(songs: List<Song>)
     suspend fun moveToTrash(songs: List<Song>)
     suspend fun restoreFromTrash(songs: List<Song>)
+    suspend fun deleteSong(songId: String)
     suspend fun deleteSong(song: Song) = deleteSongs(listOf(song))
     suspend fun deleteSongs(songs: List<Song>)
 
@@ -88,6 +93,7 @@ interface LocalRepository {
     suspend fun refetchAlbum(album: AlbumEntity) = refetchAlbums(listOf(album))
     suspend fun refetchAlbums(albums: List<AlbumEntity>)
     suspend fun getAlbum(albumId: String): Album?
+    suspend fun deleteAlbum(albumId: String)
     suspend fun deleteAlbums(albums: List<Album>)
 
     /**

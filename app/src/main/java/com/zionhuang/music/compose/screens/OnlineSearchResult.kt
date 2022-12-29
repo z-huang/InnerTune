@@ -45,6 +45,7 @@ import com.zionhuang.music.constants.SearchFilterHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.YouTubeRepository
+import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.launch
 
@@ -57,6 +58,7 @@ fun OnlineSearchResult(
         repository = YouTubeRepository(LocalContext.current),
         query = query
     )),
+    mainViewModel: MainViewModel = viewModel(),
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -67,6 +69,9 @@ fun OnlineSearchResult(
     val lazyListState = rememberLazyListState()
     val items = viewModel.pagingData.collectAsLazyPagingItems()
     val searchFilter by viewModel.filter.observeAsState()
+    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
+    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
+    val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
 
     LazyColumn(
         state = items.rememberLazyListState(),
@@ -93,6 +98,20 @@ fun OnlineSearchResult(
                     }
                     is YTItem -> YouTubeListItem(
                         item = item,
+                        badges = {
+                            if (item is SongItem && item.id in librarySongIds ||
+                                item is AlbumItem && item.id in libraryAlbumIds ||
+                                item is PlaylistItem && item.id in libraryPlaylistIds
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_library_add_check),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(18.dp)
+                                        .padding(end = 2.dp)
+                                )
+                            }
+                        },
                         playingIndicator = when (item) {
                             is SongItem -> mediaMetadata?.id == item.id
                             is AlbumItem -> mediaMetadata?.album?.id == item.id
@@ -106,12 +125,14 @@ fun OnlineSearchResult(
                                         song = item,
                                         navController = navController,
                                         playerConnection = playerConnection,
+                                        coroutineScope = coroutineScope,
                                         onDismiss = menuState::dismiss
                                     )
                                     is AlbumItem -> YouTubeAlbumMenu(
                                         album = item,
                                         navController = navController,
                                         playerConnection = playerConnection,
+                                        coroutineScope = coroutineScope,
                                         onDismiss = menuState::dismiss
                                     )
                                     is ArtistItem -> YouTubeArtistMenu(

@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AlbumDao {
+    @Query("SELECT id FROM album")
+    fun getAllAlbumId(): Flow<List<String>>
+
     @Transaction
     @RawQuery(observedEntities = [AlbumEntity::class, AlbumArtistMap::class])
     fun getAlbumsAsFlow(query: SupportSQLiteQuery): Flow<List<Album>>
@@ -59,6 +62,9 @@ interface AlbumDao {
             .mapNotNull { if (it.value == -1L) songAlbumMaps[it.index] else null }
             .let { update(it) }
     }
+
+    @Query("DELETE FROM album WHERE id = :albumId")
+    suspend fun delete(albumId: String)
 
     @Delete
     suspend fun delete(album: AlbumEntity)

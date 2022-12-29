@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.models.AlbumItem
 import com.zionhuang.innertube.models.ArtistItem
@@ -29,15 +30,26 @@ import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.viewmodels.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun YouTubeSongMenu(
     song: SongItem,
     navController: NavController,
     playerConnection: PlayerConnection,
+    coroutineScope: CoroutineScope,
+    mainViewModel: MainViewModel = viewModel(),
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
+    val songRepository = SongRepository(context)
+    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
+    val addedToLibrary = remember(librarySongIds) {
+        song.id in librarySongIds
+    }
     val artists = remember {
         song.artists.mapNotNull {
             it.navigationEndpoint?.browseEndpoint?.browseId?.let { artistId ->
@@ -123,12 +135,24 @@ fun YouTubeSongMenu(
             playerConnection.addToQueue((song.toMediaItem()))
             onDismiss()
         }
-        GridMenuItem(
-            icon = R.drawable.ic_library_add,
-            title = R.string.action_add_to_library,
-            enabled = false
-        ) {
-
+        if (addedToLibrary) {
+            GridMenuItem(
+                icon = R.drawable.ic_library_add_check,
+                title = R.string.action_remove_from_library
+            ) {
+                coroutineScope.launch {
+                    songRepository.deleteSong(song.id)
+                }
+            }
+        } else {
+            GridMenuItem(
+                icon = R.drawable.ic_library_add,
+                title = R.string.action_add_to_library
+            ) {
+                coroutineScope.launch {
+                    songRepository.safeAddSong(song)
+                }
+            }
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_add,
@@ -186,9 +210,16 @@ fun YouTubeAlbumMenu(
     album: AlbumItem,
     navController: NavController,
     playerConnection: PlayerConnection,
+    coroutineScope: CoroutineScope,
+    mainViewModel: MainViewModel = viewModel(),
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
+    val songRepository = SongRepository(context)
+    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
+    val addedToLibrary = remember(libraryAlbumIds) {
+        album.id in libraryAlbumIds
+    }
 
     GridMenu(
         contentPadding = PaddingValues(
@@ -221,13 +252,26 @@ fun YouTubeAlbumMenu(
         ) {
             onDismiss()
         }
-        GridMenuItem(
-            icon = R.drawable.ic_library_add,
-            title = R.string.action_add_to_library,
-            enabled = false
-        ) {
-
+        if (addedToLibrary) {
+            GridMenuItem(
+                icon = R.drawable.ic_library_add_check,
+                title = R.string.action_remove_from_library
+            ) {
+                coroutineScope.launch {
+                    songRepository.deleteAlbum(album.id)
+                }
+            }
+        } else {
+            GridMenuItem(
+                icon = R.drawable.ic_library_add,
+                title = R.string.action_add_to_library
+            ) {
+                coroutineScope.launch {
+                    songRepository.addAlbum(album)
+                }
+            }
         }
+
         GridMenuItem(
             icon = R.drawable.ic_playlist_add,
             title = R.string.menu_add_to_playlist,

@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SongDao {
+    @Query("SELECT id FROM song")
+    fun getAllSongId(): Flow<List<String>>
+
     @Transaction
     @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
     suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
@@ -109,6 +112,9 @@ interface SongDao {
 
     @Update
     suspend fun update(songs: List<SongEntity>)
+
+    @Query("DELETE FROM song WHERE id = :songId")
+    suspend fun delete(songId: String)
 
     @Delete
     suspend fun delete(songs: List<SongEntity>)
