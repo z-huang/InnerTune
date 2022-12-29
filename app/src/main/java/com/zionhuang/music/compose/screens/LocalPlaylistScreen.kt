@@ -14,12 +14,11 @@ import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.SongListItem
 import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
-import com.zionhuang.music.viewmodels.LocalPlaylistViewModelFactory
 
 @Composable
 fun LocalPlaylistScreen(
     playlistId: String,
-    viewModel: LocalPlaylistViewModel = viewModel(factory = LocalPlaylistViewModelFactory(
+    viewModel: LocalPlaylistViewModel = viewModel(factory = LocalPlaylistViewModel.Factory(
         context = LocalContext.current,
         playlistId = playlistId
     )),

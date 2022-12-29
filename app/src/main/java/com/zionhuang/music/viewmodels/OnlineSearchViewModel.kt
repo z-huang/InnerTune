@@ -10,7 +10,7 @@ import androidx.paging.cachedIn
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.repos.YouTubeRepository
 
-class SearchViewModel(
+class OnlineSearchViewModel(
     private val repository: YouTubeRepository,
     private val query: String,
 ) : ViewModel() {
@@ -22,13 +22,12 @@ class SearchViewModel(
             else repository.search(query, it)
         }
     }.flow.cachedIn(viewModelScope)
-}
 
-@Suppress("UNCHECKED_CAST")
-class SearchViewModelFactory(
-    private val repository: YouTubeRepository,
-    private val query: String,
-) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        SearchViewModel(repository, query) as T
+    class Factory(
+        private val repository: YouTubeRepository,
+        private val query: String,
+    ) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = OnlineSearchViewModel(repository, query) as T
+    }
 }

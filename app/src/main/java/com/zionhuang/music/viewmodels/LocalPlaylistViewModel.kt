@@ -12,13 +12,13 @@ class LocalPlaylistViewModel(
 ) : ViewModel() {
     val playlist = SongRepository(context).getPlaylist(playlistId).stateIn(viewModelScope, SharingStarted.Lazily, null)
     val playlistSongs = SongRepository(context).getPlaylistSongs(playlistId).flow.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    class Factory(
+        val context: Context,
+        val playlistId: String,
+    ) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = LocalPlaylistViewModel(context, playlistId) as T
+    }
 }
 
-@Suppress("UNCHECKED_CAST")
-class LocalPlaylistViewModelFactory(
-    val context: Context,
-    val playlistId: String,
-) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        LocalPlaylistViewModel(context, playlistId) as T
-}

@@ -1,7 +1,10 @@
 package com.zionhuang.music.viewmodels
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.repos.SongRepository
@@ -21,14 +24,13 @@ class AlbumViewModel(
                 ?: YouTube.getAlbumWithSongs(context, albumId, playlistId)
         }
     }
-}
 
-@Suppress("UNCHECKED_CAST")
-class AlbumViewModelFactory(
-    val context: Context,
-    val albumId: String,
-    val playlistId: String?,
-) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        AlbumViewModel(context, albumId, playlistId) as T
+    class Factory(
+        val context: Context,
+        val albumId: String,
+        val playlistId: String?,
+    ) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = AlbumViewModel(context, albumId, playlistId) as T
+    }
 }

@@ -45,8 +45,7 @@ import com.zionhuang.music.constants.SearchFilterHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.YouTubeRepository
-import com.zionhuang.music.viewmodels.SearchViewModel
-import com.zionhuang.music.viewmodels.SearchViewModelFactory
+import com.zionhuang.music.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -54,7 +53,7 @@ import kotlinx.coroutines.launch
 fun OnlineSearchResult(
     query: String,
     navController: NavController,
-    viewModel: SearchViewModel = viewModel(factory = SearchViewModelFactory(
+    viewModel: OnlineSearchViewModel = viewModel(factory = OnlineSearchViewModel.Factory(
         repository = YouTubeRepository(LocalContext.current),
         query = query
     )),

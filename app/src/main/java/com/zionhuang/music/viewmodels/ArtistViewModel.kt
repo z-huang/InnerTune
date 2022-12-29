@@ -1,7 +1,10 @@
 package com.zionhuang.music.viewmodels
 
 import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.ArtistHeader
 import com.zionhuang.innertube.models.BrowseEndpoint
@@ -23,13 +26,12 @@ class ArtistViewModel(
             }
         }
     }
-}
 
-@Suppress("UNCHECKED_CAST")
-class ArtistViewModelFactory(
-    val context: Context,
-    val artistId: String,
-) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        ArtistViewModel(context, artistId) as T
+    class Factory(
+        val context: Context,
+        val artistId: String,
+    ) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T = ArtistViewModel(context, artistId) as T
+    }
 }

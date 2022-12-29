@@ -46,14 +46,13 @@ import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.AlbumViewModel
-import com.zionhuang.music.viewmodels.AlbumViewModelFactory
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun AlbumScreen(
     albumId: String,
     playlistId: String?,
-    viewModel: AlbumViewModel = viewModel(factory = AlbumViewModelFactory(
+    viewModel: AlbumViewModel = viewModel(factory = AlbumViewModel.Factory(
         context = LocalContext.current,
         albumId = albumId,
         playlistId = playlistId

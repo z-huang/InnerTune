@@ -40,7 +40,6 @@ import com.zionhuang.music.compose.utils.resize
 import com.zionhuang.music.constants.AppBarHeight
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.viewmodels.ArtistViewModel
-import com.zionhuang.music.viewmodels.ArtistViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -48,7 +47,7 @@ fun ArtistScreen(
     artistId: String,
     navController: NavController,
     appBarConfig: AppBarConfig,
-    viewModel: ArtistViewModel = viewModel(factory = ArtistViewModelFactory(
+    viewModel: ArtistViewModel = viewModel(factory = ArtistViewModel.Factory(
         context = LocalContext.current,
         artistId = artistId
     )),
