@@ -32,11 +32,12 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
 import com.zionhuang.music.compose.component.shimmer.TextPlaceholder
+import com.zionhuang.music.compose.screens.settings.LyricsPosition
 import com.zionhuang.music.compose.utils.fadingEdge
-import com.zionhuang.music.compose.utils.rememberPreference
-import com.zionhuang.music.constants.LRC_TEXT_POS
+import com.zionhuang.music.constants.LYRICS_TEXT_POSITION
 import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
+import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.lyrics.LyricsHelper
@@ -57,7 +58,7 @@ fun Lyrics(
     val density = LocalDensity.current
     val coroutineScope = rememberCoroutineScope()
 
-    val lyricsTextPosition by rememberPreference(LRC_TEXT_POS, 1)
+    val lyricsTextPosition by mutablePreferenceState(LYRICS_TEXT_POSITION, LyricsPosition.CENTER)
 
     val lyricsEntity by playerConnection.currentLyrics.collectAsState(initial = null)
     val lyrics = remember(lyricsEntity) {
@@ -164,10 +165,9 @@ fun Lyrics(
                     fontSize = 20.sp,
                     color = if (index == displayedCurrentLineIndex) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
                     textAlign = when (lyricsTextPosition) {
-                        0 -> TextAlign.Left
-                        1 -> TextAlign.Center
-                        2 -> TextAlign.Right
-                        else -> TextAlign.Center
+                        LyricsPosition.LEFT -> TextAlign.Left
+                        LyricsPosition.CENTER -> TextAlign.Center
+                        LyricsPosition.RIGHT -> TextAlign.Right
                     },
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -187,10 +187,9 @@ fun Lyrics(
                         repeat(10) {
                             Box(
                                 contentAlignment = when (lyricsTextPosition) {
-                                    0 -> Alignment.CenterStart
-                                    1 -> Alignment.Center
-                                    2 -> Alignment.CenterEnd
-                                    else -> Alignment.Center
+                                    LyricsPosition.LEFT -> Alignment.CenterStart
+                                    LyricsPosition.CENTER -> Alignment.Center
+                                    LyricsPosition.RIGHT -> Alignment.CenterEnd
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -210,10 +209,9 @@ fun Lyrics(
                 fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = when (lyricsTextPosition) {
-                    0 -> TextAlign.Left
-                    1 -> TextAlign.Center
-                    2 -> TextAlign.Right
-                    else -> TextAlign.Center
+                    LyricsPosition.LEFT -> TextAlign.Left
+                    LyricsPosition.CENTER -> TextAlign.Center
+                    LyricsPosition.RIGHT -> TextAlign.Right
                 },
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier

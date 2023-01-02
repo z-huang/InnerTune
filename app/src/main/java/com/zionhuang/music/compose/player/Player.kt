@@ -46,14 +46,14 @@ fun BottomSheetPlayer(
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
 
-    val playbackState by playerConnection.playbackState.collectAsState(initial = STATE_IDLE)
-    val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
-    val repeatMode by playerConnection.repeatMode.collectAsState(initial = REPEAT_MODE_OFF)
-    val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
+    val playbackState by playerConnection.playbackState.collectAsState()
+    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val repeatMode by playerConnection.repeatMode.collectAsState()
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
 
-    val canSkipPrevious by playerConnection.canSkipPrevious.collectAsState(initial = true)
-    val canSkipNext by playerConnection.canSkipNext.collectAsState(initial = true)
+    val canSkipPrevious by playerConnection.canSkipPrevious.collectAsState()
+    val canSkipNext by playerConnection.canSkipNext.collectAsState()
 
     var position by rememberSaveable(playbackState) {
         mutableStateOf(playerConnection.player.currentPosition)

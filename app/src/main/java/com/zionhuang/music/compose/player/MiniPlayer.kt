@@ -38,7 +38,7 @@ fun MiniPlayer(
 ) {
     mediaMetadata ?: return
     val playerConnection = LocalPlayerConnection.current ?: return
-    val canSkipNext by playerConnection.canSkipNext.collectAsState(initial = true)
+    val canSkipNext by playerConnection.canSkipNext.collectAsState()
 
     Box(
         modifier = modifier

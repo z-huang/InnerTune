@@ -13,12 +13,10 @@ import coil.disk.DiskCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.kugou.KuGou
-import com.zionhuang.music.constants.INNERTUBE_COOKIE
-import com.zionhuang.music.constants.VISITOR_DATA
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
-import com.zionhuang.music.ui.fragments.settings.StorageSettingsFragment.Companion.VALUE_TO_MB
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -31,18 +29,17 @@ class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPrefere
         super.onCreate()
         INSTANCE = this
 
-        val systemDefault = getString(R.string.default_localization_key)
         val locale = Locale.getDefault()
         val languageTag = locale.toLanguageTag().replace("-Hant", "") // replace zh-Hant-* to zh-*
-        val languageCodes = resources.getStringArray(R.array.language_codes)
-        val countryCodes = resources.getStringArray(R.array.country_codes)
         YouTube.locale = YouTubeLocale(
-            gl = sharedPreferences.getString(getString(R.string.pref_content_country), systemDefault).takeIf { it != systemDefault }
-                ?: locale.country.takeIf { it in countryCodes }
+            gl = sharedPreferences.getString(CONTENT_COUNTRY, SYSTEM_DEFAULT)
+                .takeIf { it != SYSTEM_DEFAULT }
+                ?: locale.country.takeIf { it in CountryCodeToName }
                 ?: "US",
-            hl = sharedPreferences.getString(getString(R.string.pref_content_language), systemDefault).takeIf { it != systemDefault }
-                ?: locale.language.takeIf { it in languageCodes }
-                ?: languageTag.takeIf { it in languageCodes }
+            hl = sharedPreferences.getString(CONTENT_LANGUAGE, SYSTEM_DEFAULT)
+                .takeIf { it != SYSTEM_DEFAULT }
+                ?: locale.language.takeIf { it in LanguageCodeToName }
+                ?: languageTag.takeIf { it in LanguageCodeToName }
                 ?: "en"
         )
         if (languageTag == "zh-TW") {
@@ -50,12 +47,11 @@ class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPrefere
         }
         Log.d("App", "${YouTube.locale}")
 
-        if (sharedPreferences.getBoolean(getString(R.string.pref_proxy_enabled), false)) {
+        if (sharedPreferences.getBoolean(PROXY_ENABLED, false)) {
             try {
-                val socketAddress = sharedPreferences.getString(getString(R.string.pref_proxy_url), "")!!.toInetSocketAddress()
                 YouTube.proxy = Proxy(
-                    sharedPreferences.getEnum(getString(R.string.pref_proxy_type), Proxy.Type.HTTP),
-                    socketAddress
+                    sharedPreferences.getEnum(PROXY_TYPE, Proxy.Type.HTTP),
+                    sharedPreferences.getString(PROXY_URL, "")!!.toInetSocketAddress()
                 )
             } catch (e: Exception) {
                 Toast.makeText(this, "Failed to parse proxy url.", LENGTH_SHORT).show()
@@ -64,11 +60,12 @@ class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPrefere
         }
 
         GlobalScope.launch {
-            YouTube.visitorData = sharedPreferences.getString(VISITOR_DATA, null) ?: YouTube.generateVisitorData().getOrNull()?.also {
-                sharedPreferences.edit {
-                    putString(VISITOR_DATA, it)
-                }
-            } ?: YouTube.DEFAULT_VISITOR_DATA
+            YouTube.visitorData = sharedPreferences.getString(VISITOR_DATA, null)
+                ?: YouTube.generateVisitorData().getOrNull()?.also {
+                    sharedPreferences.edit {
+                        putString(VISITOR_DATA, it)
+                    }
+                } ?: YouTube.DEFAULT_VISITOR_DATA
         }
         YouTube.cookie = sharedPreferences.getString(INNERTUBE_COOKIE, null)
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
@@ -76,8 +73,13 @@ class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPrefere
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         when (key) {
-            VISITOR_DATA -> YouTube.visitorData = sharedPreferences.getString(VISITOR_DATA, null) ?: YouTube.DEFAULT_VISITOR_DATA
-            INNERTUBE_COOKIE -> YouTube.cookie = sharedPreferences.getString(INNERTUBE_COOKIE, null)
+            VISITOR_DATA -> {
+                YouTube.visitorData = sharedPreferences.getString(VISITOR_DATA, null)
+                    ?: YouTube.DEFAULT_VISITOR_DATA
+            }
+            INNERTUBE_COOKIE -> {
+                YouTube.cookie = sharedPreferences.getString(INNERTUBE_COOKIE, null)
+            }
         }
     }
 
@@ -88,10 +90,7 @@ class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPrefere
         .diskCache(
             DiskCache.Builder()
                 .directory(cacheDir.resolve("coil"))
-                .maxSizeBytes(
-                    size = (VALUE_TO_MB.getOrNull(
-                        sharedPreferences.getInt(getString(R.string.pref_image_max_cache_size), 0)
-                    ) ?: 1024) * 1024 * 1024L)
+                .maxSizeBytes(sharedPreferences.getInt(IMAGE_MAX_CACHE_SIZE, 512) * 1024 * 1024L)
                 .build()
         )
         .build()

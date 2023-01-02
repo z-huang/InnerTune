@@ -61,8 +61,8 @@ fun LibrarySongsScreen(
     val coroutineScope = rememberCoroutineScope()
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
-    val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
+    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val (sortType, onSortTypeChange) = mutablePreferenceState(SONG_SORT_TYPE, SongSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = mutablePreferenceState(SONG_SORT_DESCENDING, true)

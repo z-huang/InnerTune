@@ -48,6 +48,10 @@
     <string name="pref_open_saf_title">View downloaded files in SAF</string>
     <string name="pref_open_saf_summary">This may not work in some devices</string>
     <string name="pref_cache_title">Cache</string>
+    <string name="image_cache">Image Cache</string>
+    <string name="song_cache">Song Cache</string>
+    <string name="max_cache_size">Max cache size</string>
+    <string name="unlimited">Unlimited</string>
     <string name="pref_image_max_cache_size_title">Max image cache size</string>
     <string name="pref_clear_image_cache_title">Clear image cache</string>
     <string name="pref_song_max_cache_size_title">Max song cache size</string>

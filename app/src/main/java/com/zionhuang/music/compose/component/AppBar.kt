@@ -31,11 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.zionhuang.music.R
@@ -214,7 +212,7 @@ fun AppBar(
                         BasicTextField(
                             value = textFieldValue,
                             onValueChange = onTextFieldValueChange,
-                            textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
+                            textStyle = MaterialTheme.typography.bodyLarge,
                             singleLine = true,
                             maxLines = 1,
                             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
@@ -233,7 +231,7 @@ fun AppBar(
                                     if (textFieldValue.text.isEmpty()) {
                                         Text(
                                             text = stringResource(if (searchSource == ONLINE) R.string.search_yt_music else R.string.search_library),
-                                            textAlign = TextAlign.Start,
+                                            style = MaterialTheme.typography.bodyLarge,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
                                             modifier = Modifier

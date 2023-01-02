@@ -119,7 +119,7 @@ fun TextFieldDialog(
     modifier: Modifier = Modifier,
     icon: (@Composable () -> Unit)? = null,
     title: (@Composable () -> Unit)? = null,
-    initialText: String = "",
+    initialTextFieldValue: TextFieldValue = TextFieldValue(),
     placeholder: @Composable (() -> Unit)? = null,
     singleLine: Boolean = true,
     maxLines: Int = if (singleLine) 1 else 10,
@@ -128,7 +128,7 @@ fun TextFieldDialog(
     onDismiss: () -> Unit,
 ) {
     val (textFieldValue, onTextFieldValueChange) = remember {
-        mutableStateOf(TextFieldValue(initialText))
+        mutableStateOf(initialTextFieldValue)
     }
 
     val focusRequester = remember {

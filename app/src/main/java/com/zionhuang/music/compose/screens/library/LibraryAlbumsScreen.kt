@@ -29,8 +29,8 @@ fun LibraryAlbumsScreen(
     viewModel: LibraryAlbumsViewModel = viewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
-    val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
+    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val sortType by rememberPreference(ALBUM_SORT_TYPE, AlbumSortType.CREATE_DATE)
     val sortDescending by rememberPreference(ALBUM_SORT_DESCENDING, true)

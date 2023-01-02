@@ -68,6 +68,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_QUEUE_INDEX
+import com.zionhuang.music.constants.SONG_MAX_CACHE_SIZE
 import com.zionhuang.music.db.entities.FormatEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.*
@@ -83,7 +84,6 @@ import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
-import com.zionhuang.music.ui.fragments.settings.StorageSettingsFragment.Companion.VALUE_TO_MB
 import com.zionhuang.music.utils.InfoCache
 import com.zionhuang.music.utils.lyrics.LyricsHelper
 import com.zionhuang.music.utils.preference.enumPreference
@@ -135,9 +135,7 @@ class SongPlayer(
         isActive = true
     }
 
-    private val cacheEvictor = when (val cacheSize = (VALUE_TO_MB.getOrNull(
-        context.sharedPreferences.getInt(context.getString(R.string.pref_song_max_cache_size), 0))
-        ?: 1024)) {
+    private val cacheEvictor = when (val cacheSize = context.sharedPreferences.getInt(SONG_MAX_CACHE_SIZE, 1024)) {
         -1 -> NoOpCacheEvictor()
         else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
     }

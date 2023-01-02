@@ -24,18 +24,17 @@ val DefaultThemeColor = Color(0xFF6650a4)
 @Composable
 fun InnerTuneTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     themeColor: Color = DefaultThemeColor,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val colorScheme = remember(darkTheme, dynamicColor, themeColor) {
-        when {
-            dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-                if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            }
-            darkTheme -> Scheme.dark(themeColor.toArgb()).toColorScheme()
-            else -> Scheme.light(themeColor.toArgb()).toColorScheme()
+    val colorScheme = remember(darkTheme, themeColor) {
+        if (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (darkTheme) dynamicDarkColorScheme(context)
+            else dynamicLightColorScheme(context)
+        } else {
+            if (darkTheme) Scheme.dark(themeColor.toArgb()).toColorScheme()
+            else Scheme.light(themeColor.toArgb()).toColorScheme()
         }
     }
 

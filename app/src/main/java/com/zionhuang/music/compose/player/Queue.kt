@@ -257,7 +257,7 @@ fun Queue(
             }
         }
 
-        val shuffleModeEnabled by playerConnection.shuffleModeEnabled.collectAsState(initial = false)
+        val shuffleModeEnabled by playerConnection.shuffleModeEnabled.collectAsState()
 
         Box(
             modifier = Modifier

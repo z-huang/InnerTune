@@ -59,8 +59,8 @@ fun AlbumScreen(
     )),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
-    val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
+    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val albumWithSongsState = viewModel.albumWithSongs.observeAsState()
     val albumWithSongs = remember(albumWithSongsState.value) {
@@ -107,7 +107,8 @@ fun AlbumScreen(
                                     albumWithSongs.artists.joinToString { it.name },
                                     albumWithSongs.album.year.toString()
                                 ).joinByBullet(),
-                                style = MaterialTheme.typography.titleMedium
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Normal
                             )
                             Text(
                                 text = listOf(

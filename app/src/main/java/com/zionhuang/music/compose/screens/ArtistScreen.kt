@@ -55,8 +55,8 @@ fun ArtistScreen(
     val menuState = LocalMenuState.current
     val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState(initial = false)
-    val mediaMetadata by playerConnection.mediaMetadata.collectAsState(initial = null)
+    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val artistHeaderState = viewModel.artistHeader.observeAsState()
     val artistHeader = remember(artistHeaderState.value) {
