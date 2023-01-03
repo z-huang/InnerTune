@@ -53,11 +53,6 @@ class SongDetailsDialog : AppCompatDialogFragment() {
                 binding.fileSize.text = format?.contentLength?.let { Formatter.formatShortFileSize(requireContext(), it) } ?: getString(R.string.unknown)
             }
         }
-        lifecycleScope.launch {
-            viewModel.playerVolume.collectLatest { volume ->
-                binding.volume.text = "${(volume * 100).toInt()}%"
-            }
-        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

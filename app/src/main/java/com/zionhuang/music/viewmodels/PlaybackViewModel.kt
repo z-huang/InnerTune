@@ -35,9 +35,6 @@ class PlaybackViewModel(application: Application) : AndroidViewModel(application
     val queueTitle = MediaSessionConnection.queueTitle
     val queueItems = MediaSessionConnection.queueItems
 
-    val playerVolume: Flow<Float> = MediaSessionConnection.isConnected.flatMapLatest {
-        MediaSessionConnection.binder?.songPlayer?.playerVolume ?: emptyFlow()
-    }
     val currentSong = mediaMetadata.flatMapLatest { mediaMetadata ->
         songRepository.getSongById(mediaMetadata?.getString(METADATA_KEY_MEDIA_ID)).flow
     }

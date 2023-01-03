@@ -16,6 +16,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Pair
 import androidx.core.app.NotificationCompat
+import androidx.core.content.edit
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.core.util.component1
@@ -68,6 +69,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
 import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
 import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_QUEUE_INDEX
+import com.zionhuang.music.constants.PLAYER_VOLUME
 import com.zionhuang.music.constants.SONG_MAX_CACHE_SIZE
 import com.zionhuang.music.db.entities.FormatEntity
 import com.zionhuang.music.db.entities.Song
@@ -103,7 +105,7 @@ import kotlin.math.roundToInt
 /**
  * A wrapper around [ExoPlayer]
  */
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class SongPlayer(
     private val context: Context,
     private val scope: CoroutineScope,
@@ -119,7 +121,6 @@ class SongPlayer(
     private var currentQueue: Queue = EmptyQueue()
     var queueTitle: String? = null
 
-    val playerVolume = MutableStateFlow(1f)
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
     private val currentSongFlow = currentMediaMetadata.flatMapLatest { mediaMetadata ->
         songRepository.getSongById(mediaMetadata?.id).flow
@@ -130,10 +131,6 @@ class SongPlayer(
     var currentSong: Song? = null
 
     private val showLyrics = context.sharedPreferences.booleanFlow(context.getString(R.string.pref_show_lyrics), false)
-
-    val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
-        isActive = true
-    }
 
     private val cacheEvictor = when (val cacheSize = context.sharedPreferences.getInt(SONG_MAX_CACHE_SIZE, 1024)) {
         -1 -> NoOpCacheEvictor()
@@ -155,6 +152,12 @@ class SongPlayer(
             addAnalyticsListener(PlaybackStatsListener(false, this@SongPlayer))
         }
 
+    private val normalizeFactor = MutableStateFlow(1f)
+    val playerVolume = MutableStateFlow(context.sharedPreferences.getFloat(PLAYER_VOLUME, 1f))
+
+    val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
+        isActive = true
+    }
     private val mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
         setPlayer(player)
         setPlaybackPreparer(object : MediaSessionConnector.PlaybackPreparer {
@@ -371,6 +374,22 @@ class SongPlayer(
 
     init {
         scope.launch {
+            combine(playerVolume, normalizeFactor) { playerVolume, normalizeFactor ->
+                playerVolume * normalizeFactor
+            }.collectLatest {
+                player.volume = it
+            }
+        }
+        scope.launch {
+            combine(playerVolume, normalizeFactor) { playerVolume, normalizeFactor ->
+                playerVolume * normalizeFactor
+            }.debounce(1000).collect {
+                context.sharedPreferences.edit {
+                    putFloat(PLAYER_VOLUME, it)
+                }
+            }
+        }
+        scope.launch {
             currentSongFlow.collect { song ->
                 val shouldInvalidate = currentSong == null || song == null || currentSong?.song?.liked != song.song.liked
                 currentSong = song
@@ -398,7 +417,7 @@ class SongPlayer(
             combine(currentFormat, context.sharedPreferences.booleanFlow(context.getString(R.string.pref_audio_normalization), true)) { format, normalizeAudio ->
                 format to normalizeAudio
             }.collectLatest { (format, normalizeAudio) ->
-                player.volume = if (normalizeAudio && format?.loudnessDb != null) {
+                normalizeFactor.value = if (normalizeAudio && format?.loudnessDb != null) {
                     min(10f.pow(-format.loudnessDb.toFloat() / 20), 1f)
                 } else {
                     1f
@@ -715,10 +734,6 @@ class SongPlayer(
         scope.launch {
             songRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
         }
-    }
-
-    override fun onVolumeChanged(volume: Float) {
-        playerVolume.value = volume
     }
 
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {

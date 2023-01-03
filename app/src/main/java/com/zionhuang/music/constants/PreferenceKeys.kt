@@ -36,17 +36,21 @@ const val ALBUM_SORT_DESCENDING = "ALBUM_SORT_DESC"
 const val PLAYLIST_SORT_TYPE = "PLAYLIST_SORT_TYPE"
 const val PLAYLIST_SORT_DESCENDING = "PLAYLIST_SORT_DESC"
 
+const val SHOW_LYRICS = "SHOW_LYRICS"
+const val LYRICS_TEXT_POSITION = "LRC_TEXT_POS"
+
+const val PLAYER_VOLUME = "PLAYER_VOLUME"
+
 const val SEARCH_SOURCE = "SEARCH_SOURCE"
-const val LOCAL = "LOCAL"
-const val ONLINE = "ONLINE"
+
+enum class SearchSource {
+    LOCAL, ONLINE
+}
 
 const val VISITOR_DATA = "visitor_data"
 const val INNERTUBE_COOKIE = "innertube_cookie"
 const val ACCOUNT_NAME = "account_name"
 const val ACCOUNT_EMAIL = "account_email"
-
-const val SHOW_LYRICS = "SHOW_LYRICS"
-const val LYRICS_TEXT_POSITION = "LRC_TEXT_POS"
 
 val LanguageCodeToName = mapOf(
     "af" to "Afrikaans",

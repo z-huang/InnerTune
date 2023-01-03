@@ -38,10 +38,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.utils.canNavigateUp
-import com.zionhuang.music.constants.AppBarHeight
-import com.zionhuang.music.constants.LOCAL
-import com.zionhuang.music.constants.ONLINE
-import com.zionhuang.music.constants.SEARCH_SOURCE
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.mutablePreferenceState
 import kotlin.math.roundToInt
 
@@ -70,7 +67,7 @@ fun AppBar(
         }
     }
 
-    val (searchSource, onSearchSourceChange) = mutablePreferenceState(SEARCH_SOURCE, ONLINE)
+    val (searchSource, onSearchSourceChange) = mutablePreferenceState(SEARCH_SOURCE, SearchSource.ONLINE)
 
     val expandTransition = updateTransition(targetState = isSearchExpanded || !appBarConfig.searchable, "searchExpanded")
     val searchTransitionProgress by expandTransition.animateFloat(label = "") { if (it) 1f else 0f }
@@ -123,13 +120,12 @@ fun AppBar(
                     .add(WindowInsets(top = AppBarHeight))
                     .asPaddingValues())
         ) {
-            if (searchSource == ONLINE) {
-                onlineSearchScreen(
+            when (searchSource) {
+                SearchSource.LOCAL -> localSearchScreen(
                     query = textFieldValue.text,
                     onDismiss = { onSearchExpandedChange(false) }
                 )
-            } else {
-                localSearchScreen(
+                SearchSource.ONLINE -> onlineSearchScreen(
                     query = textFieldValue.text,
                     onDismiss = { onSearchExpandedChange(false) }
                 )
@@ -230,7 +226,10 @@ fun AppBar(
                                 ) {
                                     if (textFieldValue.text.isEmpty()) {
                                         Text(
-                                            text = stringResource(if (searchSource == ONLINE) R.string.search_yt_music else R.string.search_library),
+                                            text = stringResource(when (searchSource) {
+                                                SearchSource.LOCAL -> R.string.search_library
+                                                SearchSource.ONLINE -> R.string.search_yt_music
+                                            }),
                                             style = MaterialTheme.typography.bodyLarge,
                                             maxLines = 1,
                                             overflow = TextOverflow.Ellipsis,
@@ -265,11 +264,14 @@ fun AppBar(
 
                         IconButton(
                             onClick = {
-                                onSearchSourceChange(if (searchSource == ONLINE) LOCAL else ONLINE)
+                                onSearchSourceChange(if (searchSource == SearchSource.ONLINE) SearchSource.LOCAL else SearchSource.ONLINE)
                             }
                         ) {
                             Icon(
-                                painter = painterResource(if (searchSource == ONLINE) R.drawable.ic_language else R.drawable.ic_library_music),
+                                painter = painterResource(when (searchSource) {
+                                    SearchSource.LOCAL -> R.drawable.ic_library_music
+                                    SearchSource.ONLINE -> R.drawable.ic_language
+                                }),
                                 contentDescription = null
                             )
                         }

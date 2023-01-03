@@ -298,7 +298,6 @@ fun Queue(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PlayerMenu(
     mediaMetadata: MediaMetadata?,
@@ -310,6 +309,7 @@ fun PlayerMenu(
 ) {
     mediaMetadata ?: return
     val context = LocalContext.current
+    val playerVolume = playerConnection.songPlayer.playerVolume.collectAsState()
     val activityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
     var showSelectArtistDialog by rememberSaveable {
@@ -347,6 +347,27 @@ fun PlayerMenu(
                 }
             }
         }
+    }
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(top = 24.dp, bottom = 12.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_volume_up),
+            contentDescription = null,
+            modifier = Modifier.size(28.dp)
+        )
+
+        BigSeekBar(
+            progressProvider = playerVolume::value,
+            onProgressChange = { playerConnection.songPlayer.playerVolume.value = it },
+            modifier = Modifier.weight(1f)
+        )
     }
 
     GridMenu(
