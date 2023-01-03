@@ -685,6 +685,11 @@ class SongPlayer(
     }
 
     override fun onPlaybackStateChanged(@State playbackState: Int) {
+        if (playbackState == STATE_IDLE) {
+            currentQueue = EmptyQueue()
+            player.shuffleModeEnabled = false
+            mediaSession.setQueueTitle("")
+        }
         if (playbackState == STATE_ENDED && autoAddSong) {
             player.currentMetadata?.let {
                 addToLibrary(it)
