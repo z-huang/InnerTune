@@ -39,23 +39,36 @@ object LyricsHelper {
         songRepository.upsert(LyricsEntity(mediaMetadata.id, LyricsEntity.LYRICS_NOT_FOUND))
     }
 
-    suspend fun getAllLyrics(context: Context, mediaId: String?, songTitle: String, songArtists: String, duration: Int): List<LyricsResult> {
+    suspend fun getAllLyrics(
+        context: Context,
+        mediaId: String,
+        songTitle: String,
+        songArtists: String,
+        duration: Int,
+        callback: (LyricsResult) -> Unit,
+    ) {
         val cacheKey = "$songArtists-$songTitle".replace(" ", "")
-        return cache.get(cacheKey) ?: lyricsProviders.flatMap { provider ->
-            if (provider.isEnabled(context)) {
-                provider.getAllLyrics(mediaId, songTitle, songArtists, duration).getOrNull().orEmpty().map {
-                    LyricsResult(provider.name, it)
-                }
-            } else {
-                emptyList()
+        cache.get(cacheKey)?.let { results ->
+            results.forEach {
+                callback(it)
             }
-        }.also {
-            cache.put(cacheKey, it)
+            return
         }
+        val allResult = mutableListOf<LyricsResult>()
+        lyricsProviders.forEach { provider ->
+            if (provider.isEnabled(context)) {
+                provider.getAllLyrics(mediaId, songTitle, songArtists, duration) { lyrics ->
+                    val result = LyricsResult(provider.name, lyrics)
+                    allResult += result
+                    callback(result)
+                }
+            }
+        }
+        cache.put(cacheKey, allResult)
     }
-
-    data class LyricsResult(
-        val providerName: String,
-        val lyrics: String,
-    )
 }
+
+data class LyricsResult(
+    val providerName: String,
+    val lyrics: String,
+)

@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zionhuang.music.databinding.ItemLyricsBinding
 import com.zionhuang.music.extensions.context
-import com.zionhuang.music.utils.lyrics.LyricsHelper
+import com.zionhuang.music.utils.lyrics.LyricsResult
 
 class LyricsItemViewHolder(
     val binding: ItemLyricsBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(lyricsResult: LyricsHelper.LyricsResult) {
+    fun bind(lyricsResult: LyricsResult) {
         binding.lyrics.text = lyricsResult.lyrics
         binding.provider.text = lyricsResult.providerName
         binding.synced.isVisible = lyricsResult.lyrics.startsWith("[")

@@ -15,7 +15,6 @@ import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.extensions.addOnClickListener
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.adapters.LyricsAdapter
-import com.zionhuang.music.utils.lyrics.LyricsHelper
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -63,7 +62,7 @@ class ChooseLyricsDialog() : AppCompatDialogFragment() {
             dismiss()
         }
         lifecycleScope.launch {
-            adapter.items = LyricsHelper.getAllLyrics(requireContext(), mediaId, songTitle, songArtists, duration)
+//            adapter.items = LyricsHelper.getAllLyrics(requireContext(), mediaId, songTitle, songArtists, duration)
             adapter.notifyDataSetChanged()
             binding.progressBar.isVisible = false
         }

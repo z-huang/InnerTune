@@ -14,6 +14,7 @@ object YouTubeLyricsProvider : LyricsProvider {
             browseResult.lyrics ?: throw IllegalStateException("Lyrics unavailable")
         }
 
-    override suspend fun getAllLyrics(id: String?, title: String, artist: String, duration: Int): Result<List<String>> =
-        getLyrics(id, title, artist, duration).map { listOf(it) }
+    override suspend fun getAllLyrics(id: String?, title: String, artist: String, duration: Int, callback: (String) -> Unit) {
+        getLyrics(id, title, artist, duration).onSuccess(callback)
+    }
 }

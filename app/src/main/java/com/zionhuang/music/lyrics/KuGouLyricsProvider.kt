@@ -13,6 +13,7 @@ object KuGouLyricsProvider : LyricsProvider {
     override suspend fun getLyrics(id: String?, title: String, artist: String, duration: Int): Result<String> =
         KuGou.getLyrics(title, artist, duration)
 
-    override suspend fun getAllLyrics(id: String?, title: String, artist: String, duration: Int): Result<List<String>> =
-        KuGou.getAllLyrics(title, artist, duration)
+    override suspend fun getAllLyrics(id: String?, title: String, artist: String, duration: Int, callback: (String) -> Unit) {
+        KuGou.getAllLyrics(title, artist, duration, callback)
+    }
 }

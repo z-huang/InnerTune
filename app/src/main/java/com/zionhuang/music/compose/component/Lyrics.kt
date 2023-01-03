@@ -1,12 +1,16 @@
 package com.zionhuang.music.compose.component
 
+import android.app.SearchManager
+import android.content.Intent
 import android.text.format.DateUtils
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,12 +26,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
@@ -40,7 +45,10 @@ import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.utils.lyrics.LyricsEntry
 import com.zionhuang.music.utils.lyrics.LyricsHelper
+import com.zionhuang.music.utils.lyrics.LyricsUtils.parseLyrics
+import com.zionhuang.music.viewmodels.LyricsMenuViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -251,72 +259,203 @@ fun LyricsMenu(
     mediaMetadataProvider: () -> MediaMetadata,
     coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
+    viewModel: LyricsMenuViewModel = viewModel(),
 ) {
     val context = LocalContext.current
 
     var showEditDialog by rememberSaveable {
         mutableStateOf(false)
     }
-    val (textFieldValue, onTextFieldValueChange) = rememberSaveable(showEditDialog, stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(
-            TextFieldValue(
-                text = lyricsProvider().orEmpty()
-            )
-        )
-    }
 
     if (showEditDialog) {
-        DefaultDialog(
+        TextFieldDialog(
             onDismiss = { showEditDialog = false },
             icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
-            buttons = {
-                TextButton(
-                    onClick = {
-                        showEditDialog = false
-                    }
-                ) {
-                    Text(text = stringResource(android.R.string.cancel))
-                }
-
-                TextButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            SongRepository(context).upsert(LyricsEntity(
-                                id = mediaMetadataProvider().id,
-                                lyrics = textFieldValue.text
-                            ))
-                        }
-                        showEditDialog = false
-                        onDismiss()
-                    }
-                ) {
-                    Text(text = stringResource(android.R.string.ok))
+            title = { Text(text = mediaMetadataProvider().title) },
+            initialTextFieldValue = TextFieldValue(lyricsProvider().orEmpty()),
+            singleLine = false,
+            onDone = {
+                coroutineScope.launch {
+                    SongRepository(context).upsert(LyricsEntity(
+                        id = mediaMetadataProvider().id,
+                        lyrics = it
+                    ))
                 }
             }
-        ) {
-            TextField(
-                value = textFieldValue,
-                onValueChange = onTextFieldValueChange,
-                maxLines = 10,
-                colors = TextFieldDefaults.outlinedTextFieldColors(),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.None),
-                modifier = Modifier
-                    .padding(all = 16.dp)
-                    .weight(weight = 1f, fill = false)
-            )
-        }
+        )
     }
 
     var showSearchDialog by rememberSaveable {
         mutableStateOf(false)
     }
+    var showSearchResultDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    val searchMediaMetadata = remember(showSearchDialog) {
+        mediaMetadataProvider()
+    }
+    val (titleField, onTitleFieldChange) = rememberSaveable(showSearchDialog, stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue(
+                text = mediaMetadataProvider().title
+            )
+        )
+    }
+    val (artistField, onArtistFieldChange) = rememberSaveable(showSearchDialog, stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue(
+                text = mediaMetadataProvider().artists.joinToString { it.name }
+            )
+        )
+    }
 
     if (showSearchDialog) {
         DefaultDialog(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
             onDismiss = { showSearchDialog = false },
-            icon = { Icon(painter = painterResource(R.drawable.ic_search), contentDescription = null) }
-        ) {
+            icon = { Icon(painter = painterResource(R.drawable.ic_search), contentDescription = null) },
+            title = { Text(stringResource(R.string.dialog_title_search_lyrics)) },
+            buttons = {
+                TextButton(
+                    onClick = { showSearchDialog = false }
+                ) {
+                    Text(stringResource(android.R.string.cancel))
+                }
 
+                Spacer(Modifier.width(8.dp))
+
+                TextButton(
+                    onClick = {
+                        showSearchDialog = false
+                        onDismiss()
+                        try {
+                            context.startActivity(
+                                Intent(Intent.ACTION_WEB_SEARCH).apply {
+                                    putExtra(SearchManager.QUERY, "${artistField.text} ${titleField.text} lyrics")
+                                }
+                            )
+                        } catch (_: Exception) {
+                        }
+                    }
+                ) {
+                    Text(stringResource(R.string.menu_search_online))
+                }
+
+                Spacer(Modifier.width(8.dp))
+
+                TextButton(
+                    onClick = {
+                        viewModel.search(searchMediaMetadata.id, titleField.text, artistField.text, searchMediaMetadata.duration)
+                        showSearchResultDialog = true
+                    }
+                ) {
+                    Text(stringResource(android.R.string.ok))
+                }
+            }
+        ) {
+            OutlinedTextField(
+                value = titleField,
+                onValueChange = onTitleFieldChange,
+                singleLine = true,
+                label = { Text(stringResource(R.string.song_title)) }
+            )
+
+            Spacer(Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = artistField,
+                onValueChange = onArtistFieldChange,
+                singleLine = true,
+                label = { Text(stringResource(R.string.song_artists)) }
+            )
+        }
+    }
+
+    if (showSearchResultDialog) {
+        val results by viewModel.results.collectAsState()
+        val isLoading by viewModel.isLoading.collectAsState()
+
+        var expandedItemIndex by rememberSaveable {
+            mutableStateOf(-1)
+        }
+
+        ListDialog(
+            onDismiss = { showSearchResultDialog = false }
+        ) {
+            itemsIndexed(results) { index, result ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onDismiss()
+                            viewModel.cancelSearch()
+                            coroutineScope.launch {
+                                SongRepository(context).upsert(LyricsEntity(
+                                    id = searchMediaMetadata.id,
+                                    lyrics = result.lyrics
+                                ))
+                            }
+                        }
+                        .padding(12.dp)
+                        .animateContentSize()
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = result.lyrics,
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = if (index == expandedItemIndex) Int.MAX_VALUE else 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = result.providerName,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.secondary,
+                                maxLines = 1
+                            )
+                            if (result.lyrics.startsWith("[")) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_sync),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier
+                                        .padding(start = 4.dp)
+                                        .size(18.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    IconButton(
+                        onClick = {
+                            expandedItemIndex = if (expandedItemIndex == index) -1 else index
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(if (index == expandedItemIndex) R.drawable.ic_expand_less else R.drawable.ic_expand_more),
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+
+            if (isLoading) {
+                item {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            }
         }
     }
 
@@ -348,7 +487,6 @@ fun LyricsMenu(
         GridMenuItem(
             icon = R.drawable.ic_search,
             title = R.string.menu_search,
-            enabled = false
         ) {
             showSearchDialog = true
         }

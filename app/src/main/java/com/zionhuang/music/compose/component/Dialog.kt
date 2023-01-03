@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -26,7 +27,7 @@ fun DefaultDialog(
     modifier: Modifier = Modifier,
     icon: (@Composable () -> Unit)? = null,
     title: (@Composable () -> Unit)? = null,
-    buttons: (@Composable () -> Unit)? = null,
+    buttons: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Dialog(
@@ -34,57 +35,56 @@ fun DefaultDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
-            modifier = modifier.padding(24.dp),
+            modifier = Modifier.padding(24.dp),
             shape = AlertDialogDefaults.shape,
             color = AlertDialogDefaults.containerColor,
             tonalElevation = AlertDialogDefaults.TonalElevation
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(vertical = 24.dp)
+                modifier = modifier
+                    .padding(24.dp)
             ) {
                 if (icon != null) {
                     CompositionLocalProvider(LocalContentColor provides AlertDialogDefaults.iconContentColor) {
                         Box(
-                            Modifier
-                                .padding(bottom = 16.dp)
-                                .align(Alignment.CenterHorizontally)
+                            Modifier.align(Alignment.CenterHorizontally)
                         ) {
                             icon()
                         }
                     }
+
+                    Spacer(Modifier.height(16.dp))
                 }
                 if (title != null) {
                     CompositionLocalProvider(LocalContentColor provides AlertDialogDefaults.titleContentColor) {
                         ProvideTextStyle(MaterialTheme.typography.headlineSmall) {
                             Box(
                                 // Align the title to the center when an icon is present.
-                                Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .padding(bottom = 16.dp)
-                                    .align(if (icon == null) Alignment.Start else Alignment.CenterHorizontally)
+                                Modifier.align(if (icon == null) Alignment.Start else Alignment.CenterHorizontally)
                             ) {
                                 title()
                             }
                         }
                     }
+
+                    Spacer(Modifier.height(16.dp))
                 }
 
                 content()
 
                 if (buttons != null) {
+                    Spacer(Modifier.height(24.dp))
+
                     Row(
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(top = 24.dp)
-                            .padding(horizontal = 16.dp)
+                        modifier = Modifier.align(Alignment.End)
                     ) {
                         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.primary) {
                             ProvideTextStyle(
-                                value = MaterialTheme.typography.labelLarge,
-                                content = buttons
-                            )
+                                value = MaterialTheme.typography.labelLarge
+                            ) {
+                                buttons()
+                            }
                         }
                     }
                 }
@@ -93,23 +93,30 @@ fun DefaultDialog(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ListDialog(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    icon: (@Composable () -> Unit)? = null,
-    title: (@Composable () -> Unit)? = null,
-    buttons: (@Composable () -> Unit)? = null,
     content: LazyListScope.() -> Unit,
 ) {
-    DefaultDialog(
-        onDismiss = onDismiss,
-        modifier = modifier,
-        icon = icon,
-        title = title,
-        buttons = buttons
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
-        LazyColumn(content = content)
+        Surface(
+            modifier = Modifier.padding(24.dp),
+            shape = AlertDialogDefaults.shape,
+            color = AlertDialogDefaults.containerColor,
+            tonalElevation = AlertDialogDefaults.TonalElevation
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier.padding(vertical = 24.dp)
+            ) {
+                LazyColumn(content = content)
+            }
+        }
     }
 }
 
@@ -136,6 +143,7 @@ fun TextFieldDialog(
     }
 
     LaunchedEffect(Unit) {
+        delay(300)
         focusRequester.requestFocus()
     }
 
@@ -175,7 +183,6 @@ fun TextFieldDialog(
                 }
             ),
             modifier = Modifier
-                .padding(horizontal = 16.dp)
                 .weight(weight = 1f, fill = false)
                 .focusRequester(focusRequester)
         )
