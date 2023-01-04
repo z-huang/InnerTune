@@ -6,10 +6,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 const val CONTENT_TYPE_HEADER = 0
-const val CONTENT_TYPE_SONG = 1
-const val CONTENT_TYPE_ARTIST = 2
-const val CONTENT_TYPE_ALBUM = 3
-const val CONTENT_TYPE_PLAYLIST = 4
+const val CONTENT_TYPE_LIST = 1
+const val CONTENT_TYPE_SONG = 2
+const val CONTENT_TYPE_ARTIST = 3
+const val CONTENT_TYPE_ALBUM = 4
+const val CONTENT_TYPE_PLAYLIST = 5
 const val CONTENT_TYPE_SHIMMER = -1
 
 val NavigationBarHeight = 80.dp

@@ -36,7 +36,6 @@ import com.zionhuang.music.utils.KeyboardUtil.hideKeyboard
 import com.zionhuang.music.utils.KeyboardUtil.showKeyboard
 import com.zionhuang.music.utils.NavigationEndpointHandler
 import com.zionhuang.music.viewmodels.LocalSearchViewModel
-import com.zionhuang.music.viewmodels.LocalSearchViewModel.Filter
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -106,30 +105,6 @@ class LocalSearchFragment : AbsRecyclerViewFragment<FragmentSearchLocalBinding, 
         }
         setupSearchView()
         showKeyboard()
-        when (viewModel.filter.value) {
-            Filter.ALL -> binding.chipAll
-            Filter.SONG -> binding.chipSongs
-            Filter.ALBUM -> binding.chipAlbums
-            Filter.ARTIST -> binding.chipArtists
-            Filter.PLAYLIST -> binding.chipPlaylists
-        }.isChecked = true
-
-        binding.chipGroup.setOnCheckedStateChangeListener { group, _ ->
-            viewModel.filter.value = when (group.checkedChipId) {
-                R.id.chip_all -> Filter.ALL
-                R.id.chip_songs -> Filter.SONG
-                R.id.chip_albums -> Filter.ALBUM
-                R.id.chip_artists -> Filter.ARTIST
-                R.id.chip_playlists -> Filter.PLAYLIST
-                else -> Filter.ALL
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.result.collectLatest { list ->
-                adapter.submitList(list)
-            }
-        }
     }
 
     @OptIn(FlowPreview::class)
@@ -139,7 +114,7 @@ class LocalSearchFragment : AbsRecyclerViewFragment<FragmentSearchLocalBinding, 
                 .getTextChangeFlow()
                 .debounce(100L)
                 .collectLatest {
-                    viewModel.query.postValue(it)
+//                    viewModel.query.postValue(it)
                     binding.btnClear.isVisible = it.isNotEmpty()
                 }
         }

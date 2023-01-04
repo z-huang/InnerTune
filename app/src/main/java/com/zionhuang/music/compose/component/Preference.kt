@@ -3,9 +3,7 @@ package com.zionhuang.music.compose.component
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,7 +13,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastForEach
 
 @Composable
 fun PreferenceEntry(
@@ -95,36 +92,30 @@ fun <T> ListPreference(
         mutableStateOf(false)
     }
     if (showDialog) {
-        DefaultDialog(
+        ListDialog(
             onDismiss = { showDialog = false }
         ) {
-            Column(
-                modifier = Modifier
-                    .selectableGroup()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                values.fastForEach { value ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                showDialog = false
-                                onValueSelected(value)
-                            }
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
-                    ) {
-                        RadioButton(
-                            selected = value == selectedValue,
-                            onClick = null
-                        )
+            items(values) { value ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            showDialog = false
+                            onValueSelected(value)
+                        }
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                ) {
+                    RadioButton(
+                        selected = value == selectedValue,
+                        onClick = null
+                    )
 
-                        Text(
-                            text = valueText(value),
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                    }
+                    Text(
+                        text = valueText(value),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
                 }
             }
         }

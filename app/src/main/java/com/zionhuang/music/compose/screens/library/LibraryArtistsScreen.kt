@@ -1,7 +1,7 @@
 package com.zionhuang.music.compose.screens.library
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -77,7 +77,7 @@ fun LibraryArtistsScreen(
                     artist = artist,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .combinedClickable {
+                        .clickable {
                             navController.navigate("artist/${artist.id}")
                         }
                         .animateItemPlacement()

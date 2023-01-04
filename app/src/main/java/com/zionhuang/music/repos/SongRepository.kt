@@ -200,11 +200,11 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Search
      */
-    override fun searchAll(query: String): Flow<List<LocalBaseItem>> = combine(
-        songDao.searchSongsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_songs))) + it else emptyList() },
-        artistDao.searchArtistsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_artists))) + it else emptyList() },
-        albumDao.searchAlbumsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_albums))) + it else emptyList() },
-        playlistDao.searchPlaylistsPreview(query, 3).map { if (it.isNotEmpty()) listOf(TextHeader(context.getString(R.string.search_filter_playlists))) + it else emptyList() }
+    override fun searchAll(query: String): Flow<List<LocalItem>> = combine(
+        songDao.searchSongsPreview(query, 3),
+        artistDao.searchArtistsPreview(query, 3),
+        albumDao.searchAlbumsPreview(query, 3),
+        playlistDao.searchPlaylistsPreview(query, 3)
     ) { songResult, artistResult, albumResult, playlistResult -> songResult + artistResult + albumResult + playlistResult }
 
     override fun searchSongs(query: String) = songDao.searchSongs(query)

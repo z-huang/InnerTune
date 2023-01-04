@@ -396,8 +396,11 @@ class ComposeActivity : ComponentActivity() {
                                 onSearchExpandedChange = onSearchExpandedChange,
                                 scrollBehavior = scrollBehavior,
                                 navController = navController,
-                                localSearchScreen = { query, onDismiss ->
-
+                                localSearchScreen = { query, _ ->
+                                    LocalSearchScreen(
+                                        query = query,
+                                        navController = navController
+                                    )
                                 },
                                 onlineSearchScreen = { query, onDismiss ->
                                     OnlineSearchScreen(

@@ -42,7 +42,7 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.mutablePreferenceState
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun AppBar(
     appBarConfig: AppBarConfig,
@@ -120,15 +120,19 @@ fun AppBar(
                     .add(WindowInsets(top = AppBarHeight))
                     .asPaddingValues())
         ) {
-            when (searchSource) {
-                SearchSource.LOCAL -> localSearchScreen(
-                    query = textFieldValue.text,
-                    onDismiss = { onSearchExpandedChange(false) }
-                )
-                SearchSource.ONLINE -> onlineSearchScreen(
-                    query = textFieldValue.text,
-                    onDismiss = { onSearchExpandedChange(false) }
-                )
+            Crossfade(
+                targetState = searchSource
+            ) { searchSource ->
+                when (searchSource) {
+                    SearchSource.LOCAL -> localSearchScreen(
+                        query = textFieldValue.text,
+                        onDismiss = { onSearchExpandedChange(false) }
+                    )
+                    SearchSource.ONLINE -> onlineSearchScreen(
+                        query = textFieldValue.text,
+                        onDismiss = { onSearchExpandedChange(false) }
+                    )
+                }
             }
         }
     }

@@ -32,6 +32,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.LocalPlayerConnection
 import com.zionhuang.music.compose.component.LocalMenuState
+import com.zionhuang.music.compose.component.NoResultFound
 import com.zionhuang.music.compose.component.YouTubeListItem
 import com.zionhuang.music.compose.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.compose.component.shimmer.ShimmerHost
@@ -161,25 +162,7 @@ fun OnlineSearchResult(
 
             if (items.itemCount == 0) {
                 item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(12.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_search),
-                            contentDescription = null,
-                            modifier = Modifier.size(64.dp)
-                        )
-
-                        Spacer(Modifier.height(12.dp))
-
-                        Text(
-                            text = stringResource(R.string.no_results_found),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
+                    NoResultFound()
                 }
             }
         }

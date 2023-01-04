@@ -46,6 +46,7 @@ fun InnerTuneTheme(
 }
 
 suspend fun extractThemeColorFromBitmap(bitmap: Bitmap) = withContext(IO) {
+
     val palette = Palette.from(bitmap).maximumColorCount(8).generate()
     val defaultHsl = palette.dominantSwatch!!.hsl
     val hsl = defaultHsl.takeIf { it[1] >= 0.08 }
