@@ -64,3 +64,27 @@ fun artistAppBarConfig() = AppBarConfig(
 fun playlistAppBarConfig() = AppBarConfig(
     searchable = false
 )
+
+fun settingsAppBarConfig(route: String) = AppBarConfig(
+    title = {
+        Text(
+            text = stringResource(when (route) {
+                "settings" -> R.string.title_settings
+                "settings/appearance" -> R.string.pref_appearance_title
+                "settings/content" -> R.string.pref_content_title
+                "settings/player" -> R.string.pref_player_audio_title
+                "settings/storage" -> R.string.pref_storage_title
+                "settings/general" -> R.string.pref_general_title
+                "settings/privacy" -> R.string.pref_privacy_title
+                "settings/backup_restore" -> R.string.pref_backup_restore_title
+                "settings/about" -> R.string.pref_about_title
+                else -> error("Unknown route")
+            }),
+            style = MaterialTheme.typography.titleLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+    },
+    searchable = false
+)

@@ -167,6 +167,7 @@ class ComposeActivity : ComponentActivity() {
                                 route.startsWith("album/") -> albumAppBarConfig()
                                 route.startsWith("artist/") -> artistAppBarConfig()
                                 route.startsWith("playlist/") -> playlistAppBarConfig()
+                                route.startsWith("settings") -> settingsAppBarConfig(route)
                                 else -> defaultAppBarConfig()
                             }
                         }
