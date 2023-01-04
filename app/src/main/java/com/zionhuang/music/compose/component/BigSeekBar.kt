@@ -1,6 +1,5 @@
 package com.zionhuang.music.compose.component
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +36,6 @@ fun BigSeekBar(
             }
             .pointerInput(progressProvider) {
                 detectHorizontalDragGestures { change, dragAmount ->
-                    Log.d("DBG", "$dragAmount")
                     onProgressChange((progressProvider() + dragAmount * 1.2f / width).coerceIn(0f, 1f))
                 }
             }

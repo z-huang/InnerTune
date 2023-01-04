@@ -1,6 +1,5 @@
 package com.zionhuang.music.compose.screens.settings
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,7 +47,6 @@ fun StorageSettings() {
         while (isActive) {
             delay(500)
             imageCacheSize = imageDiskCache.size
-            Log.d("DBG", "$imageCacheSize")
         }
     }
     LaunchedEffect(playerCache) {

@@ -52,4 +52,4 @@ rootProject.name = "InnerTune"
 include(":app")
 include(":innertube")
 include(":kugou")
-include(":material-theme-builder")
+include(":material-color-utilities")

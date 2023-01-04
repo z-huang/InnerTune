@@ -15,9 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.palette.graphics.Palette
-import com.google.material.themebuilder.scheme.Scheme
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
+import com.google.material.color.scheme.Scheme
+import com.google.material.color.score.Score
 
 val DefaultThemeColor = Color(0xFF6650a4)
 
@@ -45,17 +44,14 @@ fun InnerTuneTheme(
     )
 }
 
-suspend fun extractThemeColorFromBitmap(bitmap: Bitmap) = withContext(IO) {
-
-    val palette = Palette.from(bitmap).maximumColorCount(8).generate()
-    val defaultHsl = palette.dominantSwatch!!.hsl
-    val hsl = defaultHsl.takeIf { it[1] >= 0.08 }
-        ?: palette.swatches
-            .map { it.hsl }
-            .filter { it[1] != 0f }
-            .maxByOrNull { it[1] }
-        ?: defaultHsl
-    Color.hsl(hsl[0], hsl[1], hsl[2])
+fun Bitmap.extractThemeColor(): Color {
+    val colorsToPopulation = Palette.from(this)
+        .maximumColorCount(8)
+        .generate()
+        .swatches
+        .associate { it.rgb to it.population }
+    val rankedColors = Score.score(colorsToPopulation)
+    return Color(rankedColors.first())
 }
 
 fun Scheme.toColorScheme() = ColorScheme(

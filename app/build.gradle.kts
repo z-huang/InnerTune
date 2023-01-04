@@ -102,7 +102,7 @@ dependencies {
     implementation(libs.compose.animation)
     implementation(libs.compose.animation.graphics)
     implementation(libs.compose.material3)
-    implementation(projects.materialThemeBuilder)
+    implementation(projects.materialColorUtilities)
 
     implementation(libs.compose.shimmer)
 

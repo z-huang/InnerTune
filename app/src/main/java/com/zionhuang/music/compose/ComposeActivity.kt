@@ -53,10 +53,7 @@ import com.zionhuang.music.compose.screens.library.LibraryArtistsScreen
 import com.zionhuang.music.compose.screens.library.LibraryPlaylistsScreen
 import com.zionhuang.music.compose.screens.library.LibrarySongsScreen
 import com.zionhuang.music.compose.screens.settings.*
-import com.zionhuang.music.compose.theme.ColorSaver
-import com.zionhuang.music.compose.theme.DefaultThemeColor
-import com.zionhuang.music.compose.theme.InnerTuneTheme
-import com.zionhuang.music.compose.theme.extractThemeColorFromBitmap
+import com.zionhuang.music.compose.theme.*
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.MusicService
@@ -65,6 +62,7 @@ import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.NavigationTabHelper
 import com.zionhuang.music.viewmodels.MainViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ComposeActivity : ComponentActivity() {
@@ -108,32 +106,29 @@ class ComposeActivity : ComponentActivity() {
                 val coroutineScope = rememberCoroutineScope()
                 val darkTheme by mutablePreferenceState(key = DARK_THEME, defaultValue = DarkMode.AUTO)
                 val isSystemInDarkTheme = isSystemInDarkTheme()
+                val useDarkTheme = remember(darkTheme, isSystemInDarkTheme) {
+                    if (darkTheme == DarkMode.AUTO) isSystemInDarkTheme else darkTheme == DarkMode.ON
+                }
+                LaunchedEffect(useDarkTheme) {
+                    setSystemBarAppearance(useDarkTheme)
+                }
                 var themeColor by rememberSaveable(stateSaver = ColorSaver) {
                     mutableStateOf(DefaultThemeColor)
                 }
 
                 DisposableEffect(playerConnection?.binder, isSystemInDarkTheme) {
                     playerConnection?.onBitmapChanged = { bitmap ->
-                        if (bitmap != null) {
-                            coroutineScope.launch {
-                                themeColor = extractThemeColorFromBitmap(bitmap)
-                            }
-                        } else {
-                            themeColor = DefaultThemeColor
+                        coroutineScope.launch(Dispatchers.IO) {
+                            themeColor = bitmap?.extractThemeColor() ?: DefaultThemeColor
                         }
                     }
-
                     onDispose {
                         playerConnection?.onBitmapChanged = {}
                     }
                 }
 
-                LaunchedEffect(darkTheme, isSystemInDarkTheme) {
-                    setSystemBarAppearance(if (darkTheme == DarkMode.AUTO) isSystemInDarkTheme else darkTheme == DarkMode.ON)
-                }
-
                 InnerTuneTheme(
-                    darkTheme = if (darkTheme == DarkMode.AUTO) isSystemInDarkTheme else darkTheme == DarkMode.ON,
+                    darkTheme = useDarkTheme,
                     themeColor = themeColor
                 ) {
                     BoxWithConstraints(

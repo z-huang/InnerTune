@@ -9,6 +9,7 @@ import coil.request.Disposable
 import coil.request.ImageRequest
 
 class BitmapProvider(private val context: Context) {
+    var currentUrl: String? = null
     var currentBitmap: Bitmap? = null
     private val map = LruCache<String, Bitmap>(MAX_CACHE_SIZE)
     private var disposable: Disposable? = null
@@ -19,8 +20,10 @@ class BitmapProvider(private val context: Context) {
         }
 
     fun load(url: String, callback: (Bitmap) -> Unit): Bitmap? {
-        val cache = map.get(url)
+        if (url == currentUrl) return map.get(url)
+        currentUrl = url
         disposable?.dispose()
+        val cache = map.get(url)
         if (cache == null) {
             disposable = context.imageLoader.enqueue(ImageRequest.Builder(context)
                 .data(url)
