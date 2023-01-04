@@ -3,13 +3,12 @@ package com.zionhuang.music.compose.screens.library
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -19,22 +18,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.R
 import com.zionhuang.music.compose.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.compose.component.ListItem
 import com.zionhuang.music.compose.component.PlaylistListItem
+import com.zionhuang.music.compose.component.ResizableIconButton
 import com.zionhuang.music.compose.component.TextFieldDialog
-import com.zionhuang.music.compose.utils.rememberPreference
-import com.zionhuang.music.constants.CONTENT_TYPE_HEADER
-import com.zionhuang.music.constants.CONTENT_TYPE_PLAYLIST
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.constants.Constants.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.constants.Constants.LIKED_PLAYLIST_ID
-import com.zionhuang.music.constants.PLAYLIST_SORT_DESCENDING
-import com.zionhuang.music.constants.PLAYLIST_SORT_TYPE
 import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.models.sortInfo.PlaylistSortType
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.viewmodels.LibraryPlaylistsViewModel
@@ -48,11 +47,9 @@ fun LibraryPlaylistsScreen(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val sortType by rememberPreference(PLAYLIST_SORT_TYPE, PlaylistSortType.CREATE_DATE)
-    val sortDescending by rememberPreference(PLAYLIST_SORT_DESCENDING, true)
     val likedSongCount by viewModel.likedSongCount.collectAsState()
     val downloadedSongCount by viewModel.downloadedSongCount.collectAsState()
-    val items by viewModel.allPlaylists.collectAsState()
+    val playlists by viewModel.allPlaylists.collectAsState()
 
     var showAddPlaylistDialog by rememberSaveable {
         mutableStateOf(false)
@@ -83,13 +80,7 @@ fun LibraryPlaylistsScreen(
                 key = "header",
                 contentType = CONTENT_TYPE_HEADER
             ) {
-                TextButton(onClick = {}) {
-                    Text(stringResource(when (sortType) {
-                        PlaylistSortType.CREATE_DATE -> R.string.sort_by_create_date
-                        PlaylistSortType.NAME -> R.string.sort_by_name
-                        PlaylistSortType.SONG_COUNT -> R.string.sort_by_song_count
-                    }))
-                }
+                PlaylistHeader(itemCount = playlists.size)
             }
 
             item(
@@ -125,7 +116,7 @@ fun LibraryPlaylistsScreen(
             }
 
             items(
-                items = items,
+                items = playlists,
                 key = { it.id },
                 contentType = { CONTENT_TYPE_PLAYLIST }
             ) { playlist ->
@@ -158,3 +149,85 @@ fun LibraryPlaylistsScreen(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun PlaylistHeader(
+    itemCount: Int,
+) {
+    val (sortType, onSortTypeChange) = mutablePreferenceState(PLAYLIST_SORT_TYPE, PlaylistSortType.CREATE_DATE)
+    val (sortDescending, onSortDescendingChange) = mutablePreferenceState(PLAYLIST_SORT_DESCENDING, true)
+    val (menuExpanded, onMenuExpandedChange) = remember { mutableStateOf(false) }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Text(
+            text = stringResource(when (sortType) {
+                PlaylistSortType.CREATE_DATE -> R.string.sort_by_create_date
+                PlaylistSortType.NAME -> R.string.sort_by_name
+                PlaylistSortType.SONG_COUNT -> R.string.sort_by_song_count
+            }),
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(bounded = false)
+                ) {
+                    onMenuExpandedChange(!menuExpanded)
+                }
+                .padding(horizontal = 4.dp, vertical = 8.dp)
+        )
+
+        DropdownMenu(
+            expanded = menuExpanded,
+            onDismissRequest = { onMenuExpandedChange(false) },
+            modifier = Modifier.widthIn(min = 172.dp)
+        ) {
+            listOf(
+                PlaylistSortType.CREATE_DATE to R.string.sort_by_create_date,
+                PlaylistSortType.NAME to R.string.sort_by_name,
+                PlaylistSortType.SONG_COUNT to R.string.sort_by_song_count
+            ).forEach { (type, text) ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = stringResource(text),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+                    },
+                    trailingIcon = {
+                        Icon(
+                            painter = painterResource(if (sortType == type) R.drawable.ic_radio_button_checked else R.drawable.ic_radio_button_unchecked),
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+                        onSortTypeChange(type)
+                        onMenuExpandedChange(false)
+                    }
+                )
+            }
+        }
+
+        ResizableIconButton(
+            icon = if (sortDescending) R.drawable.ic_arrow_downward else R.drawable.ic_arrow_upward,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .size(32.dp)
+                .padding(8.dp),
+            onClick = { onSortDescendingChange(!sortDescending) }
+        )
+
+        Spacer(Modifier.weight(1f))
+
+        Text(
+            text = pluralStringResource(R.plurals.playlist_count, itemCount, itemCount),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.secondary
+        )
+    }
+}

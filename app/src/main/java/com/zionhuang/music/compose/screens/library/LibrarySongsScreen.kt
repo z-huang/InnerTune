@@ -47,10 +47,6 @@ fun LibrarySongsScreen(
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
-    val (sortType, onSortTypeChange) = mutablePreferenceState(SONG_SORT_TYPE, SongSortType.CREATE_DATE)
-    val (sortDescending, onSortDescendingChange) = mutablePreferenceState(SONG_SORT_DESCENDING, true)
-    val (sortTypeMenuExpanded, onSortTypeMenuExpandedChange) = remember { mutableStateOf(false) }
-
     val items by viewModel.allSongs.collectAsState()
 
     Box(
@@ -68,15 +64,7 @@ fun LibrarySongsScreen(
                 key = "header",
                 contentType = CONTENT_TYPE_HEADER
             ) {
-                SongHeader(
-                    sortType = sortType,
-                    onSortTypeChange = onSortTypeChange,
-                    sortDescending = sortDescending,
-                    onSortDescendingChange = onSortDescendingChange,
-                    menuExpanded = sortTypeMenuExpanded,
-                    onMenuExpandedChange = onSortTypeMenuExpandedChange,
-                    songCount = items.size
-                )
+                SongHeader(itemCount = items.size)
             }
 
             itemsIndexed(
@@ -138,18 +126,16 @@ fun LibrarySongsScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SongHeader(
-    sortType: SongSortType,
-    onSortTypeChange: (SongSortType) -> Unit,
-    sortDescending: Boolean,
-    onSortDescendingChange: (Boolean) -> Unit,
-    menuExpanded: Boolean,
-    onMenuExpandedChange: (Boolean) -> Unit,
-    songCount: Int,
+    itemCount: Int,
 ) {
+    val (sortType, onSortTypeChange) = mutablePreferenceState(SONG_SORT_TYPE, SongSortType.CREATE_DATE)
+    val (sortDescending, onSortDescendingChange) = mutablePreferenceState(SONG_SORT_DESCENDING, true)
+    val (menuExpanded, onMenuExpandedChange) = remember { mutableStateOf(false) }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text = stringResource(when (sortType) {
@@ -167,7 +153,7 @@ fun SongHeader(
                 ) {
                     onMenuExpandedChange(!menuExpanded)
                 }
-                .padding(8.dp)
+                .padding(horizontal = 4.dp, vertical = 8.dp)
         )
 
         DropdownMenu(
@@ -215,7 +201,7 @@ fun SongHeader(
         Spacer(Modifier.weight(1f))
 
         Text(
-            text = pluralStringResource(R.plurals.song_count, songCount, songCount),
+            text = pluralStringResource(R.plurals.song_count, itemCount, itemCount),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.secondary
         )
