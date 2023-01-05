@@ -1,11 +1,13 @@
 package com.zionhuang.music.compose.component
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -14,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.zionhuang.music.R
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,6 +68,37 @@ fun PlayingIndicator(
                     topLeft = Offset(x = 0f, y = size.height * (1 - animatable.value)),
                     size = size.copy(height = animatable.value * size.height),
                     cornerRadius = CornerRadius(cornerRadius.toPx())
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun PlayingIndicatorBox(
+    isPlaying: Boolean,
+    playWhenReady: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    AnimatedVisibility(
+        visible = isPlaying,
+        enter = fadeIn(tween(500)),
+        exit = fadeOut(tween(500))
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+        ) {
+            if (playWhenReady) {
+                PlayingIndicator(
+                    color = Color.White,
+                    modifier = Modifier.height(24.dp)
+                )
+            } else {
+                Icon(
+                    painter = painterResource(R.drawable.ic_play),
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         }

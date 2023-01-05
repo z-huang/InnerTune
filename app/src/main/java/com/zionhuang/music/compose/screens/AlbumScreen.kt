@@ -183,7 +183,7 @@ fun AlbumScreen(
             ) { index, song ->
                 SongListItem(
                     song = song,
-                    playingIndicator = song.id == mediaMetadata?.id,
+                    isPlaying = song.id == mediaMetadata?.id,
                     playWhenReady = playWhenReady,
                     modifier = Modifier
                         .fillMaxWidth()

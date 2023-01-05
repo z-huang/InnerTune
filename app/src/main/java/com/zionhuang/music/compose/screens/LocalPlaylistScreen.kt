@@ -43,7 +43,9 @@ fun LocalPlaylistScreen(
             items = songs
         ) { song ->
             SongListItem(
-                song = song
+                song = song,
+                isPlaying = song.id == mediaMetadata?.id,
+                playWhenReady = playWhenReady
             )
         }
     }

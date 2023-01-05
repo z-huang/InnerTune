@@ -1,6 +1,7 @@
 package com.zionhuang.music.compose.menu
 
 import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
@@ -79,8 +80,13 @@ fun SongMenu(
             item {
                 ListItem(
                     title = stringResource(R.string.dialog_title_create_playlist),
-                    thumbnailDrawable = R.drawable.ic_add,
-                    showMenuButton = false,
+                    thumbnailContent = {
+                        Image(
+                            painter = painterResource(R.drawable.ic_add),
+                            contentDescription = null,
+                            modifier = Modifier.size(ListThumbnailSize)
+                        )
+                    },
                     modifier = Modifier.clickable {
                         showCreatePlaylistDialog = true
                     }
@@ -90,7 +96,6 @@ fun SongMenu(
             items(playlists) { playlist ->
                 PlaylistListItem(
                     playlist = playlist,
-                    showMenuButton = false,
                     modifier = Modifier.clickable {
                         showChoosePlaylistDialog = false
                         onDismiss()
@@ -169,7 +174,6 @@ fun SongMenu(
     SongListItem(
         song = song,
         showBadges = false,
-        showMenuButton = false,
         trailingContent = {
             IconButton(
                 onClick = {

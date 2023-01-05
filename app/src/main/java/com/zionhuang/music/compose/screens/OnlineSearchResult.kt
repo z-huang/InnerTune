@@ -1,9 +1,12 @@
 package com.zionhuang.music.compose.screens
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -113,36 +116,45 @@ fun OnlineSearchResult(
                                 )
                             }
                         },
-                        playingIndicator = when (item) {
+                        isPlaying = when (item) {
                             is SongItem -> mediaMetadata?.id == item.id
                             is AlbumItem -> mediaMetadata?.album?.id == item.id
                             else -> false
                         },
                         playWhenReady = playWhenReady,
-                        onShowMenu = {
-                            menuState.show {
-                                when (item) {
-                                    is SongItem -> YouTubeSongMenu(
-                                        song = item,
-                                        navController = navController,
-                                        playerConnection = playerConnection,
-                                        coroutineScope = coroutineScope,
-                                        onDismiss = menuState::dismiss
-                                    )
-                                    is AlbumItem -> YouTubeAlbumMenu(
-                                        album = item,
-                                        navController = navController,
-                                        playerConnection = playerConnection,
-                                        coroutineScope = coroutineScope,
-                                        onDismiss = menuState::dismiss
-                                    )
-                                    is ArtistItem -> YouTubeArtistMenu(
-                                        artist = item,
-                                        playerConnection = playerConnection,
-                                        onDismiss = menuState::dismiss
-                                    )
-                                    is PlaylistItem -> {}
+                        trailingContent = {
+                            IconButton(
+                                onClick = {
+                                    menuState.show {
+                                        when (item) {
+                                            is SongItem -> YouTubeSongMenu(
+                                                song = item,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                            is AlbumItem -> YouTubeAlbumMenu(
+                                                album = item,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                            is ArtistItem -> YouTubeArtistMenu(
+                                                artist = item,
+                                                playerConnection = playerConnection,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                            is PlaylistItem -> {}
+                                        }
+                                    }
                                 }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_more_vert),
+                                    contentDescription = null
+                                )
                             }
                         },
                         modifier = Modifier

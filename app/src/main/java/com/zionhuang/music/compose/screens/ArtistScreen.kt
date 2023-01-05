@@ -211,36 +211,39 @@ fun ArtistScreen(
                 is YTItem -> {
                     YouTubeListItem(
                         item = item,
-                        playingIndicator = when (item) {
-                            is SongItem -> mediaMetadata?.id == item.id
-                            is AlbumItem -> mediaMetadata?.album?.id == item.id
-                            else -> false
-                        },
-                        playWhenReady = playWhenReady,
-                        onShowMenu = {
-                            menuState.show {
-                                when (item) {
-                                    is SongItem -> YouTubeSongMenu(
-                                        song = item,
-                                        navController = navController,
-                                        playerConnection = playerConnection,
-                                        coroutineScope = coroutineScope,
-                                        onDismiss = menuState::dismiss
-                                    )
-                                    is AlbumItem -> YouTubeAlbumMenu(
-                                        album = item,
-                                        navController = navController,
-                                        playerConnection = playerConnection,
-                                        coroutineScope = coroutineScope,
-                                        onDismiss = menuState::dismiss
-                                    )
-                                    is ArtistItem -> YouTubeArtistMenu(
-                                        artist = item,
-                                        playerConnection = playerConnection,
-                                        onDismiss = menuState::dismiss
-                                    )
-                                    is PlaylistItem -> {}
+                        trailingContent = {
+                            IconButton(
+                                onClick = {
+                                    menuState.show {
+                                        when (item) {
+                                            is SongItem -> YouTubeSongMenu(
+                                                song = item,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                            is AlbumItem -> YouTubeAlbumMenu(
+                                                album = item,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                            is ArtistItem -> YouTubeArtistMenu(
+                                                artist = item,
+                                                playerConnection = playerConnection,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                            is PlaylistItem -> {}
+                                        }
+                                    }
                                 }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_more_vert),
+                                    contentDescription = null
+                                )
                             }
                         },
                         modifier = Modifier

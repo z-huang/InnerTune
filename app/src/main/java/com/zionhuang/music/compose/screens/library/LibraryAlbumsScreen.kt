@@ -63,7 +63,7 @@ fun LibraryAlbumsScreen(
             ) { album ->
                 AlbumListItem(
                     album = album,
-                    playingIndicator = mediaMetadata?.album?.id == album.id,
+                    isPlaying = album.id == mediaMetadata?.album?.id,
                     playWhenReady = playWhenReady,
                     modifier = Modifier
                         .fillMaxWidth()

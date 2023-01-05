@@ -210,7 +210,7 @@ fun Queue(
             ) { index, window ->
                 MediaMetadataListItem(
                     mediaMetadata = window.mediaItem.metadata!!,
-                    playingIndicator = index == currentWindowIndex,
+                    isPlaying = index == currentWindowIndex,
                     playWhenReady = playWhenReady,
                     modifier = Modifier
                         .fillMaxWidth()

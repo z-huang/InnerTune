@@ -74,16 +74,25 @@ fun LibrarySongsScreen(
             ) { index, song ->
                 SongListItem(
                     song = song,
-                    playingIndicator = song.id == mediaMetadata?.id,
+                    isPlaying = song.id == mediaMetadata?.id,
                     playWhenReady = playWhenReady,
-                    onShowMenu = {
-                        menuState.show {
-                            SongMenu(
-                                originalSong = song,
-                                navController = navController,
-                                playerConnection = playerConnection,
-                                coroutineScope = coroutineScope,
-                                onDismiss = menuState::dismiss
+                    trailingContent = {
+                        IconButton(
+                            onClick = {
+                                menuState.show {
+                                    SongMenu(
+                                        originalSong = song,
+                                        navController = navController,
+                                        playerConnection = playerConnection,
+                                        coroutineScope = coroutineScope,
+                                        onDismiss = menuState::dismiss
+                                    )
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_more_vert),
+                                contentDescription = null
                             )
                         }
                     },

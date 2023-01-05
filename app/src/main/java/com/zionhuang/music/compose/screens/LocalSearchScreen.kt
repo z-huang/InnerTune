@@ -43,6 +43,9 @@ fun LocalSearchScreen(
     val menuState = LocalMenuState.current
     val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
+    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
+
     val searchFilter by viewModel.filter.collectAsState()
     val result by viewModel.result.collectAsState()
 
@@ -122,14 +125,24 @@ fun LocalSearchScreen(
                     when (item) {
                         is Song -> SongListItem(
                             song = item,
-                            onShowMenu = {
-                                menuState.show {
-                                    SongMenu(
-                                        originalSong = item,
-                                        navController = navController,
-                                        playerConnection = playerConnection,
-                                        coroutineScope = coroutineScope,
-                                        onDismiss = menuState::dismiss
+                            isPlaying = item.id == mediaMetadata?.id,
+                            trailingContent = {
+                                IconButton(
+                                    onClick = {
+                                        menuState.show {
+                                            SongMenu(
+                                                originalSong = item,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_more_vert),
+                                        contentDescription = null
                                     )
                                 }
                             },
@@ -149,6 +162,8 @@ fun LocalSearchScreen(
                         )
                         is Album -> AlbumListItem(
                             album = item,
+                            isPlaying = item.id == mediaMetadata?.album?.id,
+                            playWhenReady = playWhenReady,
                             modifier = Modifier
                                 .clickable {
                                     navController.navigate("album/${item.id}")

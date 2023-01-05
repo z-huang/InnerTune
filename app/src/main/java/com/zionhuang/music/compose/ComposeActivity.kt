@@ -138,9 +138,7 @@ class ComposeActivity : ComponentActivity() {
                     ) {
                         val navController = rememberNavController()
                         val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val route = remember(navBackStackEntry) {
-                            navBackStackEntry?.destination?.route
-                        }
+                        val route = remember(navBackStackEntry) { navBackStackEntry?.destination?.route }
 
                         val navigationItems = remember {
                             val enabledNavItems = NavigationTabHelper.getConfig(this@ComposeActivity)

@@ -1,6 +1,5 @@
 package com.zionhuang.music.compose.component
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,8 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
 import coil.compose.AsyncImage
-import com.zionhuang.innertube.models.ArtistItem
-import com.zionhuang.innertube.models.YTItem
+import com.zionhuang.innertube.models.*
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.Album
@@ -43,11 +40,10 @@ import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 
 @Composable
-fun ListItem(
+inline fun ListItem(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: String = "",
-    badges: (@Composable RowScope.() -> Unit)? = null,
+    noinline subtitle: (@Composable RowScope.() -> Unit)? = null,
     thumbnailContent: @Composable () -> Unit,
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) {
@@ -76,21 +72,11 @@ fun ListItem(
                 overflow = TextOverflow.Ellipsis
             )
 
-            if (badges != null || subtitle.isNotEmpty()) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (badges != null) {
-                        badges()
-                    }
-
-                    Text(
-                        text = subtitle,
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontSize = 12.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (subtitle != null) {
+                    subtitle()
                 }
             }
         }
@@ -100,90 +86,28 @@ fun ListItem(
 }
 
 @Composable
-fun ListItem(
+inline fun ListItem(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: String = "",
-    badges: (@Composable RowScope.() -> Unit)? = null,
-    thumbnailContent: (@Composable () -> Unit)? = null,
-    @DrawableRes thumbnailDrawable: Int? = null,
-    thumbnailUrl: String? = null,
-    thumbnailShape: Shape = CircleShape,
-    @DrawableRes thumbnailPlaceHolder: Int? = null,
-    showMenuButton: Boolean = true,
-    onShowMenu: () -> Unit = {},
-    trailingContent: (@Composable RowScope.() -> Unit)? = null,
-    playingIndicator: Boolean = false,
-    playWhenReady: Boolean = false,
+    subtitle: String,
+    crossinline badges: @Composable RowScope.() -> Unit = {},
+    thumbnailContent: @Composable () -> Unit,
+    trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = title,
-    subtitle = subtitle,
-    badges = badges,
-    thumbnailContent = {
-        if (thumbnailContent != null) {
-            thumbnailContent()
-        } else {
-            if (thumbnailDrawable != null) {
-                Image(
-                    painter = painterResource(thumbnailDrawable),
-                    contentDescription = null,
-                    modifier = Modifier.size(ListThumbnailSize)
-                )
-            } else {
-                AsyncImage(
-                    model = thumbnailUrl,
-                    contentDescription = null,
-                    placeholder = thumbnailPlaceHolder?.let { painterResource(it) },
-                    error = thumbnailPlaceHolder?.let { painterResource(it) },
-                    modifier = Modifier
-                        .size(ListThumbnailSize)
-                        .clip(thumbnailShape)
-                )
-            }
-            AnimatedVisibility(
-                visible = playingIndicator,
-                enter = fadeIn(tween(500)),
-                exit = fadeOut(tween(500))
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(ListThumbnailSize)
-                        .background(
-                            color = Color.Black.copy(alpha = 0.4f),
-                            shape = thumbnailShape
-                        )
-                ) {
-                    if (playWhenReady) {
-                        PlayingIndicator(
-                            color = Color.White,
-                            modifier = Modifier.height(24.dp)
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_play),
-                            contentDescription = null,
-                            tint = Color.White
-                        )
-                    }
-                }
-            }
-        }
-    },
-    trailingContent = {
-        if (showMenuButton) {
-            IconButton(onClick = onShowMenu) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_more_vert),
-                    contentDescription = null
-                )
-            }
-        }
+    subtitle = {
+        badges()
 
-        if (trailingContent != null) {
-            trailingContent()
-        }
+        Text(
+            text = subtitle,
+            color = MaterialTheme.colorScheme.secondary,
+            fontSize = 12.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     },
+    thumbnailContent = thumbnailContent,
+    trailingContent = trailingContent,
     modifier = modifier
 )
 
@@ -279,15 +203,13 @@ fun GridItem(
 )
 
 @Composable
-fun SongListItem(
+inline fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
     showBadges: Boolean = true,
-    trailingContent: (@Composable RowScope.() -> Unit)? = null,
-    showMenuButton: Boolean = true,
-    onShowMenu: () -> Unit = {},
-    playingIndicator: Boolean = false,
+    isPlaying: Boolean = false,
     playWhenReady: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = song.song.title,
     subtitle = listOf(
@@ -307,42 +229,64 @@ fun SongListItem(
             )
         }
     },
-    thumbnailUrl = song.song.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
-    thumbnailPlaceHolder = R.drawable.ic_music_note,
+    thumbnailContent = {
+        AsyncImage(
+            model = song.song.thumbnailUrl,
+            contentDescription = null,
+            placeholder = painterResource(R.drawable.ic_music_note),
+            error = painterResource(R.drawable.ic_music_note),
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .clip(RoundedCornerShape(ThumbnailCornerRadius))
+        )
+
+        PlayingIndicatorBox(
+            isPlaying = isPlaying,
+            playWhenReady = playWhenReady,
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .background(
+                    color = Color.Black.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(ThumbnailCornerRadius)
+                )
+        )
+    },
     trailingContent = trailingContent,
-    showMenuButton = showMenuButton,
-    onShowMenu = onShowMenu,
-    playingIndicator = playingIndicator,
-    playWhenReady = playWhenReady,
     modifier = modifier
 )
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ArtistListItem(
+inline fun ArtistListItem(
     artist: Artist,
     modifier: Modifier = Modifier,
-    playingIndicator: Boolean = false,
-    playWhenReady: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = artist.artist.name,
     subtitle = pluralStringResource(R.plurals.song_count, artist.songCount, artist.songCount),
-    thumbnailUrl = artist.artist.thumbnailUrl,
-    thumbnailShape = CircleShape,
-    thumbnailPlaceHolder = R.drawable.ic_artist,
-    playingIndicator = playingIndicator,
-    playWhenReady = playWhenReady,
+    thumbnailContent = {
+        AsyncImage(
+            model = artist.artist.thumbnailUrl,
+            contentDescription = null,
+            placeholder = painterResource(R.drawable.ic_artist),
+            error = painterResource(R.drawable.ic_artist),
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .clip(CircleShape)
+        )
+    },
+    trailingContent = trailingContent,
     modifier = modifier
 )
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun AlbumListItem(
+inline fun AlbumListItem(
     album: Album,
     modifier: Modifier = Modifier,
-    playingIndicator: Boolean = false,
+    isPlaying: Boolean = false,
     playWhenReady: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = album.album.title,
     subtitle = listOf(
@@ -350,21 +294,38 @@ fun AlbumListItem(
         pluralStringResource(R.plurals.song_count, album.album.songCount, album.album.songCount),
         album.album.year?.toString()
     ).joinByBullet(),
-    thumbnailUrl = album.album.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(6.dp),
-    thumbnailPlaceHolder = R.drawable.ic_album,
-    playingIndicator = playingIndicator,
-    playWhenReady = playWhenReady,
+    thumbnailContent = {
+        AsyncImage(
+            model = album.album.thumbnailUrl,
+            contentDescription = null,
+            placeholder = painterResource(R.drawable.ic_album),
+            error = painterResource(R.drawable.ic_album),
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .clip(RoundedCornerShape(ThumbnailCornerRadius))
+        )
+
+        PlayingIndicatorBox(
+            isPlaying = isPlaying,
+            playWhenReady = playWhenReady,
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .background(
+                    color = Color.Black.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(ThumbnailCornerRadius)
+                )
+        )
+    },
+    trailingContent = trailingContent,
     modifier = modifier
 )
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PlaylistListItem(
+inline fun PlaylistListItem(
     playlist: Playlist,
     modifier: Modifier = Modifier,
-    showMenuButton: Boolean = true,
-    onShowMenu: () -> Unit = {},
+    trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = playlist.playlist.name,
     subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
@@ -408,20 +369,81 @@ fun PlaylistListItem(
             }
         }
     },
-    showMenuButton = showMenuButton,
-    onShowMenu = onShowMenu,
+    trailingContent = trailingContent,
     modifier = modifier
 )
 
 @Composable
-fun SongGridItem(
-    song: Song,
+inline fun MediaMetadataListItem(
+    mediaMetadata: MediaMetadata,
+    modifier: Modifier,
+    isPlaying: Boolean = false,
+    playWhenReady: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
+) = ListItem(
+    title = mediaMetadata.title,
+    subtitle = listOf(
+        mediaMetadata.artists.joinToString { it.name },
+        makeTimeString(mediaMetadata.duration * 1000L)
+    ).joinByBullet(),
+    thumbnailContent = {
+        AsyncImage(
+            model = mediaMetadata.thumbnailUrl,
+            contentDescription = null,
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .clip(RoundedCornerShape(ThumbnailCornerRadius))
+        )
+
+        PlayingIndicatorBox(
+            isPlaying = isPlaying,
+            playWhenReady = playWhenReady,
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .background(
+                    color = Color.Black.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(ThumbnailCornerRadius)
+                )
+        )
+    },
+    trailingContent = trailingContent,
+    modifier = modifier
+)
+
+@Composable
+inline fun YouTubeListItem(
+    item: YTItem,
     modifier: Modifier = Modifier,
-) = GridItem(
-    title = song.song.title,
-    subtitle = song.artists.joinToString { it.name },
-    thumbnailUrl = song.song.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
+    crossinline badges: @Composable RowScope.() -> Unit = {},
+    isPlaying: Boolean = false,
+    playWhenReady: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
+) = ListItem(
+    title = item.title,
+    subtitle = item.subtitle.orEmpty(),
+    badges = badges,
+    thumbnailContent = {
+        val thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius)
+        AsyncImage(
+            model = item.thumbnails.lastOrNull()?.url,
+            contentDescription = null,
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .clip(thumbnailShape)
+        )
+
+        PlayingIndicatorBox(
+            isPlaying = isPlaying,
+            playWhenReady = playWhenReady,
+            modifier = Modifier
+                .size(ListThumbnailSize)
+                .background(
+                    color = Color.Black.copy(alpha = 0.4f),
+                    shape = thumbnailShape
+                )
+        )
+    },
+    trailingContent = trailingContent,
     modifier = modifier
 )
 
@@ -466,42 +488,6 @@ fun PlaylistGridItem(
     subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
     thumbnailUrl = playlist.playlist.thumbnailUrl,
     thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
-    modifier = modifier
-)
-
-@Composable
-fun MediaMetadataListItem(
-    mediaMetadata: MediaMetadata,
-    modifier: Modifier,
-    playingIndicator: Boolean = false,
-    playWhenReady: Boolean = false,
-) = ListItem(
-    title = mediaMetadata.title,
-    subtitle = mediaMetadata.artists.joinToString { it.name },
-    thumbnailUrl = mediaMetadata.thumbnailUrl,
-    thumbnailShape = RoundedCornerShape(ThumbnailCornerRadius),
-    playingIndicator = playingIndicator,
-    playWhenReady = playWhenReady,
-    modifier = modifier
-)
-
-@Composable
-fun YouTubeListItem(
-    item: YTItem,
-    modifier: Modifier = Modifier,
-    badges: (@Composable RowScope.() -> Unit)? = null,
-    onShowMenu: () -> Unit = {},
-    playingIndicator: Boolean = false,
-    playWhenReady: Boolean = false,
-) = ListItem(
-    title = item.title,
-    subtitle = item.subtitle.orEmpty(),
-    badges = badges,
-    thumbnailUrl = item.thumbnails.lastOrNull()?.url,
-    thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius),
-    onShowMenu = onShowMenu,
-    playingIndicator = playingIndicator,
-    playWhenReady = playWhenReady,
     modifier = modifier
 )
 

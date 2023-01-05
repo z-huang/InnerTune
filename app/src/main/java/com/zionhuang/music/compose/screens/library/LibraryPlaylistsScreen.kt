@@ -1,8 +1,8 @@
 package com.zionhuang.music.compose.screens.library
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -90,9 +90,15 @@ fun LibraryPlaylistsScreen(
                 ListItem(
                     title = stringResource(R.string.liked_songs),
                     subtitle = pluralStringResource(R.plurals.song_count, likedSongCount, likedSongCount),
-                    thumbnailDrawable = R.drawable.ic_favorite,
+                    thumbnailContent = {
+                        Image(
+                            painter = painterResource(R.drawable.ic_favorite),
+                            contentDescription = null,
+                            modifier = Modifier.size(ListThumbnailSize)
+                        )
+                    },
                     modifier = Modifier
-                        .combinedClickable {
+                        .clickable {
 
                         }
                         .animateItemPlacement()
@@ -106,9 +112,15 @@ fun LibraryPlaylistsScreen(
                 ListItem(
                     title = stringResource(R.string.downloaded_songs),
                     subtitle = pluralStringResource(R.plurals.song_count, downloadedSongCount, downloadedSongCount),
-                    thumbnailDrawable = R.drawable.ic_save_alt,
+                    thumbnailContent = {
+                        Image(
+                            painter = painterResource(R.drawable.ic_save_alt),
+                            contentDescription = null,
+                            modifier = Modifier.size(ListThumbnailSize)
+                        )
+                    },
                     modifier = Modifier
-                        .combinedClickable {
+                        .clickable {
 
                         }
                         .animateItemPlacement()
