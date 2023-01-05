@@ -12,6 +12,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val librarySongIds = songRepository.getAllSongId()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    val likedSongIds = songRepository.getAllLikedSongId()
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     val libraryAlbumIds = songRepository.getAllAlbumId()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
     val libraryPlaylistIds = songRepository.getAllPlaylistId()

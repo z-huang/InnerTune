@@ -11,6 +11,7 @@ import java.io.File
 
 interface LocalRepository {
     fun getAllSongId(): Flow<List<String>>
+    fun getAllLikedSongId(): Flow<List<String>>
     fun getAllAlbumId(): Flow<List<String>>
     fun getAllPlaylistId(): Flow<List<String>>
 

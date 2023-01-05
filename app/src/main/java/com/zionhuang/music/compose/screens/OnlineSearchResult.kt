@@ -74,6 +74,7 @@ fun OnlineSearchResult(
     val items = viewModel.pagingData.collectAsLazyPagingItems()
     val searchFilter by viewModel.filter.observeAsState()
     val librarySongIds by mainViewModel.librarySongIds.collectAsState()
+    val likedSongIds by mainViewModel.likedSongIds.collectAsState()
     val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
     val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
 
@@ -110,6 +111,16 @@ fun OnlineSearchResult(
                                 Icon(
                                     painter = painterResource(R.drawable.ic_library_add_check),
                                     contentDescription = null,
+                                    modifier = Modifier
+                                        .size(18.dp)
+                                        .padding(end = 2.dp)
+                                )
+                            }
+                            if (item is SongItem && item.id in likedSongIds) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_favorite),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.error,
                                     modifier = Modifier
                                         .size(18.dp)
                                         .padding(end = 2.dp)

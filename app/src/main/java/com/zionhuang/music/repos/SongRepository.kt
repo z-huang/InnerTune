@@ -56,6 +56,7 @@ class SongRepository(private val context: Context) : LocalRepository {
     private var audioQuality by enumPreference(context, R.string.pref_audio_quality, SongPlayer.AudioQuality.AUTO)
 
     override fun getAllSongId(): Flow<List<String>> = songDao.getAllSongId()
+    override fun getAllLikedSongId(): Flow<List<String>> = songDao.getAllLikedSongId()
     override fun getAllAlbumId(): Flow<List<String>> = albumDao.getAllAlbumId()
     override fun getAllPlaylistId(): Flow<List<String>> = playlistDao.getAllPlaylistId()
 

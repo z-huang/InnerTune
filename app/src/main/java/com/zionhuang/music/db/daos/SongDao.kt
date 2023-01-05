@@ -15,6 +15,9 @@ interface SongDao {
     @Query("SELECT id FROM song")
     fun getAllSongId(): Flow<List<String>>
 
+    @Query("SELECT id FROM song WHERE liked")
+    fun getAllLikedSongId(): Flow<List<String>>
+
     @Transaction
     @RawQuery(observedEntities = [SongEntity::class, ArtistEntity::class, AlbumEntity::class, SongArtistMap::class, SongAlbumMap::class])
     suspend fun getSongsAsList(query: SupportSQLiteQuery): List<Song>
