@@ -1,7 +1,6 @@
 package com.zionhuang.music.viewmodels
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,14 +8,15 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.ArtistHeader
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.YTBaseItem
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class ArtistViewModel(
     context: Context,
     val artistId: String,
 ) : ViewModel() {
-    val artistHeader = MutableLiveData<ArtistHeader>(null)
-    val content = MutableLiveData<List<YTBaseItem>>(emptyList())
+    val artistHeader = MutableStateFlow<ArtistHeader?>(null)
+    val content = MutableStateFlow<List<YTBaseItem>>(emptyList())
 
     init {
         viewModelScope.launch {

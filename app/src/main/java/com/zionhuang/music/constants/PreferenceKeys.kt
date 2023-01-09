@@ -1,6 +1,5 @@
 package com.zionhuang.music.constants
 
-const val FOLLOW_SYSTEM_ACCENT = "FOLLOW_SYSTEM_ACCENT"
 const val DARK_THEME = "DARK_THEME"
 const val DEFAULT_OPEN_TAB = "DEFAULT_OPEN_TAB"
 
@@ -38,6 +37,8 @@ const val PLAYLIST_SORT_DESCENDING = "PLAYLIST_SORT_DESC"
 
 const val SHOW_LYRICS = "SHOW_LYRICS"
 const val LYRICS_TEXT_POSITION = "LRC_TEXT_POS"
+
+const val NAV_TAB_CONFIG = "NAV_TAB_CONFIG"
 
 const val PLAYER_VOLUME = "PLAYER_VOLUME"
 

@@ -5,7 +5,6 @@ import androidx.compose.runtime.Immutable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
@@ -29,3 +28,8 @@ data class SongEntity(
     @ColumnInfo(name = "modify_date")
     val modifyDate: LocalDateTime = LocalDateTime.now(),
 ) : Parcelable
+
+const val STATE_NOT_DOWNLOADED = 0
+const val STATE_PREPARING = 1
+const val STATE_DOWNLOADING = 2
+const val STATE_DOWNLOADED = 3

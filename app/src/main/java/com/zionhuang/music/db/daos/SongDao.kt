@@ -1,9 +1,7 @@
 package com.zionhuang.music.db.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.models.sortInfo.ISortInfo
@@ -73,11 +71,6 @@ interface SongDao {
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
     @Query("SELECT * FROM song WHERE id = :songId")
-    fun getSongAsLiveData(songId: String?): LiveData<Song?>
-
-    @Transaction
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM song WHERE id = :songId")
     fun getSongAsFlow(songId: String?): Flow<Song?>
 
     @Transaction
@@ -97,9 +90,6 @@ interface SongDao {
 
     @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id = :songId)")
     suspend fun hasSong(songId: String): Boolean
-
-    @Query("SELECT EXISTS (SELECT 1 FROM song WHERE id = :songId)")
-    fun hasSongAsLiveData(songId: String): LiveData<Boolean>
 
     @Query("UPDATE song SET totalPlayTime = totalPlayTime + :playTime WHERE id = :songId")
     suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)

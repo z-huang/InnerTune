@@ -26,3 +26,6 @@ data class Playlist(
     override val id: String
         get() = playlist.id
 }
+
+const val LIKED_PLAYLIST_ID = "LP_LIKED"
+const val DOWNLOADED_PLAYLIST_ID = "LP_DOWNLOADED"

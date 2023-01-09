@@ -15,32 +15,33 @@ import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
+import androidx.media.MediaBrowserServiceCompat
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.Constants.DOWNLOADED_PLAYLIST_ID
-import com.zionhuang.music.constants.Constants.LIKED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.LIKED_PLAYLIST_ID
 import com.zionhuang.music.models.sortInfo.AlbumSortInfoPreference
 import com.zionhuang.music.models.sortInfo.ArtistSortInfoPreference
 import com.zionhuang.music.models.sortInfo.PlaylistSortInfoPreference
 import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.repos.SongRepository
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
-class MusicService : LifecycleMediaBrowserService() {
+class MusicService : MediaBrowserServiceCompat() {
+    private val coroutineScope = CoroutineScope(Dispatchers.Main) + Job()
+
     private val binder = MusicBinder()
     private val songRepository by lazy { SongRepository(this) }
     private lateinit var songPlayer: SongPlayer
 
     override fun onCreate() {
         super.onCreate()
-        songPlayer = SongPlayer(this, lifecycleScope, object : PlayerNotificationManager.NotificationListener {
+        songPlayer = SongPlayer(this, coroutineScope, object : PlayerNotificationManager.NotificationListener {
             override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
                 stopForeground(STOP_FOREGROUND_REMOVE)
             }

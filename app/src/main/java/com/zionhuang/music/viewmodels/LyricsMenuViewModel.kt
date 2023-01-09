@@ -3,8 +3,8 @@ package com.zionhuang.music.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.zionhuang.music.utils.lyrics.LyricsHelper
-import com.zionhuang.music.utils.lyrics.LyricsResult
+import com.zionhuang.music.lyrics.LyricsHelper
+import com.zionhuang.music.lyrics.LyricsResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

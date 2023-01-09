@@ -7,8 +7,8 @@ import androidx.compose.runtime.Immutable
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.music.ui.utils.resize
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
 import kotlin.math.roundToInt
 
 @Immutable
@@ -36,7 +36,7 @@ data class MediaMetadata(
         .setTitle(title)
         .setSubtitle(artists.joinToString { it.name })
         .setDescription(artists.joinToString { it.name })
-        .setIconUri(thumbnailUrl?.let { resizeThumbnailUrl(it, (512 * context.resources.displayMetrics.density).roundToInt(), null) }?.toUri())
+        .setIconUri(thumbnailUrl?.resize((512 * context.resources.displayMetrics.density).roundToInt(), null)?.toUri())
         .setExtras(bundleOf(
             METADATA_KEY_DURATION to duration * 1000L,
             METADATA_KEY_ARTIST to artists.joinToString { it.name },

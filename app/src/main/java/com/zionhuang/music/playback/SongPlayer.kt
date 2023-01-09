@@ -34,7 +34,6 @@ import com.google.android.exoplayer2.audio.DefaultAudioSink.*
 import com.google.android.exoplayer2.audio.SilenceSkippingAudioProcessor.DEFAULT_SILENCE_THRESHOLD_LEVEL
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
-import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.source.ShuffleOrder.DefaultShuffleOrder
@@ -51,13 +50,10 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.*
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
 import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
+import com.zionhuang.music.ACTION_SHOW_BOTTOM_SHEET
+import com.zionhuang.music.MainActivity
 import com.zionhuang.music.R
-import com.zionhuang.music.compose.ComposeActivity
-import com.zionhuang.music.constants.Constants.ACTION_SHOW_BOTTOM_SHEET
-import com.zionhuang.music.constants.Constants.DOWNLOADED_PLAYLIST_ID
-import com.zionhuang.music.constants.Constants.LIKED_PLAYLIST_ID
-import com.zionhuang.music.constants.MediaConstants.EXTRA_MEDIA_METADATA_ITEMS
-import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_REMOVE_FROM_LIBRARY
@@ -65,15 +61,9 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_SHUFFLE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_UNLIKE
-import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_ADD_TO_QUEUE
-import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_PLAY_NEXT
-import com.zionhuang.music.constants.MediaSessionConstants.COMMAND_SEEK_TO_QUEUE_ITEM
-import com.zionhuang.music.constants.MediaSessionConstants.EXTRA_QUEUE_INDEX
-import com.zionhuang.music.constants.PLAYER_VOLUME
-import com.zionhuang.music.constants.SONG_MAX_CACHE_SIZE
-import com.zionhuang.music.db.entities.FormatEntity
-import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.lyrics.LyricsHelper
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.playback.MusicService.Companion.ALBUM
@@ -85,10 +75,9 @@ import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
+import com.zionhuang.music.ui.utils.resize
 import com.zionhuang.music.utils.InfoCache
-import com.zionhuang.music.utils.lyrics.LyricsHelper
-import com.zionhuang.music.utils.preference.enumPreference
+import com.zionhuang.music.utils.enumPreference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -115,22 +104,22 @@ class SongPlayer(
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     val bitmapProvider = BitmapProvider(context)
 
-    private var autoAddSong by context.preference(R.string.pref_auto_add_song, true)
-    private var audioQuality by enumPreference(context, R.string.pref_audio_quality, AudioQuality.AUTO)
+    private var autoAddSong by context.preference(AUTO_ADD_TO_LIBRARY, true)
+    private var audioQuality by enumPreference(context, AUDIO_QUALITY, AudioQuality.AUTO)
 
     private var currentQueue: Queue = EmptyQueue()
     var queueTitle: String? = null
 
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
     private val currentSongFlow = currentMediaMetadata.flatMapLatest { mediaMetadata ->
-        songRepository.getSongById(mediaMetadata?.id).flow
+        songRepository.getSongById(mediaMetadata?.id)
     }
     private val currentFormat = currentMediaMetadata.flatMapLatest { mediaMetadata ->
         songRepository.getSongFormat(mediaMetadata?.id).flow
     }
     var currentSong: Song? = null
 
-    private val showLyrics = context.sharedPreferences.booleanFlow(context.getString(R.string.pref_show_lyrics), false)
+    private val showLyrics = context.sharedPreferences.booleanFlow(SHOW_LYRICS, false)
 
     private val cacheEvictor = when (val cacheSize = context.sharedPreferences.getInt(SONG_MAX_CACHE_SIZE, 1024)) {
         -1 -> NoOpCacheEvictor()
@@ -227,37 +216,6 @@ class SongPlayer(
                 player.prepare()
             }
         })
-        registerCustomCommandReceiver { player, command, extras, _ ->
-            if (extras == null) return@registerCustomCommandReceiver false
-            when (command) {
-                COMMAND_MOVE_QUEUE_ITEM -> {
-                    val from = extras.getInt(EXTRA_FROM_INDEX, C.INDEX_UNSET)
-                    val to = extras.getInt(EXTRA_TO_INDEX, C.INDEX_UNSET)
-                    if (from != C.INDEX_UNSET && to != C.INDEX_UNSET) {
-                        player.moveMediaItem(from, to)
-                    }
-                    true
-                }
-                COMMAND_SEEK_TO_QUEUE_ITEM -> {
-                    player.seekToDefaultPosition(extras.getInt(EXTRA_QUEUE_INDEX))
-                    true
-                }
-                COMMAND_PLAY_NEXT -> {
-                    player.addMediaItems(
-                        if (player.mediaItemCount == 0) 0 else player.currentMediaItemIndex + 1,
-                        extras.getParcelableArray(EXTRA_MEDIA_METADATA_ITEMS)!!.filterIsInstance<MediaMetadata>().map { it.toMediaItem() }
-                    )
-                    player.prepare()
-                    true
-                }
-                COMMAND_ADD_TO_QUEUE -> {
-                    player.addMediaItems(extras.getParcelableArray(EXTRA_MEDIA_METADATA_ITEMS)!!.filterIsInstance<MediaMetadata>().map { it.toMediaItem() })
-                    player.prepare()
-                    true
-                }
-                else -> false
-            }
-        }
         setCustomActionProviders(
             object : MediaSessionConnector.CustomActionProvider {
                 override fun onCustomAction(player: Player, action: String, extras: Bundle?) = toggleLike()
@@ -319,13 +277,13 @@ class SongPlayer(
 
             override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? =
                 player.currentMetadata?.thumbnailUrl?.let { url ->
-                    bitmapProvider.load(resizeThumbnailUrl(url, (512 * context.resources.displayMetrics.density).roundToInt(), null)) {
+                    bitmapProvider.load(url.resize((512 * context.resources.displayMetrics.density).roundToInt(), null)) {
                         callback.onBitmap(it)
                     }
                 }
 
             override fun createCurrentContentIntent(player: Player): PendingIntent? =
-                PendingIntent.getActivity(context, 0, Intent(context, ComposeActivity::class.java).apply {
+                PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java).apply {
                     action = ACTION_SHOW_BOTTOM_SHEET
                 }, FLAG_IMMUTABLE)
         })
@@ -349,7 +307,7 @@ class SongPlayer(
 
             override fun getCustomActions(player: Player): List<String> {
                 val actions = mutableListOf<String>()
-                if (player.currentMetadata != null && context.sharedPreferences.getBoolean(context.getString(R.string.pref_notification_more_action), true)) {
+                if (player.currentMetadata != null && context.sharedPreferences.getBoolean(NOTIFICATION_MORE_ACTION, true)) {
                     actions.add(if (currentSong == null) ACTION_ADD_TO_LIBRARY else ACTION_REMOVE_FROM_LIBRARY)
                     actions.add(if (currentSong?.song?.liked == true) ACTION_UNLIKE else ACTION_LIKE)
                 }
@@ -409,12 +367,12 @@ class SongPlayer(
             }
         }
         scope.launch {
-            context.sharedPreferences.booleanFlow(context.getString(R.string.pref_skip_silence), true).collectLatest {
+            context.sharedPreferences.booleanFlow(SKIP_SILENCE, true).collectLatest {
                 player.skipSilenceEnabled = it
             }
         }
         scope.launch {
-            combine(currentFormat, context.sharedPreferences.booleanFlow(context.getString(R.string.pref_audio_normalization), true)) { format, normalizeAudio ->
+            combine(currentFormat, context.sharedPreferences.booleanFlow(AUDIO_NORMALIZATION, true)) { format, normalizeAudio ->
                 format to normalizeAudio
             }.collectLatest { (format, normalizeAudio) ->
                 normalizeFactor.value = if (normalizeAudio && format?.loudnessDb != null) {
@@ -425,11 +383,11 @@ class SongPlayer(
             }
         }
         scope.launch {
-            context.sharedPreferences.booleanFlow(context.getString(R.string.pref_notification_more_action), true).collectLatest {
+            context.sharedPreferences.booleanFlow(NOTIFICATION_MORE_ACTION, true).collectLatest {
                 playerNotificationManager.invalidate()
             }
         }
-        if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {
+        if (context.sharedPreferences.getBoolean(PERSISTENT_QUEUE, true)) {
             runCatching {
                 context.filesDir.resolve(PERSISTENT_QUEUE_FILE).inputStream().use { fis ->
                     ObjectInputStream(fis).use { oos ->
@@ -463,14 +421,14 @@ class SongPlayer(
                 return@runBlocking dataSpec
             }
 
-            (InfoCache.getInfo(mediaId) as? String)?.let { url ->
+            InfoCache.getInfo<String>(mediaId)?.let { url ->
                 return@runBlocking dataSpec.withUri(url.toUri())
             }
 
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
-            val playedFormat = songRepository.getSongFormat(mediaId).getValueAsync()
-            if (playedFormat != null && songRepository.getSongById(mediaId).getValueAsync()?.song?.downloadState == STATE_DOWNLOADED) {
+            val playedFormat = songRepository.getSongFormat(mediaId).flow.firstOrNull()
+            if (playedFormat != null && songRepository.getSongById(mediaId).firstOrNull()?.song?.downloadState == STATE_DOWNLOADED) {
                 return@runBlocking dataSpec.withUri(songRepository.getSongFile(mediaId).toUri())
             }
 
@@ -550,7 +508,7 @@ class SongPlayer(
             player.playWhenReady = playWhenReady
         }
 
-        scope.launch(context.exceptionHandler) {
+        scope.launch {
             val initialStatus = withContext(IO) { queue.getInitialStatus() }
             if (queue.preloadItem != null && player.playbackState == STATE_IDLE) return@launch
             initialStatus.title?.let { queueTitle ->
@@ -570,7 +528,7 @@ class SongPlayer(
         val currentMediaMetadata = player.currentMetadata ?: return
         if (player.currentMediaItemIndex > 0) player.removeMediaItems(0, player.currentMediaItemIndex)
         if (player.currentMediaItemIndex < player.mediaItemCount - 1) player.removeMediaItems(player.currentMediaItemIndex + 1, player.mediaItemCount)
-        scope.launch(context.exceptionHandler) {
+        scope.launch {
             val radioQueue = YouTubeQueue(endpoint = WatchEndpoint(videoId = currentMediaMetadata.id))
             val initialStatus = radioQueue.getInitialStatus()
             initialStatus.title?.let { queueTitle ->
@@ -582,7 +540,7 @@ class SongPlayer(
     }
 
     fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: YTItem?) {
-        scope.launch(context.exceptionHandler) {
+        scope.launch {
             val items = when (item) {
                 is SongItem -> YouTube.getQueue(videoIds = listOf(item.id)).getOrThrow().map { it.toMediaItem() }
                 is AlbumItem -> withContext(IO) {
@@ -623,7 +581,7 @@ class SongPlayer(
     }
 
     fun toggleLibrary() {
-        scope.launch(context.exceptionHandler) {
+        scope.launch {
             val song = currentSong
             val mediaMetadata = currentMediaMetadata.value ?: return@launch
             if (song == null) {
@@ -635,12 +593,12 @@ class SongPlayer(
     }
 
     fun toggleLike() {
-        scope.launch(context.exceptionHandler) {
+        scope.launch {
             val song = currentSong
             val mediaMetadata = currentMediaMetadata.value ?: return@launch
             if (song == null) {
                 songRepository.addSong(mediaMetadata)
-                songRepository.getSongById(mediaMetadata.id).getValueAsync()?.let {
+                songRepository.getSongById(mediaMetadata.id).firstOrNull()?.let {
                     songRepository.toggleLiked(it)
                 }
             } else {
@@ -650,7 +608,7 @@ class SongPlayer(
     }
 
     private fun addToLibrary(mediaMetadata: MediaMetadata) {
-        scope.launch(context.exceptionHandler) {
+        scope.launch {
             songRepository.addSong(mediaMetadata)
         }
     }
@@ -682,7 +640,7 @@ class SongPlayer(
             player.mediaItemCount - player.currentMediaItemIndex <= 5 &&
             currentQueue.hasNextPage()
         ) {
-            scope.launch(context.exceptionHandler) {
+            scope.launch {
                 val mediaItems = currentQueue.nextPage()
                 if (player.playbackState != STATE_IDLE) {
                     player.addMediaItems(mediaItems)
@@ -773,7 +731,7 @@ class SongPlayer(
     }
 
     fun onDestroy() {
-        if (context.sharedPreferences.getBoolean(context.getString(R.string.pref_persistent_queue), true)) {
+        if (context.sharedPreferences.getBoolean(PERSISTENT_QUEUE, true)) {
             saveQueueToDisk()
         }
         mediaSession.apply {

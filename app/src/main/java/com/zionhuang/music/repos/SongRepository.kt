@@ -5,17 +5,14 @@ import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
-import androidx.lifecycle.distinctUntilChanged
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.YouTube.MAX_GET_QUEUE_SIZE
 import com.zionhuang.innertube.models.*
-import com.zionhuang.innertube.models.ArtistHeader
 import com.zionhuang.innertube.utils.browseAll
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADED
-import com.zionhuang.music.constants.MediaConstants.STATE_DOWNLOADING
-import com.zionhuang.music.constants.MediaConstants.STATE_NOT_DOWNLOADED
-import com.zionhuang.music.constants.MediaConstants.STATE_PREPARING
+import com.zionhuang.music.ui.utils.resize
+import com.zionhuang.music.constants.AUDIO_QUALITY
+import com.zionhuang.music.constants.AUTO_ADD_TO_LIBRARY
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
@@ -27,9 +24,8 @@ import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.playback.SongPlayer
 import com.zionhuang.music.repos.base.LocalRepository
-import com.zionhuang.music.ui.bindings.resizeThumbnailUrl
+import com.zionhuang.music.utils.enumPreference
 import com.zionhuang.music.utils.md5
-import com.zionhuang.music.utils.preference.enumPreference
 import com.zionhuang.music.youtube.YouTubeAlbum
 import com.zionhuang.music.youtube.getYouTubeAlbum
 import kotlinx.coroutines.Dispatchers.IO
@@ -52,8 +48,8 @@ class SongRepository(private val context: Context) : LocalRepository {
     private val lyricsDao = database.lyricsDao
 
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
-    private var autoDownload by context.preference(R.string.pref_auto_download, false)
-    private var audioQuality by enumPreference(context, R.string.pref_audio_quality, SongPlayer.AudioQuality.AUTO)
+    private var autoDownload by context.preference(AUTO_ADD_TO_LIBRARY, false)
+    private var audioQuality by enumPreference(context, AUDIO_QUALITY, SongPlayer.AudioQuality.AUTO)
 
     override fun getAllSongId(): Flow<List<String>> = songDao.getAllSongId()
     override fun getAllLikedSongId(): Flow<List<String>> = songDao.getAllLikedSongId()
@@ -63,7 +59,7 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Browse
      */
-    override fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
+    override fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
         getFlow = {
             if (sortInfo.type == SongSortType.ARTIST) {
                 songDao.getAllSongsAsFlow(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
@@ -79,7 +75,7 @@ class SongRepository(private val context: Context) : LocalRepository {
 
     override suspend fun getSongCount() = withContext(IO) { songDao.getSongCount() }
 
-    override fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>) = ListWrapper<Int, Artist>(
+    override fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>) = ListWrapper<Artist>(
         getFlow = {
             if (sortInfo.type == ArtistSortType.SONG_COUNT) {
                 artistDao.getAllArtistsAsFlow(SortInfo(ArtistSortType.CREATE_DATE, true)).map { list ->
@@ -108,7 +104,7 @@ class SongRepository(private val context: Context) : LocalRepository {
         }
     }
 
-    override fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
+    override fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getArtistSongsAsList(artistId, sortInfo) } },
         getFlow = {
             songDao.getArtistSongsAsFlow(artistId, if (sortInfo.type == SongSortType.ARTIST) SortInfo(SongSortType.CREATE_DATE, sortInfo.isDescending) else sortInfo)
@@ -117,7 +113,7 @@ class SongRepository(private val context: Context) : LocalRepository {
 
     override suspend fun getArtistSongCount(artistId: String) = withContext(IO) { songDao.getArtistSongCount(artistId) }
 
-    override fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>) = ListWrapper<Int, Album>(
+    override fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>) = ListWrapper<Album>(
         getFlow = {
             if (sortInfo.type == AlbumSortType.ARTIST) {
                 albumDao.getAllAlbumsAsFlow(SortInfo(AlbumSortType.CREATE_DATE, true)).map { list ->
@@ -136,7 +132,7 @@ class SongRepository(private val context: Context) : LocalRepository {
         songDao.getAlbumSongs(albumId)
     }
 
-    override fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>) = ListWrapper<Int, Playlist>(
+    override fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>) = ListWrapper<Playlist>(
         getList = { withContext(IO) { playlistDao.getAllPlaylistsAsList() } },
         getFlow = {
             if (sortInfo.type == PlaylistSortType.SONG_COUNT) {
@@ -149,12 +145,12 @@ class SongRepository(private val context: Context) : LocalRepository {
         }
     )
 
-    override fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song> = ListWrapper(
+    override fun getPlaylistSongs(playlistId: String): ListWrapper<Song> = ListWrapper(
         getList = { withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) } },
         getFlow = { songDao.getPlaylistSongsAsFlow(playlistId) }
     )
 
-    override fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
+    override fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
         getFlow = {
             if (sortInfo.type == SongSortType.ARTIST) {
                 songDao.getLikedSongs(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
@@ -170,7 +166,7 @@ class SongRepository(private val context: Context) : LocalRepository {
 
     override fun getLikedSongCount(): Flow<Int> = songDao.getLikedSongCount()
 
-    override fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song> = ListWrapper(
+    override fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
         getList = {
             withContext(IO) {
                 if (sortInfo.type == SongSortType.ARTIST) {
@@ -308,11 +304,7 @@ class SongRepository(private val context: Context) : LocalRepository {
         )
     }
 
-    override fun getSongById(songId: String?) = DataWrapper(
-        getValueAsync = { withContext(IO) { songDao.getSong(songId) } },
-        getLiveData = { songDao.getSongAsLiveData(songId).distinctUntilChanged() },
-        getFlow = { songDao.getSongAsFlow(songId) }
-    )
+    override fun getSongById(songId: String?) = songDao.getSongAsFlow(songId)
 
     override fun getSongFile(songId: String): File {
         val mediaDir = context.getExternalFilesDir(null)!! / "media"
@@ -327,8 +319,7 @@ class SongRepository(private val context: Context) : LocalRepository {
     }
 
     override fun hasSong(songId: String): DataWrapper<Boolean> = DataWrapper(
-        getValueAsync = { songDao.hasSong(songId) },
-        getLiveData = { songDao.hasSongAsLiveData(songId).distinctUntilChanged() }
+        getValueAsync = { songDao.hasSong(songId) }
     )
 
     override suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long) = withContext(IO) {
@@ -477,7 +468,7 @@ class SongRepository(private val context: Context) : LocalRepository {
                 if (header is ArtistHeader) {
                     artistDao.update(artist.copy(
                         name = header.name,
-                        thumbnailUrl = header.bannerThumbnails?.lastOrNull()?.url?.let { resizeThumbnailUrl(it, 400, 400) },
+                        thumbnailUrl = header.bannerThumbnails?.lastOrNull()?.url?.resize(400, 400),
                         bannerUrl = header.bannerThumbnails?.lastOrNull()?.url,
                         description = header.description,
                         lastUpdateTime = LocalDateTime.now()

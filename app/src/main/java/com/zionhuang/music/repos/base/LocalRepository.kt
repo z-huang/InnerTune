@@ -18,33 +18,33 @@ interface LocalRepository {
     /**
      * Browse
      */
-    fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
     suspend fun getSongCount(): Int
 
-    fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>): ListWrapper<Int, Artist>
+    fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>): ListWrapper<Artist>
     suspend fun getArtistCount(): Int
 
     suspend fun getArtistSongsPreview(artistId: String): Result<List<YTBaseItem>>
-    fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
     suspend fun getArtistSongCount(artistId: String): Int
 
-    fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>): ListWrapper<Int, Album>
+    fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>): ListWrapper<Album>
     suspend fun getAlbumCount(): Int
     suspend fun getAlbumSongs(albumId: String): List<Song>
 
-    fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): ListWrapper<Int, Playlist>
+    fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): ListWrapper<Playlist>
 
-    fun getPlaylistSongs(playlistId: String): ListWrapper<Int, Song>
+    fun getPlaylistSongs(playlistId: String): ListWrapper<Song>
 
-    fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
     fun getLikedSongCount(): Flow<Int>
-    fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Int, Song>
+    fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
     fun getDownloadedSongCount(): Flow<Int>
 
     /**
      * Search
      */
-    fun searchAll(query: String): Flow<List<LocalBaseItem>>
+    fun searchAll(query: String): Flow<List<LocalItem>>
     fun searchSongs(query: String): Flow<List<Song>>
     fun searchDownloadedSongs(query: String): Flow<List<Song>>
     fun searchArtists(query: String): Flow<List<Artist>>
@@ -59,7 +59,7 @@ interface LocalRepository {
     suspend fun safeAddSongs(songs: List<SongItem>): List<SongEntity>
     suspend fun refetchSong(song: Song) = refetchSongs(listOf(song))
     suspend fun refetchSongs(songs: List<Song>)
-    fun getSongById(songId: String?): DataWrapper<Song?>
+    fun getSongById(songId: String?): Flow<Song?>
     fun getSongFile(songId: String): File
     fun hasSong(songId: String): DataWrapper<Boolean>
     suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)

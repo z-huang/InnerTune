@@ -27,7 +27,7 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
     val playWhenReady = MutableStateFlow(false)
     val mediaMetadata = MutableStateFlow<MediaMetadata?>(null)
     val currentSong = mediaMetadata.flatMapLatest {
-        songRepository.getSongById(it?.id).flow
+        songRepository.getSongById(it?.id)
     }
     val currentLyrics = mediaMetadata.flatMapLatest { mediaMetadata ->
         songRepository.getLyrics(mediaMetadata?.id)

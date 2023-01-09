@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="lrc_unsynced_text_color">#E6E1E5</color>
-    <color name="lrc_normal_text_color">#CAC4D0</color>
-    <color name="lrc_current_text_color">#6750A4</color>
-    <color name="lrc_timeline_text_color">#CAC4D0</color>
-    <color name="lrc_timeline_color">#CAC4D0</color>
-    <color name="lrc_time_text_color">#CAC4D0</color>
-</resources>

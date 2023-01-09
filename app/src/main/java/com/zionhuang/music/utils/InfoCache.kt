@@ -26,13 +26,14 @@ object InfoCache {
         }
     }
 
-    fun getInfo(key: String): Any? {
+    @Suppress("UNCHECKED_CAST")
+    fun <T> getInfo(key: String): T? {
         val data = LRU_CACHE[key] ?: return null
         if (data.isExpired) {
             LRU_CACHE.remove(key)
             return null
         }
-        return data.info
+        return data.info as? T
     }
 
     private fun getFromKey(id: String): Any? = synchronized(LRU_CACHE) {

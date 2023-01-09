@@ -1,7 +1,6 @@
 package com.zionhuang.music.viewmodels
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,6 +8,7 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.youtube.getAlbumWithSongs
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class AlbumViewModel(
@@ -16,7 +16,7 @@ class AlbumViewModel(
     albumId: String,
     playlistId: String?,
 ) : ViewModel() {
-    val albumWithSongs = MutableLiveData<AlbumWithSongs?>(null)
+    val albumWithSongs = MutableStateFlow<AlbumWithSongs?>(null)
 
     init {
         viewModelScope.launch {
