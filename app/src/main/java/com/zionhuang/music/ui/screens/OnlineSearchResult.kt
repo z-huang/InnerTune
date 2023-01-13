@@ -5,24 +5,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_PLAYLIST
@@ -38,7 +33,6 @@ import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.SearchFilterHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.repos.YouTubeRepository
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.NoResultFound
 import com.zionhuang.music.ui.component.YouTubeListItem
@@ -47,20 +41,15 @@ import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeArtistMenu
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
-import com.zionhuang.music.ui.utils.rememberLazyListState
 import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun OnlineSearchResult(
-    query: String,
     navController: NavController,
-    viewModel: OnlineSearchViewModel = viewModel(factory = OnlineSearchViewModel.Factory(
-        repository = YouTubeRepository(LocalContext.current),
-        query = query
-    )),
+    viewModel: OnlineSearchViewModel = viewModel(),
     mainViewModel: MainViewModel = viewModel(),
 ) {
     val menuState = LocalMenuState.current
@@ -68,25 +57,133 @@ fun OnlineSearchResult(
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
-    val coroutineScope = rememberCoroutineScope()
-    val lazyListState = rememberLazyListState()
-    val items = viewModel.pagingData.collectAsLazyPagingItems()
-    val searchFilter by viewModel.filter.collectAsState()
     val librarySongIds by mainViewModel.librarySongIds.collectAsState()
     val likedSongIds by mainViewModel.likedSongIds.collectAsState()
     val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
     val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
 
+    val coroutineScope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
+
+    val searchFilter by viewModel.filter.collectAsState()
+    val searchSummary = viewModel.summaryPage
+    val itemsPage by remember(searchFilter) {
+        derivedStateOf {
+            searchFilter?.value?.let {
+                viewModel.viewStateMap[it]
+            }
+        }
+    }
+
+    LaunchedEffect(lazyListState) {
+        snapshotFlow {
+            lazyListState.layoutInfo.visibleItemsInfo.any { it.key == "loading" }
+        }.collect { shouldLoadMore ->
+            if (!shouldLoadMore) return@collect
+            viewModel.loadMore()
+        }
+    }
+
+    val ytItemContent: @Composable LazyItemScope.(YTItem) -> Unit = { item: YTItem ->
+        YouTubeListItem(
+            item = item,
+            badges = {
+                if (item.explicit) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_explicit),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(end = 2.dp)
+                    )
+                }
+                if (item is SongItem && item.id in librarySongIds ||
+                    item is AlbumItem && item.id in libraryAlbumIds ||
+                    item is PlaylistItem && item.id in libraryPlaylistIds
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_library_add_check),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(end = 2.dp)
+                    )
+                }
+                if (item is SongItem && item.id in likedSongIds) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_favorite),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(end = 2.dp)
+                    )
+                }
+            },
+            isPlaying = when (item) {
+                is SongItem -> mediaMetadata?.id == item.id
+                is AlbumItem -> mediaMetadata?.album?.id == item.id
+                else -> false
+            },
+            playWhenReady = playWhenReady,
+            trailingContent = {
+                IconButton(
+                    onClick = {
+                        menuState.show {
+                            when (item) {
+                                is SongItem -> YouTubeSongMenu(
+                                    song = item,
+                                    navController = navController,
+                                    playerConnection = playerConnection,
+                                    coroutineScope = coroutineScope,
+                                    onDismiss = menuState::dismiss
+                                )
+                                is AlbumItem -> YouTubeAlbumMenu(
+                                    album = item,
+                                    navController = navController,
+                                    playerConnection = playerConnection,
+                                    coroutineScope = coroutineScope,
+                                    onDismiss = menuState::dismiss
+                                )
+                                is ArtistItem -> YouTubeArtistMenu(
+                                    artist = item,
+                                    playerConnection = playerConnection,
+                                    onDismiss = menuState::dismiss
+                                )
+                                is PlaylistItem -> {}
+                            }
+                        }
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_more_vert),
+                        contentDescription = null
+                    )
+                }
+            },
+            modifier = Modifier
+                .clickable {
+                    when (item) {
+                        is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                        is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                        is ArtistItem -> navController.navigate("artist/${item.id}")
+                        is PlaylistItem -> {}
+                    }
+                }
+                .animateItemPlacement()
+        )
+    }
+
     LazyColumn(
-        state = items.rememberLazyListState(),
+        state = lazyListState,
         contentPadding = LocalPlayerAwareWindowInsets.current
             .add(WindowInsets(top = SearchFilterHeight))
             .asPaddingValues()
     ) {
-        if (items.loadState.refresh !is LoadState.Loading) {
-            items(items) { item ->
-                when (item) {
-                    is Header -> Box(
+        if (searchFilter == null) {
+            searchSummary?.summaries?.forEach { summary ->
+                item {
+                    Box(
                         contentAlignment = Alignment.CenterStart,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -95,108 +192,53 @@ fun OnlineSearchResult(
                             .animateItemPlacement()
                     ) {
                         Text(
-                            text = item.title,
+                            text = summary.title,
                             style = MaterialTheme.typography.headlineMedium,
                             maxLines = 1
                         )
                     }
-                    is YTItem -> YouTubeListItem(
-                        item = item,
-                        badges = {
-                            if (item is SongItem && item.id in librarySongIds ||
-                                item is AlbumItem && item.id in libraryAlbumIds ||
-                                item is PlaylistItem && item.id in libraryPlaylistIds
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_library_add_check),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .padding(end = 2.dp)
-                                )
-                            }
-                            if (item is SongItem && item.id in likedSongIds) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_favorite),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .padding(end = 2.dp)
-                                )
-                            }
-                        },
-                        isPlaying = when (item) {
-                            is SongItem -> mediaMetadata?.id == item.id
-                            is AlbumItem -> mediaMetadata?.album?.id == item.id
-                            else -> false
-                        },
-                        playWhenReady = playWhenReady,
-                        trailingContent = {
-                            IconButton(
-                                onClick = {
-                                    menuState.show {
-                                        when (item) {
-                                            is SongItem -> YouTubeSongMenu(
-                                                song = item,
-                                                navController = navController,
-                                                playerConnection = playerConnection,
-                                                coroutineScope = coroutineScope,
-                                                onDismiss = menuState::dismiss
-                                            )
-                                            is AlbumItem -> YouTubeAlbumMenu(
-                                                album = item,
-                                                navController = navController,
-                                                playerConnection = playerConnection,
-                                                coroutineScope = coroutineScope,
-                                                onDismiss = menuState::dismiss
-                                            )
-                                            is ArtistItem -> YouTubeArtistMenu(
-                                                artist = item,
-                                                playerConnection = playerConnection,
-                                                onDismiss = menuState::dismiss
-                                            )
-                                            is PlaylistItem -> {}
-                                        }
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_more_vert),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        modifier = Modifier
-                            .clickable {
-                                when (item) {
-                                    is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
-                                    is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
-                                    is ArtistItem -> navController.navigate("artist/${item.id}")
-                                    is PlaylistItem -> {}
-                                }
-                            }
-                            .animateItemPlacement()
-                    )
-                    else -> {}
+                }
+
+                items(
+                    items = summary.items,
+                    key = { it.id },
+                    itemContent = ytItemContent
+                )
+            }
+
+            if (searchSummary?.summaries?.isEmpty() == true) {
+                item {
+                    NoResultFound()
+                }
+            }
+        } else {
+            items(
+                items = itemsPage?.items.orEmpty(),
+                key = { it.id },
+                itemContent = ytItemContent
+            )
+
+            if (itemsPage?.continuation != null) {
+                item(key = "loading") {
+                    ShimmerHost {
+                        repeat(3) {
+                            ListItemPlaceHolder()
+                        }
+                    }
                 }
             }
 
-            if (items.itemCount == 0) {
+            if (itemsPage?.items?.isEmpty() == true) {
                 item {
                     NoResultFound()
                 }
             }
         }
 
-        if (items.loadState.refresh is LoadState.Loading || items.loadState.append is LoadState.Loading) {
+        if (searchFilter == null && searchSummary == null || searchFilter != null && itemsPage == null) {
             item {
                 ShimmerHost {
-                    repeat(when {
-                        items.loadState.refresh is LoadState.Loading -> 8
-                        items.loadState.append is LoadState.Loading -> 3
-                        else -> 0
-                    }) {
+                    repeat(8) {
                         ListItemPlaceHolder()
                     }
                 }
@@ -228,13 +270,11 @@ fun OnlineSearchResult(
                 selected = searchFilter == filter,
                 colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.background),
                 onClick = {
-                    if (viewModel.filter.value == filter) {
-                        coroutineScope.launch {
-                            lazyListState.animateScrollToItem(0)
-                        }
-                    } else {
+                    if (viewModel.filter.value != filter) {
                         viewModel.filter.value = filter
-                        items.refresh()
+                    }
+                    coroutineScope.launch {
+                        lazyListState.animateScrollToItem(0)
                     }
                 }
             )

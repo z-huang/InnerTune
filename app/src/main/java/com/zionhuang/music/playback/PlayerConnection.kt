@@ -33,7 +33,7 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
         songRepository.getLyrics(mediaMetadata?.id)
     }
     val currentFormat = mediaMetadata.flatMapLatest { mediaMetadata ->
-        songRepository.getSongFormat(mediaMetadata?.id).flow
+        songRepository.getSongFormat(mediaMetadata?.id)
     }
 
     val queueTitle = MutableStateFlow<String?>(null)

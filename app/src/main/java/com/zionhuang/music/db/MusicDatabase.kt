@@ -1,11 +1,11 @@
 package com.zionhuang.music.db
 
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase.CONFLICT_ABORT
 import androidx.core.content.contentValuesOf
 import androidx.room.*
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.zionhuang.music.db.daos.*
 import com.zionhuang.music.db.entities.*
@@ -217,17 +217,5 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 }
 
 fun RoomDatabase.checkpoint() {
-    openHelper.writableDatabase.run {
-        query("PRAGMA journal_mode").use { cursor ->
-            if (cursor.moveToFirst()) {
-                when (cursor.getString(0).lowercase()) {
-                    "wal" -> {
-                        query("PRAGMA wal_checkpoint").use(Cursor::moveToFirst)
-                        query("PRAGMA wal_checkpoint(TRUNCATE)").use(Cursor::moveToFirst)
-                        query("PRAGMA wal_checkpoint").use(Cursor::moveToFirst)
-                    }
-                }
-            }
-        }
-    }
+    query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)"))
 }

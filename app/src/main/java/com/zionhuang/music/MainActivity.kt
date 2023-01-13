@@ -44,6 +44,12 @@ import androidx.navigation.navArgument
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.valentinilk.shimmer.LocalShimmerTheme
+import com.zionhuang.music.constants.*
+import com.zionhuang.music.extensions.*
+import com.zionhuang.music.playback.MusicService
+import com.zionhuang.music.playback.MusicService.MusicBinder
+import com.zionhuang.music.playback.PlayerConnection
+import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.component.shimmer.ShimmerTheme
 import com.zionhuang.music.ui.player.BottomSheetPlayer
@@ -54,12 +60,6 @@ import com.zionhuang.music.ui.screens.library.LibraryPlaylistsScreen
 import com.zionhuang.music.ui.screens.library.LibrarySongsScreen
 import com.zionhuang.music.ui.screens.settings.*
 import com.zionhuang.music.ui.theme.*
-import com.zionhuang.music.constants.*
-import com.zionhuang.music.extensions.*
-import com.zionhuang.music.playback.MusicService
-import com.zionhuang.music.playback.MusicService.MusicBinder
-import com.zionhuang.music.playback.PlayerConnection
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.utils.NavigationTabHelper
 import com.zionhuang.music.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -155,7 +155,7 @@ class MainActivity : ComponentActivity() {
                         val (textFieldValue, onTextFieldValueChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue()) }
                         val appBarConfig = remember(navBackStackEntry) {
                             when {
-                                route == null || navigationItems.any { it.route == route } -> defaultAppBarConfig()
+                                route == null || navigationItems.any { it.route == route } -> searchAppBarConfig()
                                 route.startsWith("search/") -> onlineSearchResultAppBarConfig(navBackStackEntry?.arguments?.getString("query").orEmpty())
                                 route.startsWith("album/") -> albumAppBarConfig()
                                 route.startsWith("artist/") -> artistAppBarConfig()
@@ -306,11 +306,8 @@ class MainActivity : ComponentActivity() {
                                             nullable = true
                                         }
                                     )
-                                ) { backStackEntry ->
-                                    AlbumScreen(
-                                        albumId = backStackEntry.arguments?.getString("albumId")!!,
-                                        playlistId = backStackEntry.arguments?.getString("playlistId"),
-                                    )
+                                ) {
+                                    AlbumScreen(navController)
                                 }
                                 composable(
                                     route = "artist/{artistId}",
@@ -319,9 +316,25 @@ class MainActivity : ComponentActivity() {
                                             type = NavType.StringType
                                         }
                                     )
-                                ) { backStackEntry ->
+                                ) {
                                     ArtistScreen(
-                                        artistId = backStackEntry.arguments?.getString("artistId")!!,
+                                        navController = navController,
+                                        appBarConfig = appBarConfig
+                                    )
+                                }
+                                composable(
+                                    route = "artistItems/{browseId}?params={params}",
+                                    arguments = listOf(
+                                        navArgument("browseId") {
+                                            type = NavType.StringType
+                                        },
+                                        navArgument("params") {
+                                            type = NavType.StringType
+                                            nullable = true
+                                        }
+                                    )
+                                ) {
+                                    ArtistItemsScreen(
                                         navController = navController,
                                         appBarConfig = appBarConfig
                                     )
@@ -347,7 +360,6 @@ class MainActivity : ComponentActivity() {
                                     )
                                 ) { backStackEntry ->
                                     OnlineSearchResult(
-                                        query = backStackEntry.arguments?.getString("query")!!,
                                         navController = navController
                                     )
                                 }

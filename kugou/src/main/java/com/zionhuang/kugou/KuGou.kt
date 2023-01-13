@@ -141,7 +141,7 @@ object KuGou {
         .replace("\\(.*\\)".toRegex(), "")
         .replace("（.*）".toRegex(), "")
 
-    private fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
+    fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
 
     private fun String.normalize(keyword: Pair<String, String>): String = replace("&apos;", "'").lines().filter { line ->
         line matches ACCEPTED_REGEX
@@ -186,6 +186,7 @@ object KuGou {
     private fun String.toSimplifiedChinese() = ZhConverterUtil.toSimple(this)
     private fun String.toTraditionalChinese() = ZhConverterUtil.toTraditional(this)
 
+    @Suppress("RegExpRedundantEscape")
     private val ACCEPTED_REGEX = "\\[(\\d\\d):(\\d\\d)\\.(\\d{2,3})\\].*".toRegex()
     private val BANNED_REGEX = ".+].+[:：].+".toRegex()
 

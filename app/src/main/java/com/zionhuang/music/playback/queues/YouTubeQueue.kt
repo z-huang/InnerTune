@@ -22,7 +22,7 @@ class YouTubeQueue(
         return Queue.Status(
             title = nextResult.title,
             items = nextResult.items.map { it.toMediaItem() },
-            index = nextResult.currentIndex ?: 0
+            mediaItemIndex = nextResult.currentIndex ?: 0
         )
     }
 

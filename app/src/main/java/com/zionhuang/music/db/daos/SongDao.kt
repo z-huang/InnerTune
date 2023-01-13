@@ -35,8 +35,7 @@ interface SongDao {
     @Query("SELECT COUNT(*) FROM song_artist_map WHERE artistId = :artistId")
     suspend fun getArtistSongCount(artistId: String): Int
 
-    @Query("SELECT song.id FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND NOT song.isTrash LIMIT 5")
-    suspend fun getArtistSongsPreview(artistId: String): List<String>
+    suspend fun getArtistSongsPreview(artistId: String): Flow<List<Song>> = getSongsAsFlow((QUERY_ARTIST_SONG.format(artistId) + " LIMIT 5").toSQLiteQuery())
 
     @Transaction
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
@@ -93,6 +92,9 @@ interface SongDao {
 
     @Query("UPDATE song SET totalPlayTime = totalPlayTime + :playTime WHERE id = :songId")
     suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)
+
+    @Query("UPDATE song SET duration = :duration WHERE id = :songId")
+    suspend fun updateSongDuration(songId: String, duration: Int)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(songs: List<SongEntity>)

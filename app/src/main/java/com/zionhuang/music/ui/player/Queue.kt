@@ -71,7 +71,7 @@ fun Queue(
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
     val currentFormat by playerConnection.currentFormat.collectAsState(initial = null)
 
-    var showLyrics by mutablePreferenceState(SHOW_LYRICS, defaultValue = false)
+    val (showLyrics, onShowLyricsChange) = mutablePreferenceState(SHOW_LYRICS, defaultValue = false)
 
     var showDetailsDialog by rememberSaveable {
         mutableStateOf(false)
@@ -157,7 +157,7 @@ fun Queue(
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = { showLyrics = !showLyrics }) {
+                IconButton(onClick = { onShowLyricsChange(!showLyrics) }) {
                     Icon(
                         painter = painterResource(R.drawable.ic_lyrics),
                         contentDescription = null,
@@ -248,10 +248,10 @@ fun Queue(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = listOf(
+                    text = joinByBullet(
                         makeTimeString(queueLength * 1000L),
                         pluralStringResource(R.plurals.song_count, queueItems.size, queueItems.size)
-                    ).joinByBullet(),
+                    ),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -320,10 +320,7 @@ fun PlayerMenu(
         ListDialog(
             onDismiss = { showSelectArtistDialog = false }
         ) {
-            items(
-                items = mediaMetadata.artists,
-                key = { it.id }
-            ) { artist ->
+            items(mediaMetadata.artists) { artist ->
                 Box(
                     contentAlignment = Alignment.CenterStart,
                     modifier = Modifier

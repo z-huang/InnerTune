@@ -76,9 +76,10 @@ fun PlayingIndicator(
 
 @Composable
 fun PlayingIndicatorBox(
+    modifier: Modifier = Modifier,
     isPlaying: Boolean,
     playWhenReady: Boolean,
-    modifier: Modifier = Modifier,
+    color: Color = Color.White,
 ) {
     AnimatedVisibility(
         visible = isPlaying,
@@ -91,7 +92,7 @@ fun PlayingIndicatorBox(
         ) {
             if (playWhenReady) {
                 PlayingIndicator(
-                    color = Color.White,
+                    color = color,
                     modifier = Modifier.height(24.dp)
                 )
             } else {

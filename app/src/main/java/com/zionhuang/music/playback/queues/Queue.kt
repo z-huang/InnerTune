@@ -12,7 +12,7 @@ interface Queue {
     data class Status(
         val title: String?,
         val items: List<MediaItem>,
-        val index: Int,
+        val mediaItemIndex: Int,
         val position: Long = 0L,
     )
 }

@@ -15,26 +15,19 @@ import kotlinx.serialization.Serializable
 data class MusicTwoRowItemRenderer(
     val title: Runs,
     val subtitle: Runs,
+    val subtitleBadges: List<Badges>?,
     val menu: Menu,
     val thumbnailRenderer: ThumbnailRenderer,
     val navigationEndpoint: NavigationEndpoint,
-    // val thumbnailOverlay: ThumbnailOverlay, (for playing the album directly)
+    val thumbnailOverlay: MusicResponsiveListItemRenderer.Overlay?,
 ) {
-    private val isSong: Boolean
+    val isSong: Boolean
         get() = navigationEndpoint.endpoint is WatchEndpoint
-    private val isPlaylist: Boolean
+    val isPlaylist: Boolean
         get() = navigationEndpoint.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_PLAYLIST
-    private val isAlbum: Boolean
+    val isAlbum: Boolean
         get() = navigationEndpoint.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_ALBUM ||
                 navigationEndpoint.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_AUDIOBOOK
-    private val isArtist: Boolean
+    val isArtist: Boolean
         get() = navigationEndpoint.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == MUSIC_PAGE_TYPE_ARTIST
-
-    fun toItem(): YTItem = when {
-        isSong -> SongItem.from(this)
-        isPlaylist -> PlaylistItem.from(this)
-        isAlbum -> AlbumItem.from(this)
-        isArtist -> ArtistItem.from(this)
-        else -> throw UnsupportedOperationException("Unknown item type")
-    }
 }

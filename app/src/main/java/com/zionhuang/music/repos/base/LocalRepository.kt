@@ -1,9 +1,9 @@
 package com.zionhuang.music.repos.base
 
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.models.DataWrapper
-import com.zionhuang.music.models.ListWrapper
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.sortInfo.*
 import kotlinx.coroutines.flow.Flow
@@ -18,27 +18,27 @@ interface LocalRepository {
     /**
      * Browse
      */
-    fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
+    fun getAllSongs(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>>
     suspend fun getSongCount(): Int
 
-    fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>): ListWrapper<Artist>
+    fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>): Flow<List<Artist>>
     suspend fun getArtistCount(): Int
 
-    suspend fun getArtistSongsPreview(artistId: String): Result<List<YTBaseItem>>
-    fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
+    suspend fun getArtistSongsPreview(artistId: String): Flow<List<Song>>
+    fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): Flow<List<Song>>
     suspend fun getArtistSongCount(artistId: String): Int
 
-    fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>): ListWrapper<Album>
+    fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>): Flow<List<Album>>
     suspend fun getAlbumCount(): Int
     suspend fun getAlbumSongs(albumId: String): List<Song>
 
-    fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): ListWrapper<Playlist>
+    fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>): Flow<List<Playlist>>
 
-    fun getPlaylistSongs(playlistId: String): ListWrapper<Song>
+    fun getPlaylistSongs(playlistId: String): Flow<List<Song>>
 
-    fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
+    fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>>
     fun getLikedSongCount(): Flow<Int>
-    fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song>
+    fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): Flow<List<Song>>
     fun getDownloadedSongCount(): Flow<Int>
 
     /**
@@ -54,20 +54,19 @@ interface LocalRepository {
     /**
      * Song
      */
-    suspend fun addSong(mediaMetadata: MediaMetadata): SongEntity
-    suspend fun safeAddSong(song: SongItem) = safeAddSongs(listOf(song))
-    suspend fun safeAddSongs(songs: List<SongItem>): List<SongEntity>
+    suspend fun addSong(mediaMetadata: MediaMetadata) = addSongs(listOf(mediaMetadata))
+    suspend fun addSongs(songs: List<MediaMetadata>)
     suspend fun refetchSong(song: Song) = refetchSongs(listOf(song))
     suspend fun refetchSongs(songs: List<Song>)
     fun getSongById(songId: String?): Flow<Song?>
     fun getSongFile(songId: String): File
-    fun hasSong(songId: String): DataWrapper<Boolean>
     suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long)
+    suspend fun updateSongDuration(songId: String, duration: Int)
     suspend fun updateSongTitle(song: Song, newTitle: String)
     suspend fun toggleLiked(song: Song) = toggleLiked(listOf(song))
     suspend fun toggleLiked(songs: List<Song>)
-    suspend fun downloadSong(song: SongEntity) = downloadSongs(listOf(song))
-    suspend fun downloadSongs(songs: List<SongEntity>)
+    suspend fun downloadSong(songId: String) = downloadSongs(listOf(songId))
+    suspend fun downloadSongs(songIds: List<String>)
     suspend fun onDownloadComplete(downloadId: Long, success: Boolean)
     suspend fun validateDownloads()
     suspend fun removeDownloads(songs: List<Song>)
@@ -91,26 +90,25 @@ interface LocalRepository {
      */
     suspend fun addAlbum(album: AlbumItem) = addAlbums(listOf(album))
     suspend fun addAlbums(albums: List<AlbumItem>)
-    suspend fun refetchAlbum(album: AlbumEntity) = refetchAlbums(listOf(album))
-    suspend fun refetchAlbums(albums: List<AlbumEntity>)
     suspend fun getAlbum(albumId: String): Album?
+    suspend fun getAlbumWithSongs(albumId: String): AlbumWithSongs?
     suspend fun deleteAlbum(albumId: String)
     suspend fun deleteAlbums(albums: List<Album>)
 
     /**
      * Playlist
      */
-    fun getPlaylist(playlistId: String): Flow<Playlist>
-    suspend fun insertPlaylist(playlist: PlaylistEntity)
     suspend fun addPlaylist(playlist: PlaylistItem) = addPlaylists(listOf(playlist))
     suspend fun addPlaylists(playlists: List<PlaylistItem>)
     suspend fun importPlaylist(playlist: PlaylistItem) = importPlaylists(listOf(playlist))
     suspend fun importPlaylists(playlists: List<PlaylistItem>)
+    suspend fun insertPlaylist(playlist: PlaylistEntity)
+    fun getPlaylist(playlistId: String): Flow<Playlist>
     suspend fun addToPlaylist(playlist: PlaylistEntity, item: LocalItem) = addToPlaylist(playlist, listOf(item))
     suspend fun addToPlaylist(playlist: PlaylistEntity, items: List<LocalItem>)
-    suspend fun addYouTubeItemToPlaylist(playlist: PlaylistEntity, item: YTItem) = addYouTubeItemsToPlaylist(playlist, listOf(item))
-    suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>)
-    suspend fun addMediaItemToPlaylist(playlist: PlaylistEntity, item: MediaMetadata)
+    suspend fun addYouTubeItemToPlaylist(playlist: PlaylistEntity, item: YTItem) = addYTItemsToPlaylist(playlist, listOf(item))
+    suspend fun addYTItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>)
+    suspend fun addMediaMetadataToPlaylist(playlist: PlaylistEntity, mediaMetadata: MediaMetadata)
     suspend fun refetchPlaylists(playlists: List<Playlist>)
     suspend fun downloadPlaylists(playlists: List<Playlist>)
     suspend fun getPlaylistById(playlistId: String): Playlist
@@ -139,7 +137,7 @@ interface LocalRepository {
     /**
      * Format
      */
-    fun getSongFormat(songId: String?): DataWrapper<FormatEntity?>
+    fun getSongFormat(songId: String?): Flow<FormatEntity?>
     suspend fun upsert(format: FormatEntity)
 
     /**

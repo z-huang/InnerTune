@@ -16,10 +16,6 @@ interface PlaylistDao {
     fun getAllPlaylistId(): Flow<List<String>>
 
     @Transaction
-    @Query(QUERY_ALL_PLAYLIST)
-    suspend fun getAllPlaylistsAsList(): List<Playlist>
-
-    @Transaction
     @RawQuery(observedEntities = [PlaylistEntity::class, PlaylistSongMap::class])
     fun getPlaylistsAsFlow(query: SupportSQLiteQuery): Flow<List<Playlist>>
 
@@ -93,7 +89,7 @@ interface PlaylistDao {
     @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND position IN (:position)")
     suspend fun deletePlaylistSong(playlistId: String, position: List<Int>)
 
-    @Query("SELECT max(position) FROM playlist_song_map WHERE playlistId = :playlistId")
+    @Query("SELECT MAX(position) FROM playlist_song_map WHERE playlistId = :playlistId")
     suspend fun getPlaylistMaxId(playlistId: String): Int?
 
     fun getSortQuery(sortInfo: ISortInfo<PlaylistSortType>) = QUERY_ORDER.format(

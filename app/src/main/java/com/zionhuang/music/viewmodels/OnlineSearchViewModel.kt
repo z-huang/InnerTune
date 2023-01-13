@@ -1,33 +1,54 @@
 package com.zionhuang.music.viewmodels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.music.repos.YouTubeRepository
+import com.zionhuang.innertube.pages.SearchSummaryPage
+import com.zionhuang.music.models.ItemsPage
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class OnlineSearchViewModel(
-    private val repository: YouTubeRepository,
-    private val query: String,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+    val query = savedStateHandle.get<String>("query")!!
     val filter = MutableStateFlow<YouTube.SearchFilter?>(null)
+    var summaryPage by mutableStateOf<SearchSummaryPage?>(null)
+    val viewStateMap = mutableStateMapOf<String, ItemsPage?>()
 
-    val pagingData = Pager(PagingConfig(pageSize = 20)) {
-        filter.value.let {
-            if (it == null) repository.searchAll(query)
-            else repository.search(query, it)
+    init {
+        viewModelScope.launch {
+            filter.collect { filter ->
+                if (filter == null) {
+                    if (summaryPage == null) {
+                        summaryPage = YouTube.searchSummary(query).getOrNull()
+                    }
+                } else {
+                    if (viewStateMap[filter.value] == null) {
+                        viewStateMap[filter.value] = YouTube.search(query, filter).getOrNull()?.let {
+                            ItemsPage(it.items, it.continuation)
+                        }
+                    }
+                }
+            }
         }
-    }.flow.cachedIn(viewModelScope)
+    }
 
-    class Factory(
-        private val repository: YouTubeRepository,
-        private val query: String,
-    ) : ViewModelProvider.NewInstanceFactory() {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = OnlineSearchViewModel(repository, query) as T
+    fun loadMore() {
+        val filter = filter.value?.value
+        viewModelScope.launch {
+            if (filter == null) return@launch
+            val viewState = viewStateMap[filter] ?: return@launch
+            val continuation = viewState.continuation
+            if (continuation != null) {
+                val searchResult = YouTube.searchContinuation(continuation).getOrNull() ?: return@launch
+                viewStateMap[filter] = ItemsPage((viewState.items + searchResult.items).distinctBy { it.id }, searchResult.continuation)
+            }
+        }
     }
 }

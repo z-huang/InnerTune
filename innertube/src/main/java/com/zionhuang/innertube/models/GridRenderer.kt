@@ -11,10 +11,6 @@ data class GridRenderer(
     data class Header(
         val gridHeaderRenderer: GridHeaderRenderer,
     ) {
-        fun toSectionHeader() = Header(
-            title = gridHeaderRenderer.title.toString()
-        )
-
         @Serializable
         data class GridHeaderRenderer(
             val title: Runs,
@@ -25,7 +21,5 @@ data class GridRenderer(
     data class Item(
         val musicNavigationButtonRenderer: MusicNavigationButtonRenderer?,
         val musicTwoRowItemRenderer: MusicTwoRowItemRenderer?,
-    ) {
-        fun toBaseItem(): YTBaseItem = musicNavigationButtonRenderer?.toItem() ?: musicTwoRowItemRenderer?.toItem()!!
-    }
+    )
 }

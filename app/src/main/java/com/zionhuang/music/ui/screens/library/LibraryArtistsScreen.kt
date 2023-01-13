@@ -23,12 +23,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.component.ArtistListItem
-import com.zionhuang.music.ui.component.ResizableIconButton
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.models.sortInfo.ArtistSortType
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.component.ArtistListItem
+import com.zionhuang.music.ui.component.ResizableIconButton
 import com.zionhuang.music.viewmodels.LibraryArtistsViewModel
 import java.time.Duration
 import java.time.LocalDateTime
@@ -45,7 +45,7 @@ fun LibraryArtistsScreen(
     LaunchedEffect(artists) {
         SongRepository(context).refetchArtists(
             artists.map { it.artist }.filter {
-                it.bannerUrl == null || Duration.between(it.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)
+                it.thumbnailUrl == null || Duration.between(it.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)
             }
         )
     }

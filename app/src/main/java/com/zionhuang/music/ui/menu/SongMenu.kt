@@ -12,6 +12,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,7 +24,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
 import com.zionhuang.music.db.entities.Playlist
@@ -35,6 +35,7 @@ import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.component.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -68,7 +69,7 @@ fun SongMenu(
     }
 
     LaunchedEffect(Unit) {
-        SongRepository(context).getAllPlaylists(PlaylistSortInfoPreference).flow.collect {
+        SongRepository(context).getAllPlaylists(PlaylistSortInfoPreference).collect {
             playlists = it
         }
     }
@@ -84,6 +85,7 @@ fun SongMenu(
                         Image(
                             painter = painterResource(R.drawable.ic_add),
                             contentDescription = null,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                             modifier = Modifier.size(ListThumbnailSize)
                         )
                     },
@@ -151,6 +153,7 @@ fun SongMenu(
                             contentDescription = null,
                             placeholder = painterResource(R.drawable.ic_artist),
                             error = painterResource(R.drawable.ic_artist),
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                             modifier = Modifier
                                 .size(ListThumbnailSize)
                                 .clip(CircleShape)

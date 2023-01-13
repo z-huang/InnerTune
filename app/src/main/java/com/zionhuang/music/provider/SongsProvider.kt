@@ -13,7 +13,6 @@ import com.zionhuang.music.R
 import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
 import com.zionhuang.music.repos.SongRepository
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import java.io.FileNotFoundException
 import java.time.ZoneOffset
@@ -46,8 +45,8 @@ class SongsProvider : DocumentsProvider() {
                     .add(Document.COLUMN_DISPLAY_NAME, context!!.getString(R.string.app_name))
                     .add(Document.COLUMN_MIME_TYPE, MIME_TYPE_DIR)
                 else -> {
-                    val song = songRepository.getSongById(documentId).firstOrNull() ?: throw FileNotFoundException()
-                    val format = songRepository.getSongFormat(documentId).getValueAsync() ?: throw FileNotFoundException()
+                    val song = songRepository.getSongById(documentId).first() ?: throw FileNotFoundException()
+                    val format = songRepository.getSongFormat(documentId).first() ?: throw FileNotFoundException()
                     newRow()
                         .add(Document.COLUMN_DOCUMENT_ID, documentId)
                         .add(Document.COLUMN_DISPLAY_NAME, song.song.title)
@@ -62,8 +61,8 @@ class SongsProvider : DocumentsProvider() {
     override fun queryChildDocuments(parentDocumentId: String, projection: Array<String>?, sortOrder: String?): Cursor = runBlocking {
         MatrixCursor(DEFAULT_DOCUMENT_PROJECTION).apply {
             when (parentDocumentId) {
-                ROOT_DOC -> songRepository.getDownloadedSongs(SongSortInfoPreference).flow.first().forEach { song ->
-                    val format = songRepository.getSongFormat(song.id).getValueAsync()
+                ROOT_DOC -> songRepository.getDownloadedSongs(SongSortInfoPreference).first().forEach { song ->
+                    val format = songRepository.getSongFormat(song.id).first()
                     if (format != null) {
                         newRow()
                             .add(Document.COLUMN_DOCUMENT_ID, song.id)
@@ -82,7 +81,7 @@ class SongsProvider : DocumentsProvider() {
             when (rootId) {
                 ROOT -> {
                     songRepository.searchDownloadedSongs(query).first().forEach { song ->
-                        val format = songRepository.getSongFormat(song.id).getValueAsync()
+                        val format = songRepository.getSongFormat(song.id).first()
                         if (format != null) {
                             newRow()
                                 .add(Document.COLUMN_DOCUMENT_ID, song.id)
@@ -103,7 +102,7 @@ class SongsProvider : DocumentsProvider() {
     }
 
     override fun isChildDocument(parentDocumentId: String, documentId: String): Boolean = runBlocking {
-        val song = songRepository.getSongById(documentId).firstOrNull()
+        val song = songRepository.getSongById(documentId).first()
         song != null && parentDocumentId == ROOT_DOC
     }
 

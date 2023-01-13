@@ -27,13 +27,13 @@ import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.Player.*
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.QueuePeekHeight
+import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.ui.component.BottomSheet
 import com.zionhuang.music.ui.component.BottomSheetState
 import com.zionhuang.music.ui.component.ResizableIconButton
 import com.zionhuang.music.ui.component.rememberBottomSheetState
-import com.zionhuang.music.constants.QueuePeekHeight
-import com.zionhuang.music.extensions.togglePlayPause
-import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.utils.makeTimeString
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -58,7 +58,7 @@ fun BottomSheetPlayer(
     var position by rememberSaveable(playbackState) {
         mutableStateOf(playerConnection.player.currentPosition)
     }
-    val duration by rememberSaveable(playbackState) {
+    var duration by rememberSaveable(playbackState) {
         mutableStateOf(playerConnection.player.duration)
     }
     var sliderPosition by remember {
@@ -70,6 +70,7 @@ fun BottomSheetPlayer(
             while (isActive) {
                 delay(500)
                 position = playerConnection.player.currentPosition
+                duration = playerConnection.player.duration
             }
         }
     }
@@ -121,7 +122,7 @@ fun BottomSheetPlayer(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.secondary,
                         maxLines = 1,
-                        modifier = Modifier.clickable {
+                        modifier = Modifier.clickable(enabled = artist.id != null) {
                             navController.navigate("artist/${artist.id}")
                             state.collapseSoft()
                         }

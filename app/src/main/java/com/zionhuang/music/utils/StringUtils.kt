@@ -13,7 +13,7 @@ private const val HMS_FORMAT = "%1\$d:%2$02d:%3$02d"
  * @return formatted string
  */
 fun makeTimeString(duration: Long?): String {
-    if (duration == null) return "0:00"
+    if (duration == null || duration < 0) return ""
     var sec = duration / 1000
     val hour = sec / 3600
     sec %= 3600
@@ -27,4 +27,4 @@ fun md5(str: String): String {
     return BigInteger(1, md.digest(str.toByteArray())).toString(16).padStart(32, '0')
 }
 
-fun List<String?>.joinByBullet() = filterNot { it.isNullOrEmpty() }.joinToString(separator = " • ")
+fun joinByBullet(vararg str: String?) = str.filterNot { it.isNullOrEmpty() }.joinToString(separator = " • ")

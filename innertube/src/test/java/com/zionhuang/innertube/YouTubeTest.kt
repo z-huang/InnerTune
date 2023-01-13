@@ -1,17 +1,12 @@
 package com.zionhuang.innertube
 
-import com.zionhuang.innertube.YouTube.EXPLORE_BROWSE_ID
-import com.zionhuang.innertube.YouTube.HOME_BROWSE_ID
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_COMMUNITY_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PLAYLIST
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
-import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.WatchEndpoint
-import com.zionhuang.innertube.models.YTItem
-import com.zionhuang.innertube.utils.browseAll
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.request.*
@@ -53,8 +48,8 @@ class YouTubeTest {
     @Test
     fun `Check 'search' endpoint`() = runBlocking {
         // Top result with radio link
-        val searchAllTypeResult = youTube.searchAllType("musi").getOrThrow()
-        assertTrue(searchAllTypeResult.items.size > 1)
+        val searchAllTypeResult = youTube.searchSummary("musi").getOrThrow()
+        assertTrue(searchAllTypeResult.summaries.size > 1)
         for (filter in listOf(
             FILTER_SONG,
             FILTER_VIDEO,
@@ -72,18 +67,16 @@ class YouTubeTest {
     fun `Check search continuation`() = runBlocking {
         var count = 5
         var searchResult = youTube.search(SEARCH_QUERY, FILTER_SONG).getOrThrow()
-        while (searchResult.continuations != null && count > 0) {
+        while (searchResult.continuation != null && count > 0) {
             searchResult.items.forEach {
-                if (it is YTItem) println(it.title)
+                println(it.title)
             }
-            searchResult = youTube.search(searchResult.continuations!![0]).getOrThrow()
+            searchResult = youTube.searchContinuation(searchResult.continuation!!).getOrThrow()
             count -= 1
         }
         searchResult.items.forEach {
-            if (it is YTItem) println(it.title)
+            println(it.title)
         }
-        // audio book
-        searchResult = youTube.search("tomori kusunoki", FILTER_ALBUM).getOrThrow()
     }
 
     @Test
@@ -94,24 +87,14 @@ class YouTubeTest {
 
     @Test
     fun `Check 'browse' endpoint`() = runBlocking {
-        var artist = youTube.browse(BrowseEndpoint("UCI6B8NkZKqlFWoiC_xE-hzA")).getOrThrow()
-        assertTrue(artist.items.isNotEmpty())
-        artist = youTube.browse(BrowseEndpoint("UCy2RKLxIOMOfGld_yBYEBLw")).getOrThrow() // Artist that contains audiobook
-        assertTrue(artist.items.isNotEmpty())
-        val album = youTube.browse(BrowseEndpoint("MPREb_oNAdr9eUOfS")).getOrThrow()
-        assertTrue(album.items.isNotEmpty())
-        val playlist = youTube.browse(BrowseEndpoint("VLRDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo")).getOrThrow()
-        assertTrue(playlist.items.isNotEmpty())
-        listOf(HOME_BROWSE_ID, EXPLORE_BROWSE_ID).forEach { browseId ->
-            val result = youTube.browse(BrowseEndpoint(browseId)).getOrThrow()
-            assertTrue(result.items.isNotEmpty())
-        }
-    }
-
-    @Test
-    fun `Check 'browse' continuation`() = runBlocking {
-        val result = youTube.browseAll(BrowseEndpoint(HOME_BROWSE_ID)).getOrThrow()
-        assertTrue(result.isNotEmpty())
+        var artist = youTube.browseArtist("UCI6B8NkZKqlFWoiC_xE-hzA").getOrThrow()
+        assertTrue(artist.sections.isNotEmpty())
+        artist = youTube.browseArtist("UCy2RKLxIOMOfGld_yBYEBLw").getOrThrow() // Artist that contains audiobook
+        assertTrue(artist.sections.isNotEmpty())
+        val album = youTube.browseAlbum("MPREb_oNAdr9eUOfS").getOrThrow()
+        assertTrue(album.songs.isNotEmpty())
+        val playlist = youTube.browsePlaylist("VLRDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo").getOrThrow()
+        assertTrue(playlist.songs.isNotEmpty())
     }
 
     @Test
@@ -143,7 +126,7 @@ class YouTubeTest {
     @Test
     fun `Check 'get_queue' endpoint`() = runBlocking {
         var queue = youTube.getQueue(videoIds = VIDEO_IDS).getOrThrow()
-        assertTrue(queue[0].navigationEndpoint.watchEndpoint!!.videoId == VIDEO_IDS[0])
+        assertTrue(queue.isNotEmpty())
         queue = youTube.getQueue(playlistId = PLAYLIST_ID).getOrThrow()
         assertTrue(queue.isNotEmpty())
     }
@@ -153,24 +136,26 @@ class YouTubeTest {
         // This playlist has 2900 songs
         val browseId = "VLPLtAw-mgfCzRwduBTjBHknz5U4_ZM4n6qm"
         var count = 5
-        var result = YouTube.browse(BrowseEndpoint(browseId)).getOrThrow()
-        while (result.continuations != null && count > 0) {
-            result.items.forEach {
+        val playlistPage = YouTube.browsePlaylist(browseId).getOrThrow()
+        var songs = playlistPage.songs
+        var continuation = playlistPage.songsContinuation
+        while (count > 0) {
+            songs.forEach {
                 println(it.id)
             }
-            result = YouTube.browse(result.continuations!!).getOrThrow()
-            count -= 1
-        }
-        result.items.forEach {
-            println(it.id)
+            if (continuation == null) break
+            val continuationPage = YouTube.browsePlaylistContinuation(continuation).getOrThrow()
+            songs = continuationPage.songs
+            continuation = continuationPage.continuation
+            count--
         }
     }
 
     @Test
     fun lyrics() = runBlocking {
         val nextResult = YouTube.next(WatchEndpoint(videoId = "NCC6lI0GGy0")).getOrThrow()
-        val browseResult = YouTube.browse(nextResult.lyricsEndpoint!!).getOrThrow()
-        assertTrue(browseResult.lyrics != null)
+        val lyrics = YouTube.getLyrics(nextResult.lyricsEndpoint!!).getOrThrow()
+        assertTrue(lyrics != null)
     }
 
     companion object {

@@ -1,14 +1,11 @@
 package com.zionhuang.music.db.entities
 
-import android.os.Parcelable
 import androidx.compose.runtime.Immutable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.parcelize.Parcelize
 import java.time.LocalDateTime
 
 @Immutable
-@Parcelize
 @Entity(tableName = "album")
 data class AlbumEntity(
     @PrimaryKey val id: String,
@@ -19,4 +16,4 @@ data class AlbumEntity(
     val duration: Int,
     val createDate: LocalDateTime = LocalDateTime.now(),
     val lastUpdateTime: LocalDateTime = LocalDateTime.now(),
-) : Parcelable
+)

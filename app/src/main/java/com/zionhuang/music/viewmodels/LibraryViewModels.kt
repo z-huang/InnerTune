@@ -19,7 +19,7 @@ class LibrarySongsViewModel(application: Application) : AndroidViewModel(applica
     private val songRepository = SongRepository(application)
 
     val allSongs = SongSortInfoPreference.flow.flatMapLatest { sortInfo ->
-        songRepository.getAllSongs(sortInfo).flow
+        songRepository.getAllSongs(sortInfo)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
@@ -27,7 +27,7 @@ class LibraryArtistsViewModel(application: Application) : AndroidViewModel(appli
     private val songRepository = SongRepository(application)
 
     val allArtists = ArtistSortInfoPreference.flow.flatMapLatest { sortInfo ->
-        songRepository.getAllArtists(sortInfo).flow
+        songRepository.getAllArtists(sortInfo)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
@@ -35,7 +35,7 @@ class LibraryAlbumsViewModel(application: Application) : AndroidViewModel(applic
     private val songRepository = SongRepository(application)
 
     val allAlbums = AlbumSortInfoPreference.flow.flatMapLatest { sortInfo ->
-        songRepository.getAllAlbums(sortInfo).flow
+        songRepository.getAllAlbums(sortInfo)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
@@ -49,7 +49,7 @@ class LibraryPlaylistsViewModel(application: Application) : AndroidViewModel(app
         .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
     val allPlaylists = PlaylistSortInfoPreference.flow.flatMapLatest { sortInfo ->
-        songRepository.getAllPlaylists(sortInfo).flow
+        songRepository.getAllPlaylists(sortInfo)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
@@ -57,7 +57,7 @@ class LikedSongsViewModel(application: Application) : AndroidViewModel(applicati
     private val songRepository = SongRepository(application)
 
     val songs = SongSortInfoPreference.flow.flatMapLatest { sortInfo ->
-        songRepository.getLikedSongs(sortInfo).flow
+        songRepository.getLikedSongs(sortInfo)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
@@ -65,6 +65,6 @@ class DownloadedSongsViewModel(application: Application) : AndroidViewModel(appl
     private val songRepository = SongRepository(application)
 
     val songs = SongSortInfoPreference.flow.flatMapLatest { sortInfo ->
-        songRepository.getDownloadedSongs(sortInfo).flow
+        songRepository.getDownloadedSongs(sortInfo)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }

@@ -1,36 +1,43 @@
 package com.zionhuang.music.viewmodels
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.youtube.getAlbumWithSongs
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AlbumViewModel(
-    context: Context,
-    albumId: String,
-    playlistId: String?,
-) : ViewModel() {
-    val albumWithSongs = MutableStateFlow<AlbumWithSongs?>(null)
+    application: Application,
+    savedStateHandle: SavedStateHandle,
+) : AndroidViewModel(application) {
+    val songRepository = SongRepository(application)
+    val albumId = savedStateHandle.get<String>("albumId")!!
+    private val _viewState = MutableStateFlow<AlbumViewState?>(null)
+    val viewState = _viewState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            albumWithSongs.value = SongRepository(context).getAlbumWithSongs(albumId)
-                ?: YouTube.getAlbumWithSongs(context, albumId, playlistId)
+            _viewState.value = songRepository.getAlbumWithSongs(albumId)?.let {
+                AlbumViewState.Local(it)
+            } ?: YouTube.browseAlbum(albumId).getOrNull()?.let {
+                AlbumViewState.Remote(it)
+            }
         }
     }
+}
 
-    class Factory(
-        val context: Context,
-        val albumId: String,
-        val playlistId: String?,
-    ) : ViewModelProvider.NewInstanceFactory() {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = AlbumViewModel(context, albumId, playlistId) as T
-    }
+sealed class AlbumViewState {
+    data class Local(
+        val albumWithSongs: AlbumWithSongs,
+    ) : AlbumViewState()
+
+    data class Remote(
+        val albumPage: AlbumPage,
+    ) : AlbumViewState()
 }

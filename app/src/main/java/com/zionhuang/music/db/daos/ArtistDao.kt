@@ -42,11 +42,7 @@ interface ArtistDao {
     suspend fun hasArtist(id: String): Boolean
 
     @Query("DELETE FROM song_artist_map WHERE songId = :songId")
-    suspend fun deleteSongArtists(songId: String)
-
-    suspend fun deleteSongArtists(songIds: List<String>) = songIds.forEach {
-        deleteSongArtists(it)
-    }
+    suspend fun deleteSongArtistMaps(songId: String)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(artist: ArtistEntity): Long

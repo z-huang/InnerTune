@@ -21,9 +21,6 @@ import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.component.GridMenu
-import com.zionhuang.music.ui.component.GridMenuItem
-import com.zionhuang.music.ui.component.ListDialog
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.MediaMetadata
@@ -31,6 +28,9 @@ import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.ui.component.GridMenu
+import com.zionhuang.music.ui.component.GridMenuItem
+import com.zionhuang.music.ui.component.ListDialog
 import com.zionhuang.music.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -52,8 +52,8 @@ fun YouTubeSongMenu(
     }
     val artists = remember {
         song.artists.mapNotNull {
-            it.navigationEndpoint?.browseEndpoint?.browseId?.let { artistId ->
-                MediaMetadata.Artist(id = artistId, name = it.text)
+            it.id?.let { artistId ->
+                MediaMetadata.Artist(id = artistId, name = it.name)
             }
         }
     }
@@ -66,10 +66,7 @@ fun YouTubeSongMenu(
         ListDialog(
             onDismiss = { showSelectArtistDialog = false }
         ) {
-            items(
-                items = artists,
-                key = { it.id }
-            ) { artist ->
+            items(artists) { artist ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -150,7 +147,7 @@ fun YouTubeSongMenu(
                 title = R.string.action_add_to_library
             ) {
                 coroutineScope.launch {
-                    songRepository.safeAddSong(song)
+                    songRepository.addSong(song.toMediaMetadata())
                 }
             }
         }
@@ -186,7 +183,7 @@ fun YouTubeSongMenu(
                 icon = R.drawable.ic_album,
                 title = R.string.menu_view_album
             ) {
-                navController.navigate("album/${album.navigationEndpoint.browseId}")
+                navController.navigate("album/${album.id}")
                 onDismiss()
             }
         }
@@ -221,6 +218,54 @@ fun YouTubeAlbumMenu(
         album.id in libraryAlbumIds
     }
 
+    var showSelectArtistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    if (showSelectArtistDialog) {
+        ListDialog(
+            onDismiss = { showSelectArtistDialog = false }
+        ) {
+            items(
+                items = album.artists.orEmpty(),
+                key = { it.id!! }
+            ) { artist ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .height(ListItemHeight)
+                        .clickable {
+                            navController.navigate("artist/${artist.id}")
+                            showSelectArtistDialog = false
+                            onDismiss()
+                        }
+                        .padding(horizontal = 12.dp),
+                ) {
+                    Box(
+                        contentAlignment = Alignment.CenterStart,
+                        modifier = Modifier
+                            .fillParentMaxWidth()
+                            .height(ListItemHeight)
+                            .clickable {
+                                showSelectArtistDialog = false
+                                onDismiss()
+                                navController.navigate("artist/${artist.id}")
+                            }
+                            .padding(horizontal = 24.dp),
+                    ) {
+                        Text(
+                            text = artist.name,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     GridMenu(
         contentPadding = PaddingValues(
             start = 8.dp,
@@ -229,14 +274,15 @@ fun YouTubeAlbumMenu(
             bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
         )
     ) {
-        album.menu.radioEndpoint?.watchPlaylistEndpoint?.toWatchEndpoint()?.let { watchEndpoint ->
-            GridMenuItem(
-                icon = R.drawable.ic_radio,
-                title = R.string.menu_start_radio
-            ) {
-                playerConnection.playQueue(YouTubeQueue(watchEndpoint))
-                onDismiss()
-            }
+        GridMenuItem(
+            icon = R.drawable.ic_radio,
+            title = R.string.menu_start_radio
+        ) {
+            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(
+                playlistId = album.playlistId,
+                params = "wAEB"
+            )))
+            onDismiss()
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_play,
@@ -286,13 +332,17 @@ fun YouTubeAlbumMenu(
         ) {
 
         }
-        album.menu.artistEndpoint?.browseEndpoint?.let { browseEndpoint ->
+        album.artists?.let { artists ->
             GridMenuItem(
                 icon = R.drawable.ic_artist,
                 title = R.string.menu_view_artist
             ) {
-                navController.navigate("artist/${browseEndpoint.browseId}")
-                onDismiss()
+                if (artists.size == 1) {
+                    navController.navigate("artist/${artists[0].id}")
+                    onDismiss()
+                } else {
+                    showSelectArtistDialog = true
+                }
             }
         }
         GridMenuItem(
@@ -326,7 +376,7 @@ fun YouTubeArtistMenu(
             bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
         )
     ) {
-        artist.menu.radioEndpoint?.watchPlaylistEndpoint?.toWatchEndpoint()?.let { watchEndpoint ->
+        artist.radioEndpoint?.let { watchEndpoint ->
             GridMenuItem(
                 icon = R.drawable.ic_radio,
                 title = R.string.menu_start_radio
@@ -335,7 +385,7 @@ fun YouTubeArtistMenu(
                 onDismiss()
             }
         }
-        artist.menu.shuffleEndpoint?.watchPlaylistEndpoint?.toWatchEndpoint()?.let { watchEndpoint ->
+        artist.shuffleEndpoint?.let { watchEndpoint ->
             GridMenuItem(
                 icon = R.drawable.ic_shuffle,
                 title = R.string.btn_shuffle

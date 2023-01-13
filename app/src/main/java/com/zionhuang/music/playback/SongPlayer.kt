@@ -47,9 +47,7 @@ import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvicto
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.*
-import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AFTER_CURRENT_VIDEO
-import com.zionhuang.innertube.models.QueueAddEndpoint.Companion.INSERT_AT_END
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.ACTION_SHOW_BOTTOM_SHEET
 import com.zionhuang.music.MainActivity
 import com.zionhuang.music.R
@@ -107,7 +105,7 @@ class SongPlayer(
     private var autoAddSong by context.preference(AUTO_ADD_TO_LIBRARY, true)
     private var audioQuality by enumPreference(context, AUDIO_QUALITY, AudioQuality.AUTO)
 
-    private var currentQueue: Queue = EmptyQueue()
+    private var currentQueue: Queue = EmptyQueue
     var queueTitle: String? = null
 
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
@@ -115,7 +113,7 @@ class SongPlayer(
         songRepository.getSongById(mediaMetadata?.id)
     }
     private val currentFormat = currentMediaMetadata.flatMapLatest { mediaMetadata ->
-        songRepository.getSongFormat(mediaMetadata?.id).flow
+        songRepository.getSongFormat(mediaMetadata?.id)
     }
     var currentSong: Song? = null
 
@@ -158,7 +156,7 @@ class SongPlayer(
                     when (path.firstOrNull()) {
                         SONG -> {
                             val songId = path.getOrNull(1) ?: return@launch
-                            val allSongs = songRepository.getAllSongs(SongSortInfoPreference).flow.first()
+                            val allSongs = songRepository.getAllSongs(SongSortInfoPreference).first()
                             playQueue(ListQueue(
                                 title = context.getString(R.string.queue_all_songs),
                                 items = allSongs.map { it.toMediaItem() },
@@ -169,7 +167,7 @@ class SongPlayer(
                             val songId = path.getOrNull(2) ?: return@launch
                             val artistId = path.getOrNull(1) ?: return@launch
                             val artist = songRepository.getArtistById(artistId) ?: return@launch
-                            val songs = songRepository.getArtistSongs(artistId, SongSortInfoPreference).flow.first()
+                            val songs = songRepository.getArtistSongs(artistId, SongSortInfoPreference).first()
                             playQueue(ListQueue(
                                 title = artist.name,
                                 items = songs.map { it.toMediaItem() },
@@ -191,9 +189,9 @@ class SongPlayer(
                             val songId = path.getOrNull(2) ?: return@launch
                             val playlistId = path.getOrNull(1) ?: return@launch
                             val songs = when (playlistId) {
-                                LIKED_PLAYLIST_ID -> songRepository.getLikedSongs(SongSortInfoPreference).flow.first()
-                                DOWNLOADED_PLAYLIST_ID -> songRepository.getDownloadedSongs(SongSortInfoPreference).flow.first()
-                                else -> songRepository.getPlaylistSongs(playlistId).getList()
+                                LIKED_PLAYLIST_ID -> songRepository.getLikedSongs(SongSortInfoPreference).first()
+                                DOWNLOADED_PLAYLIST_ID -> songRepository.getDownloadedSongs(SongSortInfoPreference).first()
+                                else -> songRepository.getPlaylistSongs(playlistId).first()
                             }
                             playQueue(ListQueue(
                                 title = when (playlistId) {
@@ -427,45 +425,14 @@ class SongPlayer(
 
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
-            val playedFormat = songRepository.getSongFormat(mediaId).flow.firstOrNull()
-            if (playedFormat != null && songRepository.getSongById(mediaId).firstOrNull()?.song?.downloadState == STATE_DOWNLOADED) {
+            val playedFormat = songRepository.getSongFormat(mediaId).firstOrNull()
+            val song = songRepository.getSongById(mediaId).firstOrNull()
+            if (playedFormat != null && song?.song?.downloadState == STATE_DOWNLOADED) {
                 return@runBlocking dataSpec.withUri(songRepository.getSongFile(mediaId).toUri())
             }
 
-            withContext(IO) {
+            val playerResponse = withContext(IO) {
                 YouTube.player(mediaId)
-            }.map { playerResponse ->
-                if (playerResponse.playabilityStatus.status != "OK") {
-                    throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
-                }
-                val format = if (playedFormat != null) {
-                    playerResponse.streamingData?.adaptiveFormats?.find {
-                        // Use itag to identify previous played format
-                        it.itag == playedFormat.itag
-                    }
-                } else {
-                    playerResponse.streamingData?.adaptiveFormats
-                        ?.filter { it.isAudio }
-                        ?.maxByOrNull {
-                            it.bitrate * when (audioQuality) {
-                                AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
-                                AudioQuality.HIGH -> 1
-                                AudioQuality.LOW -> -1
-                            }
-                        }
-                } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
-                songRepository.upsert(FormatEntity(
-                    id = mediaId,
-                    itag = format.itag,
-                    mimeType = format.mimeType.split(";")[0],
-                    codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
-                    bitrate = format.bitrate,
-                    sampleRate = format.audioSampleRate,
-                    contentLength = format.contentLength!!,
-                    loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
-                ))
-                InfoCache.putInfo(mediaId, format.url, playerResponse.streamingData!!.expiresInSeconds * 1000L)
-                dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
             }.getOrElse { throwable ->
                 if (throwable is ConnectException || throwable is UnknownHostException) {
                     throw PlaybackException(context.getString(R.string.error_no_internet), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
@@ -475,6 +442,39 @@ class SongPlayer(
                 }
                 throw PlaybackException(context.getString(R.string.error_unknown), throwable, ERROR_CODE_REMOTE_ERROR)
             }
+            if (playerResponse.playabilityStatus.status != "OK") {
+                throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
+            }
+
+            val format = if (playedFormat != null) {
+                playerResponse.streamingData?.adaptiveFormats?.find {
+                    // Use itag to identify previous played format
+                    it.itag == playedFormat.itag
+                }
+            } else {
+                playerResponse.streamingData?.adaptiveFormats
+                    ?.filter { it.isAudio }
+                    ?.maxByOrNull {
+                        it.bitrate * when (audioQuality) {
+                            AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
+                            AudioQuality.HIGH -> 1
+                            AudioQuality.LOW -> -1
+                        }
+                    }
+            } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
+
+            songRepository.upsert(FormatEntity(
+                id = mediaId,
+                itag = format.itag,
+                mimeType = format.mimeType.split(";")[0],
+                codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
+                bitrate = format.bitrate,
+                sampleRate = format.audioSampleRate,
+                contentLength = format.contentLength!!,
+                loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+            ))
+            InfoCache.putInfo(mediaId, format.url, playerResponse.streamingData!!.expiresInSeconds * 1000L)
+            dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     })
 
@@ -493,7 +493,7 @@ class SongPlayer(
                 .build()
     }
 
-    fun updateQueueTitle(title: String?) {
+    private fun updateQueueTitle(title: String?) {
         mediaSession.setQueueTitle(title)
         queueTitle = title
     }
@@ -515,9 +515,10 @@ class SongPlayer(
                 updateQueueTitle(queueTitle)
             }
             if (queue.preloadItem != null) {
-                player.addMediaItems(initialStatus.items.drop(1))
+                player.addMediaItems(0, initialStatus.items.subList(0, initialStatus.mediaItemIndex))
+                player.addMediaItems(initialStatus.items.subList(initialStatus.mediaItemIndex + 1, initialStatus.items.size))
             } else {
-                player.setMediaItems(initialStatus.items, if (initialStatus.index > 0) initialStatus.index else 0, initialStatus.position)
+                player.setMediaItems(initialStatus.items, if (initialStatus.mediaItemIndex > 0) initialStatus.mediaItemIndex else 0, initialStatus.position)
                 player.prepare()
                 player.playWhenReady = playWhenReady
             }
@@ -536,37 +537,6 @@ class SongPlayer(
             }
             player.addMediaItems(initialStatus.items.drop(1))
             currentQueue = radioQueue
-        }
-    }
-
-    fun handleQueueAddEndpoint(endpoint: QueueAddEndpoint, item: YTItem?) {
-        scope.launch {
-            val items = when (item) {
-                is SongItem -> YouTube.getQueue(videoIds = listOf(item.id)).getOrThrow().map { it.toMediaItem() }
-                is AlbumItem -> withContext(IO) {
-                    YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).getOrThrow().items.filterIsInstance<SongItem>().map { it.toMediaItem() }
-                    // consider refetch by [YouTube.getQueue] if needed
-                }
-                is PlaylistItem -> withContext(IO) {
-                    YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId!!).getOrThrow().map { it.toMediaItem() }
-                }
-                is ArtistItem -> return@launch
-                null -> when {
-                    endpoint.queueTarget.videoId != null -> withContext(IO) {
-                        YouTube.getQueue(videoIds = listOf(endpoint.queueTarget.videoId!!)).getOrThrow().map { it.toMediaItem() }
-                    }
-                    endpoint.queueTarget.playlistId != null -> withContext(IO) {
-                        YouTube.getQueue(playlistId = endpoint.queueTarget.playlistId).getOrThrow().map { it.toMediaItem() }
-                    }
-                    else -> error("Unknown queue target")
-                }
-            }
-            when (endpoint.queueInsertPosition) {
-                INSERT_AFTER_CURRENT_VIDEO -> player.addMediaItems((if (player.mediaItemCount == 0) -1 else player.currentMediaItemIndex) + 1, items)
-                INSERT_AT_END -> player.addMediaItems(items)
-                else -> {}
-            }
-            player.prepare()
         }
     }
 
@@ -663,7 +633,7 @@ class SongPlayer(
 
     override fun onPlaybackStateChanged(@State playbackState: Int) {
         if (playbackState == STATE_IDLE) {
-            currentQueue = EmptyQueue()
+            currentQueue = EmptyQueue
             player.shuffleModeEnabled = false
             mediaSession.setQueueTitle("")
         }

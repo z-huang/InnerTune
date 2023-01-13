@@ -1,18 +1,12 @@
 package com.zionhuang.music.ui.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -22,6 +16,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.LocalPlayerConnection
@@ -30,11 +25,12 @@ import com.zionhuang.music.constants.SuggestionItemHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.repos.SongRepository
-import com.zionhuang.music.repos.YouTubeRepository
 import com.zionhuang.music.ui.component.YouTubeListItem
-import kotlinx.coroutines.delay
+import com.zionhuang.music.viewmodels.MainViewModel
+import com.zionhuang.music.viewmodels.OnlineSearchSuggestionViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnlineSearchScreen(
     query: String,
@@ -42,42 +38,29 @@ fun OnlineSearchScreen(
     navController: NavController,
     onSearch: (String) -> Unit,
     onDismiss: () -> Unit,
+    viewModel: OnlineSearchSuggestionViewModel = viewModel(),
+    mainViewModel: MainViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val playerConnection = LocalPlayerConnection.current
+    val playerConnection = LocalPlayerConnection.current ?: return
+    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
-    var history by rememberSaveable {
-        mutableStateOf(emptyList<String>())
-    }
-    var suggestions by rememberSaveable {
-        mutableStateOf(emptyList<String>())
-    }
-    var items by rememberSaveable {
-        mutableStateOf(emptyList<YTItem>())
-    }
+    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
+    val likedSongIds by mainViewModel.likedSongIds.collectAsState()
+    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
+    val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
+
+    val viewState by viewModel.viewState.collectAsState()
 
     LaunchedEffect(query) {
-        if (query.isEmpty()) {
-            delay(200)
-            SongRepository(context).getAllSearchHistory().collect { list ->
-                history = list.map { it.query }
-                suggestions = emptyList()
-                items = emptyList()
-            }
-        } else {
-            val result = YouTubeRepository(context).getSuggestions(query)
-            SongRepository(context).getSearchHistory(query).collect { list ->
-                history = list.map { it.query }.take(3)
-                suggestions = result.queries.filter { it !in history }
-                items = result.recommendedItems
-            }
-        }
+        viewModel.query.value = query
     }
 
     LazyColumn {
         items(
-            items = history,
+            items = viewState.history,
             key = { it }
         ) { query ->
             SuggestionItem(
@@ -97,12 +80,13 @@ fun OnlineSearchScreen(
                         text = query,
                         selection = TextRange(query.length)
                     ))
-                }
+                },
+                modifier = Modifier.animateItemPlacement()
             )
         }
 
         items(
-            items = suggestions,
+            items = viewState.suggestions,
             key = { it }
         ) { query ->
             SuggestionItem(
@@ -117,27 +101,67 @@ fun OnlineSearchScreen(
                         text = query,
                         selection = TextRange(query.length)
                     ))
-                }
+                },
+                modifier = Modifier.animateItemPlacement()
             )
         }
 
-        if (items.isNotEmpty() && history.size + suggestions.size > 0) {
+        if (viewState.items.isNotEmpty() && viewState.history.size + viewState.suggestions.size > 0) {
             item {
                 Divider()
             }
         }
 
         items(
-            items = items,
+            items = viewState.items,
             key = { it.id }
         ) { item ->
             YouTubeListItem(
                 item = item,
+                badges = {
+                    if (item.explicit) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_explicit),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .padding(end = 2.dp)
+                        )
+                    }
+                    if (item is SongItem && item.id in librarySongIds ||
+                        item is AlbumItem && item.id in libraryAlbumIds ||
+                        item is PlaylistItem && item.id in libraryPlaylistIds
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_library_add_check),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .padding(end = 2.dp)
+                        )
+                    }
+                    if (item is SongItem && item.id in likedSongIds) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_favorite),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .padding(end = 2.dp)
+                        )
+                    }
+                },
+                isPlaying = when (item) {
+                    is SongItem -> mediaMetadata?.id == item.id
+                    is AlbumItem -> mediaMetadata?.album?.id == item.id
+                    else -> false
+                },
+                playWhenReady = playWhenReady,
                 modifier = Modifier
                     .clickable {
                         when (item) {
                             is SongItem -> {
-                                playerConnection?.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                                playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                                 onDismiss()
                             }
                             is AlbumItem -> {
@@ -151,6 +175,7 @@ fun OnlineSearchScreen(
                             is PlaylistItem -> {}
                         }
                     }
+                    .animateItemPlacement()
             )
         }
     }

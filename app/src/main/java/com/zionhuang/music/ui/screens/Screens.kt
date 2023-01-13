@@ -26,6 +26,10 @@ sealed class Screen(
 }
 
 fun defaultAppBarConfig() = AppBarConfig(
+    searchable = false
+)
+
+fun searchAppBarConfig() = AppBarConfig(
     isRootDestination = true,
     title = {
         Text(

@@ -1,37 +1,26 @@
 package com.zionhuang.music.viewmodels
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import android.app.Application
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.ArtistHeader
-import com.zionhuang.innertube.models.BrowseEndpoint
-import com.zionhuang.innertube.models.YTBaseItem
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.zionhuang.innertube.pages.ArtistPage
 import kotlinx.coroutines.launch
 
 class ArtistViewModel(
-    context: Context,
-    val artistId: String,
-) : ViewModel() {
-    val artistHeader = MutableStateFlow<ArtistHeader?>(null)
-    val content = MutableStateFlow<List<YTBaseItem>>(emptyList())
+    application: Application,
+    savedStateHandle: SavedStateHandle,
+) : AndroidViewModel(application) {
+    val artistId = savedStateHandle.get<String>("artistId")!!
+    var artistPage by mutableStateOf<ArtistPage?>(null)
 
     init {
         viewModelScope.launch {
-            YouTube.browse(BrowseEndpoint(browseId = artistId)).onSuccess { browseResult ->
-                artistHeader.value = browseResult.items.firstOrNull() as? ArtistHeader
-                content.value = browseResult.items.drop(1)
-            }
+            artistPage = YouTube.browseArtist(artistId).getOrNull()
         }
-    }
-
-    class Factory(
-        val context: Context,
-        val artistId: String,
-    ) : ViewModelProvider.NewInstanceFactory() {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = ArtistViewModel(context, artistId) as T
     }
 }

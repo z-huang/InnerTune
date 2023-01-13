@@ -1,36 +1,29 @@
 package com.zionhuang.music.repos
 
-import android.app.DownloadManager
 import android.content.Context
-import android.net.ConnectivityManager
-import androidx.core.content.getSystemService
-import androidx.core.net.toUri
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.YouTube.MAX_GET_QUEUE_SIZE
 import com.zionhuang.innertube.models.*
-import com.zionhuang.innertube.utils.browseAll
-import com.zionhuang.music.R
-import com.zionhuang.music.ui.utils.resize
-import com.zionhuang.music.constants.AUDIO_QUALITY
 import com.zionhuang.music.constants.AUTO_ADD_TO_LIBRARY
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.*
+import com.zionhuang.music.db.entities.Album
+import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
-import com.zionhuang.music.extensions.*
-import com.zionhuang.music.models.DataWrapper
-import com.zionhuang.music.models.ListWrapper
+import com.zionhuang.music.extensions.div
+import com.zionhuang.music.extensions.preference
+import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.sortInfo.*
-import com.zionhuang.music.playback.SongPlayer
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.repos.base.LocalRepository
-import com.zionhuang.music.utils.enumPreference
+import com.zionhuang.music.ui.utils.resize
 import com.zionhuang.music.utils.md5
-import com.zionhuang.music.youtube.YouTubeAlbum
-import com.zionhuang.music.youtube.getYouTubeAlbum
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -47,9 +40,7 @@ class SongRepository(private val context: Context) : LocalRepository {
     private val formatDao = database.formatDao
     private val lyricsDao = database.lyricsDao
 
-    private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private var autoDownload by context.preference(AUTO_ADD_TO_LIBRARY, false)
-    private var audioQuality by enumPreference(context, AUDIO_QUALITY, SongPlayer.AudioQuality.AUTO)
 
     override fun getAllSongId(): Flow<List<String>> = songDao.getAllSongId()
     override fun getAllLikedSongId(): Flow<List<String>> = songDao.getAllLikedSongId()
@@ -59,138 +50,87 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Browse
      */
-    override fun getAllSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
-        getFlow = {
-            if (sortInfo.type == SongSortType.ARTIST) {
-                songDao.getAllSongsAsFlow(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
-                    list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
-                        song.artists.joinToString(separator = "") { it.name }
-                    }).reversed(sortInfo.isDescending)
-                }
-            } else {
-                songDao.getAllSongsAsFlow(sortInfo)
+    override fun getAllSongs(sortInfo: ISortInfo<SongSortType>) =
+        if (sortInfo.type == SongSortType.ARTIST) {
+            songDao.getAllSongsAsFlow(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
+                list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
+                    song.artists.joinToString(separator = "") { it.name }
+                }).reversed(sortInfo.isDescending)
             }
+        } else {
+            songDao.getAllSongsAsFlow(sortInfo)
         }
-    )
 
     override suspend fun getSongCount() = withContext(IO) { songDao.getSongCount() }
 
-    override fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>) = ListWrapper<Artist>(
-        getFlow = {
-            if (sortInfo.type == ArtistSortType.SONG_COUNT) {
-                artistDao.getAllArtistsAsFlow(SortInfo(ArtistSortType.CREATE_DATE, true)).map { list ->
-                    list.sortedBy { it.songCount }.reversed(sortInfo.isDescending)
-                }
-            } else {
-                artistDao.getAllArtistsAsFlow(sortInfo)
+    override fun getAllArtists(sortInfo: ISortInfo<ArtistSortType>) =
+        if (sortInfo.type == ArtistSortType.SONG_COUNT) {
+            artistDao.getAllArtistsAsFlow(SortInfo(ArtistSortType.CREATE_DATE, true)).map { list ->
+                list.sortedBy { it.songCount }.reversed(sortInfo.isDescending)
             }
+        } else {
+            artistDao.getAllArtistsAsFlow(sortInfo)
         }
-    )
 
     override suspend fun getArtistCount() = withContext(IO) { artistDao.getArtistCount() }
 
-    override suspend fun getArtistSongsPreview(artistId: String): Result<List<YTBaseItem>> = withContext(IO) {
-        runCatching {
-            if (artistDao.hasArtist(artistId)) {
-                listOf(Header(
-                    title = context.getString(R.string.header_from_your_library),
-                    moreNavigationEndpoint = NavigationEndpoint(
-                        browseLocalArtistSongsEndpoint = BrowseLocalArtistSongsEndpoint(artistId)
-                    )
-                )) + YouTube.getQueue(videoIds = songDao.getArtistSongsPreview(artistId)).getOrThrow()
-            } else {
-                emptyList()
-            }
-        }
-    }
+    override suspend fun getArtistSongsPreview(artistId: String) = songDao.getArtistSongsPreview(artistId)
 
-    override fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
-        getList = { withContext(IO) { songDao.getArtistSongsAsList(artistId, sortInfo) } },
-        getFlow = {
-            songDao.getArtistSongsAsFlow(artistId, if (sortInfo.type == SongSortType.ARTIST) SortInfo(SongSortType.CREATE_DATE, sortInfo.isDescending) else sortInfo)
-        }
-    )
+    override fun getArtistSongs(artistId: String, sortInfo: ISortInfo<SongSortType>) =
+        songDao.getArtistSongsAsFlow(artistId, if (sortInfo.type == SongSortType.ARTIST) SortInfo(SongSortType.CREATE_DATE, sortInfo.isDescending) else sortInfo)
 
     override suspend fun getArtistSongCount(artistId: String) = withContext(IO) { songDao.getArtistSongCount(artistId) }
 
-    override fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>) = ListWrapper<Album>(
-        getFlow = {
-            if (sortInfo.type == AlbumSortType.ARTIST) {
-                albumDao.getAllAlbumsAsFlow(SortInfo(AlbumSortType.CREATE_DATE, true)).map { list ->
-                    list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
-                        song.artists.joinToString(separator = "") { it.name }
-                    }).reversed(sortInfo.isDescending)
-                }
-            } else {
-                albumDao.getAllAlbumsAsFlow(sortInfo)
+    override fun getAllAlbums(sortInfo: ISortInfo<AlbumSortType>) =
+        if (sortInfo.type == AlbumSortType.ARTIST) {
+            albumDao.getAllAlbumsAsFlow(SortInfo(AlbumSortType.CREATE_DATE, true)).map { list ->
+                list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
+                    song.artists.joinToString(separator = "") { it.name }
+                }).reversed(sortInfo.isDescending)
             }
+        } else {
+            albumDao.getAllAlbumsAsFlow(sortInfo)
         }
-    )
 
     override suspend fun getAlbumCount() = withContext(IO) { albumDao.getAlbumCount() }
     override suspend fun getAlbumSongs(albumId: String) = withContext(IO) {
         songDao.getAlbumSongs(albumId)
     }
 
-    override fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>) = ListWrapper<Playlist>(
-        getList = { withContext(IO) { playlistDao.getAllPlaylistsAsList() } },
-        getFlow = {
-            if (sortInfo.type == PlaylistSortType.SONG_COUNT) {
-                playlistDao.getAllPlaylistsAsFlow(SortInfo(PlaylistSortType.CREATE_DATE, true)).map { list ->
-                    list.sortedBy { it.songCount }.reversed(sortInfo.isDescending)
-                }
-            } else {
-                playlistDao.getAllPlaylistsAsFlow(sortInfo)
+    override fun getAllPlaylists(sortInfo: ISortInfo<PlaylistSortType>) =
+        if (sortInfo.type == PlaylistSortType.SONG_COUNT) {
+            playlistDao.getAllPlaylistsAsFlow(SortInfo(PlaylistSortType.CREATE_DATE, true)).map { list ->
+                list.sortedBy { it.songCount }.reversed(sortInfo.isDescending)
             }
+        } else {
+            playlistDao.getAllPlaylistsAsFlow(sortInfo)
         }
-    )
 
-    override fun getPlaylistSongs(playlistId: String): ListWrapper<Song> = ListWrapper(
-        getList = { withContext(IO) { songDao.getPlaylistSongsAsList(playlistId) } },
-        getFlow = { songDao.getPlaylistSongsAsFlow(playlistId) }
-    )
+    override fun getPlaylistSongs(playlistId: String) = songDao.getPlaylistSongsAsFlow(playlistId)
 
-    override fun getLikedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
-        getFlow = {
-            if (sortInfo.type == SongSortType.ARTIST) {
-                songDao.getLikedSongs(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
-                    list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
-                        song.artists.joinToString(separator = "") { it.name }
-                    }).reversed(sortInfo.isDescending)
-                }
-            } else {
-                songDao.getLikedSongs(sortInfo)
+    override fun getLikedSongs(sortInfo: ISortInfo<SongSortType>) =
+        if (sortInfo.type == SongSortType.ARTIST) {
+            songDao.getLikedSongs(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
+                list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
+                    song.artists.joinToString(separator = "") { it.name }
+                }).reversed(sortInfo.isDescending)
             }
+        } else {
+            songDao.getLikedSongs(sortInfo)
         }
-    )
 
     override fun getLikedSongCount(): Flow<Int> = songDao.getLikedSongCount()
 
-    override fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>): ListWrapper<Song> = ListWrapper(
-        getList = {
-            withContext(IO) {
-                if (sortInfo.type == SongSortType.ARTIST) {
-                    songDao.getDownloadedSongsAsList(SortInfo(SongSortType.CREATE_DATE, true))
-                        .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
-                            song.artists.joinToString(separator = "") { it.name }
-                        }).reversed(sortInfo.isDescending)
-                } else {
-                    songDao.getDownloadedSongsAsList(sortInfo)
-                }
+    override fun getDownloadedSongs(sortInfo: ISortInfo<SongSortType>) =
+        if (sortInfo.type == SongSortType.ARTIST) {
+            songDao.getDownloadedSongsAsFlow(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
+                list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
+                    song.artists.joinToString(separator = "") { it.name }
+                }).reversed(sortInfo.isDescending)
             }
-        },
-        getFlow = {
-            if (sortInfo.type == SongSortType.ARTIST) {
-                songDao.getDownloadedSongsAsFlow(SortInfo(SongSortType.CREATE_DATE, true)).map { list ->
-                    list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { song ->
-                        song.artists.joinToString(separator = "") { it.name }
-                    }).reversed(sortInfo.isDescending)
-                }
-            } else {
-                songDao.getDownloadedSongsAsFlow(sortInfo)
-            }
+        } else {
+            songDao.getDownloadedSongsAsFlow(sortInfo)
         }
-    )
 
     override fun getDownloadedSongCount(): Flow<Int> = songDao.getDownloadedSongCount()
 
@@ -198,10 +138,10 @@ class SongRepository(private val context: Context) : LocalRepository {
      * Search
      */
     override fun searchAll(query: String): Flow<List<LocalItem>> = combine(
-        songDao.searchSongsPreview(query, 3),
-        artistDao.searchArtistsPreview(query, 3),
-        albumDao.searchAlbumsPreview(query, 3),
-        playlistDao.searchPlaylistsPreview(query, 3)
+        songDao.searchSongsPreview(query, PREVIEW_SIZE),
+        artistDao.searchArtistsPreview(query, PREVIEW_SIZE),
+        albumDao.searchAlbumsPreview(query, PREVIEW_SIZE),
+        playlistDao.searchPlaylistsPreview(query, PREVIEW_SIZE)
     ) { songResult, artistResult, albumResult, playlistResult -> songResult + artistResult + albumResult + playlistResult }
 
     override fun searchSongs(query: String) = songDao.searchSongs(query)
@@ -213,55 +153,29 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Song
      */
-    override suspend fun addSong(mediaMetadata: MediaMetadata): SongEntity = withContext(IO) {
-        songDao.getSong(mediaMetadata.id)?.let {
-            return@withContext it.song
-        }
-        val song = mediaMetadata.toSongEntity()
-        songDao.insert(song)
-        mediaMetadata.artists.forEachIndexed { index, artist ->
-            artistDao.insert(ArtistEntity(
-                id = artist.id,
-                name = artist.name
-            ))
-            artistDao.insert(SongArtistMap(
-                songId = mediaMetadata.id,
-                artistId = artist.id,
-                position = index
-            ))
-        }
-        if (autoDownload) downloadSong(song)
-        song
-    }
-
-    private suspend fun addSongs(items: List<SongItem>) = withContext(IO) {
-        val songs = items.map { it.toSongEntity() }
-        val songArtistMaps = items.flatMap { song ->
-            song.artists.mapIndexed { index, run ->
-                val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
-                    artistDao.insert(ArtistEntity(
-                        id = it,
-                        name = run.text
-                    ))
+    override suspend fun addSongs(songs: List<MediaMetadata>) = withContext(IO) {
+        songs.forEach { mediaMetadata ->
+            songDao.getSong(mediaMetadata.id)?.let { song ->
+                if (song.song.downloadState == STATE_NOT_DOWNLOADED && autoDownload) {
+                    downloadSong(mediaMetadata.id)
                 }
-                SongArtistMap(
-                    songId = song.id,
+                return@forEach
+            }
+            songDao.insert(mediaMetadata.toSongEntity())
+            mediaMetadata.artists.forEachIndexed { index, artist ->
+                val artistId = artist.id ?: getArtistByName(artist.name)?.id ?: generateArtistId()
+                artistDao.insert(ArtistEntity(
+                    id = artistId,
+                    name = artist.name
+                ))
+                artistDao.insert(SongArtistMap(
+                    songId = mediaMetadata.id,
                     artistId = artistId,
                     position = index
-                )
+                ))
             }
+            if (autoDownload) downloadSong(mediaMetadata.id)
         }
-        songDao.insert(songs)
-        artistDao.insertSongArtistMaps(songArtistMaps)
-        if (autoDownload) downloadSongs(songs)
-        return@withContext songs
-    }
-
-    override suspend fun safeAddSongs(songs: List<SongItem>): List<SongEntity> = withContext(IO) {
-        // call [YouTube.getQueue] to ensure we get full information
-        addSongs(songs.chunked(MAX_GET_QUEUE_SIZE).flatMap { chunk ->
-            YouTube.getQueue(chunk.map { it.id }).getOrThrow()
-        })
     }
 
     override suspend fun refetchSongs(songs: List<Song>) = withContext(IO) {
@@ -274,18 +188,18 @@ class SongRepository(private val context: Context) : LocalRepository {
                 id = item.id,
                 title = item.title,
                 duration = item.duration!!,
-                thumbnailUrl = item.thumbnails.last().url,
-                albumId = item.album?.navigationEndpoint?.browseId,
-                albumName = item.album?.text,
+                thumbnailUrl = item.thumbnail,
+                albumId = item.album?.id,
+                albumName = item.album?.name,
                 modifyDate = LocalDateTime.now()
             )
         })
         val songArtistMaps = songItems.flatMap { song ->
-            song.artists.mapIndexed { index, run ->
-                val artistId = (run.navigationEndpoint?.browseEndpoint?.browseId ?: getArtistByName(run.text)?.id ?: generateArtistId()).also {
+            song.artists.mapIndexed { index, artist ->
+                val artistId = (artist.id ?: getArtistByName(artist.name)?.id ?: generateArtistId()).also {
                     artistDao.insert(ArtistEntity(
                         id = it,
-                        name = run.text
+                        name = artist.name
                     ))
                 }
                 SongArtistMap(
@@ -295,12 +209,15 @@ class SongRepository(private val context: Context) : LocalRepository {
                 )
             }
         }
-        artistDao.deleteSongArtists(songs.map { it.id })
+        songs.forEach { song ->
+            artistDao.deleteSongArtistMaps(songId = song.id)
+        }
         artistDao.insertSongArtistMaps(songArtistMaps)
-        artistDao.delete(songs
-            .flatMap { it.artists }
-            .distinctBy { it.id }
-            .filter { artistDao.getArtistSongCount(it.id) == 0 }
+        artistDao.delete(
+            songs
+                .flatMap { it.artists }
+                .distinctBy { it.id }
+                .filter { artistDao.getArtistSongCount(it.id) == 0 }
         )
     }
 
@@ -318,12 +235,12 @@ class SongRepository(private val context: Context) : LocalRepository {
         return mediaDir / (md5(songId) + ".tmp")
     }
 
-    override fun hasSong(songId: String): DataWrapper<Boolean> = DataWrapper(
-        getValueAsync = { songDao.hasSong(songId) }
-    )
-
     override suspend fun incrementSongTotalPlayTime(songId: String, playTime: Long) = withContext(IO) {
         songDao.incrementSongTotalPlayTime(songId, playTime)
+    }
+
+    override suspend fun updateSongDuration(songId: String, duration: Int) = withContext(IO) {
+        songDao.updateSongDuration(songId, duration)
     }
 
     override suspend fun updateSongTitle(song: Song, newTitle: String) = withContext(IO) {
@@ -342,54 +259,8 @@ class SongRepository(private val context: Context) : LocalRepository {
         })
     }
 
-    override suspend fun downloadSongs(songs: List<SongEntity>) = withContext(IO) {
-        songs.filter { it.downloadState == STATE_NOT_DOWNLOADED }.let { songs ->
-            songDao.update(songs.map { it.copy(downloadState = STATE_PREPARING) })
-            songs.forEach { song ->
-                val playedFormat = getSongFormat(song.id).getValueAsync()
-                val playerResponse = YouTube.player(videoId = song.id).getOrThrow()
-                if (playerResponse.playabilityStatus.status == "OK") {
-                    val format = if (playedFormat != null) {
-                        playerResponse.streamingData?.adaptiveFormats?.find { it.itag == playedFormat.itag }
-                    } else {
-                        playerResponse.streamingData?.adaptiveFormats
-                            ?.filter { it.isAudio }
-                            ?.maxByOrNull {
-                                it.bitrate * when (audioQuality) {
-                                    SongPlayer.AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
-                                    SongPlayer.AudioQuality.HIGH -> 1
-                                    SongPlayer.AudioQuality.LOW -> -1
-                                }
-                            }
-                    }
-                    if (format == null) {
-                        songDao.update(song.copy(downloadState = STATE_NOT_DOWNLOADED))
-                        // TODO
-                    } else {
-                        upsert(FormatEntity(
-                            id = song.id,
-                            itag = format.itag,
-                            mimeType = format.mimeType.split(";")[0],
-                            codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
-                            bitrate = format.bitrate,
-                            sampleRate = format.audioSampleRate,
-                            contentLength = format.contentLength!!,
-                            loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
-                        ))
-                        songDao.update(song.copy(downloadState = STATE_DOWNLOADING))
-                        val downloadManager = context.getSystemService<DownloadManager>()!!
-                        val req = DownloadManager.Request(format.url.toUri())
-                            .setTitle(song.title)
-                            .setDestinationUri(getSongTempFile(song.id).toUri())
-                        val did = downloadManager.enqueue(req)
-                        addDownloadEntity(DownloadEntity(did, song.id))
-                    }
-                } else {
-                    songDao.update(song.copy(downloadState = STATE_NOT_DOWNLOADED))
-                    // TODO
-                }
-            }
-        }
+    override suspend fun downloadSongs(songIds: List<String>) = withContext(IO) {
+        // TODO
     }
 
     override suspend fun onDownloadComplete(downloadId: Long, success: Boolean): Unit = withContext(IO) {
@@ -403,7 +274,7 @@ class SongRepository(private val context: Context) : LocalRepository {
     }
 
     override suspend fun validateDownloads() {
-        getDownloadedSongs(SongSortInfoPreference).getList().forEach { song ->
+        getDownloadedSongs(SongSortInfoPreference).first().forEach { song ->
             if (!getSongFile(song.id).exists() && !getSongTempFile(song.id).exists()) {
                 songDao.update(song.song.copy(downloadState = STATE_NOT_DOWNLOADED))
             }
@@ -461,20 +332,15 @@ class SongRepository(private val context: Context) : LocalRepository {
     }
 
     override suspend fun refetchArtists(artists: List<ArtistEntity>) = withContext(IO) {
-        artists.forEach { artist ->
-            if (artist.isYouTubeArtist) {
-                val browseResult = YouTube.browse(BrowseEndpoint(browseId = artist.id)).getOrThrow()
-                val header = browseResult.items.firstOrNull()
-                if (header is ArtistHeader) {
-                    artistDao.update(artist.copy(
-                        name = header.name,
-                        thumbnailUrl = header.bannerThumbnails?.lastOrNull()?.url?.resize(400, 400),
-                        bannerUrl = header.bannerThumbnails?.lastOrNull()?.url,
-                        description = header.description,
-                        lastUpdateTime = LocalDateTime.now()
-                    ))
-                }
-            }
+        artists.filter { artist ->
+            artist.isYouTubeArtist
+        }.forEach { artist ->
+            val artistPage = YouTube.browseArtist(artist.id).getOrThrow()
+            artistDao.update(artist.copy(
+                name = artistPage.artist.title,
+                thumbnailUrl = artistPage.artist.thumbnail.resize(400, 400),
+                lastUpdateTime = LocalDateTime.now()
+            ))
         }
     }
 
@@ -485,43 +351,40 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Album
      */
-    suspend fun addAlbum(youTubeAlbum: YouTubeAlbum) = withContext(IO) {
-        val (album, artists, songs) = youTubeAlbum
-        albumDao.insert(album)
-        addSongs(songs)
-        albumDao.upsert(songs.mapIndexed { index, songItem ->
-            SongAlbumMap(
-                songId = songItem.id,
-                albumId = album.id,
-                index = index
-            )
-        })
-        artistDao.insertArtists(artists)
-        albumDao.insertAlbumArtistMaps(artists.mapIndexed { index, artist ->
-            AlbumArtistMap(
-                albumId = album.id,
-                artistId = artist.id,
-                order = index
-            )
-        })
-    }
-
     override suspend fun addAlbums(albums: List<AlbumItem>) = withContext(IO) {
-        albums.forEach { album ->
-            addAlbum(album.getYouTubeAlbum(context))
-        }
-    }
-
-    override suspend fun refetchAlbums(albums: List<AlbumEntity>) = withContext(IO) {
-        albums.forEach { album ->
-            (YouTube.browse(BrowseEndpoint(browseId = album.id)).getOrThrow().items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-                albumDao.update(album.copy(
-                    title = header.name,
-                    thumbnailUrl = header.thumbnails.lastOrNull()?.url,
-                    year = header.year,
-                    lastUpdateTime = LocalDateTime.now()
-                ))
-            }
+        albums.filter {
+            albumDao.getAlbumById(it.id) == null
+        }.forEach { album ->
+            val albumPage = YouTube.browseAlbum(album.browseId).getOrThrow()
+            albumDao.insert(AlbumEntity(
+                id = albumPage.album.browseId,
+                title = albumPage.album.title,
+                year = albumPage.album.year,
+                thumbnailUrl = albumPage.album.thumbnail,
+                songCount = albumPage.songs.size,
+                duration = albumPage.songs.sumOf { it.duration ?: 0 }
+            ))
+            addSongs(albumPage.songs.map(SongItem::toMediaMetadata))
+            albumDao.upsert(albumPage.songs.mapIndexed { index, song ->
+                SongAlbumMap(
+                    songId = song.id,
+                    albumId = album.id,
+                    index = index
+                )
+            })
+            artistDao.insertArtists(albumPage.album.artists!!.map { artist ->
+                ArtistEntity(
+                    id = artist.id ?: getArtistByName(artist.name)?.id ?: generateArtistId(),
+                    name = artist.name
+                )
+            })
+            albumDao.insertAlbumArtistMaps(albumPage.album.artists!!.mapIndexed { index, artist ->
+                AlbumArtistMap(
+                    albumId = album.id,
+                    artistId = artist.id ?: getArtistByName(artist.name)?.id ?: generateArtistId(),
+                    order = index
+                )
+            })
         }
     }
 
@@ -529,12 +392,12 @@ class SongRepository(private val context: Context) : LocalRepository {
         albumDao.getAlbumById(albumId)
     }
 
-    override suspend fun deleteAlbum(albumId: String) = withContext(IO) {
-        albumDao.delete(albumId)
+    override suspend fun getAlbumWithSongs(albumId: String) = withContext(IO) {
+        albumDao.getAlbumWithSongs(albumId)
     }
 
-    suspend fun getAlbumWithSongs(albumId: String) = withContext(IO) {
-        albumDao.getAlbumWithSongs(albumId)
+    override suspend fun deleteAlbum(albumId: String) = withContext(IO) {
+        albumDao.delete(albumId)
     }
 
     override suspend fun deleteAlbums(albums: List<Album>) = withContext(IO) {
@@ -549,32 +412,50 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Playlist
      */
-    override fun getPlaylist(playlistId: String): Flow<Playlist> = playlistDao.getPlaylist(playlistId)
-    override suspend fun insertPlaylist(playlist: PlaylistEntity): Unit = withContext(IO) { playlistDao.insert(playlist) }
     override suspend fun addPlaylists(playlists: List<PlaylistItem>) = withContext(IO) {
         playlists.forEach { playlist ->
-            (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).getOrThrow().items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-                playlistDao.insert(header.toPlaylistEntity())
-            }
+            val playlistPage = YouTube.browsePlaylist("VL${playlist.id}").getOrThrow()
+            playlistDao.insert(PlaylistEntity(
+                id = playlistPage.playlist.id,
+                name = playlistPage.playlist.title,
+                author = playlistPage.playlist.author.name,
+                authorId = playlistPage.playlist.author.id,
+                thumbnailUrl = playlistPage.playlist.thumbnail
+            ))
         }
     }
 
     override suspend fun importPlaylists(playlists: List<PlaylistItem>) = withContext(IO) {
         playlists.forEach { playlist ->
             val playlistId = generatePlaylistId()
-            playlistDao.insert(playlist.toPlaylistEntity().copy(id = playlistId))
+            val playlistPage = YouTube.browsePlaylist("VL${playlist.id}").getOrThrow()
+            playlistDao.insert(PlaylistEntity(
+                id = playlistId,
+                name = playlistPage.playlist.title,
+                thumbnailUrl = playlistPage.playlist.thumbnail
+            ))
             var index = 0
-            val songs = YouTube.browseAll(BrowseEndpoint(browseId = "VL" + playlist.id)).getOrThrow().filterIsInstance<SongItem>()
-            safeAddSongs(songs)
-            playlistDao.insert(songs.map {
-                PlaylistSongMap(
-                    playlistId = playlistId,
-                    songId = it.id,
-                    position = index++
-                )
-            })
+            var songs: List<SongItem> = playlistPage.songs
+            var continuation = playlistPage.songsContinuation
+            while (true) {
+                playlistDao.insert(songs.map {
+                    PlaylistSongMap(
+                        playlistId = playlistId,
+                        songId = it.id,
+                        position = index++
+                    )
+                })
+                if (continuation == null) break
+                val continuationPage = YouTube.browsePlaylistContinuation(continuation).getOrThrow()
+                songs = continuationPage.songs
+                continuation = continuationPage.continuation
+            }
         }
     }
+
+    override suspend fun insertPlaylist(playlist: PlaylistEntity): Unit = withContext(IO) { playlistDao.insert(playlist) }
+
+    override fun getPlaylist(playlistId: String): Flow<Playlist> = playlistDao.getPlaylist(playlistId)
 
     private suspend fun addSongsToPlaylist(playlistId: String, songIds: List<String>) {
         var maxId = playlistDao.getPlaylistMaxId(playlistId) ?: -1
@@ -590,59 +471,59 @@ class SongRepository(private val context: Context) : LocalRepository {
     override suspend fun addToPlaylist(playlist: PlaylistEntity, items: List<LocalItem>) = withContext(IO) {
         val songIds = items.flatMap { item ->
             when (item) {
-                is Song -> listOf(item).map { it.id }
+                is Song -> listOf(item.id)
                 is Album -> getAlbumSongs(item.id).map { it.id }
-                is Artist -> getArtistSongs(item.id, SongSortInfoPreference).getList().map { it.id }
+                is Artist -> getArtistSongs(item.id, SongSortInfoPreference).first().map { it.id }
                 is Playlist -> if (item.playlist.isLocalPlaylist) {
-                    getPlaylistSongs(item.id).getList().map { it.id }
+                    getPlaylistSongs(item.id).first().map { it.id }
                 } else {
-                    safeAddSongs(YouTube.browseAll(BrowseEndpoint(browseId = "VL" + item.id)).getOrThrow().filterIsInstance<SongItem>()).map { it.id }
+                    emptyList()
                 }
             }
         }
         addSongsToPlaylist(playlist.id, songIds)
     }
 
-    override suspend fun addYouTubeItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>) = withContext(IO) {
+    override suspend fun addYTItemsToPlaylist(playlist: PlaylistEntity, items: List<YTItem>) = withContext(IO) {
         val songs = items.flatMap { item ->
             when (item) {
-                is SongItem -> YouTube.getQueue(videoIds = listOf(item.id)).getOrThrow()
-                is AlbumItem -> YouTube.browse(BrowseEndpoint(browseId = "VL" + item.playlistId)).getOrThrow().items.filterIsInstance<SongItem>() // consider refetch by [YouTube.getQueue] if needed
+                is SongItem -> listOf(item)
+                is AlbumItem -> YouTube.browseAlbum("VL${item.playlistId}").getOrThrow().songs
                 is PlaylistItem -> YouTube.getQueue(playlistId = item.id).getOrThrow()
                 is ArtistItem -> emptyList()
             }
-        }
+        }.map(SongItem::toMediaMetadata)
         addSongs(songs)
         addSongsToPlaylist(playlist.id, songs.map { it.id })
     }
 
-    override suspend fun addMediaItemToPlaylist(playlist: PlaylistEntity, item: MediaMetadata) = withContext(IO) {
-        val song = YouTube.getQueue(videoIds = listOf(item.id)).getOrThrow()
-        addSongs(song)
-        addSongsToPlaylist(playlist.id, song.map { it.id })
+    override suspend fun addMediaMetadataToPlaylist(playlist: PlaylistEntity, mediaMetadata: MediaMetadata) = withContext(IO) {
+        addSong(mediaMetadata)
+        addSongsToPlaylist(playlist.id, listOf(mediaMetadata.id))
     }
 
     override suspend fun refetchPlaylists(playlists: List<Playlist>): Unit = withContext(IO) {
-        playlists.forEach { playlist ->
-            (YouTube.browse(BrowseEndpoint(browseId = "VL" + playlist.id)).getOrThrow().items.firstOrNull() as? AlbumOrPlaylistHeader)?.let { header ->
-                playlistDao.update(playlist.playlist.copy(
-                    name = header.name,
-                    author = header.artists?.firstOrNull()?.text,
-                    authorId = header.artists?.firstOrNull()?.navigationEndpoint?.browseEndpoint?.browseId,
-                    year = header.year,
-                    thumbnailUrl = header.thumbnails.lastOrNull()?.url,
-                    lastUpdateTime = LocalDateTime.now()
-                ))
-            }
+        playlists.filter { playlist ->
+            playlist.playlist.isYouTubePlaylist
+        }.forEach { playlist ->
+            val playlistPage = YouTube.browsePlaylist("VL${playlist.id}").getOrThrow()
+            playlistDao.update(PlaylistEntity(
+                id = playlistPage.playlist.id,
+                name = playlistPage.playlist.title,
+                author = playlistPage.playlist.author.name,
+                authorId = playlistPage.playlist.author.id,
+                thumbnailUrl = playlistPage.playlist.thumbnail,
+                lastUpdateTime = LocalDateTime.now()
+            ))
         }
     }
 
     override suspend fun downloadPlaylists(playlists: List<Playlist>) = withContext(IO) {
         downloadSongs(playlists
             .filter { it.playlist.isLocalPlaylist }
-            .flatMap { getPlaylistSongs(it.id).getList() }
-            .distinctBy { it.id }
-            .map { it.song })
+            .flatMap { getPlaylistSongs(it.id).first() }
+            .map { it.id }
+            .distinct())
     }
 
     override suspend fun getPlaylistById(playlistId: String): Playlist = withContext(IO) {
@@ -704,10 +585,7 @@ class SongRepository(private val context: Context) : LocalRepository {
     /**
      * Format
      */
-    override fun getSongFormat(songId: String?): DataWrapper<FormatEntity?> = DataWrapper(
-        getValueAsync = { withContext(IO) { formatDao.getSongFormat(songId) } },
-        getFlow = { formatDao.getSongFormatAsFlow(songId) }
-    )
+    override fun getSongFormat(songId: String?) = formatDao.getSongFormatAsFlow(songId)
 
     override suspend fun upsert(format: FormatEntity) = withContext(IO) {
         formatDao.upsert(format)
@@ -728,4 +606,8 @@ class SongRepository(private val context: Context) : LocalRepository {
     }
 
     override suspend fun deleteLyrics(songId: String) = lyricsDao.deleteLyrics(songId)
+
+    companion object {
+        const val PREVIEW_SIZE = 3
+    }
 }
