@@ -215,34 +215,34 @@
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
-        <item quantity="one">%d song has been deleted.</item>
-        <item quantity="other">%d songs has been deleted.</item>
+        <item quantity="one">%d Song wurde gelöscht.</item>
+        <item quantity="other">%d Lieder wurden gelöscht.</item>
     </plurals>
     <plurals name="n_selected">
-        <item quantity="other">%d selected</item>
+        <item quantity="other">%d ausgewählt</item>
     </plurals>
-    <string name="snackbar_undo">Undo</string>
-    <string name="snackbar_url_error">Can\'t identify this url.</string>
+    <string name="snackbar_undo">Rückgängig machen</string>
+    <string name="snackbar_url_error">Kann diese Url nicht identifizieren.</string>
     <plurals name="snackbar_song_play_next">
-        <item quantity="one">Song will play next</item>
-        <item quantity="other">%d songs will play next</item>
+        <item quantity="one">Song wird als nächstes gespielt</item>
+        <item quantity="other">%d Lieder werden als nächstes gespielt</item>
     </plurals>
     <plurals name="snackbar_artist_play_next">
-        <item quantity="one">Artist will play next</item>
-        <item quantity="other">%d artists will play next</item>
+        <item quantity="one">Der Künstler spielt als nächstes</item>
+        <item quantity="other">%d Künstler werden als nächstes spielen</item>
     </plurals>
     <plurals name="snackbar_album_play_next">
-        <item quantity="one">Album will play next</item>
-        <item quantity="other">%d albums will play next</item>
+        <item quantity="one">Album wird als nächstes gespielt</item>
+        <item quantity="other">%d Alben werden als nächstes gespielt</item>
     </plurals>
     <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">Playlist will play next</item>
-        <item quantity="other">%d playlists will play next</item>
+        <item quantity="one">Playlist wird als nächstes abgespielt</item>
+        <item quantity="other">%d Wiedergabelisten werden als nächstes abgespielt</item>
     </plurals>
-    <string name="snackbar_play_next">Selected will play next</string>
+    <string name="snackbar_play_next">Ausgewählte spielen als nächstes</string>
     <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">Song added to queue</item>
-        <item quantity="other">%d songs added to queue</item>
+        <item quantity="one">Lied zur Warteschlange hinzugefügt</item>
+        <item quantity="other">%d Lieder zur Warteschlange hinzugefügt</item>
     </plurals>
     <plurals name="snackbar_artist_added_to_queue">
         <item quantity="one">Artist added to queue</item>
