@@ -270,37 +270,37 @@
 
     <!-- Custom Action -->
     <string name="action_like">Favoriten</string>
-    <string name="action_remove_like">Entfernen Favoriten</string>
+    <string name="action_remove_like">Entfernen aus Favoriten</string>
     <string name="action_add_to_library">Zur Bibliothek hinzufügen</string>
-    <string name="action_remove_from_library">Remove from library</string>
+    <string name="action_remove_from_library">Aus der Bibliothek entfernen</string>
 
     <!-- Search Filter -->
-    <string name="search_filter_all">All</string>
-    <string name="search_filter_songs">Songs</string>
+    <string name="search_filter_all">Alles</string>
+    <string name="search_filter_songs">Lieder</string>
     <string name="search_filter_videos">Videos</string>
-    <string name="search_filter_albums">Albums</string>
-    <string name="search_filter_artists">Artists</string>
-    <string name="search_filter_playlists">Playlists</string>
-    <string name="search_filter_community_playlists">Community playlists</string>
-    <string name="search_filter_featured_playlists">Featured playlists</string>
+    <string name="search_filter_albums">Alben</string>
+    <string name="search_filter_artists">Künstler</string>
+    <string name="search_filter_playlists">Wiedergabelisten</string>
+    <string name="search_filter_community_playlists">Community-Wiedergabelisten</string>
+    <string name="search_filter_featured_playlists">Ausgewählte Wiedergabelisten</string>
 
-    <string name="system_default">System default</string>
-    <string name="header_from_your_library">From your library</string>
+    <string name="system_default">Systemvorgabe</string>
+    <string name="header_from_your_library">Aus der Bibliothek</string>
 
     <!-- Error Activity -->
-    <string name="sorry_for_error">Sorry, that should not have happened.</string>
-    <string name="copied">Copied to clipboard</string>
+    <string name="sorry_for_error">Tut mir leid, das hätte nicht passieren dürfen.</string>
+    <string name="copied">In die Zwischenablage kopiert</string>
 
     <!-- Player Error Message -->
-    <string name="error_no_stream">No stream available</string>
-    <string name="error_no_internet">No network connection</string>
-    <string name="error_timeout">Timeout</string>
-    <string name="error_unknown">Unknown error</string>
+    <string name="error_no_stream">Kein Stream verfügbar</string>
+    <string name="error_no_internet">Keine Netzverbindung</string>
+    <string name="error_timeout">Zeitüberschreitung</string>
+    <string name="error_unknown">Unbekannter Fehler</string>
 
     <!-- Queue Title -->
-    <string name="queue_all_songs">All songs</string>
-    <string name="queue_searched_songs">Searched songs</string>
+    <string name="queue_all_songs">Alle Lieder</string>
+    <string name="queue_searched_songs">Gesuchte Lieder</string>
 
     <!-- Lyrics View -->
-    <string name="lyrics_not_found">Lyrics not found</string>
+    <string name="lyrics_not_found">Liedtext nicht gefunden</string>
 </resources>
