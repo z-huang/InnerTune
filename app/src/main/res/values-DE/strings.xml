@@ -178,40 +178,40 @@
 
     <!-- Noun -->
     <plurals name="song_count">
-        <item quantity="one">%d song</item>
-        <item quantity="other">%d songs</item>
+        <item quantity="one">%d Lied</item>
+        <item quantity="other">%d Lied</item>
     </plurals>
     <plurals name="artist_count">
-        <item quantity="one">%d artist</item>
-        <item quantity="other">%d artists</item>
+        <item quantity="one">%d Künstler</item>
+        <item quantity="other">%d Künstler</item>
     </plurals>
     <plurals name="album_count">
-        <item quantity="one">%d album</item>
-        <item quantity="other">%d albums</item>
+        <item quantity="one">%d Album</item>
+        <item quantity="other">%d Alben</item>
     </plurals>
     <plurals name="playlist_count">
-        <item quantity="one">%d playlist</item>
-        <item quantity="other">%d playlists</item>
+        <item quantity="one">%d Wiedergabeliste</item>
+        <item quantity="other">%d Wiedergabelisten</item>
     </plurals>
 
     <!-- Button -->
-    <string name="btn_retry">Retry</string>
-    <string name="btn_play">Play</string>
-    <string name="btn_play_all">Play All</string>
+    <string name="btn_retry">Wiederholen</string>
+    <string name="btn_play">Spielen</string>
+    <string name="btn_play_all">Alles abspielen</string>
     <string name="btn_radio">Radio</string>
     <string name="btn_shuffle">Shuffle</string>
-    <string name="btn_copy_stacktrace">Copy stacktrace</string>
-    <string name="btn_report">Report</string>
-    <string name="btn_report_on_github">Report on GitHub</string>
+    <string name="btn_copy_stacktrace">Stapelspur kopieren</string>
+    <string name="btn_report">Bericht</string>
+    <string name="btn_report_on_github">Bericht auf GitHub</string>
 
     <!-- Sort Menu -->
-    <string name="sort_by_create_date">Date added</string>
+    <string name="sort_by_create_date">Datum hinzugefügt</string>
     <string name="sort_by_name">Name</string>
-    <string name="sort_by_artist">Artist</string>
-    <string name="sort_by_year">Year</string>
-    <string name="sort_by_song_count">Song count</string>
-    <string name="sort_by_length">Length</string>
-    <string name="sort_by_play_time">Play time</string>
+    <string name="sort_by_artist">Künstler</string>
+    <string name="sort_by_year">Jahr</string>
+    <string name="sort_by_song_count">Anzahl der Lieder</string>
+    <string name="sort_by_length">Länge</string>
+    <string name="sort_by_play_time">Spielzeit</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
