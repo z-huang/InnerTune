@@ -245,33 +245,33 @@
         <item quantity="other">%d Lieder zur Warteschlange hinzugefügt</item>
     </plurals>
     <plurals name="snackbar_artist_added_to_queue">
-        <item quantity="one">Artist added to queue</item>
-        <item quantity="other">%d artists added to queue</item>
+        <item quantity="one">Künstler zur Warteschlange hinzugefügt</item>
+        <item quantity="other">%d Künstler zur Warteschlange hinzugefügt</item>
     </plurals>
     <plurals name="snackbar_album_added_to_queue">
-        <item quantity="one">Album added to queue</item>
-        <item quantity="other">%d albums added to queue</item>
+        <item quantity="one">Album zur Warteschlange hinzugefügt</item>
+        <item quantity="other">%d Alben zur Warteschlange hinzugefügt</item>
     </plurals>
     <plurals name="snackbar_playlist_added_to_queue">
-        <item quantity="one">Playlist added to queue</item>
-        <item quantity="other">%d playlists added to queue</item>
+        <item quantity="one">Wiedergabeliste zur Warteschlange hinzugefügt</item>
+        <item quantity="other">%d Wiedergabelisten zur Warteschlange hinzugefügt</item>
     </plurals>
-    <string name="snackbar_added_to_queue">Selected added to queue</string>
-    <string name="snackbar_added_to_library">Added to library</string>
-    <string name="snackbar_removed_from_library">Removed from library</string>
-    <string name="snackbar_playlist_imported">Playlist imported</string>
-    <string name="snackbar_added_to_playlist">Added to %1$s</string>
+    <string name="snackbar_added_to_queue">Ausgewählte zur Warteschlange hinzugefügt</string>
+    <string name="snackbar_added_to_library">Zur Bibliothek hinzugefügt</string>
+    <string name="snackbar_removed_from_library">Aus der Bibliothek entfernt</string>
+    <string name="snackbar_playlist_imported">Wiedergabeliste importiert</string>
+    <string name="snackbar_added_to_playlist">Hinzugefügt zu %1$s</string>
     <plurals name="snackbar_download_song">
-        <item quantity="one">Start downloading song</item>
-        <item quantity="other">Start downloading %d songs</item>
+        <item quantity="one">Herunterladen des Songs starten</item>
+        <item quantity="other">Herunterladen von %d Titeln beginnen</item>
     </plurals>
-    <string name="snackbar_removed_download">Removed download</string>
-    <string name="snackbar_action_view">View</string>
+    <string name="snackbar_removed_download">Download entfernt</string>
+    <string name="snackbar_action_view">Ansicht</string>
 
     <!-- Custom Action -->
-    <string name="action_like">Like</string>
-    <string name="action_remove_like">Remove like</string>
-    <string name="action_add_to_library">Add to library</string>
+    <string name="action_like">Favoriten</string>
+    <string name="action_remove_like">Entfernen Favoriten</string>
+    <string name="action_add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="action_remove_from_library">Remove from library</string>
 
     <!-- Search Filter -->
