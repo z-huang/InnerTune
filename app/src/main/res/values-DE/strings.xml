@@ -219,6 +219,7 @@
         <item quantity="other">%d Lieder wurden gelöscht.</item>
     </plurals>
     <plurals name="n_selected">
+        <item quantity="one">%d ausgewählt</item>
         <item quantity="other">%d ausgewählt</item>
     </plurals>
     <string name="snackbar_undo">Rückgängig machen</string>
