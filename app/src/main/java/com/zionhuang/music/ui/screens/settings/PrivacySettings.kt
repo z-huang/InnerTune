@@ -10,25 +10,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ENABLE_KUGOU
 import com.zionhuang.music.constants.PAUSE_SEARCH_HISTORY
 import com.zionhuang.music.extensions.mutablePreferenceState
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.DefaultDialog
 import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.SwitchPreference
-import kotlinx.coroutines.launch
 
 @Composable
 fun PrivacySettings() {
-    val context = LocalContext.current
-    val songRepository = SongRepository(context)
-    val coroutineScope = rememberCoroutineScope()
+    val database = LocalDatabase.current
     val (pauseSearchHistory, onPauseSearchHistoryChange) = mutablePreferenceState(key = PAUSE_SEARCH_HISTORY, defaultValue = false)
     val (enableKugou, onEnableKugouChange) = mutablePreferenceState(key = ENABLE_KUGOU, defaultValue = true)
 
@@ -56,8 +52,8 @@ fun PrivacySettings() {
                 TextButton(
                     onClick = {
                         showClearHistoryDialog = false
-                        coroutineScope.launch {
-                            songRepository.clearSearchHistory()
+                        database.query {
+                            clearSearchHistory()
                         }
                     }
                 ) {

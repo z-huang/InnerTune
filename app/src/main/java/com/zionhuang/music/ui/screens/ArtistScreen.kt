@@ -18,7 +18,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
@@ -47,8 +47,8 @@ import com.zionhuang.music.viewmodels.MainViewModel
 fun ArtistScreen(
     navController: NavController,
     appBarConfig: AppBarConfig,
-    viewModel: ArtistViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel(),
+    viewModel: ArtistViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
     val coroutineScope = rememberCoroutineScope()

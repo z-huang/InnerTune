@@ -21,27 +21,31 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.music.R
-import com.zionhuang.music.db.entities.DOWNLOADED_PLAYLIST_ID
-import com.zionhuang.music.db.entities.LIKED_PLAYLIST_ID
-import com.zionhuang.music.models.sortInfo.AlbumSortInfoPreference
-import com.zionhuang.music.models.sortInfo.ArtistSortInfoPreference
-import com.zionhuang.music.models.sortInfo.PlaylistSortInfoPreference
-import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
+import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
+import com.zionhuang.music.lyrics.LyricsHelper
+import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.models.toMediaMetadata
-import com.zionhuang.music.repos.SongRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MusicService : MediaBrowserServiceCompat() {
-    private val coroutineScope = CoroutineScope(Dispatchers.Main) + Job()
+    @Inject
+    lateinit var database: MusicDatabase
 
+    @Inject
+    lateinit var lyricsHelper: LyricsHelper
+    private val coroutineScope = CoroutineScope(Dispatchers.Main) + Job()
     private val binder = MusicBinder()
-    private val songRepository by lazy { SongRepository(this) }
     private lateinit var songPlayer: SongPlayer
 
     override fun onCreate() {
         super.onCreate()
-        songPlayer = SongPlayer(this, coroutineScope, object : PlayerNotificationManager.NotificationListener {
+        songPlayer = SongPlayer(this, database, lyricsHelper, coroutineScope, object : PlayerNotificationManager.NotificationListener {
             override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
                 stopForeground(STOP_FOREGROUND_REMOVE)
             }
@@ -109,52 +113,52 @@ class MusicService : MediaBrowserServiceCompat() {
             ))
             SONG -> {
                 result.detach()
-                result.sendResult(songRepository.getAllSongs(SongSortInfoPreference).first().map {
+                result.sendResult(database.songsByCreateDateDesc().first().map {
                     MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                 }.toMutableList())
             }
             ARTIST -> {
                 result.detach()
-                result.sendResult(songRepository.getAllArtists(ArtistSortInfoPreference).first().map { artist ->
+                result.sendResult(database.artistsByCreateDateDesc().first().map { artist ->
                     mediaBrowserItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.song_count, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri())
                 }.toMutableList())
             }
             ALBUM -> {
                 result.detach()
-                result.sendResult(songRepository.getAllAlbums(AlbumSortInfoPreference).first().map { album ->
+                result.sendResult(database.albumsByCreateDateDesc().first().map { album ->
                     mediaBrowserItem("$ALBUM/${album.id}", album.album.title, album.artists.joinToString(), album.album.thumbnailUrl?.toUri())
                 }.toMutableList())
             }
             PLAYLIST -> {
                 result.detach()
-                val likedSongCount = songRepository.getLikedSongCount().first()
-                val downloadedSongCount = songRepository.getDownloadedSongCount().first()
+                val likedSongCount = database.likedSongsCount().first()
+                val downloadedSongCount = database.downloadedSongsCount().first()
                 result.sendResult((listOf(
                     mediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.song_count, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
                     mediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.song_count, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
-                ) + songRepository.getAllPlaylists(PlaylistSortInfoPreference).first().filter { it.playlist.isLocalPlaylist }.map { playlist ->
+                ) + database.playlistsByCreateDateDesc().first().filter { it.playlist.isLocalPlaylist }.map { playlist ->
                     mediaBrowserItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.playlist.thumbnailUrl?.toUri() ?: playlist.thumbnails.firstOrNull()?.toUri())
                 }).toMutableList())
             }
             else -> when {
                 parentId.startsWith("$ARTIST/") -> {
                     result.detach()
-                    result.sendResult(songRepository.getArtistSongs(parentId.removePrefix("$ARTIST/"), SongSortInfoPreference).first().map {
+                    result.sendResult(database.artistSongsByCreateDateDesc(parentId.removePrefix("$ARTIST/")).first().map {
                         MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$ALBUM/") -> {
                     result.detach()
-                    result.sendResult(songRepository.getAlbumSongs(parentId.removePrefix("$ALBUM/")).map {
+                    result.sendResult(database.albumSongs(parentId.removePrefix("$ALBUM/")).first().map {
                         MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$PLAYLIST/") -> {
                     result.detach()
                     result.sendResult(when (val playlistId = parentId.removePrefix("$PLAYLIST/")) {
-                        LIKED_PLAYLIST_ID -> songRepository.getLikedSongs(SongSortInfoPreference)
-                        DOWNLOADED_PLAYLIST_ID -> songRepository.getDownloadedSongs(SongSortInfoPreference)
-                        else -> songRepository.getPlaylistSongs(playlistId)
+                        LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, true)
+                        DOWNLOADED_PLAYLIST_ID -> database.downloadedSongs(SongSortType.CREATE_DATE, true)
+                        else -> database.playlistSongs(playlistId)
                     }.first().map {
                         MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
                     }.toMutableList())

@@ -31,29 +31,26 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.component.shimmer.ShimmerHost
-import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
-import com.zionhuang.music.ui.screens.settings.LyricsPosition
-import com.zionhuang.music.ui.utils.fadingEdge
 import com.zionhuang.music.constants.LYRICS_TEXT_POSITION
 import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import com.zionhuang.music.extensions.mutablePreferenceState
-import com.zionhuang.music.models.MediaMetadata
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.lyrics.LyricsEntry
 import com.zionhuang.music.lyrics.LyricsEntry.Companion.HEAD_LYRICS_ENTRY
-import com.zionhuang.music.lyrics.LyricsHelper
 import com.zionhuang.music.lyrics.LyricsUtils.findCurrentLineIndex
 import com.zionhuang.music.lyrics.LyricsUtils.parseLyrics
+import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.ui.component.shimmer.ShimmerHost
+import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
+import com.zionhuang.music.ui.screens.settings.LyricsPosition
+import com.zionhuang.music.ui.utils.fadingEdge
 import com.zionhuang.music.viewmodels.LyricsMenuViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -65,7 +62,6 @@ fun Lyrics(
     val playerConnection = LocalPlayerConnection.current ?: return
     val menuState = LocalMenuState.current
     val density = LocalDensity.current
-    val coroutineScope = rememberCoroutineScope()
 
     val lyricsTextPosition by mutablePreferenceState(LYRICS_TEXT_POSITION, LyricsPosition.CENTER)
 
@@ -239,7 +235,6 @@ fun Lyrics(
                     LyricsMenu(
                         lyricsProvider = { lyricsEntity?.lyrics },
                         mediaMetadataProvider = mediaMetadataProvider,
-                        coroutineScope = coroutineScope,
                         onDismiss = menuState::dismiss
                     )
                 }
@@ -258,11 +253,11 @@ fun Lyrics(
 fun LyricsMenu(
     lyricsProvider: () -> String?,
     mediaMetadataProvider: () -> MediaMetadata,
-    coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
-    viewModel: LyricsMenuViewModel = viewModel(),
+    viewModel: LyricsMenuViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val database = LocalDatabase.current
 
     var showEditDialog by rememberSaveable {
         mutableStateOf(false)
@@ -276,8 +271,8 @@ fun LyricsMenu(
             initialTextFieldValue = TextFieldValue(lyricsProvider().orEmpty()),
             singleLine = false,
             onDone = {
-                coroutineScope.launch {
-                    SongRepository(context).upsert(LyricsEntity(
+                database.query {
+                    upsert(LyricsEntity(
                         id = mediaMetadataProvider().id,
                         lyrics = it
                     ))
@@ -391,8 +386,8 @@ fun LyricsMenu(
                         .clickable {
                             onDismiss()
                             viewModel.cancelSearch()
-                            coroutineScope.launch {
-                                SongRepository(context).upsert(LyricsEntity(
+                            database.query {
+                                upsert(LyricsEntity(
                                     id = searchMediaMetadata.id,
                                     lyrics = result.lyrics
                                 ))
@@ -478,11 +473,7 @@ fun LyricsMenu(
             icon = R.drawable.ic_cached,
             title = R.string.menu_refetch
         ) {
-            val mediaMetadata = mediaMetadataProvider()
-            coroutineScope.launch {
-                SongRepository(context).deleteLyrics(mediaMetadata.id)
-                LyricsHelper.loadLyrics(context, mediaMetadata)
-            }
+            viewModel.refetchLyrics(mediaMetadataProvider())
             onDismiss()
         }
         GridMenuItem(

@@ -24,9 +24,13 @@ data class SongEntity(
     val createDate: LocalDateTime = LocalDateTime.now(),
     @ColumnInfo(name = "modify_date")
     val modifyDate: LocalDateTime = LocalDateTime.now(),
-)
+) {
+    fun toggleLike() = copy(liked = !liked)
 
-const val STATE_NOT_DOWNLOADED = 0
-const val STATE_PREPARING = 1
-const val STATE_DOWNLOADING = 2
-const val STATE_DOWNLOADED = 3
+    companion object {
+        const val STATE_NOT_DOWNLOADED = 0
+        const val STATE_PREPARING = 1
+        const val STATE_DOWNLOADING = 2
+        const val STATE_DOWNLOADED = 3
+    }
+}

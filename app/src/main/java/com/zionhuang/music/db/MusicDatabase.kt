@@ -1,20 +1,41 @@
 package com.zionhuang.music.db
 
-import android.content.Context
 import android.database.sqlite.SQLiteDatabase.CONFLICT_ABORT
 import androidx.core.content.contentValuesOf
 import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.zionhuang.music.db.daos.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
 import com.zionhuang.music.extensions.toSQLiteQuery
+import com.zionhuang.music.models.sortInfo.*
 import java.time.Instant
 import java.time.ZoneOffset
 import java.util.*
+
+class MusicDatabase(
+    val delegate: InternalDatabase,
+) : DatabaseDao by delegate.dao {
+    fun query(block: MusicDatabase.() -> Unit) = with(delegate) {
+        queryExecutor.execute {
+            block(this@MusicDatabase)
+        }
+    }
+
+    fun transaction(block: MusicDatabase.() -> Unit) = with(delegate) {
+        transactionExecutor.execute {
+            runInTransaction {
+                block(this@MusicDatabase)
+            }
+        }
+    }
+
+    fun checkpoint() {
+        delegate.query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)"))
+    }
+}
 
 @Database(
     entities = [
@@ -45,34 +66,11 @@ import java.util.*
     ]
 )
 @TypeConverters(Converters::class)
-abstract class MusicDatabase : RoomDatabase() {
-    abstract val songDao: SongDao
-    abstract val artistDao: ArtistDao
-    abstract val albumDao: AlbumDao
-    abstract val playlistDao: PlaylistDao
-    abstract val downloadDao: DownloadDao
-    abstract val searchHistoryDao: SearchHistoryDao
-    abstract val formatDao: FormatDao
-    abstract val lyricsDao: LyricsDao
+abstract class InternalDatabase : RoomDatabase() {
+    abstract val dao: DatabaseDao
 
     companion object {
         const val DB_NAME = "song.db"
-
-        @Volatile
-        var INSTANCE: MusicDatabase? = null
-
-        fun getInstance(context: Context): MusicDatabase {
-            if (INSTANCE == null) {
-                synchronized(MusicDatabase::class.java) {
-                    if (INSTANCE == null) {
-                        INSTANCE = Room.databaseBuilder(context, MusicDatabase::class.java, DB_NAME)
-                            .addMigrations(MIGRATION_1_2)
-                            .build()
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
     }
 }
 
@@ -214,8 +212,4 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             ))
         }
     }
-}
-
-fun RoomDatabase.checkpoint() {
-    query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)"))
 }

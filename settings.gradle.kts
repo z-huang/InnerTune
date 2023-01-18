@@ -16,6 +16,7 @@ dependencyResolutionManagement {
 
             library("activity", "androidx.activity", "activity-compose").version("1.5.1")
             library("navigation", "androidx.navigation", "navigation-compose").version("2.5.3")
+            library("hilt-navigation", "androidx.hilt", "hilt-navigation-compose").version("1.0.0")
 
             version("compose-compiler", "1.3.2")
             version("compose", "1.3.0")
@@ -49,12 +50,16 @@ dependencyResolutionManagement {
             library("paging-runtime", "androidx.paging", "paging-runtime").version("3.1.1")
             library("paging-compose", "androidx.paging", "paging-compose").version("1.0.0-alpha17")
 
-            version("room", "2.4.3")
+            version("room", "2.5.0")
             library("room-runtime", "androidx.room", "room-runtime").versionRef("room")
             library("room-compiler", "androidx.room", "room-compiler").versionRef("room")
             library("room-ktx", "androidx.room", "room-ktx").versionRef("room")
 
             library("apache-lang3", "org.apache.commons", "commons-lang3").version("3.12.0")
+
+            version("hilt", "2.44")
+            library("hilt", "com.google.dagger", "hilt-android").versionRef("hilt")
+            library("hilt-compiler", "com.google.dagger", "hilt-android-compiler").versionRef("hilt")
 
             version("ktor", "2.2.2")
             library("ktor-client-core", "io.ktor", "ktor-client-core").versionRef("ktor")

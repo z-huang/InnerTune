@@ -12,43 +12,30 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.models.sortInfo.ArtistSortType
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.ArtistListItem
 import com.zionhuang.music.ui.component.ResizableIconButton
 import com.zionhuang.music.viewmodels.LibraryArtistsViewModel
-import java.time.Duration
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibraryArtistsScreen(
     navController: NavController,
-    viewModel: LibraryArtistsViewModel = viewModel(),
+    viewModel: LibraryArtistsViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
     val artists by viewModel.allArtists.collectAsState()
-
-    LaunchedEffect(artists) {
-        SongRepository(context).refetchArtists(
-            artists.map { it.artist }.filter {
-                it.thumbnailUrl == null || Duration.between(it.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)
-            }
-        )
-    }
 
     Box(
         modifier = Modifier.fillMaxSize()

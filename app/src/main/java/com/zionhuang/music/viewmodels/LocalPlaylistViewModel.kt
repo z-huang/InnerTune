@@ -1,23 +1,22 @@
 package com.zionhuang.music.viewmodels
 
-import android.content.Context
-import androidx.lifecycle.*
-import com.zionhuang.music.repos.SongRepository
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.zionhuang.music.db.MusicDatabase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class LocalPlaylistViewModel(
-    context: Context,
-    playlistId: String,
+@HiltViewModel
+class LocalPlaylistViewModel @Inject constructor(
+    database: MusicDatabase,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    val playlist = SongRepository(context).getPlaylist(playlistId).stateIn(viewModelScope, SharingStarted.Lazily, null)
-    val playlistSongs = SongRepository(context).getPlaylistSongs(playlistId).stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-
-    class Factory(
-        val context: Context,
-        val playlistId: String,
-    ) : ViewModelProvider.NewInstanceFactory() {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T = LocalPlaylistViewModel(context, playlistId) as T
-    }
+    val playlistId = savedStateHandle.get<String>("playlistId")!!
+    val playlist = database.playlist(playlistId)
+        .stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val playlistSongs = database.playlistSongs(playlistId)
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }

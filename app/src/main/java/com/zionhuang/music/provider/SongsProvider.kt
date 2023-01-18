@@ -10,18 +10,24 @@ import android.provider.DocumentsContract.Root
 import android.provider.DocumentsProvider
 import com.google.android.exoplayer2.util.FileTypes
 import com.zionhuang.music.R
-import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
-import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.models.sortInfo.SongSortType
+import com.zionhuang.music.utils.getSongFile
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.io.FileNotFoundException
 import java.time.ZoneOffset
 
 class SongsProvider : DocumentsProvider() {
-    private lateinit var songRepository: SongRepository
+    lateinit var entryPoint: SongsProviderEntryPoint
+    val database: MusicDatabase get() = entryPoint.provideDatabase()
 
     override fun onCreate(): Boolean {
-        songRepository = SongRepository(context!!)
+        entryPoint = EntryPointAccessors.fromApplication(context!!, SongsProviderEntryPoint::class.java)
         return true
     }
 
@@ -45,8 +51,8 @@ class SongsProvider : DocumentsProvider() {
                     .add(Document.COLUMN_DISPLAY_NAME, context!!.getString(R.string.app_name))
                     .add(Document.COLUMN_MIME_TYPE, MIME_TYPE_DIR)
                 else -> {
-                    val song = songRepository.getSongById(documentId).first() ?: throw FileNotFoundException()
-                    val format = songRepository.getSongFormat(documentId).first() ?: throw FileNotFoundException()
+                    val song = database.song(documentId).first() ?: throw FileNotFoundException()
+                    val format = database.format(documentId).first() ?: throw FileNotFoundException()
                     newRow()
                         .add(Document.COLUMN_DOCUMENT_ID, documentId)
                         .add(Document.COLUMN_DISPLAY_NAME, song.song.title)
@@ -61,8 +67,8 @@ class SongsProvider : DocumentsProvider() {
     override fun queryChildDocuments(parentDocumentId: String, projection: Array<String>?, sortOrder: String?): Cursor = runBlocking {
         MatrixCursor(DEFAULT_DOCUMENT_PROJECTION).apply {
             when (parentDocumentId) {
-                ROOT_DOC -> songRepository.getDownloadedSongs(SongSortInfoPreference).first().forEach { song ->
-                    val format = songRepository.getSongFormat(song.id).first()
+                ROOT_DOC -> database.downloadedSongs(SongSortType.CREATE_DATE, true).first().forEach { song ->
+                    val format = database.format(song.id).first()
                     if (format != null) {
                         newRow()
                             .add(Document.COLUMN_DOCUMENT_ID, song.id)
@@ -80,8 +86,8 @@ class SongsProvider : DocumentsProvider() {
         MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION).apply {
             when (rootId) {
                 ROOT -> {
-                    songRepository.searchDownloadedSongs(query).first().forEach { song ->
-                        val format = songRepository.getSongFormat(song.id).first()
+                    database.searchDownloadedSongs(query).first().forEach { song ->
+                        val format = database.format(song.id).first()
                         if (format != null) {
                             newRow()
                                 .add(Document.COLUMN_DOCUMENT_ID, song.id)
@@ -97,12 +103,12 @@ class SongsProvider : DocumentsProvider() {
     }
 
     override fun openDocument(documentId: String, mode: String, signal: CancellationSignal?): ParcelFileDescriptor = runBlocking {
-        val file = songRepository.getSongFile(documentId)
+        val file = getSongFile(context!!, documentId)
         ParcelFileDescriptor.open(file, ParcelFileDescriptor.parseMode(mode))
     }
 
     override fun isChildDocument(parentDocumentId: String, documentId: String): Boolean = runBlocking {
-        val song = songRepository.getSongById(documentId).first()
+        val song = database.song(documentId).first()
         song != null && parentDocumentId == ROOT_DOC
     }
 
@@ -125,6 +131,12 @@ class SongsProvider : DocumentsProvider() {
         FileTypes.WAV -> ".wav"
         FileTypes.WEBVTT -> ".webvtt"
         else -> ""
+    }
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface SongsProviderEntryPoint {
+        fun provideDatabase(): MusicDatabase
     }
 
     companion object {

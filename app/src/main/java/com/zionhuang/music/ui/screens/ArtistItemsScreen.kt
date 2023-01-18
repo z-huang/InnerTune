@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.models.*
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
@@ -48,8 +48,8 @@ import com.zionhuang.music.viewmodels.MainViewModel
 fun ArtistItemsScreen(
     navController: NavController,
     appBarConfig: AppBarConfig,
-    viewModel: ArtistItemsViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel(),
+    viewModel: ArtistItemsViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return

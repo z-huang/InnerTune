@@ -15,6 +15,10 @@ enum class ArtistSortType : SortType {
     CREATE_DATE, NAME, SONG_COUNT
 }
 
+enum class ArtistSongSortType : SortType {
+    CREATE_DATE, NAME, PLAY_TIME
+}
+
 enum class AlbumSortType : SortType {
     CREATE_DATE, NAME, ARTIST, YEAR, SONG_COUNT, LENGTH
 }

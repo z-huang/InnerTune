@@ -1,20 +1,21 @@
 package com.zionhuang.music.viewmodels
 
-import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.pages.ArtistPage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ArtistViewModel(
-    application: Application,
+@HiltViewModel
+class ArtistViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-) : AndroidViewModel(application) {
+) : ViewModel() {
     val artistId = savedStateHandle.get<String>("artistId")!!
     var artistPage by mutableStateOf<ArtistPage?>(null)
 

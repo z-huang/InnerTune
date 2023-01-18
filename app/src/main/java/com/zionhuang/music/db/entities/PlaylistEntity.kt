@@ -25,6 +25,9 @@ data class PlaylistEntity(
         get() = !isLocalPlaylist
 
     companion object {
+        const val LIKED_PLAYLIST_ID = "LP_LIKED"
+        const val DOWNLOADED_PLAYLIST_ID = "LP_DOWNLOADED"
+
         fun generatePlaylistId() = "LP" + RandomStringUtils.random(8, true, false)
     }
 }

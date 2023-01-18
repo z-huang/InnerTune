@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -66,9 +67,18 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+
+    arguments {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+}
+
 dependencies {
     implementation(libs.activity)
     implementation(libs.navigation)
+    implementation(libs.hilt.navigation)
 
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
@@ -101,10 +111,13 @@ dependencies {
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
 
+    implementation(libs.apache.lang3)
+
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+
     implementation(projects.innertube)
     implementation(projects.kugou)
-
-    implementation(libs.apache.lang3)
 
     coreLibraryDesugaring(libs.desugaring)
 }

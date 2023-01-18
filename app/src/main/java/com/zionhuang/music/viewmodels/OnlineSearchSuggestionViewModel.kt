@@ -1,18 +1,22 @@
 package com.zionhuang.music.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YTItem
-import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.db.entities.SearchHistory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class OnlineSearchSuggestionViewModel(app: Application) : AndroidViewModel(app) {
-    private val songRepository = SongRepository(app)
+@HiltViewModel
+class OnlineSearchSuggestionViewModel @Inject constructor(
+    database: MusicDatabase,
+) : ViewModel() {
     val query = MutableStateFlow("")
     private val _viewState = MutableStateFlow(SearchSuggestionViewState())
     val viewState = _viewState.asStateFlow()
@@ -21,21 +25,24 @@ class OnlineSearchSuggestionViewModel(app: Application) : AndroidViewModel(app) 
         viewModelScope.launch {
             query.flatMapLatest { query ->
                 if (query.isEmpty()) {
-                    songRepository.getAllSearchHistory().map { history ->
+                    database.searchHistory().map { history ->
                         SearchSuggestionViewState(
-                            history = history.map { it.query }
+                            history = history
                         )
                     }
                 } else {
                     val result = YouTube.getSearchSuggestions(query).getOrNull()
-                    songRepository.getSearchHistory(query).map { searchHistory ->
-                        val history = searchHistory.map { it.query }.take(3)
-                        SearchSuggestionViewState(
-                            history = history,
-                            suggestions = result?.queries?.filter { it !in history }.orEmpty(),
-                            items = result?.recommendedItems.orEmpty()
-                        )
-                    }
+                    database.searchHistory(query)
+                        .map { it.take(3) }
+                        .map { history ->
+                            SearchSuggestionViewState(
+                                history = history,
+                                suggestions = result?.queries?.filter { query ->
+                                    history.none { it.query == query }
+                                }.orEmpty(),
+                                items = result?.recommendedItems.orEmpty()
+                            )
+                        }
                 }
             }.collect {
                 _viewState.value = it
@@ -45,7 +52,7 @@ class OnlineSearchSuggestionViewModel(app: Application) : AndroidViewModel(app) 
 }
 
 data class SearchSuggestionViewState(
-    val history: List<String> = emptyList(),
+    val history: List<SearchHistory> = emptyList(),
     val suggestions: List<String> = emptyList(),
     val items: List<YTItem> = emptyList(),
 )

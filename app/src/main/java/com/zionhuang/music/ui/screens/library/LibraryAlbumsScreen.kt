@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
@@ -35,7 +35,7 @@ import com.zionhuang.music.viewmodels.LibraryAlbumsViewModel
 @Composable
 fun LibraryAlbumsScreen(
     navController: NavController,
-    viewModel: LibraryAlbumsViewModel = viewModel(),
+    viewModel: LibraryAlbumsViewModel = hiltViewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()

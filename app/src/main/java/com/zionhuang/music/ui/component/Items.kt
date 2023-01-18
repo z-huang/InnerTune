@@ -525,6 +525,7 @@ inline fun YouTubeGridItem(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             textAlign = if (item is ArtistItem) TextAlign.Center else TextAlign.Start,
+            modifier = Modifier.fillMaxWidth()
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {

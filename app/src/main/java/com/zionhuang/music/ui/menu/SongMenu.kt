@@ -23,18 +23,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
-import com.zionhuang.music.models.sortInfo.PlaylistSortInfoPreference
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -48,8 +48,8 @@ fun SongMenu(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val songRepository = SongRepository(context)
-    val songState = songRepository.getSongById(originalSong.id).collectAsState(initial = originalSong)
+    val database = LocalDatabase.current
+    val songState = database.song(originalSong.id).collectAsState(initial = originalSong)
     val song = songState.value ?: originalSong
 
     var showChoosePlaylistDialog by rememberSaveable {
@@ -69,7 +69,7 @@ fun SongMenu(
     }
 
     LaunchedEffect(Unit) {
-        SongRepository(context).getAllPlaylists(PlaylistSortInfoPreference).collect {
+        database.playlistsByCreateDateDesc().collect {
             playlists = it
         }
     }
@@ -102,7 +102,13 @@ fun SongMenu(
                         showChoosePlaylistDialog = false
                         onDismiss()
                         coroutineScope.launch {
-                            SongRepository(context).addToPlaylist(playlist.playlist, song)
+                            database.query {
+                                insert(PlaylistSongMap(
+                                    songId = song.id,
+                                    playlistId = playlist.id,
+                                    position = playlist.songCount
+                                ))
+                            }
                         }
                     }
                 )
@@ -116,8 +122,8 @@ fun SongMenu(
             title = { Text(text = stringResource(R.string.dialog_title_create_playlist)) },
             onDismiss = { showCreatePlaylistDialog = false },
             onDone = { playlistName ->
-                coroutineScope.launch {
-                    SongRepository(context).insertPlaylist(PlaylistEntity(
+                database.query {
+                    insert(PlaylistEntity(
                         name = playlistName
                     ))
                 }
@@ -180,8 +186,8 @@ fun SongMenu(
         trailingContent = {
             IconButton(
                 onClick = {
-                    coroutineScope.launch {
-                        songRepository.toggleLiked(song)
+                    database.query {
+                        insert(song.song.toggleLike())
                     }
                 }
             ) {
@@ -208,22 +214,22 @@ fun SongMenu(
             icon = R.drawable.ic_radio,
             title = R.string.menu_start_radio
         ) {
-            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
             onDismiss()
+            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_play,
             title = R.string.menu_play_next
         ) {
-            playerConnection.playNext(song.toMediaItem())
             onDismiss()
+            playerConnection.playNext(song.toMediaItem())
         }
         GridMenuItem(
             icon = R.drawable.ic_queue_music,
             title = R.string.menu_add_to_queue
         ) {
-            playerConnection.addToQueue((song.toMediaItem()))
             onDismiss()
+            playerConnection.addToQueue((song.toMediaItem()))
         }
         GridMenuItem(
             icon = R.drawable.ic_edit,
@@ -261,39 +267,30 @@ fun SongMenu(
                 icon = R.drawable.ic_album,
                 title = R.string.menu_view_album
             ) {
-                navController.navigate("album/${song.song.albumId}")
                 onDismiss()
+                navController.navigate("album/${song.song.albumId}")
             }
         }
         GridMenuItem(
             icon = R.drawable.ic_share,
             title = R.string.menu_share
         ) {
+            onDismiss()
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${song.id}")
             }
             context.startActivity(Intent.createChooser(intent, null))
-            onDismiss()
-        }
-        GridMenuItem(
-            icon = R.drawable.ic_cached,
-            title = R.string.menu_refetch
-        ) {
-            coroutineScope.launch {
-                songRepository.refetchSong(song)
-            }
-            onDismiss()
         }
         GridMenuItem(
             icon = R.drawable.ic_delete,
             title = R.string.menu_delete
         ) {
-            coroutineScope.launch {
-                songRepository.deleteSong(song)
-            }
             onDismiss()
+            database.query {
+                delete(song)
+            }
         }
     }
 }

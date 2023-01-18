@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ALBUM
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_ARTIST
@@ -49,8 +49,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnlineSearchResult(
     navController: NavController,
-    viewModel: OnlineSearchViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel(),
+    viewModel: OnlineSearchViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return

@@ -7,9 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.util.fastSumBy
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.ui.component.SongListItem
@@ -17,11 +16,7 @@ import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
 
 @Composable
 fun LocalPlaylistScreen(
-    playlistId: String,
-    viewModel: LocalPlaylistViewModel = viewModel(factory = LocalPlaylistViewModel.Factory(
-        context = LocalContext.current,
-        playlistId = playlistId
-    )),
+    viewModel: LocalPlaylistViewModel = hiltViewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()

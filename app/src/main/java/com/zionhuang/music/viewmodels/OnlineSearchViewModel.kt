@@ -10,10 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.pages.SearchSummaryPage
 import com.zionhuang.music.models.ItemsPage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OnlineSearchViewModel(
+@HiltViewModel
+class OnlineSearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     val query = savedStateHandle.get<String>("query")!!

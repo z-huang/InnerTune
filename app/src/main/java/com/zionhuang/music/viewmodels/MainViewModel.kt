@@ -1,29 +1,31 @@
 package com.zionhuang.music.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zionhuang.music.repos.SongRepository
+import com.zionhuang.music.db.MusicDatabase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-    val songRepository = SongRepository(application)
-
-    val librarySongIds = songRepository.getAllSongId()
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    database: MusicDatabase,
+) : ViewModel() {
+    val librarySongIds = database.allSongId()
         .map(List<String>::toHashSet)
         .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
 
-    val likedSongIds = songRepository.getAllLikedSongId()
+    val likedSongIds = database.allLikedSongId()
         .map(List<String>::toHashSet)
         .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
 
-    val libraryAlbumIds = songRepository.getAllAlbumId()
+    val libraryAlbumIds = database.allAlbumId()
         .map(List<String>::toHashSet)
         .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
 
-    val libraryPlaylistIds = songRepository.getAllPlaylistId()
+    val libraryPlaylistIds = database.allPlaylistId()
         .map(List<String>::toHashSet)
         .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
 }

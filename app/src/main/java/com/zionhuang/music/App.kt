@@ -17,12 +17,14 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.net.Proxy
 import java.util.*
 
+@HiltAndroidApp
 class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPreferenceChangeListener {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate() {
@@ -90,7 +92,7 @@ class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPrefere
         .diskCache(
             DiskCache.Builder()
                 .directory(cacheDir.resolve("coil"))
-                .maxSizeBytes(sharedPreferences.getInt(IMAGE_MAX_CACHE_SIZE, 512) * 1024 * 1024L)
+                .maxSizeBytes(sharedPreferences.getInt(MAX_IMAGE_CACHE_SIZE, 512) * 1024 * 1024L)
                 .build()
         )
         .build()

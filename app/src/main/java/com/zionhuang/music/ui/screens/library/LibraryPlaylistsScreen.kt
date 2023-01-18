@@ -13,39 +13,36 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.db.entities.DOWNLOADED_PLAYLIST_ID
-import com.zionhuang.music.db.entities.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.models.sortInfo.PlaylistSortType
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.ListItem
 import com.zionhuang.music.ui.component.PlaylistListItem
 import com.zionhuang.music.ui.component.ResizableIconButton
 import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.viewmodels.LibraryPlaylistsViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LibraryPlaylistsScreen(
     navController: NavController,
-    viewModel: LibraryPlaylistsViewModel = viewModel(),
+    viewModel: LibraryPlaylistsViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    val database = LocalDatabase.current
     val likedSongCount by viewModel.likedSongCount.collectAsState()
     val downloadedSongCount by viewModel.downloadedSongCount.collectAsState()
     val playlists by viewModel.allPlaylists.collectAsState()
@@ -60,8 +57,8 @@ fun LibraryPlaylistsScreen(
             title = { Text(text = stringResource(R.string.dialog_title_create_playlist)) },
             onDismiss = { showAddPlaylistDialog = false },
             onDone = { playlistName ->
-                coroutineScope.launch {
-                    SongRepository(context).insertPlaylist(PlaylistEntity(
+                database.query {
+                    insert(PlaylistEntity(
                         name = playlistName
                     ))
                 }

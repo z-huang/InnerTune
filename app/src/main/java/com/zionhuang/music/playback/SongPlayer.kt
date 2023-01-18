@@ -19,8 +19,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.edit
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
-import androidx.core.util.component1
-import androidx.core.util.component2
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.PlaybackException.*
@@ -59,11 +57,17 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_SHUFFLE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_UNLIKE
-import com.zionhuang.music.db.entities.*
+import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.db.entities.FormatEntity
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.lyrics.LyricsHelper
 import com.zionhuang.music.models.MediaMetadata
-import com.zionhuang.music.models.sortInfo.SongSortInfoPreference
+import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.playback.MusicService.Companion.ALBUM
 import com.zionhuang.music.playback.MusicService.Companion.ARTIST
 import com.zionhuang.music.playback.MusicService.Companion.PLAYLIST
@@ -72,7 +76,6 @@ import com.zionhuang.music.playback.queues.EmptyQueue
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.utils.resize
 import com.zionhuang.music.utils.InfoCache
 import com.zionhuang.music.utils.enumPreference
@@ -95,10 +98,11 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class SongPlayer(
     private val context: Context,
+    private val database: MusicDatabase,
+    private val lyricsHelper: LyricsHelper,
     private val scope: CoroutineScope,
     notificationListener: PlayerNotificationManager.NotificationListener,
 ) : Listener, PlaybackStatsListener.Callback {
-    private val songRepository = SongRepository(context)
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     val bitmapProvider = BitmapProvider(context)
 
@@ -110,16 +114,16 @@ class SongPlayer(
 
     val currentMediaMetadata = MutableStateFlow<MediaMetadata?>(null)
     private val currentSongFlow = currentMediaMetadata.flatMapLatest { mediaMetadata ->
-        songRepository.getSongById(mediaMetadata?.id)
+        database.song(mediaMetadata?.id)
     }
     private val currentFormat = currentMediaMetadata.flatMapLatest { mediaMetadata ->
-        songRepository.getSongFormat(mediaMetadata?.id)
+        database.format(mediaMetadata?.id)
     }
     var currentSong: Song? = null
 
     private val showLyrics = context.sharedPreferences.booleanFlow(SHOW_LYRICS, false)
 
-    private val cacheEvictor = when (val cacheSize = context.sharedPreferences.getInt(SONG_MAX_CACHE_SIZE, 1024)) {
+    private val cacheEvictor = when (val cacheSize = context.sharedPreferences.getInt(MAX_SONG_CACHE_SIZE, 1024)) {
         -1 -> NoOpCacheEvictor()
         else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
     }
@@ -156,7 +160,7 @@ class SongPlayer(
                     when (path.firstOrNull()) {
                         SONG -> {
                             val songId = path.getOrNull(1) ?: return@launch
-                            val allSongs = songRepository.getAllSongs(SongSortInfoPreference).first()
+                            val allSongs = database.songsByCreateDateDesc().first()
                             playQueue(ListQueue(
                                 title = context.getString(R.string.queue_all_songs),
                                 items = allSongs.map { it.toMediaItem() },
@@ -166,8 +170,8 @@ class SongPlayer(
                         ARTIST -> {
                             val songId = path.getOrNull(2) ?: return@launch
                             val artistId = path.getOrNull(1) ?: return@launch
-                            val artist = songRepository.getArtistById(artistId) ?: return@launch
-                            val songs = songRepository.getArtistSongs(artistId, SongSortInfoPreference).first()
+                            val artist = database.artist(artistId).first() ?: return@launch
+                            val songs = database.artistSongsByCreateDateDesc(artistId).first()
                             playQueue(ListQueue(
                                 title = artist.name,
                                 items = songs.map { it.toMediaItem() },
@@ -177,27 +181,26 @@ class SongPlayer(
                         ALBUM -> {
                             val songId = path.getOrNull(2) ?: return@launch
                             val albumId = path.getOrNull(1) ?: return@launch
-                            val album = songRepository.getAlbum(albumId) ?: return@launch
-                            val songs = songRepository.getAlbumSongs(albumId)
+                            val albumWithSongs = database.albumWithSongs(albumId).first() ?: return@launch
                             playQueue(ListQueue(
-                                title = album.album.title,
-                                items = songs.map { it.toMediaItem() },
-                                startIndex = songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
+                                title = albumWithSongs.album.title,
+                                items = albumWithSongs.songs.map { it.toMediaItem() },
+                                startIndex = albumWithSongs.songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
                             ), playWhenReady)
                         }
                         PLAYLIST -> {
                             val songId = path.getOrNull(2) ?: return@launch
                             val playlistId = path.getOrNull(1) ?: return@launch
                             val songs = when (playlistId) {
-                                LIKED_PLAYLIST_ID -> songRepository.getLikedSongs(SongSortInfoPreference).first()
-                                DOWNLOADED_PLAYLIST_ID -> songRepository.getDownloadedSongs(SongSortInfoPreference).first()
-                                else -> songRepository.getPlaylistSongs(playlistId).first()
+                                LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, descending = true).first()
+                                DOWNLOADED_PLAYLIST_ID -> database.downloadedSongs(SongSortType.CREATE_DATE, descending = true).first()
+                                else -> database.playlistSongs(playlistId).first()
                             }
                             playQueue(ListQueue(
                                 title = when (playlistId) {
                                     LIKED_PLAYLIST_ID -> context.getString(R.string.liked_songs)
                                     DOWNLOADED_PLAYLIST_ID -> context.getString(R.string.downloaded_songs)
-                                    else -> songRepository.getPlaylistById(playlistId).playlist.name
+                                    else -> database.playlist(playlistId).first()?.playlist?.name ?: return@launch
                                 },
                                 items = songs.map { it.toMediaItem() },
                                 startIndex = songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0
@@ -357,10 +360,10 @@ class SongPlayer(
         }
         scope.launch {
             combine(currentMediaMetadata.distinctUntilChangedBy { it?.id }, showLyrics) { mediaMetadata, showLyrics ->
-                Pair(mediaMetadata, showLyrics)
+                mediaMetadata to showLyrics
             }.collectLatest { (mediaMetadata, showLyrics) ->
-                if (showLyrics && mediaMetadata != null && !songRepository.hasLyrics(mediaMetadata.id)) {
-                    LyricsHelper.loadLyrics(context, mediaMetadata)
+                if (showLyrics && mediaMetadata != null && database.lyrics(mediaMetadata.id).first() == null) {
+                    lyricsHelper.loadLyrics(mediaMetadata)
                 }
             }
         }
@@ -425,10 +428,10 @@ class SongPlayer(
 
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
-            val playedFormat = songRepository.getSongFormat(mediaId).firstOrNull()
-            val song = songRepository.getSongById(mediaId).firstOrNull()
+            val playedFormat = database.format(mediaId).firstOrNull()
+            val song = database.song(mediaId).firstOrNull()
             if (playedFormat != null && song?.song?.downloadState == STATE_DOWNLOADED) {
-                return@runBlocking dataSpec.withUri(songRepository.getSongFile(mediaId).toUri())
+                // TODO
             }
 
             val playerResponse = withContext(IO) {
@@ -463,16 +466,18 @@ class SongPlayer(
                     }
             } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
-            songRepository.upsert(FormatEntity(
-                id = mediaId,
-                itag = format.itag,
-                mimeType = format.mimeType.split(";")[0],
-                codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
-                bitrate = format.bitrate,
-                sampleRate = format.audioSampleRate,
-                contentLength = format.contentLength!!,
-                loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
-            ))
+            database.query {
+                upsert(FormatEntity(
+                    id = mediaId,
+                    itag = format.itag,
+                    mimeType = format.mimeType.split(";")[0],
+                    codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
+                    bitrate = format.bitrate,
+                    sampleRate = format.audioSampleRate,
+                    contentLength = format.contentLength!!,
+                    loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                ))
+            }
             InfoCache.putInfo(mediaId, format.url, playerResponse.streamingData!!.expiresInSeconds * 1000L)
             dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
@@ -551,35 +556,32 @@ class SongPlayer(
     }
 
     fun toggleLibrary() {
-        scope.launch {
+        database.query {
             val song = currentSong
-            val mediaMetadata = currentMediaMetadata.value ?: return@launch
+            val mediaMetadata = currentMediaMetadata.value ?: return@query
             if (song == null) {
-                songRepository.addSong(mediaMetadata)
+                insert(mediaMetadata)
             } else {
-                songRepository.deleteSong(song)
+                delete(song)
             }
         }
     }
 
     fun toggleLike() {
-        scope.launch {
+        database.query {
             val song = currentSong
-            val mediaMetadata = currentMediaMetadata.value ?: return@launch
+            val mediaMetadata = currentMediaMetadata.value ?: return@query
             if (song == null) {
-                songRepository.addSong(mediaMetadata)
-                songRepository.getSongById(mediaMetadata.id).firstOrNull()?.let {
-                    songRepository.toggleLiked(it)
-                }
+                insert(mediaMetadata, SongEntity::toggleLike)
             } else {
-                songRepository.toggleLiked(song)
+                update(song.song.toggleLike())
             }
         }
     }
 
     private fun addToLibrary(mediaMetadata: MediaMetadata) {
-        scope.launch {
-            songRepository.addSong(mediaMetadata)
+        database.query {
+            insert(mediaMetadata)
         }
     }
 
@@ -659,8 +661,8 @@ class SongPlayer(
 
     override fun onPlaybackStatsReady(eventTime: AnalyticsListener.EventTime, playbackStats: PlaybackStats) {
         val mediaItem = eventTime.timeline.getWindow(eventTime.windowIndex, Timeline.Window()).mediaItem
-        scope.launch {
-            songRepository.incrementSongTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
+        database.query {
+            incrementTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
         }
     }
 

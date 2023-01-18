@@ -14,12 +14,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.AlbumItem
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.extensions.toMediaItem
@@ -27,12 +29,13 @@ import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
 import com.zionhuang.music.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Composable
@@ -41,11 +44,11 @@ fun YouTubeSongMenu(
     navController: NavController,
     playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
-    mainViewModel: MainViewModel = viewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val songRepository = SongRepository(context)
+    val database = LocalDatabase.current
     val librarySongIds by mainViewModel.librarySongIds.collectAsState()
     val addedToLibrary = remember(librarySongIds) {
         song.id in librarySongIds
@@ -137,8 +140,12 @@ fun YouTubeSongMenu(
                 icon = R.drawable.ic_library_add_check,
                 title = R.string.action_remove_from_library
             ) {
-                coroutineScope.launch {
-                    songRepository.deleteSong(song.id)
+                coroutineScope.launch(Dispatchers.IO) {
+                    database.song(song.id).first()?.let { song ->
+                        database.query {
+                            delete(song)
+                        }
+                    }
                 }
             }
         } else {
@@ -146,8 +153,8 @@ fun YouTubeSongMenu(
                 icon = R.drawable.ic_library_add,
                 title = R.string.action_add_to_library
             ) {
-                coroutineScope.launch {
-                    songRepository.addSong(song.toMediaMetadata())
+                database.query {
+                    insert(song.toMediaMetadata())
                 }
             }
         }
@@ -208,11 +215,11 @@ fun YouTubeAlbumMenu(
     navController: NavController,
     playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
-    mainViewModel: MainViewModel = viewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val songRepository = SongRepository(context)
+    val database = LocalDatabase.current
     val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
     val addedToLibrary = remember(libraryAlbumIds) {
         album.id in libraryAlbumIds
@@ -303,8 +310,10 @@ fun YouTubeAlbumMenu(
                 icon = R.drawable.ic_library_add_check,
                 title = R.string.action_remove_from_library
             ) {
-                coroutineScope.launch {
-                    songRepository.deleteAlbum(album.id)
+                database.query {
+                    album(album.id)?.let {
+                        delete(it.album)
+                    }
                 }
             }
         } else {
@@ -312,8 +321,12 @@ fun YouTubeAlbumMenu(
                 icon = R.drawable.ic_library_add,
                 title = R.string.action_add_to_library
             ) {
-                coroutineScope.launch {
-                    songRepository.addAlbum(album)
+                coroutineScope.launch(Dispatchers.IO) {
+                    YouTube.browseAlbum(album.browseId).onSuccess { albumPage ->
+                        database.query {
+                            insert(albumPage)
+                        }
+                    }
                 }
             }
         }

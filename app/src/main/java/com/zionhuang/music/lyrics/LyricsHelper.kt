@@ -2,22 +2,21 @@ package com.zionhuang.music.lyrics
 
 import android.content.Context
 import android.util.LruCache
-import com.zionhuang.music.db.entities.LyricsEntity
+import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import com.zionhuang.music.models.MediaMetadata
-import com.zionhuang.music.repos.SongRepository
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-object LyricsHelper {
+class LyricsHelper @Inject constructor(
+    @ApplicationContext private val context: Context,
+) {
     private val lyricsProviders = listOf(KuGouLyricsProvider, YouTubeLyricsProvider)
-
-    private const val MAX_CACHE_SIZE = 3
     private val cache = LruCache<String, List<LyricsResult>>(MAX_CACHE_SIZE)
 
-    suspend fun loadLyrics(context: Context, mediaMetadata: MediaMetadata) {
-        val songRepository = SongRepository(context)
+    suspend fun loadLyrics(mediaMetadata: MediaMetadata): String {
         val cached = cache.get(mediaMetadata.id)?.firstOrNull()
         if (cached != null) {
-            songRepository.upsert(LyricsEntity(mediaMetadata.id, cached.lyrics))
-            return
+            return cached.lyrics
         }
         lyricsProviders.forEach { provider ->
             if (provider.isEnabled(context)) {
@@ -27,18 +26,16 @@ object LyricsHelper {
                     mediaMetadata.artists.joinToString { it.name },
                     mediaMetadata.duration
                 ).onSuccess { lyrics ->
-                    songRepository.upsert(LyricsEntity(mediaMetadata.id, lyrics))
-                    return
+                    return lyrics
                 }.onFailure {
                     it.printStackTrace()
                 }
             }
         }
-        songRepository.upsert(LyricsEntity(mediaMetadata.id, LyricsEntity.LYRICS_NOT_FOUND))
+        return LYRICS_NOT_FOUND
     }
 
     suspend fun getAllLyrics(
-        context: Context,
         mediaId: String,
         songTitle: String,
         songArtists: String,
@@ -63,6 +60,10 @@ object LyricsHelper {
             }
         }
         cache.put(cacheKey, allResult)
+    }
+
+    companion object {
+        private const val MAX_CACHE_SIZE = 3
     }
 }
 

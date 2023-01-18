@@ -15,12 +15,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.component.*
-import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.constants.CONTENT_TYPE_LIST
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.db.entities.Album
@@ -29,6 +27,8 @@ import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
+import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.viewmodels.LocalFilter
 import com.zionhuang.music.viewmodels.LocalSearchViewModel
 
@@ -37,7 +37,7 @@ import com.zionhuang.music.viewmodels.LocalSearchViewModel
 fun LocalSearchScreen(
     query: String,
     navController: NavController,
-    viewModel: LocalSearchViewModel = viewModel(),
+    viewModel: LocalSearchViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val menuState = LocalMenuState.current

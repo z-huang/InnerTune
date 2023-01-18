@@ -24,7 +24,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
@@ -50,7 +50,7 @@ import com.zionhuang.music.viewmodels.AlbumViewState
 @Composable
 fun AlbumScreen(
     navController: NavController,
-    viewModel: AlbumViewModel = viewModel(),
+    viewModel: AlbumViewModel = hiltViewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()

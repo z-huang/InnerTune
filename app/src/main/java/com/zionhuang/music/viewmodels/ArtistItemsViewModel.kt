@@ -6,15 +6,18 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.models.ItemsPage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ArtistItemsViewModel(
+@HiltViewModel
+class ArtistItemsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    val browseId = savedStateHandle.get<String>("browseId")!!
-    val params = savedStateHandle.get<String>("params")
+    private val browseId = savedStateHandle.get<String>("browseId")!!
+    private val params = savedStateHandle.get<String>("params")
 
     val title = MutableStateFlow("")
     val itemsPage = MutableStateFlow<ItemsPage?>(null)

@@ -10,25 +10,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.models.*
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.SuggestionItemHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.YouTubeListItem
 import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlineSearchSuggestionViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -38,11 +36,10 @@ fun OnlineSearchScreen(
     navController: NavController,
     onSearch: (String) -> Unit,
     onDismiss: () -> Unit,
-    viewModel: OnlineSearchSuggestionViewModel = viewModel(),
-    mainViewModel: MainViewModel = viewModel(),
+    viewModel: OnlineSearchSuggestionViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -61,24 +58,24 @@ fun OnlineSearchScreen(
     LazyColumn {
         items(
             items = viewState.history,
-            key = { it }
-        ) { query ->
+            key = { it.query }
+        ) { history ->
             SuggestionItem(
-                query = query,
+                query = history.query,
                 online = false,
                 onClick = {
-                    onSearch(query)
+                    onSearch(history.query)
                     onDismiss()
                 },
                 onDelete = {
-                    coroutineScope.launch {
-                        SongRepository(context).deleteSearchHistory(query)
+                    database.query {
+                        delete(history)
                     }
                 },
                 onFillTextField = {
                     onTextFieldValueChange(TextFieldValue(
-                        text = query,
-                        selection = TextRange(query.length)
+                        text = history.query,
+                        selection = TextRange(history.query.length)
                     ))
                 },
                 modifier = Modifier.animateItemPlacement()

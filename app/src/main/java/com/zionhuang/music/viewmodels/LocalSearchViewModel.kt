@@ -1,18 +1,22 @@
 package com.zionhuang.music.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.repos.SongRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class LocalSearchViewModel(application: Application) : AndroidViewModel(application) {
-    private val songRepository = SongRepository(application)
+@HiltViewModel
+class LocalSearchViewModel @Inject constructor(
+    database: MusicDatabase,
+) : ViewModel() {
     val query = MutableStateFlow("")
     val filter = MutableStateFlow(LocalFilter.ALL)
+
     val result = combine(query, filter) { query, filter ->
         query to filter
     }.flatMapLatest { (query, filter) ->
@@ -20,11 +24,18 @@ class LocalSearchViewModel(application: Application) : AndroidViewModel(applicat
             flowOf(LocalSearchResult("", filter, emptyMap()))
         } else {
             when (filter) {
-                LocalFilter.ALL -> songRepository.searchAll(query)
-                LocalFilter.SONG -> songRepository.searchSongs(query)
-                LocalFilter.ALBUM -> songRepository.searchAlbums(query)
-                LocalFilter.ARTIST -> songRepository.searchArtists(query)
-                LocalFilter.PLAYLIST -> songRepository.searchPlaylists(query)
+                LocalFilter.ALL -> combine(
+                    database.searchSongs(query, PREVIEW_SIZE),
+                    database.searchAlbums(query, PREVIEW_SIZE),
+                    database.searchArtists(query, PREVIEW_SIZE),
+                    database.searchPlaylists(query, PREVIEW_SIZE),
+                ) { songs, albums, artists, playlists ->
+                    songs + albums + artists + playlists
+                }
+                LocalFilter.SONG -> database.searchSongs(query)
+                LocalFilter.ALBUM -> database.searchAlbums(query)
+                LocalFilter.ARTIST -> database.searchArtists(query)
+                LocalFilter.PLAYLIST -> database.searchPlaylists(query)
             }.map { list ->
                 LocalSearchResult(
                     query = query,
@@ -40,6 +51,10 @@ class LocalSearchViewModel(application: Application) : AndroidViewModel(applicat
             }
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, LocalSearchResult("", filter.value, emptyMap()))
+
+    companion object {
+        const val PREVIEW_SIZE = 3
+    }
 }
 
 enum class LocalFilter {

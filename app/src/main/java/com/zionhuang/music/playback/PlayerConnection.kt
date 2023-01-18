@@ -1,10 +1,10 @@
 package com.zionhuang.music.playback
 
-import android.content.Context
 import android.graphics.Bitmap
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.Timeline
+import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.extensions.currentMetadata
 import com.zionhuang.music.extensions.getCurrentQueueIndex
 import com.zionhuang.music.extensions.getQueueWindows
@@ -12,14 +12,15 @@ import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.queues.Queue
-import com.zionhuang.music.repos.SongRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
-    val songRepository by lazy { SongRepository(context) }
+class PlayerConnection(
+    val database: MusicDatabase,
+    val binder: MusicBinder,
+) : Listener {
     val songPlayer = binder.songPlayer
     val player = binder.player
 
@@ -27,13 +28,13 @@ class PlayerConnection(context: Context, val binder: MusicBinder) : Listener {
     val playWhenReady = MutableStateFlow(false)
     val mediaMetadata = MutableStateFlow<MediaMetadata?>(null)
     val currentSong = mediaMetadata.flatMapLatest {
-        songRepository.getSongById(it?.id)
+        database.song(it?.id)
     }
     val currentLyrics = mediaMetadata.flatMapLatest { mediaMetadata ->
-        songRepository.getLyrics(mediaMetadata?.id)
+        database.lyrics(mediaMetadata?.id)
     }
     val currentFormat = mediaMetadata.flatMapLatest { mediaMetadata ->
-        songRepository.getSongFormat(mediaMetadata?.id)
+        database.format(mediaMetadata?.id)
     }
 
     val queueTitle = MutableStateFlow<String?>(null)

@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -45,11 +44,12 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.music.constants.*
+import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.db.entities.SearchHistory
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
-import com.zionhuang.music.repos.SongRepository
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.component.shimmer.ShimmerTheme
 import com.zionhuang.music.ui.player.BottomSheetPlayer
@@ -61,18 +61,20 @@ import com.zionhuang.music.ui.screens.library.LibrarySongsScreen
 import com.zionhuang.music.ui.screens.settings.*
 import com.zionhuang.music.ui.theme.*
 import com.zionhuang.music.utils.NavigationTabHelper
-import com.zionhuang.music.viewmodels.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Suppress("unused")
-    private val viewModel: MainViewModel by viewModels()
+    @Inject
+    lateinit var database: MusicDatabase
     private var playerConnection by mutableStateOf<PlayerConnection?>(null)
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             if (service is MusicBinder) {
-                playerConnection = PlayerConnection(this@MainActivity, service)
+                playerConnection = PlayerConnection(database, service)
             }
         }
 
@@ -102,6 +104,7 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(
                 LocalSharedPreferences provides sharedPreferences,
                 LocalSharedPreferencesKeyFlow provides sharedPreferences.keyFlow,
+                LocalDatabase provides database
             ) {
                 val coroutineScope = rememberCoroutineScope()
                 val darkTheme by mutablePreferenceState(key = DARK_THEME, defaultValue = DarkMode.AUTO)
@@ -171,8 +174,8 @@ class MainActivity : ComponentActivity() {
                                     selection = TextRange(query.length)
                                 ))
                                 navController.navigate("search/$query")
-                                coroutineScope.launch {
-                                    SongRepository(this@MainActivity).insertSearchHistory(query)
+                                database.query {
+                                    insert(SearchHistory(query = query))
                                 }
                             }
                         }
@@ -347,9 +350,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 ) { backStackEntry ->
-                                    LocalPlaylistScreen(
-                                        playlistId = backStackEntry.arguments?.getString("playlistId")!!
-                                    )
+                                    LocalPlaylistScreen()
                                 }
                                 composable(
                                     route = "search/{query}",
@@ -491,5 +492,6 @@ class MainActivity : ComponentActivity() {
 
 const val ACTION_SHOW_BOTTOM_SHEET = "show_bottom_sheet"
 
+val LocalDatabase = staticCompositionLocalOf<MusicDatabase> { error("No database provided") }
 val LocalPlayerConnection = staticCompositionLocalOf<PlayerConnection?> { error("No PlayerConnection provided") }
 val LocalPlayerAwareWindowInsets = compositionLocalOf<WindowInsets> { error("No WindowInsets provided") }
