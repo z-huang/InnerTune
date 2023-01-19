@@ -1,7 +1,7 @@
 <resources>
     <!-- Title -->
     <string name="title_home">Startseite</string>
-    <string name="title_songs">Lieder</string>
+    <string name="title_songs">Titel</string>
     <string name="title_artists">Künstler</string>
     <string name="title_albums">Alben</string>
     <string name="title_playlists">Wiedergabelisten</string>
@@ -48,7 +48,7 @@
     <string name="pref_open_saf_title">Heruntergeladene Dateien in SAF anzeigen</string>
     <string name="pref_open_saf_summary">Dies kann bei einigen Geräten nicht funktionieren</string>
     <string name="pref_cache_title">Zwischenspeicher</string>
-    <string name="pref_image_max_cache_size_title">MMaximale Größe des Bild-Caches</string>
+    <string name="pref_image_max_cache_size_title">Maximale Größe des Bild-Caches</string>
     <string name="pref_clear_image_cache_title">Bild-Cache löschen</string>
     <string name="pref_song_max_cache_size_title">Maximale Größe des Song-Cache</string>
     <string name="size_used">%s verwendet</string>
@@ -109,7 +109,7 @@
     <string name="menu_details">Details</string>
     <string name="menu_edit">Bearbeiten</string>
     <string name="menu_start_radio">Radio starten</string>
-    <string name="menu_play">Spielen</string>
+    <string name="menu_play">Wiedergegeben</string>
     <string name="menu_play_next">Als nächstes wiedergeben</string>
     <string name="menu_add_to_queue">Zu Warteschlange hinzufügen</string>
     <string name="menu_add_to_library">Zur Bibliothek hinzufügen</string>
@@ -141,7 +141,7 @@
     <string name="dialog_title_search_lyrics">Songtext suchen</string>
     <string name="dialog_title_choose_lyrics">Songtext auswählen</string>
 
-    <string name="dialog_title_edit_song">Lied bearbeiten</string>
+    <string name="dialog_title_edit_song">Titel bearbeiten</string>
     <string name="song_title">Songtitel</string>
     <string name="song_artists">Song-Künstler</string>
     <string name="error_song_title_empty">Der Songtitel darf nicht leer sein.</string>
@@ -167,7 +167,7 @@
     <string name="dialog_title_choose_restore_content">Wählen Sie Inhalt wiederherstellen</string>
     <string name="choice_preferences">Einstellungen</string>
     <string name="choice_database">Datenbank</string>
-    <string name="choice_downloaded_songs">Heruntergeladene Lieder</string>
+    <string name="choice_downloaded_songs">Heruntergeladene Titel</string>
     <string name="message_backup_create_success">Sicherung erfolgreich erstellt</string>
     <string name="message_backup_create_failed">Konnte keine Sicherung erstellen</string>
     <string name="message_restore_failed">Wiederherstellung der Sicherung fehlgeschlagen</string>
@@ -216,7 +216,7 @@
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
         <item quantity="one">%d Song wurde gelöscht.</item>
-        <item quantity="other">%d Lieder wurden gelöscht.</item>
+        <item quantity="other">%d Songs wurden gelöscht.</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="one">%d ausgewählt</item>
@@ -226,7 +226,7 @@
     <string name="snackbar_url_error">Kann diese Url nicht identifizieren.</string>
     <plurals name="snackbar_song_play_next">
         <item quantity="one">Song wird als nächstes gespielt</item>
-        <item quantity="other">%d Lieder werden als nächstes gespielt</item>
+        <item quantity="other">%d Songs werden als nächstes gespielt</item>
     </plurals>
     <plurals name="snackbar_artist_play_next">
         <item quantity="one">Der Künstler spielt als nächstes</item>
@@ -277,7 +277,7 @@
 
     <!-- Search Filter -->
     <string name="search_filter_all">Alles</string>
-    <string name="search_filter_songs">Lieder</string>
+    <string name="search_filter_songs">Titel</string>
     <string name="search_filter_videos">Videos</string>
     <string name="search_filter_albums">Alben</string>
     <string name="search_filter_artists">Künstler</string>
@@ -299,8 +299,8 @@
     <string name="error_unknown">Unbekannter Fehler</string>
 
     <!-- Queue Title -->
-    <string name="queue_all_songs">Alle Lieder</string>
-    <string name="queue_searched_songs">Gesuchte Lieder</string>
+    <string name="queue_all_songs">Alle Titel</string>
+    <string name="queue_searched_songs">Gesuchte Titel</string>
 
     <!-- Lyrics View -->
     <string name="lyrics_not_found">Liedtext nicht gefunden</string>
