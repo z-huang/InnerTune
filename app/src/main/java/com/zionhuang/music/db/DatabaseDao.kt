@@ -11,11 +11,8 @@ import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.ui.utils.resize
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 
 @Dao
@@ -175,7 +172,7 @@ interface DatabaseDao {
 
     @Transaction
     @Query("SELECT * FROM album WHERE id = :id")
-    fun album(id: String): Album?
+    fun album(id: String): Flow<Album?>
 
     @Transaction
     @Query("SELECT * FROM album WHERE id = :albumId")
@@ -418,13 +415,9 @@ interface DatabaseDao {
     }
 
     @Transaction
-    fun delete(album: Album) {
-        runBlocking(Dispatchers.IO) {
-            albumSongs(album.id).first()
-        }.map {
-            it.copy(album = null)
-        }.forEach(::delete)
-        delete(album.album)
-        album.artists.filter { artistSongCount(it.id) == 0 }.forEach(::delete)
+    fun delete(albumWithSongs: AlbumWithSongs) {
+        albumWithSongs.songs.map { it.copy(album = null) }.forEach(::delete)
+        delete(albumWithSongs.album)
+        albumWithSongs.artists.filter { artistSongCount(it.id) == 0 }.forEach(::delete)
     }
 }

@@ -8,9 +8,7 @@ import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +20,9 @@ class AlbumViewModel @Inject constructor(
     val albumId = savedStateHandle.get<String>("albumId")!!
     private val _viewState = MutableStateFlow<AlbumViewState?>(null)
     val viewState = _viewState.asStateFlow()
+    val inLibrary: StateFlow<Boolean> = database.album(albumId)
+        .map { it != null }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     init {
         viewModelScope.launch {

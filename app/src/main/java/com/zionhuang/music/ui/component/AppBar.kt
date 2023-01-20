@@ -105,7 +105,9 @@ fun AppBar(
 
     AnimatedVisibility(
         visible = isSearchExpanded,
-        enter = fadeIn(tween(easing = LinearOutSlowInEasing)) + slideInVertically(tween()) { with(density) { -AppBarHeight.toPx().roundToInt() } },
+        enter = fadeIn(tween(easing = LinearOutSlowInEasing)) + slideInVertically(tween()) {
+            with(density) { -AppBarHeight.toPx().roundToInt() }
+        },
         exit = fadeOut()
     ) {
         BackHandler {

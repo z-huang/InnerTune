@@ -37,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun YouTubeSongMenu(
@@ -311,7 +312,9 @@ fun YouTubeAlbumMenu(
                 title = R.string.action_remove_from_library
             ) {
                 database.query {
-                    album(album.id)?.let {
+                    runBlocking(Dispatchers.IO) {
+                        album(album.id).first()
+                    }?.let {
                         delete(it.album)
                     }
                 }

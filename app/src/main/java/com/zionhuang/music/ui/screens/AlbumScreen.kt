@@ -27,12 +27,17 @@ import androidx.compose.ui.util.fastForEachIndexed
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.pages.AlbumPage
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AlbumThumbnailSize
 import com.zionhuang.music.constants.CONTENT_TYPE_SONG
 import com.zionhuang.music.constants.ThumbnailCornerRadius
+import com.zionhuang.music.db.entities.AlbumWithSongs
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AutoResizeText
@@ -45,6 +50,9 @@ import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
 import com.zionhuang.music.viewmodels.AlbumViewModel
 import com.zionhuang.music.viewmodels.AlbumViewState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -57,6 +65,7 @@ fun AlbumScreen(
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val viewState by viewModel.viewState.collectAsState()
+    val inLibrary by viewModel.inLibrary.collectAsState()
 
     LazyColumn(
         contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
@@ -65,45 +74,10 @@ fun AlbumScreen(
             when (viewState) {
                 is AlbumViewState.Local -> {
                     item {
-                        AlbumHeader(
-                            title = viewState.albumWithSongs.album.title,
-                            artists = {
-                                val annotatedString = buildAnnotatedString {
-                                    withStyle(
-                                        style = MaterialTheme.typography.titleMedium.copy(
-                                            fontWeight = FontWeight.Normal
-                                        ).toSpanStyle()
-                                    ) {
-                                        viewState.albumWithSongs.artists.fastForEachIndexed { index, artist ->
-                                            pushStringAnnotation(artist.id, artist.name)
-                                            append(artist.name)
-                                            pop()
-                                            if (index != viewState.albumWithSongs.artists.lastIndex) {
-                                                append(", ")
-                                            }
-                                        }
-                                    }
-                                }
-                                ClickableText(annotatedString) { offset ->
-                                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
-                                        navController.navigate("artist/${range.tag}")
-                                    }
-                                }
-                            },
-                            year = viewState.albumWithSongs.album.year,
-                            thumbnail = viewState.albumWithSongs.album.thumbnailUrl,
-                            onPlay = {
-                                playerConnection.playQueue(ListQueue(
-                                    title = viewState.albumWithSongs.album.title,
-                                    items = viewState.albumWithSongs.songs.map { it.toMediaItem() }
-                                ))
-                            },
-                            onShuffle = {
-                                playerConnection.playQueue(ListQueue(
-                                    title = viewState.albumWithSongs.album.title,
-                                    items = viewState.albumWithSongs.songs.shuffled().map { it.toMediaItem() }
-                                ))
-                            }
+                        LocalAlbumHeader(
+                            albumWithSongs = viewState.albumWithSongs,
+                            inLibrary = inLibrary,
+                            navController = navController
                         )
                     }
 
@@ -130,49 +104,10 @@ fun AlbumScreen(
                 }
                 is AlbumViewState.Remote -> {
                     item {
-                        AlbumHeader(
-                            title = viewState.albumPage.album.title,
-                            artists = {
-                                val annotatedString = buildAnnotatedString {
-                                    withStyle(
-                                        style = MaterialTheme.typography.titleMedium.copy(
-                                            fontWeight = FontWeight.Normal
-                                        ).toSpanStyle()
-                                    ) {
-                                        viewState.albumPage.album.artists?.fastForEachIndexed { index, artist ->
-                                            if (artist.id != null) {
-                                                pushStringAnnotation(artist.id!!, artist.name)
-                                                append(artist.name)
-                                                pop()
-                                            } else {
-                                                append(artist.name)
-                                            }
-                                            if (index != viewState.albumPage.album.artists?.lastIndex) {
-                                                append(", ")
-                                            }
-                                        }
-                                    }
-                                }
-                                ClickableText(annotatedString) { offset ->
-                                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
-                                        navController.navigate("artist/${range.tag}")
-                                    }
-                                }
-                            },
-                            year = viewState.albumPage.album.year,
-                            thumbnail = viewState.albumPage.album.thumbnail,
-                            onPlay = {
-                                playerConnection.playQueue(ListQueue(
-                                    title = viewState.albumPage.album.title,
-                                    items = viewState.albumPage.songs.map { it.toMediaItem() }
-                                ))
-                            },
-                            onShuffle = {
-                                playerConnection.playQueue(ListQueue(
-                                    title = viewState.albumPage.album.title,
-                                    items = viewState.albumPage.songs.shuffled().map { it.toMediaItem() }
-                                ))
-                            }
+                        RemoteAlbumHeader(
+                            albumPage = viewState.albumPage,
+                            inLibrary = inLibrary,
+                            navController = navController
                         )
                     }
 
@@ -255,14 +190,14 @@ fun AlbumScreen(
 }
 
 @Composable
-inline fun AlbumHeader(
-    title: String,
-    artists: @Composable () -> Unit,
-    year: Int? = null,
-    thumbnail: String?,
-    noinline onPlay: () -> Unit,
-    noinline onShuffle: () -> Unit,
+fun LocalAlbumHeader(
+    albumWithSongs: AlbumWithSongs,
+    inLibrary: Boolean,
+    navController: NavController,
 ) {
+    val playerConnection = LocalPlayerConnection.current ?: return
+    val database = LocalDatabase.current
+
     Column(
         modifier = Modifier.padding(12.dp)
     ) {
@@ -270,7 +205,7 @@ inline fun AlbumHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
-                model = thumbnail,
+                model = albumWithSongs.album.thumbnailUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .size(AlbumThumbnailSize)
@@ -283,27 +218,57 @@ inline fun AlbumHeader(
                 verticalArrangement = Arrangement.Center,
             ) {
                 AutoResizeText(
-                    text = title,
+                    text = albumWithSongs.album.title,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     fontSizeRange = FontSizeRange(16.sp, 22.sp)
                 )
 
-                artists()
+                val annotatedString = buildAnnotatedString {
+                    withStyle(
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Normal
+                        ).toSpanStyle()
+                    ) {
+                        albumWithSongs.artists.fastForEachIndexed { index, artist ->
+                            pushStringAnnotation(artist.id, artist.name)
+                            append(artist.name)
+                            pop()
+                            if (index != albumWithSongs.artists.lastIndex) {
+                                append(", ")
+                            }
+                        }
+                    }
+                }
+                ClickableText(annotatedString) { offset ->
+                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
+                        navController.navigate("artist/${range.tag}")
+                    }
+                }
 
-                year?.let { year ->
+                if (albumWithSongs.album.year != null) {
                     Text(
-                        text = year.toString(),
+                        text = albumWithSongs.album.year.toString(),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Normal
                     )
                 }
 
                 Row {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(
+                        onClick = {
+                            database.query {
+                                if (inLibrary) {
+                                    delete(albumWithSongs)
+                                } else {
+                                    insert(albumWithSongs)
+                                }
+                            }
+                        }
+                    ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_library_add_check),
+                            painter = painterResource(if (inLibrary) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
                             contentDescription = null
                         )
                     }
@@ -315,7 +280,12 @@ inline fun AlbumHeader(
 
         Row {
             Button(
-                onClick = onPlay,
+                onClick = {
+                    playerConnection.playQueue(ListQueue(
+                        title = albumWithSongs.album.title,
+                        items = albumWithSongs.songs.map(Song::toMediaItem)
+                    ))
+                },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.weight(1f)
             ) {
@@ -333,7 +303,155 @@ inline fun AlbumHeader(
             Spacer(Modifier.width(12.dp))
 
             OutlinedButton(
-                onClick = onShuffle,
+                onClick = {
+                    playerConnection.playQueue(ListQueue(
+                        title = albumWithSongs.album.title,
+                        items = albumWithSongs.songs.shuffled().map(Song::toMediaItem)
+                    ))
+                },
+                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_shuffle),
+                    contentDescription = null,
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(stringResource(R.string.btn_shuffle))
+            }
+        }
+    }
+}
+
+@Composable
+fun RemoteAlbumHeader(
+    albumPage: AlbumPage,
+    inLibrary: Boolean,
+    navController: NavController,
+) {
+    val playerConnection = LocalPlayerConnection.current ?: return
+    val database = LocalDatabase.current
+
+    Column(
+        modifier = Modifier.padding(12.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = albumPage.album.thumbnail,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(AlbumThumbnailSize)
+                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
+            )
+
+            Spacer(Modifier.width(16.dp))
+
+            Column(
+                verticalArrangement = Arrangement.Center,
+            ) {
+                AutoResizeText(
+                    text = albumPage.album.title,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSizeRange = FontSizeRange(16.sp, 22.sp)
+                )
+
+                val annotatedString = buildAnnotatedString {
+                    withStyle(
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Normal
+                        ).toSpanStyle()
+                    ) {
+                        albumPage.album.artists?.fastForEachIndexed { index, artist ->
+                            if (artist.id != null) {
+                                pushStringAnnotation(artist.id!!, artist.name)
+                                append(artist.name)
+                                pop()
+                            } else {
+                                append(artist.name)
+                            }
+                            if (index != albumPage.album.artists?.lastIndex) {
+                                append(", ")
+                            }
+                        }
+                    }
+                }
+                ClickableText(annotatedString) { offset ->
+                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
+                        navController.navigate("artist/${range.tag}")
+                    }
+                }
+
+                if (albumPage.album.year != null) {
+                    Text(
+                        text = albumPage.album.year.toString(),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Normal
+                    )
+                }
+
+                Row {
+                    IconButton(
+                        onClick = {
+                            database.query {
+                                if (inLibrary) {
+                                    runBlocking(Dispatchers.IO) {
+                                        albumWithSongs(albumPage.album.browseId).first()
+                                    }?.let {
+                                        delete(it)
+                                    }
+                                } else {
+                                    insert(albumPage)
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(if (inLibrary) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        Row {
+            Button(
+                onClick = {
+                    playerConnection.playQueue(ListQueue(
+                        title = albumPage.album.title,
+                        items = albumPage.songs.map(SongItem::toMediaItem)
+                    ))
+                },
+                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                modifier = Modifier.weight(1f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_play),
+                    contentDescription = null,
+                    modifier = Modifier.size(ButtonDefaults.IconSize)
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(
+                    text = stringResource(R.string.btn_play)
+                )
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            OutlinedButton(
+                onClick = {
+                    playerConnection.playQueue(ListQueue(
+                        title = albumPage.album.title,
+                        items = albumPage.songs.shuffled().map(SongItem::toMediaItem)
+                    ))
+                },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.weight(1f)
             ) {
