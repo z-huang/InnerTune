@@ -21,11 +21,11 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.lyrics.LyricsHelper
-import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.models.toMediaMetadata
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*

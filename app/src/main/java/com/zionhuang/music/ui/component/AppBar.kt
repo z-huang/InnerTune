@@ -37,12 +37,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.utils.canNavigateUp
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.extensions.mutablePreferenceState
+import com.zionhuang.music.ui.utils.canNavigateUp
+import com.zionhuang.music.utils.rememberEnumPreference
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBar(
     appBarConfig: AppBarConfig,
@@ -67,7 +67,7 @@ fun AppBar(
         }
     }
 
-    val (searchSource, onSearchSourceChange) = mutablePreferenceState(SEARCH_SOURCE, SearchSource.ONLINE)
+    var searchSource by rememberEnumPreference(SearchSourceKey, SearchSource.ONLINE)
 
     val expandTransition = updateTransition(targetState = isSearchExpanded || !appBarConfig.searchable, "searchExpanded")
     val searchTransitionProgress by expandTransition.animateFloat(label = "") { if (it) 1f else 0f }
@@ -268,7 +268,7 @@ fun AppBar(
 
                         IconButton(
                             onClick = {
-                                onSearchSourceChange(if (searchSource == SearchSource.ONLINE) SearchSource.LOCAL else SearchSource.ONLINE)
+                                searchSource = if (searchSource == SearchSource.ONLINE) SearchSource.LOCAL else SearchSource.ONLINE
                             }
                         ) {
                             Icon(

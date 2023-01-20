@@ -15,18 +15,18 @@ import androidx.compose.ui.unit.dp
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.ENABLE_KUGOU
-import com.zionhuang.music.constants.PAUSE_SEARCH_HISTORY
-import com.zionhuang.music.extensions.mutablePreferenceState
+import com.zionhuang.music.constants.EnableKugouKey
+import com.zionhuang.music.constants.PauseSearchHistory
 import com.zionhuang.music.ui.component.DefaultDialog
 import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.SwitchPreference
+import com.zionhuang.music.utils.rememberPreference
 
 @Composable
 fun PrivacySettings() {
     val database = LocalDatabase.current
-    val (pauseSearchHistory, onPauseSearchHistoryChange) = mutablePreferenceState(key = PAUSE_SEARCH_HISTORY, defaultValue = false)
-    val (enableKugou, onEnableKugouChange) = mutablePreferenceState(key = ENABLE_KUGOU, defaultValue = true)
+    val (pauseSearchHistory, onPauseSearchHistoryChange) = rememberPreference(key = PauseSearchHistory, defaultValue = false)
+    val (enableKugou, onEnableKugouChange) = rememberPreference(key = EnableKugouKey, defaultValue = true)
 
     var showClearHistoryDialog by remember {
         mutableStateOf(false)

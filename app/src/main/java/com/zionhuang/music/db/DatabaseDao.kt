@@ -4,11 +4,11 @@ import androidx.room.*
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.innertube.pages.ArtistPage
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.models.MediaMetadata
-import com.zionhuang.music.models.sortInfo.*
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.ui.utils.resize
 import kotlinx.coroutines.Dispatchers

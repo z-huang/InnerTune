@@ -35,10 +35,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.LYRICS_TEXT_POSITION
+import com.zionhuang.music.constants.LyricsTextPositionKey
 import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
-import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.lyrics.LyricsEntry
 import com.zionhuang.music.lyrics.LyricsEntry.Companion.HEAD_LYRICS_ENTRY
 import com.zionhuang.music.lyrics.LyricsUtils.findCurrentLineIndex
@@ -48,6 +47,7 @@ import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
 import com.zionhuang.music.ui.screens.settings.LyricsPosition
 import com.zionhuang.music.ui.utils.fadingEdge
+import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.viewmodels.LyricsMenuViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -63,7 +63,7 @@ fun Lyrics(
     val menuState = LocalMenuState.current
     val density = LocalDensity.current
 
-    val lyricsTextPosition by mutablePreferenceState(LYRICS_TEXT_POSITION, LyricsPosition.CENTER)
+    val lyricsTextPosition by rememberEnumPreference(LyricsTextPositionKey, LyricsPosition.CENTER)
 
     val lyricsEntity by playerConnection.currentLyrics.collectAsState(initial = null)
     val lyrics = remember(lyricsEntity) {

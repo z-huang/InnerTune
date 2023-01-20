@@ -10,21 +10,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.*
 import com.zionhuang.music.ui.component.EditTextPreference
 import com.zionhuang.music.ui.component.ListPreference
 import com.zionhuang.music.ui.component.PreferenceGroupTitle
 import com.zionhuang.music.ui.component.SwitchPreference
-import com.zionhuang.music.constants.*
-import com.zionhuang.music.extensions.mutablePreferenceState
+import com.zionhuang.music.utils.rememberEnumPreference
+import com.zionhuang.music.utils.rememberPreference
 import java.net.Proxy
 
 @Composable
 fun ContentSettings() {
-    val (contentLanguage, onContentLanguageChange) = mutablePreferenceState(key = CONTENT_LANGUAGE, defaultValue = "system")
-    val (contentCountry, onContentCountryChange) = mutablePreferenceState(key = CONTENT_COUNTRY, defaultValue = "system")
-    val (proxyEnabled, onProxyEnabledChange) = mutablePreferenceState(key = PROXY_ENABLED, defaultValue = false)
-    val (proxyType, onProxyTypeChange) = mutablePreferenceState(key = PROXY_TYPE, defaultValue = Proxy.Type.HTTP)
-    val (proxyUrl, onProxyUrlChange) = mutablePreferenceState(key = PROXY_URL, defaultValue = "host:port")
+    val (contentLanguage, onContentLanguageChange) = rememberPreference(key = ContentLanguageKey, defaultValue = "system")
+    val (contentCountry, onContentCountryChange) = rememberPreference(key = ContentCountryKey, defaultValue = "system")
+    val (proxyEnabled, onProxyEnabledChange) = rememberPreference(key = ProxyEnabledKey, defaultValue = false)
+    val (proxyType, onProxyTypeChange) = rememberEnumPreference(key = ProxyTypeKey, defaultValue = Proxy.Type.HTTP)
+    val (proxyUrl, onProxyUrlChange) = rememberPreference(key = ProxyUrlKey, defaultValue = "host:port")
 
 
     Column(

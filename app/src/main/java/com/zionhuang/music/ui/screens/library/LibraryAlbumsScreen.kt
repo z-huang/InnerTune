@@ -25,10 +25,10 @@ import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.extensions.mutablePreferenceState
-import com.zionhuang.music.models.sortInfo.AlbumSortType
 import com.zionhuang.music.ui.component.AlbumListItem
 import com.zionhuang.music.ui.component.ResizableIconButton
+import com.zionhuang.music.utils.rememberEnumPreference
+import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibraryAlbumsViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -82,9 +82,9 @@ fun LibraryAlbumsScreen(
 fun AlbumHeader(
     itemCount: Int,
 ) {
-    val (sortType, onSortTypeChange) = mutablePreferenceState(ALBUM_SORT_TYPE, AlbumSortType.CREATE_DATE)
-    val (sortDescending, onSortDescendingChange) = mutablePreferenceState(ALBUM_SORT_DESCENDING, true)
-    val (menuExpanded, onMenuExpandedChange) = remember { mutableStateOf(false) }
+    var sortType by rememberEnumPreference(AlbumSortTypeKey, AlbumSortType.CREATE_DATE)
+    var sortDescending by rememberPreference(AlbumSortDescendingKey, true)
+    var menuExpanded by remember { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -107,14 +107,14 @@ fun AlbumHeader(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = rememberRipple(bounded = false)
                 ) {
-                    onMenuExpandedChange(!menuExpanded)
+                    menuExpanded = !menuExpanded
                 }
                 .padding(horizontal = 4.dp, vertical = 8.dp)
         )
 
         DropdownMenu(
             expanded = menuExpanded,
-            onDismissRequest = { onMenuExpandedChange(false) },
+            onDismissRequest = { menuExpanded = false },
             modifier = Modifier.widthIn(min = 172.dp)
         ) {
             listOf(
@@ -140,8 +140,8 @@ fun AlbumHeader(
                         )
                     },
                     onClick = {
-                        onSortTypeChange(type)
-                        onMenuExpandedChange(false)
+                        sortType = type
+                        menuExpanded = false
                     }
                 )
             }
@@ -153,7 +153,7 @@ fun AlbumHeader(
             modifier = Modifier
                 .size(32.dp)
                 .padding(8.dp),
-            onClick = { onSortDescendingChange(!sortDescending) }
+            onClick = { sortDescending = !sortDescending }
         )
 
         Spacer(Modifier.weight(1f))

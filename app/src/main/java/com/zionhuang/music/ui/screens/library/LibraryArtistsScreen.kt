@@ -23,10 +23,10 @@ import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
-import com.zionhuang.music.extensions.mutablePreferenceState
-import com.zionhuang.music.models.sortInfo.ArtistSortType
 import com.zionhuang.music.ui.component.ArtistListItem
 import com.zionhuang.music.ui.component.ResizableIconButton
+import com.zionhuang.music.utils.rememberEnumPreference
+import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibraryArtistsViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -74,8 +74,8 @@ fun LibraryArtistsScreen(
 fun ArtistHeader(
     itemCount: Int,
 ) {
-    val (sortType, onSortTypeChange) = mutablePreferenceState(ARTIST_SORT_TYPE, ArtistSortType.CREATE_DATE)
-    val (sortDescending, onSortDescendingChange) = mutablePreferenceState(ARTIST_SORT_DESCENDING, true)
+    var sortType by rememberEnumPreference(ArtistSortTypeKey, ArtistSortType.CREATE_DATE)
+    var sortDescending by rememberPreference(ArtistSortDescendingKey, true)
     val (menuExpanded, onMenuExpandedChange) = remember { mutableStateOf(false) }
 
     Row(
@@ -126,7 +126,7 @@ fun ArtistHeader(
                         )
                     },
                     onClick = {
-                        onSortTypeChange(type)
+                        sortType = type
                         onMenuExpandedChange(false)
                     }
                 )
@@ -139,7 +139,7 @@ fun ArtistHeader(
             modifier = Modifier
                 .size(32.dp)
                 .padding(8.dp),
-            onClick = { onSortDescendingChange(!sortDescending) }
+            onClick = { sortDescending = !sortDescending }
         )
 
         Spacer(Modifier.weight(1f))

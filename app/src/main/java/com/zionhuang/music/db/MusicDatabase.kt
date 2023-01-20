@@ -10,7 +10,6 @@ import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
 import com.zionhuang.music.extensions.toSQLiteQuery
-import com.zionhuang.music.models.sortInfo.*
 import java.time.Instant
 import java.time.ZoneOffset
 import java.util.*

@@ -10,19 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.AUTO_ADD_TO_LIBRARY
-import com.zionhuang.music.constants.AUTO_DOWNLOAD
-import com.zionhuang.music.constants.EXPAND_ON_PLAY
-import com.zionhuang.music.constants.NOTIFICATION_MORE_ACTION
-import com.zionhuang.music.extensions.mutablePreferenceState
+import com.zionhuang.music.constants.AutoAddToLibraryKey
+import com.zionhuang.music.constants.AutoDownloadKey
+import com.zionhuang.music.constants.ExpandOnPlayKey
+import com.zionhuang.music.constants.NotificationMoreActionKey
 import com.zionhuang.music.ui.component.SwitchPreference
+import com.zionhuang.music.utils.rememberPreference
 
 @Composable
 fun GeneralSettings() {
-    val (autoAddToLibrary, onAutoAddToLibraryChange) = mutablePreferenceState(key = AUTO_ADD_TO_LIBRARY, defaultValue = true)
-    val (autoDownload, onAutoDownloadChange) = mutablePreferenceState(key = AUTO_DOWNLOAD, defaultValue = false)
-    val (expandOnPlay, onExpandOnPlayChange) = mutablePreferenceState(key = EXPAND_ON_PLAY, defaultValue = false)
-    val (notificationMoreAction, onNotificationMoreActionChange) = mutablePreferenceState(key = NOTIFICATION_MORE_ACTION, defaultValue = true)
+    val (autoAddToLibrary, onAutoAddToLibraryChange) = rememberPreference(key = AutoAddToLibraryKey, defaultValue = true)
+    val (autoDownload, onAutoDownloadChange) = rememberPreference(key = AutoDownloadKey, defaultValue = false)
+    val (expandOnPlay, onExpandOnPlayChange) = rememberPreference(key = ExpandOnPlayKey, defaultValue = false)
+    val (notificationMoreAction, onNotificationMoreActionChange) = rememberPreference(key = NotificationMoreActionKey, defaultValue = true)
 
     Column(
         Modifier

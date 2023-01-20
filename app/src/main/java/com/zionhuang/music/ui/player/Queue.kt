@@ -36,15 +36,15 @@ import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
-import com.zionhuang.music.constants.SHOW_LYRICS
+import com.zionhuang.music.constants.ShowLyricsKey
 import com.zionhuang.music.extensions.metadata
-import com.zionhuang.music.extensions.mutablePreferenceState
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
+import com.zionhuang.music.utils.rememberPreference
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -71,7 +71,7 @@ fun Queue(
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
     val currentFormat by playerConnection.currentFormat.collectAsState(initial = null)
 
-    val (showLyrics, onShowLyricsChange) = mutablePreferenceState(SHOW_LYRICS, defaultValue = false)
+    var showLyrics by rememberPreference(ShowLyricsKey, defaultValue = false)
 
     var showDetailsDialog by rememberSaveable {
         mutableStateOf(false)
@@ -157,7 +157,7 @@ fun Queue(
                         contentDescription = null
                     )
                 }
-                IconButton(onClick = { onShowLyricsChange(!showLyrics) }) {
+                IconButton(onClick = { showLyrics = !showLyrics }) {
                     Icon(
                         painter = painterResource(R.drawable.ic_lyrics),
                         contentDescription = null,

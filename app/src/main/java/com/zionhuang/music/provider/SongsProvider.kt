@@ -10,8 +10,8 @@ import android.provider.DocumentsContract.Root
 import android.provider.DocumentsProvider
 import com.google.android.exoplayer2.util.FileTypes
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.MusicDatabase
-import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.utils.getSongFile
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn

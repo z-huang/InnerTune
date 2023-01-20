@@ -10,17 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.DARK_THEME
-import com.zionhuang.music.constants.DEFAULT_OPEN_TAB
-import com.zionhuang.music.constants.LYRICS_TEXT_POSITION
-import com.zionhuang.music.extensions.mutablePreferenceState
+import com.zionhuang.music.constants.DarkModeKey
+import com.zionhuang.music.constants.DefaultOpenTabKey
+import com.zionhuang.music.constants.LyricsTextPositionKey
 import com.zionhuang.music.ui.component.EnumListPreference
+import com.zionhuang.music.utils.rememberEnumPreference
 
 @Composable
 fun AppearanceSettings() {
-    val (darkMode, onDarkModeChange) = mutablePreferenceState(key = DARK_THEME, defaultValue = DarkMode.AUTO)
-    val (defaultOpenTab, onDefaultOpenTabChange) = mutablePreferenceState(key = DEFAULT_OPEN_TAB, defaultValue = NavigationTab.HOME)
-    val (lyricsPosition, onLyricsPositionChange) = mutablePreferenceState(key = LYRICS_TEXT_POSITION, defaultValue = LyricsPosition.CENTER)
+    val (darkMode, onDarkModeChange) = rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
+    val (defaultOpenTab, onDefaultOpenTabChange) = rememberEnumPreference(DefaultOpenTabKey, defaultValue = NavigationTab.HOME)
+    val (lyricsPosition, onLyricsPositionChange) = rememberEnumPreference(LyricsTextPositionKey, defaultValue = LyricsPosition.CENTER)
 
     Column(
         Modifier

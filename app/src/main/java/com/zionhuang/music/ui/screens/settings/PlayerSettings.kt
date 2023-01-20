@@ -10,20 +10,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.AUDIO_NORMALIZATION
-import com.zionhuang.music.constants.AUDIO_QUALITY
-import com.zionhuang.music.constants.PERSISTENT_QUEUE
-import com.zionhuang.music.constants.SKIP_SILENCE
-import com.zionhuang.music.extensions.mutablePreferenceState
+import com.zionhuang.music.constants.AudioNormalizationKey
+import com.zionhuang.music.constants.AudioQualityKey
+import com.zionhuang.music.constants.PersistentQueueKey
+import com.zionhuang.music.constants.SkipSilenceKey
 import com.zionhuang.music.ui.component.EnumListPreference
 import com.zionhuang.music.ui.component.SwitchPreference
+import com.zionhuang.music.utils.rememberEnumPreference
+import com.zionhuang.music.utils.rememberPreference
 
 @Composable
 fun PlayerSettings() {
-    val (audioQuality, onAudioQualityChange) = mutablePreferenceState(key = AUDIO_QUALITY, defaultValue = AudioQuality.AUTO)
-    val (persistentQueue, onPersistentQueueChange) = mutablePreferenceState(key = PERSISTENT_QUEUE, defaultValue = true)
-    val (skipSilence, onSkipSilenceChange) = mutablePreferenceState(key = SKIP_SILENCE, defaultValue = true)
-    val (audioNormalization, onAudioNormalizationChange) = mutablePreferenceState(key = AUDIO_NORMALIZATION, defaultValue = true)
+    val (audioQuality, onAudioQualityChange) = rememberEnumPreference(key = AudioQualityKey, defaultValue = AudioQuality.AUTO)
+    val (persistentQueue, onPersistentQueueChange) = rememberPreference(key = PersistentQueueKey, defaultValue = true)
+    val (skipSilence, onSkipSilenceChange) = rememberPreference(key = SkipSilenceKey, defaultValue = true)
+    val (audioNormalization, onAudioNormalizationChange) = rememberPreference(key = AudioNormalizationKey, defaultValue = true)
 
     Column(
         Modifier

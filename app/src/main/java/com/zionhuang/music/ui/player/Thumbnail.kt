@@ -14,11 +14,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.zionhuang.music.constants.SHOW_LYRICS
+import com.zionhuang.music.constants.ShowLyricsKey
 import com.zionhuang.music.constants.ThumbnailCornerRadius
-import com.zionhuang.music.extensions.preferenceState
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.ui.component.Lyrics
+import com.zionhuang.music.utils.rememberPreference
 
 @Composable
 fun Thumbnail(
@@ -27,7 +27,7 @@ fun Thumbnail(
     modifier: Modifier = Modifier,
 ) {
     mediaMetadata ?: return
-    val showLyrics by preferenceState(SHOW_LYRICS, false)
+    val showLyrics by rememberPreference(ShowLyricsKey, false)
 
     val currentView = LocalView.current
 

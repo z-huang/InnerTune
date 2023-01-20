@@ -28,12 +28,12 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
-import com.zionhuang.music.extensions.mutablePreferenceState
-import com.zionhuang.music.models.sortInfo.PlaylistSortType
 import com.zionhuang.music.ui.component.ListItem
 import com.zionhuang.music.ui.component.PlaylistListItem
 import com.zionhuang.music.ui.component.ResizableIconButton
 import com.zionhuang.music.ui.component.TextFieldDialog
+import com.zionhuang.music.utils.rememberEnumPreference
+import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibraryPlaylistsViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -163,9 +163,9 @@ fun LibraryPlaylistsScreen(
 fun PlaylistHeader(
     itemCount: Int,
 ) {
-    val (sortType, onSortTypeChange) = mutablePreferenceState(PLAYLIST_SORT_TYPE, PlaylistSortType.CREATE_DATE)
-    val (sortDescending, onSortDescendingChange) = mutablePreferenceState(PLAYLIST_SORT_DESCENDING, true)
-    val (menuExpanded, onMenuExpandedChange) = remember { mutableStateOf(false) }
+    var sortType by rememberEnumPreference(PlaylistSortTypeKey, PlaylistSortType.CREATE_DATE)
+    var sortDescending by rememberPreference(PlaylistSortDescendingKey, true)
+    var menuExpanded by remember { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -185,14 +185,14 @@ fun PlaylistHeader(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = rememberRipple(bounded = false)
                 ) {
-                    onMenuExpandedChange(!menuExpanded)
+                    menuExpanded = !menuExpanded
                 }
                 .padding(horizontal = 4.dp, vertical = 8.dp)
         )
 
         DropdownMenu(
             expanded = menuExpanded,
-            onDismissRequest = { onMenuExpandedChange(false) },
+            onDismissRequest = { menuExpanded = false },
             modifier = Modifier.widthIn(min = 172.dp)
         ) {
             listOf(
@@ -215,8 +215,8 @@ fun PlaylistHeader(
                         )
                     },
                     onClick = {
-                        onSortTypeChange(type)
-                        onMenuExpandedChange(false)
+                        sortType = type
+                        menuExpanded = false
                     }
                 )
             }
@@ -228,7 +228,7 @@ fun PlaylistHeader(
             modifier = Modifier
                 .size(32.dp)
                 .padding(8.dp),
-            onClick = { onSortDescendingChange(!sortDescending) }
+            onClick = { sortDescending = !sortDescending }
         )
 
         Spacer(Modifier.weight(1f))

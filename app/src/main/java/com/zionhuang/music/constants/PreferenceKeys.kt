@@ -1,57 +1,82 @@
 package com.zionhuang.music.constants
 
-const val DARK_THEME = "DARK_THEME"
-const val DEFAULT_OPEN_TAB = "DEFAULT_OPEN_TAB"
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+
+val DarkModeKey = stringPreferencesKey("darkMode")
+val DefaultOpenTabKey = stringPreferencesKey("defaultOpenTab")
 
 const val SYSTEM_DEFAULT = "SYSTEM_DEFAULT"
-const val CONTENT_LANGUAGE = "CONTENT_LANGUAGE"
-const val CONTENT_COUNTRY = "CONTENT_COUNTRY"
-const val PROXY_ENABLED = "PROXY_ENABLED"
-const val PROXY_URL = "PROXY_URL"
-const val PROXY_TYPE = "PROXY_TYPE"
+val ContentLanguageKey = stringPreferencesKey("contentLanguage")
+val ContentCountryKey = stringPreferencesKey("contentCountry")
+val ProxyEnabledKey = booleanPreferencesKey("proxyEnabled")
+val ProxyUrlKey = stringPreferencesKey("proxyUrl")
+val ProxyTypeKey = stringPreferencesKey("proxyType")
 
-const val AUDIO_QUALITY = "AUDIO_QUALITY"
-const val PERSISTENT_QUEUE = "PERSISTENT_QUEUE"
-const val SKIP_SILENCE = "SKIP_SILENCE"
-const val AUDIO_NORMALIZATION = "AUDIO_NORMALIZATION"
+val AudioQualityKey = stringPreferencesKey("audioQuality")
+val PersistentQueueKey = booleanPreferencesKey("persistentQueue")
+val SkipSilenceKey = booleanPreferencesKey("skipSilence")
+val AudioNormalizationKey = booleanPreferencesKey("audioNormalization")
 
-const val MAX_IMAGE_CACHE_SIZE = "MAX_IMAGE_CACHE_SIZE"
-const val MAX_SONG_CACHE_SIZE = "MAX_SONG_CACHE_SIZE"
+val MaxImageCacheSizeKey = intPreferencesKey("maxImageCacheSize")
+val MaxSongCacheSizeKey = intPreferencesKey("maxSongCacheSize")
 
-const val AUTO_ADD_TO_LIBRARY = "AUTO_ADD_TO_LIBRARY"
-const val AUTO_DOWNLOAD = "AUTO_DOWNLOAD"
-const val EXPAND_ON_PLAY = "EXPAND_ON_PLAY"
-const val NOTIFICATION_MORE_ACTION = "NOTIFICATION_MORE_ACTION"
+val AutoAddToLibraryKey = booleanPreferencesKey("autoAddToLibrary")
+val AutoDownloadKey = booleanPreferencesKey("autoDownload")
+val ExpandOnPlayKey = booleanPreferencesKey("expandOnPlay")
+val NotificationMoreActionKey = booleanPreferencesKey("notificationMoreAction")
 
-const val PAUSE_SEARCH_HISTORY = "PAUSE_SEARCH_HISTORY"
-const val ENABLE_KUGOU = "ENABLE_KUGOU"
+val PauseSearchHistory = booleanPreferencesKey("pauseSearchHistory")
+val EnableKugouKey = booleanPreferencesKey("enableKugou")
 
-const val SONG_SORT_TYPE = "SONG_SORT_TYPE"
-const val SONG_SORT_DESCENDING = "SONG_SORT_DESC"
-const val ARTIST_SORT_TYPE = "ARTIST_SORT_TYPE"
-const val ARTIST_SORT_DESCENDING = "ARTIST_SORT_DESC"
-const val ALBUM_SORT_TYPE = "ALBUM_SORT_TYPE"
-const val ALBUM_SORT_DESCENDING = "ALBUM_SORT_DESC"
-const val PLAYLIST_SORT_TYPE = "PLAYLIST_SORT_TYPE"
-const val PLAYLIST_SORT_DESCENDING = "PLAYLIST_SORT_DESC"
+val SongSortTypeKey = stringPreferencesKey("songSortType")
+val SongSortDescendingKey = booleanPreferencesKey("songSortDescending")
+val ArtistSortTypeKey = stringPreferencesKey("artistSortType")
+val ArtistSortDescendingKey = booleanPreferencesKey("artistSortDescending")
+val AlbumSortTypeKey = stringPreferencesKey("albumSortType")
+val AlbumSortDescendingKey = booleanPreferencesKey("albumSortDescending")
+val PlaylistSortTypeKey = stringPreferencesKey("playlistSortType")
+val PlaylistSortDescendingKey = booleanPreferencesKey("playlistSortDescending")
 
-const val SHOW_LYRICS = "SHOW_LYRICS"
-const val LYRICS_TEXT_POSITION = "LRC_TEXT_POS"
+enum class SongSortType {
+    CREATE_DATE, NAME, ARTIST, PLAY_TIME
+}
 
-const val NAV_TAB_CONFIG = "NAV_TAB_CONFIG"
+enum class ArtistSortType {
+    CREATE_DATE, NAME, SONG_COUNT
+}
 
-const val PLAYER_VOLUME = "PLAYER_VOLUME"
+enum class ArtistSongSortType {
+    CREATE_DATE, NAME, PLAY_TIME
+}
 
-const val SEARCH_SOURCE = "SEARCH_SOURCE"
+enum class AlbumSortType {
+    CREATE_DATE, NAME, ARTIST, YEAR, SONG_COUNT, LENGTH
+}
+
+enum class PlaylistSortType {
+    CREATE_DATE, NAME, SONG_COUNT
+}
+
+val ShowLyricsKey = booleanPreferencesKey("showLyrics")
+val LyricsTextPositionKey = stringPreferencesKey("lyricsTextPosition")
+
+val NavTabConfigKey = stringPreferencesKey("navTabConfig")
+
+val PlayerVolumeKey = floatPreferencesKey("playerVolume")
+
+val SearchSourceKey = stringPreferencesKey("searchSource")
 
 enum class SearchSource {
     LOCAL, ONLINE
 }
 
-const val VISITOR_DATA = "visitor_data"
-const val INNERTUBE_COOKIE = "innertube_cookie"
-const val ACCOUNT_NAME = "account_name"
-const val ACCOUNT_EMAIL = "account_email"
+val VisitorDataKey = stringPreferencesKey("visitorData")
+val InnerTubeCookieKey = stringPreferencesKey("innerTubeCookie")
+val AccountNameKey = stringPreferencesKey("accountName")
+val AccountEmailKey = stringPreferencesKey("accountEmail")
 
 val LanguageCodeToName = mapOf(
     "af" to "Afrikaans",

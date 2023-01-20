@@ -19,13 +19,13 @@ import coil.imageLoader
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.MAX_IMAGE_CACHE_SIZE
-import com.zionhuang.music.constants.MAX_SONG_CACHE_SIZE
-import com.zionhuang.music.extensions.mutablePreferenceState
+import com.zionhuang.music.constants.MaxImageCacheSizeKey
+import com.zionhuang.music.constants.MaxSongCacheSizeKey
 import com.zionhuang.music.ui.component.ListPreference
 import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.PreferenceGroupTitle
 import com.zionhuang.music.ui.utils.formatFileSize
+import com.zionhuang.music.utils.rememberPreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
@@ -56,8 +56,8 @@ fun StorageSettings() {
         }
     }
 
-    val (maxImageCacheSize, onMaxImageCacheSizeChange) = mutablePreferenceState(key = MAX_IMAGE_CACHE_SIZE, defaultValue = 512)
-    val (maxSongCacheSize, onMaxSongCacheSizeChange) = mutablePreferenceState(key = MAX_SONG_CACHE_SIZE, defaultValue = 1024)
+    val (maxImageCacheSize, onMaxImageCacheSizeChange) = rememberPreference(key = MaxImageCacheSizeKey, defaultValue = 512)
+    val (maxSongCacheSize, onMaxSongCacheSizeChange) = rememberPreference(key = MaxSongCacheSizeKey, defaultValue = 1024)
 
     Column(
         Modifier

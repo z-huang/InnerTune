@@ -17,6 +17,7 @@ dependencyResolutionManagement {
             library("activity", "androidx.activity", "activity-compose").version("1.5.1")
             library("navigation", "androidx.navigation", "navigation-compose").version("2.5.3")
             library("hilt-navigation", "androidx.hilt", "hilt-navigation-compose").version("1.0.0")
+            library("datastore", "androidx.datastore", "datastore-preferences").version("1.0.0")
 
             version("compose-compiler", "1.3.2")
             version("compose", "1.3.0")

@@ -16,9 +16,9 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
 import android.util.Pair
 import androidx.core.app.NotificationCompat
-import androidx.core.content.edit
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
+import androidx.datastore.preferences.core.edit
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
 import com.google.android.exoplayer2.PlaybackException.*
@@ -67,7 +67,6 @@ import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.lyrics.LyricsHelper
 import com.zionhuang.music.models.MediaMetadata
-import com.zionhuang.music.models.sortInfo.SongSortType
 import com.zionhuang.music.playback.MusicService.Companion.ALBUM
 import com.zionhuang.music.playback.MusicService.Companion.ARTIST
 import com.zionhuang.music.playback.MusicService.Companion.PLAYLIST
@@ -77,8 +76,7 @@ import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.utils.resize
-import com.zionhuang.music.utils.InfoCache
-import com.zionhuang.music.utils.enumPreference
+import com.zionhuang.music.utils.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -106,8 +104,8 @@ class SongPlayer(
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     val bitmapProvider = BitmapProvider(context)
 
-    private var autoAddSong by context.preference(AUTO_ADD_TO_LIBRARY, true)
-    private var audioQuality by enumPreference(context, AUDIO_QUALITY, AudioQuality.AUTO)
+    private val autoAddSong by preference(context, AutoAddToLibraryKey, true)
+    private val audioQuality by enumPreference(context, AudioQualityKey, AudioQuality.AUTO)
 
     private var currentQueue: Queue = EmptyQueue
     var queueTitle: String? = null
@@ -121,9 +119,7 @@ class SongPlayer(
     }
     var currentSong: Song? = null
 
-    private val showLyrics = context.sharedPreferences.booleanFlow(SHOW_LYRICS, false)
-
-    private val cacheEvictor = when (val cacheSize = context.sharedPreferences.getInt(MAX_SONG_CACHE_SIZE, 1024)) {
+    private val cacheEvictor = when (val cacheSize = context.dataStore[MaxSongCacheSizeKey] ?: 1024) {
         -1 -> NoOpCacheEvictor()
         else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
     }
@@ -144,7 +140,7 @@ class SongPlayer(
         }
 
     private val normalizeFactor = MutableStateFlow(1f)
-    val playerVolume = MutableStateFlow(context.sharedPreferences.getFloat(PLAYER_VOLUME, 1f))
+    val playerVolume = MutableStateFlow(context.dataStore[PlayerVolumeKey]?.coerceIn(0f, 1f) ?: 1f)
 
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
@@ -308,7 +304,7 @@ class SongPlayer(
 
             override fun getCustomActions(player: Player): List<String> {
                 val actions = mutableListOf<String>()
-                if (player.currentMetadata != null && context.sharedPreferences.getBoolean(NOTIFICATION_MORE_ACTION, true)) {
+                if (player.currentMetadata != null && context.dataStore[NotificationMoreActionKey] != false) {
                     actions.add(if (currentSong == null) ACTION_ADD_TO_LIBRARY else ACTION_REMOVE_FROM_LIBRARY)
                     actions.add(if (currentSong?.song?.liked == true) ACTION_UNLIKE else ACTION_LIKE)
                 }
@@ -340,11 +336,9 @@ class SongPlayer(
             }
         }
         scope.launch {
-            combine(playerVolume, normalizeFactor) { playerVolume, normalizeFactor ->
-                playerVolume * normalizeFactor
-            }.debounce(1000).collect {
-                context.sharedPreferences.edit {
-                    putFloat(PLAYER_VOLUME, it)
+            playerVolume.debounce(1000).collect { volume ->
+                context.dataStore.edit { settings ->
+                    settings[PlayerVolumeKey] = volume
                 }
             }
         }
@@ -359,7 +353,10 @@ class SongPlayer(
             }
         }
         scope.launch {
-            combine(currentMediaMetadata.distinctUntilChangedBy { it?.id }, showLyrics) { mediaMetadata, showLyrics ->
+            combine(
+                currentMediaMetadata.distinctUntilChangedBy { it?.id },
+                context.dataStore.data.map { it[ShowLyricsKey] ?: false }.distinctUntilChanged()
+            ) { mediaMetadata, showLyrics ->
                 mediaMetadata to showLyrics
             }.collectLatest { (mediaMetadata, showLyrics) ->
                 if (showLyrics && mediaMetadata != null && database.lyrics(mediaMetadata.id).first() == null) {
@@ -368,12 +365,20 @@ class SongPlayer(
             }
         }
         scope.launch {
-            context.sharedPreferences.booleanFlow(SKIP_SILENCE, true).collectLatest {
-                player.skipSilenceEnabled = it
-            }
+            context.dataStore.data
+                .map { it[SkipSilenceKey] ?: true }
+                .distinctUntilChanged()
+                .collectLatest {
+                    player.skipSilenceEnabled = it
+                }
         }
         scope.launch {
-            combine(currentFormat, context.sharedPreferences.booleanFlow(AUDIO_NORMALIZATION, true)) { format, normalizeAudio ->
+            combine(
+                currentFormat,
+                context.dataStore.data
+                    .map { it[AudioNormalizationKey] ?: true }
+                    .distinctUntilChanged()
+            ) { format, normalizeAudio ->
                 format to normalizeAudio
             }.collectLatest { (format, normalizeAudio) ->
                 normalizeFactor.value = if (normalizeAudio && format?.loudnessDb != null) {
@@ -384,11 +389,14 @@ class SongPlayer(
             }
         }
         scope.launch {
-            context.sharedPreferences.booleanFlow(NOTIFICATION_MORE_ACTION, true).collectLatest {
-                playerNotificationManager.invalidate()
-            }
+            context.dataStore.data
+                .map { it[NotificationMoreActionKey] ?: true }
+                .distinctUntilChanged()
+                .collectLatest {
+                    playerNotificationManager.invalidate()
+                }
         }
-        if (context.sharedPreferences.getBoolean(PERSISTENT_QUEUE, true)) {
+        if (context.dataStore[PersistentQueueKey] != false) {
             runCatching {
                 context.filesDir.resolve(PERSISTENT_QUEUE_FILE).inputStream().use { fis ->
                     ObjectInputStream(fis).use { oos ->
@@ -703,7 +711,7 @@ class SongPlayer(
     }
 
     fun onDestroy() {
-        if (context.sharedPreferences.getBoolean(PERSISTENT_QUEUE, true)) {
+        if (context.dataStore[PersistentQueueKey] != false) {
             saveQueueToDisk()
         }
         mediaSession.apply {

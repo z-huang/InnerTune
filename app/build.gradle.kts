@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.navigation)
     implementation(libs.hilt.navigation)
+    implementation(libs.datastore)
 
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
