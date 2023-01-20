@@ -14,7 +14,6 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
-import android.util.Pair
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -76,7 +75,10 @@ import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.utils.resize
-import com.zionhuang.music.utils.*
+import com.zionhuang.music.utils.dataStore
+import com.zionhuang.music.utils.enumPreference
+import com.zionhuang.music.utils.get
+import com.zionhuang.music.utils.preference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -248,10 +250,6 @@ class SongPlayer(
             }
         )
         setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription(context) }
-        setErrorMessageProvider { e -> // e is ExoPlaybackException
-            val cause = e.cause?.cause as? PlaybackException // what we throw from resolving data source
-            Pair(cause?.errorCode ?: e.errorCode, cause?.message ?: e.message)
-        }
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
             override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) = throw UnsupportedOperationException()
@@ -430,10 +428,6 @@ class SongPlayer(
                 return@runBlocking dataSpec
             }
 
-            InfoCache.getInfo<String>(mediaId)?.let { url ->
-                return@runBlocking dataSpec.withUri(url.toUri())
-            }
-
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
             val playedFormat = database.format(mediaId).firstOrNull()
@@ -486,7 +480,6 @@ class SongPlayer(
                     loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
                 ))
             }
-            InfoCache.putInfo(mediaId, format.url, playerResponse.streamingData!!.expiresInSeconds * 1000L)
             dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     })
