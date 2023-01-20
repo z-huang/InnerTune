@@ -1,7 +1,9 @@
-package com.zionhuang.music.extensions
+package com.zionhuang.music.utils
 
-import android.util.Log
-import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawWithCache
@@ -14,30 +16,9 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.dp
-import com.zionhuang.music.BuildConfig
 import kotlinx.coroutines.delay
 import kotlin.math.min
 
-val Any.TAG: String
-    get() = javaClass.simpleName
-
-fun Any.logd(msg: String) {
-    Log.d(TAG, msg)
-}
-
-class Ref(var value: Int)
-
-// Note the inline function below which ensures that this function is essentially
-// copied at the call site to ensure that its logging only recompositions from the
-// original call site.
-@Composable
-inline fun LogCompositions(tag: String, msg: String) {
-    if (BuildConfig.DEBUG) {
-        val ref = remember { Ref(0) }
-        SideEffect { ref.value++ }
-        Log.d(tag, "Compositions: $msg ${ref.value}")
-    }
-}
 /**
  * A [Modifier] that draws a border around elements that are recomposing. The border increases in
  * size and interpolates from red to green as more recompositions occur before a timeout.

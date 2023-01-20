@@ -93,13 +93,12 @@ dependencies {
     implementation(libs.viewmodel.compose)
 
     implementation(libs.material3)
+    implementation(libs.palette)
     implementation(projects.materialColorUtilities)
 
     implementation(libs.coil)
 
     implementation(libs.shimmer)
-
-    implementation(libs.palette)
 
     implementation(libs.exoplayer)
     implementation(libs.exoplayer.mediasession)
@@ -121,4 +120,6 @@ dependencies {
     implementation(projects.kugou)
 
     coreLibraryDesugaring(libs.desugaring)
+
+    implementation(libs.timber)
 }

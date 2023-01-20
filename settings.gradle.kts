@@ -76,6 +76,8 @@ dependencyResolutionManagement {
             library("desugaring", "com.android.tools", "desugar_jdk_libs").version("1.1.5")
 
             library("junit", "junit", "junit").version("4.13.2")
+
+            library("timber", "com.jakewharton.timber", "timber").version("4.7.1")
         }
     }
 }

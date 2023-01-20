@@ -2,7 +2,6 @@ package com.zionhuang.music
 
 import android.app.Application
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.datastore.preferences.core.edit
@@ -22,6 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.net.Proxy
 import java.util.*
 
@@ -30,6 +30,7 @@ class App : Application(), ImageLoaderFactory {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate() {
         super.onCreate()
+        Timber.plant(Timber.DebugTree())
 
         val locale = Locale.getDefault()
         val languageTag = locale.toLanguageTag().replace("-Hant", "") // replace zh-Hant-* to zh-*
@@ -45,7 +46,6 @@ class App : Application(), ImageLoaderFactory {
         if (languageTag == "zh-TW") {
             KuGou.useTraditionalChinese = true
         }
-        Log.d("App", "${YouTube.locale}")
 
         if (dataStore[ProxyEnabledKey] == true) {
             try {
