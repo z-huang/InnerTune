@@ -99,7 +99,7 @@ fun PlayingIndicatorBox(
                 Icon(
                     painter = painterResource(R.drawable.ic_play),
                     contentDescription = null,
-                    tint = Color.White
+                    tint = color
                 )
             }
         }
