@@ -58,6 +58,7 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_SHUFFLE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_UNLIKE
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.FormatEntity
+import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.Song
@@ -358,7 +359,13 @@ class SongPlayer(
                 mediaMetadata to showLyrics
             }.collectLatest { (mediaMetadata, showLyrics) ->
                 if (showLyrics && mediaMetadata != null && database.lyrics(mediaMetadata.id).first() == null) {
-                    lyricsHelper.loadLyrics(mediaMetadata)
+                    val lyrics = lyricsHelper.getLyrics(mediaMetadata)
+                    database.query {
+                        upsert(LyricsEntity(
+                            id = mediaMetadata.id,
+                            lyrics = lyrics
+                        ))
+                    }
                 }
             }
         }

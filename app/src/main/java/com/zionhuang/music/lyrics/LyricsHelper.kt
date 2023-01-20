@@ -13,7 +13,7 @@ class LyricsHelper @Inject constructor(
     private val lyricsProviders = listOf(KuGouLyricsProvider, YouTubeLyricsProvider)
     private val cache = LruCache<String, List<LyricsResult>>(MAX_CACHE_SIZE)
 
-    suspend fun loadLyrics(mediaMetadata: MediaMetadata): String {
+    suspend fun getLyrics(mediaMetadata: MediaMetadata): String {
         val cached = cache.get(mediaMetadata.id)?.firstOrNull()
         if (cached != null) {
             return cached.lyrics

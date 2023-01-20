@@ -45,7 +45,7 @@ class LyricsMenuViewModel @Inject constructor(
 
     fun refetchLyrics(mediaMetadata: MediaMetadata) {
         viewModelScope.launch {
-            val lyrics = lyricsHelper.loadLyrics(mediaMetadata)
+            val lyrics = lyricsHelper.getLyrics(mediaMetadata)
             database.query {
                 upsert(LyricsEntity(mediaMetadata.id, lyrics))
             }
