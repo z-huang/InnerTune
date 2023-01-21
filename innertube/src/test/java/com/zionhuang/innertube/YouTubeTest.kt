@@ -93,7 +93,7 @@ class YouTubeTest {
         assertTrue(artist.sections.isNotEmpty())
         val album = youTube.browseAlbum("MPREb_oNAdr9eUOfS").getOrThrow()
         assertTrue(album.songs.isNotEmpty())
-        val playlist = youTube.browsePlaylist("VLRDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo").getOrThrow()
+        val playlist = youTube.browsePlaylist("RDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo").getOrThrow()
         assertTrue(playlist.songs.isNotEmpty())
     }
 
@@ -134,9 +134,9 @@ class YouTubeTest {
     @Test
     fun `Browse playlist`() = runBlocking {
         // This playlist has 2900 songs
-        val browseId = "VLPLtAw-mgfCzRwduBTjBHknz5U4_ZM4n6qm"
+        val playlistId = "PLtAw-mgfCzRwduBTjBHknz5U4_ZM4n6qm"
         var count = 5
-        val playlistPage = YouTube.browsePlaylist(browseId).getOrThrow()
+        val playlistPage = YouTube.browsePlaylist(playlistId).getOrThrow()
         var songs = playlistPage.songs
         var continuation = playlistPage.songsContinuation
         while (count > 0) {

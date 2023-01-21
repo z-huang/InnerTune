@@ -181,11 +181,11 @@ object YouTube {
         )
     }
 
-    suspend fun browsePlaylist(browseId: String) = runCatching {
-        val response = innerTube.browse(WEB_REMIX, browseId).body<BrowseResponse>()
+    suspend fun browsePlaylist(playlistId: String) = runCatching {
+        val response = innerTube.browse(WEB_REMIX, "VL$playlistId").body<BrowseResponse>()
         PlaylistPage(
             playlist = PlaylistItem(
-                id = browseId,
+                id = playlistId,
                 title = response.header?.musicDetailHeaderRenderer?.title?.runs?.firstOrNull()?.text!!,
                 author = response.header.musicDetailHeaderRenderer.subtitle.runs?.getOrNull(2)?.let {
                     Artist(

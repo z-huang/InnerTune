@@ -278,7 +278,7 @@ fun LocalAlbumHeader(
 
         Spacer(Modifier.height(12.dp))
 
-        Row {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(
                 onClick = {
                     playerConnection.playQueue(ListQueue(
@@ -299,8 +299,6 @@ fun LocalAlbumHeader(
                     text = stringResource(R.string.btn_play)
                 )
             }
-
-            Spacer(Modifier.width(12.dp))
 
             OutlinedButton(
                 onClick = {
@@ -421,7 +419,7 @@ fun RemoteAlbumHeader(
 
         Spacer(Modifier.height(12.dp))
 
-        Row {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(
                 onClick = {
                     playerConnection.playQueue(ListQueue(
@@ -442,8 +440,6 @@ fun RemoteAlbumHeader(
                     text = stringResource(R.string.btn_play)
                 )
             }
-
-            Spacer(Modifier.width(12.dp))
 
             OutlinedButton(
                 onClick = {

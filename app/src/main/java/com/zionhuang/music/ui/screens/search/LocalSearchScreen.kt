@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.screens
+package com.zionhuang.music.ui.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable

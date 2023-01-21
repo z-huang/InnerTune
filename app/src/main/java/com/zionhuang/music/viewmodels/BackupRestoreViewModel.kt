@@ -40,7 +40,7 @@ class BackupRestoreViewModel @Inject constructor(
                         inputStream.copyTo(outputStream)
                     }
                     database.checkpoint()
-                    FileInputStream(database.delegate.openHelper.writableDatabase.path).use { inputStream ->
+                    FileInputStream(database.openHelper.writableDatabase.path).use { inputStream ->
                         outputStream.putNextEntry(ZipEntry(InternalDatabase.DB_NAME))
                         inputStream.copyTo(outputStream)
                     }
@@ -70,8 +70,8 @@ class BackupRestoreViewModel @Inject constructor(
                             }
                             InternalDatabase.DB_NAME -> {
                                 database.checkpoint()
-                                database.delegate.close()
-                                FileOutputStream(database.delegate.openHelper.writableDatabase.path).use { outputStream ->
+                                database.close()
+                                FileOutputStream(database.openHelper.writableDatabase.path).use { outputStream ->
                                     inputStream.copyTo(outputStream)
                                 }
                             }

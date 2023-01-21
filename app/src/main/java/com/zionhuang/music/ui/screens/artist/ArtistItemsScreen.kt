@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.screens
+package com.zionhuang.music.ui.screens.artist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -137,7 +137,7 @@ fun ArtistItemsScreen(
                                     is SongItem -> playerConnection.playQueue(YouTubeQueue(item.endpoint ?: WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                                     is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
                                     is ArtistItem -> navController.navigate("artist/${item.id}")
-                                    is PlaylistItem -> {}
+                                    is PlaylistItem -> navController.navigate("playlist/${item.id}")
                                 }
                             },
                             onLongClick = {
@@ -271,7 +271,7 @@ fun ArtistItemsScreen(
                                 is SongItem -> playerConnection.playQueue(YouTubeQueue(item.endpoint ?: WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                                 is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
                                 is ArtistItem -> navController.navigate("artist/${item.id}")
-                                is PlaylistItem -> {}
+                                is PlaylistItem -> navController.navigate("playlist/${item.id}")
                             }
                         }
                 )

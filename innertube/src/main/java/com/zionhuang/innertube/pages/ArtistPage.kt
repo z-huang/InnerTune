@@ -109,7 +109,7 @@ data class ArtistPage(
                 renderer.isPlaylist -> {
                     // Playlist from YouTube Music
                     PlaylistItem(
-                        id = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
+                        id = renderer.navigationEndpoint.browseEndpoint?.browseId?.removePrefix("VL") ?: return null,
                         title = renderer.title.runs?.firstOrNull()?.text ?: return null,
                         author = Artist(
                             name = renderer.subtitle.runs?.lastOrNull()?.text ?: return null,

@@ -378,6 +378,9 @@ interface DatabaseDao {
     fun delete(album: AlbumEntity)
 
     @Delete
+    fun delete(playlist: PlaylistEntity)
+
+    @Delete
     fun delete(lyrics: LyricsEntity)
 
     @Delete

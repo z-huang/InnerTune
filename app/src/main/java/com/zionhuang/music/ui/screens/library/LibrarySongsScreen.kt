@@ -53,12 +53,7 @@ fun LibrarySongsScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
-            contentPadding = WindowInsets.systemBars
-                .add(WindowInsets(
-                    top = AppBarHeight,
-                    bottom = NavigationBarHeight + MiniPlayerHeight
-                ))
-                .asPaddingValues()
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item(
                 key = "header",

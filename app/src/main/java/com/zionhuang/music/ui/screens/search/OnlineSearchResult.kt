@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.screens
+package com.zionhuang.music.ui.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -167,7 +167,7 @@ fun OnlineSearchResult(
                         is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                         is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
                         is ArtistItem -> navController.navigate("artist/${item.id}")
-                        is PlaylistItem -> {}
+                        is PlaylistItem -> navController.navigate("playlist/${item.id}")
                     }
                 }
                 .animateItemPlacement()

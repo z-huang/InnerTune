@@ -77,7 +77,7 @@ data class SearchSummaryPage(
                 }
                 renderer.isPlaylist -> {
                     PlaylistItem(
-                        id = renderer.navigationEndpoint?.browseEndpoint?.browseId ?: return null,
+                        id = renderer.navigationEndpoint?.browseEndpoint?.browseId?.removePrefix("VL") ?: return null,
                         title = renderer.flexColumns.firstOrNull()
                             ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs
                             ?.firstOrNull()?.text ?: return null,

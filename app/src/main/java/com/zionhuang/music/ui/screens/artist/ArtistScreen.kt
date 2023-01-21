@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.screens
+package com.zionhuang.music.ui.screens.artist
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -307,7 +307,7 @@ fun ArtistScreen(
                                                         is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                                                         is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
                                                         is ArtistItem -> navController.navigate("artist/${item.id}")
-                                                        is PlaylistItem -> {}
+                                                        is PlaylistItem -> navController.navigate("playlist/${item.id}")
                                                     }
                                                 },
                                                 onLongClick = {

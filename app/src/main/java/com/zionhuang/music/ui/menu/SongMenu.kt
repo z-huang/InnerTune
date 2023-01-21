@@ -187,7 +187,7 @@ fun SongMenu(
             IconButton(
                 onClick = {
                     database.query {
-                        insert(song.song.toggleLike())
+                        update(song.song.toggleLike())
                     }
                 }
             ) {

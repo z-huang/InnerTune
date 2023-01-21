@@ -6,6 +6,7 @@ import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
@@ -15,8 +16,11 @@ import java.time.ZoneOffset
 import java.util.*
 
 class MusicDatabase(
-    val delegate: InternalDatabase,
+    private val delegate: InternalDatabase,
 ) : DatabaseDao by delegate.dao {
+    val openHelper: SupportSQLiteOpenHelper
+        get() = delegate.openHelper
+
     fun query(block: MusicDatabase.() -> Unit) = with(delegate) {
         queryExecutor.execute {
             block(this@MusicDatabase)
@@ -34,6 +38,8 @@ class MusicDatabase(
     fun checkpoint() {
         delegate.query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)"))
     }
+
+    fun close() = delegate.close()
 }
 
 @Database(

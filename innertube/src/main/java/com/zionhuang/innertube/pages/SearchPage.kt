@@ -74,16 +74,16 @@ object SearchPage {
             }
             renderer.isPlaylist -> {
                 PlaylistItem(
-                    id = renderer.navigationEndpoint?.browseEndpoint?.browseId ?: return null,
+                    id = renderer.navigationEndpoint?.browseEndpoint?.browseId?.removePrefix("VL") ?: return null,
                     title = renderer.flexColumns.firstOrNull()
                         ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs
                         ?.firstOrNull()?.text ?: return null,
                     author = secondaryLine.firstOrNull()?.firstOrNull()?.let {
-                            Artist(
-                                name = it.text,
-                                id = it.navigationEndpoint?.browseEndpoint?.browseId
-                            )
-                        } ?: return null,
+                        Artist(
+                            name = it.text,
+                            id = it.navigationEndpoint?.browseEndpoint?.browseId
+                        )
+                    } ?: return null,
                     songCountText = renderer.flexColumns.getOrNull(1)
                         ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs
                         ?.lastOrNull()?.text ?: return null,

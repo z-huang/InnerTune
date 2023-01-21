@@ -54,10 +54,17 @@ import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.component.shimmer.ShimmerTheme
 import com.zionhuang.music.ui.player.BottomSheetPlayer
 import com.zionhuang.music.ui.screens.*
+import com.zionhuang.music.ui.screens.artist.ArtistItemsScreen
+import com.zionhuang.music.ui.screens.artist.ArtistScreen
 import com.zionhuang.music.ui.screens.library.LibraryAlbumsScreen
 import com.zionhuang.music.ui.screens.library.LibraryArtistsScreen
 import com.zionhuang.music.ui.screens.library.LibraryPlaylistsScreen
 import com.zionhuang.music.ui.screens.library.LibrarySongsScreen
+import com.zionhuang.music.ui.screens.playlist.LocalPlaylistScreen
+import com.zionhuang.music.ui.screens.playlist.OnlinePlaylistScreen
+import com.zionhuang.music.ui.screens.search.LocalSearchScreen
+import com.zionhuang.music.ui.screens.search.OnlineSearchResult
+import com.zionhuang.music.ui.screens.search.OnlineSearchScreen
 import com.zionhuang.music.ui.screens.settings.*
 import com.zionhuang.music.ui.theme.*
 import com.zionhuang.music.utils.dataStore
@@ -344,8 +351,19 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 )
-                            ) {
-                                LocalPlaylistScreen()
+                            ) { backStackEntry ->
+                                val playlistId = backStackEntry.arguments?.getString("playlistId")!!
+                                if (playlistId.startsWith("LP")) {
+                                    LocalPlaylistScreen(
+                                        appBarConfig = appBarConfig,
+                                        navController = navController
+                                    )
+                                } else {
+                                    OnlinePlaylistScreen(
+                                        appBarConfig = appBarConfig,
+                                        navController = navController
+                                    )
+                                }
                             }
                             composable(
                                 route = "search/{query}",
