@@ -141,30 +141,6 @@ inline fun GridItem(
 }
 
 @Composable
-inline fun GridItem(
-    modifier: Modifier = Modifier,
-    title: String,
-    subtitle: String,
-    crossinline badges: @Composable RowScope.() -> Unit = {},
-    thumbnailContent: @Composable () -> Unit,
-) = GridItem(
-    modifier = modifier,
-    title = title,
-    subtitle = {
-        badges()
-
-        Text(
-            text = subtitle,
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = 12.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    },
-    thumbnailContent = thumbnailContent,
-)
-
-@Composable
 inline fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
@@ -177,7 +153,6 @@ inline fun SongListItem(
     title = song.song.title,
     subtitle = joinByBullet(
         song.artists.joinToString(),
-        song.album?.title,
         makeTimeString(song.song.duration * 1000L)
     ),
     badges = {
