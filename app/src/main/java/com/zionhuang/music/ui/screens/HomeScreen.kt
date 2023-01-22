@@ -36,6 +36,7 @@ import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.utils.SnapLayoutInfoProvider
 import com.zionhuang.music.viewmodels.HomeViewModel
 import com.zionhuang.music.viewmodels.MainViewModel
+import kotlin.random.Random
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -248,6 +249,31 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(LocalPlayerAwareWindowInsets.current
+                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                    .asPaddingValues())
+                .padding(16.dp),
+            onClick = {
+                if (newReleaseAlbums.isEmpty() || Random.nextBoolean()) {
+                    val song = mostPlayedSongs.random()
+                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
+                } else {
+                    val album = newReleaseAlbums.random()
+                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(
+                        playlistId = album.playlistId,
+                        params = "wAEB"
+                    )))
+                }
+            }) {
+            Icon(
+                painter = painterResource(R.drawable.ic_casino),
+                contentDescription = null
+            )
         }
     }
 }
