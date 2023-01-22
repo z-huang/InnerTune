@@ -146,7 +146,6 @@ fun SongHeader(
                 SongSortType.CREATE_DATE -> R.string.sort_by_create_date
                 SongSortType.NAME -> R.string.sort_by_name
                 SongSortType.ARTIST -> R.string.sort_by_artist
-                SongSortType.PLAY_TIME -> R.string.sort_by_play_time
             }),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.labelLarge,
@@ -168,8 +167,7 @@ fun SongHeader(
             listOf(
                 SongSortType.CREATE_DATE to R.string.sort_by_create_date,
                 SongSortType.NAME to R.string.sort_by_name,
-                SongSortType.ARTIST to R.string.sort_by_artist,
-                SongSortType.PLAY_TIME to R.string.sort_by_play_time
+                SongSortType.ARTIST to R.string.sort_by_artist
             ).forEach { (type, text) ->
                 DropdownMenuItem(
                     text = {

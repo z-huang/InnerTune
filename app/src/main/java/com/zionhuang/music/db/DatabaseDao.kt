@@ -41,10 +41,6 @@ interface DatabaseDao {
     @Query("SELECT * FROM song ORDER BY title DESC")
     fun songsByNameDesc(): Flow<List<Song>>
 
-    @Transaction
-    @Query("SELECT * FROM song ORDER BY totalPlayTime DESC")
-    fun songsByPlayTimeDesc(): Flow<List<Song>>
-
     fun songs(sortType: SongSortType, descending: Boolean) =
         when (sortType) {
             SongSortType.CREATE_DATE -> songsByCreateDateDesc()
@@ -54,13 +50,16 @@ interface DatabaseDao {
                     song.artists.joinToString(separator = "") { it.name }
                 })
             }
-            SongSortType.PLAY_TIME -> songsByPlayTimeDesc()
         }.map { it.reversed(!descending) }
 
     fun likedSongs(sortType: SongSortType, descending: Boolean) =
         songs(sortType, descending).map { songs ->
             songs.filter { it.song.liked }
         }
+
+    @Transaction
+    @Query("SELECT * FROM song ORDER BY totalPlayTime DESC LIMIT 20")
+    fun mostPlayedSongs(): Flow<List<Song>>
 
     @Query("SELECT COUNT(1) FROM song WHERE liked")
     fun likedSongsCount(): Flow<Int>

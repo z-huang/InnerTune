@@ -313,4 +313,5 @@
 
     <string name="playlist_empty">The playlist is empty</string>
     <string name="new_release_albums">New release albums</string>
+    <string name="most_played_songs">Most played songs</string>
 </resources>
