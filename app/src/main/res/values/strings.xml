@@ -316,6 +316,7 @@
     <string name="most_played_songs">Most played songs</string>
     <string name="sleep_timer">Sleep timer</string>
     <string name="end_of_song">End of song</string>
+    <string name="clear_song_cache">Clear song cache</string>
 
     <plurals name="minute">
         <item quantity="one">1 minute</item>

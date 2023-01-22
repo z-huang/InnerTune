@@ -26,8 +26,10 @@ import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.PreferenceGroupTitle
 import com.zionhuang.music.ui.utils.formatFileSize
 import com.zionhuang.music.utils.rememberPreference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -35,6 +37,8 @@ fun StorageSettings() {
     val context = LocalContext.current
     val imageDiskCache = context.imageLoader.diskCache ?: return
     val playerCache = LocalPlayerConnection.current?.songPlayer?.cache ?: return
+
+    val coroutineScope = rememberCoroutineScope()
 
     var imageCacheSize by remember {
         mutableStateOf(imageDiskCache.size)
@@ -92,7 +96,9 @@ fun StorageSettings() {
         PreferenceEntry(
             title = stringResource(R.string.pref_clear_image_cache_title),
             onClick = {
-                imageDiskCache.clear()
+                coroutineScope.launch(Dispatchers.IO) {
+                    imageDiskCache.clear()
+                }
             },
         )
 
@@ -129,6 +135,17 @@ fun StorageSettings() {
                 if (it == -1) stringResource(R.string.unlimited) else formatFileSize(it * 1024 * 1024L)
             },
             onValueSelected = onMaxSongCacheSizeChange
+        )
+
+        PreferenceEntry(
+            title = stringResource(R.string.clear_song_cache),
+            onClick = {
+                coroutineScope.launch(Dispatchers.IO) {
+                    playerCache.keys.forEach { key ->
+                        playerCache.removeResource(key)
+                    }
+                }
+            },
         )
     }
 }
