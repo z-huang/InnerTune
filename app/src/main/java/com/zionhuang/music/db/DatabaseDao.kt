@@ -354,7 +354,7 @@ interface DatabaseDao {
     fun update(artist: ArtistEntity, artistPage: ArtistPage) {
         update(artist.copy(
             name = artistPage.artist.title,
-            thumbnailUrl = artistPage.artist.thumbnail.resize(400, 400),
+            thumbnailUrl = artistPage.artist.thumbnail.resize(544, 544),
             lastUpdateTime = LocalDateTime.now()
         ))
     }

@@ -162,7 +162,7 @@ fun OnlineSearchScreen(
                                 onDismiss()
                             }
                             is AlbumItem -> {
-                                navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                                navController.navigate("album/${item.id}")
                                 onDismiss()
                             }
                             is ArtistItem -> {

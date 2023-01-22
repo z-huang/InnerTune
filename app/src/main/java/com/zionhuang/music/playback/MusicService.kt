@@ -114,7 +114,7 @@ class MusicService : MediaBrowserServiceCompat() {
             SONG -> {
                 result.detach()
                 result.sendResult(database.songsByCreateDateDesc().first().map {
-                    MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                    MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(), FLAG_PLAYABLE)
                 }.toMutableList())
             }
             ARTIST -> {
@@ -144,13 +144,13 @@ class MusicService : MediaBrowserServiceCompat() {
                 parentId.startsWith("$ARTIST/") -> {
                     result.detach()
                     result.sendResult(database.artistSongsByCreateDateDesc(parentId.removePrefix("$ARTIST/")).first().map {
-                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$ALBUM/") -> {
                     result.detach()
                     result.sendResult(database.albumSongs(parentId.removePrefix("$ALBUM/")).first().map {
-                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 parentId.startsWith("$PLAYLIST/") -> {
@@ -160,7 +160,7 @@ class MusicService : MediaBrowserServiceCompat() {
                         DOWNLOADED_PLAYLIST_ID -> database.downloadedSongs(SongSortType.CREATE_DATE, true)
                         else -> database.playlistSongs(playlistId)
                     }.first().map {
-                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(this@MusicService), FLAG_PLAYABLE)
+                        MediaBrowserCompat.MediaItem(it.toMediaMetadata().copy(id = "$parentId/${it.id}").toMediaDescription(), FLAG_PLAYABLE)
                     }.toMutableList())
                 }
                 else -> {

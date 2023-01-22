@@ -165,7 +165,7 @@ fun OnlineSearchResult(
                 .clickable {
                     when (item) {
                         is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
-                        is AlbumItem -> navController.navigate("album/${item.id}?playlistId=${item.playlistId}")
+                        is AlbumItem -> navController.navigate("album/${item.id}")
                         is ArtistItem -> navController.navigate("artist/${item.id}")
                         is PlaylistItem -> navController.navigate("playlist/${item.id}")
                     }

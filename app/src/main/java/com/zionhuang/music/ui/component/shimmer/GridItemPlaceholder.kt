@@ -16,13 +16,26 @@ import com.zionhuang.music.constants.ThumbnailCornerRadius
 fun GridItemPlaceHolder(
     modifier: Modifier = Modifier,
     thumbnailShape: Shape = RoundedCornerShape(ThumbnailCornerRadius),
+    fillMaxWidth: Boolean = false,
 ) {
     Column(
-        modifier = modifier.padding(12.dp)
+        modifier = if (fillMaxWidth) {
+            modifier
+                .padding(12.dp)
+                .fillMaxWidth()
+        } else {
+            modifier
+                .padding(12.dp)
+                .width(GridThumbnailHeight)
+        }
     ) {
         Spacer(
-            modifier = Modifier
-                .size(GridThumbnailHeight)
+            modifier = if (fillMaxWidth) {
+                Modifier.fillMaxWidth()
+            } else {
+                Modifier.height(GridThumbnailHeight)
+            }
+                .aspectRatio(1f)
                 .clip(thumbnailShape)
                 .background(MaterialTheme.colorScheme.onSurface)
         )

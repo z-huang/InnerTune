@@ -228,7 +228,8 @@ fun LocalAlbumHeader(
                 val annotatedString = buildAnnotatedString {
                     withStyle(
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            color = MaterialTheme.colorScheme.onBackground
                         ).toSpanStyle()
                     ) {
                         albumWithSongs.artists.fastForEachIndexed { index, artist ->
@@ -361,7 +362,8 @@ fun RemoteAlbumHeader(
                 val annotatedString = buildAnnotatedString {
                     withStyle(
                         style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            color = MaterialTheme.colorScheme.onBackground
                         ).toSpanStyle()
                     ) {
                         albumPage.album.artists?.fastForEachIndexed { index, artist ->

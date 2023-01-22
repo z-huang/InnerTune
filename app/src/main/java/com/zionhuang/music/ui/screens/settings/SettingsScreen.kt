@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.screens
+package com.zionhuang.music.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.asPaddingValues

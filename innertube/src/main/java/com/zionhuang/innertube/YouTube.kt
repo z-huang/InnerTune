@@ -214,6 +214,24 @@ object YouTube {
         )
     }
 
+    suspend fun newReleaseAlbumsPreview(): Result<List<AlbumItem>> = runCatching {
+        val response = innerTube.browse(WEB_REMIX, browseId = "FEmusic_explore").body<BrowseResponse>()
+        response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.getOrNull(1)?.musicCarouselShelfRenderer?.contents?.mapNotNull {
+            it.musicTwoRowItemRenderer?.let { renderer ->
+                NewReleaseAlbumPage.fromMusicTwoRowItemRenderer(renderer)
+            }
+        }.orEmpty()
+    }
+
+    suspend fun newReleaseAlbums(): Result<List<AlbumItem>> = runCatching {
+        val response = innerTube.browse(WEB_REMIX, browseId = "FEmusic_new_releases_albums").body<BrowseResponse>()
+        response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()?.gridRenderer?.items?.mapNotNull {
+            it.musicTwoRowItemRenderer?.let { renderer ->
+                NewReleaseAlbumPage.fromMusicTwoRowItemRenderer(renderer)
+            }
+        }.orEmpty()
+    }
+
     suspend fun browsePlaylistContinuation(continuation: String) = runCatching {
         val response = innerTube.browse(WEB_REMIX, continuation = continuation).body<BrowseResponse>()
         PlaylistContinuationPage(
@@ -299,10 +317,7 @@ object YouTube {
         }
     }
 
-    const val HOME_BROWSE_ID = "FEmusic_home"
-    const val EXPLORE_BROWSE_ID = "FEmusic_explore"
-
-    const val MAX_GET_QUEUE_SIZE = 1000
+    private const val MAX_GET_QUEUE_SIZE = 1000
 
     const val DEFAULT_VISITOR_DATA = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
 }

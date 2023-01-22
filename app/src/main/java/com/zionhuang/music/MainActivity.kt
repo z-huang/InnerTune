@@ -300,6 +300,9 @@ class MainActivity : ComponentActivity() {
                             composable(Screen.Playlists.route) {
                                 LibraryPlaylistsScreen(navController)
                             }
+                            composable("new_release") {
+                                NewReleaseScreen(navController)
+                            }
                             composable(
                                 route = "album/{albumId}?playlistId={playlistId}",
                                 arguments = listOf(

@@ -91,7 +91,6 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.math.min
 import kotlin.math.pow
-import kotlin.math.roundToInt
 
 /**
  * A wrapper around [ExoPlayer]
@@ -250,7 +249,7 @@ class SongPlayer(
                     ).build()
             }
         )
-        setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription(context) }
+        setQueueNavigator { player, windowIndex -> player.getMediaItemAt(windowIndex).metadata!!.toMediaDescription() }
         setQueueEditor(object : MediaSessionConnector.QueueEditor {
             override fun onCommand(player: Player, command: String, extras: Bundle?, cb: ResultReceiver?) = false
             override fun onAddQueueItem(player: Player, description: MediaDescriptionCompat) = throw UnsupportedOperationException()
@@ -273,7 +272,7 @@ class SongPlayer(
 
             override fun getCurrentLargeIcon(player: Player, callback: PlayerNotificationManager.BitmapCallback): Bitmap? =
                 player.currentMetadata?.thumbnailUrl?.let { url ->
-                    bitmapProvider.load(url.resize((512 * context.resources.displayMetrics.density).roundToInt(), null)) {
+                    bitmapProvider.load(url.resize(544, 544)) {
                         callback.onBitmap(it)
                     }
                 }

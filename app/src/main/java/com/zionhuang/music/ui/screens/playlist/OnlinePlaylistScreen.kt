@@ -119,7 +119,8 @@ fun OnlinePlaylistScreen(
                                 val annotatedString = buildAnnotatedString {
                                     withStyle(
                                         style = MaterialTheme.typography.titleMedium.copy(
-                                            fontWeight = FontWeight.Normal
+                                            fontWeight = FontWeight.Normal,
+                                            color = MaterialTheme.colorScheme.onBackground
                                         ).toSpanStyle()
                                     ) {
                                         if (playlist.author.id != null) {

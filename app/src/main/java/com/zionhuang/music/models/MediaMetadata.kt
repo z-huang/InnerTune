@@ -1,6 +1,5 @@
 package com.zionhuang.music.models
 
-import android.content.Context
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat.*
 import androidx.compose.runtime.Immutable
@@ -9,7 +8,6 @@ import androidx.core.os.bundleOf
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.ui.utils.resize
-import kotlin.math.roundToInt
 
 @Immutable
 data class MediaMetadata(
@@ -30,12 +28,12 @@ data class MediaMetadata(
         val title: String,
     )
 
-    fun toMediaDescription(context: Context): MediaDescriptionCompat = builder
+    fun toMediaDescription(): MediaDescriptionCompat = builder
         .setMediaId(id)
         .setTitle(title)
         .setSubtitle(artists.joinToString { it.name })
         .setDescription(artists.joinToString { it.name })
-        .setIconUri(thumbnailUrl?.resize((512 * context.resources.displayMetrics.density).roundToInt(), null)?.toUri())
+        .setIconUri(thumbnailUrl?.resize(544, 544)?.toUri())
         .setExtras(bundleOf(
             METADATA_KEY_DURATION to duration * 1000L,
             METADATA_KEY_ARTIST to artists.joinToString { it.name },
@@ -91,7 +89,7 @@ fun SongItem.toMediaMetadata() = MediaMetadata(
         )
     },
     duration = duration ?: -1,
-    thumbnailUrl = thumbnail,
+    thumbnailUrl = thumbnail.resize(544, 544),
     album = album?.let {
         MediaMetadata.Album(
             id = it.id,
