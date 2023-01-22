@@ -6,6 +6,8 @@ import android.text.format.Formatter
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -42,11 +46,13 @@ import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.ui.component.*
-import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberPreference
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlin.math.roundToInt
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun Queue(
     state: BottomSheetState,
@@ -72,6 +78,84 @@ fun Queue(
     val currentFormat by playerConnection.currentFormat.collectAsState(initial = null)
 
     var showLyrics by rememberPreference(ShowLyricsKey, defaultValue = false)
+
+    val sleepTimerEnabled = remember(playerConnection.songPlayer.sleepTimerTriggerTime, playerConnection.songPlayer.pauseWhenSongEnd) {
+        playerConnection.songPlayer.sleepTimerTriggerTime != -1L || playerConnection.songPlayer.pauseWhenSongEnd
+    }
+
+    var sleepTimerTimeLeft by remember {
+        mutableStateOf(0L)
+    }
+
+    LaunchedEffect(sleepTimerEnabled) {
+        if (sleepTimerEnabled) {
+            while (isActive) {
+                sleepTimerTimeLeft = if (playerConnection.songPlayer.pauseWhenSongEnd) {
+                    playerConnection.player.duration - playerConnection.player.currentPosition
+                } else {
+                    playerConnection.songPlayer.sleepTimerTriggerTime - System.currentTimeMillis()
+                }
+                delay(1000L)
+            }
+        }
+    }
+
+    var showSleepTimerDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var sleepTimerValue by remember {
+        mutableStateOf(30f)
+    }
+    if (showSleepTimerDialog) {
+        AlertDialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            onDismissRequest = { showSleepTimerDialog = false },
+            icon = { Icon(painter = painterResource(R.drawable.ic_bedtime), contentDescription = null) },
+            title = { Text(stringResource(R.string.sleep_timer)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showSleepTimerDialog = false
+                        playerConnection.songPlayer.setSleepTimer(sleepTimerValue.roundToInt())
+                    }
+                ) {
+                    Text(stringResource(android.R.string.ok))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showSleepTimerDialog = false }
+                ) {
+                    Text(stringResource(android.R.string.cancel))
+                }
+            },
+            text = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = pluralStringResource(R.plurals.minute, sleepTimerValue.roundToInt(), sleepTimerValue.roundToInt()),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
+                    Slider(
+                        value = sleepTimerValue,
+                        onValueChange = { sleepTimerValue = it },
+                        valueRange = 5f..120f,
+                        steps = (120 - 5) / 5 - 1,
+                    )
+
+                    OutlinedButton(
+                        onClick = {
+                            showSleepTimerDialog = false
+                            playerConnection.songPlayer.setSleepTimer(-1)
+                        }
+                    ) {
+                        Text(stringResource(R.string.end_of_song))
+                    }
+                }
+            }
+        )
+    }
 
     var showDetailsDialog by rememberSaveable {
         mutableStateOf(false)
@@ -164,6 +248,27 @@ fun Queue(
                         modifier = Modifier.alpha(if (showLyrics) 1f else 0.5f)
                     )
                 }
+                AnimatedContent(
+                    targetState = sleepTimerEnabled
+                ) { sleepTimerEnabled ->
+                    if (sleepTimerEnabled) {
+                        Text(
+                            text = makeTimeString(sleepTimerTimeLeft),
+                            style = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(50))
+                                .clickable(onClick = playerConnection.songPlayer::clearSleepTimer)
+                                .padding(8.dp)
+                        )
+                    } else {
+                        IconButton(onClick = { showSleepTimerDialog = true }) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_bedtime),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
                 IconButton(onClick = playerConnection::toggleLibrary) {
                     Icon(
                         painter = painterResource(if (currentSong != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
@@ -237,23 +342,31 @@ fun Queue(
                     .asPaddingValues())
         ) {
             Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .height(ListItemHeight)
-                    .padding(12.dp)
+                    .padding(horizontal = 12.dp, vertical = 12.dp)
             ) {
                 Text(
                     text = queueTitle.orEmpty(),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
-                Text(
-                    text = joinByBullet(
-                        makeTimeString(queueLength * 1000L),
-                        pluralStringResource(R.plurals.song_count, queueItems.size, queueItems.size)
-                    ),
-                    style = MaterialTheme.typography.bodyMedium
-                )
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = pluralStringResource(R.plurals.song_count, queueItems.size, queueItems.size),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Text(
+                        text = makeTimeString(queueLength * 1000L),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         }
 

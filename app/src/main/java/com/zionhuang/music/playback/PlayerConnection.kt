@@ -9,7 +9,6 @@ import com.zionhuang.music.extensions.currentMetadata
 import com.zionhuang.music.extensions.getCurrentQueueIndex
 import com.zionhuang.music.extensions.getQueueWindows
 import com.zionhuang.music.extensions.metadata
-import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.queues.Queue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,8 +24,8 @@ class PlayerConnection(
     val player = binder.player
 
     val playbackState = MutableStateFlow(STATE_IDLE)
-    val playWhenReady = MutableStateFlow(false)
-    val mediaMetadata = MutableStateFlow<MediaMetadata?>(null)
+    val playWhenReady = MutableStateFlow(player.playWhenReady)
+    val mediaMetadata = MutableStateFlow(player.currentMetadata)
     val currentSong = mediaMetadata.flatMapLatest {
         database.song(it?.id)
     }

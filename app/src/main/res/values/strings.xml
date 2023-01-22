@@ -314,4 +314,11 @@
     <string name="playlist_empty">The playlist is empty</string>
     <string name="new_release_albums">New release albums</string>
     <string name="most_played_songs">Most played songs</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="end_of_song">End of song</string>
+
+    <plurals name="minute">
+        <item quantity="one">1 minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
 </resources>

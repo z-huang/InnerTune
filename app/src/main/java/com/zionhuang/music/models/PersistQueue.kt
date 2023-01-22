@@ -1,6 +1,5 @@
-package com.zionhuang.music.playback
+package com.zionhuang.music.models
 
-import com.zionhuang.music.models.MediaMetadata
 import java.io.Serializable
 
 data class PersistQueue(

@@ -11,7 +11,6 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_BROWSABLE
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
-import android.support.v4.media.session.MediaSessionCompat
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.net.toUri
@@ -87,9 +86,6 @@ class MusicService : MediaBrowserServiceCompat() {
     }
 
     inner class MusicBinder : Binder() {
-        val sessionToken: MediaSessionCompat.Token
-            get() = songPlayer.mediaSession.sessionToken
-
         val player: ExoPlayer
             get() = this@MusicService.songPlayer.player
 

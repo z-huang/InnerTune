@@ -14,6 +14,9 @@ import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -67,6 +70,7 @@ import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.lyrics.LyricsHelper
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.models.PersistQueue
 import com.zionhuang.music.playback.MusicService.Companion.ALBUM
 import com.zionhuang.music.playback.MusicService.Companion.ARTIST
 import com.zionhuang.music.playback.MusicService.Companion.PLAYLIST
@@ -91,10 +95,8 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.time.Duration.Companion.minutes
 
-/**
- * A wrapper around [ExoPlayer]
- */
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class SongPlayer(
     private val context: Context,
@@ -143,6 +145,9 @@ class SongPlayer(
 
     private val normalizeFactor = MutableStateFlow(1f)
     val playerVolume = MutableStateFlow(context.dataStore[PlayerVolumeKey]?.coerceIn(0f, 1f) ?: 1f)
+
+    var sleepTimerTriggerTime by mutableStateOf(-1L)
+    var pauseWhenSongEnd by mutableStateOf(false)
 
     val mediaSession = MediaSessionCompat(context, context.getString(R.string.app_name)).apply {
         isActive = true
@@ -592,6 +597,24 @@ class SongPlayer(
         }
     }
 
+    fun setSleepTimer(minute: Int) {
+        if (minute == -1) {
+            pauseWhenSongEnd = true
+        } else {
+            sleepTimerTriggerTime = System.currentTimeMillis() + minute.minutes.inWholeMilliseconds
+            scope.launch {
+                delay(minute.minutes)
+                player.pause()
+                sleepTimerTriggerTime = -1L
+            }
+        }
+    }
+
+    fun clearSleepTimer() {
+        pauseWhenSongEnd = false
+        sleepTimerTriggerTime = -1L
+    }
+
     private fun openAudioEffectSession() {
         context.sendBroadcast(
             Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION).apply {
@@ -630,6 +653,10 @@ class SongPlayer(
             bitmapProvider.currentBitmap = null
             bitmapProvider.onBitmapChanged(null)
         }
+        if (pauseWhenSongEnd) {
+            pauseWhenSongEnd = false
+            player.pause()
+        }
     }
 
     override fun onPositionDiscontinuity(oldPosition: PositionInfo, newPosition: PositionInfo, @DiscontinuityReason reason: Int) {
@@ -646,9 +673,15 @@ class SongPlayer(
             player.shuffleModeEnabled = false
             mediaSession.setQueueTitle("")
         }
-        if (playbackState == STATE_ENDED && autoAddSong) {
-            player.currentMetadata?.let {
-                addToLibrary(it)
+        if (playbackState == STATE_ENDED) {
+            if (autoAddSong) {
+                player.currentMetadata?.let {
+                    addToLibrary(it)
+                }
+            }
+            if (pauseWhenSongEnd) {
+                pauseWhenSongEnd = false
+                player.pause()
             }
         }
     }
