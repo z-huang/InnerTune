@@ -230,6 +230,8 @@
     </plurals>
     <plurals name="n_selected">
         <item quantity="one">%d вибрано</item>
+        <item quantity="few">%d вибрано</item>
+        <item quantity="many">%d вибрано</item>
         <item quantity="other">%d вибрано</item>
     </plurals>
     <string name="snackbar_undo">Скасувати</string>
