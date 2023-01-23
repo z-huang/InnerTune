@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import com.zionhuang.music.BuildConfig
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.ui.component.PreferenceEntry
@@ -24,7 +25,7 @@ fun AboutScreen() {
     ) {
         PreferenceEntry(
             title = stringResource(R.string.pref_app_version_title),
-            description = stringResource(R.string.app_name),
+            description = BuildConfig.VERSION_NAME,
             icon = R.drawable.ic_info,
             onClick = { }
         )

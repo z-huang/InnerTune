@@ -146,6 +146,7 @@ class SongPlayer(
     private val normalizeFactor = MutableStateFlow(1f)
     val playerVolume = MutableStateFlow(context.dataStore[PlayerVolumeKey]?.coerceIn(0f, 1f) ?: 1f)
 
+    var sleepTimerJob: Job? = null
     var sleepTimerTriggerTime by mutableStateOf(-1L)
     var pauseWhenSongEnd by mutableStateOf(false)
 
@@ -598,11 +599,13 @@ class SongPlayer(
     }
 
     fun setSleepTimer(minute: Int) {
+        sleepTimerJob?.cancel()
+        sleepTimerJob = null
         if (minute == -1) {
             pauseWhenSongEnd = true
         } else {
             sleepTimerTriggerTime = System.currentTimeMillis() + minute.minutes.inWholeMilliseconds
-            scope.launch {
+            sleepTimerJob = scope.launch {
                 delay(minute.minutes)
                 player.pause()
                 sleepTimerTriggerTime = -1L
@@ -611,6 +614,8 @@ class SongPlayer(
     }
 
     fun clearSleepTimer() {
+        sleepTimerJob?.cancel()
+        sleepTimerJob = null
         pauseWhenSongEnd = false
         sleepTimerTriggerTime = -1L
     }

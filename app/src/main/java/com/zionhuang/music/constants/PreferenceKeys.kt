@@ -28,7 +28,7 @@ val AutoDownloadKey = booleanPreferencesKey("autoDownload")
 val ExpandOnPlayKey = booleanPreferencesKey("expandOnPlay")
 val NotificationMoreActionKey = booleanPreferencesKey("notificationMoreAction")
 
-val PauseSearchHistory = booleanPreferencesKey("pauseSearchHistory")
+val PauseSearchHistoryKey = booleanPreferencesKey("pauseSearchHistory")
 val EnableKugouKey = booleanPreferencesKey("enableKugou")
 
 val SongSortTypeKey = stringPreferencesKey("songSortType")

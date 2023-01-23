@@ -3,7 +3,6 @@ package com.zionhuang.music.ui.screens
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -63,6 +62,7 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         val horizontalLazyGridItemWidthFactor = if (maxWidth * 0.475f >= 320.dp) 0.475f else 0.9f
+        val horizontalLazyGridItemWidth = maxWidth * horizontalLazyGridItemWidthFactor
         val snapLayoutInfoProvider = remember(mostPlayedLazyGridState) {
             SnapLayoutInfoProvider(
                 lazyGridState = mostPlayedLazyGridState,
@@ -72,183 +72,168 @@ fun HomeScreen(
             )
         }
 
-        LazyColumn(
-            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            item {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                        .widthIn(min = 84.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
-                        .clickable {
-                            navController.navigate("settings")
-                        }
-                        .padding(12.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_settings),
-                        contentDescription = null
-                    )
+            Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding()))
 
-                    Spacer(Modifier.height(6.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                    .widthIn(min = 84.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
+                    .clickable {
+                        navController.navigate("settings")
+                    }
+                    .padding(12.dp)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_settings),
+                    contentDescription = null
+                )
 
-                    Text(
-                        text = stringResource(R.string.title_settings),
-                        style = MaterialTheme.typography.labelLarge,
-                    )
-                }
+                Spacer(Modifier.height(6.dp))
+
+                Text(
+                    text = stringResource(R.string.title_settings),
+                    style = MaterialTheme.typography.labelLarge,
+                )
             }
 
             if (mostPlayedSongs.isNotEmpty()) {
-                item {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.most_played_songs),
-                                style = MaterialTheme.typography.headlineSmall
-                            )
-                        }
-                    }
-                }
+                Text(
+                    text = stringResource(R.string.most_played_songs),
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(12.dp)
+                )
 
-                item {
-                    LazyHorizontalGrid(
-                        state = mostPlayedLazyGridState,
-                        rows = GridCells.Fixed(4),
-                        flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(ListItemHeight * 4)
-                    ) {
-                        items(
-                            items = mostPlayedSongs,
-                            key = { it.id }
-                        ) { song ->
-                            SongListItem(
-                                song = song,
-                                isPlaying = song.id == mediaMetadata?.id,
-                                playWhenReady = playWhenReady,
-                                trailingContent = {
-                                    IconButton(
-                                        onClick = {
-                                            menuState.show {
-                                                SongMenu(
-                                                    originalSong = song,
-                                                    navController = navController,
-                                                    playerConnection = playerConnection,
-                                                    coroutineScope = coroutineScope,
-                                                    onDismiss = menuState::dismiss
-                                                )
-                                            }
+                LazyHorizontalGrid(
+                    state = mostPlayedLazyGridState,
+                    rows = GridCells.Fixed(4),
+                    flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(ListItemHeight * 4)
+                ) {
+                    items(
+                        items = mostPlayedSongs,
+                        key = { it.id }
+                    ) { song ->
+                        SongListItem(
+                            song = song,
+                            isPlaying = song.id == mediaMetadata?.id,
+                            playWhenReady = playWhenReady,
+                            trailingContent = {
+                                IconButton(
+                                    onClick = {
+                                        menuState.show {
+                                            SongMenu(
+                                                originalSong = song,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
                                         }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_more_vert),
-                                            contentDescription = null
-                                        )
                                     }
-                                },
-                                modifier = Modifier
-                                    .width(maxWidth * horizontalLazyGridItemWidthFactor)
-                                    .combinedClickable {
-                                        playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
-                                    }
-                            )
-                        }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_more_vert),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            modifier = Modifier
+                                .width(horizontalLazyGridItemWidth)
+                                .clickable {
+                                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
+                                }
+                                .animateItemPlacement()
+                        )
                     }
                 }
             }
 
             if (newReleaseAlbums.isNotEmpty()) {
-                item {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navController.navigate("new_release")
-                            }
-                            .padding(12.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.new_release_albums),
-                                style = MaterialTheme.typography.headlineSmall
-                            )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate("new_release")
                         }
+                        .padding(12.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.new_release_albums),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
 
-                        Icon(
-                            painter = painterResource(R.drawable.ic_navigate_next),
-                            contentDescription = null
+                    Icon(
+                        painter = painterResource(R.drawable.ic_navigate_next),
+                        contentDescription = null
+                    )
+                }
+
+                LazyRow {
+                    items(
+                        items = newReleaseAlbums,
+                        key = { it.id }
+                    ) { album ->
+                        YouTubeGridItem(
+                            item = album,
+                            badges = {
+                                if (album.id in libraryAlbumIds) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_library_add_check),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .padding(end = 2.dp)
+                                    )
+                                }
+                                if (album.explicit) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_explicit),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .padding(end = 2.dp)
+                                    )
+                                }
+                            },
+                            isPlaying = mediaMetadata?.id == album.id,
+                            playWhenReady = playWhenReady,
+                            modifier = Modifier
+                                .combinedClickable(
+                                    onClick = {
+                                        navController.navigate("album/${album.id}")
+                                    },
+                                    onLongClick = {
+                                        menuState.show {
+                                            YouTubeAlbumMenu(
+                                                album = album,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                        }
+                                    }
+                                )
+                                .animateItemPlacement()
                         )
                     }
                 }
-
-                item {
-                    LazyRow {
-                        items(
-                            items = newReleaseAlbums,
-                            key = { it.id }
-                        ) { album ->
-                            YouTubeGridItem(
-                                item = album,
-                                badges = {
-                                    if (album.id in libraryAlbumIds) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_library_add_check),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .padding(end = 2.dp)
-                                        )
-                                    }
-                                    if (album.explicit) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_explicit),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .padding(end = 2.dp)
-                                        )
-                                    }
-                                },
-                                isPlaying = mediaMetadata?.id == album.id,
-                                playWhenReady = playWhenReady,
-                                modifier = Modifier
-                                    .combinedClickable(
-                                        onClick = {
-                                            navController.navigate("album/${album.id}")
-                                        },
-                                        onLongClick = {
-                                            menuState.show {
-                                                YouTubeAlbumMenu(
-                                                    album = album,
-                                                    navController = navController,
-                                                    playerConnection = playerConnection,
-                                                    coroutineScope = coroutineScope,
-                                                    onDismiss = menuState::dismiss
-                                                )
-                                            }
-                                        }
-                                    )
-                                    .animateItemPlacement()
-                            )
-                        }
-                    }
-                }
             }
+
+            Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()))
         }
 
         FloatingActionButton(

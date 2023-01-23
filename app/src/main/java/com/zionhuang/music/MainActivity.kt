@@ -175,8 +175,10 @@ class MainActivity : ComponentActivity() {
                                 selection = TextRange(query.length)
                             ))
                             navController.navigate("search/$query")
-                            database.query {
-                                insert(SearchHistory(query = query))
+                            if (dataStore[PauseSearchHistoryKey] != true) {
+                                database.query {
+                                    insert(SearchHistory(query = query))
+                                }
                             }
                         }
                     }
