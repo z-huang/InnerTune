@@ -217,9 +217,9 @@
     <string name="sort_by_name">Назва</string>
     <string name="sort_by_artist">Виконавець</string>
     <string name="sort_by_year">Рік</string>
-    <string name="sort_by_song_count">Кількість</string>
+    <string name="sort_by_song_count">Кількість треків</string>
     <string name="sort_by_length">Тривалість</string>
-    <string name="sort_by_play_time">Нещодавно відтворені</string>
+    <string name="sort_by_play_time">Кількість відтворень</string>
 
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
