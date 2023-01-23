@@ -40,7 +40,7 @@
     <string name="audio_quality_high">Высокое</string>
     <string name="audio_quality_low">Низкое</string>
     <string name="pref_persistent_queue_title">Постоянная очередь</string>
-    <string name="pref_skip_silence_title">Пропуск тишины в треках</string>
+    <string name="pref_skip_silence_title">Пропуск тишины в композициях</string>
     <string name="pref_audio_normalization_title">Нормализация аудио</string>
     <string name="pref_equalizer_title">Эквалайзер</string>
 
