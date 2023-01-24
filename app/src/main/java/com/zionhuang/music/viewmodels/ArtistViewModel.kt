@@ -21,7 +21,7 @@ class ArtistViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            artistPage = YouTube.browseArtist(artistId).getOrNull()
+            artistPage = YouTube.artist(artistId).getOrNull()
         }
     }
 }

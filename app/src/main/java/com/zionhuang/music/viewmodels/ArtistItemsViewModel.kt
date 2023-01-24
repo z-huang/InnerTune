@@ -24,7 +24,7 @@ class ArtistItemsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val artistItemsPage = YouTube.browseArtistItems(BrowseEndpoint(
+            val artistItemsPage = YouTube.artistItems(BrowseEndpoint(
                 browseId = browseId,
                 params = params
             )).getOrNull() ?: return@launch
@@ -40,7 +40,7 @@ class ArtistItemsViewModel @Inject constructor(
         viewModelScope.launch {
             val oldItemsPage = itemsPage.value ?: return@launch
             val continuation = oldItemsPage.continuation ?: return@launch
-            val artistItemsContinuationPage = YouTube.browseArtistItemsContinuation(continuation).getOrNull() ?: return@launch
+            val artistItemsContinuationPage = YouTube.artistItemsContinuation(continuation).getOrNull() ?: return@launch
             itemsPage.update {
                 ItemsPage(
                     items = (oldItemsPage.items + artistItemsContinuationPage.items).distinctBy { it.id },

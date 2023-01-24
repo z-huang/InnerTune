@@ -81,19 +81,19 @@ class YouTubeTest {
 
     @Test
     fun `Check 'get_search_suggestion' endpoint`() = runBlocking {
-        val suggestions = youTube.getSearchSuggestions(SEARCH_QUERY).getOrThrow()
+        val suggestions = youTube.searchSuggestions(SEARCH_QUERY).getOrThrow()
         assertTrue(suggestions.queries.isNotEmpty())
     }
 
     @Test
     fun `Check 'browse' endpoint`() = runBlocking {
-        var artist = youTube.browseArtist("UCI6B8NkZKqlFWoiC_xE-hzA").getOrThrow()
+        var artist = youTube.artist("UCI6B8NkZKqlFWoiC_xE-hzA").getOrThrow()
         assertTrue(artist.sections.isNotEmpty())
-        artist = youTube.browseArtist("UCy2RKLxIOMOfGld_yBYEBLw").getOrThrow() // Artist that contains audiobook
+        artist = youTube.artist("UCy2RKLxIOMOfGld_yBYEBLw").getOrThrow() // Artist that contains audiobook
         assertTrue(artist.sections.isNotEmpty())
-        val album = youTube.browseAlbum("MPREb_oNAdr9eUOfS").getOrThrow()
+        val album = youTube.album("MPREb_oNAdr9eUOfS").getOrThrow()
         assertTrue(album.songs.isNotEmpty())
-        val playlist = youTube.browsePlaylist("RDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo").getOrThrow()
+        val playlist = youTube.playlist("RDCLAK5uy_mHAEb33pqvgdtuxsemicZNu-5w6rLRweo").getOrThrow()
         assertTrue(playlist.songs.isNotEmpty())
     }
 
@@ -125,9 +125,9 @@ class YouTubeTest {
 
     @Test
     fun `Check 'get_queue' endpoint`() = runBlocking {
-        var queue = youTube.getQueue(videoIds = VIDEO_IDS).getOrThrow()
+        var queue = youTube.queue(videoIds = VIDEO_IDS).getOrThrow()
         assertTrue(queue.isNotEmpty())
-        queue = youTube.getQueue(playlistId = PLAYLIST_ID).getOrThrow()
+        queue = youTube.queue(playlistId = PLAYLIST_ID).getOrThrow()
         assertTrue(queue.isNotEmpty())
     }
 
@@ -136,7 +136,7 @@ class YouTubeTest {
         // This playlist has 2900 songs
         val playlistId = "PLtAw-mgfCzRwduBTjBHknz5U4_ZM4n6qm"
         var count = 5
-        val playlistPage = YouTube.browsePlaylist(playlistId).getOrThrow()
+        val playlistPage = YouTube.playlist(playlistId).getOrThrow()
         var songs = playlistPage.songs
         var continuation = playlistPage.songsContinuation
         while (count > 0) {
@@ -144,7 +144,7 @@ class YouTubeTest {
                 println(it.id)
             }
             if (continuation == null) break
-            val continuationPage = YouTube.browsePlaylistContinuation(continuation).getOrThrow()
+            val continuationPage = YouTube.playlistContinuation(continuation).getOrThrow()
             songs = continuationPage.songs
             continuation = continuationPage.continuation
             count--
@@ -154,7 +154,7 @@ class YouTubeTest {
     @Test
     fun lyrics() = runBlocking {
         val nextResult = YouTube.next(WatchEndpoint(videoId = "NCC6lI0GGy0")).getOrThrow()
-        val lyrics = YouTube.getLyrics(nextResult.lyricsEndpoint!!).getOrThrow()
+        val lyrics = YouTube.lyrics(nextResult.lyricsEndpoint!!).getOrThrow()
         assertTrue(lyrics != null)
     }
 

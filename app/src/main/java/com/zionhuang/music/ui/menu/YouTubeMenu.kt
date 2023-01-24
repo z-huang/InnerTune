@@ -28,6 +28,7 @@ import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
+import com.zionhuang.music.playback.queues.YouTubeAlbumRadio
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
@@ -286,10 +287,7 @@ fun YouTubeAlbumMenu(
             icon = R.drawable.ic_radio,
             title = R.string.menu_start_radio
         ) {
-            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(
-                playlistId = album.playlistId,
-                params = "wAEB"
-            )))
+            playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
             onDismiss()
         }
         GridMenuItem(
@@ -325,7 +323,7 @@ fun YouTubeAlbumMenu(
                 title = R.string.action_add_to_library
             ) {
                 coroutineScope.launch(Dispatchers.IO) {
-                    YouTube.browseAlbum(album.browseId).onSuccess { albumPage ->
+                    YouTube.album(album.browseId).onSuccess { albumPage ->
                         database.query {
                             insert(albumPage)
                         }

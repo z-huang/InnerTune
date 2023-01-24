@@ -26,6 +26,7 @@ import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.models.toMediaMetadata
+import com.zionhuang.music.playback.queues.YouTubeAlbumRadio
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
@@ -208,7 +209,7 @@ fun HomeScreen(
                                     )
                                 }
                             },
-                            isPlaying = mediaMetadata?.id == album.id,
+                            isPlaying = mediaMetadata?.album?.id == album.id,
                             playWhenReady = playWhenReady,
                             modifier = Modifier
                                 .combinedClickable(
@@ -249,10 +250,7 @@ fun HomeScreen(
                     playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
                 } else {
                     val album = newReleaseAlbums.random()
-                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(
-                        playlistId = album.playlistId,
-                        params = "wAEB"
-                    )))
+                    playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
                 }
             }) {
             Icon(

@@ -28,7 +28,7 @@ class AlbumViewModel @Inject constructor(
         viewModelScope.launch {
             _viewState.value = database.albumWithSongs(albumId).first()?.let {
                 AlbumViewState.Local(it)
-            } ?: YouTube.browseAlbum(albumId).getOrNull()?.let {
+            } ?: YouTube.album(albumId).getOrNull()?.let {
                 AlbumViewState.Remote(it)
             }
         }

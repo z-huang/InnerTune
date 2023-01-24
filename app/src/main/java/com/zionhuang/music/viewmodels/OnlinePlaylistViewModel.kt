@@ -23,7 +23,7 @@ class OnlinePlaylistViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val playlistPage = YouTube.browsePlaylist(playlistId).getOrNull() ?: return@launch
+            val playlistPage = YouTube.playlist(playlistId).getOrNull() ?: return@launch
             playlist.value = playlistPage.playlist
             itemsPage.value = ItemsPage(playlistPage.songs, playlistPage.songsContinuation)
         }
@@ -33,7 +33,7 @@ class OnlinePlaylistViewModel @Inject constructor(
         viewModelScope.launch {
             val oldItemsPage = itemsPage.value ?: return@launch
             val continuation = oldItemsPage.continuation ?: return@launch
-            val playlistContinuationPage = YouTube.browsePlaylistContinuation(continuation).getOrNull() ?: return@launch
+            val playlistContinuationPage = YouTube.playlistContinuation(continuation).getOrNull() ?: return@launch
             itemsPage.update {
                 ItemsPage(
                     items = (oldItemsPage.items + playlistContinuationPage.songs).distinctBy { it.id },

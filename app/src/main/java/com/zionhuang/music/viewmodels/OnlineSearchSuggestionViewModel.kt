@@ -31,7 +31,7 @@ class OnlineSearchSuggestionViewModel @Inject constructor(
                         )
                     }
                 } else {
-                    val result = YouTube.getSearchSuggestions(query).getOrNull()
+                    val result = YouTube.searchSuggestions(query).getOrNull()
                     database.searchHistory(query)
                         .map { it.take(3) }
                         .map { history ->

@@ -59,7 +59,7 @@ class LibraryArtistsViewModel @Inject constructor(
                         it.thumbnailUrl == null || Duration.between(it.lastUpdateTime, LocalDateTime.now()) > Duration.ofDays(10)
                     }
                     .forEach { artist ->
-                        YouTube.browseArtist(artist.id).onSuccess { artistPage ->
+                        YouTube.artist(artist.id).onSuccess { artistPage ->
                             database.query {
                                 update(artist, artistPage)
                             }

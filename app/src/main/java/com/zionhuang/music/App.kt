@@ -64,11 +64,12 @@ class App : Application(), ImageLoaderFactory {
                 .map { it[VisitorDataKey] }
                 .distinctUntilChanged()
                 .collect { visitorData ->
-                    YouTube.visitorData = visitorData ?: YouTube.generateVisitorData().getOrNull()?.also { newVisitorData ->
-                        dataStore.edit { settings ->
-                            settings[VisitorDataKey] = newVisitorData
-                        }
-                    } ?: YouTube.DEFAULT_VISITOR_DATA
+                    YouTube.visitorData = visitorData
+                        ?: YouTube.visitorData().getOrNull()?.also { newVisitorData ->
+                            dataStore.edit { settings ->
+                                settings[VisitorDataKey] = newVisitorData
+                            }
+                        } ?: YouTube.DEFAULT_VISITOR_DATA
                 }
         }
         GlobalScope.launch {
