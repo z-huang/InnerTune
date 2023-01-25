@@ -1,4 +1,4 @@
-package com.zionhuang.music.ui.screens.library
+package com.zionhuang.music.ui.screens.artist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -33,13 +33,13 @@ import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
-import com.zionhuang.music.viewmodels.LibrarySongsViewModel
+import com.zionhuang.music.viewmodels.ArtistSongsViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun LibrarySongsScreen(
+fun ArtistSongsScreen(
     navController: NavController,
-    viewModel: LibrarySongsViewModel = hiltViewModel(),
+    viewModel: ArtistSongsViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -48,10 +48,11 @@ fun LibrarySongsScreen(
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
-    val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
-    val (sortDescending, onSortDescendingChange) = rememberPreference(SongSortDescendingKey, true)
+    val (sortType, onSortTypeChange) = rememberEnumPreference(ArtistSongSortTypeKey, ArtistSongSortType.CREATE_DATE)
+    val (sortDescending, onSortDescendingChange) = rememberPreference(ArtistSongSortDescendingKey, true)
 
-    val items by viewModel.allSongs.collectAsState()
+    val artist by viewModel.artist.collectAsState()
+    val songs by viewModel.songs.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -70,17 +71,16 @@ fun LibrarySongsScreen(
                     onSortDescendingChange = onSortDescendingChange,
                     sortTypeText = { sortType ->
                         when (sortType) {
-                            SongSortType.CREATE_DATE -> R.string.sort_by_create_date
-                            SongSortType.NAME -> R.string.sort_by_name
-                            SongSortType.ARTIST -> R.string.sort_by_artist
+                            ArtistSongSortType.CREATE_DATE -> R.string.sort_by_create_date
+                            ArtistSongSortType.NAME -> R.string.sort_by_name
                         }
                     },
-                    trailingText = pluralStringResource(R.plurals.song_count, items.size, items.size)
+                    trailingText = pluralStringResource(R.plurals.song_count, songs.size, songs.size)
                 )
             }
 
             itemsIndexed(
-                items = items,
+                items = songs,
                 key = { _, item -> item.id },
                 contentType = { _, _ -> CONTENT_TYPE_SONG }
             ) { index, song ->
@@ -113,7 +113,7 @@ fun LibrarySongsScreen(
                         .combinedClickable {
                             playerConnection.playQueue(ListQueue(
                                 title = context.getString(R.string.queue_all_songs),
-                                items = items.map { it.toMediaItem() },
+                                items = songs.map { it.toMediaItem() },
                                 startIndex = index
                             ))
                         }
@@ -131,8 +131,8 @@ fun LibrarySongsScreen(
                 .padding(16.dp),
             onClick = {
                 playerConnection.playQueue(ListQueue(
-                    title = context.getString(R.string.queue_all_songs),
-                    items = items.shuffled().map { it.toMediaItem() },
+                    title = artist?.name,
+                    items = songs.shuffled().map { it.toMediaItem() },
                 ))
             }
         ) {

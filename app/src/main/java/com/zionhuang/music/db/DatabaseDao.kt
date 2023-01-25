@@ -88,15 +88,10 @@ interface DatabaseDao {
     @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId ORDER BY title DESC")
     fun artistSongsByNameDesc(artistId: String): Flow<List<Song>>
 
-    @Transaction
-    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId ORDER BY totalPlayTime DESC")
-    fun artistSongsByPlayTimeDesc(artistId: String): Flow<List<Song>>
-
     fun artistSongs(artistId: String, sortType: ArtistSongSortType, descending: Boolean) =
         when (sortType) {
             ArtistSongSortType.CREATE_DATE -> artistSongsByCreateDateDesc(artistId)
             ArtistSongSortType.NAME -> artistSongsByNameDesc(artistId)
-            ArtistSongSortType.PLAY_TIME -> artistSongsByPlayTimeDesc(artistId)
         }.map { it.reversed(!descending) }
 
     @Transaction

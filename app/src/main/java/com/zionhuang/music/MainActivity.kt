@@ -56,6 +56,7 @@ import com.zionhuang.music.ui.player.BottomSheetPlayer
 import com.zionhuang.music.ui.screens.*
 import com.zionhuang.music.ui.screens.artist.ArtistItemsScreen
 import com.zionhuang.music.ui.screens.artist.ArtistScreen
+import com.zionhuang.music.ui.screens.artist.ArtistSongsScreen
 import com.zionhuang.music.ui.screens.library.LibraryAlbumsScreen
 import com.zionhuang.music.ui.screens.library.LibraryArtistsScreen
 import com.zionhuang.music.ui.screens.library.LibraryPlaylistsScreen
@@ -326,11 +327,16 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 )
-                            ) {
-                                ArtistScreen(
-                                    navController = navController,
-                                    appBarConfig = appBarConfig
-                                )
+                            ) { backStackEntry ->
+                                val artistId = backStackEntry.arguments?.getString("artistId")!!
+                                if (artistId.startsWith("LA")) {
+                                    ArtistSongsScreen(navController = navController)
+                                } else {
+                                    ArtistScreen(
+                                        navController = navController,
+                                        appBarConfig = appBarConfig
+                                    )
+                                }
                             }
                             composable(
                                 route = "artistItems/{browseId}?params={params}",
@@ -348,6 +354,16 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     appBarConfig = appBarConfig
                                 )
+                            }
+                            composable(
+                                route = "artistSongs/{artistId}",
+                                arguments = listOf(
+                                    navArgument("artistId") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) {
+                                ArtistSongsScreen(navController = navController)
                             }
                             composable(
                                 route = "playlist/{playlistId}",

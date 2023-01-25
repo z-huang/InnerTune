@@ -3,6 +3,7 @@
 package com.zionhuang.music.viewmodels
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
@@ -104,6 +105,27 @@ class LibraryPlaylistsViewModel @Inject constructor(
         .distinctUntilChanged()
         .flatMapLatest { (sortType, descending) ->
             database.playlists(sortType, descending)
+        }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+}
+
+@HiltViewModel
+class ArtistSongsViewModel @Inject constructor(
+    @ApplicationContext context: Context,
+    database: MusicDatabase,
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    private val artistId = savedStateHandle.get<String>("artistId")!!
+    val artist = database.artist(artistId)
+        .stateIn(viewModelScope, SharingStarted.Lazily, null)
+
+    val songs = context.dataStore.data
+        .map {
+            it[ArtistSongSortTypeKey].toEnum(ArtistSongSortType.CREATE_DATE) to (it[ArtistSongSortDescendingKey] ?: true)
+        }
+        .distinctUntilChanged()
+        .flatMapLatest { (sortType, descending) ->
+            database.artistSongs(artistId, sortType, descending)
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
