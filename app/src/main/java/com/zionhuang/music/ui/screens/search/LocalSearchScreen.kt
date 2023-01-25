@@ -91,7 +91,8 @@ fun LocalSearchScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(ListItemHeight)
-                                .padding(start = 16.dp, end = 6.dp)
+                                .clickable { viewModel.filter.value = filter }
+                                .padding(start = 12.dp, end = 18.dp)
                         ) {
                             Text(
                                 text = stringResource(when (filter) {
@@ -105,14 +106,10 @@ fun LocalSearchScreen(
                                 modifier = Modifier.weight(1f)
                             )
 
-                            IconButton(
-                                onClick = { viewModel.filter.value = filter }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_navigate_next),
-                                    contentDescription = null
-                                )
-                            }
+                            Icon(
+                                painter = painterResource(R.drawable.ic_navigate_next),
+                                contentDescription = null
+                            )
                         }
                     }
                 }
