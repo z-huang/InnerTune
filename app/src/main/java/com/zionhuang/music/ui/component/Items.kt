@@ -458,6 +458,7 @@ inline fun YouTubeGridItem(
             AsyncImage(
                 model = item.thumbnail,
                 contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
 
@@ -518,7 +519,7 @@ inline fun YouTubeGridItem(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
             }

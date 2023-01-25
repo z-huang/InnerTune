@@ -34,7 +34,6 @@ import com.zionhuang.music.ui.component.AppBarConfig
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.YouTubeGridItem
 import com.zionhuang.music.ui.component.YouTubeListItem
-import com.zionhuang.music.ui.component.shimmer.GridItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
@@ -88,108 +87,17 @@ fun ArtistItemsScreen(
         }
     }
 
-    if (itemsPage?.items?.firstOrNull() is AlbumItem) {
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = GridThumbnailHeight + 24.dp),
-            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
+    if (itemsPage == null) {
+        ShimmerHost(
+            modifier = Modifier.padding(LocalPlayerAwareWindowInsets.current.asPaddingValues())
         ) {
-            items(
-                items = itemsPage?.items.orEmpty(),
-                key = { it.id }
-            ) { item ->
-                YouTubeGridItem(
-                    item = item,
-                    badges = {
-                        if (item is SongItem && item.id in librarySongIds ||
-                            item is AlbumItem && item.id in libraryAlbumIds ||
-                            item is PlaylistItem && item.id in libraryPlaylistIds
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_library_add_check),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                        if (item is SongItem && item.id in likedSongIds) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_favorite),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.error,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                        if (item.explicit) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_explicit),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                    },
-                    isPlaying = when (item) {
-                        is SongItem -> mediaMetadata?.id == item.id
-                        is AlbumItem -> mediaMetadata?.album?.id == item.id
-                        else -> false
-                    },
-                    playWhenReady = playWhenReady,
-                    fillMaxWidth = true,
-                    modifier = Modifier
-                        .combinedClickable(
-                            onClick = {
-                                when (item) {
-                                    is SongItem -> playerConnection.playQueue(YouTubeQueue(item.endpoint ?: WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
-                                    is AlbumItem -> navController.navigate("album/${item.id}")
-                                    is ArtistItem -> navController.navigate("artist/${item.id}")
-                                    is PlaylistItem -> navController.navigate("playlist/${item.id}")
-                                }
-                            },
-                            onLongClick = {
-                                menuState.show {
-                                    when (item) {
-                                        is SongItem -> YouTubeSongMenu(
-                                            song = item,
-                                            navController = navController,
-                                            playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
-                                            onDismiss = menuState::dismiss
-                                        )
-                                        is AlbumItem -> YouTubeAlbumMenu(
-                                            album = item,
-                                            navController = navController,
-                                            playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
-                                            onDismiss = menuState::dismiss
-                                        )
-                                        is ArtistItem -> YouTubeArtistMenu(
-                                            artist = item,
-                                            playerConnection = playerConnection,
-                                            onDismiss = menuState::dismiss
-                                        )
-                                        is PlaylistItem -> {}
-                                    }
-                                }
-                            }
-                        )
-                )
-            }
-
-            if (itemsPage?.continuation != null) {
-                item(key = "loading") {
-                    ShimmerHost {
-                        repeat(4) {
-                            GridItemPlaceHolder()
-                        }
-                    }
-                }
+            repeat(8) {
+                ListItemPlaceHolder()
             }
         }
-    } else {
+    }
+
+    if (itemsPage?.items?.firstOrNull() is SongItem) {
         LazyColumn(
             state = lazyListState,
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
@@ -286,16 +194,6 @@ fun ArtistItemsScreen(
                 )
             }
 
-            if (itemsPage == null) {
-                item {
-                    ShimmerHost {
-                        repeat(8) {
-                            ListItemPlaceHolder()
-                        }
-                    }
-                }
-            }
-
             if (itemsPage?.continuation != null) {
                 item(key = "loading") {
                     ShimmerHost {
@@ -304,6 +202,97 @@ fun ArtistItemsScreen(
                         }
                     }
                 }
+            }
+        }
+    } else {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = GridThumbnailHeight + 24.dp),
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
+        ) {
+            items(
+                items = itemsPage?.items.orEmpty(),
+                key = { it.id }
+            ) { item ->
+                YouTubeGridItem(
+                    item = item,
+                    badges = {
+                        if (item is SongItem && item.id in librarySongIds ||
+                            item is AlbumItem && item.id in libraryAlbumIds ||
+                            item is PlaylistItem && item.id in libraryPlaylistIds
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_library_add_check),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .padding(end = 2.dp)
+                            )
+                        }
+                        if (item is SongItem && item.id in likedSongIds) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_favorite),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .padding(end = 2.dp)
+                            )
+                        }
+                        if (item.explicit) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_explicit),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .padding(end = 2.dp)
+                            )
+                        }
+                    },
+                    isPlaying = when (item) {
+                        is SongItem -> mediaMetadata?.id == item.id
+                        is AlbumItem -> mediaMetadata?.album?.id == item.id
+                        else -> false
+                    },
+                    playWhenReady = playWhenReady,
+                    fillMaxWidth = true,
+                    modifier = Modifier
+                        .combinedClickable(
+                            onClick = {
+                                when (item) {
+                                    is SongItem -> playerConnection.playQueue(YouTubeQueue(item.endpoint ?: WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                                    is AlbumItem -> navController.navigate("album/${item.id}")
+                                    is ArtistItem -> navController.navigate("artist/${item.id}")
+                                    is PlaylistItem -> navController.navigate("playlist/${item.id}")
+                                }
+                            },
+                            onLongClick = {
+                                menuState.show {
+                                    when (item) {
+                                        is SongItem -> YouTubeSongMenu(
+                                            song = item,
+                                            navController = navController,
+                                            playerConnection = playerConnection,
+                                            coroutineScope = coroutineScope,
+                                            onDismiss = menuState::dismiss
+                                        )
+                                        is AlbumItem -> YouTubeAlbumMenu(
+                                            album = item,
+                                            navController = navController,
+                                            playerConnection = playerConnection,
+                                            coroutineScope = coroutineScope,
+                                            onDismiss = menuState::dismiss
+                                        )
+                                        is ArtistItem -> YouTubeArtistMenu(
+                                            artist = item,
+                                            playerConnection = playerConnection,
+                                            onDismiss = menuState::dismiss
+                                        )
+                                        is PlaylistItem -> {}
+                                    }
+                                }
+                            }
+                        )
+                )
             }
         }
     }

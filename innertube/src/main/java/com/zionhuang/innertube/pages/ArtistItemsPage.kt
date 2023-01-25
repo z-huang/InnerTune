@@ -39,20 +39,60 @@ data class ArtistItemsPage(
             )
         }
 
-        fun fromMusicTwoRowItemRenderer(renderer: MusicTwoRowItemRenderer): AlbumItem? {
-            return AlbumItem(
-                browseId = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
-                playlistId = renderer.thumbnailOverlay?.musicItemThumbnailOverlayRenderer
-                    ?.content?.musicPlayButtonRenderer?.playNavigationEndpoint
-                    ?.watchPlaylistEndpoint?.playlistId ?: return null,
-                title = renderer.title.runs?.firstOrNull()?.text ?: return null,
-                artists = null,
-                year = renderer.subtitle.runs?.lastOrNull()?.text?.toIntOrNull(),
-                thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
-                explicit = renderer.subtitleBadges?.find {
-                    it.musicInlineBadgeRenderer.icon.iconType == "MUSIC_EXPLICIT_BADGE"
-                } != null
-            )
+        fun fromMusicTwoRowItemRenderer(renderer: MusicTwoRowItemRenderer): YTItem? {
+            return when {
+                renderer.isAlbum -> AlbumItem(
+                    browseId = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
+                    playlistId = renderer.thumbnailOverlay?.musicItemThumbnailOverlayRenderer
+                        ?.content?.musicPlayButtonRenderer?.playNavigationEndpoint
+                        ?.watchPlaylistEndpoint?.playlistId ?: return null,
+                    title = renderer.title.runs?.firstOrNull()?.text ?: return null,
+                    artists = null,
+                    year = renderer.subtitle.runs?.lastOrNull()?.text?.toIntOrNull(),
+                    thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
+                    explicit = renderer.subtitleBadges?.find {
+                        it.musicInlineBadgeRenderer.icon.iconType == "MUSIC_EXPLICIT_BADGE"
+                    } != null
+                )
+                // Video
+                renderer.isSong -> SongItem(
+                    id = renderer.navigationEndpoint.watchEndpoint?.videoId ?: return null,
+                    title = renderer.title.runs?.firstOrNull()?.text ?: return null,
+                    artists = renderer.subtitle.runs?.splitBySeparator()?.firstOrNull()?.oddElements()?.map {
+                        Artist(
+                            name = it.text,
+                            id = it.navigationEndpoint?.browseEndpoint?.browseId
+                        )
+                    } ?: return null,
+                    album = null,
+                    duration = null,
+                    thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
+                    endpoint = renderer.navigationEndpoint.watchEndpoint
+                )
+                renderer.isPlaylist -> PlaylistItem(
+                    id = renderer.navigationEndpoint.browseEndpoint?.browseId?.removePrefix("VL") ?: return null,
+                    title = renderer.title.runs?.firstOrNull()?.text ?: return null,
+                    author = renderer.subtitle.runs?.getOrNull(2)?.let {
+                        Artist(
+                            name = it.text,
+                            id = it.navigationEndpoint?.browseEndpoint?.browseId
+                        )
+                    } ?: return null,
+                    songCountText = renderer.subtitle.runs.getOrNull(4)?.text,
+                    thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
+                    playEndpoint = renderer.thumbnailOverlay
+                        ?.musicItemThumbnailOverlayRenderer?.content
+                        ?.musicPlayButtonRenderer?.playNavigationEndpoint
+                        ?.watchPlaylistEndpoint ?: return null,
+                    shuffleEndpoint = renderer.menu.menuRenderer.items.find {
+                        it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE"
+                    }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null,
+                    radioEndpoint = renderer.menu.menuRenderer.items.find {
+                        it.menuNavigationItemRenderer?.icon?.iconType == "MIX"
+                    }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null
+                )
+                else -> null
+            }
         }
     }
 }

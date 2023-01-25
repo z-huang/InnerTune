@@ -65,8 +65,8 @@ data class BrowseResponse(
         @Serializable
         data class MusicVisualHeaderRenderer(
             val title: Runs,
-            val foregroundThumbnail: ThumbnailRenderer.MusicThumbnailRenderer,
-            val thumbnail: ThumbnailRenderer.MusicThumbnailRenderer?,
+            val foregroundThumbnail: ThumbnailRenderer,
+            val thumbnail: ThumbnailRenderer?,
         )
 
         @Serializable

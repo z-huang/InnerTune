@@ -100,6 +100,10 @@ interface DatabaseDao {
         }.map { it.reversed(!descending) }
 
     @Transaction
+    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId LIMIT :previewSize")
+    fun artistSongsPreview(artistId: String, previewSize: Int = 3): Flow<List<Song>>
+
+    @Transaction
     @Query("SELECT * FROM song WHERE id = :songId")
     fun song(songId: String?): Flow<Song?>
 
