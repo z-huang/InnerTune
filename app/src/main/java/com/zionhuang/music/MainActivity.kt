@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(DefaultThemeColor)
             }
 
-            DisposableEffect(playerConnection?.binder, isSystemInDarkTheme) {
+            DisposableEffect(playerConnection, isSystemInDarkTheme) {
                 playerConnection?.onBitmapChanged = { bitmap ->
                     coroutineScope.launch(Dispatchers.IO) {
                         themeColor = bitmap?.extractThemeColor() ?: DefaultThemeColor

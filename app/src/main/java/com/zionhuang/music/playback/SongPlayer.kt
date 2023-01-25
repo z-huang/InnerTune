@@ -80,10 +80,7 @@ import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.utils.resize
-import com.zionhuang.music.utils.dataStore
-import com.zionhuang.music.utils.enumPreference
-import com.zionhuang.music.utils.get
-import com.zionhuang.music.utils.preference
+import com.zionhuang.music.utils.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -445,7 +442,7 @@ class SongPlayer(
             val playedFormat = database.format(mediaId).firstOrNull()
             val song = database.song(mediaId).firstOrNull()
             if (playedFormat != null && song?.song?.downloadState == STATE_DOWNLOADED) {
-                // TODO
+                return@runBlocking dataSpec.withUri(getSongFile(context, mediaId).toUri())
             }
 
             val playerResponse = withContext(IO) {
