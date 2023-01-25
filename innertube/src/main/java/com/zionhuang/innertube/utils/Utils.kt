@@ -19,7 +19,7 @@ fun String.parseTime(): Int? {
             return parts[0] * 60 + parts[1]
         }
         if (parts.size == 3) {
-            return parts[0] * 1440 + parts[1] * 60 + parts[2]
+            return parts[0] * 3600 + parts[1] * 60 + parts[2]
         }
     } catch (e: Exception) {
         return null
