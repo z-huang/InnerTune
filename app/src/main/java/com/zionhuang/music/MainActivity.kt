@@ -45,6 +45,8 @@ import com.google.android.exoplayer2.Player
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.SearchHistory
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.MusicService
@@ -61,6 +63,7 @@ import com.zionhuang.music.ui.screens.library.LibraryAlbumsScreen
 import com.zionhuang.music.ui.screens.library.LibraryArtistsScreen
 import com.zionhuang.music.ui.screens.library.LibraryPlaylistsScreen
 import com.zionhuang.music.ui.screens.library.LibrarySongsScreen
+import com.zionhuang.music.ui.screens.playlist.BuiltInPlaylistScreen
 import com.zionhuang.music.ui.screens.playlist.LocalPlaylistScreen
 import com.zionhuang.music.ui.screens.playlist.OnlinePlaylistScreen
 import com.zionhuang.music.ui.screens.search.LocalSearchScreen
@@ -339,8 +342,21 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             composable(
-                                route = "artistItems/{browseId}?params={params}",
+                                route = "artist/{artistId}/songs",
                                 arguments = listOf(
+                                    navArgument("artistId") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) {
+                                ArtistSongsScreen(navController = navController)
+                            }
+                            composable(
+                                route = "artist/{artistId}/{browseId}?params={params}",
+                                arguments = listOf(
+                                    navArgument("artistId") {
+                                        type = NavType.StringType
+                                    },
                                     navArgument("browseId") {
                                         type = NavType.StringType
                                     },
@@ -356,16 +372,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(
-                                route = "artistSongs/{artistId}",
-                                arguments = listOf(
-                                    navArgument("artistId") {
-                                        type = NavType.StringType
-                                    }
-                                )
-                            ) {
-                                ArtistSongsScreen(navController = navController)
-                            }
-                            composable(
                                 route = "playlist/{playlistId}",
                                 arguments = listOf(
                                     navArgument("playlistId") {
@@ -374,7 +380,12 @@ class MainActivity : ComponentActivity() {
                                 )
                             ) { backStackEntry ->
                                 val playlistId = backStackEntry.arguments?.getString("playlistId")!!
-                                if (playlistId.startsWith("LP")) {
+                                if (playlistId == LIKED_PLAYLIST_ID || playlistId == DOWNLOADED_PLAYLIST_ID) {
+                                    BuiltInPlaylistScreen(
+                                        appBarConfig = appBarConfig,
+                                        navController = navController
+                                    )
+                                } else if (playlistId.startsWith("LP")) {
                                     LocalPlaylistScreen(
                                         appBarConfig = appBarConfig,
                                         navController = navController

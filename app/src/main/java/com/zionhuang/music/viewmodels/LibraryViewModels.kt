@@ -129,35 +129,3 @@ class ArtistSongsViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
-
-@HiltViewModel
-class LikedSongsViewModel @Inject constructor(
-    @ApplicationContext context: Context,
-    database: MusicDatabase,
-) : ViewModel() {
-    val songs = context.dataStore.data
-        .map {
-            it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE) to (it[SongSortDescendingKey] ?: true)
-        }
-        .distinctUntilChanged()
-        .flatMapLatest { (sortType, descending) ->
-            database.likedSongs(sortType, descending)
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-}
-
-@HiltViewModel
-class DownloadedSongsViewModel @Inject constructor(
-    @ApplicationContext context: Context,
-    database: MusicDatabase,
-) : ViewModel() {
-    val songs = context.dataStore.data
-        .map {
-            it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE) to (it[SongSortDescendingKey] ?: true)
-        }
-        .distinctUntilChanged()
-        .flatMapLatest { (sortType, descending) ->
-            database.downloadedSongs(sortType, descending)
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-}

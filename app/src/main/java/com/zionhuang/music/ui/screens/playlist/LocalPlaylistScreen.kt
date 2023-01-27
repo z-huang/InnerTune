@@ -1,7 +1,6 @@
 package com.zionhuang.music.ui.screens.playlist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -78,26 +76,10 @@ fun LocalPlaylistScreen(
         playlist?.let { playlist ->
             item {
                 if (playlist.songCount == 0) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(12.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_music_note),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-                            modifier = Modifier.size(64.dp)
-                        )
-
-                        Spacer(Modifier.height(12.dp))
-
-                        Text(
-                            text = stringResource(R.string.playlist_empty),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
+                    EmptyPlaceholder(
+                        icon = R.drawable.ic_music_note,
+                        text = stringResource(R.string.playlist_empty)
+                    )
                 } else {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(12.dp),

@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.screens
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -78,31 +80,33 @@ fun HomeScreen(
         ) {
             Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding()))
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
                     .padding(WindowInsets.systemBars
                         .only(WindowInsetsSides.Horizontal)
                         .asPaddingValues())
                     .padding(horizontal = 12.dp, vertical = 6.dp)
-                    .widthIn(min = 84.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
-                    .clickable {
-                        navController.navigate("settings")
-                    }
-                    .padding(12.dp)
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_settings),
-                    contentDescription = null
+                NavigationTile(
+                    title = stringResource(R.string.history),
+                    icon = R.drawable.ic_history,
+                    onClick = { navController.navigate("history") },
+                    enabled = false,
+                    modifier = Modifier.weight(1f)
                 )
-
-                Spacer(Modifier.height(6.dp))
-
-                Text(
-                    text = stringResource(R.string.title_settings),
-                    style = MaterialTheme.typography.labelLarge,
+                NavigationTile(
+                    title = stringResource(R.string.stats),
+                    icon = R.drawable.ic_trending_up,
+                    onClick = { navController.navigate("stats") },
+                    enabled = false,
+                    modifier = Modifier.weight(1f)
+                )
+                NavigationTile(
+                    title = stringResource(R.string.title_settings),
+                    icon = R.drawable.ic_settings,
+                    onClick = { navController.navigate("settings") },
+                    modifier = Modifier.weight(1f)
                 )
             }
 
@@ -275,5 +279,37 @@ fun HomeScreen(
                 contentDescription = null
             )
         }
+    }
+}
+
+@Composable
+fun NavigationTile(
+    title: String,
+    @DrawableRes icon: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clip(RoundedCornerShape(6.dp))
+            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
+            .clickable(enabled = enabled, onClick = onClick)
+            .padding(12.dp)
+            .alpha(if (enabled) 1f else 0.5f)
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null
+        )
+
+        Spacer(Modifier.height(6.dp))
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.labelLarge,
+        )
     }
 }

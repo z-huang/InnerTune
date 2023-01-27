@@ -1,48 +1,51 @@
-package com.zionhuang.music.ui.screens.library
+package com.zionhuang.music.ui.screens.playlist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastSumBy
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
+import com.zionhuang.music.constants.SongSortDescendingKey
+import com.zionhuang.music.constants.SongSortType
+import com.zionhuang.music.constants.SongSortTypeKey
+import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
+import com.zionhuang.music.ui.component.AppBarConfig
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.utils.joinByBullet
+import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
-import com.zionhuang.music.viewmodels.LibrarySongsViewModel
+import com.zionhuang.music.viewmodels.BuiltInPlaylistViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun LibrarySongsScreen(
+fun BuiltInPlaylistScreen(
+    appBarConfig: AppBarConfig,
     navController: NavController,
-    viewModel: LibrarySongsViewModel = hiltViewModel(),
+    viewModel: BuiltInPlaylistViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
@@ -51,7 +54,33 @@ fun LibrarySongsScreen(
     val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(SongSortDescendingKey, true)
 
-    val songs by viewModel.allSongs.collectAsState()
+    val songs by viewModel.songs.collectAsState()
+    val playlistLength = remember(songs) {
+        songs.fastSumBy { it.song.duration }
+    }
+    val playlistName = remember {
+        context.getString(
+            when (viewModel.playlistId) {
+                PlaylistEntity.LIKED_PLAYLIST_ID -> R.string.liked_songs
+                PlaylistEntity.DOWNLOADED_PLAYLIST_ID -> R.string.downloaded_songs
+                else -> error("Unknown playlist id")
+            }
+        )
+    }
+
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        appBarConfig.title = {
+            Text(
+                text = playlistName,
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -59,10 +88,7 @@ fun LibrarySongsScreen(
         LazyColumn(
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
-            item(
-                key = "header",
-                contentType = CONTENT_TYPE_HEADER
-            ) {
+            item {
                 SortHeader(
                     sortType = sortType,
                     sortDescending = sortDescending,
@@ -75,14 +101,16 @@ fun LibrarySongsScreen(
                             SongSortType.ARTIST -> R.string.sort_by_artist
                         }
                     },
-                    trailingText = pluralStringResource(R.plurals.song_count, songs.size, songs.size)
+                    trailingText = joinByBullet(
+                        makeTimeString(playlistLength * 1000L),
+                        pluralStringResource(R.plurals.song_count, songs.size, songs.size)
+                    )
                 )
             }
 
             itemsIndexed(
                 items = songs,
-                key = { _, item -> item.id },
-                contentType = { _, _ -> CONTENT_TYPE_SONG }
+                key = { _, song -> song.id }
             ) { index, song ->
                 SongListItem(
                     song = song,
@@ -112,7 +140,7 @@ fun LibrarySongsScreen(
                         .fillMaxWidth()
                         .combinedClickable {
                             playerConnection.playQueue(ListQueue(
-                                title = context.getString(R.string.queue_all_songs),
+                                title = playlistName,
                                 items = songs.map { it.toMediaItem() },
                                 startIndex = index
                             ))
@@ -132,7 +160,7 @@ fun LibrarySongsScreen(
                     .padding(16.dp),
                 onClick = {
                     playerConnection.playQueue(ListQueue(
-                        title = context.getString(R.string.queue_all_songs),
+                        title = playlistName,
                         items = songs.shuffled().map { it.toMediaItem() },
                     ))
                 }

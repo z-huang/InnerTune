@@ -350,6 +350,8 @@ fun Queue(
                 Text(
                     text = queueTitle.orEmpty(),
                     style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f)
                 )
 

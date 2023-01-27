@@ -112,7 +112,7 @@ fun LibraryPlaylistsScreen(
                     },
                     modifier = Modifier
                         .clickable {
-
+                            navController.navigate("playlist/$LIKED_PLAYLIST_ID")
                         }
                         .animateItemPlacement()
                 )
@@ -134,7 +134,7 @@ fun LibraryPlaylistsScreen(
                     },
                     modifier = Modifier
                         .clickable {
-
+                            navController.navigate("playlist/$DOWNLOADED_PLAYLIST_ID")
                         }
                         .animateItemPlacement()
                 )

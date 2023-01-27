@@ -191,7 +191,10 @@ fun LocalSearchScreen(
                 item(
                     key = "no_result"
                 ) {
-                    NoResultFound()
+                    EmptyPlaceholder(
+                        icon = R.drawable.ic_search,
+                        text = stringResource(R.string.no_results_found)
+                    )
                 }
             }
         }

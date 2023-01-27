@@ -180,7 +180,7 @@ fun ArtistScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    navController.navigate("artistSongs/${artistPage.artist.id}")
+                                    navController.navigate("artist/${viewModel.artistId}/songs")
                                 }
                                 .padding(12.dp)
                         ) {
@@ -244,7 +244,7 @@ fun ArtistScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable(enabled = section.moreEndpoint != null) {
-                                    navController.navigate("artistItems/${section.moreEndpoint?.browseId}?params=${section.moreEndpoint?.params}")
+                                    navController.navigate("artist/${viewModel.artistId}/${section.moreEndpoint?.browseId}?params=${section.moreEndpoint?.params}")
                                 }
                                 .padding(12.dp)
                         ) {

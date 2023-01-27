@@ -33,8 +33,8 @@ import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.SearchFilterHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.ui.component.EmptyPlaceholder
 import com.zionhuang.music.ui.component.LocalMenuState
-import com.zionhuang.music.ui.component.NoResultFound
 import com.zionhuang.music.ui.component.YouTubeListItem
 import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
@@ -208,7 +208,10 @@ fun OnlineSearchResult(
 
             if (searchSummary?.summaries?.isEmpty() == true) {
                 item {
-                    NoResultFound()
+                    EmptyPlaceholder(
+                        icon = R.drawable.ic_search,
+                        text = stringResource(R.string.no_results_found)
+                    )
                 }
             }
         } else {
@@ -230,7 +233,10 @@ fun OnlineSearchResult(
 
             if (itemsPage?.items?.isEmpty() == true) {
                 item {
-                    NoResultFound()
+                    EmptyPlaceholder(
+                        icon = R.drawable.ic_search,
+                        text = stringResource(R.string.no_results_found)
+                    )
                 }
             }
         }
