@@ -3,6 +3,7 @@ package com.zionhuang.music.ui.player
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -11,9 +12,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.constants.ShowLyricsKey
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.models.MediaMetadata
@@ -27,9 +30,10 @@ fun Thumbnail(
     modifier: Modifier = Modifier,
 ) {
     mediaMetadata ?: return
-    val showLyrics by rememberPreference(ShowLyricsKey, false)
-
+    val playerConnection = LocalPlayerConnection.current ?: return
     val currentView = LocalView.current
+
+    val showLyrics by rememberPreference(ShowLyricsKey, false)
 
     DisposableEffect(showLyrics) {
         currentView.keepScreenOn = showLyrics
@@ -59,6 +63,17 @@ fun Thumbnail(
                         .clip(RoundedCornerShape(ThumbnailCornerRadius))
                         .fillMaxWidth()
                         .align(Alignment.Center)
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onDoubleTap = { offset ->
+                                    if (offset.x < size.width / 2) {
+                                        playerConnection.player.seekBack()
+                                    } else {
+                                        playerConnection.player.seekForward()
+                                    }
+                                }
+                            )
+                        }
                 )
             }
         }

@@ -134,6 +134,8 @@ class SongPlayer(
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .build(), true)
+        .setSeekBackIncrementMs(5000)
+        .setSeekForwardIncrementMs(5000)
         .build()
         .apply {
             addListener(this@SongPlayer)
