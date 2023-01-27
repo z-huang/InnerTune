@@ -73,6 +73,9 @@ fun BottomSheetMenu(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(WindowInsets.systemBars
+                    .only(WindowInsetsSides.Horizontal)
+                    .asPaddingValues())
                 .padding(top = 48.dp)
                 .clip(ShapeDefaults.Large.top())
                 .background(background)

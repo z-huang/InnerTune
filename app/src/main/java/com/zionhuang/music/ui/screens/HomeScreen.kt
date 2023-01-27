@@ -81,6 +81,9 @@ fun HomeScreen(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
+                    .padding(WindowInsets.systemBars
+                        .only(WindowInsetsSides.Horizontal)
+                        .asPaddingValues())
                     .padding(horizontal = 12.dp, vertical = 6.dp)
                     .widthIn(min = 84.dp)
                     .clip(RoundedCornerShape(6.dp))
@@ -107,13 +110,20 @@ fun HomeScreen(
                 Text(
                     text = stringResource(R.string.most_played_songs),
                     style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier
+                        .padding(WindowInsets.systemBars
+                            .only(WindowInsetsSides.Horizontal)
+                            .asPaddingValues())
+                        .padding(12.dp)
                 )
 
                 LazyHorizontalGrid(
                     state = mostPlayedLazyGridState,
                     rows = GridCells.Fixed(4),
                     flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
+                    contentPadding = WindowInsets.systemBars
+                        .only(WindowInsetsSides.Horizontal)
+                        .asPaddingValues(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(ListItemHeight * 4)
@@ -162,6 +172,9 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(WindowInsets.systemBars
+                            .only(WindowInsetsSides.Horizontal)
+                            .asPaddingValues())
                         .clickable {
                             navController.navigate("new_release")
                         }
@@ -182,7 +195,11 @@ fun HomeScreen(
                     )
                 }
 
-                LazyRow {
+                LazyRow(
+                    contentPadding = WindowInsets.systemBars
+                        .only(WindowInsetsSides.Horizontal)
+                        .asPaddingValues()
+                ) {
                     items(
                         items = newReleaseAlbums,
                         key = { it.id }
