@@ -157,9 +157,6 @@ fun SongMenu(
                         AsyncImage(
                             model = artist.thumbnailUrl,
                             contentDescription = null,
-                            placeholder = painterResource(R.drawable.ic_artist),
-                            error = painterResource(R.drawable.ic_artist),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                             modifier = Modifier
                                 .size(ListThumbnailSize)
                                 .clip(CircleShape)
