@@ -1,6 +1,7 @@
 package com.zionhuang.music.db
 
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.innertube.pages.ArtistPage
@@ -8,6 +9,7 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extensions.reversed
+import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.ui.utils.resize
@@ -420,5 +422,12 @@ interface DatabaseDao {
         albumWithSongs.songs.map { it.copy(album = null) }.forEach(::delete)
         delete(albumWithSongs.album)
         albumWithSongs.artists.filter { artistSongCount(it.id) == 0 }.forEach(::delete)
+    }
+
+    @RawQuery
+    fun raw(supportSQLiteQuery: SupportSQLiteQuery): Int
+
+    fun checkpoint() {
+        raw("PRAGMA wal_checkpoint(FULL)".toSQLiteQuery())
     }
 }

@@ -4,7 +4,6 @@ import android.database.sqlite.SQLiteDatabase.CONFLICT_ABORT
 import androidx.core.content.contentValuesOf
 import androidx.room.*
 import androidx.room.migration.Migration
-import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.zionhuang.music.db.entities.*
@@ -33,10 +32,6 @@ class MusicDatabase(
                 block(this@MusicDatabase)
             }
         }
-    }
-
-    fun checkpoint() {
-        delegate.query(SimpleSQLiteQuery("PRAGMA wal_checkpoint(FULL)"))
     }
 
     fun close() = delegate.close()

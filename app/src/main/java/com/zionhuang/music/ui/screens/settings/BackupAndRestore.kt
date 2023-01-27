@@ -26,12 +26,12 @@ fun BackupAndRestore(
     val context = LocalContext.current
     val backupLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
         if (uri != null) {
-            viewModel.backup(uri)
+            viewModel.backup(context, uri)
         }
     }
     val restoreLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
-            viewModel.restore(uri)
+            viewModel.restore(context, uri)
         }
     }
     Column(
@@ -56,5 +56,3 @@ fun BackupAndRestore(
         )
     }
 }
-
-const val PREF_NAME = "preferences.xml"
