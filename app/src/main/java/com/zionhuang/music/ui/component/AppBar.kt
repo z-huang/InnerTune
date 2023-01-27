@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.zionhuang.music.R
@@ -119,8 +120,19 @@ fun AppBar(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(WindowInsets.systemBars
-                    .add(WindowInsets(top = AppBarHeight))
+                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                     .asPaddingValues())
+                .padding(
+                    top = AppBarHeight,
+                    bottom = max(
+                        WindowInsets.systemBars
+                            .asPaddingValues()
+                            .calculateBottomPadding(),
+                        WindowInsets.ime
+                            .asPaddingValues()
+                            .calculateBottomPadding()
+                    )
+                )
         ) {
             Crossfade(
                 targetState = searchSource
