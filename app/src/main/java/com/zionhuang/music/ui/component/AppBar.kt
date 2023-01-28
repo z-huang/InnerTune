@@ -16,13 +16,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.platform.LocalDensity
@@ -183,8 +183,13 @@ fun AppBar(
                 .fillMaxWidth()
                 .height(AppBarHeight)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding)
-                .clip(RoundedCornerShape(cornerShapePercent))
-                .background(barBackground)
+                .graphicsLayer {
+                    clip = true
+                    shape = RoundedCornerShape(cornerShapePercent)
+                }
+                .drawBehind {
+                    drawRect(barBackground)
+                }
         ) {
             AnimatedVisibility(
                 visible = appBarConfig.searchable,
