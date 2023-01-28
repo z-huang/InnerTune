@@ -72,12 +72,12 @@ object YouTube {
         val response = innerTube.search(WEB_REMIX, query, filter.value).body<SearchResponse>()
         SearchResult(
             items = response.contents?.tabbedSearchResultsRenderer?.tabs?.firstOrNull()
-                ?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()
+                ?.tabRenderer?.content?.sectionListRenderer?.contents?.lastOrNull()
                 ?.musicShelfRenderer?.contents?.mapNotNull {
                     SearchPage.toYTItem(it.musicResponsiveListItemRenderer)
                 }.orEmpty(),
             continuation = response.contents?.tabbedSearchResultsRenderer?.tabs?.firstOrNull()
-                ?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()
+                ?.tabRenderer?.content?.sectionListRenderer?.contents?.lastOrNull()
                 ?.musicShelfRenderer?.continuations?.getContinuation()
         )
     }
@@ -86,7 +86,9 @@ object YouTube {
         val response = innerTube.search(WEB_REMIX, continuation = continuation).body<SearchResponse>()
         SearchResult(
             items = response.continuationContents?.musicShelfContinuation?.contents
-                ?.mapNotNull { SearchPage.toYTItem(it.musicResponsiveListItemRenderer) }!!,
+                ?.mapNotNull {
+                    SearchPage.toYTItem(it.musicResponsiveListItemRenderer)
+                }!!,
             continuation = response.continuationContents.musicShelfContinuation.continuations?.getContinuation()
         )
     }
@@ -246,6 +248,7 @@ object YouTube {
             }
         }.orEmpty()
     }
+
     suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): Result<NextResult> = runCatching {
         val response = innerTube.next(WEB_REMIX, endpoint.videoId, endpoint.playlistId, endpoint.playlistSetVideoId, endpoint.index, endpoint.params, continuation).body<NextResponse>()
         val playlistPanelRenderer = response.continuationContents?.playlistPanelContinuation
