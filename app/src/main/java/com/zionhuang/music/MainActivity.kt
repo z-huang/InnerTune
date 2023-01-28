@@ -352,13 +352,14 @@ class MainActivity : ComponentActivity() {
                                 ArtistSongsScreen(navController = navController)
                             }
                             composable(
-                                route = "artist/{artistId}/{browseId}?params={params}",
+                                route = "artist/{artistId}/items?browseId={browseId}?params={params}",
                                 arguments = listOf(
                                     navArgument("artistId") {
                                         type = NavType.StringType
                                     },
                                     navArgument("browseId") {
                                         type = NavType.StringType
+                                        nullable = true
                                     },
                                     navArgument("params") {
                                         type = NavType.StringType
