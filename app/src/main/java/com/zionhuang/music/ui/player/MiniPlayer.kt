@@ -21,11 +21,11 @@ import coil.compose.AsyncImage
 import com.google.android.exoplayer2.Player.STATE_BUFFERING
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
-import com.zionhuang.music.ui.component.LinearProgressIndicator
 import com.zionhuang.music.constants.MiniPlayerHeight
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.ui.component.LinearProgressIndicator
 
 @Composable
 fun MiniPlayer(
@@ -44,9 +44,7 @@ fun MiniPlayer(
         modifier = modifier
             .fillMaxWidth()
             .height(MiniPlayerHeight)
-            .padding(WindowInsets.systemBars
-                .only(WindowInsetsSides.Horizontal)
-                .asPaddingValues())
+            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
     ) {
         LinearProgressIndicator(
             indeterminate = playbackState == STATE_BUFFERING,

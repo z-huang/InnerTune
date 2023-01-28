@@ -37,6 +37,8 @@ dependencyResolutionManagement {
             library("material3", "androidx.compose.material3", "material3").versionRef("material3")
             library("material3-windowsize", "androidx.compose.material3", "material3-window-size-class").versionRef("material3")
 
+            library("accompanist-insets", "com.google.accompanist", "accompanist-insets").version("0.28.0")
+
             library("coil", "io.coil-kt", "coil-compose").version("2.2.2")
 
             library("shimmer", "com.valentinilk.shimmer", "compose-shimmer").version("1.0.3")

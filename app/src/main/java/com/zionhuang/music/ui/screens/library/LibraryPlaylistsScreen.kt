@@ -160,9 +160,10 @@ fun LibraryPlaylistsScreen(
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(LocalPlayerAwareWindowInsets.current
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                    .asPaddingValues())
+                .windowInsetsPadding(
+                    LocalPlayerAwareWindowInsets.current
+                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                )
                 .padding(16.dp),
             onClick = { showAddPlaylistDialog = true }
         ) {

@@ -154,9 +154,10 @@ fun BuiltInPlaylistScreen(
             FloatingActionButton(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(LocalPlayerAwareWindowInsets.current
-                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                        .asPaddingValues())
+                    .windowInsetsPadding(
+                        LocalPlayerAwareWindowInsets.current
+                            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                    )
                     .padding(16.dp),
                 onClick = {
                     playerConnection.playQueue(ListQueue(

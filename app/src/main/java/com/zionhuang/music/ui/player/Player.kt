@@ -263,10 +263,8 @@ fun BottomSheetPlayer(
             Configuration.ORIENTATION_LANDSCAPE -> {
                 Row(
                     modifier = Modifier
-                        .padding(WindowInsets.systemBars
-                            .only(WindowInsetsSides.Horizontal)
-                            .add(WindowInsets(bottom = queueSheetState.collapsedBound))
-                            .asPaddingValues())
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+                        .padding(bottom = queueSheetState.collapsedBound)
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,
@@ -283,9 +281,7 @@ fun BottomSheetPlayer(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .weight(1f)
-                            .padding(WindowInsets.systemBars
-                                .only(WindowInsetsSides.Top)
-                                .asPaddingValues())
+                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
                     ) {
                         Spacer(Modifier.weight(1f))
 
@@ -301,10 +297,8 @@ fun BottomSheetPlayer(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .padding(WindowInsets.systemBars
-                            .only(WindowInsetsSides.Horizontal)
-                            .add(WindowInsets(bottom = queueSheetState.collapsedBound))
-                            .asPaddingValues())
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+                        .padding(bottom = queueSheetState.collapsedBound)
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,

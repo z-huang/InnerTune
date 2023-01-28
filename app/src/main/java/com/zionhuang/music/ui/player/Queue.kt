@@ -231,9 +231,10 @@ fun Queue(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(WindowInsets.systemBars
-                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                        .asPaddingValues())
+                    .windowInsetsPadding(
+                        WindowInsets.systemBars
+                            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                    )
             ) {
                 IconButton(onClick = { state.expandSoft() }) {
                     Icon(
@@ -303,10 +304,12 @@ fun Queue(
 
         LazyColumn(
             state = lazyListState,
-            contentPadding = WindowInsets.systemBars.add(WindowInsets(
-                top = ListItemHeight,
-                bottom = ListItemHeight)
-            ).asPaddingValues(),
+            contentPadding = WindowInsets.systemBars
+                .add(WindowInsets(
+                    top = ListItemHeight,
+                    bottom = ListItemHeight
+                ))
+                .asPaddingValues(),
             modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
         ) {
             itemsIndexed(
@@ -337,9 +340,10 @@ fun Queue(
                 .background(MaterialTheme.colorScheme
                     .surfaceColorAtElevation(NavigationBarDefaults.Elevation)
                     .copy(alpha = 0.95f))
-                .padding(WindowInsets.systemBars
-                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
-                    .asPaddingValues())
+                .windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                )
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -378,16 +382,19 @@ fun Queue(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f))
                 .fillMaxWidth()
-                .height(ListItemHeight + WindowInsets.systemBars
-                    .asPaddingValues()
-                    .calculateBottomPadding())
+                .height(ListItemHeight +
+                        WindowInsets.systemBars
+                            .asPaddingValues()
+                            .calculateBottomPadding()
+                )
                 .align(Alignment.BottomCenter)
                 .clickable {
                     state.collapseSoft()
                 }
-                .padding(WindowInsets.systemBars
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                    .asPaddingValues())
+                .windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                )
                 .padding(12.dp)
         ) {
             IconButton(

@@ -6,6 +6,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -89,7 +90,7 @@ fun ArtistItemsScreen(
 
     if (itemsPage == null) {
         ShimmerHost(
-            modifier = Modifier.padding(LocalPlayerAwareWindowInsets.current.asPaddingValues())
+            modifier = Modifier.windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
         ) {
             repeat(8) {
                 ListItemPlaceHolder()

@@ -34,7 +34,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.zionhuang.music.R
@@ -119,20 +118,13 @@ fun AppBar(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(WindowInsets.systemBars
-                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
-                    .asPaddingValues())
-                .padding(
-                    top = AppBarHeight,
-                    bottom = max(
-                        WindowInsets.systemBars
-                            .asPaddingValues()
-                            .calculateBottomPadding(),
-                        WindowInsets.ime
-                            .asPaddingValues()
-                            .calculateBottomPadding()
-                    )
+                .windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
                 )
+                .padding(top = AppBarHeight)
+                .navigationBarsPadding()
+                .imePadding()
         ) {
             Crossfade(
                 targetState = searchSource
@@ -177,9 +169,10 @@ fun AppBar(
 
         Box(
             modifier = Modifier
-                .padding(WindowInsets.systemBars
-                    .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
-                    .asPaddingValues())
+                .windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                )
                 .fillMaxWidth()
                 .height(AppBarHeight)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding)

@@ -254,9 +254,8 @@ fun OnlineSearchResult(
 
     Row(
         modifier = Modifier
-            .padding(WindowInsets.systemBars
-                .add(WindowInsets(top = AppBarHeight))
-                .asPaddingValues())
+            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top))
+            .padding(top = AppBarHeight)
             .fillMaxWidth()
             .horizontalScroll(rememberScrollState())
     ) {

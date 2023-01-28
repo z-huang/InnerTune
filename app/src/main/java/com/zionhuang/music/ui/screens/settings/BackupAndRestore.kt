@@ -3,8 +3,7 @@ package com.zionhuang.music.ui.screens.settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -36,7 +35,7 @@ fun BackupAndRestore(
     }
     Column(
         Modifier
-            .padding(LocalPlayerAwareWindowInsets.current.asPaddingValues())
+            .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
     ) {
         PreferenceEntry(

@@ -51,10 +51,11 @@ fun Thumbnail(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(WindowInsets.systemBars
-                        .only(WindowInsetsSides.Top)
-                        .add(WindowInsets(left = 16.dp, right = 16.dp))
-                        .asPaddingValues())
+                    .windowInsetsPadding(
+                        WindowInsets.systemBars
+                            .only(WindowInsetsSides.Top)
+                            .add(WindowInsets(left = 16.dp, right = 16.dp))
+                    )
             ) {
                 AsyncImage(
                     model = mediaMetadata.thumbnailUrl,

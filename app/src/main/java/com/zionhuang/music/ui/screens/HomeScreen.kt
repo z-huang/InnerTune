@@ -83,9 +83,7 @@ fun HomeScreen(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
-                    .padding(WindowInsets.systemBars
-                        .only(WindowInsetsSides.Horizontal)
-                        .asPaddingValues())
+                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 NavigationTile(
@@ -115,9 +113,7 @@ fun HomeScreen(
                     text = stringResource(R.string.most_played_songs),
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier
-                        .padding(WindowInsets.systemBars
-                            .only(WindowInsetsSides.Horizontal)
-                            .asPaddingValues())
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
                         .padding(12.dp)
                 )
 
@@ -176,9 +172,7 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(WindowInsets.systemBars
-                            .only(WindowInsetsSides.Horizontal)
-                            .asPaddingValues())
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
                         .clickable {
                             navController.navigate("new_release")
                         }
@@ -261,9 +255,10 @@ fun HomeScreen(
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(LocalPlayerAwareWindowInsets.current
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                    .asPaddingValues())
+                .windowInsetsPadding(
+                    LocalPlayerAwareWindowInsets.current
+                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                )
                 .padding(16.dp),
             onClick = {
                 if (newReleaseAlbums.isEmpty() || Random.nextBoolean()) {
