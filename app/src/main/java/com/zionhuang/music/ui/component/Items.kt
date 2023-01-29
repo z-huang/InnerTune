@@ -279,9 +279,18 @@ inline fun PlaylistListItem(
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = playlist.playlist.name,
-    subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
+    subtitle = if (playlist.playlist.isYouTubePlaylist) playlist.playlist.author else pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
     thumbnailContent = {
-        if (playlist.thumbnails.isEmpty()) {
+        if (playlist.playlist.thumbnailUrl != null) {
+            AsyncImage(
+                model = playlist.playlist.thumbnailUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(ListThumbnailSize)
+                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
+            )
+        } else if (playlist.thumbnails.isEmpty()) {
             Icon(
                 painter = painterResource(R.drawable.ic_queue_music),
                 contentDescription = null,

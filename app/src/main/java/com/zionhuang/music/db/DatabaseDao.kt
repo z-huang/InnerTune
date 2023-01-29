@@ -2,6 +2,7 @@ package com.zionhuang.music.db
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
+import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.innertube.pages.ArtistPage
@@ -245,7 +246,7 @@ interface DatabaseDao {
     fun artistByName(name: String): ArtistEntity?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(song: SongEntity)
+    fun insert(song: SongEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(artist: ArtistEntity)
@@ -273,7 +274,7 @@ interface DatabaseDao {
 
     @Transaction
     fun insert(mediaMetadata: MediaMetadata, block: (SongEntity) -> SongEntity = { it }) {
-        insert(mediaMetadata.toSongEntity().let(block))
+        if (insert(mediaMetadata.toSongEntity().let(block)) == -1L) return
         mediaMetadata.artists.forEachIndexed { index, artist ->
             val artistId = artist.id ?: artistByName(artist.name)?.id ?: ArtistEntity.generateArtistId()
             insert(ArtistEntity(
@@ -340,6 +341,16 @@ interface DatabaseDao {
                 order = index
             )
         }.forEach(::insert)
+    }
+
+    fun insert(playlist: PlaylistItem) {
+        insert(PlaylistEntity(
+            id = playlist.id,
+            name = playlist.title,
+            author = playlist.author.name,
+            authorId = playlist.author.id,
+            thumbnailUrl = playlist.thumbnail
+        ))
     }
 
     @Update

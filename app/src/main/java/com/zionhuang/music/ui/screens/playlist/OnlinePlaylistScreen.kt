@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.*
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -38,6 +39,8 @@ import com.zionhuang.music.ui.component.shimmer.*
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlinePlaylistViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -48,6 +51,7 @@ fun OnlinePlaylistScreen(
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
+    val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -57,6 +61,7 @@ fun OnlinePlaylistScreen(
 
     val playlist by viewModel.playlist.collectAsState()
     val itemsPage by viewModel.itemsPage.collectAsState()
+    val inLibrary by viewModel.inLibrary.collectAsState()
 
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -144,6 +149,29 @@ fun OnlinePlaylistScreen(
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Normal
                                     )
+                                }
+
+                                Row {
+                                    IconButton(
+                                        onClick = {
+                                            database.query {
+                                                if (inLibrary) {
+                                                    runBlocking {
+                                                        database.playlist(playlist.id).first()?.playlist
+                                                    }?.let { playlist ->
+                                                        delete(playlist)
+                                                    }
+                                                } else {
+                                                    insert(playlist)
+                                                }
+                                            }
+                                        }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(if (inLibrary) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
+                                            contentDescription = null
+                                        )
+                                    }
                                 }
                             }
                         }
