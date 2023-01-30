@@ -6,7 +6,6 @@ Make your own music library with any song from YouTube Music.
 No ads, free, and simple.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.zionhuang.music)
-[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music)
 
 [![Latest release](https://img.shields.io/github/v/release/z-huang/InnerTune?include_prereleases)](https://github.com/z-huang/music/releases)
 [![License](https://img.shields.io/github/license/z-huang/InnerTune)](https://www.gnu.org/licenses/gpl-3.0)
@@ -82,7 +81,7 @@ With this app, you're like getting a free music streaming service. You can liste
 You can install _InnerTune_ using the following methods:
 
 1. Download the APK file from [GitHub Releases](https://github.com/z-huang/InnerTune/releases).
-2. Add [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music) to your F-Droid repos following the [instruction](https://apt.izzysoft.de/fdroid/index/info), and you can search for this app and receive updates.
+2. Install the app from [F-Droid](https://f-droid.org/en/packages/com.zionhuang.music/), either using the F-Droid app (recommended) or directly from the web page.
 3. If you want to have bug fixes or enjoy new features quickly, install debug version from [GitHub Action](https://github.com/z-huang/InnerTune/actions) at your own risk and remember to backup your data more frequently.
 4. Clone this repository and build a debug APK.
 
