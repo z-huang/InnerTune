@@ -145,7 +145,6 @@
     <string name="message_restore_failed">ਬੈਕਅੱਪ ਰੀਸਟੋਰ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ</string>
     <string name="channel_name_playback">ਸੰਗੀਤ ਪਲੇਅਰ</string>
     <string name="channel_name_download">ਡਾਊਨਲੋਡ</string>
-    </plurals>
     <plurals name="song_count">
         <item quantity="one">%d ਗੀਤ</item>
         <item quantity="other">%d ਗੀਤ</item>
