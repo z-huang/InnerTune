@@ -18,8 +18,8 @@
     <string name="dark_theme_on">ਚਾਲੂ</string>
     <string name="dark_theme_off">ਬੰਦ</string>
     <string name="dark_theme_follow_system">ਸਿਸਟਮ ਦੀ ਪਾਲਣਾ ਕਰੋ</string>
-    <string name="pref_default_open_tab_title">ਡੀਫ਼ਾਲਟ ਖੁੱਲ੍ਹੀ ਟੈਬ</string>
-    <string name="pref_customize_navigation_tabs">ਨੈਵੀਗੇਸ਼ਨ ਟੈਬਾਂ ਨੂੰ ਅਨੁਕੂਲ ਬਣਾਓ</string>
+    <string name="pref_default_open_tab_title">ਡੀਫ਼ਾਲਟ ਖੁੱਲ੍ਹਣ ਵਾਲੀ ਟੈਬ</string>
+    <string name="pref_customize_navigation_tabs">ਨੈਵੀਗੇਸ਼ਨ ਟੈਬਾਂ ਨੂੰ ਆਪਣੀ ਪਸੰਦ ਦਾ ਢਾਲੋ</string>
     <string name="pref_lyrics_text_position_title">ਬੋਲਾਂ ਦੀ ਟੈਕਸਟ ਸਥਿਤੀ</string>
     <string name="align_left">ਖੱਬੇ</string>
     <string name="align_center">ਵਿਚਕਾਰ</string>
@@ -44,7 +44,7 @@
     <string name="pref_storage_title">ਸਟੋਰੇਜ</string>
     <string name="pref_open_saf_title">SAF ਵਿੱਚ ਡਾਊਨਲੋਡ ਕੀਤੀਆਂ ਫਾਈਲਾਂ ਦੇਖੋ</string>
     <string name="pref_open_saf_summary">ਇਹ ਕੁਝ ਡਿਵਾਈਸਾਂ ਵਿੱਚ ਕੰਮ ਨਹੀਂ ਕਰ ਸਕਦਾ ਹੈ</string>
-    <string name="pref_cache_title">ਕੈਸ਼</string>
+    <string name="pref_cache_title">ਕੈਸ਼ੇ</string>
     <string name="pref_image_max_cache_size_title">ਅਧਿਕਤਮ ਚਿੱਤਰ ਕੈਸ਼ੇ ਆਕਾਰ</string>
     <string name="pref_clear_image_cache_title">ਚਿੱਤਰ ਕੈਸ਼ੇ ਸਾਫ਼ ਕਰੋ</string>
     <string name="pref_song_max_cache_size_title">ਅਧਿਕਤਮ ਗੀਤ ਕੈਸ਼ੇ ਆਕਾਰ</string>
