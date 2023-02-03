@@ -1,7 +1,6 @@
 package com.zionhuang.music.db.entities
 
 import androidx.compose.runtime.Immutable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
@@ -17,12 +16,8 @@ data class SongEntity(
     val albumName: String? = null,
     val liked: Boolean = false,
     val totalPlayTime: Long = 0, // in milliseconds
-    val isTrash: Boolean = false,
-    @ColumnInfo(name = "download_state")
     val downloadState: Int = STATE_NOT_DOWNLOADED,
-    @ColumnInfo(name = "create_date")
     val createDate: LocalDateTime = LocalDateTime.now(),
-    @ColumnInfo(name = "modify_date")
     val modifyDate: LocalDateTime = LocalDateTime.now(),
 ) {
     fun toggleLike() = copy(liked = !liked)

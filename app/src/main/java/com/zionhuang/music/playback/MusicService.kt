@@ -132,8 +132,8 @@ class MusicService : MediaBrowserServiceCompat() {
                 result.sendResult((listOf(
                     mediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.song_count, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
                     mediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.song_count, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
-                ) + database.playlistsByCreateDateDesc().first().filter { it.playlist.isLocalPlaylist }.map { playlist ->
-                    mediaBrowserItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.playlist.thumbnailUrl?.toUri() ?: playlist.thumbnails.firstOrNull()?.toUri())
+                ) + database.playlistsByCreateDateDesc().first().map { playlist ->
+                    mediaBrowserItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.thumbnails.firstOrNull()?.toUri())
                 }).toMutableList())
             }
             else -> when {

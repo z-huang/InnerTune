@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -32,6 +33,8 @@ import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AlbumThumbnailSize
 import com.zionhuang.music.constants.ThumbnailCornerRadius
+import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.*
@@ -39,8 +42,7 @@ import com.zionhuang.music.ui.component.shimmer.*
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlinePlaylistViewModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -50,6 +52,7 @@ fun OnlinePlaylistScreen(
     viewModel: OnlinePlaylistViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val menuState = LocalMenuState.current
     val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -60,11 +63,11 @@ fun OnlinePlaylistScreen(
     val likedSongIds by mainViewModel.likedSongIds.collectAsState()
 
     val playlist by viewModel.playlist.collectAsState()
-    val itemsPage by viewModel.itemsPage.collectAsState()
-    val inLibrary by viewModel.inLibrary.collectAsState()
+    val songs by viewModel.playlistSongs.collectAsState()
 
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(playlist) {
         appBarConfig.title = {
@@ -78,228 +81,28 @@ fun OnlinePlaylistScreen(
         }
     }
 
-    LaunchedEffect(lazyListState) {
-        snapshotFlow {
-            lazyListState.layoutInfo.visibleItemsInfo.any { it.key == "loading" }
-        }.collect { shouldLoadMore ->
-            if (!shouldLoadMore) return@collect
-            viewModel.loadMore()
-        }
-    }
-
-    LazyColumn(
-        state = lazyListState,
-        contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        playlist.let { playlist ->
-            if (playlist != null) {
-                item {
-                    Column(
-                        modifier = Modifier.padding(12.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
+        ) {
+            playlist.let { playlist ->
+                if (playlist != null) {
+                    item {
+                        Column(
+                            modifier = Modifier.padding(12.dp)
                         ) {
-                            AsyncImage(
-                                model = playlist.thumbnail,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(AlbumThumbnailSize)
-                                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
-                            )
-
-                            Spacer(Modifier.width(16.dp))
-
-                            Column(
-                                verticalArrangement = Arrangement.Center,
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                AutoResizeText(
-                                    text = playlist.title,
-                                    fontWeight = FontWeight.Bold,
-                                    maxLines = 2,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontSizeRange = FontSizeRange(16.sp, 22.sp)
-                                )
-
-                                val annotatedString = buildAnnotatedString {
-                                    withStyle(
-                                        style = MaterialTheme.typography.titleMedium.copy(
-                                            fontWeight = FontWeight.Normal,
-                                            color = MaterialTheme.colorScheme.onBackground
-                                        ).toSpanStyle()
-                                    ) {
-                                        if (playlist.author.id != null) {
-                                            pushStringAnnotation(playlist.author.id!!, playlist.author.name)
-                                            append(playlist.author.name)
-                                            pop()
-                                        } else {
-                                            append(playlist.author.name)
-                                        }
-                                    }
-                                }
-                                ClickableText(annotatedString) { offset ->
-                                    annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
-                                        navController.navigate("artist/${range.tag}")
-                                    }
-                                }
-
-                                playlist.songCountText?.let { songCountText ->
-                                    Text(
-                                        text = songCountText,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Normal
-                                    )
-                                }
-
-                                Row {
-                                    IconButton(
-                                        onClick = {
-                                            database.query {
-                                                if (inLibrary) {
-                                                    runBlocking {
-                                                        database.playlist(playlist.id).first()?.playlist
-                                                    }?.let { playlist ->
-                                                        delete(playlist)
-                                                    }
-                                                } else {
-                                                    insert(playlist)
-                                                }
-                                            }
-                                        }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(if (inLibrary) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        Spacer(Modifier.height(12.dp))
-
-                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Button(
-                                onClick = {
-                                    playerConnection.playQueue(YouTubeQueue(playlist.shuffleEndpoint))
-                                },
-                                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_shuffle),
+                                AsyncImage(
+                                    model = playlist.thumbnail,
                                     contentDescription = null,
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text(stringResource(R.string.btn_shuffle))
-                            }
-
-                            OutlinedButton(
-                                onClick = {
-                                    playerConnection.playQueue(YouTubeQueue(playlist.radioEndpoint))
-                                },
-                                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_radio),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                                )
-                                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text(stringResource(R.string.btn_radio))
-                            }
-                        }
-                    }
-                }
-
-                items(
-                    items = itemsPage?.items.orEmpty(),
-                    key = { it.id }
-                ) { song ->
-                    if (song !is SongItem) return@items
-                    YouTubeListItem(
-                        item = song,
-                        badges = {
-                            if (song.explicit) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_explicit),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .padding(end = 2.dp)
-                                )
-                            }
-                            if (song.id in librarySongIds) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_library_add_check),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .padding(end = 2.dp)
-                                )
-                            }
-                            if (song.id in likedSongIds) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_favorite),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .padding(end = 2.dp)
-                                )
-                            }
-                        },
-                        isPlaying = mediaMetadata?.id == song.id,
-                        playWhenReady = playWhenReady,
-                        trailingContent = {
-                            IconButton(
-                                onClick = {
-                                    menuState.show {
-                                        YouTubeSongMenu(
-                                            song = song,
-                                            navController = navController,
-                                            playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
-                                            onDismiss = menuState::dismiss
-                                        )
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_more_vert),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        modifier = Modifier
-                            .clickable {
-                                playerConnection.playQueue(YouTubeQueue(song.endpoint ?: WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
-                            }
-                            .animateItemPlacement()
-                    )
-                }
-
-                if (itemsPage?.continuation != null) {
-                    item(key = "loading") {
-                        ShimmerHost {
-                            repeat(3) {
-                                ListItemPlaceHolder()
-                            }
-                        }
-                    }
-                }
-            } else {
-                item {
-                    ShimmerHost {
-                        Column(Modifier.padding(12.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Spacer(
                                     modifier = Modifier
                                         .size(AlbumThumbnailSize)
                                         .clip(RoundedCornerShape(ThumbnailCornerRadius))
-                                        .background(MaterialTheme.colorScheme.onSurface)
                                 )
 
                                 Spacer(Modifier.width(16.dp))
@@ -307,29 +110,226 @@ fun OnlinePlaylistScreen(
                                 Column(
                                     verticalArrangement = Arrangement.Center,
                                 ) {
-                                    TextPlaceholder()
-                                    TextPlaceholder()
-                                    TextPlaceholder()
+                                    AutoResizeText(
+                                        text = playlist.title,
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontSizeRange = FontSizeRange(16.sp, 22.sp)
+                                    )
+
+                                    val annotatedString = buildAnnotatedString {
+                                        withStyle(
+                                            style = MaterialTheme.typography.titleMedium.copy(
+                                                fontWeight = FontWeight.Normal,
+                                                color = MaterialTheme.colorScheme.onBackground
+                                            ).toSpanStyle()
+                                        ) {
+                                            if (playlist.author.id != null) {
+                                                pushStringAnnotation(playlist.author.id!!, playlist.author.name)
+                                                append(playlist.author.name)
+                                                pop()
+                                            } else {
+                                                append(playlist.author.name)
+                                            }
+                                        }
+                                    }
+                                    ClickableText(annotatedString) { offset ->
+                                        annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
+                                            navController.navigate("artist/${range.tag}")
+                                        }
+                                    }
+
+                                    playlist.songCountText?.let { songCountText ->
+                                        Text(
+                                            text = songCountText,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.Normal
+                                        )
+                                    }
+
+                                    Row {
+                                        IconButton(
+                                            onClick = {
+                                                database.transaction {
+                                                    val playlistEntity = PlaylistEntity(name = playlist.title)
+                                                    insert(playlistEntity)
+                                                    songs.map(SongItem::toMediaMetadata)
+                                                        .onEach(::insert)
+                                                        .mapIndexed { index, song ->
+                                                            PlaylistSongMap(
+                                                                songId = song.id,
+                                                                playlistId = playlistEntity.id,
+                                                                position = index
+                                                            )
+                                                        }
+                                                        .forEach(::insert)
+                                                    coroutineScope.launch {
+                                                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_playlist_imported))
+                                                    }
+                                                }
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.ic_input),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    }
                                 }
                             }
 
-                            Spacer(Modifier.padding(8.dp))
+                            Spacer(Modifier.height(12.dp))
 
-                            Row {
-                                ButtonPlaceholder(Modifier.weight(1f))
+                            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                Button(
+                                    onClick = {
+                                        playerConnection.playQueue(YouTubeQueue(playlist.shuffleEndpoint))
+                                    },
+                                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_shuffle),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    )
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text(stringResource(R.string.btn_shuffle))
+                                }
 
-                                Spacer(Modifier.width(12.dp))
-
-                                ButtonPlaceholder(Modifier.weight(1f))
+                                OutlinedButton(
+                                    onClick = {
+                                        playerConnection.playQueue(YouTubeQueue(playlist.radioEndpoint))
+                                    },
+                                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_radio),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                                    )
+                                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                                    Text(stringResource(R.string.btn_radio))
+                                }
                             }
                         }
+                    }
 
-                        repeat(6) {
-                            ListItemPlaceHolder()
+                    items(
+                        items = songs,
+                        key = { it.id }
+                    ) { song ->
+                        YouTubeListItem(
+                            item = song,
+                            badges = {
+                                if (song.explicit) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_explicit),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .padding(end = 2.dp)
+                                    )
+                                }
+                                if (song.id in librarySongIds) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_library_add_check),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .padding(end = 2.dp)
+                                    )
+                                }
+                                if (song.id in likedSongIds) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_favorite),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier
+                                            .size(18.dp)
+                                            .padding(end = 2.dp)
+                                    )
+                                }
+                            },
+                            isPlaying = mediaMetadata?.id == song.id,
+                            playWhenReady = playWhenReady,
+                            trailingContent = {
+                                IconButton(
+                                    onClick = {
+                                        menuState.show {
+                                            YouTubeSongMenu(
+                                                song = song,
+                                                navController = navController,
+                                                playerConnection = playerConnection,
+                                                coroutineScope = coroutineScope,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_more_vert),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    playerConnection.playQueue(YouTubeQueue(song.endpoint ?: WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
+                                }
+                                .animateItemPlacement()
+                        )
+                    }
+                } else {
+                    item {
+                        ShimmerHost {
+                            Column(Modifier.padding(12.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Spacer(
+                                        modifier = Modifier
+                                            .size(AlbumThumbnailSize)
+                                            .clip(RoundedCornerShape(ThumbnailCornerRadius))
+                                            .background(MaterialTheme.colorScheme.onSurface)
+                                    )
+
+                                    Spacer(Modifier.width(16.dp))
+
+                                    Column(
+                                        verticalArrangement = Arrangement.Center,
+                                    ) {
+                                        TextPlaceholder()
+                                        TextPlaceholder()
+                                        TextPlaceholder()
+                                    }
+                                }
+
+                                Spacer(Modifier.padding(8.dp))
+
+                                Row {
+                                    ButtonPlaceholder(Modifier.weight(1f))
+
+                                    Spacer(Modifier.width(12.dp))
+
+                                    ButtonPlaceholder(Modifier.weight(1f))
+                                }
+                            }
+
+                            repeat(6) {
+                                ListItemPlaceHolder()
+                            }
                         }
                     }
                 }
             }
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
+                .align(Alignment.BottomCenter)
+        )
     }
 }

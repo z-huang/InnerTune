@@ -112,7 +112,7 @@ fun LibraryPlaylistsScreen(
                     },
                     modifier = Modifier
                         .clickable {
-                            navController.navigate("playlist/$LIKED_PLAYLIST_ID")
+                            navController.navigate("local_playlist/$LIKED_PLAYLIST_ID")
                         }
                         .animateItemPlacement()
                 )
@@ -134,7 +134,7 @@ fun LibraryPlaylistsScreen(
                     },
                     modifier = Modifier
                         .clickable {
-                            navController.navigate("playlist/$DOWNLOADED_PLAYLIST_ID")
+                            navController.navigate("local_playlist/$DOWNLOADED_PLAYLIST_ID")
                         }
                         .animateItemPlacement()
                 )
@@ -150,7 +150,7 @@ fun LibraryPlaylistsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate("playlist/${playlist.id}")
+                            navController.navigate("local_playlist/${playlist.id}")
                         }
                         .animateItemPlacement()
                 )

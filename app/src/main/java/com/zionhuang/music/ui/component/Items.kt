@@ -279,25 +279,15 @@ inline fun PlaylistListItem(
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = playlist.playlist.name,
-    subtitle = if (playlist.playlist.isYouTubePlaylist) playlist.playlist.author else pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
+    subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
     thumbnailContent = {
-        if (playlist.playlist.thumbnailUrl != null) {
-            AsyncImage(
-                model = playlist.playlist.thumbnailUrl,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(ListThumbnailSize)
-                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
-            )
-        } else if (playlist.thumbnails.isEmpty()) {
-            Icon(
+        when (playlist.thumbnails.size) {
+            0 -> Icon(
                 painter = painterResource(R.drawable.ic_queue_music),
                 contentDescription = null,
                 modifier = Modifier.size(ListThumbnailSize)
             )
-        } else if (playlist.thumbnails.size == 1) {
-            AsyncImage(
+            1 -> AsyncImage(
                 model = playlist.thumbnails[0],
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
@@ -305,8 +295,7 @@ inline fun PlaylistListItem(
                     .size(ListThumbnailSize)
                     .clip(RoundedCornerShape(ThumbnailCornerRadius))
             )
-        } else {
-            Box(
+            else -> Box(
                 modifier = Modifier
                     .size(ListThumbnailSize)
                     .clip(RoundedCornerShape(ThumbnailCornerRadius))

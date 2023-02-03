@@ -179,7 +179,7 @@ fun LocalSearchScreen(
                             playlist = item,
                             modifier = Modifier
                                 .clickable {
-                                    navController.navigate("playlist/${item.id}")
+                                    navController.navigate("local_playlist/${item.id}")
                                 }
                                 .animateItemPlacement()
                         )

@@ -88,15 +88,6 @@ fun OnlineSearchResult(
         YouTubeListItem(
             item = item,
             badges = {
-                if (item.explicit) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_explicit),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .padding(end = 2.dp)
-                    )
-                }
                 if (item is SongItem && item.id in librarySongIds ||
                     item is AlbumItem && item.id in libraryAlbumIds ||
                     item is PlaylistItem && item.id in libraryPlaylistIds
@@ -114,6 +105,15 @@ fun OnlineSearchResult(
                         painter = painterResource(R.drawable.ic_favorite),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(end = 2.dp)
+                    )
+                }
+                if (item.explicit) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_explicit),
+                        contentDescription = null,
                         modifier = Modifier
                             .size(18.dp)
                             .padding(end = 2.dp)
@@ -167,7 +167,7 @@ fun OnlineSearchResult(
                         is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                         is AlbumItem -> navController.navigate("album/${item.id}")
                         is ArtistItem -> navController.navigate("artist/${item.id}")
-                        is PlaylistItem -> navController.navigate("playlist/${item.id}")
+                        is PlaylistItem -> navController.navigate("online_playlist/${item.id}")
                     }
                 }
                 .animateItemPlacement()

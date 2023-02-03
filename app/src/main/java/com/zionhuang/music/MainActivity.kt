@@ -373,7 +373,20 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(
-                                route = "playlist/{playlistId}",
+                                route = "online_playlist/{playlistId}",
+                                arguments = listOf(
+                                    navArgument("playlistId") {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) {
+                                OnlinePlaylistScreen(
+                                    appBarConfig = appBarConfig,
+                                    navController = navController
+                                )
+                            }
+                            composable(
+                                route = "local_playlist/{playlistId}",
                                 arguments = listOf(
                                     navArgument("playlistId") {
                                         type = NavType.StringType
@@ -386,13 +399,8 @@ class MainActivity : ComponentActivity() {
                                         appBarConfig = appBarConfig,
                                         navController = navController
                                     )
-                                } else if (playlistId.startsWith("LP")) {
-                                    LocalPlaylistScreen(
-                                        appBarConfig = appBarConfig,
-                                        navController = navController
-                                    )
                                 } else {
-                                    OnlinePlaylistScreen(
+                                    LocalPlaylistScreen(
                                         appBarConfig = appBarConfig,
                                         navController = navController
                                     )

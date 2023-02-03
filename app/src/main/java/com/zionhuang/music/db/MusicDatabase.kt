@@ -1,16 +1,17 @@
 package com.zionhuang.music.db
 
-import android.database.sqlite.SQLiteDatabase.CONFLICT_ABORT
+import android.database.sqlite.SQLiteDatabase
 import androidx.core.content.contentValuesOf
 import androidx.room.*
+import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.db.entities.ArtistEntity.Companion.generateArtistId
-import com.zionhuang.music.db.entities.PlaylistEntity.Companion.generatePlaylistId
 import com.zionhuang.music.extensions.toSQLiteQuery
+import timber.log.Timber
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
 
@@ -57,12 +58,13 @@ class MusicDatabase(
         SortedSongAlbumMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4),
-        AutoMigration(from = 4, to = 5)
+        AutoMigration(from = 4, to = 5),
+        AutoMigration(from = 5, to = 6, spec = Migration5To6::class)
     ]
 )
 @TypeConverters(Converters::class)
@@ -82,7 +84,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.query("SELECT * FROM artist".toSQLiteQuery()).use { cursor ->
             while (cursor.moveToNext()) {
                 val oldId = cursor.getInt(0)
-                val newId = generateArtistId()
+                val newId = ArtistEntity.generateArtistId()
                 artistMap[oldId] = newId
                 artists.add(ArtistEntity(
                     id = newId,
@@ -96,7 +98,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.query("SELECT * FROM playlist".toSQLiteQuery()).use { cursor ->
             while (cursor.moveToNext()) {
                 val oldId = cursor.getInt(0)
-                val newId = generatePlaylistId()
+                val newId = PlaylistEntity.generatePlaylistId()
                 playlistMap[oldId] = newId
                 playlists.add(PlaylistEntity(
                     id = newId,
@@ -169,7 +171,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("CREATE VIEW `sorted_song_artist_map` AS SELECT * FROM song_artist_map ORDER BY position")
         database.execSQL("CREATE VIEW `playlist_song_map_preview` AS SELECT * FROM playlist_song_map WHERE position <= 3 ORDER BY position")
         artists.forEach { artist ->
-            database.insert("artist", CONFLICT_ABORT, contentValuesOf(
+            database.insert("artist", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
                 "id" to artist.id,
                 "name" to artist.name,
                 "createDate" to converters.dateToTimestamp(artist.createDate),
@@ -177,39 +179,64 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             ))
         }
         songs.forEach { song ->
-            database.insert("song", CONFLICT_ABORT, contentValuesOf(
+            database.insert("song", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
                 "id" to song.id,
                 "title" to song.title,
                 "duration" to song.duration,
                 "liked" to song.liked,
                 "totalPlayTime" to song.totalPlayTime,
-                "isTrash" to song.isTrash,
+                "isTrash" to false,
                 "download_state" to song.downloadState,
                 "create_date" to converters.dateToTimestamp(song.createDate),
                 "modify_date" to converters.dateToTimestamp(song.modifyDate)
             ))
         }
         songArtistMaps.forEach { songArtistMap ->
-            database.insert("song_artist_map", CONFLICT_ABORT, contentValuesOf(
+            database.insert("song_artist_map", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
                 "songId" to songArtistMap.songId,
                 "artistId" to songArtistMap.artistId,
                 "position" to songArtistMap.position
             ))
         }
         playlists.forEach { playlist ->
-            database.insert("playlist", CONFLICT_ABORT, contentValuesOf(
+            database.insert("playlist", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
                 "id" to playlist.id,
                 "name" to playlist.name,
-                "createDate" to converters.dateToTimestamp(playlist.createDate),
-                "lastUpdateTime" to converters.dateToTimestamp(playlist.lastUpdateTime)
+                "createDate" to converters.dateToTimestamp(LocalDateTime.now()),
+                "lastUpdateTime" to converters.dateToTimestamp(LocalDateTime.now())
             ))
         }
         playlistSongMaps.forEach { playlistSongMap ->
-            database.insert("playlist_song_map", CONFLICT_ABORT, contentValuesOf(
+            database.insert("playlist_song_map", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
                 "playlistId" to playlistSongMap.playlistId,
                 "songId" to playlistSongMap.songId,
                 "position" to playlistSongMap.position
             ))
+        }
+    }
+}
+
+@DeleteColumn.Entries(
+    DeleteColumn(tableName = "song", columnName = "isTrash"),
+    DeleteColumn(tableName = "playlist", columnName = "author"),
+    DeleteColumn(tableName = "playlist", columnName = "authorId"),
+    DeleteColumn(tableName = "playlist", columnName = "year"),
+    DeleteColumn(tableName = "playlist", columnName = "thumbnailUrl"),
+    DeleteColumn(tableName = "playlist", columnName = "createDate"),
+    DeleteColumn(tableName = "playlist", columnName = "lastUpdateTime")
+)
+@RenameColumn.Entries(
+    RenameColumn(tableName = "song", fromColumnName = "download_state", toColumnName = "downloadState"),
+    RenameColumn(tableName = "song", fromColumnName = "create_date", toColumnName = "createDate"),
+    RenameColumn(tableName = "song", fromColumnName = "modify_date", toColumnName = "modifyDate")
+)
+class Migration5To6 : AutoMigrationSpec {
+    override fun onPostMigrate(db: SupportSQLiteDatabase) {
+        db.query("SELECT id FROM playlist WHERE id NOT LIKE 'LP%'").use { cursor ->
+            while (cursor.moveToNext()) {
+                Timber.d("id = ${cursor.getString(0)}")
+                db.execSQL("UPDATE playlist SET browseID = '${cursor.getString(0)}' WHERE id = '${cursor.getString(0)}'")
+            }
         }
     }
 }

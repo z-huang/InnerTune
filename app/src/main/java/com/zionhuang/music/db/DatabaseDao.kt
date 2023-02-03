@@ -2,7 +2,6 @@ package com.zionhuang.music.db
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.innertube.pages.ArtistPage
@@ -37,7 +36,7 @@ interface DatabaseDao {
     fun songsByRowIdDesc(): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song ORDER BY create_date DESC")
+    @Query("SELECT * FROM song ORDER BY createDate DESC")
     fun songsByCreateDateDesc(): Flow<List<Song>>
 
     @Transaction
@@ -72,7 +71,7 @@ interface DatabaseDao {
             songs.filter { it.song.downloadState == STATE_DOWNLOADED }
         }
 
-    @Query("SELECT COUNT(*) FROM song WHERE download_state = $STATE_DOWNLOADED")
+    @Query("SELECT COUNT(*) FROM song WHERE downloadState = $STATE_DOWNLOADED")
     fun downloadedSongsCount(): Flow<Int>
 
     @Transaction
@@ -84,7 +83,7 @@ interface DatabaseDao {
     fun playlistSongs(playlistId: String): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId ORDER BY create_date DESC")
+    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId ORDER BY createDate DESC")
     fun artistSongsByCreateDateDesc(artistId: String): Flow<List<Song>>
 
     @Transaction
@@ -180,7 +179,7 @@ interface DatabaseDao {
     fun albumWithSongs(albumId: String): Flow<AlbumWithSongs?>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY createDate DESC")
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY rowId DESC")
     fun playlistsByCreateDateDesc(): Flow<List<Playlist>>
 
     @Transaction
@@ -207,7 +206,7 @@ interface DatabaseDao {
     fun searchSongs(query: String, previewSize: Int = Int.MAX_VALUE): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND download_state = $STATE_DOWNLOADED LIMIT :previewSize")
+    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND downloadState = $STATE_DOWNLOADED LIMIT :previewSize")
     fun searchDownloadedSongs(query: String, previewSize: Int = Int.MAX_VALUE): Flow<List<Song>>
 
     @Transaction
@@ -341,16 +340,6 @@ interface DatabaseDao {
                 order = index
             )
         }.forEach(::insert)
-    }
-
-    fun insert(playlist: PlaylistItem) {
-        insert(PlaylistEntity(
-            id = playlist.id,
-            name = playlist.title,
-            author = playlist.author.name,
-            authorId = playlist.author.id,
-            thumbnailUrl = playlist.thumbnail
-        ))
     }
 
     @Update
