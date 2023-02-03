@@ -179,18 +179,22 @@
     <!-- Noun -->
     <plurals name="song_count">
         <item quantity="one">%d skladba</item>
+        <item quantity="few">%d skladby</item>
         <item quantity="other">%d skladeb</item>
     </plurals>
     <plurals name="artist_count">
         <item quantity="one">%d umělec</item>
+        <item quantity="few">%d umělci</item>
         <item quantity="other">%d umělců</item>
     </plurals>
     <plurals name="album_count">
         <item quantity="one">%d album</item>
+        <item quantity="few">%d alba</item>
         <item quantity="other">%d alb</item>
     </plurals>
     <plurals name="playlist_count">
-        <item quantity="one">%d playlis</item>
+        <item quantity="one">%d playlist</item>
+        <item quantity="few">%d playlisty</item>
         <item quantity="other">%d playlistů</item>
     </plurals>
 
