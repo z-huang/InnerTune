@@ -224,44 +224,65 @@
     <!-- Snackbar -->
     <plurals name="snackbar_delete_song">
         <item quantity="one">Byla odstraněna %d skladba.</item>
+        <item quantity="few">Byly odstraněny %d skladby.</item>
+        <item quantity="many">Bylo odstraněna %d skladeb.</item>
         <item quantity="other">Bylo odstraněno %d skladeb.</item>
     </plurals>
     <plurals name="n_selected">
+        <item quantity="one">Vybrána %d</item>
+        <item quantity="few">Vybrány %d</item>
+        <item quantity="many">Vybráno %d</item>
         <item quantity="other">Vybráno %d</item>
     </plurals>
     <string name="snackbar_undo">Zrušit</string>
     <string name="snackbar_url_error">Tuto adresu nelze identifikovat.</string>
     <plurals name="snackbar_song_play_next">
         <item quantity="one">Skladba bude hrát jako další</item>
+        <item quantity="few">%d skladby budou hrát jako další</item>
+        <item quantity="many">%d skladeb bude hrát jako další</item>
         <item quantity="other">%d skladeb bude hrát jako další</item>
     </plurals>
     <plurals name="snackbar_artist_play_next">
         <item quantity="one">Umělec bude hrát jako další</item>
+        <item quantity="few">%d umělci budou hrát jako další</item>
+        <item quantity="many">%d umělců bude hrát jako další</item>
         <item quantity="other">%d umělců bude hrát jako další</item>
     </plurals>
     <plurals name="snackbar_album_play_next">
         <item quantity="one">Album bude hrát jako další</item>
+        <item quantity="few">%d alba budou hrát jako další</item>
+        <item quantity="many">%d alb bude hrát jako další</item>
         <item quantity="other">%d alb bude hrát jako další</item>
     </plurals>
     <plurals name="snackbar_playlist_play_next">
         <item quantity="one">Playlist bude hrát jako další</item>
+        <item quantity="few">%d playlisty budou hrát jako další</item>
+        <item quantity="many">%d playlistů bude hrát jako další</item>
         <item quantity="other">%d playlistů bude hrát jako další</item>
     </plurals>
     <string name="snackbar_play_next">Vybrané budou přehrány jako další</string>
     <plurals name="snackbar_song_added_to_queue">
         <item quantity="one">Skladba přidána do fronty</item>
+        <item quantity="few">%d skladby přidány do fronty</item>
+        <item quantity="many">%d skladeb přidáno do fronty</item>
         <item quantity="other">%d skladeb přidáno do fronty</item>
     </plurals>
     <plurals name="snackbar_artist_added_to_queue">
         <item quantity="one">Umělec přidán do fronty</item>
+        <item quantity="few">%d umělci přidáni do fronty</item>
+        <item quantity="many">%d umělců přidáno do fronty</item>
         <item quantity="other">%d umělců přidáno do fronty</item>
     </plurals>
     <plurals name="snackbar_album_added_to_queue">
         <item quantity="one">Album přidáno do fronty</item>
+        <item quantity="few">%d alba přidány do fronty</item>
+        <item quantity="many">%d alb přidáno do fronty</item>
         <item quantity="other">%d alb přidáno do fronty</item>
     </plurals>
     <plurals name="snackbar_playlist_added_to_queue">
         <item quantity="one">Playlist přidán do fronty</item>
+        <item quantity="few">%d playlisty přidány do fronty</item>
+        <item quantity="many">%d playlistů přidáno do fronty</item>
         <item quantity="other">%d playlistů přidáno do fronty</item>
     </plurals>
     <string name="snackbar_added_to_queue">Vybrané přidány do fronty</string>
@@ -271,7 +292,9 @@
     <string name="snackbar_added_to_playlist">Přidáno do playlistu %1$s</string>
     <plurals name="snackbar_download_song">
         <item quantity="one">Stáhnout skladbu</item>
-        <item quantity="other">Stáhnout %d skladen</item>
+        <item quantity="few">Stáhnout %d skladby</item>
+        <item quantity="many">Stáhnout %d skladeb</item>
+        <item quantity="other">Stáhnout %d skladeb</item>
     </plurals>
     <string name="snackbar_removed_download">Odebrané stahování</string>
     <string name="snackbar_action_view">Zobrazit</string>
