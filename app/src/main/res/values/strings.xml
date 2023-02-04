@@ -319,6 +319,7 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="history">History</string>
     <string name="stats">Stats</string>
+    <string name="menu_sync">Sync</string>
 
     <plurals name="minute">
         <item quantity="one">1 minute</item>

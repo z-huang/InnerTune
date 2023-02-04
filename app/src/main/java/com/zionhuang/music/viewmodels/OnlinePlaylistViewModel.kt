@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.utils.completed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,16 +24,9 @@ class OnlinePlaylistViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val playlistPage = YouTube.playlist(playlistId).getOrNull() ?: return@launch
-            val songs = playlistPage.songs.toMutableList()
-            var continuation = playlistPage.songsContinuation
-            while (continuation != null) {
-                val continuationPage = YouTube.playlistContinuation(continuation).getOrNull() ?: break
-                songs += continuationPage.songs
-                continuation = continuationPage.continuation
-            }
+            val playlistPage = YouTube.playlist(playlistId).completed().getOrNull() ?: return@launch
             playlist.value = playlistPage.playlist
-            playlistSongs.value = songs
+            playlistSongs.value = playlistPage.songs
         }
     }
 }

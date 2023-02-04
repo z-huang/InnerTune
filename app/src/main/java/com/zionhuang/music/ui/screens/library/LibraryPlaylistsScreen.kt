@@ -5,10 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -27,10 +24,8 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
-import com.zionhuang.music.ui.component.ListItem
-import com.zionhuang.music.ui.component.PlaylistListItem
-import com.zionhuang.music.ui.component.SortHeader
-import com.zionhuang.music.ui.component.TextFieldDialog
+import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.menu.PlaylistMenu
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibraryPlaylistsViewModel
@@ -41,7 +36,10 @@ fun LibraryPlaylistsScreen(
     navController: NavController,
     viewModel: LibraryPlaylistsViewModel = hiltViewModel(),
 ) {
+    val menuState = LocalMenuState.current
     val database = LocalDatabase.current
+
+    val coroutineScope = rememberCoroutineScope()
 
     val (sortType, onSortTypeChange) = rememberEnumPreference(PlaylistSortTypeKey, PlaylistSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(PlaylistSortDescendingKey, true)
@@ -147,6 +145,24 @@ fun LibraryPlaylistsScreen(
             ) { playlist ->
                 PlaylistListItem(
                     playlist = playlist,
+                    trailingContent = {
+                        IconButton(
+                            onClick = {
+                                menuState.show {
+                                    PlaylistMenu(
+                                        playlist = playlist,
+                                        coroutineScope = coroutineScope,
+                                        onDismiss = menuState::dismiss
+                                    )
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_more_vert),
+                                contentDescription = null
+                            )
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {

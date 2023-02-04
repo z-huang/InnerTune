@@ -187,7 +187,7 @@ object YouTube {
         )
     }
 
-    suspend fun playlist(playlistId: String) = runCatching {
+    suspend fun playlist(playlistId: String): Result<PlaylistPage> = runCatching {
         val response = innerTube.browse(WEB_REMIX, "VL$playlistId").body<BrowseResponse>()
         PlaylistPage(
             playlist = PlaylistItem(

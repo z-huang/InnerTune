@@ -241,6 +241,9 @@ interface DatabaseDao {
     """)
     fun move(playlistId: Long, fromPosition: Int, toPosition: Int)
 
+    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId")
+    fun clearPlaylist(playlistId: String)
+
     @Query("SELECT * FROM artist WHERE name = :name")
     fun artistByName(name: String): ArtistEntity?
 
@@ -347,6 +350,9 @@ interface DatabaseDao {
 
     @Update
     fun update(artist: ArtistEntity)
+
+    @Update
+    fun update(playlist: PlaylistEntity)
 
     @Update
     fun update(map: PlaylistSongMap)
