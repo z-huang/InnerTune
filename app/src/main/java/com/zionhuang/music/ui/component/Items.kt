@@ -81,11 +81,11 @@ inline fun ListItem(
 }
 
 @Composable
-inline fun ListItem(
+fun ListItem(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String?,
-    crossinline badges: @Composable RowScope.() -> Unit = {},
+    badges: @Composable RowScope.() -> Unit = {},
     thumbnailContent: @Composable () -> Unit,
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
@@ -109,10 +109,10 @@ inline fun ListItem(
 )
 
 @Composable
-inline fun GridItem(
+fun GridItem(
     modifier: Modifier = Modifier,
     title: String,
-    noinline subtitle: (@Composable RowScope.() -> Unit)? = null,
+    subtitle: (@Composable RowScope.() -> Unit)? = null,
     thumbnailContent: @Composable () -> Unit,
 ) {
     Column(
@@ -141,7 +141,7 @@ inline fun GridItem(
 }
 
 @Composable
-inline fun SongListItem(
+fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
     albumIndex: Int? = null,
@@ -212,7 +212,7 @@ inline fun SongListItem(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-inline fun ArtistListItem(
+fun ArtistListItem(
     artist: Artist,
     modifier: Modifier = Modifier,
     trailingContent: @Composable RowScope.() -> Unit = {},
@@ -234,7 +234,7 @@ inline fun ArtistListItem(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-inline fun AlbumListItem(
+fun AlbumListItem(
     album: Album,
     modifier: Modifier = Modifier,
     isPlaying: Boolean = false,
@@ -273,7 +273,7 @@ inline fun AlbumListItem(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-inline fun PlaylistListItem(
+fun PlaylistListItem(
     playlist: Playlist,
     modifier: Modifier = Modifier,
     trailingContent: @Composable RowScope.() -> Unit = {},
@@ -323,7 +323,7 @@ inline fun PlaylistListItem(
 )
 
 @Composable
-inline fun MediaMetadataListItem(
+fun MediaMetadataListItem(
     mediaMetadata: MediaMetadata,
     modifier: Modifier,
     isPlaying: Boolean = false,
@@ -360,11 +360,11 @@ inline fun MediaMetadataListItem(
 )
 
 @Composable
-inline fun YouTubeListItem(
+fun YouTubeListItem(
     item: YTItem,
     modifier: Modifier = Modifier,
     albumIndex: Int? = null,
-    crossinline badges: @Composable RowScope.() -> Unit = {},
+    badges: @Composable RowScope.() -> Unit = {},
     isPlaying: Boolean = false,
     playWhenReady: Boolean = false,
     trailingContent: @Composable RowScope.() -> Unit = {},
@@ -422,10 +422,10 @@ inline fun YouTubeListItem(
 )
 
 @Composable
-inline fun YouTubeGridItem(
+fun YouTubeGridItem(
     item: YTItem,
     modifier: Modifier = Modifier,
-    crossinline badges: @Composable RowScope.() -> Unit = {},
+    badges: @Composable RowScope.() -> Unit = {},
     isPlaying: Boolean = false,
     playWhenReady: Boolean = false,
     fillMaxWidth: Boolean = false,

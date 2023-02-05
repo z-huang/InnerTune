@@ -11,7 +11,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -37,19 +36,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.google.android.exoplayer2.source.ShuffleOrder.DefaultShuffleOrder
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ShowLyricsKey
 import com.zionhuang.music.extensions.metadata
+import com.zionhuang.music.extensions.move
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.utils.reordering.ReorderingLazyColumn
+import com.zionhuang.music.ui.utils.reordering.draggedItem
+import com.zionhuang.music.ui.utils.reordering.rememberReorderingState
+import com.zionhuang.music.ui.utils.reordering.reorder
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberPreference
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
@@ -66,14 +73,10 @@ fun Queue(
 
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
-    val queueTitle by playerConnection.queueTitle.collectAsState()
-    val queueItems by playerConnection.queueItems.collectAsState()
-    val queueLength = remember(queueItems) {
-        queueItems.sumOf { it.mediaItem.metadata!!.duration }
-    }
+
     val currentWindowIndex by playerConnection.currentWindowIndex.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
-    if (mediaMetadata == null) return
+
     val currentSong by playerConnection.currentSong.collectAsState(initial = null)
     val currentFormat by playerConnection.currentFormat.collectAsState(initial = null)
 
@@ -298,12 +301,33 @@ fun Queue(
             }
         }
     ) {
-        val lazyListState = rememberLazyListState(
-            initialFirstVisibleItemIndex = currentWindowIndex
+        val queueTitle by playerConnection.queueTitle.collectAsState()
+        val queueWindows by playerConnection.queueWindows.collectAsState()
+        val queueLength = remember(queueWindows) {
+            queueWindows.sumOf { it.mediaItem.metadata!!.duration }
+        }
+
+        val coroutineScope = rememberCoroutineScope()
+        val reorderingState = rememberReorderingState(
+            lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = currentWindowIndex),
+            key = queueWindows,
+            onDragEnd = { currentIndex, newIndex ->
+                if (!playerConnection.player.shuffleModeEnabled) {
+                    playerConnection.player.moveMediaItem(currentIndex, newIndex)
+                } else {
+                    playerConnection.player.setShuffleOrder(
+                        DefaultShuffleOrder(
+                            queueWindows.map { it.firstPeriodIndex }.toMutableList().move(currentIndex, newIndex).toIntArray(),
+                            System.currentTimeMillis()
+                        )
+                    )
+                }
+            },
+            extraItemCount = 0
         )
 
-        LazyColumn(
-            state = lazyListState,
+        ReorderingLazyColumn(
+            reorderingState = reorderingState,
             contentPadding = WindowInsets.systemBars
                 .add(WindowInsets(
                     top = ListItemHeight,
@@ -313,24 +337,46 @@ fun Queue(
             modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
         ) {
             itemsIndexed(
-                items = queueItems,
+                items = queueWindows,
                 key = { _, item -> item.uid.hashCode() }
             ) { index, window ->
                 MediaMetadataListItem(
                     mediaMetadata = window.mediaItem.metadata!!,
                     isPlaying = index == currentWindowIndex,
                     playWhenReady = playWhenReady,
+                    trailingContent = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_drag_handle),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .reorder(
+                                    reorderingState = reorderingState,
+                                    index = index
+                                )
+                                .clickable(
+                                    enabled = false,
+                                    onClick = {}
+                                )
+                                .padding(8.dp)
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .animateItemPlacement()
                         .clickable {
-                            if (index == currentWindowIndex) {
-                                playerConnection.player.togglePlayPause()
-                            } else {
-                                playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
-                                playerConnection.player.playWhenReady = true
+                            coroutineScope.launch(Dispatchers.Main) {
+                                if (index == currentWindowIndex) {
+                                    playerConnection.player.togglePlayPause()
+                                } else {
+                                    playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
+                                    playerConnection.player.playWhenReady = true
+                                }
                             }
                         }
+//                        .animateItemPlacement(reorderingState = reorderingState)
+                        .draggedItem(
+                            reorderingState = reorderingState,
+                            index = index
+                        )
                 )
             }
         }
@@ -364,7 +410,7 @@ fun Queue(
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = pluralStringResource(R.plurals.song_count, queueItems.size, queueItems.size),
+                        text = pluralStringResource(R.plurals.song_count, queueWindows.size, queueWindows.size),
                         style = MaterialTheme.typography.bodyMedium
                     )
 
@@ -400,14 +446,19 @@ fun Queue(
             IconButton(
                 modifier = Modifier.align(Alignment.CenterStart),
                 onClick = {
-                    playerConnection.player.shuffleModeEnabled = !playerConnection.player.shuffleModeEnabled
+                    reorderingState.coroutineScope.launch {
+                        reorderingState.lazyListState.animateScrollToItem(
+                            if (playerConnection.player.shuffleModeEnabled) playerConnection.player.currentMediaItemIndex else 0
+                        )
+                    }.invokeOnCompletion {
+                        playerConnection.player.shuffleModeEnabled = !playerConnection.player.shuffleModeEnabled
+                    }
                 }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_shuffle),
                     contentDescription = null,
-                    modifier = Modifier
-                        .alpha(if (shuffleModeEnabled) 1f else 0.5f)
+                    modifier = Modifier.alpha(if (shuffleModeEnabled) 1f else 0.5f)
                 )
             }
 

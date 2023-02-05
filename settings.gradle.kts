@@ -20,7 +20,7 @@ dependencyResolutionManagement {
             library("datastore", "androidx.datastore", "datastore-preferences").version("1.0.0")
 
             version("compose-compiler", "1.3.2")
-            version("compose", "1.3.0")
+            version("compose", "1.3.1")
             library("compose-runtime", "androidx.compose.runtime", "runtime").versionRef("compose")
             library("compose-foundation", "androidx.compose.foundation", "foundation").versionRef("compose")
             library("compose-ui", "androidx.compose.ui", "ui").versionRef("compose")

@@ -37,7 +37,7 @@ class PlayerConnection(
     }
 
     val queueTitle = MutableStateFlow<String?>(null)
-    val queueItems = MutableStateFlow<List<Timeline.Window>>(emptyList())
+    val queueWindows = MutableStateFlow<List<Timeline.Window>>(emptyList())
     val currentMediaItemIndex = MutableStateFlow(-1)
     val currentWindowIndex = MutableStateFlow(-1)
 
@@ -61,7 +61,7 @@ class PlayerConnection(
         playWhenReady.value = binder.player.playWhenReady
         mediaMetadata.value = binder.player.currentMetadata
         queueTitle.value = binder.songPlayer.queueTitle
-        queueItems.value = binder.player.getQueueWindows()
+        queueWindows.value = binder.player.getQueueWindows()
         currentWindowIndex.value = binder.player.getCurrentQueueIndex()
         currentMediaItemIndex.value = binder.player.currentMediaItemIndex
         shuffleModeEnabled.value = binder.player.shuffleModeEnabled
@@ -117,7 +117,7 @@ class PlayerConnection(
     }
 
     override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-        queueItems.value = binder.player.getQueueWindows()
+        queueWindows.value = binder.player.getQueueWindows()
         queueTitle.value = binder.songPlayer.queueTitle
         currentMediaItemIndex.value = player.currentMediaItemIndex
         currentWindowIndex.value = binder.player.getCurrentQueueIndex()
@@ -126,7 +126,7 @@ class PlayerConnection(
 
     override fun onShuffleModeEnabledChanged(enabled: Boolean) {
         shuffleModeEnabled.value = enabled
-        queueItems.value = binder.player.getQueueWindows()
+        queueWindows.value = binder.player.getQueueWindows()
         currentWindowIndex.value = binder.player.getCurrentQueueIndex()
         updateCanSkipPreviousAndNext()
     }

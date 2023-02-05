@@ -713,10 +713,7 @@ class SongPlayer(
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         if (shuffleModeEnabled) {
             // Always put current playing item at first
-            val shuffledIndices = IntArray(player.mediaItemCount)
-            for (i in 0 until player.mediaItemCount) {
-                shuffledIndices[i] = i
-            }
+            val shuffledIndices = IntArray(player.mediaItemCount) { it }
             shuffledIndices.shuffle()
             shuffledIndices[shuffledIndices.indexOf(player.currentMediaItemIndex)] = shuffledIndices[0]
             shuffledIndices[0] = player.currentMediaItemIndex

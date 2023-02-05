@@ -3,8 +3,8 @@ package com.zionhuang.music.ui.screens.playlist
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,6 +25,7 @@ import androidx.compose.ui.util.fastSumBy
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -35,6 +36,7 @@ import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.utils.reordering.*
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
 
@@ -46,6 +48,7 @@ fun LocalPlaylistScreen(
     viewModel: LocalPlaylistViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
+    val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -70,7 +73,19 @@ fun LocalPlaylistScreen(
         }
     }
 
-    LazyColumn(
+    val reorderingState = rememberReorderingState(
+        lazyListState = rememberLazyListState(),
+        key = songs,
+        onDragEnd = { fromIndex, toIndex ->
+            database.query {
+                move(viewModel.playlistId, fromIndex, toIndex)
+            }
+        },
+        extraItemCount = 1
+    )
+
+    ReorderingLazyColumn(
+        reorderingState = reorderingState,
         contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
     ) {
         playlist?.let { playlist ->
@@ -217,17 +232,28 @@ fun LocalPlaylistScreen(
                             contentDescription = null
                         )
                     }
+
+                    IconButton(
+                        onClick = { },
+                        modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_drag_handle),
+                            contentDescription = null
+                        )
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .combinedClickable {
                         playerConnection.playQueue(ListQueue(
                             title = playlist!!.playlist.name,
-                            items = songs.map { it.toMediaItem() },
+                            items = songs.map(Song::toMediaItem),
                             startIndex = index
                         ))
                     }
-                    .animateItemPlacement()
+                    .animateItemPlacement(reorderingState = reorderingState)
+                    .draggedItem(reorderingState = reorderingState, index = index)
             )
         }
     }

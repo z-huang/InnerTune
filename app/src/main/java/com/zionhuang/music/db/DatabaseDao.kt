@@ -237,9 +237,9 @@ interface DatabaseDao {
                 WHEN position > :fromPosition THEN position - 1
                 ELSE :toPosition
             END 
-        WHERE playlistId = :playlistId AND position BETWEEN MIN(:fromPosition,:toPosition) AND MAX(:fromPosition,:toPosition)
+        WHERE playlistId = :playlistId AND position BETWEEN MIN(:fromPosition, :toPosition) AND MAX(:fromPosition, :toPosition)
     """)
-    fun move(playlistId: Long, fromPosition: Int, toPosition: Int)
+    fun move(playlistId: String, fromPosition: Int, toPosition: Int)
 
     @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId")
     fun clearPlaylist(playlistId: String)
