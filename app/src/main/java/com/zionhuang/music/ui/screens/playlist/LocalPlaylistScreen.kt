@@ -16,7 +16,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,20 +27,27 @@ import androidx.compose.ui.util.fastSumBy
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.utils.completed
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AlbumThumbnailSize
 import com.zionhuang.music.constants.ThumbnailCornerRadius
+import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.ui.utils.reordering.*
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -69,6 +78,26 @@ fun LocalPlaylistScreen(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
+            )
+        }
+    }
+
+    var showEditDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showEditDialog) {
+        playlist?.playlist?.let { playlistEntity ->
+            TextFieldDialog(
+                icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
+                title = { Text(text = stringResource(R.string.dialog_title_edit_playlist)) },
+                onDismiss = { showEditDialog = false },
+                initialTextFieldValue = TextFieldValue(playlistEntity.name, TextRange(playlistEntity.name.length)),
+                onDone = { name ->
+                    database.query {
+                        update(playlistEntity.copy(name = name))
+                    }
+                }
             )
         }
     }
@@ -159,6 +188,46 @@ fun LocalPlaylistScreen(
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Normal
                                 )
+
+                                Row {
+                                    IconButton(
+                                        onClick = { showEditDialog = true }
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_edit),
+                                            contentDescription = null
+                                        )
+                                    }
+
+                                    if (playlist.playlist.browseId != null) {
+                                        IconButton(
+                                            onClick = {
+                                                coroutineScope.launch(Dispatchers.IO) {
+                                                    val playlistPage = YouTube.playlist(playlist.playlist.browseId).completed().getOrNull() ?: return@launch
+                                                    database.transaction {
+                                                        clearPlaylist(playlist.id)
+                                                        playlistPage.songs
+                                                            .map(SongItem::toMediaMetadata)
+                                                            .onEach(::insert)
+                                                            .mapIndexed { position, song ->
+                                                                PlaylistSongMap(
+                                                                    songId = song.id,
+                                                                    playlistId = playlist.id,
+                                                                    position = position
+                                                                )
+                                                            }
+                                                            .forEach(::insert)
+                                                    }
+                                                }
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.ic_sync),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
 
@@ -246,11 +315,13 @@ fun LocalPlaylistScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .combinedClickable {
-                        playerConnection.playQueue(ListQueue(
-                            title = playlist!!.playlist.name,
-                            items = songs.map(Song::toMediaItem),
-                            startIndex = index
-                        ))
+                        playerConnection.playQueue(
+                            ListQueue(
+                                title = playlist!!.playlist.name,
+                                items = songs.map(Song::toMediaItem),
+                                startIndex = index
+                            )
+                        )
                     }
                     .animateItemPlacement(reorderingState = reorderingState)
                     .draggedItem(reorderingState = reorderingState, index = index)
