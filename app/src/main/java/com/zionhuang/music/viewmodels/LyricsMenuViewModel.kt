@@ -13,6 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,12 +44,13 @@ class LyricsMenuViewModel @Inject constructor(
         job = null
     }
 
-    fun refetchLyrics(mediaMetadata: MediaMetadata) {
-        viewModelScope.launch {
-            val lyrics = lyricsHelper.getLyrics(mediaMetadata)
-            database.query {
-                upsert(LyricsEntity(mediaMetadata.id, lyrics))
+    fun refetchLyrics(mediaMetadata: MediaMetadata, lyricsEntity: LyricsEntity?) {
+        database.query {
+            lyricsEntity?.let(::delete)
+            val lyrics = runBlocking {
+                lyricsHelper.getLyrics(mediaMetadata)
             }
+            upsert(LyricsEntity(mediaMetadata.id, lyrics))
         }
     }
 }

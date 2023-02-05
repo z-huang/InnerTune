@@ -233,7 +233,7 @@ fun Lyrics(
             onClick = {
                 menuState.show {
                     LyricsMenu(
-                        lyricsProvider = { lyricsEntity?.lyrics },
+                        lyricsProvider = { lyricsEntity },
                         mediaMetadataProvider = mediaMetadataProvider,
                         onDismiss = menuState::dismiss
                     )
@@ -251,7 +251,7 @@ fun Lyrics(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LyricsMenu(
-    lyricsProvider: () -> String?,
+    lyricsProvider: () -> LyricsEntity?,
     mediaMetadataProvider: () -> MediaMetadata,
     onDismiss: () -> Unit,
     viewModel: LyricsMenuViewModel = hiltViewModel(),
@@ -268,7 +268,7 @@ fun LyricsMenu(
             onDismiss = { showEditDialog = false },
             icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
             title = { Text(text = mediaMetadataProvider().title) },
-            initialTextFieldValue = TextFieldValue(lyricsProvider().orEmpty()),
+            initialTextFieldValue = TextFieldValue(lyricsProvider()?.lyrics.orEmpty()),
             singleLine = false,
             onDone = {
                 database.query {
@@ -473,8 +473,8 @@ fun LyricsMenu(
             icon = R.drawable.ic_cached,
             title = R.string.menu_refetch
         ) {
-            viewModel.refetchLyrics(mediaMetadataProvider())
             onDismiss()
+            viewModel.refetchLyrics(mediaMetadataProvider(), lyricsProvider())
         }
         GridMenuItem(
             icon = R.drawable.ic_search,
