@@ -77,20 +77,6 @@ With this app, you're like getting a free music streaming service. You can liste
   <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="170" />
 </p>
 
-## Installation
-
-You can install _InnerTune_ using the following methods:
-
-1. Download the APK file from [GitHub Releases](https://github.com/z-huang/InnerTune/releases).
-2. Add [IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music) to your F-Droid repos following the [instruction](https://apt.izzysoft.de/fdroid/index/info), and you can search for this app and receive updates.
-3. If you want to have bug fixes or enjoy new features quickly, install debug version from [GitHub Action](https://github.com/z-huang/InnerTune/actions) at your own risk and remember to backup your data more frequently.
-4. Clone this repository and build a debug APK.
-
-How to get updates?
-
-1. F-Droid application.
-2. [GitHub](https://github.com/z-huang/InnerTune) + [Obtainium (beta)](https://github.com/ImranR98/Obtainium)
-
 ## FAQ
 
 ### Q: How to scrobble music to LastFM, LibreFM, ListenBrainz or GNU FM?
@@ -118,18 +104,17 @@ recommended).
 
 #### App
 
-1. Have a fork of this project.
-2. If you have Android Studio, right click on the `app/src/main/res/values` folder, select "New"->"
-   Values Resource File". Input `strings.xml` as file name. Select "Locale", click ">>", choose your
-   language and region, and click "OK".
-3. If not, create a folder named `values-<language code>-r<region code>` under `app/src/main/res`.
-   Copy `app/src/main/res/values/strings.xml` to the created folder.
-4. Replace each English string with the equivalent translation. Note that lines
-   with `translatable="false"` should be ignored.
-5. (Recommended) Build the app to see if something is wrong.
-6. Make a pull request with your changes. If you do step 5, the process of accepting your PR will be
-   faster.
+Follow the [instruction](https://developer.android.com/guide/topics/resources/localization) and
+create a pull request. If possible, please build the app beforehand and make sure there is no error
+before you create a pull request.
 
 #### Fastlane (App Description and Changelogs)
 
-Follow the [fastlane instruction](https://gitlab.com/-/snippets/1895688) to add your language and create a pull request.
+Follow the [fastlane instruction](https://gitlab.com/-/snippets/1895688) to add your language and
+create a pull request.
+
+## Credit
+
+I want to give credit to [vfsfitvnm/ViMusic](https://github.com/vfsfitvnm/ViMusic) for being an
+example of Jetpack Compose and music player. It helped me a lot on my way to learn Compose and
+Android development.
