@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.zionhuang.music.ui.utils.top
 
@@ -43,6 +44,8 @@ fun BottomSheetMenu(
     state: MenuState,
     background: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(NavigationBarDefaults.Elevation),
 ) {
+    val focusManager = LocalFocusManager.current
+
     AnimatedVisibility(
         visible = state.isVisible,
         enter = fadeIn(),
@@ -79,6 +82,12 @@ fun BottomSheetMenu(
                 .background(background)
         ) {
             state.content(this)
+        }
+    }
+
+    LaunchedEffect(state.isVisible) {
+        if (state.isVisible) {
+            focusManager.clearFocus()
         }
     }
 }
