@@ -156,6 +156,11 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
+                    val focusManager = LocalFocusManager.current
+                    val density = LocalDensity.current
+                    val windowsInsets = WindowInsets.systemBars
+                    val bottomInset = with(density) { windowsInsets.getBottom(density).toDp() }
+
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -166,7 +171,6 @@ class MainActivity : ComponentActivity() {
                         dataStore[DefaultOpenTabKey].toEnum(defaultValue = NavigationTab.HOME)
                     }
 
-                    val focusManager = LocalFocusManager.current
                     val (query, onQueryChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
                         mutableStateOf(TextFieldValue())
                     }
@@ -207,10 +211,6 @@ class MainActivity : ComponentActivity() {
                         animationSpec = NavigationBarAnimationSpec
                     )
 
-                    val density = LocalDensity.current
-                    val windowsInsets = WindowInsets.systemBars
-                    val bottomInset = with(density) { windowsInsets.getBottom(density).toDp() }
-
                     val playerBottomSheetState = rememberBottomSheetState(
                         dismissedBound = 0.dp,
                         collapsedBound = bottomInset + (if (shouldShowNavigationBar) NavigationBarHeight else 0.dp) + MiniPlayerHeight,
@@ -223,12 +223,7 @@ class MainActivity : ComponentActivity() {
                         if (!playerBottomSheetState.isDismissed) bottom += MiniPlayerHeight
                         windowsInsets
                             .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-                            .add(
-                                WindowInsets(
-                                    top = AppBarHeight,
-                                    bottom = bottom
-                                )
-                            )
+                            .add(WindowInsets(top = AppBarHeight, bottom = bottom))
                     }
 
                     val scrollBehavior = appBarScrollBehavior(
@@ -524,8 +519,8 @@ class MainActivity : ComponentActivity() {
                                     targetState = searchSource,
                                     modifier = Modifier
                                         .fillMaxSize()
+                                        .padding(bottom = if (!playerBottomSheetState.isDismissed) MiniPlayerHeight else 0.dp)
                                         .navigationBarsPadding()
-                                        .imePadding()
                                 ) { searchSource ->
                                     when (searchSource) {
                                         SearchSource.LOCAL -> LocalSearchScreen(
