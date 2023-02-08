@@ -9,7 +9,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toSQLiteQuery
-import timber.log.Timber
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -234,7 +233,6 @@ class Migration5To6 : AutoMigrationSpec {
     override fun onPostMigrate(db: SupportSQLiteDatabase) {
         db.query("SELECT id FROM playlist WHERE id NOT LIKE 'LP%'").use { cursor ->
             while (cursor.moveToNext()) {
-                Timber.d("id = ${cursor.getString(0)}")
                 db.execSQL("UPDATE playlist SET browseID = '${cursor.getString(0)}' WHERE id = '${cursor.getString(0)}'")
             }
         }

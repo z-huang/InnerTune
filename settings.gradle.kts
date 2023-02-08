@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 dependencyResolutionManagement {
@@ -11,7 +13,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            version("kotlin", "1.7.20")
+            version("kotlin", "1.8.0")
             plugin("kotlin-serialization", "org.jetbrains.kotlin.plugin.serialization").versionRef("kotlin")
 
             library("activity", "androidx.activity", "activity-compose").version("1.5.1")
@@ -19,10 +21,10 @@ dependencyResolutionManagement {
             library("hilt-navigation", "androidx.hilt", "hilt-navigation-compose").version("1.0.0")
             library("datastore", "androidx.datastore", "datastore-preferences").version("1.0.0")
 
-            version("compose-compiler", "1.3.2")
-            version("compose", "1.3.1")
+            version("compose-compiler", "1.4.0")
+            version("compose", "1.3.3")
             library("compose-runtime", "androidx.compose.runtime", "runtime").versionRef("compose")
-            library("compose-foundation", "androidx.compose.foundation", "foundation").versionRef("compose")
+            library("compose-foundation", "androidx.compose.foundation", "foundation").version("1.3.1")
             library("compose-ui", "androidx.compose.ui", "ui").versionRef("compose")
             library("compose-ui-util", "androidx.compose.ui", "ui-util").versionRef("compose")
             library("compose-ui-tooling", "androidx.compose.ui", "ui-tooling").versionRef("compose")
@@ -33,7 +35,7 @@ dependencyResolutionManagement {
             library("viewmodel", "androidx.lifecycle", "lifecycle-viewmodel-ktx").versionRef("lifecycle")
             library("viewmodel-compose", "androidx.lifecycle", "lifecycle-viewmodel-compose").versionRef("lifecycle")
 
-            version("material3", "1.1.0-alpha03")
+            version("material3", "1.1.0-alpha05")
             library("material3", "androidx.compose.material3", "material3").versionRef("material3")
             library("material3-windowsize", "androidx.compose.material3", "material3-window-size-class").versionRef("material3")
 

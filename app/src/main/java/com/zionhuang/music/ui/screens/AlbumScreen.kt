@@ -54,10 +54,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AlbumScreen(
     navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
     viewModel: AlbumViewModel = hiltViewModel(),
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -93,11 +94,13 @@ fun AlbumScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .combinedClickable {
-                                    playerConnection.playQueue(ListQueue(
-                                        title = viewState.albumWithSongs.album.title,
-                                        items = viewState.albumWithSongs.songs.map { it.toMediaItem() },
-                                        startIndex = index
-                                    ))
+                                    playerConnection.playQueue(
+                                        ListQueue(
+                                            title = viewState.albumWithSongs.album.title,
+                                            items = viewState.albumWithSongs.songs.map { it.toMediaItem() },
+                                            startIndex = index
+                                        )
+                                    )
                                 }
                         )
                     }
@@ -135,11 +138,13 @@ fun AlbumScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .combinedClickable {
-                                    playerConnection.playQueue(ListQueue(
-                                        title = viewState.albumPage.album.title,
-                                        items = viewState.albumPage.songs.map { it.toMediaItem() },
-                                        startIndex = index
-                                    ))
+                                    playerConnection.playQueue(
+                                        ListQueue(
+                                            title = viewState.albumPage.album.title,
+                                            items = viewState.albumPage.songs.map { it.toMediaItem() },
+                                            startIndex = index
+                                        )
+                                    )
                                 }
                         )
                     }
@@ -187,6 +192,19 @@ fun AlbumScreen(
             }
         }
     }
+
+    TopAppBar(
+        title = { },
+        navigationIcon = {
+            IconButton(onClick = navController::navigateUp) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }
 
 @Composable
@@ -282,10 +300,12 @@ fun LocalAlbumHeader(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(
                 onClick = {
-                    playerConnection.playQueue(ListQueue(
-                        title = albumWithSongs.album.title,
-                        items = albumWithSongs.songs.map(Song::toMediaItem)
-                    ))
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = albumWithSongs.album.title,
+                            items = albumWithSongs.songs.map(Song::toMediaItem)
+                        )
+                    )
                 },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.weight(1f)
@@ -303,10 +323,12 @@ fun LocalAlbumHeader(
 
             OutlinedButton(
                 onClick = {
-                    playerConnection.playQueue(ListQueue(
-                        title = albumWithSongs.album.title,
-                        items = albumWithSongs.songs.shuffled().map(Song::toMediaItem)
-                    ))
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = albumWithSongs.album.title,
+                            items = albumWithSongs.songs.shuffled().map(Song::toMediaItem)
+                        )
+                    )
                 },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.weight(1f)
@@ -424,10 +446,12 @@ fun RemoteAlbumHeader(
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(
                 onClick = {
-                    playerConnection.playQueue(ListQueue(
-                        title = albumPage.album.title,
-                        items = albumPage.songs.map(SongItem::toMediaItem)
-                    ))
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = albumPage.album.title,
+                            items = albumPage.songs.map(SongItem::toMediaItem)
+                        )
+                    )
                 },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.weight(1f)
@@ -445,10 +469,12 @@ fun RemoteAlbumHeader(
 
             OutlinedButton(
                 onClick = {
-                    playerConnection.playQueue(ListQueue(
-                        title = albumPage.album.title,
-                        items = albumPage.songs.shuffled().map(SongItem::toMediaItem)
-                    ))
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = albumPage.album.title,
+                            items = albumPage.songs.shuffled().map(SongItem::toMediaItem)
+                        )
+                    )
                 },
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 modifier = Modifier.weight(1f)

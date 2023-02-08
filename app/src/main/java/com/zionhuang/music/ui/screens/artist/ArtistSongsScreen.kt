@@ -5,15 +5,12 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,10 +32,11 @@ import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.ArtistSongsViewModel
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ArtistSongsScreen(
     navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
     viewModel: ArtistSongsViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -111,16 +109,31 @@ fun ArtistSongsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-                            playerConnection.playQueue(ListQueue(
-                                title = context.getString(R.string.queue_all_songs),
-                                items = songs.map { it.toMediaItem() },
-                                startIndex = index
-                            ))
+                            playerConnection.playQueue(
+                                ListQueue(
+                                    title = context.getString(R.string.queue_all_songs),
+                                    items = songs.map { it.toMediaItem() },
+                                    startIndex = index
+                                )
+                            )
                         }
                         .animateItemPlacement()
                 )
             }
         }
+
+        TopAppBar(
+            title = { Text(artist?.name.orEmpty()) },
+            navigationIcon = {
+                IconButton(onClick = navController::navigateUp) {
+                    Icon(
+                        painterResource(R.drawable.ic_arrow_back),
+                        contentDescription = null
+                    )
+                }
+            },
+            scrollBehavior = scrollBehavior
+        )
 
         FloatingActionButton(
             modifier = Modifier
@@ -131,10 +144,12 @@ fun ArtistSongsScreen(
                 )
                 .padding(16.dp),
             onClick = {
-                playerConnection.playQueue(ListQueue(
-                    title = artist?.name,
-                    items = songs.shuffled().map { it.toMediaItem() },
-                ))
+                playerConnection.playQueue(
+                    ListQueue(
+                        title = artist?.name,
+                        items = songs.shuffled().map { it.toMediaItem() },
+                    )
+                )
             }
         ) {
             Icon(

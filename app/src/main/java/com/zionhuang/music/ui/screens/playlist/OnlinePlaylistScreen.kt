@@ -26,7 +26,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
@@ -37,18 +38,24 @@ import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.ui.component.*
-import com.zionhuang.music.ui.component.shimmer.*
+import com.zionhuang.music.ui.component.AutoResizeText
+import com.zionhuang.music.ui.component.FontSizeRange
+import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.YouTubeListItem
+import com.zionhuang.music.ui.component.shimmer.ButtonPlaceholder
+import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
+import com.zionhuang.music.ui.component.shimmer.ShimmerHost
+import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlinePlaylistViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun OnlinePlaylistScreen(
-    appBarConfig: AppBarConfig,
     navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
     viewModel: OnlinePlaylistViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
@@ -69,15 +76,9 @@ fun OnlinePlaylistScreen(
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(playlist) {
-        appBarConfig.title = {
-            Text(
-                text = playlist?.title.orEmpty(),
-                style = MaterialTheme.typography.titleLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
+    val showTopBarTitle by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0
         }
     }
 
@@ -324,6 +325,19 @@ fun OnlinePlaylistScreen(
                 }
             }
         }
+
+        TopAppBar(
+            title = { if (showTopBarTitle) Text(playlist?.title.orEmpty()) },
+            navigationIcon = {
+                IconButton(onClick = navController::navigateUp) {
+                    Icon(
+                        painterResource(R.drawable.ic_arrow_back),
+                        contentDescription = null
+                    )
+                }
+            },
+            scrollBehavior = scrollBehavior
+        )
 
         SnackbarHost(
             hostState = snackbarHostState,

@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -49,11 +48,11 @@ import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun LocalPlaylistScreen(
-    appBarConfig: AppBarConfig,
     navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
     viewModel: LocalPlaylistViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
@@ -69,16 +68,11 @@ fun LocalPlaylistScreen(
     }
 
     val coroutineScope = rememberCoroutineScope()
+    val lazyListState = rememberLazyListState()
 
-    LaunchedEffect(playlist) {
-        appBarConfig.title = {
-            Text(
-                text = playlist?.playlist?.name.orEmpty(),
-                style = MaterialTheme.typography.titleLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
+    val showTopBarTitle by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0
         }
     }
 
@@ -103,7 +97,7 @@ fun LocalPlaylistScreen(
     }
 
     val reorderingState = rememberReorderingState(
-        lazyListState = rememberLazyListState(),
+        lazyListState = lazyListState,
         key = songs,
         onDragEnd = { fromIndex, toIndex ->
             database.query {
@@ -234,10 +228,12 @@ fun LocalPlaylistScreen(
                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Button(
                                 onClick = {
-                                    playerConnection.playQueue(ListQueue(
-                                        title = playlist.playlist.name,
-                                        items = songs.map(Song::toMediaItem)
-                                    ))
+                                    playerConnection.playQueue(
+                                        ListQueue(
+                                            title = playlist.playlist.name,
+                                            items = songs.map(Song::toMediaItem)
+                                        )
+                                    )
                                 },
                                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                                 modifier = Modifier.weight(1f)
@@ -253,10 +249,12 @@ fun LocalPlaylistScreen(
 
                             OutlinedButton(
                                 onClick = {
-                                    playerConnection.playQueue(ListQueue(
-                                        title = playlist.playlist.name,
-                                        items = songs.shuffled().map(Song::toMediaItem)
-                                    ))
+                                    playerConnection.playQueue(
+                                        ListQueue(
+                                            title = playlist.playlist.name,
+                                            items = songs.shuffled().map(Song::toMediaItem)
+                                        )
+                                    )
                                 },
                                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                                 modifier = Modifier.weight(1f)
@@ -328,4 +326,17 @@ fun LocalPlaylistScreen(
             )
         }
     }
+
+    TopAppBar(
+        title = { if (showTopBarTitle) Text(playlist?.playlist?.name.orEmpty()) },
+        navigationIcon = {
+            IconButton(onClick = navController::navigateUp) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }

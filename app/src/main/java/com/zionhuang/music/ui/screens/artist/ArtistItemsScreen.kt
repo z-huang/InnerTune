@@ -13,14 +13,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -31,7 +27,6 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.GridThumbnailHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.ui.component.AppBarConfig
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.YouTubeGridItem
 import com.zionhuang.music.ui.component.YouTubeListItem
@@ -43,11 +38,11 @@ import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.ArtistItemsViewModel
 import com.zionhuang.music.viewmodels.MainViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ArtistItemsScreen(
     navController: NavController,
-    appBarConfig: AppBarConfig,
+    scrollBehavior: TopAppBarScrollBehavior,
     viewModel: ArtistItemsViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
@@ -66,18 +61,6 @@ fun ArtistItemsScreen(
 
     val title by viewModel.title.collectAsState()
     val itemsPage by viewModel.itemsPage.collectAsState()
-
-    LaunchedEffect(title) {
-        appBarConfig.title = {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
 
     LaunchedEffect(lazyListState) {
         snapshotFlow {
@@ -297,4 +280,17 @@ fun ArtistItemsScreen(
             }
         }
     }
+
+    TopAppBar(
+        title = { Text(title) },
+        navigationIcon = {
+            IconButton(onClick = navController::navigateUp) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }

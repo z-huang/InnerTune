@@ -1,16 +1,19 @@
 package com.zionhuang.music.ui.screens.settings
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.imageLoader
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
@@ -28,9 +31,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun StorageSettings() {
+fun StorageSettings(
+    navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
+) {
     val context = LocalContext.current
     val imageDiskCache = context.imageLoader.diskCache ?: return
     val playerCache = LocalPlayerConnection.current?.songPlayer?.cache ?: return
@@ -145,4 +151,17 @@ fun StorageSettings() {
             },
         )
     }
+
+    TopAppBar(
+        title = { Text(stringResource(R.string.pref_storage_title)) },
+        navigationIcon = {
+            IconButton(onClick = navController::navigateUp) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }

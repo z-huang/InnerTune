@@ -24,6 +24,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.SuggestionItemHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.ui.component.SearchBarIconOffsetX
 import com.zionhuang.music.ui.component.YouTubeListItem
 import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlineSearchSuggestionViewModel
@@ -32,7 +33,7 @@ import com.zionhuang.music.viewmodels.OnlineSearchSuggestionViewModel
 @Composable
 fun OnlineSearchScreen(
     query: String,
-    onTextFieldValueChange: (TextFieldValue) -> Unit,
+    onQueryChange: (TextFieldValue) -> Unit,
     navController: NavController,
     onSearch: (String) -> Unit,
     onDismiss: () -> Unit,
@@ -73,10 +74,12 @@ fun OnlineSearchScreen(
                     }
                 },
                 onFillTextField = {
-                    onTextFieldValueChange(TextFieldValue(
-                        text = history.query,
-                        selection = TextRange(history.query.length)
-                    ))
+                    onQueryChange(
+                        TextFieldValue(
+                            text = history.query,
+                            selection = TextRange(history.query.length)
+                        )
+                    )
                 },
                 modifier = Modifier.animateItemPlacement()
             )
@@ -94,10 +97,12 @@ fun OnlineSearchScreen(
                     onDismiss()
                 },
                 onFillTextField = {
-                    onTextFieldValueChange(TextFieldValue(
-                        text = query,
-                        selection = TextRange(query.length)
-                    ))
+                    onQueryChange(
+                        TextFieldValue(
+                            text = query,
+                            selection = TextRange(query.length)
+                        )
+                    )
                 },
                 modifier = Modifier.animateItemPlacement()
             )
@@ -192,9 +197,8 @@ fun SuggestionItem(
         modifier = modifier
             .fillMaxWidth()
             .height(SuggestionItemHeight)
-            .clickable(
-                onClick = onClick
-            )
+            .clickable(onClick = onClick)
+            .padding(end = SearchBarIconOffsetX)
     ) {
         Icon(
             painterResource(if (online) R.drawable.ic_search else R.drawable.ic_history),

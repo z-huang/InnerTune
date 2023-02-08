@@ -5,13 +5,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
@@ -22,8 +22,12 @@ import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.SwitchPreference
 import com.zionhuang.music.utils.rememberPreference
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrivacySettings() {
+fun PrivacySettings(
+    navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
+) {
     val database = LocalDatabase.current
     val (pauseSearchHistory, onPauseSearchHistoryChange) = rememberPreference(key = PauseSearchHistoryKey, defaultValue = false)
     val (enableKugou, onEnableKugouChange) = rememberPreference(key = EnableKugouKey, defaultValue = true)
@@ -86,6 +90,19 @@ fun PrivacySettings() {
             onCheckedChange = onEnableKugouChange
         )
     }
+
+    TopAppBar(
+        title = { Text(stringResource(R.string.pref_privacy_title)) },
+        navigationIcon = {
+            IconButton(onClick = navController::navigateUp) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }
 
 enum class AudioQuality {

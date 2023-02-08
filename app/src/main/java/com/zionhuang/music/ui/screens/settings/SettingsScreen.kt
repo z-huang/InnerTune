@@ -4,17 +4,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.ui.component.PreferenceEntry
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
 ) {
     Column(
         modifier = Modifier
@@ -62,4 +66,17 @@ fun SettingsScreen(
             onClick = { navController.navigate("settings/about") }
         )
     }
+
+    TopAppBar(
+        title = { Text(stringResource(R.string.title_settings)) },
+        navigationIcon = {
+            IconButton(onClick = navController::navigateUp) {
+                Icon(
+                    painterResource(R.drawable.ic_arrow_back),
+                    contentDescription = null
+                )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }

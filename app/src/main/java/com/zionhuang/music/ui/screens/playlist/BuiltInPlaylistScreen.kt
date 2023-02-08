@@ -8,12 +8,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastSumBy
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,7 +25,6 @@ import com.zionhuang.music.constants.SongSortTypeKey
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
-import com.zionhuang.music.ui.component.AppBarConfig
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
@@ -38,11 +35,11 @@ import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.BuiltInPlaylistViewModel
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun BuiltInPlaylistScreen(
-    appBarConfig: AppBarConfig,
     navController: NavController,
+    scrollBehavior: TopAppBarScrollBehavior,
     viewModel: BuiltInPlaylistViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -69,18 +66,6 @@ fun BuiltInPlaylistScreen(
     }
 
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        appBarConfig.title = {
-            Text(
-                text = playlistName,
-                style = MaterialTheme.typography.titleLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -139,16 +124,31 @@ fun BuiltInPlaylistScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-                            playerConnection.playQueue(ListQueue(
-                                title = playlistName,
-                                items = songs.map { it.toMediaItem() },
-                                startIndex = index
-                            ))
+                            playerConnection.playQueue(
+                                ListQueue(
+                                    title = playlistName,
+                                    items = songs.map { it.toMediaItem() },
+                                    startIndex = index
+                                )
+                            )
                         }
                         .animateItemPlacement()
                 )
             }
         }
+
+        TopAppBar(
+            title = { Text(playlistName) },
+            navigationIcon = {
+                IconButton(onClick = navController::navigateUp) {
+                    Icon(
+                        painterResource(R.drawable.ic_arrow_back),
+                        contentDescription = null
+                    )
+                }
+            },
+            scrollBehavior = scrollBehavior
+        )
 
         if (songs.isNotEmpty()) {
             FloatingActionButton(
@@ -160,10 +160,12 @@ fun BuiltInPlaylistScreen(
                     )
                     .padding(16.dp),
                 onClick = {
-                    playerConnection.playQueue(ListQueue(
-                        title = playlistName,
-                        items = songs.shuffled().map { it.toMediaItem() },
-                    ))
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = playlistName,
+                            items = songs.shuffled().map { it.toMediaItem() },
+                        )
+                    )
                 }
             ) {
                 Icon(
