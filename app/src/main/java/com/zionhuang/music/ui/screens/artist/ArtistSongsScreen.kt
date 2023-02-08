@@ -73,7 +73,7 @@ fun ArtistSongsScreen(
                             ArtistSongSortType.NAME -> R.string.sort_by_name
                         }
                     },
-                    trailingText = pluralStringResource(R.plurals.song_count, songs.size, songs.size)
+                    trailingText = pluralStringResource(R.plurals.n_song, songs.size, songs.size)
                 )
             }
 

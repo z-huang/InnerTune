@@ -41,7 +41,7 @@ fun PrivacySettings(
             onDismiss = { showClearHistoryDialog = false },
             content = {
                 Text(
-                    text = stringResource(R.string.clear_search_history_question),
+                    text = stringResource(R.string.clear_search_history_confirm),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(horizontal = 18.dp)
                 )
@@ -73,18 +73,18 @@ fun PrivacySettings(
             .verticalScroll(rememberScrollState())
     ) {
         SwitchPreference(
-            title = stringResource(R.string.pref_pause_search_history_title),
+            title = stringResource(R.string.pause_search_history),
             icon = R.drawable.ic_manage_search,
             checked = pauseSearchHistory,
             onCheckedChange = onPauseSearchHistoryChange
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_clear_search_history_title),
+            title = stringResource(R.string.clear_search_history),
             icon = R.drawable.ic_clear_all,
             onClick = { showClearHistoryDialog = true }
         )
         SwitchPreference(
-            title = stringResource(R.string.pref_enable_kugou_title),
+            title = stringResource(R.string.enable_kugou),
             icon = R.drawable.ic_lyrics,
             checked = enableKugou,
             onCheckedChange = onEnableKugouChange
@@ -92,7 +92,7 @@ fun PrivacySettings(
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_privacy_title)) },
+        title = { Text(stringResource(R.string.privacy)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

@@ -459,7 +459,7 @@ class MainActivity : ComponentActivity() {
                                 placeholder = {
                                     Text(
                                         text = stringResource(
-                                            if (!active) R.string.menu_search
+                                            if (!active) R.string.search
                                             else when (searchSource) {
                                                 SearchSource.LOCAL -> R.string.search_library
                                                 SearchSource.ONLINE -> R.string.search_yt_music

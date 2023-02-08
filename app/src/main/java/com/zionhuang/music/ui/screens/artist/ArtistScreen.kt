@@ -137,7 +137,7 @@ fun ArtistScreen(
                                     )
                                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                                     Text(
-                                        text = stringResource(R.string.btn_shuffle)
+                                        text = stringResource(R.string.shuffle)
                                     )
                                 }
                             }
@@ -156,7 +156,7 @@ fun ArtistScreen(
                                         modifier = Modifier.size(ButtonDefaults.IconSize)
                                     )
                                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                    Text(stringResource(R.string.btn_radio))
+                                    Text(stringResource(R.string.radio))
                                 }
                             }
                         }
@@ -178,7 +178,7 @@ fun ArtistScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = stringResource(R.string.header_from_your_library),
+                                    text = stringResource(R.string.from_your_library),
                                     style = MaterialTheme.typography.headlineMedium
                                 )
                             }

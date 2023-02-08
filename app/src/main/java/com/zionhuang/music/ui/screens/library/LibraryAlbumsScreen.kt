@@ -66,7 +66,7 @@ fun LibraryAlbumsScreen(
                             AlbumSortType.LENGTH -> R.string.sort_by_length
                         }
                     },
-                    trailingText = pluralStringResource(R.plurals.album_count, albums.size, albums.size)
+                    trailingText = pluralStringResource(R.plurals.n_album, albums.size, albums.size)
                 )
             }
 

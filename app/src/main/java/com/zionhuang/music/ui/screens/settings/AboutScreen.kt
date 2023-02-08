@@ -30,7 +30,7 @@ fun AboutScreen(
             .verticalScroll(rememberScrollState())
     ) {
         PreferenceEntry(
-            title = stringResource(R.string.pref_app_version_title),
+            title = stringResource(R.string.app_version),
             description = BuildConfig.VERSION_NAME,
             icon = R.drawable.ic_info,
             onClick = { }
@@ -46,7 +46,7 @@ fun AboutScreen(
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_about_title)) },
+        title = { Text(stringResource(R.string.about)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

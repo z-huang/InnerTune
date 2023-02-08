@@ -1,132 +1,79 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Title -->
-    <string name="title_home">首頁</string>
-    <string name="title_songs">歌曲</string>
-    <string name="title_artists">藝人</string>
-    <string name="title_albums">專輯</string>
-    <string name="title_playlists">播放清單</string>
-    <string name="title_explore">探索</string>
-    <string name="title_settings">設定</string>
-    <string name="title_now_playing">現正播放</string>
-    <string name="title_error_report">錯誤報告</string>
+<resources>
+    <!-- Bottom navigation -->
+    <string name="home">首頁</string>
+    <string name="songs">歌曲</string>
+    <string name="artists">藝人</string>
+    <string name="albums">專輯</string>
+    <string name="playlists">播放清單</string>
 
-    <!-- Preference Title -->
-    <string name="pref_appearance_title">外觀</string>
-    <string name="pref_follow_system_accent_title">跟隨系統主題</string>
-    <string name="pref_theme_color_title">主題顏色</string>
-    <string name="pref_dark_theme_title">深色主題</string>
-    <string name="dark_theme_on">開</string>
-    <string name="dark_theme_off">關</string>
-    <string name="dark_theme_follow_system">跟隨系統</string>
-    <string name="pref_default_open_tab_title">預設啟動標籤</string>
-    <string name="pref_customize_navigation_tabs">自訂導覽列</string>
-    <string name="pref_lyrics_text_position_title">歌詞文字位置</string>
-    <string name="align_left">靠左</string>
-    <string name="align_center">置中</string>
-    <string name="align_right">靠右</string>
+    <!-- Top bar -->
+    <plurals name="n_selected">
+        <item quantity="other">已選取 %d 個項目</item>
+    </plurals>
 
-    <string name="pref_content_title">內容</string>
-    <string name="login">登入</string>
-    <string name="pref_content_language_title">預設內容語言</string>
-    <string name="pref_default_content_country_title">預設內容國家</string>
-    <string name="pref_enable_proxy_title">啟用 Proxy</string>
-    <string name="pref_proxy_type_title">Proxy 種類</string>
-    <string name="pref_proxy_url_title">Proxy URL</string>
-    <string name="pref_restart_title">重啟以套用變更</string>
+    <!-- Home -->
+    <string name="history">歷史記錄</string>
+    <string name="stats">統計</string>
+    <string name="new_release_albums">新專輯</string>
+    <string name="most_played_songs">最常播放</string>
 
-    <string name="pref_player_audio_title">播放與音訊</string>
-    <string name="pref_audio_quality_title">音質</string>
-    <string name="audio_quality_auto">自動</string>
-    <string name="audio_quality_high">高</string>
-    <string name="audio_quality_low">低</string>
-    <string name="pref_persistent_queue_title">保留播放佇列</string>
-    <string name="pref_skip_silence_title">跳過無聲片段</string>
-    <string name="pref_audio_normalization_title">標準化音量</string>
-    <string name="pref_equalizer_title">等化器</string>
-
-    <string name="pref_storage_title">儲存</string>
-    <string name="pref_open_saf_title">檢視已下載的歌曲</string>
-    <string name="pref_open_saf_summary">在某些裝置可能無法開啟</string>
-    <string name="pref_cache_title">快取</string>
-    <string name="pref_image_max_cache_size_title">圖片快取大小</string>
-    <string name="pref_clear_image_cache_title">清除圖片快取</string>
-    <string name="pref_song_max_cache_size_title">歌曲快取大小</string>
-    <string name="size_used">已使用 %s</string>
-
-    <string name="pref_general_title">一般</string>
-    <string name="pref_auto_download_title">自動下載</string>
-    <string name="pref_auto_download_summary">自動下載新增的歌曲</string>
-    <string name="pref_auto_add_song_title">自動將音樂加入媒體庫</string>
-    <string name="pref_auto_add_song_summary">在結束播放時加入你的音樂</string>
-    <string name="pref_expand_on_play_title">在點擊音樂時展開播放器</string>
-    <string name="pref_notification_more_action_title">在通知顯示更多按鈕</string>
-    <string name="pref_notification_more_action_summary">顯示「加入媒體庫」和「喜歡」按鈕</string>
-
-    <string name="pref_privacy_title">隱私</string>
-    <string name="pref_pause_search_history_title">暫停搜尋紀錄</string>
-    <string name="pref_clear_search_history_title">清除搜尋紀錄</string>
-    <string name="clear_search_history_question">您確定要清除所有搜尋紀錄嗎？</string>
-    <string name="pref_enable_kugou_title">使用酷狗音樂提供歌詞</string>
-
-    <string name="pref_backup_restore_title">備份與還原</string>
-    <string name="pref_backup_title">備份</string>
-    <string name="pref_restore_title">還原</string>
-
-    <string name="pref_about_title">關於</string>
-    <string name="pref_app_version_title">應用程式版本</string>
-
-    <!-- Colors -->
-    <string name="color_sakura">櫻花</string>
-    <string name="color_red">紅色</string>
-    <string name="color_pink">粉色</string>
-    <string name="color_purple">紫色</string>
-    <string name="color_deep_purple">深紫</string>
-    <string name="color_indigo">靛青</string>
-    <string name="color_blue">藍色</string>
-    <string name="color_light_blue">淺藍</string>
-    <string name="color_cyan">青色</string>
-    <string name="color_teal">青綠</string>
-    <string name="color_green">綠色</string>
-    <string name="color_light_green">淺綠</string>
-    <string name="color_lime">萊姆綠</string>
-    <string name="color_yellow">黃色</string>
-    <string name="color_amber">琥珀</string>
-    <string name="color_orange">橙色</string>
-    <string name="color_deep_orange">深橙</string>
-    <string name="color_brown">棕色</string>
-    <string name="color_blue_grey">藍灰</string>
-
-    <!-- Nav Menu -->
-    <string name="menu_search">搜尋</string>
+    <!-- Search -->
+    <string name="search">搜尋</string>
     <string name="search_yt_music">搜尋 YouTube Music…</string>
     <string name="search_library">搜尋媒體庫…</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_songs">歌曲</string>
+    <string name="filter_videos">影片</string>
+    <string name="filter_albums">專輯</string>
+    <string name="filter_artists">藝人</string>
+    <string name="filter_playlists">播放清單</string>
+    <string name="filter_community_playlists">社群播放清單</string>
+    <string name="filter_featured_playlists">精選播放清單</string>
+    <string name="no_results_found">找不到結果</string>
 
-    <!-- Built-in playlist -->
+    <!-- Artist screen -->
+    <string name="from_your_library">來自你的媒體庫</string>
+
+    <!-- Playlist -->
     <string name="liked_songs">喜歡的歌曲</string>
     <string name="downloaded_songs">已下載的歌曲</string>
+    <string name="playlist_is_empty">播放清單為空</string>
 
-    <!-- Popup Menu -->
-    <string name="menu_details">詳細資訊</string>
-    <string name="menu_edit">編輯</string>
-    <string name="menu_start_radio">開啟電台</string>
-    <string name="menu_play">播放</string>
-    <string name="menu_play_next">接著播放</string>
-    <string name="menu_add_to_queue">加入待播清單</string>
-    <string name="menu_add_to_library">加入媒體庫</string>
-    <string name="menu_download">下載</string>
-    <string name="menu_remove_download">刪除下載</string>
-    <string name="menu_import_playlist">匯入播放清單</string>
-    <string name="menu_add_to_playlist">加入播放清單</string>
-    <string name="menu_view_artist">瀏覽藝人</string>
-    <string name="menu_view_album">瀏覽專輯</string>
-    <string name="menu_refetch">更新資料</string>
-    <string name="menu_share">分享</string>
-    <string name="menu_delete">移除</string>
-    <string name="menu_search_online">線上搜尋</string>
-    <string name="menu_choose_lyrics">切換其他歌詞</string>
+    <!-- Button -->
+    <string name="retry">重試</string>
+    <string name="radio">電台</string>
+    <string name="shuffle">隨機播放</string>
+
+    <!-- Menu -->
+    <string name="details">詳細資訊</string>
+    <string name="edit">編輯</string>
+    <string name="start_radio">開啟電台</string>
+    <string name="play">播放</string>
+    <string name="play_next">接著播放</string>
+    <string name="add_to_queue">加入待播清單</string>
+    <string name="add_to_library">加入媒體庫</string>
+    <string name="download">下載</string>
+    <string name="remove_download">刪除下載</string>
+    <string name="import_playlist">匯入播放清單</string>
+    <string name="add_to_playlist">加入播放清單</string>
+    <string name="view_artist">瀏覽藝人</string>
+    <string name="view_album">瀏覽專輯</string>
+    <string name="refetch">更新資料</string>
+    <string name="share">分享</string>
+    <string name="delete">移除</string>
+    <string name="search_online">線上搜尋</string>
+    <string name="sync">同步</string>
+
+    <!-- Sort menu -->
+    <string name="sort_by_create_date">新增時間</string>
+    <string name="sort_by_name">名稱</string>
+    <string name="sort_by_artist">藝人</string>
+    <string name="sort_by_year">年份</string>
+    <string name="sort_by_song_count">歌曲總數</string>
+    <string name="sort_by_length">長度</string>
+    <string name="sort_by_play_time">播放時間</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">詳細資訊</string>
     <string name="media_id">Id</string>
     <string name="mime_type">MIME 類型</string>
     <string name="codecs">編碼</string>
@@ -136,169 +83,133 @@
     <string name="volume">音量</string>
     <string name="file_size">檔案大小</string>
     <string name="unknown">未知</string>
+    <string name="copied">已複製至剪貼簿</string>
 
-    <string name="dialog_title_edit_lyrics">編輯歌詞</string>
-    <string name="dialog_title_search_lyrics">搜尋歌詞</string>
-    <string name="dialog_title_choose_lyrics">選擇歌詞</string>
+    <string name="edit_lyrics">編輯歌詞</string>
+    <string name="search_lyrics">搜尋歌詞</string>
 
-    <string name="dialog_title_edit_song">編輯歌曲</string>
+    <string name="edit_song">編輯歌曲</string>
     <string name="song_title">歌名</string>
     <string name="song_artists">藝人</string>
     <string name="error_song_title_empty">歌名不能為空</string>
     <string name="error_song_artist_empty">藝人不能為空</string>
-    <string name="dialog_button_save">儲存</string>
+    <string name="save">儲存</string>
 
-    <string name="dialog_title_create_playlist">新增播放清單</string>
-    <string name="text_view_hint_playlist_name">名稱</string>
+    <string name="choose_playlist">選擇播放清單</string>
+    <string name="edit_playlist">編輯播放清單</string>
+    <string name="create_playlist">新增播放清單</string>
+    <string name="playlist_name">名稱</string>
     <string name="error_playlist_name_empty">播放清單名稱不能為空</string>
 
-    <string name="dialog_title_edit_artist">編輯藝人</string>
-    <string name="text_view_hint_artist_name">藝人名稱</string>
+    <string name="edit_artist">編輯藝人</string>
+    <string name="artist_name">藝人名稱</string>
     <string name="error_artist_name_empty">藝人名稱不能為空</string>
 
-    <string name="dialog_title_duplicate_artist">重複的作曲家</string>
-    <string name="dialog_msg_duplicate_artist">作曲家「%1$s」已存在。</string>
-
-    <string name="dialog_title_choose_playlist">選擇播放清單</string>
-
-    <string name="dialog_title_edit_playlist">編輯播放清單</string>
-
-    <string name="dialog_title_choose_backup_content">選擇備份項目</string>
-    <string name="dialog_title_choose_restore_content">選擇還原項目</string>
-    <string name="choice_preferences">設定</string>
-    <string name="choice_database">資料庫</string>
-    <string name="choice_downloaded_songs">已下載的歌曲</string>
-    <string name="message_backup_create_success">成功建立備份</string>
-    <string name="message_backup_create_failed">無法建立備份</string>
-    <string name="message_restore_failed">無法還原備份</string>
-
-    <!-- Notification -->
-    <string name="channel_name_playback">音樂播放器</string>
-    <string name="channel_name_download">下載</string>
-
     <!-- Noun -->
-    <plurals name="song_count">
+    <plurals name="n_song">
         <item quantity="other">%d 首歌曲</item>
     </plurals>
-    <plurals name="artist_count">
+    <plurals name="n_artist">
         <item quantity="other">%d 位藝人</item>
     </plurals>
-    <plurals name="album_count">
+    <plurals name="n_album">
         <item quantity="other">%d 張專輯</item>
     </plurals>
-    <plurals name="playlist_count">
+    <plurals name="n_playlist">
         <item quantity="other">%d 個播放清單</item>
     </plurals>
 
-    <!-- Button -->
-    <string name="btn_retry">重試</string>
-    <string name="btn_play">播放</string>
-    <string name="btn_play_all">全部播放</string>
-    <string name="btn_radio">電台</string>
-    <string name="btn_shuffle">隨機播放</string>
-    <string name="btn_copy_stacktrace">複製 stacktrace</string>
-    <string name="btn_report">回報</string>
-    <string name="btn_report_on_github">在 GitHub 上回報</string>
-
-    <!-- Sort Menu -->
-    <string name="sort_by_create_date">新增時間</string>
-    <string name="sort_by_name">名稱</string>
-    <string name="sort_by_artist">藝人</string>
-    <string name="sort_by_year">年份</string>
-    <string name="sort_by_song_count">歌曲總數</string>
-    <string name="sort_by_length">長度</string>
-    <string name="sort_by_play_time">播放時間</string>
-
     <!-- Snackbar -->
-    <plurals name="snackbar_delete_song">
-        <item quantity="other">已刪除 %d 首歌曲</item>
-    </plurals>
-    <plurals name="n_selected">
-        <item quantity="other">已選取 %d 個項目</item>
-    </plurals>
-    <string name="snackbar_undo">復原</string>
-    <string name="snackbar_url_error">無法辨識此連結</string>
-    <plurals name="snackbar_song_play_next" tools:ignore="UnusedQuantity">
-        <item quantity="one">即將播放此歌曲</item>
-        <item quantity="other">即將播放這%d首歌曲</item>
-    </plurals>
-    <plurals name="snackbar_artist_play_next" tools:ignore="UnusedQuantity">
-        <item quantity="one">即將播放此藝人的歌曲</item>
-        <item quantity="other">即將播放這%d位藝人的歌曲</item>
-    </plurals>
-    <plurals name="snackbar_album_play_next" tools:ignore="UnusedQuantity">
-        <item quantity="one">即將播放此專輯</item>
-        <item quantity="other">即將播放這%d張專輯</item>
-    </plurals>
-    <plurals name="snackbar_playlist_play_next" tools:ignore="UnusedQuantity">
-        <item quantity="one">即將播放此播放清單</item>
-        <item quantity="other">即將播放這%d個播放清單</item>
-    </plurals>
-    <string name="snackbar_play_next">即將播放所選項目</string>
-    <plurals name="snackbar_song_added_to_queue" tools:ignore="UnusedQuantity">
-        <item quantity="one">已將此歌曲加入待播清單</item>
-        <item quantity="other">已將這%d首歌曲加入待播清單</item>
-    </plurals>
-    <plurals name="snackbar_artist_added_to_queue" tools:ignore="UnusedQuantity">
-        <item quantity="one">已將此藝人的歌曲加入待播清單</item>
-        <item quantity="other">已將這%d位藝人的歌曲加入待播清單</item>
-    </plurals>
-    <plurals name="snackbar_album_added_to_queue" tools:ignore="UnusedQuantity">
-        <item quantity="one">已將此專輯加入待播清單</item>
-        <item quantity="other">已將這%d張專輯加入待播清單</item>
-    </plurals>
-    <plurals name="snackbar_playlist_added_to_queue" tools:ignore="UnusedQuantity">
-        <item quantity="one">已將此播放清單加入待播清單</item>
-        <item quantity="other">已將這%d個播放清單加入待播清單</item>
-    </plurals>
-    <string name="snackbar_added_to_queue">已將所選加入待播清單</string>
-    <string name="snackbar_added_to_library">已新增至媒體庫</string>
-    <string name="snackbar_removed_from_library">已從媒體庫中移除</string>
     <string name="snackbar_playlist_imported">已匯入此播放清單</string>
-    <string name="snackbar_added_to_playlist">已新增至「%1$s」</string>
-    <plurals name="snackbar_download_song" tools:ignore="UnusedQuantity">
-        <item quantity="one">正在下載歌曲</item>
-        <item quantity="other">正在下載%d首歌曲</item>
+
+    <!-- Player -->
+    <string name="lyrics_not_found">沒有歌詞</string>
+    <string name="sleep_timer">睡眠定時器</string>
+    <string name="end_of_song">這首歌曲播放完畢</string>
+    <plurals name="minute">
+        <item quantity="other">%d 分鐘</item>
     </plurals>
-    <string name="snackbar_removed_download">已移除下載</string>
-    <string name="snackbar_action_view">查看</string>
-
-    <!-- Custom Action -->
-    <string name="action_like">喜歡</string>
-    <string name="action_remove_like">取消喜歡</string>
-    <string name="action_add_to_library">加入音樂庫</string>
-    <string name="action_remove_from_library">從音樂庫中移除</string>
-
-    <!-- Search Filter -->
-    <string name="search_filter_all">全部</string>
-    <string name="search_filter_songs">歌曲</string>
-    <string name="search_filter_videos">影片</string>
-    <string name="search_filter_albums">專輯</string>
-    <string name="search_filter_artists">藝人</string>
-    <string name="search_filter_playlists">播放清單</string>
-    <string name="search_filter_community_playlists">社群播放清單</string>
-    <string name="search_filter_featured_playlists">精選播放清單</string>
-
-    <string name="system_default">系統預設</string>
-    <string name="header_from_your_library">來自你的媒體庫</string>
-
-    <!-- Error Activity -->
-    <string name="sorry_for_error">抱歉，這不該發生的</string>
-    <string name="copied">已複製至剪貼簿</string>
-
-    <!-- Player Error Message -->
     <string name="error_no_stream">沒有可用的音源</string>
     <string name="error_no_internet">沒有網路連線</string>
     <string name="error_timeout">連線逾時</string>
     <string name="error_unknown">未知的錯誤</string>
 
+    <!-- Player action -->
+    <string name="action_like">喜歡</string>
+    <string name="action_remove_like">取消喜歡</string>
+    <string name="action_add_to_library">加入音樂庫</string>
+    <string name="action_remove_from_library">從音樂庫中移除</string>
+
     <!-- Queue Title -->
     <string name="queue_all_songs">全部歌曲</string>
     <string name="queue_searched_songs">搜尋的歌曲</string>
 
-    <!-- Lyrics View -->
-    <string name="lyrics_not_found">沒有歌詞</string>
+    <!-- Notification name -->
+    <string name="music_player">音樂播放器</string>
 
-    <!-- Search Result -->
-    <string name="no_results_found">找不到結果</string>
+    <!-- Settings -->
+    <string name="settings">設定</string>
+    <string name="appearance">外觀</string>
+    <string name="dark_theme">深色主題</string>
+    <string name="dark_theme_on">開</string>
+    <string name="dark_theme_off">關</string>
+    <string name="dark_theme_follow_system">跟隨系統</string>
+    <string name="default_open_tab">預設啟動標籤</string>
+    <string name="customize_navigation_tabs">自訂導覽列</string>
+    <string name="lyrics_text_position">歌詞文字位置</string>
+    <string name="left">靠左</string>
+    <string name="center">置中</string>
+    <string name="right">靠右</string>
+
+    <string name="content">內容</string>
+    <string name="login">登入</string>
+    <string name="content_language">預設內容語言</string>
+    <string name="content_country">預設內容國家</string>
+    <string name="system_default">系統預設</string>
+    <string name="enable_proxy">啟用 Proxy</string>
+    <string name="proxy_type">Proxy 種類</string>
+    <string name="proxy_url">Proxy URL</string>
+    <string name="restart_to_take_effect">重啟以套用變更</string>
+
+    <string name="player_and_audio">播放與音訊</string>
+    <string name="audio_quality">音質</string>
+    <string name="audio_quality_auto">自動</string>
+    <string name="audio_quality_high">高</string>
+    <string name="audio_quality_low">低</string>
+    <string name="persistent_queue">保留播放佇列</string>
+    <string name="skip_silence">跳過無聲片段</string>
+    <string name="audio_normalization">標準化音量</string>
+    <string name="equalizer">等化器</string>
+
+    <string name="storage">儲存</string>
+    <string name="cache">快取</string>
+    <string name="max_image_cache_size">圖片快取大小</string>
+    <string name="clear_image_cache">清除圖片快取</string>
+    <string name="max_song_cache_size">歌曲快取大小</string>
+    <string name="size_used">已使用 %s</string>
+
+    <string name="general">一般</string>
+    <string name="auto_download">自動下載</string>
+    <string name="auto_download_desc">自動下載新增的歌曲</string>
+    <string name="auto_add_song">自動將音樂加入媒體庫</string>
+    <string name="auto_add_song_desc">在結束播放時加入你的音樂</string>
+    <string name="expand_on_play">在點擊音樂時展開播放器</string>
+    <string name="notification_more_action">在通知顯示更多按鈕</string>
+    <string name="notification_more_action_desc">顯示「加入媒體庫」和「喜歡」按鈕</string>
+
+    <string name="privacy">隱私</string>
+    <string name="pause_search_history">暫停搜尋紀錄</string>
+    <string name="clear_search_history">清除搜尋紀錄</string>
+    <string name="clear_search_history_confirm">您確定要清除所有搜尋紀錄嗎？</string>
+    <string name="enable_kugou">使用酷狗音樂提供歌詞</string>
+
+    <string name="backup_restore">備份與還原</string>
+    <string name="backup">備份</string>
+    <string name="restore">還原</string>
+    <string name="backup_create_success">成功建立備份</string>
+    <string name="backup_create_failed">無法建立備份</string>
+    <string name="restore_failed">無法還原備份</string>
+
+    <string name="about">關於</string>
+    <string name="app_version">應用程式版本</string>
 </resources>

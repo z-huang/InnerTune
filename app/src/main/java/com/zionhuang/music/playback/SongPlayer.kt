@@ -249,7 +249,7 @@ class SongPlayer(
                 override fun getCustomAction(player: Player) =
                     CustomAction.Builder(
                         ACTION_TOGGLE_SHUFFLE,
-                        context.getString(R.string.btn_shuffle),
+                        context.getString(R.string.shuffle),
                         if (player.shuffleModeEnabled) R.drawable.ic_shuffle_on else R.drawable.ic_shuffle
                     ).build()
             }
@@ -287,7 +287,7 @@ class SongPlayer(
                     action = ACTION_SHOW_BOTTOM_SHEET
                 }, FLAG_IMMUTABLE)
         })
-        .setChannelNameResourceId(R.string.channel_name_playback)
+        .setChannelNameResourceId(R.string.music_player)
         .setNotificationListener(notificationListener)
         .setCustomActionReceiver(object : CustomActionReceiver {
             override fun createCustomActions(context: Context, instanceId: Int): Map<String, NotificationCompat.Action> = mapOf(

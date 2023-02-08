@@ -40,7 +40,7 @@ fun ContentSettings(
             .verticalScroll(rememberScrollState())
     ) {
         ListPreference(
-            title = stringResource(R.string.pref_content_language_title),
+            title = stringResource(R.string.content_language),
             icon = R.drawable.ic_language,
             selectedValue = contentLanguage,
             values = listOf(SYSTEM_DEFAULT) + LanguageCodeToName.keys.toList(),
@@ -52,7 +52,7 @@ fun ContentSettings(
             onValueSelected = onContentLanguageChange
         )
         ListPreference(
-            title = stringResource(R.string.pref_default_content_country_title),
+            title = stringResource(R.string.content_country),
             icon = R.drawable.ic_place,
             selectedValue = contentCountry,
             values = listOf(SYSTEM_DEFAULT) + CountryCodeToName.keys.toList(),
@@ -69,21 +69,21 @@ fun ContentSettings(
         )
 
         SwitchPreference(
-            title = stringResource(R.string.pref_enable_proxy_title),
+            title = stringResource(R.string.enable_proxy),
             checked = proxyEnabled,
             onCheckedChange = onProxyEnabledChange
         )
 
         if (proxyEnabled) {
             ListPreference(
-                title = stringResource(R.string.pref_proxy_type_title),
+                title = stringResource(R.string.proxy_type),
                 selectedValue = proxyType,
                 values = listOf(Proxy.Type.HTTP, Proxy.Type.SOCKS),
                 valueText = { it.name },
                 onValueSelected = onProxyTypeChange
             )
             EditTextPreference(
-                title = stringResource(R.string.pref_proxy_url_title),
+                title = stringResource(R.string.proxy_url),
                 value = proxyUrl,
                 onValueChange = onProxyUrlChange
             )
@@ -91,7 +91,7 @@ fun ContentSettings(
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_content_title)) },
+        title = { Text(stringResource(R.string.content)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

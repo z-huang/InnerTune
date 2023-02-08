@@ -63,11 +63,11 @@ fun LocalSearchScreen(
                 .horizontalScroll(rememberScrollState())
         ) {
             listOf(
-                LocalFilter.ALL to R.string.search_filter_all,
-                LocalFilter.SONG to R.string.search_filter_songs,
-                LocalFilter.ALBUM to R.string.search_filter_albums,
-                LocalFilter.ARTIST to R.string.search_filter_artists,
-                LocalFilter.PLAYLIST to R.string.search_filter_playlists
+                LocalFilter.ALL to R.string.filter_all,
+                LocalFilter.SONG to R.string.filter_songs,
+                LocalFilter.ALBUM to R.string.filter_albums,
+                LocalFilter.ARTIST to R.string.filter_artists,
+                LocalFilter.PLAYLIST to R.string.filter_playlists
             ).forEach { (filter, label) ->
                 FilterChip(
                     label = { Text(stringResource(label)) },
@@ -98,10 +98,10 @@ fun LocalSearchScreen(
                             Text(
                                 text = stringResource(
                                     when (filter) {
-                                        LocalFilter.SONG -> R.string.search_filter_songs
-                                        LocalFilter.ALBUM -> R.string.search_filter_albums
-                                        LocalFilter.ARTIST -> R.string.search_filter_artists
-                                        LocalFilter.PLAYLIST -> R.string.search_filter_playlists
+                                        LocalFilter.SONG -> R.string.filter_songs
+                                        LocalFilter.ALBUM -> R.string.filter_albums
+                                        LocalFilter.ARTIST -> R.string.filter_artists
+                                        LocalFilter.PLAYLIST -> R.string.filter_playlists
                                         LocalFilter.ALL -> error("")
                                     }
                                 ),

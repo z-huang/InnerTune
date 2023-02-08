@@ -102,10 +102,10 @@ class MusicService : MediaBrowserServiceCompat() {
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) = runBlocking {
         when (parentId) {
             ROOT -> result.sendResult(mutableListOf(
-                mediaBrowserItem(SONG, getString(R.string.title_songs), null, drawableUri(R.drawable.ic_music_note)),
-                mediaBrowserItem(ARTIST, getString(R.string.title_artists), null, drawableUri(R.drawable.ic_artist)),
-                mediaBrowserItem(ALBUM, getString(R.string.title_albums), null, drawableUri(R.drawable.ic_album)),
-                mediaBrowserItem(PLAYLIST, getString(R.string.title_playlists), null, drawableUri(R.drawable.ic_queue_music))
+                mediaBrowserItem(SONG, getString(R.string.songs), null, drawableUri(R.drawable.ic_music_note)),
+                mediaBrowserItem(ARTIST, getString(R.string.artists), null, drawableUri(R.drawable.ic_artist)),
+                mediaBrowserItem(ALBUM, getString(R.string.albums), null, drawableUri(R.drawable.ic_album)),
+                mediaBrowserItem(PLAYLIST, getString(R.string.playlists), null, drawableUri(R.drawable.ic_queue_music))
             ))
             SONG -> {
                 result.detach()
@@ -116,7 +116,7 @@ class MusicService : MediaBrowserServiceCompat() {
             ARTIST -> {
                 result.detach()
                 result.sendResult(database.artistsByCreateDateDesc().first().map { artist ->
-                    mediaBrowserItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.song_count, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri())
+                    mediaBrowserItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.n_song, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri())
                 }.toMutableList())
             }
             ALBUM -> {
@@ -130,10 +130,10 @@ class MusicService : MediaBrowserServiceCompat() {
                 val likedSongCount = database.likedSongsCount().first()
                 val downloadedSongCount = database.downloadedSongsCount().first()
                 result.sendResult((listOf(
-                    mediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.song_count, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
-                    mediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.song_count, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
+                    mediaBrowserItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.n_song, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite)),
+                    mediaBrowserItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.n_song, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt))
                 ) + database.playlistsByCreateDateDesc().first().map { playlist ->
-                    mediaBrowserItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.song_count, playlist.songCount, playlist.songCount), playlist.thumbnails.firstOrNull()?.toUri())
+                    mediaBrowserItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.n_song, playlist.songCount, playlist.songCount), playlist.thumbnails.firstOrNull()?.toUri())
                 }).toMutableList())
             }
             else -> when {

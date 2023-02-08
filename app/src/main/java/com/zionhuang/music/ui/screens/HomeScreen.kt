@@ -101,7 +101,7 @@ fun HomeScreen(
                     modifier = Modifier.weight(1f)
                 )
                 NavigationTile(
-                    title = stringResource(R.string.title_settings),
+                    title = stringResource(R.string.settings),
                     icon = R.drawable.ic_settings,
                     onClick = { navController.navigate("settings") },
                     modifier = Modifier.weight(1f)

@@ -42,7 +42,7 @@ fun PlaylistMenu(
     if (showEditDialog) {
         TextFieldDialog(
             icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
-            title = { Text(text = stringResource(R.string.dialog_title_edit_playlist)) },
+            title = { Text(text = stringResource(R.string.edit_playlist)) },
             onDismiss = { showEditDialog = false },
             initialTextFieldValue = TextFieldValue(playlist.playlist.name, TextRange(playlist.playlist.name.length)),
             onDone = { name ->
@@ -64,7 +64,7 @@ fun PlaylistMenu(
     ) {
         GridMenuItem(
             icon = R.drawable.ic_edit,
-            title = R.string.menu_edit
+            title = R.string.edit
         ) {
             showEditDialog = true
         }
@@ -72,7 +72,7 @@ fun PlaylistMenu(
         if (playlist.playlist.browseId != null) {
             GridMenuItem(
                 icon = R.drawable.ic_sync,
-                title = R.string.menu_sync
+                title = R.string.sync
             ) {
                 onDismiss()
                 coroutineScope.launch(Dispatchers.IO) {
@@ -97,7 +97,7 @@ fun PlaylistMenu(
 
         GridMenuItem(
             icon = R.drawable.ic_delete,
-            title = R.string.menu_delete
+            title = R.string.delete
         ) {
             onDismiss()
             database.query {

@@ -84,7 +84,7 @@ fun LocalPlaylistScreen(
         playlist?.playlist?.let { playlistEntity ->
             TextFieldDialog(
                 icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
-                title = { Text(text = stringResource(R.string.dialog_title_edit_playlist)) },
+                title = { Text(text = stringResource(R.string.edit_playlist)) },
                 onDismiss = { showEditDialog = false },
                 initialTextFieldValue = TextFieldValue(playlistEntity.name, TextRange(playlistEntity.name.length)),
                 onDone = { name ->
@@ -116,7 +116,7 @@ fun LocalPlaylistScreen(
                 if (playlist.songCount == 0) {
                     EmptyPlaceholder(
                         icon = R.drawable.ic_music_note,
-                        text = stringResource(R.string.playlist_empty)
+                        text = stringResource(R.string.playlist_is_empty)
                     )
                 } else {
                     Column(
@@ -172,7 +172,7 @@ fun LocalPlaylistScreen(
                                 )
 
                                 Text(
-                                    text = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
+                                    text = pluralStringResource(R.plurals.n_song, playlist.songCount, playlist.songCount),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Normal
                                 )
@@ -244,7 +244,7 @@ fun LocalPlaylistScreen(
                                     modifier = Modifier.size(ButtonDefaults.IconSize)
                                 )
                                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text(stringResource(R.string.btn_play))
+                                Text(stringResource(R.string.play))
                             }
 
                             OutlinedButton(
@@ -265,7 +265,7 @@ fun LocalPlaylistScreen(
                                     modifier = Modifier.size(ButtonDefaults.IconSize)
                                 )
                                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                Text(stringResource(R.string.btn_shuffle))
+                                Text(stringResource(R.string.shuffle))
                             }
                         }
                     }

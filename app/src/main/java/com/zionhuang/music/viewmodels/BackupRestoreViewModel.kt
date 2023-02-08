@@ -45,10 +45,10 @@ class BackupRestoreViewModel @Inject constructor(
                 }
             }
         }.onSuccess {
-            Toast.makeText(context, R.string.message_backup_create_success, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.backup_create_success, Toast.LENGTH_SHORT).show()
         }.onFailure {
             it.printStackTrace()
-            Toast.makeText(context, R.string.message_backup_create_failed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.backup_create_failed, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -84,7 +84,7 @@ class BackupRestoreViewModel @Inject constructor(
             exitProcess(0)
         }.onFailure {
             it.printStackTrace()
-            Toast.makeText(context, R.string.message_restore_failed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.restore_failed, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -97,7 +97,7 @@ fun StorageSettings(
         )
 
         PreferenceEntry(
-            title = stringResource(R.string.pref_clear_image_cache_title),
+            title = stringResource(R.string.clear_image_cache),
             onClick = {
                 coroutineScope.launch(Dispatchers.IO) {
                     imageDiskCache.clear()
@@ -153,7 +153,7 @@ fun StorageSettings(
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_storage_title)) },
+        title = { Text(stringResource(R.string.storage)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

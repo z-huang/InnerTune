@@ -311,7 +311,7 @@ fun LyricsMenu(
             modifier = Modifier.verticalScroll(rememberScrollState()),
             onDismiss = { showSearchDialog = false },
             icon = { Icon(painter = painterResource(R.drawable.ic_search), contentDescription = null) },
-            title = { Text(stringResource(R.string.dialog_title_search_lyrics)) },
+            title = { Text(stringResource(R.string.search_lyrics)) },
             buttons = {
                 TextButton(
                     onClick = { showSearchDialog = false }
@@ -335,7 +335,7 @@ fun LyricsMenu(
                         }
                     }
                 ) {
-                    Text(stringResource(R.string.menu_search_online))
+                    Text(stringResource(R.string.search_online))
                 }
 
                 Spacer(Modifier.width(8.dp))
@@ -387,10 +387,12 @@ fun LyricsMenu(
                             onDismiss()
                             viewModel.cancelSearch()
                             database.query {
-                                upsert(LyricsEntity(
-                                    id = searchMediaMetadata.id,
-                                    lyrics = result.lyrics
-                                ))
+                                upsert(
+                                    LyricsEntity(
+                                        id = searchMediaMetadata.id,
+                                        lyrics = result.lyrics
+                                    )
+                                )
                             }
                         }
                         .padding(12.dp)
@@ -465,20 +467,20 @@ fun LyricsMenu(
     ) {
         GridMenuItem(
             icon = R.drawable.ic_edit,
-            title = R.string.menu_edit
+            title = R.string.edit
         ) {
             showEditDialog = true
         }
         GridMenuItem(
             icon = R.drawable.ic_cached,
-            title = R.string.menu_refetch
+            title = R.string.refetch
         ) {
             onDismiss()
             viewModel.refetchLyrics(mediaMetadataProvider(), lyricsProvider())
         }
         GridMenuItem(
             icon = R.drawable.ic_search,
-            title = R.string.menu_search,
+            title = R.string.search,
         ) {
             showSearchDialog = true
         }

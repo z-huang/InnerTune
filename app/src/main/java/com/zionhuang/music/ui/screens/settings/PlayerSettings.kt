@@ -38,7 +38,7 @@ fun PlayerSettings(
             .verticalScroll(rememberScrollState())
     ) {
         EnumListPreference(
-            title = stringResource(R.string.pref_audio_quality_title),
+            title = stringResource(R.string.audio_quality),
             icon = R.drawable.ic_graphic_eq,
             selectedValue = audioQuality,
             onValueSelected = onAudioQualityChange,
@@ -51,19 +51,19 @@ fun PlayerSettings(
             }
         )
         SwitchPreference(
-            title = stringResource(R.string.pref_persistent_queue_title),
+            title = stringResource(R.string.persistent_queue),
             icon = R.drawable.ic_queue_music,
             checked = persistentQueue,
             onCheckedChange = onPersistentQueueChange
         )
         SwitchPreference(
-            title = stringResource(R.string.pref_skip_silence_title),
+            title = stringResource(R.string.skip_silence),
             icon = R.drawable.ic_skip_next,
             checked = skipSilence,
             onCheckedChange = onSkipSilenceChange
         )
         SwitchPreference(
-            title = stringResource(R.string.pref_audio_normalization_title),
+            title = stringResource(R.string.audio_normalization),
             icon = R.drawable.ic_volume_up,
             checked = audioNormalization,
             onCheckedChange = onAudioNormalizationChange
@@ -71,7 +71,7 @@ fun PlayerSettings(
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_player_audio_title)) },
+        title = { Text(stringResource(R.string.player_and_audio)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

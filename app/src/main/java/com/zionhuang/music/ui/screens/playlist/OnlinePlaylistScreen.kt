@@ -196,7 +196,7 @@ fun OnlinePlaylistScreen(
                                         modifier = Modifier.size(ButtonDefaults.IconSize)
                                     )
                                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                    Text(stringResource(R.string.btn_shuffle))
+                                    Text(stringResource(R.string.shuffle))
                                 }
 
                                 OutlinedButton(
@@ -212,7 +212,7 @@ fun OnlinePlaylistScreen(
                                         modifier = Modifier.size(ButtonDefaults.IconSize)
                                     )
                                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                                    Text(stringResource(R.string.btn_radio))
+                                    Text(stringResource(R.string.radio))
                                 }
                             }
                         }

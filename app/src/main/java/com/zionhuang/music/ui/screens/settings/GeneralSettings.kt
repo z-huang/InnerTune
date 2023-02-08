@@ -36,28 +36,28 @@ fun GeneralSettings(
             .verticalScroll(rememberScrollState())
     ) {
         SwitchPreference(
-            title = stringResource(R.string.pref_auto_add_song_title),
-            description = stringResource(R.string.pref_auto_add_song_summary),
+            title = stringResource(R.string.auto_add_song),
+            description = stringResource(R.string.auto_add_song_desc),
             icon = R.drawable.ic_library_add,
             checked = autoAddToLibrary,
             onCheckedChange = onAutoAddToLibraryChange
         )
         SwitchPreference(
-            title = stringResource(R.string.pref_auto_download_title),
-            description = stringResource(R.string.pref_auto_download_summary),
+            title = stringResource(R.string.auto_download),
+            description = stringResource(R.string.auto_download_desc),
             icon = R.drawable.ic_save_alt,
             checked = autoDownload,
             onCheckedChange = onAutoDownloadChange
         )
         SwitchPreference(
-            title = stringResource(R.string.pref_expand_on_play_title),
+            title = stringResource(R.string.expand_on_play),
             icon = R.drawable.ic_open_in_full,
             checked = expandOnPlay,
             onCheckedChange = onExpandOnPlayChange
         )
         SwitchPreference(
-            title = stringResource(R.string.pref_notification_more_action_title),
-            description = stringResource(R.string.pref_notification_more_action_summary),
+            title = stringResource(R.string.notification_more_action),
+            description = stringResource(R.string.notification_more_action_desc),
             icon = R.drawable.ic_notifications,
             checked = notificationMoreAction,
             onCheckedChange = onNotificationMoreActionChange
@@ -65,7 +65,7 @@ fun GeneralSettings(
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_general_title)) },
+        title = { Text(stringResource(R.string.general)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

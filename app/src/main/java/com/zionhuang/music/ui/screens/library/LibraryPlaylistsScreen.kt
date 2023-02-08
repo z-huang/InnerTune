@@ -55,13 +55,15 @@ fun LibraryPlaylistsScreen(
     if (showAddPlaylistDialog) {
         TextFieldDialog(
             icon = { Icon(painter = painterResource(R.drawable.ic_add), contentDescription = null) },
-            title = { Text(text = stringResource(R.string.dialog_title_create_playlist)) },
+            title = { Text(text = stringResource(R.string.create_playlist)) },
             onDismiss = { showAddPlaylistDialog = false },
             onDone = { playlistName ->
                 database.query {
-                    insert(PlaylistEntity(
-                        name = playlistName
-                    ))
+                    insert(
+                        PlaylistEntity(
+                            name = playlistName
+                        )
+                    )
                 }
             }
         )
@@ -89,7 +91,7 @@ fun LibraryPlaylistsScreen(
                             PlaylistSortType.SONG_COUNT -> R.string.sort_by_song_count
                         }
                     },
-                    trailingText = pluralStringResource(R.plurals.playlist_count, playlists.size, playlists.size)
+                    trailingText = pluralStringResource(R.plurals.n_playlist, playlists.size, playlists.size)
                 )
             }
 
@@ -99,7 +101,7 @@ fun LibraryPlaylistsScreen(
             ) {
                 ListItem(
                     title = stringResource(R.string.liked_songs),
-                    subtitle = pluralStringResource(R.plurals.song_count, likedSongCount, likedSongCount),
+                    subtitle = pluralStringResource(R.plurals.n_song, likedSongCount, likedSongCount),
                     thumbnailContent = {
                         Icon(
                             painter = painterResource(R.drawable.ic_favorite),
@@ -122,7 +124,7 @@ fun LibraryPlaylistsScreen(
             ) {
                 ListItem(
                     title = stringResource(R.string.downloaded_songs),
-                    subtitle = pluralStringResource(R.plurals.song_count, downloadedSongCount, downloadedSongCount),
+                    subtitle = pluralStringResource(R.plurals.n_song, downloadedSongCount, downloadedSongCount),
                     thumbnailContent = {
                         Icon(
                             painter = painterResource(R.drawable.ic_save_alt),

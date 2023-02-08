@@ -75,7 +75,7 @@ fun LibrarySongsScreen(
                             SongSortType.ARTIST -> R.string.sort_by_artist
                         }
                     },
-                    trailingText = pluralStringResource(R.plurals.song_count, songs.size, songs.size)
+                    trailingText = pluralStringResource(R.plurals.n_song, songs.size, songs.size)
                 )
             }
 
@@ -111,11 +111,13 @@ fun LibrarySongsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-                            playerConnection.playQueue(ListQueue(
-                                title = context.getString(R.string.queue_all_songs),
-                                items = songs.map { it.toMediaItem() },
-                                startIndex = index
-                            ))
+                            playerConnection.playQueue(
+                                ListQueue(
+                                    title = context.getString(R.string.queue_all_songs),
+                                    items = songs.map { it.toMediaItem() },
+                                    startIndex = index
+                                )
+                            )
                         }
                         .animateItemPlacement()
                 )

@@ -218,7 +218,7 @@ fun ArtistListItem(
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = artist.artist.name,
-    subtitle = pluralStringResource(R.plurals.song_count, artist.songCount, artist.songCount),
+    subtitle = pluralStringResource(R.plurals.n_song, artist.songCount, artist.songCount),
     thumbnailContent = {
         AsyncImage(
             model = artist.artist.thumbnailUrl,
@@ -244,7 +244,7 @@ fun AlbumListItem(
     title = album.album.title,
     subtitle = joinByBullet(
         album.artists.joinToString(),
-        pluralStringResource(R.plurals.song_count, album.album.songCount, album.album.songCount),
+        pluralStringResource(R.plurals.n_song, album.album.songCount, album.album.songCount),
         album.album.year?.toString()
     ),
     thumbnailContent = {
@@ -279,7 +279,7 @@ fun PlaylistListItem(
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = playlist.playlist.name,
-    subtitle = pluralStringResource(R.plurals.song_count, playlist.songCount, playlist.songCount),
+    subtitle = pluralStringResource(R.plurals.n_song, playlist.songCount, playlist.songCount),
     thumbnailContent = {
         when (playlist.thumbnails.size) {
             0 -> Icon(

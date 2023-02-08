@@ -34,7 +34,7 @@ fun AppearanceSettings(
             .verticalScroll(rememberScrollState())
     ) {
         EnumListPreference(
-            title = stringResource(R.string.pref_dark_theme_title),
+            title = stringResource(R.string.dark_theme),
             icon = R.drawable.ic_dark_mode,
             selectedValue = darkMode,
             onValueSelected = onDarkModeChange,
@@ -47,37 +47,37 @@ fun AppearanceSettings(
             }
         )
         EnumListPreference(
-            title = stringResource(R.string.pref_default_open_tab_title),
+            title = stringResource(R.string.default_open_tab),
             icon = R.drawable.ic_tab,
             selectedValue = defaultOpenTab,
             onValueSelected = onDefaultOpenTabChange,
             valueText = {
                 when (it) {
-                    NavigationTab.HOME -> stringResource(R.string.title_home)
-                    NavigationTab.SONG -> stringResource(R.string.title_songs)
-                    NavigationTab.ARTIST -> stringResource(R.string.title_artists)
-                    NavigationTab.ALBUM -> stringResource(R.string.title_albums)
-                    NavigationTab.PLAYLIST -> stringResource(R.string.title_playlists)
+                    NavigationTab.HOME -> stringResource(R.string.home)
+                    NavigationTab.SONG -> stringResource(R.string.songs)
+                    NavigationTab.ARTIST -> stringResource(R.string.artists)
+                    NavigationTab.ALBUM -> stringResource(R.string.albums)
+                    NavigationTab.PLAYLIST -> stringResource(R.string.playlists)
                 }
             }
         )
         EnumListPreference(
-            title = stringResource(R.string.pref_lyrics_text_position_title),
+            title = stringResource(R.string.lyrics_text_position),
             icon = R.drawable.ic_lyrics,
             selectedValue = lyricsPosition,
             onValueSelected = onLyricsPositionChange,
             valueText = {
                 when (it) {
-                    LyricsPosition.LEFT -> stringResource(R.string.align_left)
-                    LyricsPosition.CENTER -> stringResource(R.string.align_center)
-                    LyricsPosition.RIGHT -> stringResource(R.string.align_right)
+                    LyricsPosition.LEFT -> stringResource(R.string.left)
+                    LyricsPosition.CENTER -> stringResource(R.string.center)
+                    LyricsPosition.RIGHT -> stringResource(R.string.right)
                 }
             }
         )
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_appearance_title)) },
+        title = { Text(stringResource(R.string.appearance)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

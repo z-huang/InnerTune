@@ -58,7 +58,7 @@ fun LibraryArtistsScreen(
                             ArtistSortType.SONG_COUNT -> R.string.sort_by_song_count
                         }
                     },
-                    trailingText = pluralStringResource(R.plurals.artist_count, artists.size, artists.size)
+                    trailingText = pluralStringResource(R.plurals.n_artist, artists.size, artists.size)
                 )
             }
 

@@ -262,13 +262,13 @@ fun OnlineSearchResult(
         Spacer(Modifier.width(8.dp))
 
         listOf(
-            null to R.string.search_filter_all,
-            FILTER_SONG to R.string.search_filter_songs,
-            FILTER_VIDEO to R.string.search_filter_videos,
-            FILTER_ALBUM to R.string.search_filter_albums,
-            FILTER_ARTIST to R.string.search_filter_artists,
-            FILTER_COMMUNITY_PLAYLIST to R.string.search_filter_community_playlists,
-            FILTER_FEATURED_PLAYLIST to R.string.search_filter_featured_playlists
+            null to R.string.filter_all,
+            FILTER_SONG to R.string.filter_songs,
+            FILTER_VIDEO to R.string.filter_videos,
+            FILTER_ALBUM to R.string.filter_albums,
+            FILTER_ARTIST to R.string.filter_artists,
+            FILTER_COMMUNITY_PLAYLIST to R.string.filter_community_playlists,
+            FILTER_FEATURED_PLAYLIST to R.string.filter_featured_playlists
         ).forEach { (filter, label) ->
             FilterChip(
                 label = { Text(text = stringResource(label)) },

@@ -80,7 +80,7 @@ fun SongMenu(
         ) {
             item {
                 ListItem(
-                    title = stringResource(R.string.dialog_title_create_playlist),
+                    title = stringResource(R.string.create_playlist),
                     thumbnailContent = {
                         Image(
                             painter = painterResource(R.drawable.ic_add),
@@ -119,13 +119,15 @@ fun SongMenu(
     if (showCreatePlaylistDialog) {
         TextFieldDialog(
             icon = { Icon(painter = painterResource(R.drawable.ic_add), contentDescription = null) },
-            title = { Text(text = stringResource(R.string.dialog_title_create_playlist)) },
+            title = { Text(text = stringResource(R.string.create_playlist)) },
             onDismiss = { showCreatePlaylistDialog = false },
             onDone = { playlistName ->
                 database.query {
-                    insert(PlaylistEntity(
-                        name = playlistName
-                    ))
+                    insert(
+                        PlaylistEntity(
+                            name = playlistName
+                        )
+                    )
                 }
             }
         )
@@ -209,48 +211,48 @@ fun SongMenu(
     ) {
         GridMenuItem(
             icon = R.drawable.ic_radio,
-            title = R.string.menu_start_radio
+            title = R.string.start_radio
         ) {
             onDismiss()
             playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_play,
-            title = R.string.menu_play_next
+            title = R.string.play_next
         ) {
             onDismiss()
             playerConnection.playNext(song.toMediaItem())
         }
         GridMenuItem(
             icon = R.drawable.ic_queue_music,
-            title = R.string.menu_add_to_queue
+            title = R.string.add_to_queue
         ) {
             onDismiss()
             playerConnection.addToQueue((song.toMediaItem()))
         }
         GridMenuItem(
             icon = R.drawable.ic_edit,
-            title = R.string.menu_edit,
+            title = R.string.edit,
             enabled = false
         ) {
 
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_add,
-            title = R.string.menu_add_to_playlist
+            title = R.string.add_to_playlist
         ) {
             showChoosePlaylistDialog = true
         }
         GridMenuItem(
             icon = R.drawable.ic_file_download,
-            title = R.string.menu_download,
+            title = R.string.download,
             enabled = false
         ) {
 
         }
         GridMenuItem(
             icon = R.drawable.ic_artist,
-            title = R.string.menu_view_artist
+            title = R.string.view_artist
         ) {
             if (song.artists.size == 1) {
                 navController.navigate("artist/${song.artists[0].id}")
@@ -262,7 +264,7 @@ fun SongMenu(
         if (song.song.albumId != null) {
             GridMenuItem(
                 icon = R.drawable.ic_album,
-                title = R.string.menu_view_album
+                title = R.string.view_album
             ) {
                 onDismiss()
                 navController.navigate("album/${song.song.albumId}")
@@ -270,7 +272,7 @@ fun SongMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_share,
-            title = R.string.menu_share
+            title = R.string.share
         ) {
             onDismiss()
             val intent = Intent().apply {
@@ -282,7 +284,7 @@ fun SongMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_delete,
-            title = R.string.menu_delete
+            title = R.string.delete
         ) {
             onDismiss()
             database.query {

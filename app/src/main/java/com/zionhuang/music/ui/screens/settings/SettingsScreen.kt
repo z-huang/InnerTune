@@ -26,49 +26,49 @@ fun SettingsScreen(
             .verticalScroll(rememberScrollState())
     ) {
         PreferenceEntry(
-            title = stringResource(R.string.pref_appearance_title),
+            title = stringResource(R.string.appearance),
             icon = R.drawable.ic_palette,
             onClick = { navController.navigate("settings/appearance") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_content_title),
+            title = stringResource(R.string.content),
             icon = R.drawable.ic_language,
             onClick = { navController.navigate("settings/content") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_player_audio_title),
+            title = stringResource(R.string.player_and_audio),
             icon = R.drawable.ic_play,
             onClick = { navController.navigate("settings/player") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_storage_title),
+            title = stringResource(R.string.storage),
             icon = R.drawable.ic_storage,
             onClick = { navController.navigate("settings/storage") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_general_title),
+            title = stringResource(R.string.general),
             icon = R.drawable.ic_testing,
             onClick = { navController.navigate("settings/general") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_privacy_title),
+            title = stringResource(R.string.privacy),
             icon = R.drawable.ic_security,
             onClick = { navController.navigate("settings/privacy") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_backup_restore_title),
+            title = stringResource(R.string.backup_restore),
             icon = R.drawable.ic_settings_backup_restore,
             onClick = { navController.navigate("settings/backup_restore") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_about_title),
+            title = stringResource(R.string.about),
             icon = R.drawable.ic_info,
             onClick = { navController.navigate("settings/about") }
         )
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.title_settings)) },
+        title = { Text(stringResource(R.string.settings)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(

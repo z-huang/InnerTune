@@ -317,7 +317,7 @@ fun LocalAlbumHeader(
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text(
-                    text = stringResource(R.string.btn_play)
+                    text = stringResource(R.string.play)
                 )
             }
 
@@ -339,7 +339,7 @@ fun LocalAlbumHeader(
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.btn_shuffle))
+                Text(stringResource(R.string.shuffle))
             }
         }
     }
@@ -463,7 +463,7 @@ fun RemoteAlbumHeader(
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text(
-                    text = stringResource(R.string.btn_play)
+                    text = stringResource(R.string.play)
                 )
             }
 
@@ -485,7 +485,7 @@ fun RemoteAlbumHeader(
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.btn_shuffle))
+                Text(stringResource(R.string.shuffle))
             }
         }
     }

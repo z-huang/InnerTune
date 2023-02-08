@@ -383,9 +383,11 @@ fun Queue(
 
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme
-                    .surfaceColorAtElevation(NavigationBarDefaults.Elevation)
-                    .copy(alpha = 0.95f))
+                .background(
+                    MaterialTheme.colorScheme
+                        .surfaceColorAtElevation(NavigationBarDefaults.Elevation)
+                        .copy(alpha = 0.95f)
+                )
                 .windowInsetsPadding(
                     WindowInsets.systemBars
                         .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
@@ -410,7 +412,7 @@ fun Queue(
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = pluralStringResource(R.plurals.song_count, queueWindows.size, queueWindows.size),
+                        text = pluralStringResource(R.plurals.n_song, queueWindows.size, queueWindows.size),
                         style = MaterialTheme.typography.bodyMedium
                     )
 
@@ -428,10 +430,11 @@ fun Queue(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f))
                 .fillMaxWidth()
-                .height(ListItemHeight +
-                        WindowInsets.systemBars
-                            .asPaddingValues()
-                            .calculateBottomPadding()
+                .height(
+                    ListItemHeight +
+                            WindowInsets.systemBars
+                                .asPaddingValues()
+                                .calculateBottomPadding()
                 )
                 .align(Alignment.BottomCenter)
                 .clickable {
@@ -550,28 +553,28 @@ fun PlayerMenu(
     ) {
         GridMenuItem(
             icon = R.drawable.ic_radio,
-            title = R.string.menu_start_radio
+            title = R.string.start_radio
         ) {
             playerConnection.songPlayer.startRadioSeamlessly()
             onDismiss()
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_add,
-            title = R.string.menu_add_to_playlist,
+            title = R.string.add_to_playlist,
             enabled = false
         ) {
 
         }
         GridMenuItem(
             icon = R.drawable.ic_file_download,
-            title = R.string.menu_download,
+            title = R.string.download,
             enabled = false
         ) {
 
         }
         GridMenuItem(
             icon = R.drawable.ic_artist,
-            title = R.string.menu_view_artist
+            title = R.string.view_artist
         ) {
             if (mediaMetadata.artists.size == 1) {
                 navController.navigate("artist/${mediaMetadata.artists[0].id}")
@@ -584,7 +587,7 @@ fun PlayerMenu(
         if (mediaMetadata.album != null) {
             GridMenuItem(
                 icon = R.drawable.ic_album,
-                title = R.string.menu_view_album
+                title = R.string.view_album
             ) {
                 navController.navigate("album/${mediaMetadata.album.id}")
                 playerBottomSheetState.collapseSoft()
@@ -593,7 +596,7 @@ fun PlayerMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_share,
-            title = R.string.menu_share
+            title = R.string.share
         ) {
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
@@ -605,14 +608,14 @@ fun PlayerMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_info,
-            title = R.string.menu_details
+            title = R.string.details
         ) {
             onShowDetailsDialog()
             onDismiss()
         }
         GridMenuItem(
             icon = R.drawable.ic_equalizer,
-            title = R.string.pref_equalizer_title
+            title = R.string.equalizer
         ) {
             val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
                 putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playerConnection.player.audioSessionId)

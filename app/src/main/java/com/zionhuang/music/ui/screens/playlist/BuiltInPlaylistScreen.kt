@@ -88,7 +88,7 @@ fun BuiltInPlaylistScreen(
                     },
                     trailingText = joinByBullet(
                         makeTimeString(playlistLength * 1000L),
-                        pluralStringResource(R.plurals.song_count, songs.size, songs.size)
+                        pluralStringResource(R.plurals.n_song, songs.size, songs.size)
                     )
                 )
             }

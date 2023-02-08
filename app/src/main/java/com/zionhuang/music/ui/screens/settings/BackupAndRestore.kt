@@ -46,7 +46,7 @@ fun BackupAndRestore(
             .verticalScroll(rememberScrollState())
     ) {
         PreferenceEntry(
-            title = stringResource(R.string.pref_backup_title),
+            title = stringResource(R.string.backup),
             icon = R.drawable.ic_backup,
             onClick = {
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
@@ -54,7 +54,7 @@ fun BackupAndRestore(
             }
         )
         PreferenceEntry(
-            title = stringResource(R.string.pref_restore_title),
+            title = stringResource(R.string.restore),
             icon = R.drawable.ic_restore,
             onClick = {
                 restoreLauncher.launch(arrayOf("application/octet-stream"))
@@ -63,7 +63,7 @@ fun BackupAndRestore(
     }
 
     TopAppBar(
-        title = { Text(stringResource(R.string.pref_backup_restore_title)) },
+        title = { Text(stringResource(R.string.backup_restore)) },
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
