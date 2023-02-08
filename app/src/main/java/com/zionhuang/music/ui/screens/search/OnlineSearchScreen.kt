@@ -5,11 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -28,8 +31,9 @@ import com.zionhuang.music.ui.component.SearchBarIconOffsetX
 import com.zionhuang.music.ui.component.YouTubeListItem
 import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlineSearchSuggestionViewModel
+import kotlinx.coroutines.flow.drop
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun OnlineSearchScreen(
     query: String,
@@ -41,6 +45,7 @@ fun OnlineSearchScreen(
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val database = LocalDatabase.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -52,11 +57,23 @@ fun OnlineSearchScreen(
 
     val viewState by viewModel.viewState.collectAsState()
 
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { lazyListState.firstVisibleItemScrollOffset }
+            .drop(1)
+            .collect {
+                keyboardController?.hide()
+            }
+    }
+
     LaunchedEffect(query) {
         viewModel.query.value = query
     }
 
-    LazyColumn {
+    LazyColumn(
+        state = lazyListState
+    ) {
         items(
             items = viewState.history,
             key = { it.query }

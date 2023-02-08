@@ -6,12 +6,15 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,8 +34,9 @@ import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.viewmodels.LocalFilter
 import com.zionhuang.music.viewmodels.LocalSearchViewModel
+import kotlinx.coroutines.flow.drop
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LocalSearchScreen(
     query: String,
@@ -41,6 +45,7 @@ fun LocalSearchScreen(
     viewModel: LocalSearchViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val menuState = LocalMenuState.current
     val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -49,6 +54,16 @@ fun LocalSearchScreen(
 
     val searchFilter by viewModel.filter.collectAsState()
     val result by viewModel.result.collectAsState()
+
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        snapshotFlow { lazyListState.firstVisibleItemScrollOffset }
+            .drop(1)
+            .collect {
+                keyboardController?.hide()
+            }
+    }
 
     LaunchedEffect(query) {
         viewModel.query.value = query
@@ -79,6 +94,7 @@ fun LocalSearchScreen(
         }
 
         LazyColumn(
+            state = lazyListState,
             modifier = Modifier.weight(1f)
         ) {
             result.map.forEach { (filter, items) ->
