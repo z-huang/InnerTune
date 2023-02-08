@@ -5,6 +5,7 @@
 Make your own music library with any song from YouTube Music.  
 No ads, free, and simple.
 
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.zionhuang.music)
 [<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.zionhuang.music)
 
 [![Latest release](https://img.shields.io/github/v/release/z-huang/InnerTune?include_prereleases)](https://github.com/z-huang/music/releases)
@@ -94,11 +95,22 @@ How to get updates?
 
 ### Q: How to scrobble music to LastFM, LibreFM, ListenBrainz or GNU FM?
 
-Use other music scrobbler apps. I recommend [Pano Scrobbler](https://play.google.com/store/apps/details?id=com.arn.scrobble).
+Use other music scrobbler apps. I
+recommend [Pano Scrobbler](https://play.google.com/store/apps/details?id=com.arn.scrobble).
 
 ### Q: How to export downloaded song files?
 
-*InnerTune* supports SAF. You can find the provider in Android native file manager. You can also use [Material Files](https://play.google.com/store/apps/details?id=me.zhanghai.android.files) with [instruction](https://github.com/z-huang/InnerTune/issues/117#issuecomment-1295090708) (recommended).
+*InnerTune* supports SAF. You can find the provider in Android native file manager. You can also
+use [Material Files](https://play.google.com/store/apps/details?id=me.zhanghai.android.files)
+with [instruction](https://github.com/z-huang/InnerTune/issues/117#issuecomment-1295090708) (
+recommended).
+
+### Q: Why InnerTune isn't showing in Android Auto?
+
+1. Go to Android Auto's settings and tap multiple times on the version in the bottom to enable
+   developer settings
+2. In the three dots menu at the top-right of the screen, click "Developer settings"
+3. Enable "Unknown sources"
 
 ## Contribution
 
@@ -107,11 +119,16 @@ Use other music scrobbler apps. I recommend [Pano Scrobbler](https://play.google
 #### App
 
 1. Have a fork of this project.
-2. If you have Android Studio, right click on the `app/src/main/res/values` folder, select "New"->"Values Resource File". Input `strings.xml` as file name. Select "Locale", click ">>", choose your language and region, and click "OK".
-3. If not, create a folder named `values-<language code>-r<region code>` under `app/src/main/res`. Copy `app/src/main/res/values/strings.xml` to the created folder.
-4. Replace each English string with the equivalent translation. Note that lines with `translatable="false"` should be ignored.
+2. If you have Android Studio, right click on the `app/src/main/res/values` folder, select "New"->"
+   Values Resource File". Input `strings.xml` as file name. Select "Locale", click ">>", choose your
+   language and region, and click "OK".
+3. If not, create a folder named `values-<language code>-r<region code>` under `app/src/main/res`.
+   Copy `app/src/main/res/values/strings.xml` to the created folder.
+4. Replace each English string with the equivalent translation. Note that lines
+   with `translatable="false"` should be ignored.
 5. (Recommended) Build the app to see if something is wrong.
-6. Make a pull request with your changes. If you do step 5, the process of accepting your PR will be faster.
+6. Make a pull request with your changes. If you do step 5, the process of accepting your PR will be
+   faster.
 
 #### Fastlane (App Description and Changelogs)
 
