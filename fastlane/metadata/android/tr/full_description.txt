@@ -1,0 +1,18 @@
+Bu uygulama ile ücretsiz bir müzik akışı hizmeti almış gibi oluyorsunuz. YouTube Müzik'ten müzik dinleyebilir ve kendi kitaplığınızı oluşturabilirsiniz. Ayrıca şarkılar çevrimdışı çalınmak üzere indirilebilir. Şarkılarınızı düzenlemek için çalma listeleri de oluşturabilirsiniz. <i>InnerTune'un</i> amacı, kullanımı kolay, pratik ve reklamsız bir uygulama ile herkesin hiçbir ücret ödemeden müzik dinlemesini sağlamaktır.
+<br><b>Not:</b>
+
+Proje şu anda dengesiz bir aşamada. Hatalarla karşılaşırsanız, lütfen <a href='https://github.com/z-huang/InnerTune'>GitHub</a> üzerinden bildirin
+
+<br><b>Özellikler:</b>
+
+* Reklamsız şarkı çalma
+* Çevrimdışı oynatmak için müzik indirme
+* Yerel kütüphane yönetimi
+* İndirilen şarkıları SAF üzerinden dışa aktarma
+* Önbellek şarkıları
+* (Eşzamanlı) şarkı sözleri
+* Ses normalleştirme
+* Sessizliği atlama
+* Yedekleme ve geri yükleme
+* Proxy desteği
+* Android Auto desteği

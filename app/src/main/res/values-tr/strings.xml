@@ -1,0 +1,306 @@
+<resources>
+    <!-- Title -->
+    <string name="title_home">Ana Sayfa</string>
+    <string name="title_songs">Şarkılar</string>
+    <string name="title_artists">Sanatçılar</string>
+    <string name="title_albums">Albümler</string>
+    <string name="title_playlists">Çalma Listeleri</string>
+    <string name="title_explore">Keşfet</string>
+    <string name="title_settings">Ayarlar</string>
+    <string name="title_now_playing">Şimdi çalıyor</string>
+    <string name="title_error_report">Hata raporu</string>
+
+    <!-- Preference Title -->
+    <string name="pref_appearance_title">Görünüm</string>
+    <string name="pref_follow_system_accent_title">Sistem temasını izle</string>
+    <string name="pref_theme_color_title">Tema rengi</string>
+    <string name="pref_dark_theme_title">Koyu tema</string>
+    <string name="dark_theme_on">Kapalı</string>
+    <string name="dark_theme_off">Açık</string>
+    <string name="dark_theme_follow_system">Sistemi izle</string>
+    <string name="pref_default_open_tab_title">Varsayılan açılış sekmesi</string>
+    <string name="pref_customize_navigation_tabs">Gezinti sekmelerini özelleştir</string>
+    <string name="pref_lyrics_text_position_title">Şarkı sözleri metin konumu</string>
+    <string name="align_left">Sol</string>
+    <string name="align_center">Orta</string>
+    <string name="align_right">Sağ</string>
+
+    <string name="pref_content_title">İçerik</string>
+    <string name="login">Giriş yap</string>
+    <string name="pref_content_language_title">Varsayılan içerik dili</string>
+    <string name="pref_default_content_country_title">Varsayılan içerik ülkesi</string>
+    <string name="pref_enable_proxy_title">Proxy'yi etkinleştir</string>
+    <string name="pref_proxy_type_title">Proxy türü</string>
+    <string name="pref_proxy_url_title">Proxy URL\'si</string>
+    <string name="pref_restart_title">Etkili olması için yeniden başlat</string>
+
+    <string name="pref_player_audio_title">Çalar ve ses</string>
+    <string name="pref_audio_quality_title">Ses kalitesi</string>
+    <string name="audio_quality_auto">Otomatik</string>
+    <string name="audio_quality_high">Yüksek</string>
+    <string name="audio_quality_low">Düşük</string>
+    <string name="pref_persistent_queue_title">Kalıcı sıra</string>
+    <string name="pref_skip_silence_title">Sessizliği atla</string>
+    <string name="pref_audio_normalization_title">Ses normalleştirme</string>
+    <string name="pref_equalizer_title">Ekolayzer</string>
+
+    <string name="pref_storage_title">Depolama</string>
+    <string name="pref_open_saf_title">İndirilen dosyaları SAF'ta görüntüle</string>
+    <string name="pref_open_saf_summary">Bazı cihazlarda çalışmayabilir</string>
+    <string name="pref_cache_title">Önbellek</string>
+    <string name="pref_image_max_cache_size_title">Maksimum görüntü önbellek boyutu</string>
+    <string name="pref_clear_image_cache_title">Görüntü önbelleğini temizle</string>
+    <string name="pref_song_max_cache_size_title">Maksimum şarkı önbellek boyutu</string>
+    <string name="size_used">%s kullanıldı</string>
+
+    <string name="pref_general_title">Genel</string>
+    <string name="pref_auto_download_title">Otomatik indir</string>
+    <string name="pref_auto_download_summary">Şarkı kütüphaneye eklendiğinde indirin</string>
+    <string name="pref_auto_add_song_title">Kütüphaneye otomatik şarkı ekle</string>
+    <string name="pref_auto_add_song_summary">Çalmayı tamamladığında şarkıyı kütüphanenize ekleyin</string>
+    <string name="pref_expand_on_play_title">Çalma esnasında alttaki oynatıcıyı genişlet</string>
+    <string name="pref_notification_more_action_title">Bildirimde daha fazla eylem</string>
+    <string name="pref_notification_more_action_summary">Kitaplığa ekle ve beğen düğmelerini gösterir</string>
+
+    <string name="pref_privacy_title">Gizlilik</string>
+    <string name="pref_pause_search_history_title">Arama geçmişini duraklat</string>
+    <string name="pref_clear_search_history_title">Arama geçmişini temizle</string>
+    <string name="clear_search_history_question">Tüm arama geçmişini temizlemek istediğinizden emin misiniz?</string>
+    <string name="pref_enable_kugou_title">KuGou şarkı sözü sağlayıcısını etkinleştir</string>
+
+    <string name="pref_backup_restore_title">Yedekleme ve geri yükleme</string>
+    <string name="pref_backup_title">Yedekle</string>
+    <string name="pref_restore_title">Geri yükle</string>
+
+    <string name="pref_about_title">Hakkında</string>
+    <string name="pref_app_version_title">Uygulama sürümü</string>
+
+    <!-- Colors -->
+    <string name="color_sakura">Sakura</string>
+    <string name="color_red">Kırmızı</string>
+    <string name="color_pink">Pembe</string>
+    <string name="color_purple">Mor</string>
+    <string name="color_deep_purple">Koyu mor</string>
+    <string name="color_indigo">Çivit mavisi</string>
+    <string name="color_blue">Mavi</string>
+    <string name="color_light_blue">Açık mavi</string>
+    <string name="color_cyan">Camgöbeği</string>
+    <string name="color_teal">Deniz mavisi</string>
+    <string name="color_green">Yeşil</string>
+    <string name="color_light_green">Açık yeşil</string>
+    <string name="color_lime">Kireç</string>
+    <string name="color_yellow">Sarı</string>
+    <string name="color_amber">Kehribar</string>
+    <string name="color_orange">Turuncu</string>
+    <string name="color_deep_orange">Koyu turuncu</string>
+    <string name="color_brown">Kahverengi</string>
+    <string name="color_blue_grey">Mavi gri</string>
+
+    <!-- Nav Menu -->
+    <string name="menu_search">Arama</string>
+    <string name="search_yt_music">YouTube Müzik\'te Ara...</string>
+    <string name="search_library">Kütüphanede ara...</string>
+
+    <!-- Built-in playlist -->
+    <string name="liked_songs">Beğenilen şarkılar</string>
+    <string name="downloaded_songs">İndirilen şarkılar</string>
+
+    <!-- Popup Menu -->
+    <string name="menu_details">Detaylar</string>
+    <string name="menu_edit">Düzenle</string>
+    <string name="menu_start_radio">Radyoyu başlat</string>
+    <string name="menu_play">Çal</string>
+    <string name="menu_play_next">Sonrakini çal</string>
+    <string name="menu_add_to_queue">Sıraya ekle</string>
+    <string name="menu_add_to_library">Kütüphaneye ekle</string>
+    <string name="menu_download">İndir</string>
+    <string name="menu_remove_download">İndirmeyi kaldır</string>
+    <string name="menu_import_playlist">Çalma listesini içe aktar</string>
+    <string name="menu_add_to_playlist">Çalma listesine ekle</string>
+    <string name="menu_view_artist">Sanatçıyı görüntüle</string>
+    <string name="menu_view_album">Albümü görüntüle</string>
+    <string name="menu_refetch">Yeniden getir</string>
+    <string name="menu_share">Paylaş</string>
+    <string name="menu_delete">Sil</string>
+    <string name="menu_search_online">Çevrimiçi ara</string>
+    <string name="menu_choose_lyrics">Başka sözler seç</string>
+
+    <!-- Dialog -->
+    <string name="dialog_title_details">Detaylar</string>
+    <string name="media_id">Medya kimliği</string>
+    <string name="mime_type">MIME kimliği</string>
+    <string name="codecs">Kodekler</string>
+    <string name="bitrate">Bit hızı</string>
+    <string name="sample_rate">Örnek hızı</string>
+    <string name="loudness">Ses yüksekliği</string>
+    <string name="volume">Ses seviyesi</string>
+    <string name="file_size">Dosya boyutu</string>
+    <string name="unknown">Bilinmiyor</string>
+
+    <string name="dialog_title_edit_lyrics">Şarkı sözlerini düzenle</string>
+    <string name="dialog_title_search_lyrics">Şarkı sözlerini ara</string>
+    <string name="dialog_title_choose_lyrics">Şarkı sözlerini seç</string>
+
+    <string name="dialog_title_edit_song">Şarkıyı düzenle</string>
+    <string name="song_title">Şarkı adı</string>
+    <string name="song_artists">Şarkı sanatçıları</string>
+    <string name="error_song_title_empty">Şarkı adı boş olamaz.</string>
+    <string name="error_song_artist_empty">Şarkının sanatçısı boş olamaz.</string>
+    <string name="dialog_button_save">Kaydet</string>
+
+    <string name="dialog_title_create_playlist">Çalma listesi oluştur</string>
+    <string name="text_view_hint_playlist_name">Çalma listesi adı</string>
+    <string name="error_playlist_name_empty">Çalma listesi adı boş olamaz.</string>
+
+    <string name="dialog_title_edit_artist">Sanatçıyı düzenle</string>
+    <string name="text_view_hint_artist_name">Sanatçı adı</string>
+    <string name="error_artist_name_empty">Sanatçı adı boş olamaz.</string>
+
+    <string name="dialog_title_duplicate_artist">Sanatçıları kopyala</string>
+    <string name="dialog_msg_duplicate_artist">%1$s adlı sanatçı zaten mevcut.</string>
+
+    <string name="dialog_title_choose_playlist">Çalma listesi seç</string>
+
+    <string name="dialog_title_edit_playlist">Çalma listesini düzenle</string>
+
+    <string name="dialog_title_choose_backup_content">Yedekleme içeriğini seç</string>
+    <string name="dialog_title_choose_restore_content">Geri yükleme içeriğini seç</string>
+    <string name="choice_preferences">Tercihler</string>
+    <string name="choice_database">Veritabanı</string>
+    <string name="choice_downloaded_songs">İndirilen şarkılar</string>
+    <string name="message_backup_create_success">Yedek başarıyla oluşturuldu</string>
+    <string name="message_backup_create_failed">Yedek oluşturulamadı</string>
+    <string name="message_restore_failed">Yedek geri yüklenemedi</string>
+
+    <!-- Notification -->
+    <string name="channel_name_playback">Müzik Çalar</string>
+    <string name="channel_name_download">İndir</string>
+
+    <!-- Noun -->
+    <plurals name="song_count">
+        <item quantity="one">%d şarkı</item>
+        <item quantity="other">%d şarkı</item>
+    </plurals>
+    <plurals name="artist_count">
+        <item quantity="one">%d sanatçı</item>
+        <item quantity="other">%d sanatçı</item>
+    </plurals>
+    <plurals name="album_count">
+        <item quantity="one">%d albüm</item>
+        <item quantity="other">%d albüm</item>
+    </plurals>
+    <plurals name="playlist_count">
+        <item quantity="one">%d çalma listesi</item>
+        <item quantity="other">%d çalma listesi</item>
+    </plurals>
+
+    <!-- Button -->
+    <string name="btn_retry">Yeniden dene</string>
+    <string name="btn_play">Çal</string>
+    <string name="btn_play_all">Hepsini çal</string>
+    <string name="btn_radio">Radyo</string>
+    <string name="btn_shuffle">Karıştır</string>
+    <string name="btn_copy_stacktrace">Yığın izini kopyala</string>
+    <string name="btn_report">Bildir</string>
+    <string name="btn_report_on_github">GitHub üzerinden bildir</string>
+
+    <!-- Sort Menu -->
+    <string name="sort_by_create_date">Eklendiği tarih</string>
+    <string name="sort_by_name">Ad</string>
+    <string name="sort_by_artist">Sanatçı</string>
+    <string name="sort_by_year">Yıl</string>
+    <string name="sort_by_song_count">Şarkı sayısı</string>
+    <string name="sort_by_length">Uzunluk</string>
+    <string name="sort_by_play_time">Çalma süresi</string>
+
+    <!-- Snackbar -->
+    <plurals name="snackbar_delete_song">
+        <item quantity="one">%d şarkı silindi.</item>
+        <item quantity="other">%d şarkı silindi.</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="other">%d seçildi</item>
+    </plurals>
+    <string name="snackbar_undo">Geri al</string>
+    <string name="snackbar_url_error">Bu URL tanımlanamıyor.</string>
+    <plurals name="snackbar_song_play_next">
+        <item quantity="one">Sıradaki şarkı çalacak</item>
+        <item quantity="other">Sırada %d şarkı çalacak</item>
+    </plurals>
+    <plurals name="snackbar_artist_play_next">
+        <item quantity="one">Sırada bir sanatçı var</item>
+        <item quantity="other">Sırada %d sanatçı var</item>
+    </plurals>
+    <plurals name="snackbar_album_play_next">
+        <item quantity="one">Bir sonraki albüm çalacak</item>
+        <item quantity="other">Sırada %d albüm var</item>
+    </plurals>
+    <plurals name="snackbar_playlist_play_next">
+        <item quantity="one">Bir çalma listesi daha sonra çalacak</item>
+        <item quantity="other">Sırada %d çalma listesi var</item>
+    </plurals>
+    <string name="snackbar_play_next">Seçilenler sırada çalacak</string>
+    <plurals name="snackbar_song_added_to_queue">
+        <item quantity="one">Şarkı sıraya eklendi</item>
+        <item quantity="other">Sıraya %d şarkı eklendi</item>
+    </plurals>
+    <plurals name="snackbar_artist_added_to_queue">
+        <item quantity="one">Sanatçı kuyruğa eklendi</item>
+        <item quantity="other">Sıraya %d sanatçı eklendi</item>
+    </plurals>
+    <plurals name="snackbar_album_added_to_queue">
+        <item quantity="one">Albüm sıraya eklendi</item>
+        <item quantity="other">Sıraya %d albüm eklendi</item>
+    </plurals>
+    <plurals name="snackbar_playlist_added_to_queue">
+        <item quantity="one">Çalma listesi kuyruğa eklendi</item>
+        <item quantity="other">Sıraya %d çalma listesi eklendi</item>
+    </plurals>
+    <string name="snackbar_added_to_queue">Seçilenler sıraya eklendi</string>
+    <string name="snackbar_added_to_library">Kütüphaneye eklendi</string>
+    <string name="snackbar_removed_from_library">Kütüphaneden kaldırıldı</string>
+    <string name="snackbar_playlist_imported">Çalma listesi içe aktarıldı</string>
+    <string name="snackbar_added_to_playlist">%1$s çalma listesine eklendi</string>
+    <plurals name="snackbar_download_song">
+        <item quantity="one">Şarkı indirmeye başla</item>
+        <item quantity="other">%d şarkı indirmeye başla</item>
+    </plurals>
+    <string name="snackbar_removed_download">İndirme kaldırıldı</string>
+    <string name="snackbar_action_view">Görüntüle</string>
+
+    <!-- Custom Action -->
+    <string name="action_like">Beğen</string>
+    <string name="action_remove_like">Beğeniyi kaldır</string>
+    <string name="action_add_to_library">Kütüphaneye ekle</string>
+    <string name="action_remove_from_library">Kütüphaneden kaldır</string>
+
+    <!-- Search Filter -->
+    <string name="search_filter_all">Hepsi</string>
+    <string name="search_filter_songs">Şarkılar</string>
+    <string name="search_filter_videos">Videolar</string>
+    <string name="search_filter_albums">Albümler</string>
+    <string name="search_filter_artists">Sanatçılar</string>
+    <string name="search_filter_playlists">Çalma Listeleri</string>
+    <string name="search_filter_community_playlists">Topluluk çalma listeleri</string>
+    <string name="search_filter_featured_playlists">Öne çıkan çalma listeleri</string>
+
+    <string name="system_default">Sistem varsayılanı</string>
+    <string name="header_from_your_library">Kütüphanenizden</string>
+
+    <!-- Error Activity -->
+    <string name="sorry_for_error">Üzgünüm, bu olmamalıydı.</string>
+    <string name="copied">Panoya kopyalandı</string>
+
+    <!-- Player Error Message -->
+    <string name="error_no_stream">Yayın yok</string>
+    <string name="error_no_internet">Ağ bağlantısı yok</string>
+    <string name="error_timeout">Zaman aşımı</string>
+    <string name="error_unknown">Bilinmeyen hata</string>
+
+    <!-- Queue Title -->
+    <string name="queue_all_songs">Tüm şarkılar</string>
+    <string name="queue_searched_songs">Aranan şarkılar</string>
+
+    <!-- Lyrics View -->
+    <string name="lyrics_not_found">Şarkı sözleri bulunamadı</string>
+</resources>
