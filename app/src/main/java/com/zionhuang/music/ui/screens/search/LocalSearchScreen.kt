@@ -37,6 +37,7 @@ import com.zionhuang.music.viewmodels.LocalSearchViewModel
 fun LocalSearchScreen(
     query: String,
     navController: NavController,
+    onDismiss: () -> Unit,
     viewModel: LocalSearchViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -95,13 +96,15 @@ fun LocalSearchScreen(
                                 .padding(start = 12.dp, end = 18.dp)
                         ) {
                             Text(
-                                text = stringResource(when (filter) {
-                                    LocalFilter.SONG -> R.string.search_filter_songs
-                                    LocalFilter.ALBUM -> R.string.search_filter_albums
-                                    LocalFilter.ARTIST -> R.string.search_filter_artists
-                                    LocalFilter.PLAYLIST -> R.string.search_filter_playlists
-                                    LocalFilter.ALL -> error("")
-                                }),
+                                text = stringResource(
+                                    when (filter) {
+                                        LocalFilter.SONG -> R.string.search_filter_songs
+                                        LocalFilter.ALBUM -> R.string.search_filter_albums
+                                        LocalFilter.ARTIST -> R.string.search_filter_artists
+                                        LocalFilter.PLAYLIST -> R.string.search_filter_playlists
+                                        LocalFilter.ALL -> error("")
+                                    }
+                                ),
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier.weight(1f)
                             )
@@ -132,7 +135,10 @@ fun LocalSearchScreen(
                                                 navController = navController,
                                                 playerConnection = playerConnection,
                                                 coroutineScope = coroutineScope,
-                                                onDismiss = menuState::dismiss
+                                                onDismiss = {
+                                                    onDismiss()
+                                                    menuState.dismiss()
+                                                }
                                             )
                                         }
                                     }
@@ -163,6 +169,7 @@ fun LocalSearchScreen(
                             playWhenReady = playWhenReady,
                             modifier = Modifier
                                 .clickable {
+                                    onDismiss()
                                     navController.navigate("album/${item.id}")
                                 }
                                 .animateItemPlacement()
@@ -171,6 +178,7 @@ fun LocalSearchScreen(
                             artist = item,
                             modifier = Modifier
                                 .clickable {
+                                    onDismiss()
                                     navController.navigate("artist/${item.id}")
                                 }
                                 .animateItemPlacement()
@@ -179,6 +187,7 @@ fun LocalSearchScreen(
                             playlist = item,
                             modifier = Modifier
                                 .clickable {
+                                    onDismiss()
                                     navController.navigate("local_playlist/${item.id}")
                                 }
                                 .animateItemPlacement()

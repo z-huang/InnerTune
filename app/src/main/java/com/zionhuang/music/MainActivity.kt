@@ -447,8 +447,7 @@ class MainActivity : ComponentActivity() {
                         AnimatedVisibility(
                             visible = shouldShowSearchBar,
                             enter = fadeIn(),
-                            exit = fadeOut(),
-                            modifier = Modifier.align(Alignment.TopCenter)
+                            exit = fadeOut()
                         ) {
                             SearchBar(
                                 query = query,
@@ -531,7 +530,8 @@ class MainActivity : ComponentActivity() {
                                     when (searchSource) {
                                         SearchSource.LOCAL -> LocalSearchScreen(
                                             query = query.text,
-                                            navController = navController
+                                            navController = navController,
+                                            onDismiss = { onActiveChange(false) }
                                         )
                                         SearchSource.ONLINE -> OnlineSearchScreen(
                                             query = query.text,
