@@ -16,7 +16,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +54,10 @@ fun SongMenu(
     val songState = database.song(originalSong.id).collectAsState(initial = originalSong)
     val song = songState.value ?: originalSong
 
+    var showEditDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     var showChoosePlaylistDialog by rememberSaveable {
         mutableStateOf(false)
     }
@@ -72,6 +78,21 @@ fun SongMenu(
         database.playlistsByCreateDateDesc().collect {
             playlists = it
         }
+    }
+
+    if (showEditDialog) {
+        TextFieldDialog(
+            icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
+            title = { Text(text = stringResource(R.string.edit_song)) },
+            onDismiss = { showEditDialog = false },
+            initialTextFieldValue = TextFieldValue(song.song.title, TextRange(song.song.title.length)),
+            onDone = { title ->
+                onDismiss()
+                database.query {
+                    update(song.song.copy(title = title))
+                }
+            }
+        )
     }
 
     if (showChoosePlaylistDialog) {
@@ -103,11 +124,13 @@ fun SongMenu(
                         onDismiss()
                         coroutineScope.launch {
                             database.query {
-                                insert(PlaylistSongMap(
-                                    songId = song.id,
-                                    playlistId = playlist.id,
-                                    position = playlist.songCount
-                                ))
+                                insert(
+                                    PlaylistSongMap(
+                                        songId = song.id,
+                                        playlistId = playlist.id,
+                                        position = playlist.songCount
+                                    )
+                                )
                             }
                         }
                     }
@@ -232,10 +255,9 @@ fun SongMenu(
         }
         GridMenuItem(
             icon = R.drawable.ic_edit,
-            title = R.string.edit,
-            enabled = false
+            title = R.string.edit
         ) {
-
+            showEditDialog = true
         }
         GridMenuItem(
             icon = R.drawable.ic_playlist_add,
