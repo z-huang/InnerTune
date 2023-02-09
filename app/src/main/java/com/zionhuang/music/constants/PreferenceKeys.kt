@@ -108,6 +108,7 @@ val LanguageCodeToName = mapOf(
     "hu" to "Magyar",
     "nl" to "Nederlands",
     "no" to "Norsk",
+    "or" to "Odia",
     "uz" to "O‘zbe",
     "pl" to "Polski",
     "pt-PT" to "Português",
