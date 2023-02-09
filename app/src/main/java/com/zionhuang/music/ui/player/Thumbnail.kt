@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ fun Thumbnail(
     val currentView = LocalView.current
 
     val showLyrics by rememberPreference(ShowLyricsKey, false)
+    val error by playerConnection.error.collectAsState()
 
     DisposableEffect(showLyrics) {
         currentView.keepScreenOn = showLyrics
@@ -44,52 +46,61 @@ fun Thumbnail(
 
     Box(modifier = modifier) {
         AnimatedVisibility(
-            visible = !showLyrics,
+            visible = !showLyrics && error == null,
             enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .windowInsetsPadding(
-                        WindowInsets.systemBars
-                            .only(WindowInsetsSides.Top)
-                            .add(WindowInsets(left = 16.dp, right = 16.dp))
-                    )
-            ) {
-                AsyncImage(
-                    model = mediaMetadata.thumbnailUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(ThumbnailCornerRadius))
-                        .fillMaxWidth()
-                        .align(Alignment.Center)
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onDoubleTap = { offset ->
-                                    if (offset.x < size.width / 2) {
-                                        playerConnection.player.seekBack()
-                                    } else {
-                                        playerConnection.player.seekForward()
-                                    }
-                                }
-                            )
-                        }
+            exit = fadeOut(),
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(
+                    WindowInsets.systemBars
+                        .only(WindowInsetsSides.Top)
+                        .add(WindowInsets(left = 16.dp, right = 16.dp))
                 )
-            }
+        ) {
+            AsyncImage(
+                model = mediaMetadata.thumbnailUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(ThumbnailCornerRadius))
+                    .fillMaxWidth()
+                    .align(Alignment.Center)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onDoubleTap = { offset ->
+                                if (offset.x < size.width / 2) {
+                                    playerConnection.player.seekBack()
+                                } else {
+                                    playerConnection.player.seekForward()
+                                }
+                            }
+                        )
+                    }
+            )
         }
 
         AnimatedVisibility(
-            visible = showLyrics,
+            visible = showLyrics && error == null,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Lyrics(
-                    sliderPositionProvider = sliderPositionProvider,
-                    mediaMetadataProvider = { mediaMetadata }
+            Lyrics(
+                sliderPositionProvider = sliderPositionProvider,
+                mediaMetadataProvider = { mediaMetadata }
+            )
+        }
+
+        AnimatedVisibility(
+            visible = error != null,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .padding(32.dp)
+                .align(Alignment.Center)
+        ) {
+            error?.let { error ->
+                PlaybackError(
+                    error = error,
+                    retry = playerConnection.player::prepare
                 )
             }
         }

@@ -1,5 +1,8 @@
 package com.zionhuang.music.ui.player
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -12,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,6 +43,7 @@ fun MiniPlayer(
     mediaMetadata ?: return
     val playerConnection = LocalPlayerConnection.current ?: return
     val canSkipNext by playerConnection.canSkipNext.collectAsState()
+    val error by playerConnection.error.collectAsState()
 
     Box(
         modifier = modifier
@@ -68,7 +73,30 @@ fun MiniPlayer(
                         .size(48.dp)
                         .clip(RoundedCornerShape(ThumbnailCornerRadius))
                 )
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = error != null,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Box(
+                        Modifier
+                            .size(48.dp)
+                            .background(
+                                color = Color.Black.copy(alpha = 0.6f),
+                                shape = RoundedCornerShape(ThumbnailCornerRadius)
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_info),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
             }
+
             Column(
                 modifier = Modifier
                     .weight(1f)

@@ -2,6 +2,7 @@ package com.zionhuang.music.playback
 
 import android.graphics.Bitmap
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.Timeline
 import com.zionhuang.music.db.MusicDatabase
@@ -18,7 +19,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlayerConnection(
     val database: MusicDatabase,
-    val binder: MusicBinder,
+    private val binder: MusicBinder,
 ) : Listener {
     val songPlayer = binder.songPlayer
     val player = binder.player
@@ -52,6 +53,8 @@ class PlayerConnection(
             field = value
             binder.songPlayer.bitmapProvider.onBitmapChanged = value
         }
+
+    val error = MutableStateFlow<PlaybackException?>(null)
 
     init {
         binder.player.addListener(this)
@@ -103,6 +106,7 @@ class PlayerConnection(
 
     override fun onPlaybackStateChanged(state: Int) {
         playbackState.value = state
+        error.value = player.playerError
     }
 
     override fun onPlayWhenReadyChanged(newPlayWhenReady: Boolean, reason: Int) {
@@ -134,6 +138,10 @@ class PlayerConnection(
     override fun onRepeatModeChanged(mode: Int) {
         repeatMode.value = mode
         updateCanSkipPreviousAndNext()
+    }
+
+    override fun onPlayerErrorChanged(playbackError: PlaybackException?) {
+        error.value = playbackError
     }
 
     private fun updateCanSkipPreviousAndNext() {
