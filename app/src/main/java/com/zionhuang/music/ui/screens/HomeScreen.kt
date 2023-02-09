@@ -253,27 +253,29 @@ fun HomeScreen(
             Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()))
         }
 
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .windowInsetsPadding(
-                    LocalPlayerAwareWindowInsets.current
-                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+        if (mostPlayedSongs.isNotEmpty() || newReleaseAlbums.isNotEmpty()) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .windowInsetsPadding(
+                        LocalPlayerAwareWindowInsets.current
+                            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                    )
+                    .padding(16.dp),
+                onClick = {
+                    if (Random.nextBoolean() && mostPlayedSongs.isNotEmpty()) {
+                        val song = mostPlayedSongs.random()
+                        playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
+                    } else if (newReleaseAlbums.isNotEmpty()) {
+                        val album = newReleaseAlbums.random()
+                        playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
+                    }
+                }) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_casino),
+                    contentDescription = null
                 )
-                .padding(16.dp),
-            onClick = {
-                if (newReleaseAlbums.isEmpty() || Random.nextBoolean()) {
-                    val song = mostPlayedSongs.random()
-                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
-                } else {
-                    val album = newReleaseAlbums.random()
-                    playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
-                }
-            }) {
-            Icon(
-                painter = painterResource(R.drawable.ic_casino),
-                contentDescription = null
-            )
+            }
         }
     }
 }
