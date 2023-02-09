@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
@@ -577,7 +578,13 @@ class MainActivity : ComponentActivity() {
                                             contentDescription = null
                                         )
                                     },
-                                    label = { Text(stringResource(screen.titleId)) },
+                                    label = {
+                                        Text(
+                                            text = stringResource(screen.titleId),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    },
                                     onClick = {
                                         navController.navigate(screen.route) {
                                             popUpTo(navController.graph.startDestinationId) {
