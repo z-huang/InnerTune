@@ -485,7 +485,7 @@ class SongPlayer(
                             AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
                             AudioQuality.HIGH -> 1
                             AudioQuality.LOW -> -1
-                        }
+                        } + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) // prefer opus stream
                     }
             } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
