@@ -23,6 +23,11 @@ operator fun <T> DataStore<Preferences>.get(key: Preferences.Key<T>): T? =
         data.first()[key]
     }
 
+fun <T> DataStore<Preferences>.get(key: Preferences.Key<T>, defaultValue: T): T =
+    runBlocking(Dispatchers.IO) {
+        data.first()[key] ?: defaultValue
+    }
+
 fun <T> preference(
     context: Context,
     key: Preferences.Key<T>,

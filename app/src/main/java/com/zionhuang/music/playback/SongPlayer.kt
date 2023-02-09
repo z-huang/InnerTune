@@ -130,10 +130,12 @@ class SongPlayer(
         .setRenderersFactory(createRenderersFactory())
         .setHandleAudioBecomingNoisy(true)
         .setWakeMode(WAKE_MODE_NETWORK)
-        .setAudioAttributes(AudioAttributes.Builder()
-            .setUsage(C.USAGE_MEDIA)
-            .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
-            .build(), true)
+        .setAudioAttributes(
+            AudioAttributes.Builder()
+                .setUsage(C.USAGE_MEDIA)
+                .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                .build(), true
+        )
         .setSeekBackIncrementMs(5000)
         .setSeekForwardIncrementMs(5000)
         .build()
@@ -143,7 +145,7 @@ class SongPlayer(
         }
 
     private val normalizeFactor = MutableStateFlow(1f)
-    val playerVolume = MutableStateFlow(context.dataStore[PlayerVolumeKey]?.coerceIn(0f, 1f) ?: 1f)
+    val playerVolume = MutableStateFlow(context.dataStore.get(PlayerVolumeKey, 1f).coerceIn(0f, 1f))
 
     var sleepTimerJob: Job? = null
     var sleepTimerTriggerTime by mutableStateOf(-1L)
@@ -307,7 +309,7 @@ class SongPlayer(
 
             override fun getCustomActions(player: Player): List<String> {
                 val actions = mutableListOf<String>()
-                if (player.currentMetadata != null && context.dataStore[NotificationMoreActionKey] != false) {
+                if (player.currentMetadata != null && context.dataStore.get(NotificationMoreActionKey, true)) {
                     actions.add(if (currentSong == null) ACTION_ADD_TO_LIBRARY else ACTION_REMOVE_FROM_LIBRARY)
                     actions.add(if (currentSong?.song?.liked == true) ACTION_UNLIKE else ACTION_LIKE)
                 }
@@ -365,10 +367,12 @@ class SongPlayer(
                 if (showLyrics && mediaMetadata != null && database.lyrics(mediaMetadata.id).first() == null) {
                     val lyrics = lyricsHelper.getLyrics(mediaMetadata)
                     database.query {
-                        upsert(LyricsEntity(
-                            id = mediaMetadata.id,
-                            lyrics = lyrics
-                        ))
+                        upsert(
+                            LyricsEntity(
+                                id = mediaMetadata.id,
+                                lyrics = lyrics
+                            )
+                        )
                     }
                 }
             }
@@ -405,7 +409,7 @@ class SongPlayer(
                     playerNotificationManager.invalidate()
                 }
         }
-        if (context.dataStore[PersistentQueueKey] != false) {
+        if (context.dataStore.get(PersistentQueueKey, true)) {
             runCatching {
                 context.filesDir.resolve(PERSISTENT_QUEUE_FILE).inputStream().use { fis ->
                     ObjectInputStream(fis).use { oos ->
@@ -413,19 +417,25 @@ class SongPlayer(
                     }
                 }
             }.onSuccess { queue ->
-                playQueue(ListQueue(
-                    title = queue.title,
-                    items = queue.items.map { it.toMediaItem() },
-                    startIndex = queue.mediaItemIndex,
-                    position = queue.position
-                ), playWhenReady = false)
+                playQueue(
+                    queue = ListQueue(
+                        title = queue.title,
+                        items = queue.items.map { it.toMediaItem() },
+                        startIndex = queue.mediaItemIndex,
+                        position = queue.position
+                    ),
+                    playWhenReady = false
+                )
             }
         }
     }
 
-    private fun createOkHttpDataSourceFactory() = OkHttpDataSource.Factory(OkHttpClient.Builder()
-        .proxy(YouTube.proxy)
-        .build())
+    private fun createOkHttpDataSourceFactory() =
+        OkHttpDataSource.Factory(
+            OkHttpClient.Builder()
+                .proxy(YouTube.proxy)
+                .build()
+        )
 
     private fun createCacheDataSource() = CacheDataSource.Factory()
         .setCache(cache)
@@ -480,16 +490,18 @@ class SongPlayer(
             } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
             database.query {
-                upsert(FormatEntity(
-                    id = mediaId,
-                    itag = format.itag,
-                    mimeType = format.mimeType.split(";")[0],
-                    codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
-                    bitrate = format.bitrate,
-                    sampleRate = format.audioSampleRate,
-                    contentLength = format.contentLength!!,
-                    loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
-                ))
+                upsert(
+                    FormatEntity(
+                        id = mediaId,
+                        itag = format.itag,
+                        mimeType = format.mimeType.split(";")[0],
+                        codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
+                        bitrate = format.bitrate,
+                        sampleRate = format.audioSampleRate,
+                        contentLength = format.contentLength!!,
+                        loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                    )
+                )
             }
             dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
@@ -502,11 +514,13 @@ class SongPlayer(
                 .setEnableFloatOutput(enableFloatOutput)
                 .setEnableAudioTrackPlaybackParams(enableAudioTrackPlaybackParams)
                 .setOffloadMode(if (enableOffload) OFFLOAD_MODE_ENABLED_GAPLESS_REQUIRED else OFFLOAD_MODE_DISABLED)
-                .setAudioProcessorChain(DefaultAudioProcessorChain(
-                    emptyArray(),
-                    SilenceSkippingAudioProcessor(2_000_000, 20_000, DEFAULT_SILENCE_THRESHOLD_LEVEL),
-                    SonicAudioProcessor()
-                ))
+                .setAudioProcessorChain(
+                    DefaultAudioProcessorChain(
+                        emptyArray(),
+                        SilenceSkippingAudioProcessor(2_000_000, 20_000, DEFAULT_SILENCE_THRESHOLD_LEVEL),
+                        SonicAudioProcessor()
+                    )
+                )
                 .build()
     }
 
@@ -744,7 +758,7 @@ class SongPlayer(
     }
 
     fun onDestroy() {
-        if (context.dataStore[PersistentQueueKey] != false) {
+        if (context.dataStore.get(PersistentQueueKey, true)) {
             saveQueueToDisk()
         }
         mediaSession.apply {

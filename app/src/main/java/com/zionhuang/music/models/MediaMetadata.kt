@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.ui.utils.resize
+import java.io.Serializable
 
 @Immutable
 data class MediaMetadata(
@@ -17,16 +18,16 @@ data class MediaMetadata(
     val duration: Int,
     val thumbnailUrl: String? = null,
     val album: Album? = null,
-) {
+) : Serializable {
     data class Artist(
         val id: String?,
         val name: String,
-    )
+    ) : Serializable
 
     data class Album(
         val id: String,
         val title: String,
-    )
+    ) : Serializable
 
     fun toMediaDescription(): MediaDescriptionCompat = builder
         .setMediaId(id)
@@ -34,11 +35,13 @@ data class MediaMetadata(
         .setSubtitle(artists.joinToString { it.name })
         .setDescription(artists.joinToString { it.name })
         .setIconUri(thumbnailUrl?.resize(544, 544)?.toUri())
-        .setExtras(bundleOf(
-            METADATA_KEY_DURATION to duration * 1000L,
-            METADATA_KEY_ARTIST to artists.joinToString { it.name },
-            METADATA_KEY_ALBUM to album?.title
-        ))
+        .setExtras(
+            bundleOf(
+                METADATA_KEY_DURATION to duration * 1000L,
+                METADATA_KEY_ARTIST to artists.joinToString { it.name },
+                METADATA_KEY_ALBUM to album?.title
+            )
+        )
         .build()
 
     fun toSongEntity() = SongEntity(
