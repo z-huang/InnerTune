@@ -18,7 +18,7 @@ import androidx.palette.graphics.Palette
 import com.google.material.color.scheme.Scheme
 import com.google.material.color.score.Score
 
-val DefaultThemeColor = Color(0xFF6650a4)
+val DefaultThemeColor = Color(0xFF4285F4)
 
 @Composable
 fun InnerTuneTheme(

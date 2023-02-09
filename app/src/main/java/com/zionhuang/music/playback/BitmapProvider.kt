@@ -25,22 +25,33 @@ class BitmapProvider(private val context: Context) {
         disposable?.dispose()
         val cache = map.get(url)
         if (cache == null) {
-            disposable = context.imageLoader.enqueue(ImageRequest.Builder(context)
-                .data(url)
-                .allowHardware(false)
-                .target(onSuccess = { drawable ->
-                    val bitmap = (drawable as BitmapDrawable).bitmap
-                    map.put(url, bitmap)
-                    callback(bitmap)
-                    currentBitmap = bitmap
-                    onBitmapChanged(bitmap)
-                })
-                .build())
+            disposable = context.imageLoader.enqueue(
+                ImageRequest.Builder(context)
+                    .data(url)
+                    .allowHardware(false)
+                    .target(
+                        onSuccess = { drawable ->
+                            val bitmap = (drawable as BitmapDrawable).bitmap
+                            map.put(url, bitmap)
+                            callback(bitmap)
+                            currentBitmap = bitmap
+                            onBitmapChanged(bitmap)
+                        }
+                    )
+                    .build()
+            )
         } else {
             currentBitmap = cache
             onBitmapChanged(cache)
         }
         return cache
+    }
+
+    fun clear() {
+        disposable?.dispose()
+        currentUrl = null
+        currentBitmap = null
+        onBitmapChanged(null)
     }
 
     companion object {

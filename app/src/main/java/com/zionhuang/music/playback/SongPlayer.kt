@@ -668,8 +668,7 @@ class SongPlayer(
             }
         }
         if (mediaItem == null) {
-            bitmapProvider.currentBitmap = null
-            bitmapProvider.onBitmapChanged(null)
+            bitmapProvider.clear()
         }
         if (pauseWhenSongEnd) {
             pauseWhenSongEnd = false
