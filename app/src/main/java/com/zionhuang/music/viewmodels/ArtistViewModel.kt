@@ -27,7 +27,12 @@ class ArtistViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            artistPage = YouTube.artist(artistId).getOrNull()
+            YouTube.artist(artistId)
+                .onSuccess {
+                    artistPage = it
+                }.onFailure { e ->
+                    e.printStackTrace()
+                }
         }
     }
 }

@@ -24,15 +24,20 @@ class ArtistItemsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val artistItemsPage = YouTube.artistItems(BrowseEndpoint(
-                browseId = browseId,
-                params = params
-            )).getOrNull() ?: return@launch
-            title.value = artistItemsPage.title
-            itemsPage.value = ItemsPage(
-                items = artistItemsPage.items,
-                continuation = artistItemsPage.continuation
-            )
+            YouTube.artistItems(
+                BrowseEndpoint(
+                    browseId = browseId,
+                    params = params
+                )
+            ).onSuccess { artistItemsPage ->
+                title.value = artistItemsPage.title
+                itemsPage.value = ItemsPage(
+                    items = artistItemsPage.items,
+                    continuation = artistItemsPage.continuation
+                )
+            }.onFailure { e ->
+                e.printStackTrace()
+            }
         }
     }
 
@@ -40,13 +45,17 @@ class ArtistItemsViewModel @Inject constructor(
         viewModelScope.launch {
             val oldItemsPage = itemsPage.value ?: return@launch
             val continuation = oldItemsPage.continuation ?: return@launch
-            val artistItemsContinuationPage = YouTube.artistItemsContinuation(continuation).getOrNull() ?: return@launch
-            itemsPage.update {
-                ItemsPage(
-                    items = (oldItemsPage.items + artistItemsContinuationPage.items).distinctBy { it.id },
-                    continuation = artistItemsContinuationPage.continuation
-                )
-            }
+            YouTube.artistItemsContinuation(continuation)
+                .onSuccess { artistItemsContinuationPage ->
+                    itemsPage.update {
+                        ItemsPage(
+                            items = (oldItemsPage.items + artistItemsContinuationPage.items).distinctBy { it.id },
+                            continuation = artistItemsContinuationPage.continuation
+                        )
+                    }
+                }.onFailure { e ->
+                    e.printStackTrace()
+                }
         }
     }
 }

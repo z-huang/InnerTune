@@ -24,9 +24,13 @@ class OnlinePlaylistViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val playlistPage = YouTube.playlist(playlistId).completed().getOrNull() ?: return@launch
-            playlist.value = playlistPage.playlist
-            playlistSongs.value = playlistPage.songs
+            YouTube.playlist(playlistId).completed()
+                .onSuccess { playlistPage ->
+                    playlist.value = playlistPage.playlist
+                    playlistSongs.value = playlistPage.songs
+                }.onFailure { e ->
+                    e.printStackTrace()
+                }
         }
     }
 }
