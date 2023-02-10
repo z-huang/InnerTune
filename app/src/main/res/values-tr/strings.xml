@@ -29,7 +29,7 @@
     <string name="login">Giriş yap</string>
     <string name="pref_content_language_title">Varsayılan içerik dili</string>
     <string name="pref_default_content_country_title">Varsayılan içerik ülkesi</string>
-    <string name="pref_enable_proxy_title">Proxy'yi etkinleştir</string>
+    <string name="pref_enable_proxy_title">Proxy\'yi etkinleştir</string>
     <string name="pref_proxy_type_title">Proxy türü</string>
     <string name="pref_proxy_url_title">Proxy URL\'si</string>
     <string name="pref_restart_title">Etkili olması için yeniden başlat</string>
@@ -45,7 +45,7 @@
     <string name="pref_equalizer_title">Ekolayzer</string>
 
     <string name="pref_storage_title">Depolama</string>
-    <string name="pref_open_saf_title">İndirilen dosyaları SAF'ta görüntüle</string>
+    <string name="pref_open_saf_title">İndirilen dosyaları SAF\'ta görüntüle</string>
     <string name="pref_open_saf_summary">Bazı cihazlarda çalışmayabilir</string>
     <string name="pref_cache_title">Önbellek</string>
     <string name="pref_image_max_cache_size_title">Maksimum görüntü önbellek boyutu</string>
