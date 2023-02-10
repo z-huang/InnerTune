@@ -154,6 +154,7 @@
     <string name="dark_theme_on">켬</string>
     <string name="dark_theme_off">끔</string>
     <string name="dark_theme_follow_system">시스템</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Default open tab</string>
     <string name="customize_navigation_tabs">Customize navigation tabs</string>
     <string name="lyrics_text_position">Lyrics text position</string>

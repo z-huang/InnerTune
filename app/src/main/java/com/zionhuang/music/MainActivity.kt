@@ -126,6 +126,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val coroutineScope = rememberCoroutineScope()
             val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
+            val pureBlack by rememberPreference(PureBlackKey, defaultValue = false)
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val useDarkTheme = remember(darkTheme, isSystemInDarkTheme) {
                 if (darkTheme == DarkMode.AUTO) isSystemInDarkTheme else darkTheme == DarkMode.ON
@@ -150,6 +151,7 @@ class MainActivity : ComponentActivity() {
 
             InnerTuneTheme(
                 darkTheme = useDarkTheme,
+                pureBlack = pureBlack,
                 themeColor = themeColor
             ) {
                 BoxWithConstraints(

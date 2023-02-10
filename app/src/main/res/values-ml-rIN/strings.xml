@@ -160,6 +160,7 @@
     <string name="dark_theme_on">ഓൺ</string>
     <string name="dark_theme_off">ഓഫ്</string>
     <string name="dark_theme_follow_system">സിസ്റ്റം പിന്തുടരുക</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">സ്ഥിര ഓപ്പൺ ടാബ്</string>
     <string name="customize_navigation_tabs">Customize navigation tabs</string>
     <string name="lyrics_text_position">Lyrics text position</string>

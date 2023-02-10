@@ -160,6 +160,7 @@
     <string name="dark_theme_on">Be</string>
     <string name="dark_theme_off">Ki</string>
     <string name="dark_theme_follow_system">Rendszer szerint</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Alapért. nyitott lap</string>
     <string name="customize_navigation_tabs">A navigációs lapok testreszabása</string>
     <string name="lyrics_text_position">Dalszöveg szöveg pozíció</string>

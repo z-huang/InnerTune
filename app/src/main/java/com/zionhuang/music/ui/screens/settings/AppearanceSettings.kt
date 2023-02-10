@@ -15,8 +15,11 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.DarkModeKey
 import com.zionhuang.music.constants.DefaultOpenTabKey
 import com.zionhuang.music.constants.LyricsTextPositionKey
+import com.zionhuang.music.constants.PureBlackKey
 import com.zionhuang.music.ui.component.EnumListPreference
+import com.zionhuang.music.ui.component.SwitchPreference
 import com.zionhuang.music.utils.rememberEnumPreference
+import com.zionhuang.music.utils.rememberPreference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,6 +28,7 @@ fun AppearanceSettings(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     val (darkMode, onDarkModeChange) = rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
+    val (pureBlack, onPureBlackChange) = rememberPreference(PureBlackKey, defaultValue = false)
     val (defaultOpenTab, onDefaultOpenTabChange) = rememberEnumPreference(DefaultOpenTabKey, defaultValue = NavigationTab.HOME)
     val (lyricsPosition, onLyricsPositionChange) = rememberEnumPreference(LyricsTextPositionKey, defaultValue = LyricsPosition.CENTER)
 
@@ -45,6 +49,12 @@ fun AppearanceSettings(
                     DarkMode.AUTO -> stringResource(R.string.dark_theme_follow_system)
                 }
             }
+        )
+        SwitchPreference(
+            title = stringResource(R.string.pure_black),
+            icon = R.drawable.contrast,
+            checked = pureBlack,
+            onCheckedChange = onPureBlackChange
         )
         EnumListPreference(
             title = stringResource(R.string.default_open_tab),

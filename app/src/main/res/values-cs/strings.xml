@@ -171,6 +171,7 @@
     <string name="dark_theme_on">Zap</string>
     <string name="dark_theme_off">Vyp</string>
     <string name="dark_theme_follow_system">Podle systému</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Výchozí karta</string>
     <string name="customize_navigation_tabs">Přizpůsobit navigační karty</string>
     <string name="lyrics_text_position">Pozice textů</string>

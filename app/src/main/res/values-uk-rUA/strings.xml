@@ -171,6 +171,7 @@
     <string name="dark_theme_on">Увімк.</string>
     <string name="dark_theme_off">Вимк.</string>
     <string name="dark_theme_follow_system">Використовувати конфігурацію системи</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Вкладка навігації за замовчуванням</string>
     <string name="customize_navigation_tabs">Налаштування вкладок навігації</string>
     <string name="lyrics_text_position">Розташування тексту пісні</string>

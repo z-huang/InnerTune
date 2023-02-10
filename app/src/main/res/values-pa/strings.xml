@@ -160,6 +160,7 @@
     <string name="dark_theme_on">ਚਾਲੂ</string>
     <string name="dark_theme_off">ਬੰਦ</string>
     <string name="dark_theme_follow_system">ਸਿਸਟਮ ਦੀ ਪਾਲਣਾ ਕਰੋ</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">ਡੀਫ਼ਾਲਟ ਖੁੱਲ੍ਹਣ ਵਾਲੀ ਟੈਬ</string>
     <string name="customize_navigation_tabs">ਨੈਵੀਗੇਸ਼ਨ ਟੈਬਾਂ ਨੂੰ ਆਪਣੀ ਪਸੰਦ ਦਾ ਢਾਲੋ</string>
     <string name="lyrics_text_position">ਬੋਲਾਂ ਦੀ ਟੈਕਸਟ ਸਥਿਤੀ</string>

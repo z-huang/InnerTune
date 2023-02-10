@@ -160,6 +160,7 @@
     <string name="dark_theme_on">An</string>
     <string name="dark_theme_off">Aus</string>
     <string name="dark_theme_follow_system">System folgen</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Standardmäßig geöffnete Registerkarte</string>
     <string name="customize_navigation_tabs">Anpassen der Navigationsregisterkarten</string>
     <string name="lyrics_text_position">Position des Liedtextes</string>

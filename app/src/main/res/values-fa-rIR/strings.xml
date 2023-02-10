@@ -160,6 +160,7 @@
     <string name="dark_theme_on">روشن</string>
     <string name="dark_theme_off">خاموش</string>
     <string name="dark_theme_follow_system">پیروی از سیستم</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">زبانه باز پیش‌فرض</string>
     <string name="customize_navigation_tabs">Customize navigation tabs</string>
     <string name="lyrics_text_position">Lyrics text position</string>

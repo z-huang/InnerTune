@@ -160,6 +160,7 @@
     <string name="dark_theme_on">Attivato</string>
     <string name="dark_theme_off">Disattivato</string>
     <string name="dark_theme_follow_system">Segui sistema</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Scheda principale predefinita</string>
     <string name="customize_navigation_tabs">Personalizza schede di navigazione</string>
     <string name="lyrics_text_position">Posizione del testo dei brani</string>

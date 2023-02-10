@@ -23,16 +23,17 @@ val DefaultThemeColor = Color(0xFF4285F4)
 @Composable
 fun InnerTuneTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    pureBlack: Boolean = false,
     themeColor: Color = DefaultThemeColor,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val colorScheme = remember(darkTheme, themeColor) {
+    val colorScheme = remember(darkTheme, pureBlack, themeColor) {
         if (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (darkTheme) dynamicDarkColorScheme(context)
+            if (darkTheme) dynamicDarkColorScheme(context).pureBlack(pureBlack)
             else dynamicLightColorScheme(context)
         } else {
-            if (darkTheme) Scheme.dark(themeColor.toArgb()).toColorScheme()
+            if (darkTheme) Scheme.dark(themeColor.toArgb()).toColorScheme().pureBlack(pureBlack)
             else Scheme.light(themeColor.toArgb()).toColorScheme()
         }
     }
@@ -85,6 +86,12 @@ fun Scheme.toColorScheme() = ColorScheme(
     outlineVariant = Color(outlineVariant),
     scrim = Color(scrim),
 )
+
+fun ColorScheme.pureBlack(apply: Boolean) =
+    if (apply) copy(
+        surface = Color.Black,
+        background = Color.Black
+    ) else this
 
 val ColorSaver = object : Saver<Color, Int> {
     override fun restore(value: Int): Color = Color(value)

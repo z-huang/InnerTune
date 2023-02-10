@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 
 val DarkModeKey = stringPreferencesKey("darkMode")
+val PureBlackKey = booleanPreferencesKey("pureBlack")
 val DefaultOpenTabKey = stringPreferencesKey("defaultOpenTab")
 
 const val SYSTEM_DEFAULT = "SYSTEM_DEFAULT"

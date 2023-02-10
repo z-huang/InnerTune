@@ -160,6 +160,7 @@
     <string name="dark_theme_on">On</string>
     <string name="dark_theme_off">Off</string>
     <string name="dark_theme_follow_system">Seguir o sistema</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Aba padrão ao iniciar</string>
     <string name="customize_navigation_tabs">Costumar barra de navegação</string>
     <string name="lyrics_text_position">Lyrics text position</string>

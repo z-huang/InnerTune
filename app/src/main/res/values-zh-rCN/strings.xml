@@ -154,6 +154,7 @@
     <string name="dark_theme_on">开</string>
     <string name="dark_theme_off">关</string>
     <string name="dark_theme_follow_system">跟随系统</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">默认启动选项卡</string>
     <string name="customize_navigation_tabs">自定义导航选项卡</string>
     <string name="lyrics_text_position">歌词文字位置</string>

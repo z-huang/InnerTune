@@ -154,6 +154,7 @@
     <string name="dark_theme_on">Aktif</string>
     <string name="dark_theme_off">Tidak aktif</string>
     <string name="dark_theme_follow_system">Ikuti sistem</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Tab buka bawaan</string>
     <string name="customize_navigation_tabs">Sesuaikan tab navigasi</string>
     <string name="lyrics_text_position">Posisi teks lirik</string>

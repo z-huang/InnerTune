@@ -171,6 +171,7 @@
     <string name="dark_theme_on">Вкл.</string>
     <string name="dark_theme_off">Выкл.</string>
     <string name="dark_theme_follow_system">Использовать настройки системы</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">Вкладка навигации по умолчанию</string>
     <string name="customize_navigation_tabs">Настройка вкладок навигации</string>
     <string name="lyrics_text_position">Расположение текста песни</string>

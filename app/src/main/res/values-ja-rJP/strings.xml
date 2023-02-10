@@ -154,6 +154,7 @@
     <string name="dark_theme_on">オン</string>
     <string name="dark_theme_off">オフ</string>
     <string name="dark_theme_follow_system">システムに従う</string>
+    <string name="pure_black">Pure black</string>
     <string name="default_open_tab">起動時に開くタブ</string>
     <string name="customize_navigation_tabs">ナビゲーションタブのカスタマイズ</string>
     <string name="lyrics_text_position">歌詞テキストの位置</string>
