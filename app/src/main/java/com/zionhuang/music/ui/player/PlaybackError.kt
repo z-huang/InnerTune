@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.android.exoplayer2.PlaybackException
 import com.zionhuang.music.R
@@ -36,7 +37,7 @@ fun PlaybackError(
         )
 
         Text(
-            text = error.message.orEmpty(),
+            text = error.cause?.cause?.message ?: stringResource(R.string.error_unknown),
             style = MaterialTheme.typography.bodyMedium
         )
     }
