@@ -56,7 +56,6 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun Lyrics(
     sliderPositionProvider: () -> Long?,
-    mediaMetadataProvider: () -> MediaMetadata,
     modifier: Modifier = Modifier,
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -65,6 +64,7 @@ fun Lyrics(
 
     val lyricsTextPosition by rememberEnumPreference(LyricsTextPositionKey, LyricsPosition.CENTER)
 
+    val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
     val lyricsEntity by playerConnection.currentLyrics.collectAsState(initial = null)
     val lyrics = remember(lyricsEntity) {
         lyricsEntity?.lyrics
@@ -226,24 +226,26 @@ fun Lyrics(
             )
         }
 
-        IconButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(12.dp),
-            onClick = {
-                menuState.show {
-                    LyricsMenu(
-                        lyricsProvider = { lyricsEntity },
-                        mediaMetadataProvider = mediaMetadataProvider,
-                        onDismiss = menuState::dismiss
-                    )
+        mediaMetadata?.let { mediaMetadata ->
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp),
+                onClick = {
+                    menuState.show {
+                        LyricsMenu(
+                            lyricsProvider = { lyricsEntity },
+                            mediaMetadataProvider = { mediaMetadata },
+                            onDismiss = menuState::dismiss
+                        )
+                    }
                 }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_more_horiz),
+                    contentDescription = null
+                )
             }
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_more_horiz),
-                contentDescription = null
-            )
         }
     }
 }
@@ -272,10 +274,12 @@ fun LyricsMenu(
             singleLine = false,
             onDone = {
                 database.query {
-                    upsert(LyricsEntity(
-                        id = mediaMetadataProvider().id,
-                        lyrics = it
-                    ))
+                    upsert(
+                        LyricsEntity(
+                            id = mediaMetadataProvider().id,
+                            lyrics = it
+                        )
+                    )
                 }
             }
         )
