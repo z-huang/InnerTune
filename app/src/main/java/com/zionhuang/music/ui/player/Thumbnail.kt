@@ -53,7 +53,7 @@ fun Thumbnail(
         )
     }
 
-    LaunchedEffect(pagerState, currentWindowIndex) {
+    LaunchedEffect(pagerState, currentWindowIndex, windows) {
         try {
             pagerState.scrollToPage(currentWindowIndex)
         } catch (_: Exception) {
@@ -63,7 +63,7 @@ fun Thumbnail(
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.settledPage }.drop(1).collect {
             if (!pagerState.isScrollInProgress) {
-                playerConnection.player.seekToDefaultPosition(it)
+                playerConnection.player.seekToDefaultPosition(windows[it].firstPeriodIndex)
             }
         }
     }
@@ -89,7 +89,7 @@ fun Thumbnail(
                     state = pagerState,
                     flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
                     pageCount = windows.size,
-                    key = { windows[it].uid.hashCode() },
+                    key = { it },
                     beyondBoundsPageCount = 2
                 ) { index ->
                     Box(Modifier.fillMaxSize()) {
