@@ -117,7 +117,7 @@
     <string name="menu_remove_download">Удалить из загруженных</string>
     <string name="menu_import_playlist">Импортировать плейлист</string>
     <string name="menu_add_to_playlist">Добавить в плейлист</string>
-    <string name="menu_view_artist">Перейти на страницу исполнителя</string>
+    <string name="menu_view_artist">Перейти к исполнителю</string>
     <string name="menu_view_album">Перейти к альбому</string>
     <string name="menu_refetch">Обновить</string>
     <string name="menu_share">Поделиться</string>
