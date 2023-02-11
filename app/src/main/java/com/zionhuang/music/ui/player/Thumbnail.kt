@@ -7,7 +7,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
@@ -23,6 +22,7 @@ import com.zionhuang.music.constants.ShowLyricsKey
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.ui.component.Lyrics
+import com.zionhuang.music.ui.utils.HorizontalPager
 import com.zionhuang.music.ui.utils.SnapLayoutInfoProvider
 import com.zionhuang.music.utils.rememberPreference
 import kotlinx.coroutines.flow.drop
@@ -53,17 +53,16 @@ fun Thumbnail(
         )
     }
 
-    LaunchedEffect(pagerState, currentWindowIndex, windows) {
-        try {
-            pagerState.scrollToPage(currentWindowIndex)
-        } catch (_: Exception) {
+    LaunchedEffect(pagerState, currentWindowIndex) {
+        if (windows.isNotEmpty()) {
+            pagerState.animateScrollToPage(currentWindowIndex)
         }
     }
 
     LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.settledPage }.drop(1).collect {
-            if (!pagerState.isScrollInProgress) {
-                playerConnection.player.seekToDefaultPosition(windows[it].firstPeriodIndex)
+        snapshotFlow { pagerState.settledPage }.drop(1).collect { index ->
+            if (!pagerState.isScrollInProgress && index != currentWindowIndex && windows.isNotEmpty()) {
+                playerConnection.player.seekToDefaultPosition(windows[index].firstPeriodIndex)
             }
         }
     }
@@ -84,36 +83,34 @@ fun Thumbnail(
                 .fillMaxSize()
                 .statusBarsPadding()
         ) {
-            windows.takeIf { it.isNotEmpty() }?.let { windows ->
-                HorizontalPager(
-                    state = pagerState,
-                    flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
-                    pageCount = windows.size,
-                    key = { it },
-                    beyondBoundsPageCount = 2
-                ) { index ->
-                    Box(Modifier.fillMaxSize()) {
-                        AsyncImage(
-                            model = windows[index].mediaItem.metadata?.thumbnailUrl,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .clip(RoundedCornerShape(ThumbnailCornerRadius))
-                                .align(Alignment.Center)
-                                .pointerInput(Unit) {
-                                    detectTapGestures(
-                                        onDoubleTap = { offset ->
-                                            if (offset.x < size.width / 2) {
-                                                playerConnection.player.seekBack()
-                                            } else {
-                                                playerConnection.player.seekForward()
-                                            }
+            HorizontalPager(
+                state = pagerState,
+                flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
+                items = windows,
+                key = { it.uid.hashCode() },
+                beyondBoundsPageCount = 2
+            ) { window ->
+                Box(Modifier.fillMaxSize()) {
+                    AsyncImage(
+                        model = window.mediaItem.metadata?.thumbnailUrl,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .clip(RoundedCornerShape(ThumbnailCornerRadius))
+                            .align(Alignment.Center)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onDoubleTap = { offset ->
+                                        if (offset.x < size.width / 2) {
+                                            playerConnection.player.seekBack()
+                                        } else {
+                                            playerConnection.player.seekForward()
                                         }
-                                    )
-                                }
-                        )
-                    }
+                                    }
+                                )
+                            }
+                    )
                 }
             }
         }
@@ -123,9 +120,7 @@ fun Thumbnail(
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            Lyrics(
-                sliderPositionProvider = sliderPositionProvider
-            )
+            Lyrics(sliderPositionProvider = sliderPositionProvider)
         }
 
         AnimatedVisibility(
