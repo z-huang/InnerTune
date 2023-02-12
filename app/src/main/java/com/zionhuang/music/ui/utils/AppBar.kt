@@ -32,7 +32,7 @@ class AppBarScrollBehavior constructor(
     override val flingAnimationSpec: DecayAnimationSpec<Float>?,
     val canScroll: () -> Boolean = { true },
 ) : TopAppBarScrollBehavior {
-    override val isPinned: Boolean = false
+    override val isPinned: Boolean = true
     override var nestedScrollConnection = object : NestedScrollConnection {
         override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
             if (!canScroll()) return Offset.Zero
