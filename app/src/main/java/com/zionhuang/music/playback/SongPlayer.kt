@@ -144,6 +144,7 @@ class SongPlayer(
         .apply {
             addListener(this@SongPlayer)
             addAnalyticsListener(PlaybackStatsListener(false, this@SongPlayer))
+            repeatMode = context.dataStore.get(RepeatModeKey, Player.REPEAT_MODE_OFF)
         }
 
     private val normalizeFactor = MutableStateFlow(1f)
@@ -739,6 +740,14 @@ class SongPlayer(
             shuffledIndices[shuffledIndices.indexOf(player.currentMediaItemIndex)] = shuffledIndices[0]
             shuffledIndices[0] = player.currentMediaItemIndex
             player.setShuffleOrder(DefaultShuffleOrder(shuffledIndices, System.currentTimeMillis()))
+        }
+    }
+
+    override fun onRepeatModeChanged(repeatMode: Int) {
+        scope.launch {
+            context.dataStore.edit { settings ->
+                settings[RepeatModeKey] = repeatMode
+            }
         }
     }
 

@@ -70,6 +70,7 @@ val LyricsTextPositionKey = stringPreferencesKey("lyricsTextPosition")
 val NavTabConfigKey = stringPreferencesKey("navTabConfig")
 
 val PlayerVolumeKey = floatPreferencesKey("playerVolume")
+val RepeatModeKey = intPreferencesKey("repeatMode")
 
 val SearchSourceKey = stringPreferencesKey("searchSource")
 
