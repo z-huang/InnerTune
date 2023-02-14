@@ -318,6 +318,9 @@ class MainActivity : ComponentActivity() {
                             composable(Screens.Playlists.route) {
                                 LibraryPlaylistsScreen(navController)
                             }
+                            composable("history") {
+                                HistoryScreen(navController, scrollBehavior)
+                            }
                             composable("new_release") {
                                 NewReleaseScreen(navController, scrollBehavior)
                             }

@@ -279,7 +279,7 @@ fun LocalAlbumHeader(
                         onClick = {
                             database.query {
                                 if (inLibrary) {
-                                    delete(albumWithSongs)
+                                    delete(albumWithSongs.album)
                                 } else {
                                     insert(albumWithSongs)
                                 }
@@ -424,7 +424,7 @@ fun RemoteAlbumHeader(
                                     runBlocking(Dispatchers.IO) {
                                         albumWithSongs(albumPage.album.browseId).first()
                                     }?.let {
-                                        delete(it)
+                                        delete(it.album)
                                     }
                                 } else {
                                     insert(albumPage)

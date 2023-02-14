@@ -19,7 +19,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -59,7 +58,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Queue(
     state: BottomSheetState,
@@ -275,7 +274,7 @@ fun Queue(
                 }
                 IconButton(onClick = playerConnection::toggleLibrary) {
                     Icon(
-                        painter = painterResource(if (currentSong != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
+                        painter = painterResource(if (currentSong?.song?.inLibrary != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
                         contentDescription = null
                     )
                 }
@@ -329,10 +328,12 @@ fun Queue(
         ReorderingLazyColumn(
             reorderingState = reorderingState,
             contentPadding = WindowInsets.systemBars
-                .add(WindowInsets(
-                    top = ListItemHeight,
-                    bottom = ListItemHeight
-                ))
+                .add(
+                    WindowInsets(
+                        top = ListItemHeight,
+                        bottom = ListItemHeight
+                    )
+                )
                 .asPaddingValues(),
             modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
         ) {

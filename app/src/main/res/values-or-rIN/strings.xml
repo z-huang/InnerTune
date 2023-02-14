@@ -18,6 +18,12 @@
     <string name="new_release_albums">New release albums</string>
     <string name="most_played_songs">Most played songs</string>
 
+    <!-- History -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="last_week">Last week</string>
+
     <!-- Search -->
     <string name="search">ସନ୍ଧାନ କରନ୍ତୁ</string>
     <string name="search_yt_music">ୟୁଟ୍ୟୁବ୍ ମ୍ୟୁଜିକ୍ ଖୋଜ…</string>
@@ -62,6 +68,7 @@
     <string name="refetch">ପୁନଃ ଆଣନ୍ତୁ</string>
     <string name="share">ଅଂଶୀଦାର କରନ୍ତୁ</string>
     <string name="delete">ବିଲୋପ କରନ୍ତୁ</string>
+    <string name="remove_from_history">Remove from history</string>
     <string name="search_online">ଅନଲାଇନ୍ ସନ୍ଧାନ କରନ୍ତୁ</string>
     <string name="sync">Sync</string>
 

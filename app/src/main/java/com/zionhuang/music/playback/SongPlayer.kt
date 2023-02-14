@@ -5,6 +5,7 @@ import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
+import android.database.SQLException
 import android.graphics.Bitmap
 import android.media.audiofx.AudioEffect
 import android.net.ConnectivityManager
@@ -60,12 +61,12 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_SHUFFLE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_UNLIKE
 import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.db.entities.Event
 import com.zionhuang.music.db.entities.FormatEntity
 import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.db.entities.SongEntity
 import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.lyrics.LyricsHelper
@@ -90,6 +91,7 @@ import java.io.ObjectOutputStream
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.time.LocalDateTime
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.minutes
@@ -490,6 +492,7 @@ class SongPlayer(
             } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
             database.query {
+                currentMediaMetadata.value?.let(::insert)
                 upsert(
                     FormatEntity(
                         id = mediaId,
@@ -583,24 +586,16 @@ class SongPlayer(
 
     fun toggleLibrary() {
         database.query {
-            val song = currentSong
-            val mediaMetadata = currentMediaMetadata.value ?: return@query
-            if (song == null) {
-                insert(mediaMetadata)
-            } else {
-                delete(song)
+            currentSong?.let {
+                update(it.song.toggleLibrary())
             }
         }
     }
 
     fun toggleLike() {
         database.query {
-            val song = currentSong
-            val mediaMetadata = currentMediaMetadata.value ?: return@query
-            if (song == null) {
-                insert(mediaMetadata, SongEntity::toggleLike)
-            } else {
-                update(song.song.toggleLike())
+            currentSong?.let {
+                update(it.song.toggleLike())
             }
         }
     }
@@ -720,6 +715,19 @@ class SongPlayer(
         val mediaItem = eventTime.timeline.getWindow(eventTime.windowIndex, Timeline.Window()).mediaItem
         database.query {
             incrementTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
+
+            if (playbackStats.totalPlayTimeMs >= 10000) {
+                try {
+                    insert(
+                        Event(
+                            songId = mediaItem.mediaId,
+                            timestamp = LocalDateTime.now(),
+                            playTime = playbackStats.totalPlayTimeMs
+                        )
+                    )
+                } catch (_: SQLException) {
+                }
+            }
         }
     }
 

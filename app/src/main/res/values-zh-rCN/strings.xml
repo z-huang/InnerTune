@@ -17,6 +17,12 @@
     <string name="new_release_albums">New release albums</string>
     <string name="most_played_songs">Most played songs</string>
 
+    <!-- History -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="last_week">Last week</string>
+
     <!-- Search -->
     <string name="search">搜索</string>
     <string name="search_yt_music">搜索 YouTube Music…</string>
@@ -61,6 +67,7 @@
     <string name="refetch">刷新</string>
     <string name="share">分享</string>
     <string name="delete">移除</string>
+    <string name="remove_from_history">Remove from history</string>
     <string name="search_online">在线搜索</string>
     <string name="sync">Sync</string>
 

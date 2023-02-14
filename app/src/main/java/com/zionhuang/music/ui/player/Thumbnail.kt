@@ -55,7 +55,10 @@ fun Thumbnail(
 
     LaunchedEffect(pagerState, currentWindowIndex) {
         if (windows.isNotEmpty()) {
-            pagerState.animateScrollToPage(currentWindowIndex)
+            try {
+                pagerState.animateScrollToPage(currentWindowIndex)
+            } catch (_: Exception) {
+            }
         }
     }
 

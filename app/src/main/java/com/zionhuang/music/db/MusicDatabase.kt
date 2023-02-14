@@ -1,5 +1,6 @@
 package com.zionhuang.music.db
 
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import androidx.core.content.contentValuesOf
 import androidx.room.*
@@ -49,6 +50,7 @@ class MusicDatabase(
         PlaylistSongMap::class,
         DownloadEntity::class,
         SearchHistory::class,
+        Event::class,
         FormatEntity::class,
         LyricsEntity::class
     ],
@@ -57,13 +59,15 @@ class MusicDatabase(
         SortedSongAlbumMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 6,
+    version = 8,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
-        AutoMigration(from = 5, to = 6, spec = Migration5To6::class)
+        AutoMigration(from = 5, to = 6, spec = Migration5To6::class),
+        AutoMigration(from = 6, to = 7, spec = Migration6To7::class),
+        AutoMigration(from = 7, to = 8, spec = Migration7To8::class)
     ]
 )
 @TypeConverters(Converters::class)
@@ -72,11 +76,32 @@ abstract class InternalDatabase : RoomDatabase() {
 
     companion object {
         const val DB_NAME = "song.db"
+
+        fun newInstance(context: Context): MusicDatabase =
+            MusicDatabase(
+                delegate = Room.databaseBuilder(context, InternalDatabase::class.java, DB_NAME)
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
+            )
     }
 }
 
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(database: SupportSQLiteDatabase) {
+        data class OldSongEntity(
+            val id: String,
+            val title: String,
+            val duration: Int = -1, // in seconds
+            val thumbnailUrl: String? = null,
+            val albumId: String? = null,
+            val albumName: String? = null,
+            val liked: Boolean = false,
+            val totalPlayTime: Long = 0, // in milliseconds
+            val downloadState: Int = SongEntity.STATE_NOT_DOWNLOADED,
+            val createDate: LocalDateTime = LocalDateTime.now(),
+            val modifyDate: LocalDateTime = LocalDateTime.now(),
+        )
+
         val converters = Converters()
         val artistMap = mutableMapOf<Int, String>()
         val artists = mutableListOf<ArtistEntity>()
@@ -85,10 +110,12 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 val oldId = cursor.getInt(0)
                 val newId = ArtistEntity.generateArtistId()
                 artistMap[oldId] = newId
-                artists.add(ArtistEntity(
-                    id = newId,
-                    name = cursor.getString(1)
-                ))
+                artists.add(
+                    ArtistEntity(
+                        id = newId,
+                        name = cursor.getString(1)
+                    )
+                )
             }
         }
 
@@ -99,20 +126,24 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 val oldId = cursor.getInt(0)
                 val newId = PlaylistEntity.generatePlaylistId()
                 playlistMap[oldId] = newId
-                playlists.add(PlaylistEntity(
-                    id = newId,
-                    name = cursor.getString(1)
-                ))
+                playlists.add(
+                    PlaylistEntity(
+                        id = newId,
+                        name = cursor.getString(1)
+                    )
+                )
             }
         }
         val playlistSongMaps = mutableListOf<PlaylistSongMap>()
         database.query("SELECT * FROM playlist_song".toSQLiteQuery()).use { cursor ->
             while (cursor.moveToNext()) {
-                playlistSongMaps.add(PlaylistSongMap(
-                    playlistId = playlistMap[cursor.getInt(1)]!!,
-                    songId = cursor.getString(2),
-                    position = cursor.getInt(3)
-                ))
+                playlistSongMaps.add(
+                    PlaylistSongMap(
+                        playlistId = playlistMap[cursor.getInt(1)]!!,
+                        songId = cursor.getString(2),
+                        position = cursor.getInt(3)
+                    )
+                )
             }
         }
         // ensure we have continuous playlist song position
@@ -124,24 +155,28 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 playlistSongCount[map.playlistId] = playlistSongCount[map.playlistId]!! + 1
             }
         }
-        val songs = mutableListOf<SongEntity>()
+        val songs = mutableListOf<OldSongEntity>()
         val songArtistMaps = mutableListOf<SongArtistMap>()
         database.query("SELECT * FROM song".toSQLiteQuery()).use { cursor ->
             while (cursor.moveToNext()) {
                 val songId = cursor.getString(0)
-                songs.add(SongEntity(
-                    id = songId,
-                    title = cursor.getString(1),
-                    duration = cursor.getInt(3),
-                    liked = cursor.getInt(4) == 1,
-                    createDate = Instant.ofEpochMilli(Date(cursor.getLong(8)).time).atZone(ZoneOffset.UTC).toLocalDateTime(),
-                    modifyDate = Instant.ofEpochMilli(Date(cursor.getLong(9)).time).atZone(ZoneOffset.UTC).toLocalDateTime()
-                ))
-                songArtistMaps.add(SongArtistMap(
-                    songId = songId,
-                    artistId = artistMap[cursor.getInt(2)]!!,
-                    position = 0
-                ))
+                songs.add(
+                    OldSongEntity(
+                        id = songId,
+                        title = cursor.getString(1),
+                        duration = cursor.getInt(3),
+                        liked = cursor.getInt(4) == 1,
+                        createDate = Instant.ofEpochMilli(Date(cursor.getLong(8)).time).atZone(ZoneOffset.UTC).toLocalDateTime(),
+                        modifyDate = Instant.ofEpochMilli(Date(cursor.getLong(9)).time).atZone(ZoneOffset.UTC).toLocalDateTime()
+                    )
+                )
+                songArtistMaps.add(
+                    SongArtistMap(
+                        songId = songId,
+                        artistId = artistMap[cursor.getInt(2)]!!,
+                        position = 0
+                    )
+                )
             }
         }
         database.execSQL("DROP TABLE IF EXISTS song")
@@ -170,47 +205,57 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("CREATE VIEW `sorted_song_artist_map` AS SELECT * FROM song_artist_map ORDER BY position")
         database.execSQL("CREATE VIEW `playlist_song_map_preview` AS SELECT * FROM playlist_song_map WHERE position <= 3 ORDER BY position")
         artists.forEach { artist ->
-            database.insert("artist", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
-                "id" to artist.id,
-                "name" to artist.name,
-                "createDate" to converters.dateToTimestamp(artist.createDate),
-                "lastUpdateTime" to converters.dateToTimestamp(artist.lastUpdateTime)
-            ))
+            database.insert(
+                "artist", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
+                    "id" to artist.id,
+                    "name" to artist.name,
+                    "createDate" to converters.dateToTimestamp(artist.createDate),
+                    "lastUpdateTime" to converters.dateToTimestamp(artist.lastUpdateTime)
+                )
+            )
         }
         songs.forEach { song ->
-            database.insert("song", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
-                "id" to song.id,
-                "title" to song.title,
-                "duration" to song.duration,
-                "liked" to song.liked,
-                "totalPlayTime" to song.totalPlayTime,
-                "isTrash" to false,
-                "download_state" to song.downloadState,
-                "create_date" to converters.dateToTimestamp(song.createDate),
-                "modify_date" to converters.dateToTimestamp(song.modifyDate)
-            ))
+            database.insert(
+                "song", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
+                    "id" to song.id,
+                    "title" to song.title,
+                    "duration" to song.duration,
+                    "liked" to song.liked,
+                    "totalPlayTime" to song.totalPlayTime,
+                    "isTrash" to false,
+                    "download_state" to song.downloadState,
+                    "create_date" to converters.dateToTimestamp(song.createDate),
+                    "modify_date" to converters.dateToTimestamp(song.modifyDate)
+                )
+            )
         }
         songArtistMaps.forEach { songArtistMap ->
-            database.insert("song_artist_map", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
-                "songId" to songArtistMap.songId,
-                "artistId" to songArtistMap.artistId,
-                "position" to songArtistMap.position
-            ))
+            database.insert(
+                "song_artist_map", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
+                    "songId" to songArtistMap.songId,
+                    "artistId" to songArtistMap.artistId,
+                    "position" to songArtistMap.position
+                )
+            )
         }
         playlists.forEach { playlist ->
-            database.insert("playlist", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
-                "id" to playlist.id,
-                "name" to playlist.name,
-                "createDate" to converters.dateToTimestamp(LocalDateTime.now()),
-                "lastUpdateTime" to converters.dateToTimestamp(LocalDateTime.now())
-            ))
+            database.insert(
+                "playlist", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
+                    "id" to playlist.id,
+                    "name" to playlist.name,
+                    "createDate" to converters.dateToTimestamp(LocalDateTime.now()),
+                    "lastUpdateTime" to converters.dateToTimestamp(LocalDateTime.now())
+                )
+            )
         }
         playlistSongMaps.forEach { playlistSongMap ->
-            database.insert("playlist_song_map", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
-                "playlistId" to playlistSongMap.playlistId,
-                "songId" to playlistSongMap.songId,
-                "position" to playlistSongMap.position
-            ))
+            database.insert(
+                "playlist_song_map", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
+                    "playlistId" to playlistSongMap.playlistId,
+                    "songId" to playlistSongMap.songId,
+                    "position" to playlistSongMap.position
+                )
+            )
         }
     }
 }
@@ -238,3 +283,19 @@ class Migration5To6 : AutoMigrationSpec {
         }
     }
 }
+
+class Migration6To7 : AutoMigrationSpec {
+    override fun onPostMigrate(db: SupportSQLiteDatabase) {
+        db.query("SELECT id, createDate FROM song").use { cursor ->
+            while (cursor.moveToNext()) {
+                db.execSQL("UPDATE song SET inLibrary = ${cursor.getLong(1)} WHERE id = '${cursor.getString(0)}'")
+            }
+        }
+    }
+}
+
+@DeleteColumn.Entries(
+    DeleteColumn(tableName = "song", columnName = "createDate"),
+    DeleteColumn(tableName = "song", columnName = "modifyDate")
+)
+class Migration7To8 : AutoMigrationSpec

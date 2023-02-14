@@ -14,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.AlbumItem
@@ -33,12 +32,10 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
-import com.zionhuang.music.viewmodels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
 
 @Composable
 fun YouTubeSongMenu(
@@ -46,15 +43,11 @@ fun YouTubeSongMenu(
     navController: NavController,
     playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
-    mainViewModel: MainViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
-    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
-    val addedToLibrary = remember(librarySongIds) {
-        song.id in librarySongIds
-    }
+    val librarySong by database.song(song.id).collectAsState(initial = null)
     val artists = remember {
         song.artists.mapNotNull {
             it.id?.let { artistId ->
@@ -137,17 +130,13 @@ fun YouTubeSongMenu(
             playerConnection.addToQueue((song.toMediaItem()))
             onDismiss()
         }
-        if (addedToLibrary) {
+        if (librarySong?.song?.inLibrary != null) {
             GridMenuItem(
                 icon = R.drawable.ic_library_add_check,
                 title = R.string.action_remove_from_library
             ) {
-                coroutineScope.launch(Dispatchers.IO) {
-                    database.song(song.id).first()?.let { song ->
-                        database.query {
-                            delete(song)
-                        }
-                    }
+                database.query {
+                    inLibrary(song.id, null)
                 }
             }
         } else {
@@ -155,8 +144,9 @@ fun YouTubeSongMenu(
                 icon = R.drawable.ic_library_add,
                 title = R.string.action_add_to_library
             ) {
-                database.query {
+                database.transaction {
                     insert(song.toMediaMetadata())
+                    inLibrary(song.id, LocalDateTime.now())
                 }
             }
         }
@@ -217,15 +207,11 @@ fun YouTubeAlbumMenu(
     navController: NavController,
     playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
-    mainViewModel: MainViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
-    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
-    val addedToLibrary = remember(libraryAlbumIds) {
-        album.id in libraryAlbumIds
-    }
+    val libraryAlbum by database.album(album.id).collectAsState(initial = null)
 
     var showSelectArtistDialog by rememberSaveable {
         mutableStateOf(false)
@@ -304,17 +290,13 @@ fun YouTubeAlbumMenu(
         ) {
             onDismiss()
         }
-        if (addedToLibrary) {
+        if (libraryAlbum != null) {
             GridMenuItem(
                 icon = R.drawable.ic_library_add_check,
                 title = R.string.action_remove_from_library
             ) {
                 database.query {
-                    runBlocking(Dispatchers.IO) {
-                        album(album.id).first()
-                    }?.let {
-                        delete(it.album)
-                    }
+                    libraryAlbum?.album?.let(::delete)
                 }
             }
         } else {

@@ -1,9 +1,7 @@
 package com.zionhuang.music.di
 
 import android.content.Context
-import androidx.room.Room
 import com.zionhuang.music.db.InternalDatabase
-import com.zionhuang.music.db.MIGRATION_1_2
 import com.zionhuang.music.db.MusicDatabase
 import dagger.Module
 import dagger.Provides
@@ -17,11 +15,6 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideDatabase(@ApplicationContext context: Context): MusicDatabase {
-        return MusicDatabase(
-            delegate = Room.databaseBuilder(context, InternalDatabase::class.java, InternalDatabase.DB_NAME)
-                .addMigrations(MIGRATION_1_2)
-                .build()
-        )
-    }
+    fun provideDatabase(@ApplicationContext context: Context): MusicDatabase =
+        InternalDatabase.newInstance(context)
 }

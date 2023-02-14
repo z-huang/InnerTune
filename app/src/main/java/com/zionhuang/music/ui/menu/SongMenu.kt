@@ -29,10 +29,7 @@ import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
-import com.zionhuang.music.db.entities.Playlist
-import com.zionhuang.music.db.entities.PlaylistEntity
-import com.zionhuang.music.db.entities.PlaylistSongMap
-import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
@@ -44,6 +41,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SongMenu(
     originalSong: Song,
+    event: Event? = null,
     navController: NavController,
     playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
@@ -304,13 +302,36 @@ fun SongMenu(
             }
             context.startActivity(Intent.createChooser(intent, null))
         }
-        GridMenuItem(
-            icon = R.drawable.ic_delete,
-            title = R.string.delete
-        ) {
-            onDismiss()
-            database.query {
-                delete(song)
+        if (song.song.inLibrary == null) {
+            GridMenuItem(
+                icon = R.drawable.ic_library_add,
+                title = R.string.add_to_library
+            ) {
+                onDismiss()
+                database.query {
+                    update(song.song.toggleLibrary())
+                }
+            }
+        } else {
+            GridMenuItem(
+                icon = R.drawable.ic_delete,
+                title = R.string.delete
+            ) {
+                onDismiss()
+                database.query {
+                    update(song.song.toggleLibrary())
+                }
+            }
+        }
+        if (event != null) {
+            GridMenuItem(
+                icon = R.drawable.ic_delete,
+                title = R.string.remove_from_history
+            ) {
+                onDismiss()
+                database.query {
+                    delete(event)
+                }
             }
         }
     }

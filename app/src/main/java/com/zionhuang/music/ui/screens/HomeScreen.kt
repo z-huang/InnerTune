@@ -91,7 +91,6 @@ fun HomeScreen(
                     title = stringResource(R.string.history),
                     icon = R.drawable.ic_history,
                     onClick = { navController.navigate("history") },
-                    enabled = false,
                     modifier = Modifier.weight(1f)
                 )
                 NavigationTile(

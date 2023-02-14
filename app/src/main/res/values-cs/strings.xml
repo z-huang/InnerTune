@@ -20,6 +20,12 @@
     <string name="new_release_albums">New release albums</string>
     <string name="most_played_songs">Most played songs</string>
 
+    <!-- History -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="last_week">Last week</string>
+
     <!-- Search -->
     <string name="search">Vyhledávání</string>
     <string name="search_yt_music">Hledat v YouTube Music…</string>
@@ -64,6 +70,7 @@
     <string name="refetch">Obnovit</string>
     <string name="share">Sdílet</string>
     <string name="delete">Odstranit</string>
+    <string name="remove_from_history">Remove from history</string>
     <string name="search_online">Hledat online</string>
     <string name="sync">Sync</string>
 

@@ -20,7 +20,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.io.FileNotFoundException
-import java.time.ZoneOffset
 
 class SongsProvider : DocumentsProvider() {
     lateinit var entryPoint: SongsProviderEntryPoint
@@ -58,7 +57,6 @@ class SongsProvider : DocumentsProvider() {
                         .add(Document.COLUMN_DISPLAY_NAME, song.song.title)
                         .add(Document.COLUMN_MIME_TYPE, format.mimeType)
                         .add(Document.COLUMN_SIZE, format.contentLength)
-                        .add(Document.COLUMN_LAST_MODIFIED, song.song.modifyDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli())
                 }
             }
         }
@@ -75,7 +73,6 @@ class SongsProvider : DocumentsProvider() {
                             .add(Document.COLUMN_DISPLAY_NAME, "${song.song.title}${mimeToExt(format.mimeType)}")
                             .add(Document.COLUMN_MIME_TYPE, format.mimeType)
                             .add(Document.COLUMN_SIZE, format.contentLength)
-                            .add(Document.COLUMN_LAST_MODIFIED, song.song.modifyDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli())
                     }
                 }
             }
@@ -94,7 +91,6 @@ class SongsProvider : DocumentsProvider() {
                                 .add(Document.COLUMN_DISPLAY_NAME, "${song.song.title}${mimeToExt(format.mimeType)}")
                                 .add(Document.COLUMN_MIME_TYPE, format.mimeType)
                                 .add(Document.COLUMN_SIZE, format.contentLength)
-                                .add(Document.COLUMN_LAST_MODIFIED, song.song.modifyDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli())
                         }
                     }
                 }
