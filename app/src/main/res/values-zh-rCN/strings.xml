@@ -211,6 +211,7 @@
     <string name="notification_more_action_desc">显示“添加到媒体库”和“喜欢”按钮</string>
 
     <string name="privacy">隐私</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">暂停搜索记录</string>
     <string name="clear_search_history">清除搜索记录</string>
     <string name="clear_search_history_confirm">您确定要清除所有搜索记录吗？</string>

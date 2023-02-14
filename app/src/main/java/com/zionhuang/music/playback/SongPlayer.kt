@@ -716,7 +716,7 @@ class SongPlayer(
         database.query {
             incrementTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
 
-            if (playbackStats.totalPlayTimeMs >= 10000) {
+            if (playbackStats.totalPlayTimeMs >= 10000 && !context.dataStore.get(PauseListenHistoryKey, false)) {
                 try {
                     insert(
                         Event(

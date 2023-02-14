@@ -217,6 +217,7 @@
     <string name="notification_more_action_desc">Könyvtárhoz adás és tetszés gombok megjelenítése</string>
 
     <string name="privacy">Adatvédelem</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Keresési előzmények szüneteltetése</string>
     <string name="clear_search_history">Keresési előzmények törlése</string>
     <string name="clear_search_history_confirm">Biztosan töröl minden keresési előzményt?</string>

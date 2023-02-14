@@ -217,6 +217,7 @@
     <string name="notification_more_action_desc">Show add to library and like buttons</string>
 
     <string name="privacy">حریم‌خصوصی</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">متوقف‌کردن تاریخچه جستجو</string>
     <string name="clear_search_history">پاک‌کردن تاریخچه جستجو</string>
     <string name="clear_search_history_confirm">آیا برای پاک‌کردن تمام سابقه جستجو مطمئن هستید؟</string>

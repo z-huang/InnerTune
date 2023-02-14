@@ -16,6 +16,7 @@ import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.EnableKugouKey
+import com.zionhuang.music.constants.PauseListenHistoryKey
 import com.zionhuang.music.constants.PauseSearchHistoryKey
 import com.zionhuang.music.ui.component.DefaultDialog
 import com.zionhuang.music.ui.component.PreferenceEntry
@@ -29,6 +30,7 @@ fun PrivacySettings(
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     val database = LocalDatabase.current
+    val (pauseListenHistory, onPauseListenHistoryChange) = rememberPreference(key = PauseListenHistoryKey, defaultValue = false)
     val (pauseSearchHistory, onPauseSearchHistoryChange) = rememberPreference(key = PauseSearchHistoryKey, defaultValue = false)
     val (enableKugou, onEnableKugouChange) = rememberPreference(key = EnableKugouKey, defaultValue = true)
 
@@ -72,6 +74,12 @@ fun PrivacySettings(
             .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
     ) {
+        SwitchPreference(
+            title = stringResource(R.string.pause_listen_history),
+            icon = R.drawable.ic_history,
+            checked = pauseListenHistory,
+            onCheckedChange = onPauseListenHistoryChange
+        )
         SwitchPreference(
             title = stringResource(R.string.pause_search_history),
             icon = R.drawable.ic_manage_search,

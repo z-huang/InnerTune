@@ -228,6 +228,7 @@
     <string name="notification_more_action_desc">Показывать кнопки «Добавить в библиотеку» и «Нравится»</string>
 
     <string name="privacy">Конфиденциальность</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Приостановить сохранение истории поиска</string>
     <string name="clear_search_history">Очистить историю поиска</string>
     <string name="clear_search_history_confirm">Вы уверены, что хотите очистить всю историю поиска?</string>

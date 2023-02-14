@@ -211,6 +211,7 @@
     <string name="notification_more_action_desc">Show add to library and like buttons</string>
 
     <string name="privacy">Privacy</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Pause search history</string>
     <string name="clear_search_history">Clear search history</string>
     <string name="clear_search_history_confirm">Are you sure to clear all search history?</string>

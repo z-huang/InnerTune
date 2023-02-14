@@ -211,6 +211,7 @@
     <string name="notification_more_action_desc">Tampilkan tombol tambahkan ke perpustakaan dan suka</string>
 
     <string name="privacy">Privasi</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Jeda riwayat pencarian</string>
     <string name="clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="clear_search_history_confirm">Apakah anda yakin untuk menghapus semua riwayat penelusuran?</string>

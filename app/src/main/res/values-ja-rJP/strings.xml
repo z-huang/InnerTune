@@ -211,6 +211,7 @@
     <string name="notification_more_action_desc">「ライブラリに追加」と「いいね」ボタンを表示する</string>
 
     <string name="privacy">プライバシー</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">履歴の記録を一時停止</string>
     <string name="clear_search_history">履歴を削除</string>
     <string name="clear_search_history_confirm">すべての検索履歴を削除しますか？</string>

@@ -217,6 +217,7 @@
     <string name="notification_more_action_desc">Mostra i bottoni Aggiungi alla libreria e Mi piace</string>
 
     <string name="privacy">Privacy</string>
+    <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Sospendi la cronologia delle ricerche</string>
     <string name="clear_search_history">Pulisci la cronologia delle ricerche</string>
     <string name="clear_search_history_confirm">Sei sicuro di voler cancellare la cronologia delle ricerche?</string>
