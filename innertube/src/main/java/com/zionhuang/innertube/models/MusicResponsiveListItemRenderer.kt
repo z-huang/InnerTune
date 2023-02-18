@@ -27,8 +27,8 @@ data class MusicResponsiveListItemRenderer(
 ) {
     fun getTitle() = flexColumns[0].musicResponsiveListItemFlexColumnRenderer.text.toString()
     fun getSubtitle() = (flexColumns.drop(1) + fixedColumns.orEmpty())
-        .filterNot {
-            it.musicResponsiveListItemFlexColumnRenderer.text?.runs.isNullOrEmpty()
+        .filter {
+            it.musicResponsiveListItemFlexColumnRenderer.text.runs.isNotEmpty()
         }.joinToString(separator = " • ") {
             it.musicResponsiveListItemFlexColumnRenderer.text.toString()
         }
@@ -60,7 +60,7 @@ data class MusicResponsiveListItemRenderer(
     ) {
         @Serializable
         data class MusicResponsiveListItemFlexColumnRenderer(
-            val text: Runs?,
+            val text: Runs,
         )
     }
 

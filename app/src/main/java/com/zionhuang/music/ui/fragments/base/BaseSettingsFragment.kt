@@ -30,7 +30,7 @@ abstract class BaseSettingsFragment : PreferenceFragmentCompat() {
             }
             is EditTextPreference -> {
                 val binding = DialogEditTextPreferenceBinding.inflate(layoutInflater)
-                binding.editText.setText(sharedPreferences.getString(preference.key, ""))
+                binding.editText.setText(requireContext().sharedPreferences.getString(preference.key, ""))
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(preference.title)
                     .setView(binding.root)

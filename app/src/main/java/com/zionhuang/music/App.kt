@@ -1,7 +1,6 @@
 package com.zionhuang.music
 
 import android.app.Application
-import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -13,8 +12,6 @@ import coil.disk.DiskCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.kugou.KuGou
-import com.zionhuang.music.constants.Constants.INNERTUBE_COOKIE
-import com.zionhuang.music.constants.Constants.VISITOR_DATA
 import com.zionhuang.music.extensions.getEnum
 import com.zionhuang.music.extensions.sharedPreferences
 import com.zionhuang.music.extensions.toInetSocketAddress
@@ -25,7 +22,7 @@ import kotlinx.coroutines.launch
 import java.net.Proxy
 import java.util.*
 
-class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPreferenceChangeListener {
+class App : Application(), ImageLoaderFactory {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate() {
         super.onCreate()
@@ -64,20 +61,14 @@ class App : Application(), ImageLoaderFactory, SharedPreferences.OnSharedPrefere
         }
 
         GlobalScope.launch {
-            YouTube.visitorData = sharedPreferences.getString(VISITOR_DATA, null) ?: YouTube.generateVisitorData().getOrNull()?.also {
+            val visitorData = sharedPreferences.getString(getString(R.string.pref_visitor_data), null) ?: YouTube.generateVisitorData().getOrNull()?.also {
                 sharedPreferences.edit {
-                    putString(VISITOR_DATA, it)
+                    putString(getString(R.string.pref_visitor_data), it)
                 }
-            } ?: YouTube.DEFAULT_VISITOR_DATA
-        }
-        YouTube.cookie = sharedPreferences.getString(INNERTUBE_COOKIE, null)
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        when (key) {
-            VISITOR_DATA -> YouTube.visitorData = sharedPreferences.getString(VISITOR_DATA, null) ?: YouTube.DEFAULT_VISITOR_DATA
-            INNERTUBE_COOKIE -> YouTube.cookie = sharedPreferences.getString(INNERTUBE_COOKIE, null)
+            }
+            visitorData?.let {
+                YouTube.visitorData = it
+            }
         }
     }
 

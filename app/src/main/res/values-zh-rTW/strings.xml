@@ -26,7 +26,6 @@
     <string name="align_right">靠右</string>
 
     <string name="pref_content_title">內容</string>
-    <string name="login">登入</string>
     <string name="pref_content_language_title">預設內容語言</string>
     <string name="pref_default_content_country_title">預設內容國家</string>
     <string name="pref_enable_proxy_title">啟用 Proxy</string>

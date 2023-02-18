@@ -45,7 +45,6 @@ val Context.sharedPreferences: SharedPreferences
 fun <T : Any> Context.preference(@StringRes keyId: Int, defaultValue: T) = Preference(this, keyId, defaultValue)
 
 fun <T : Any> Context.preferenceLiveData(@StringRes keyId: Int, defaultValue: T) = PreferenceLiveData(this, keyId, defaultValue)
-fun <T : Any> Context.preferenceLiveData(key: String, defaultValue: T) = PreferenceLiveData(this, key, defaultValue)
 
 fun Context.tryOrReport(block: () -> Unit) = try {
     block()

@@ -130,7 +130,7 @@ class YouTubeSuggestionFragment : NavigationFragment<FragmentYoutubeSuggestionBi
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun search(query: String) {
-        if (!sharedPreferences.getBoolean(getString(R.string.pref_pause_search_history), false)) {
+        if (!requireContext().sharedPreferences.getBoolean(getString(R.string.pref_pause_search_history), false)) {
             GlobalScope.launch {
                 SongRepository(requireContext()).insertSearchHistory(query)
             }

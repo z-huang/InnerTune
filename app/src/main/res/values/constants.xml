@@ -25,9 +25,9 @@
     <string name="pref_nav_tab_config" translatable="false">NAV_TAB_CONFIG</string>
     <string name="pref_lyrics_text_position" translatable="false">LRC_TEXT_POS</string>
 
-    <string name="pref_account" translatable="false">ACCOUNT</string>
     <string name="pref_content_language" translatable="false">CONTENT_LANGUAGE</string>
     <string name="pref_content_country" translatable="false">CONTENT_COUNTRY</string>
+    <string name="pref_visitor_data" translatable="false">VISITOR_DATA</string>
     <string name="pref_proxy_enabled" translatable="false">PROXY_ENABLED</string>
     <string name="pref_proxy_type" translatable="false">PROXY_TYPE</string>
     <string name="pref_proxy_url" translatable="false">PROXY_URL</string>

@@ -10,12 +10,11 @@ import com.zionhuang.music.utils.livedata.SafeLiveData
 
 open class PreferenceLiveData<T : Any>(
     context: Context,
-    val key: String,
+    @StringRes private val keyId: Int,
     private val defValue: T,
 ) : SafeLiveData<T>(defValue) {
     protected val sharedPreferences: SharedPreferences = context.sharedPreferences
-
-    constructor(context: Context, @StringRes keyId: Int, defValue: T) : this(context, context.getString(keyId), defValue)
+    protected val key = context.getString(keyId)
 
     protected fun getPreferenceValue() = sharedPreferences.get(key, defValue)
 
