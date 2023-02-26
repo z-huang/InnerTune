@@ -60,8 +60,32 @@ interface DatabaseDao {
         }
 
     @Transaction
-    @Query("SELECT * FROM song ORDER BY totalPlayTime DESC LIMIT 20")
-    fun mostPlayedSongs(): Flow<List<Song>>
+    @Query(
+        """
+        SELECT song.*
+        FROM (SELECT *, COUNT(1) AS referredCount
+              FROM related_song_map
+              GROUP BY relatedSongId) map
+                 JOIN song ON song.id = map.relatedSongId
+        WHERE songId IN (SELECT *
+                         FROM (SELECT songId
+                               FROM event
+                               WHERE timestamp > :now - 86400000 * 7
+                               GROUP BY songId
+                               ORDER BY SUM(playTime) DESC
+                               LIMIT 5)
+                         UNION
+                         SELECT *
+                         FROM (SELECT songId
+                               FROM event
+                               ORDER BY ROWID DESC
+                               LIMIT 5))
+          AND totalPlayTime < 30000
+        ORDER BY referredCount DESC
+        LIMIT 100
+    """
+    )
+    fun quickPicks(now: Long = System.currentTimeMillis()): Flow<List<Song>>
 
     @Query("SELECT COUNT(1) FROM song WHERE liked")
     fun likedSongsCount(): Flow<Int>
@@ -285,6 +309,9 @@ interface DatabaseDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(event: Event)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(map: RelatedSongMap)
 
     @Transaction
     fun insert(mediaMetadata: MediaMetadata, block: (SongEntity) -> SongEntity = { it }) {

@@ -35,11 +35,12 @@ dependencyResolutionManagement {
             library("viewmodel", "androidx.lifecycle", "lifecycle-viewmodel-ktx").versionRef("lifecycle")
             library("viewmodel-compose", "androidx.lifecycle", "lifecycle-viewmodel-compose").versionRef("lifecycle")
 
+            library("material", "androidx.compose.material", "material").version("1.4.0-beta02")
             version("material3", "1.1.0-alpha05")
             library("material3", "androidx.compose.material3", "material3").versionRef("material3")
             library("material3-windowsize", "androidx.compose.material3", "material3-window-size-class").versionRef("material3")
 
-            library("accompanist-insets", "com.google.accompanist", "accompanist-insets").version("0.28.0")
+            library("accompanist-swiperefresh", "com.google.accompanist", "accompanist-swiperefresh").version("0.28.0")
 
             library("coil", "io.coil-kt", "coil-compose").version("2.2.2")
 

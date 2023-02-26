@@ -50,16 +50,17 @@ class MusicDatabase(
         PlaylistSongMap::class,
         DownloadEntity::class,
         SearchHistory::class,
-        Event::class,
         FormatEntity::class,
-        LyricsEntity::class
+        LyricsEntity::class,
+        Event::class,
+        RelatedSongMap::class
     ],
     views = [
         SortedSongArtistMap::class,
         SortedSongAlbumMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
@@ -67,7 +68,8 @@ class MusicDatabase(
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6, spec = Migration5To6::class),
         AutoMigration(from = 6, to = 7, spec = Migration6To7::class),
-        AutoMigration(from = 7, to = 8, spec = Migration7To8::class)
+        AutoMigration(from = 7, to = 8, spec = Migration7To8::class),
+        AutoMigration(from = 8, to = 9)
     ]
 )
 @TypeConverters(Converters::class)

@@ -35,7 +35,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HistoryScreen(
     navController: NavController,
-    scrollBehavior: TopAppBarScrollBehavior,
     viewModel: HistoryViewModel = hiltViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()

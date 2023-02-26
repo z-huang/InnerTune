@@ -1,6 +1,7 @@
 package com.zionhuang.innertube
 
 import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.WatchEndpoint.WatchEndpointMusicSupportedConfigs.WatchEndpointMusicConfig.Companion.MUSIC_VIDEO_TYPE_ATV
 import com.zionhuang.innertube.models.YouTubeClient.Companion.ANDROID_MUSIC
 import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
 import com.zionhuang.innertube.models.response.*
@@ -91,10 +92,6 @@ object YouTube {
                 }!!,
             continuation = response.continuationContents.musicShelfContinuation.continuations?.getContinuation()
         )
-    }
-
-    suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
-        innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
     }
 
     suspend fun album(browseId: String): Result<AlbumPage> = runCatching {
@@ -249,6 +246,10 @@ object YouTube {
         }.orEmpty()
     }
 
+    suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
+        innerTube.player(ANDROID_MUSIC, videoId, playlistId).body()
+    }
+
     suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): Result<NextResult> = runCatching {
         val response = innerTube.next(WEB_REMIX, endpoint.videoId, endpoint.playlistId, endpoint.playlistSetVideoId, endpoint.index, endpoint.params, continuation).body<NextResponse>()
         val playlistPanelRenderer = response.continuationContents?.playlistPanelContinuation
@@ -286,6 +287,34 @@ object YouTube {
     suspend fun lyrics(endpoint: BrowseEndpoint): Result<String?> = runCatching {
         val response = innerTube.browse(WEB_REMIX, endpoint.browseId, endpoint.params).body<BrowseResponse>()
         response.contents?.sectionListRenderer?.contents?.firstOrNull()?.musicDescriptionShelfRenderer?.description?.runs?.firstOrNull()?.text
+    }
+
+    suspend fun related(endpoint: BrowseEndpoint) = runCatching {
+        val response = innerTube.browse(WEB_REMIX, endpoint.browseId).body<BrowseResponse>()
+        val songs = mutableListOf<SongItem>()
+        val albums = mutableListOf<AlbumItem>()
+        val artists = mutableListOf<ArtistItem>()
+        val playlists = mutableListOf<PlaylistItem>()
+        response.contents?.sectionListRenderer?.contents?.forEach { sectionContent ->
+            sectionContent.musicCarouselShelfRenderer?.contents?.forEach { content ->
+                when (val item = content.musicResponsiveListItemRenderer?.let(RelatedPage.Companion::fromMusicResponsiveListItemRenderer)
+                    ?: content.musicTwoRowItemRenderer?.let(RelatedPage.Companion::fromMusicTwoRowItemRenderer)) {
+                    is SongItem -> if (content.musicResponsiveListItemRenderer?.overlay
+                            ?.musicItemThumbnailOverlayRenderer?.content
+                            ?.musicPlayButtonRenderer?.playNavigationEndpoint
+                            ?.watchEndpoint?.watchEndpointMusicSupportedConfigs
+                            ?.watchEndpointMusicConfig?.musicVideoType == MUSIC_VIDEO_TYPE_ATV
+                    ) {
+                        songs.add(item)
+                    }
+                    is AlbumItem -> albums.add(item)
+                    is ArtistItem -> artists.add(item)
+                    is PlaylistItem -> playlists.add(item)
+                    null -> {}
+                }
+            }
+        }
+        RelatedPage(songs, albums, artists, playlists)
     }
 
     suspend fun queue(videoIds: List<String>? = null, playlistId: String? = null): Result<List<SongItem>> = runCatching {

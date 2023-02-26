@@ -158,6 +158,13 @@ class YouTubeTest {
         assertTrue(lyrics != null)
     }
 
+    @Test
+    fun related() = runBlocking {
+        val relatedEndpoint = YouTube.next(WatchEndpoint(videoId = "Z6ji6kls_OA")).getOrThrow().relatedEndpoint!!
+        val relatedPage = YouTube.related(relatedEndpoint).getOrThrow()
+        assertTrue(relatedPage.songs.isNotEmpty())
+    }
+
     companion object {
         private val VIDEO_IDS = listOf(
             "4H-N260cPCg",
