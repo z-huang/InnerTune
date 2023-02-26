@@ -53,6 +53,7 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.innertube.models.response.PlayerResponse
 import com.zionhuang.music.ACTION_SHOW_BOTTOM_SHEET
 import com.zionhuang.music.MainActivity
 import com.zionhuang.music.R
@@ -451,46 +452,78 @@ class SongPlayer(
         arrayOf(MatroskaExtractor(), FragmentedMp4Extractor())
     }
 
+    private suspend fun recoverSong(mediaId: String, playerResponse: PlayerResponse? = null) {
+        val song = database.song(mediaId).first()
+        val mediaMetadata = withContext(Dispatchers.Main) { player.findNextMediaItemById(mediaId)?.metadata } ?: return
+        val duration = song?.song?.duration?.takeIf { it != -1 }
+            ?: mediaMetadata.duration.takeIf { it != -1 }
+            ?: (playerResponse ?: YouTube.player(mediaId).getOrNull())?.videoDetails?.lengthSeconds?.toInt()
+            ?: -1
+        database.query {
+            if (song == null) insert(mediaMetadata.copy(duration = duration))
+            else if (song.song.duration == -1) update(song.song.copy(duration = duration))
+        }
+        if (!database.hasRelatedSongs(mediaId)) {
+            val relatedEndpoint = YouTube.next(WatchEndpoint(videoId = mediaId)).getOrNull()?.relatedEndpoint ?: return
+            val relatedPage = YouTube.related(relatedEndpoint).getOrNull() ?: return
+            database.query {
+                relatedPage.songs
+                    .map(SongItem::toMediaMetadata)
+                    .onEach(::insert)
+                    .map {
+                        RelatedSongMap(
+                            songId = mediaId,
+                            relatedSongId = it.id
+                        )
+                    }
+                    .forEach(::insert)
+            }
+        }
+    }
+
     private fun createDataSourceFactory(): ResolvingDataSource.Factory {
         val songUrlCache = HashMap<String, Pair<String, Long>>()
         return ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
-            runBlocking {
-                val mediaId = dataSpec.key ?: error("No media id")
+            val mediaId = dataSpec.key ?: error("No media id")
 
-                if (cache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)) {
-                    return@runBlocking dataSpec
-                }
+            if (cache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)) {
+                scope.launch(IO) { recoverSong(mediaId) }
+                return@Factory dataSpec
+            }
 
-                songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
-                    return@runBlocking dataSpec.withUri(it.first.toUri())
-                }
+            songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
+                scope.launch(IO) { recoverSong(mediaId) }
+                return@Factory dataSpec.withUri(it.first.toUri())
+            }
 
-                // Check whether format exists so that users from older version can view format details
-                // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
-                val playedFormat = database.format(mediaId).firstOrNull()
-                val song = database.song(mediaId).firstOrNull()
-                if (playedFormat != null && song?.song?.downloadState == STATE_DOWNLOADED) {
-                    return@runBlocking dataSpec.withUri(getSongFile(context, mediaId).toUri())
-                }
+            // Check whether format exists so that users from older version can view format details
+            // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
+            val playedFormat = runBlocking(IO) { database.format(mediaId).first() }
+            val song = runBlocking(IO) { database.song(mediaId).first() }
+            if (playedFormat != null && song?.song?.downloadState == STATE_DOWNLOADED) {
+                scope.launch(IO) { recoverSong(mediaId) }
+                return@Factory dataSpec.withUri(getSongFile(context, mediaId).toUri())
+            }
 
-                val playerResponse = withContext(IO) {
-                    YouTube.player(mediaId)
-                }.getOrElse { throwable ->
-                    when (throwable) {
-                        is ConnectException, is UnknownHostException -> {
-                            throw PlaybackException(context.getString(R.string.error_no_internet), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
-                        }
-                        is SocketTimeoutException -> {
-                            throw PlaybackException(context.getString(R.string.error_timeout), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
-                        }
-                        else -> throw PlaybackException(context.getString(R.string.error_unknown), throwable, ERROR_CODE_REMOTE_ERROR)
+            val playerResponse = runBlocking(IO) {
+                YouTube.player(mediaId)
+            }.getOrElse { throwable ->
+                when (throwable) {
+                    is ConnectException, is UnknownHostException -> {
+                        throw PlaybackException(context.getString(R.string.error_no_internet), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
                     }
+                    is SocketTimeoutException -> {
+                        throw PlaybackException(context.getString(R.string.error_timeout), throwable, ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
+                    }
+                    else -> throw PlaybackException(context.getString(R.string.error_unknown), throwable, ERROR_CODE_REMOTE_ERROR)
                 }
-                if (playerResponse.playabilityStatus.status != "OK") {
-                    throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
-                }
+            }
+            if (playerResponse.playabilityStatus.status != "OK") {
+                throw PlaybackException(playerResponse.playabilityStatus.reason, null, ERROR_CODE_REMOTE_ERROR)
+            }
 
-                val format = if (playedFormat != null) {
+            val format =
+                if (playedFormat != null) {
                     playerResponse.streamingData?.adaptiveFormats?.find {
                         // Use itag to identify previous played format
                         it.itag == playedFormat.itag
@@ -507,49 +540,24 @@ class SongPlayer(
                         }
                 } ?: throw PlaybackException(context.getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
-                database.query {
-                    val mediaMetadata = runBlocking(Dispatchers.Main) { player.findNextMediaItemById(mediaId)?.metadata }
-                    if (song == null) {
-                        mediaMetadata?.let {
-                            insert(it.copy(duration = format.approxDurationMs?.toInt()?.div(1000) ?: it.duration))
-                        }
-                    } else if (song.song.duration == -1) {
-                        update(song.song.copy(duration = format.approxDurationMs?.toInt()?.div(1000) ?: mediaMetadata?.duration ?: -1))
-                    }
-                    upsert(
-                        FormatEntity(
-                            id = mediaId,
-                            itag = format.itag,
-                            mimeType = format.mimeType.split(";")[0],
-                            codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
-                            bitrate = format.bitrate,
-                            sampleRate = format.audioSampleRate,
-                            contentLength = format.contentLength!!,
-                            loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
-                        )
+            database.query {
+                upsert(
+                    FormatEntity(
+                        id = mediaId,
+                        itag = format.itag,
+                        mimeType = format.mimeType.split(";")[0],
+                        codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
+                        bitrate = format.bitrate,
+                        sampleRate = format.audioSampleRate,
+                        contentLength = format.contentLength!!,
+                        loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
                     )
-                }
-
-                scope.launch(IO) {
-                    val relatedEndpoint = YouTube.next(WatchEndpoint(videoId = mediaId)).getOrNull()?.relatedEndpoint ?: return@launch
-                    val relatedPage = YouTube.related(relatedEndpoint).getOrNull() ?: return@launch
-                    database.query {
-                        relatedPage.songs
-                            .map(SongItem::toMediaMetadata)
-                            .onEach(::insert)
-                            .map {
-                                RelatedSongMap(
-                                    songId = mediaId,
-                                    relatedSongId = it.id
-                                )
-                            }
-                            .forEach(::insert)
-                    }
-                }
-
-                songUrlCache[mediaId] = format.url to playerResponse.streamingData!!.expiresInSeconds * 1000L
-                dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
+                )
             }
+            scope.launch(IO) { recoverSong(mediaId, playerResponse) }
+
+            songUrlCache[mediaId] = format.url to playerResponse.streamingData!!.expiresInSeconds * 1000L
+            dataSpec.withUri(format.url.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     }
 

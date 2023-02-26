@@ -261,6 +261,9 @@ interface DatabaseDao {
     @Query("UPDATE song SET inLibrary = :inLibrary WHERE id = :songId")
     fun inLibrary(songId: String, inLibrary: LocalDateTime?)
 
+    @Query("SELECT COUNT(1) FROM related_song_map WHERE songId = :songId LIMIT 1")
+    fun hasRelatedSongs(songId: String): Boolean
+
     @Query(
         """
         UPDATE playlist_song_map SET position = 
