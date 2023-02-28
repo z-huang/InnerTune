@@ -202,7 +202,7 @@ fun SongMenu(
 
     SongListItem(
         song = song,
-        showBadges = false,
+        badges = {},
         trailingContent = {
             IconButton(
                 onClick = {

@@ -76,6 +76,27 @@ fun HistoryScreen(
                     song = event.song,
                     isPlaying = event.song.id == mediaMetadata?.id,
                     playWhenReady = playWhenReady,
+                    badges = {
+                        if (event.song.song.inLibrary != null) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_library_add_check),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .padding(end = 2.dp)
+                            )
+                        }
+                        if (event.song.song.liked) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_favorite),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .padding(end = 2.dp)
+                            )
+                        }
+                    },
                     trailingContent = {
                         IconButton(
                             onClick = {

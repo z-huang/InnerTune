@@ -68,7 +68,7 @@ fun HomeScreen(
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
         onRefresh = viewModel::refresh,
-        modifier = Modifier.windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
+        indicatorPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
     ) {
         BoxWithConstraints(
             modifier = Modifier.fillMaxSize()
@@ -87,6 +87,8 @@ fun HomeScreen(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
+                Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding()))
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier
@@ -253,6 +255,8 @@ fun HomeScreen(
                         }
                     }
                 }
+
+                Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()))
             }
 
             if (quickPicks.isNotEmpty() || newReleaseAlbums.isNotEmpty()) {

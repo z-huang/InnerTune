@@ -145,18 +145,8 @@ fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
     albumIndex: Int? = null,
-    showBadges: Boolean = true,
-    isPlaying: Boolean = false,
-    playWhenReady: Boolean = false,
-    trailingContent: @Composable RowScope.() -> Unit = {},
-) = ListItem(
-    title = song.song.title,
-    subtitle = joinByBullet(
-        song.artists.joinToString(),
-        makeTimeString(song.song.duration * 1000L)
-    ),
-    badges = {
-        if (showBadges && song.song.liked) {
+    badges: @Composable RowScope.() -> Unit = {
+        if (song.song.liked) {
             Icon(
                 painter = painterResource(R.drawable.ic_favorite),
                 contentDescription = null,
@@ -167,6 +157,16 @@ fun SongListItem(
             )
         }
     },
+    isPlaying: Boolean = false,
+    playWhenReady: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
+) = ListItem(
+    title = song.song.title,
+    subtitle = joinByBullet(
+        song.artists.joinToString(),
+        makeTimeString(song.song.duration * 1000L)
+    ),
+    badges = badges,
     thumbnailContent = {
         Box(
             contentAlignment = Alignment.Center,
