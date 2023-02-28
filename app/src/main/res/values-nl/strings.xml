@@ -209,7 +209,7 @@
     <string name="sort_by_name">Naam</string>
     <string name="sort_by_artist">Artiest</string>
     <string name="sort_by_year">Jaar</string>
-    <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_song_count">Aantal nummers</string>
     <string name="sort_by_length">Duur</string>
     <string name="sort_by_play_time">Speeltijd</string>
 
