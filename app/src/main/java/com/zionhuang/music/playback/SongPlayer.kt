@@ -766,21 +766,18 @@ class SongPlayer(
 
     override fun onPlaybackStatsReady(eventTime: AnalyticsListener.EventTime, playbackStats: PlaybackStats) {
         val mediaItem = eventTime.timeline.getWindow(eventTime.windowIndex, Timeline.Window()).mediaItem
-        database.query {
-            if (playbackStats.totalPlayTimeMs >= 30000) {
+        if (playbackStats.totalPlayTimeMs >= 30000 && !context.dataStore.get(PauseListenHistoryKey, false)) {
+            database.query {
                 incrementTotalPlayTime(mediaItem.mediaId, playbackStats.totalPlayTimeMs)
-
-                if (!context.dataStore.get(PauseListenHistoryKey, false)) {
-                    try {
-                        insert(
-                            Event(
-                                songId = mediaItem.mediaId,
-                                timestamp = LocalDateTime.now(),
-                                playTime = playbackStats.totalPlayTimeMs
-                            )
+                try {
+                    insert(
+                        Event(
+                            songId = mediaItem.mediaId,
+                            timestamp = LocalDateTime.now(),
+                            playTime = playbackStats.totalPlayTimeMs
                         )
-                    } catch (_: SQLException) {
-                    }
+                    )
+                } catch (_: SQLException) {
                 }
             }
         }
