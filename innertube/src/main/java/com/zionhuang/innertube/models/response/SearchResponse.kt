@@ -13,7 +13,7 @@ data class SearchResponse(
 ) {
     @Serializable
     data class Contents(
-        val tabbedSearchResultsRenderer: Tabs,
+        val tabbedSearchResultsRenderer: Tabs?,
     )
 
     @Serializable
