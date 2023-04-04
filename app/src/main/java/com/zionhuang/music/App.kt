@@ -65,6 +65,7 @@ class App : Application(), ImageLoaderFactory {
                 .distinctUntilChanged()
                 .collect { visitorData ->
                     YouTube.visitorData = visitorData
+                        ?.takeIf { it != "null" } // Previously visitorData was sometimes saved as "null" due to a bug
                         ?: YouTube.visitorData().getOrNull()?.also { newVisitorData ->
                             dataStore.edit { settings ->
                                 settings[VisitorDataKey] = newVisitorData
