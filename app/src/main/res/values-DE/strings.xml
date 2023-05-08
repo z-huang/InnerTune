@@ -22,7 +22,7 @@
     <string name="pref_customize_navigation_tabs">Anpassen der Navigationsregisterkarten</string>
     <string name="pref_lyrics_text_position_title">Position des Liedtextes</string>
     <string name="align_left">Links</string>
-    <string name="align_center">Mitte</string>
+    <string name="align_center">Zentriert</string>
     <string name="align_right">Rechts</string>
 
     <string name="pref_content_title">Inhalt</string>
@@ -271,7 +271,7 @@
 
     <!-- Custom Action -->
     <string name="action_like">Favoriten</string>
-    <string name="action_remove_like">Entfernen aus Favoriten</string>
+    <string name="action_remove_like">Aus Favoriten entfernen</string>
     <string name="action_add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="action_remove_from_library">Aus der Bibliothek entfernen</string>
 
@@ -294,7 +294,7 @@
 
     <!-- Player Error Message -->
     <string name="error_no_stream">Kein Stream verfügbar</string>
-    <string name="error_no_internet">Keine Netzwerkverbindung</string>
+    <string name="error_no_internet">Keine Netzverbindung</string>
     <string name="error_timeout">Zeitüberschreitung</string>
     <string name="error_unknown">Unbekannter Fehler</string>
 
