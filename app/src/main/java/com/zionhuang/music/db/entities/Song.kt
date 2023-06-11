@@ -2,6 +2,7 @@ package com.zionhuang.music.db.entities
 
 import androidx.compose.runtime.Immutable
 import androidx.room.Embedded
+import androidx.room.Ignore
 import androidx.room.Junction
 import androidx.room.Relation
 
@@ -29,6 +30,7 @@ data class Song @JvmOverloads constructor(
             entityColumn = "albumId"
         )
     )
+    @Ignore
     val album: AlbumEntity? = null,
 ) : LocalItem() {
     override val id: String

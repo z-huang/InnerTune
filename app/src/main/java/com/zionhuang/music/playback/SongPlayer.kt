@@ -14,7 +14,10 @@ import android.os.Bundle
 import android.os.ResultReceiver
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat.*
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_PREPARE
+import android.support.v4.media.session.PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID
+import android.support.v4.media.session.PlaybackStateCompat.CustomAction
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,17 +25,43 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.datastore.preferences.core.edit
-import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.C.WAKE_MODE_NETWORK
-import com.google.android.exoplayer2.PlaybackException.*
-import com.google.android.exoplayer2.Player.*
+import com.google.android.exoplayer2.DefaultRenderersFactory
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackException
+import com.google.android.exoplayer2.PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED
+import com.google.android.exoplayer2.PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT
+import com.google.android.exoplayer2.PlaybackException.ERROR_CODE_REMOTE_ERROR
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_AUTO_TRANSITION
+import com.google.android.exoplayer2.Player.DiscontinuityReason
+import com.google.android.exoplayer2.Player.EVENT_IS_PLAYING_CHANGED
+import com.google.android.exoplayer2.Player.EVENT_PLAYBACK_STATE_CHANGED
+import com.google.android.exoplayer2.Player.EVENT_PLAY_WHEN_READY_CHANGED
+import com.google.android.exoplayer2.Player.EVENT_POSITION_DISCONTINUITY
+import com.google.android.exoplayer2.Player.EVENT_TIMELINE_CHANGED
+import com.google.android.exoplayer2.Player.Events
+import com.google.android.exoplayer2.Player.Listener
+import com.google.android.exoplayer2.Player.MEDIA_ITEM_TRANSITION_REASON_REPEAT
+import com.google.android.exoplayer2.Player.PositionInfo
+import com.google.android.exoplayer2.Player.STATE_ENDED
+import com.google.android.exoplayer2.Player.STATE_IDLE
 import com.google.android.exoplayer2.Player.State
+import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.analytics.PlaybackStats
 import com.google.android.exoplayer2.analytics.PlaybackStatsListener
-import com.google.android.exoplayer2.audio.*
-import com.google.android.exoplayer2.audio.DefaultAudioSink.*
+import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.audio.AudioCapabilities
+import com.google.android.exoplayer2.audio.DefaultAudioSink
+import com.google.android.exoplayer2.audio.DefaultAudioSink.DefaultAudioProcessorChain
+import com.google.android.exoplayer2.audio.DefaultAudioSink.OFFLOAD_MODE_DISABLED
+import com.google.android.exoplayer2.audio.DefaultAudioSink.OFFLOAD_MODE_ENABLED_GAPLESS_REQUIRED
+import com.google.android.exoplayer2.audio.SilenceSkippingAudioProcessor
 import com.google.android.exoplayer2.audio.SilenceSkippingAudioProcessor.DEFAULT_SILENCE_THRESHOLD_LEVEL
+import com.google.android.exoplayer2.audio.SonicAudioProcessor
 import com.google.android.exoplayer2.database.StandaloneDatabaseProvider
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource
@@ -57,7 +86,10 @@ import com.zionhuang.innertube.models.response.PlayerResponse
 import com.zionhuang.music.ACTION_SHOW_BOTTOM_SHEET
 import com.zionhuang.music.MainActivity
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
+import com.zionhuang.music.constants.AudioNormalizationKey
+import com.zionhuang.music.constants.AudioQualityKey
+import com.zionhuang.music.constants.AutoAddToLibraryKey
+import com.zionhuang.music.constants.MaxSongCacheSizeKey
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_ADD_TO_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_REMOVE_FROM_LIBRARY
@@ -65,13 +97,30 @@ import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_SHUFFLE
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_UNLIKE
+import com.zionhuang.music.constants.NotificationMoreActionKey
+import com.zionhuang.music.constants.PauseListenHistoryKey
+import com.zionhuang.music.constants.PersistentQueueKey
+import com.zionhuang.music.constants.PlayerVolumeKey
+import com.zionhuang.music.constants.RepeatModeKey
+import com.zionhuang.music.constants.ShowLyricsKey
+import com.zionhuang.music.constants.SkipSilenceKey
+import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.MusicDatabase
-import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.db.entities.Event
+import com.zionhuang.music.db.entities.FormatEntity
+import com.zionhuang.music.db.entities.LyricsEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.RelatedSongMap
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
-import com.zionhuang.music.extensions.*
+import com.zionhuang.music.extensions.currentMetadata
+import com.zionhuang.music.extensions.findNextMediaItemById
+import com.zionhuang.music.extensions.mediaItemIndexOf
+import com.zionhuang.music.extensions.mediaItems
+import com.zionhuang.music.extensions.metadata
+import com.zionhuang.music.extensions.setQueueNavigator
+import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.lyrics.LyricsHelper
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.PersistQueue
@@ -85,10 +134,30 @@ import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.playback.queues.Queue
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.utils.resize
-import com.zionhuang.music.utils.*
-import kotlinx.coroutines.*
+import com.zionhuang.music.utils.dataStore
+import com.zionhuang.music.utils.enumPreference
+import com.zionhuang.music.utils.get
+import com.zionhuang.music.utils.getSongFile
+import com.zionhuang.music.utils.preference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -245,8 +314,8 @@ class SongPlayer(
                 override fun getCustomAction(player: Player) = if (currentMediaMetadata.value != null) {
                     CustomAction.Builder(
                         ACTION_TOGGLE_LIBRARY,
-                        context.getString(if (currentSong != null) R.string.action_remove_from_library else R.string.action_add_to_library),
-                        if (currentSong != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add
+                        context.getString(if (currentSong?.song?.inLibrary != null) R.string.action_remove_from_library else R.string.action_add_to_library),
+                        if (currentSong?.song?.inLibrary != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add
                     ).build()
                 } else null
             },

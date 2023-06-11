@@ -63,7 +63,7 @@ dependencyResolutionManagement {
 
             library("apache-lang3", "org.apache.commons", "commons-lang3").version("3.12.0")
 
-            version("hilt", "2.44")
+            version("hilt", "2.46.1")
             library("hilt", "com.google.dagger", "hilt-android").versionRef("hilt")
             library("hilt-compiler", "com.google.dagger", "hilt-android-compiler").versionRef("hilt")
 
