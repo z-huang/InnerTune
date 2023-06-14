@@ -15,17 +15,17 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="new_release_albums">New release albums</string>
-    <string name="most_played_songs">Most played songs</string>
+    <string name="history">История</string>
+    <string name="stats">Статистика</string>
+    <string name="quick_picks">Быстрый выбор</string>
+    <string name="new_release_albums">Новые релизы альбомов</string>
+    <string name="most_played_songs">Самые популярные песни</string>
 
     <!-- History -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_week">This week</string>
-    <string name="last_week">Last week</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <string name="this_week">На этой неделе</string>
+    <string name="last_week">На прошлой неделе</string>
 
     <!-- Search -->
     <string name="search">Поиск</string>
@@ -39,7 +39,7 @@
     <string name="filter_playlists">Плейлисты</string>
     <string name="filter_community_playlists">Плейлисты сообщества</string>
     <string name="filter_featured_playlists">Избранные плейлисты</string>
-    <string name="no_results_found">No results found</string>
+    <string name="no_results_found">Результаты не найдены</string>
 
     <!-- Artist screen -->
     <string name="from_your_library">Из вашей библиотеки</string>
@@ -47,7 +47,7 @@
     <!-- Playlist -->
     <string name="liked_songs">Любимые треки</string>
     <string name="downloaded_songs">Загруженная музыка</string>
-    <string name="playlist_is_empty">The playlist is empty</string>
+    <string name="playlist_is_empty">Плейлист пуст</string>
 
     <!-- Button -->
     <string name="retry">Повторить</string>
@@ -66,14 +66,14 @@
     <string name="remove_download">Удалить из загруженных</string>
     <string name="import_playlist">Импортировать плейлист</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
-    <string name="view_artist">Перейти на страницу исполнителя</string>
+    <string name="view_artist">Перейти к исполнителю</string>
     <string name="view_album">Перейти к альбому</string>
     <string name="refetch">Обновить</string>
     <string name="share">Поделиться</string>
     <string name="delete">Удалить</string>
-    <string name="remove_from_history">Remove from history</string>
+    <string name="remove_from_history">Удалить из истории</string>
     <string name="search_online">Поиск в Интернете</string>
-    <string name="sync">Sync</string>
+    <string name="sync">Синхронизация</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Недавно добавленные</string>
@@ -147,12 +147,13 @@
 
     <!-- Player -->
     <string name="lyrics_not_found">Текст песни не найден</string>
-    <string name="sleep_timer">Sleep timer</string>
-    <string name="end_of_song">End of song</string>
+    <string name="sleep_timer">Таймер сна</string>
+    <string name="end_of_song">Конец песни</string>
     <plurals name="minute">
-        <item quantity="one" tools:ignore="ImpliedQuantity">1 minute</item>
-        <item quantity="few">%d minutes</item>
-        <item quantity="many">%d minutes</item>
+        <item quantity="one" tools:ignore="ImpliedQuantity">1 минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
     </plurals>
     <string name="error_no_stream">Нет доступных потоков</string>
     <string name="error_no_internet">Нет подключения к сети</string>
@@ -179,7 +180,7 @@
     <string name="dark_theme_on">Вкл.</string>
     <string name="dark_theme_off">Выкл.</string>
     <string name="dark_theme_follow_system">Использовать настройки системы</string>
-    <string name="pure_black">Pure black</string>
+    <string name="pure_black">Режим чистого черного цвета</string>
     <string name="default_open_tab">Вкладка навигации по умолчанию</string>
     <string name="customize_navigation_tabs">Настройка вкладок навигации</string>
     <string name="lyrics_text_position">Расположение текста песни</string>
@@ -209,14 +210,14 @@
 
     <string name="storage">Хранилище</string>
     <string name="cache">Кэш</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
+    <string name="image_cache">Кэш изображений</string>
+    <string name="song_cache">Кэш аудио</string>
+    <string name="max_cache_size">Максимальный размер кэша</string>
+    <string name="unlimited">Неограниченный</string>
     <string name="max_image_cache_size">Макс. размер кэша изображений</string>
     <string name="clear_image_cache">Очистить кэш изображений</string>
     <string name="max_song_cache_size">Макс. размер кэша аудио</string>
-    <string name="clear_song_cache">Clear song cache</string>
+    <string name="clear_song_cache">Очистить кэш аудио</string>
     <string name="size_used">%s использовано</string>
 
     <string name="general">Общие</string>
@@ -229,8 +230,8 @@
     <string name="notification_more_action_desc">Показывать кнопки «Добавить в библиотеку» и «Нравится»</string>
 
     <string name="privacy">Конфиденциальность</string>
-    <string name="pause_listen_history">Pause listen history</string>
-    <string name="pause_search_history">Приостановить сохранение истории поиска</string>
+    <string name="pause_listen_history">Приостановить историю прослушивания</string>
+    <string name="pause_search_history">Приостановить историю поиска</string>
     <string name="clear_search_history">Очистить историю поиска</string>
     <string name="clear_search_history_confirm">Вы уверены, что хотите очистить всю историю поиска?</string>
     <string name="enable_kugou">Включить провайдера текстов KuGou</string>
