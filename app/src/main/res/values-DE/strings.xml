@@ -22,7 +22,7 @@
     <string name="pref_customize_navigation_tabs">Anpassen der Navigationsregisterkarten</string>
     <string name="pref_lyrics_text_position_title">Position des Liedtextes</string>
     <string name="align_left">Links</string>
-    <string name="align_center">Mitte</string>
+    <string name="align_center">Zentriert</string>
     <string name="align_right">Rechts</string>
 
     <string name="pref_content_title">Inhalt</string>
@@ -32,7 +32,7 @@
     <string name="pref_enable_proxy_title">Proxy einschalten</string>
     <string name="pref_proxy_type_title">Proxy-Typ</string>
     <string name="pref_proxy_url_title">Proxy-URL</string>
-    <string name="pref_restart_title">Neustart, damit er wirksam wird</string>
+    <string name="pref_restart_title">Neustart, damit Änderungen wirksam werden</string>
 
     <string name="pref_player_audio_title">Player und Audio</string>
     <string name="pref_audio_quality_title">Tonqualität</string>
@@ -111,7 +111,7 @@
     <string name="menu_start_radio">Radio starten</string>
     <string name="menu_play">Wiedergegeben</string>
     <string name="menu_play_next">Als nächstes wiedergeben</string>
-    <string name="menu_add_to_queue">Zu Warteschlange hinzufügen</string>
+    <string name="menu_add_to_queue">Zur Warteschlange hinzufügen</string>
     <string name="menu_add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="menu_download">Herunterladen</string>
     <string name="menu_remove_download">Download entfernen</string>
@@ -163,8 +163,8 @@
 
     <string name="dialog_title_edit_playlist">Wiedergabeliste bearbeiten</string>
 
-    <string name="dialog_title_choose_backup_content">Wählen Sie den Sicherungsinhalt</string>
-    <string name="dialog_title_choose_restore_content">Wählen Sie Inhalt wiederherstellen</string>
+    <string name="dialog_title_choose_backup_content">Inhalt zum Sichern auswählen</string>
+    <string name="dialog_title_choose_restore_content">Inhalt zum Wiederherstellen auswählen</string>
     <string name="choice_preferences">Einstellungen</string>
     <string name="choice_database">Datenbank</string>
     <string name="choice_downloaded_songs">Heruntergeladene Titel</string>
@@ -223,7 +223,7 @@
         <item quantity="other">%d ausgewählt</item>
     </plurals>
     <string name="snackbar_undo">Rückgängig machen</string>
-    <string name="snackbar_url_error">Kann diese Url nicht identifizieren.</string>
+    <string name="snackbar_url_error">Kann diese URL nicht identifizieren.</string>
     <plurals name="snackbar_song_play_next">
         <item quantity="one">Song wird als nächstes gespielt</item>
         <item quantity="other">%d Songs werden als nächstes gespielt</item>
@@ -271,7 +271,7 @@
 
     <!-- Custom Action -->
     <string name="action_like">Favoriten</string>
-    <string name="action_remove_like">Entfernen aus Favoriten</string>
+    <string name="action_remove_like">Aus Favoriten entfernen</string>
     <string name="action_add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="action_remove_from_library">Aus der Bibliothek entfernen</string>
 
