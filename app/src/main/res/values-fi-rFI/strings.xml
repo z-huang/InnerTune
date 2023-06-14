@@ -1,132 +1,88 @@
 <resources>
-    <!-- Title -->
-    <string name="title_home">Home</string>
-    <string name="title_songs">Kappaleet</string>
-    <string name="title_artists">Artistit</string>
-    <string name="title_albums">Albums</string>
-    <string name="title_playlists">Soittolistat</string>
-    <string name="title_explore">Tutustu</string>
-    <string name="title_settings">Asetukset</string>
-    <string name="title_now_playing">Nyt soi</string>
-    <string name="title_error_report">Error report</string>
+    <!-- Bottom navigation -->
+    <string name="home">Home</string>
+    <string name="songs">Kappaleet</string>
+    <string name="artists">Artistit</string>
+    <string name="albums">Albums</string>
+    <string name="playlists">Soittolistat</string>
 
-    <!-- Preference Title -->
-    <string name="pref_appearance_title">Ulkoasu</string>
-    <string name="pref_follow_system_accent_title">Järjestelmän teeman mukainen</string>
-    <string name="pref_theme_color_title">Teeman väri</string>
-    <string name="pref_dark_theme_title">Tumma teema</string>
-    <string name="dark_theme_on">Käytössä</string>
-    <string name="dark_theme_off">Pois käytöstä</string>
-    <string name="dark_theme_follow_system">Järjestelmän teeman mukainen</string>
-    <string name="pref_default_open_tab_title">Default open tab</string>
-    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <!-- Top bar -->
+    <plurals name="n_selected">
+        <item quantity="one">%d valittu</item>
+        <item quantity="other">%d kappaletta valittu</item>
+    </plurals>
 
-    <string name="pref_content_title">Sisältö</string>
-    <string name="login">Login</string>
-    <string name="pref_content_language_title">Sisällön oletuskieli</string>
-    <string name="pref_default_content_country_title">Sisällön oletusmaa</string>
-    <string name="pref_enable_proxy_title">Enable proxy</string>
-    <string name="pref_proxy_type_title">Proxy type</string>
-    <string name="pref_proxy_url_title">Proxy URL</string>
-    <string name="pref_restart_title">Restart to take effect</string>
+    <!-- Home -->
+    <string name="history">History</string>
+    <string name="stats">Stats</string>
+    <string name="quick_picks">Quick picks</string>
+    <string name="new_release_albums">New release albums</string>
+    <string name="most_played_songs">Most played songs</string>
 
-    <string name="pref_player_audio_title">Player and audio</string>
-    <string name="pref_audio_quality_title">Audio quality</string>
-    <string name="audio_quality_auto">Auto</string>
-    <string name="audio_quality_high">High</string>
-    <string name="audio_quality_low">Low</string>
-    <string name="pref_persistent_queue_title">Persistent queue</string>
-    <string name="pref_skip_silence_title">Skip silence</string>
-    <string name="pref_audio_normalization_title">Audio normalization</string>
-    <string name="pref_equalizer_title">Equalizer</string>
+    <!-- History -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="last_week">Last week</string>
 
-    <string name="pref_storage_title">Storage</string>
-    <string name="pref_open_saf_title">View downloaded files in SAF</string>
-    <string name="pref_open_saf_summary">This may not work in some devices</string>
-    <string name="pref_cache_title">Cache</string>
-    <string name="pref_image_max_cache_size_title">Max image cache size</string>
-    <string name="pref_clear_image_cache_title">Clear image cache</string>
-    <string name="pref_song_max_cache_size_title">Max song cache size</string>
-    <string name="size_used">%s used</string>
-
-    <string name="pref_general_title">General</string>
-    <string name="pref_auto_download_title">Automaattinen lataus</string>
-    <string name="pref_auto_download_summary">Lataa kirjastoon lisätyt kappaleet automaattisesti</string>
-    <string name="pref_auto_add_song_title">Automaattinen vienti kirjastoon</string>
-    <string name="pref_auto_add_song_summary">Lisää kappale kirjastoon automaattisesti, kun se on soitettu</string>
-    <string name="pref_expand_on_play_title">Laajenna alapalkki toistaessa</string>
-    <string name="pref_notification_more_action_title">More actions in notification</string>
-    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
-
-    <string name="pref_privacy_title">Privacy</string>
-    <string name="pref_pause_search_history_title">Pause search history</string>
-    <string name="pref_clear_search_history_title">Clear search history</string>
-    <string name="clear_search_history_question">Are you sure to clear all search history?</string>
-    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
-
-    <string name="pref_backup_restore_title">Backup and restore</string>
-    <string name="pref_backup_title">Backup</string>
-    <string name="pref_restore_title">Restore</string>
-
-    <string name="pref_about_title">Tietoa</string>
-    <string name="pref_app_version_title">Sovelluksen versio</string>
-
-    <!-- Colors -->
-    <string name="color_sakura">Sakura</string>
-    <string name="color_red">Punainen</string>
-    <string name="color_pink">Pinkki</string>
-    <string name="color_purple">Violetti</string>
-    <string name="color_deep_purple">Syvä violetti</string>
-    <string name="color_indigo">Indigo</string>
-    <string name="color_blue">Sininen</string>
-    <string name="color_light_blue">Vaaleansininen</string>
-    <string name="color_cyan">Syaani</string>
-    <string name="color_teal">Sinappi</string>
-    <string name="color_green">Vihreä</string>
-    <string name="color_light_green">Vaalean vihreä</string>
-    <string name="color_lime">Lime</string>
-    <string name="color_yellow">Keltainen</string>
-    <string name="color_amber">Meripihka</string>
-    <string name="color_orange">Oranssi</string>
-    <string name="color_deep_orange">Syvä oranssi</string>
-    <string name="color_brown">Ruskea</string>
-    <string name="color_blue_grey">Sinharmaa</string>
-
-    <!-- Nav Menu -->
-    <string name="menu_search">Etsi</string>
+    <!-- Search -->
+    <string name="search">Etsi</string>
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
+    <string name="filter_all">Kaikki</string>
+    <string name="filter_songs">Kappaleet</string>
+    <string name="filter_videos">Videot</string>
+    <string name="filter_albums">Albumit</string>
+    <string name="filter_artists">Artistit</string>
+    <string name="filter_playlists">Soittolistat</string>
+    <string name="filter_community_playlists">Community playlists</string>
+    <string name="filter_featured_playlists">Featured playlists</string>
+    <string name="no_results_found">No results found</string>
 
-    <!-- Built-in playlist -->
+    <!-- Artist screen -->
+    <string name="from_your_library">From your library</string>
+
+    <!-- Playlist -->
     <string name="liked_songs">Liked songs</string>
     <string name="downloaded_songs">Downloaded songs</string>
+    <string name="playlist_is_empty">The playlist is empty</string>
 
-    <!-- Popup Menu -->
-    <string name="menu_details">Details</string>
-    <string name="menu_edit">Muokkaa</string>
-    <string name="menu_start_radio">Start radio</string>
-    <string name="menu_play">Play</string>
-    <string name="menu_play_next">Toista seuraavaksi</string>
-    <string name="menu_add_to_queue">Lisää jonoon</string>
-    <string name="menu_add_to_playlist">Lisää soittolistaan</string>
-    <string name="menu_download">Lataa</string>
-    <string name="menu_remove_download">Poista lataus</string>
-    <string name="menu_import_playlist">Import playlist</string>
-    <string name="menu_add_to_library">Lisää kirjastoon</string>
-    <string name="menu_view_artist">View artist</string>
-    <string name="menu_view_album">View album</string>
-    <string name="menu_refetch">Refetch</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_delete">Poista</string>
-    <string name="menu_search_online">Search online</string>
-    <string name="menu_choose_lyrics">Choose other lyrics</string>
+    <!-- Button -->
+    <string name="retry">Toisto</string>
+    <string name="radio">Radio</string>
+    <string name="shuffle">Sekoita</string>
+
+    <!-- Menu -->
+    <string name="details">Details</string>
+    <string name="edit">Muokkaa</string>
+    <string name="start_radio">Start radio</string>
+    <string name="play">Play</string>
+    <string name="play_next">Toista seuraavaksi</string>
+    <string name="add_to_queue">Lisää jonoon</string>
+    <string name="add_to_library">Lisää kirjastoon</string>
+    <string name="download">Lataa</string>
+    <string name="remove_download">Poista lataus</string>
+    <string name="import_playlist">Import playlist</string>
+    <string name="add_to_playlist">Lisää soittolistaan</string>
+    <string name="view_artist">View artist</string>
+    <string name="view_album">View album</string>
+    <string name="refetch">Refetch</string>
+    <string name="share">Share</string>
+    <string name="delete">Poista</string>
+    <string name="remove_from_history">Remove from history</string>
+    <string name="search_online">Search online</string>
+    <string name="sync">Sync</string>
+
+    <!-- Sort menu -->
+    <string name="sort_by_create_date">Lisäyspäivä</string>
+    <string name="sort_by_name">Nimi</string>
+    <string name="sort_by_artist">Artisti</string>
+    <string name="sort_by_year">Year</string>
+    <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
+    <string name="sort_by_play_time">Play time</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">Details</string>
     <string name="media_id">Media id</string>
     <string name="mime_type">MIME type</string>
     <string name="codecs">Codecs</string>
@@ -136,172 +92,145 @@
     <string name="volume">Volume</string>
     <string name="file_size">File size</string>
     <string name="unknown">Unknown</string>
+    <string name="copied">Copied to clipboard</string>
 
-    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
-    <string name="dialog_title_search_lyrics">Search lyrics</string>
-    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
+    <string name="edit_lyrics">Edit lyrics</string>
+    <string name="search_lyrics">Search lyrics</string>
 
-    <string name="dialog_title_edit_song">Muokkaa kappaletta</string>
+    <string name="edit_song">Muokkaa kappaletta</string>
     <string name="song_title">Kappaleen nimi</string>
     <string name="song_artists">Artisti</string>
     <string name="error_song_title_empty">Kappaleen nimi ei voi olla tyhjä.</string>
     <string name="error_song_artist_empty">Artistin nimi ei voi olla tyhjä.</string>
-    <string name="dialog_button_save">Tallenna</string>
+    <string name="save">Tallenna</string>
 
-    <string name="dialog_title_create_playlist">Luo soittolista</string>
-    <string name="text_view_hint_playlist_name">Soittolistan nimi</string>
+    <string name="choose_playlist">Valitse soittolista</string>
+    <string name="edit_playlist">Muokkaa soittolistaa</string>
+    <string name="create_playlist">Luo soittolista</string>
+    <string name="playlist_name">Soittolistan nimi</string>
     <string name="error_playlist_name_empty">Soittolistan nimi ei voi olla tyhjä.</string>
 
-    <string name="dialog_title_edit_artist">Muokkaa artistia</string>
-    <string name="text_view_hint_artist_name">Artistin nimi</string>
+    <string name="edit_artist">Muokkaa artistia</string>
+    <string name="artist_name">Artistin nimi</string>
     <string name="error_artist_name_empty">Artistin nimi ei voi olla tyhjä.</string>
 
-    <string name="dialog_title_duplicate_artist">Artistin kaksoiskappale</string>
-    <string name="dialog_msg_duplicate_artist">Artisti %1$s on jo olemassa.</string>
-
-    <string name="dialog_title_choose_playlist">Valitse soittolista</string>
-
-    <string name="dialog_title_edit_playlist">Muokkaa soittolistaa</string>
-
-    <string name="dialog_title_choose_backup_content">Choose backup content</string>
-    <string name="dialog_title_choose_restore_content">Choose restore content</string>
-    <string name="choice_preferences">Preferences</string>
-    <string name="choice_database">Database</string>
-    <string name="choice_downloaded_songs">Downloaded songs</string>
-    <string name="message_backup_create_success">Backup created successfully</string>
-    <string name="message_backup_create_failed">Couldn\'t create backup</string>
-    <string name="message_restore_failed">Failed to restore backup</string>
-
-    <!-- Notification -->
-    <string name="channel_name_playback">Soitin</string>
-    <string name="channel_name_download">Lataa</string>
-
     <!-- Noun -->
-    <plurals name="song_count">
+    <plurals name="n_song">
         <item quantity="one">%d kappale</item>
         <item quantity="other">%d kappaletta</item>
     </plurals>
-    <plurals name="artist_count">
+    <plurals name="n_artist">
         <item quantity="one">%d artist</item>
         <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="album_count">
+    <plurals name="n_album">
         <item quantity="one">%d album</item>
         <item quantity="other">%d albums</item>
     </plurals>
-    <plurals name="playlist_count">
+    <plurals name="n_playlist">
         <item quantity="one">%d playlist</item>
         <item quantity="other">%d playlists</item>
     </plurals>
 
-    <!-- Button -->
-    <string name="btn_retry">Toisto</string>
-    <string name="btn_play">Play</string>
-    <string name="btn_play_all">Toista kaikki</string>
-    <string name="btn_radio">Radio</string>
-    <string name="btn_shuffle">Sekoita</string>
-    <string name="btn_copy_stacktrace">Copy stacktrace</string>
-    <string name="btn_report">Report</string>
-    <string name="btn_report_on_github">Report on GitHub</string>
-
-    <!-- Sort Menu -->
-    <string name="sort_by_create_date">Lisäyspäivä</string>
-    <string name="sort_by_name">Nimi</string>
-    <string name="sort_by_artist">Artisti</string>
-    <string name="sort_by_year">Year</string>
-    <string name="sort_by_song_count">Song count</string>
-    <string name="sort_by_length">Length</string>
-    <string name="sort_by_play_time">Play time</string>
-
     <!-- Snackbar -->
-    <plurals name="snackbar_delete_song">
-        <item quantity="one">%d kappale poistettu.</item>
-        <item quantity="other">%d kappaletta poistettu.</item>
-    </plurals>
-    <plurals name="n_selected">
-        <item quantity="one">%d valittu</item>
-        <item quantity="other">%d kappaletta valittu</item>
-    </plurals>
-    <string name="snackbar_undo">Kumoa</string>
-    <string name="snackbar_url_error">Can\'t identify this url.</string>
-    <plurals name="snackbar_song_play_next">
-        <item quantity="one">Song will play next</item>
-        <item quantity="other">%d songs will play next</item>
-    </plurals>
-    <plurals name="snackbar_artist_play_next">
-        <item quantity="one">Artist will play next</item>
-        <item quantity="other">%d artists will play next</item>
-    </plurals>
-    <plurals name="snackbar_album_play_next">
-        <item quantity="one">Album will play next</item>
-        <item quantity="other">%d albums will play next</item>
-    </plurals>
-    <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">Playlist will play next</item>
-        <item quantity="other">%d playlists will play next</item>
-    </plurals>
-    <string name="snackbar_play_next">Selected will play next</string>
-    <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">Song added to queue</item>
-        <item quantity="other">%d songs added to queue</item>
-    </plurals>
-    <plurals name="snackbar_artist_added_to_queue">
-        <item quantity="one">Artist added to queue</item>
-        <item quantity="other">%d artists added to queue</item>
-    </plurals>
-    <plurals name="snackbar_album_added_to_queue">
-        <item quantity="one">Album added to queue</item>
-        <item quantity="other">%d albums added to queue</item>
-    </plurals>
-    <plurals name="snackbar_playlist_added_to_queue">
-        <item quantity="one">Playlist added to queue</item>
-        <item quantity="other">%d playlists added to queue</item>
-    </plurals>
-    <string name="snackbar_added_to_queue">Selected added to queue</string>
-    <string name="snackbar_added_to_library">Added to library</string>
-    <string name="snackbar_removed_from_library">Removed from library</string>
     <string name="snackbar_playlist_imported">Playlist imported</string>
-    <string name="snackbar_added_to_playlist">Added to %1$s</string>
-    <plurals name="snackbar_download_song">
-        <item quantity="one">Start downloading song</item>
-        <item quantity="other">Start downloading %d songs</item>
+
+    <!-- Player -->
+    <string name="lyrics_not_found">Lyrics not found</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="end_of_song">End of song</string>
+    <plurals name="minute">
+        <item quantity="one">1 minute</item>
+        <item quantity="other">%d minutes</item>
     </plurals>
-    <string name="snackbar_removed_download">Removed download</string>
-    <string name="snackbar_action_view">View</string>
-
-    <!-- Custom Action -->
-    <string name="action_like">Like</string>
-    <string name="action_remove_like">Remove like</string>
-    <string name="action_add_to_library">Lisää kirjastoon</string>
-    <string name="action_remove_from_library">Remove from library</string>
-
-    <!-- Search Filter -->
-    <string name="search_filter_all">Kaikki</string>
-    <string name="search_filter_songs">Kappaleet</string>
-    <string name="search_filter_videos">Videot</string>
-    <string name="search_filter_albums">Albumit</string>
-    <string name="search_filter_artists">Artistit</string>
-    <string name="search_filter_playlists">Soittolistat</string>
-    <string name="search_filter_community_playlists">Community playlists</string>
-    <string name="search_filter_featured_playlists">Featured playlists</string>
-
-    <string name="system_default">Järjestelmän oletus</string>
-    <string name="header_from_your_library">From your library</string>
-
-    <!-- Error Activity -->
-    <string name="sorry_for_error">Sorry, that should not have happened.</string>
-    <string name="copied">Copied to clipboard</string>
-
-    <!-- Player Error Message -->
     <string name="error_no_stream">No stream available</string>
     <string name="error_no_internet">No network connection</string>
     <string name="error_timeout">Timeout</string>
     <string name="error_unknown">Unknown error</string>
 
+    <!-- Player action -->
+    <string name="action_like">Like</string>
+    <string name="action_remove_like">Remove like</string>
+    <string name="action_add_to_library">Lisää kirjastoon</string>
+    <string name="action_remove_from_library">Remove from library</string>
+
     <!-- Queue Title -->
     <string name="queue_all_songs">All songs</string>
     <string name="queue_searched_songs">Searched songs</string>
 
-    <!-- Lyrics View -->
-    <string name="lyrics_not_found">Lyrics not found</string>
+    <!-- Notification name -->
+    <string name="music_player">Soitin</string>
+
+    <!-- Settings -->
+    <string name="settings">Asetukset</string>
+    <string name="appearance">Ulkoasu</string>
+    <string name="dark_theme">Tumma teema</string>
+    <string name="dark_theme_on">Käytössä</string>
+    <string name="dark_theme_off">Pois käytöstä</string>
+    <string name="dark_theme_follow_system">Järjestelmän teeman mukainen</string>
+    <string name="pure_black">Pure black</string>
+    <string name="default_open_tab">Default open tab</string>
+    <string name="customize_navigation_tabs">Customize navigation tabs</string>
+    <string name="lyrics_text_position">Lyrics text position</string>
+    <string name="left">Left</string>
+    <string name="center">Center</string>
+    <string name="right">Right</string>
+
+    <string name="content">Sisältö</string>
+    <string name="login">Login</string>
+    <string name="content_language">Sisällön oletuskieli</string>
+    <string name="content_country">Sisällön oletusmaa</string>
+    <string name="system_default">Järjestelmän oletus</string>
+    <string name="enable_proxy">Enable proxy</string>
+    <string name="proxy_type">Proxy type</string>
+    <string name="proxy_url">Proxy URL</string>
+    <string name="restart_to_take_effect">Restart to take effect</string>
+
+    <string name="player_and_audio">Player and audio</string>
+    <string name="audio_quality">Audio quality</string>
+    <string name="audio_quality_auto">Auto</string>
+    <string name="audio_quality_high">High</string>
+    <string name="audio_quality_low">Low</string>
+    <string name="persistent_queue">Persistent queue</string>
+    <string name="skip_silence">Skip silence</string>
+    <string name="audio_normalization">Audio normalization</string>
+    <string name="equalizer">Equalizer</string>
+
+    <string name="storage">Storage</string>
+    <string name="cache">Cache</string>
+    <string name="image_cache">Image Cache</string>
+    <string name="song_cache">Song Cache</string>
+    <string name="max_cache_size">Max cache size</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="max_image_cache_size">Max image cache size</string>
+    <string name="clear_image_cache">Clear image cache</string>
+    <string name="max_song_cache_size">Max song cache size</string>
+    <string name="clear_song_cache">Clear song cache</string>
+    <string name="size_used">%s used</string>
+
+    <string name="general">General</string>
+    <string name="auto_download">Automaattinen lataus</string>
+    <string name="auto_download_desc">Lataa kirjastoon lisätyt kappaleet automaattisesti</string>
+    <string name="auto_add_song">Automaattinen vienti kirjastoon</string>
+    <string name="auto_add_song_desc">Lisää kappale kirjastoon automaattisesti, kun se on soitettu</string>
+    <string name="expand_on_play">Laajenna alapalkki toistaessa</string>
+    <string name="notification_more_action">More actions in notification</string>
+    <string name="notification_more_action_desc">Show add to library and like buttons</string>
+
+    <string name="privacy">Privacy</string>
+    <string name="pause_listen_history">Pause listen history</string>
+    <string name="pause_search_history">Pause search history</string>
+    <string name="clear_search_history">Clear search history</string>
+    <string name="clear_search_history_confirm">Are you sure to clear all search history?</string>
+    <string name="enable_kugou">Enable KuGou lyrics provider</string>
+
+    <string name="backup_restore">Backup and restore</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="backup_create_success">Backup created successfully</string>
+    <string name="backup_create_failed">Couldn\'t create backup</string>
+    <string name="restore_failed">Failed to restore backup</string>
+
+    <string name="about">Tietoa</string>
+    <string name="app_version">Sovelluksen versio</string>
 </resources>

@@ -1,69 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
-    <style name="AppTheme" parent="Base.AppTheme" />
-
-    <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowLightStatusBar">?isLightTheme</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">?isLightTheme</item>
+    <style name="Theme.InnerTune" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">#ffffff</item>
+        <item name="android:enforceNavigationBarContrast" tools:ignore="NewApi">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-
-        <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeTheme">@style/Widget.Material3.ActionBar.Solid</item>
-        <item name="actionModeCloseDrawable">@drawable/ic_close</item>
-
-        <item name="invertedColor">@color/colorInverted</item>
-        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
-        <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteTextView</item>
-        <item name="popupMenuStyle">@style/Widget.Material3.PopupMenu</item>
-        <item name="android:contextPopupMenuStyle">@style/Widget.Material3.PopupMenu.ContextMenu</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.Material3.PopupMenu.Overflow</item>
-        <!-- Material You Dialog -->
-        <item name="alertDialogTheme">@style/ThemeOverlay.Material3.MaterialAlertDialog</item>
-        <item name="dialogCornerRadius">28dp</item>
-        <!-- Preference title -->
-        <item name="android:textAppearanceListItem">?textAppearanceSubtitle1</item>
-        <!-- Preference category title -->
-        <item name="android:colorAccent">?colorPrimary</item>
-        <!-- Preference switch -->
-        <item name="android:colorControlActivated">?colorPrimary</item>
-        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
-    </style>
-
-    <style name="AppTheme.SearchView" parent="@style/Widget.AppCompat.SearchView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="queryHint">@string/abc_search_hint</item>
-        <item name="searchHintIcon">@null</item>
-    </style>
-
-    <style name="AppTheme.AutoCompleteTextView" parent="Widget.AppCompat.AutoCompleteTextView">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:textColorHint">?attr/colorOnPrimary</item>
-    </style>
-
-    <style name="Dialog" parent="ThemeOverlay.Material3.Dialog.Alert">
-        <item name="android:windowTranslucentNavigation">false</item>
-    </style>
-    -->
-
-    <style name="CustomBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
-        <item name="background">?colorSurface</item>
-    </style>
-
-    <style name="CustomBottomSheet" parent="Widget.Material3.BottomSheet">
-        <!-- API 28+ Only -->
-        <item name="android:outlineAmbientShadowColor" tools:ignore="NewApi">@android:color/transparent</item>
-        <item name="android:outlineSpotShadowColor" tools:ignore="NewApi">@android:color/transparent</item>
-    </style>
-
-    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">16dp</item>
-        <item name="cornerSizeTopLeft">16dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 </resources>

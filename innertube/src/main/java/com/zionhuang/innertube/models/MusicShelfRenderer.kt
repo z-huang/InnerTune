@@ -10,17 +10,11 @@ data class MusicShelfRenderer(
     val moreContentButton: Button?,
     val continuations: List<Continuation>?,
 ) {
-    fun toHeader(): Header? = title?.let {
-        Header(
-            title = it.toString(),
-            moreNavigationEndpoint = bottomEndpoint ?: moreContentButton?.buttonRenderer?.navigationEndpoint
-        )
-    }
-
     @Serializable
     data class Content(
         val musicResponsiveListItemRenderer: MusicResponsiveListItemRenderer,
-    ) {
-        fun toItem(): YTItem? = musicResponsiveListItemRenderer.toItem()
-    }
+    )
 }
+
+fun List<Continuation>.getContinuation() =
+    firstOrNull()?.nextContinuationData?.continuation

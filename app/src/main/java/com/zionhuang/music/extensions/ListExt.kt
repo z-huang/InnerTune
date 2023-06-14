@@ -1,11 +1,9 @@
 package com.zionhuang.music.extensions
 
-@Suppress("UNCHECKED_CAST")
-inline fun <reified T : Any> List<*>.castOrNull(): List<T>? = if (all { it is T }) this as List<T> else null
+fun <T> List<T>.reversed(reversed: Boolean) = if (reversed) asReversed() else this
 
-fun <T> MutableList<T>.swap(i: Int, j: Int): MutableList<T> {
-    this[i] = this[j].also { this[j] = this[i] }
+fun <T> MutableList<T>.move(fromIndex: Int, toIndex: Int): MutableList<T> {
+    val item = removeAt(fromIndex)
+    add(toIndex, item)
     return this
 }
-
-fun <T> List<T>.reversed(reversed: Boolean) = if (reversed) reversed() else this
