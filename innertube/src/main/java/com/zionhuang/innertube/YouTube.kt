@@ -9,6 +9,7 @@ import com.zionhuang.innertube.pages.*
 import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import java.net.Proxy
@@ -333,7 +334,7 @@ object YouTube {
         Json.parseToJsonElement(innerTube.getSwJsData().bodyAsText().substring(5))
             .jsonArray[0]
             .jsonArray[2]
-            .jsonArray[6]
+            .jsonArray.first { (it as? JsonPrimitive)?.content?.startsWith(VISITOR_DATA_PREFIX) == true }
             .jsonPrimitive.content
     }
 
@@ -354,6 +355,8 @@ object YouTube {
     }
 
     private const val MAX_GET_QUEUE_SIZE = 1000
+
+    private const val VISITOR_DATA_PREFIX = "Cgt"
 
     const val DEFAULT_VISITOR_DATA = "CgtsZG1ySnZiQWtSbyiMjuGSBg%3D%3D"
 }
