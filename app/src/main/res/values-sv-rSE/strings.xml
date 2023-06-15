@@ -164,6 +164,7 @@
     <!-- Settings -->
     <string name="settings">Inställningar</string>
     <string name="appearance">Utseende</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Mörkt tema</string>
     <string name="dark_theme_on">På</string>
     <string name="dark_theme_off">Av</string>

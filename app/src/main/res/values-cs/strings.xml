@@ -175,6 +175,7 @@
     <!-- Settings -->
     <string name="settings">Nastavení</string>
     <string name="appearance">Vzhled</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Tmavý motiv</string>
     <string name="dark_theme_on">Zap</string>
     <string name="dark_theme_off">Vyp</string>

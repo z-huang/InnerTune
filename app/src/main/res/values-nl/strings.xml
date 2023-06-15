@@ -164,6 +164,7 @@
     <!-- Settings -->
     <string name="settings">Instellingen</string>
     <string name="appearance">Uiterlijk</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Donker thema</string>
     <string name="dark_theme_on">Aan</string>
     <string name="dark_theme_off">Uit</string>

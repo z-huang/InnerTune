@@ -158,6 +158,7 @@
     <!-- Settings -->
     <string name="settings">設定</string>
     <string name="appearance">外観</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">ダークテーマ</string>
     <string name="dark_theme_on">オン</string>
     <string name="dark_theme_off">オフ</string>

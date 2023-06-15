@@ -14,6 +14,7 @@ import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.DarkModeKey
 import com.zionhuang.music.constants.DefaultOpenTabKey
+import com.zionhuang.music.constants.DynamicThemeKey
 import com.zionhuang.music.constants.LyricsTextPositionKey
 import com.zionhuang.music.constants.PureBlackKey
 import com.zionhuang.music.ui.component.EnumListPreference
@@ -27,6 +28,7 @@ fun AppearanceSettings(
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
+    val (dynamicTheme, onDynamicThemeChange) = rememberPreference(DynamicThemeKey, defaultValue = true)
     val (darkMode, onDarkModeChange) = rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
     val (pureBlack, onPureBlackChange) = rememberPreference(PureBlackKey, defaultValue = false)
     val (defaultOpenTab, onDefaultOpenTabChange) = rememberEnumPreference(DefaultOpenTabKey, defaultValue = NavigationTab.HOME)
@@ -37,6 +39,12 @@ fun AppearanceSettings(
             .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
     ) {
+        SwitchPreference(
+            title = stringResource(R.string.enable_dynamic_theme),
+            icon = R.drawable.ic_palette,
+            checked = dynamicTheme,
+            onCheckedChange = onDynamicThemeChange
+        )
         EnumListPreference(
             title = stringResource(R.string.dark_theme),
             icon = R.drawable.ic_dark_mode,

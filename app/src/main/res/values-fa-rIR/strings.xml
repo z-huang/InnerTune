@@ -164,6 +164,7 @@
     <!-- Settings -->
     <string name="settings">تنظیمات</string>
     <string name="appearance">ظاهر</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">تم تاریک</string>
     <string name="dark_theme_on">روشن</string>
     <string name="dark_theme_off">خاموش</string>

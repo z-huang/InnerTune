@@ -176,6 +176,7 @@
     <!-- Settings -->
     <string name="settings">Настройки</string>
     <string name="appearance">Внешний вид</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Темная тема</string>
     <string name="dark_theme_on">Вкл.</string>
     <string name="dark_theme_off">Выкл.</string>

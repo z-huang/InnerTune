@@ -164,6 +164,7 @@
     <!-- Settings -->
     <string name="settings">Asetukset</string>
     <string name="appearance">Ulkoasu</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Tumma teema</string>
     <string name="dark_theme_on">Käytössä</string>
     <string name="dark_theme_off">Pois käytöstä</string>

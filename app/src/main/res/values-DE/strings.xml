@@ -164,6 +164,7 @@
     <!-- Settings -->
     <string name="settings">Einstellungen</string>
     <string name="appearance">Erscheinungsbild</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Dunkles Thema</string>
     <string name="dark_theme_on">An</string>
     <string name="dark_theme_off">Aus</string>

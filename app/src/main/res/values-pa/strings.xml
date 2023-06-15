@@ -164,6 +164,7 @@
     <!-- Settings -->
     <string name="settings">ਸੈਟਿੰਗਾਂ</string>
     <string name="appearance">ਦਿੱਖ</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">ਗੂੜ੍ਹਾ ਥੀਮ</string>
     <string name="dark_theme_on">ਚਾਲੂ</string>
     <string name="dark_theme_off">ਬੰਦ</string>

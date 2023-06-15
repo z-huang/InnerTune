@@ -158,6 +158,7 @@
     <!-- Settings -->
     <string name="settings">Pengaturan</string>
     <string name="appearance">Tampilan</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Tema gelap</string>
     <string name="dark_theme_on">Aktif</string>
     <string name="dark_theme_off">Tidak aktif</string>

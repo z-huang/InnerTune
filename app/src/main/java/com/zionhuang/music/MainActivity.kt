@@ -125,6 +125,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val coroutineScope = rememberCoroutineScope()
+            val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
             val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
             val pureBlack by rememberPreference(PureBlackKey, defaultValue = false)
             val isSystemInDarkTheme = isSystemInDarkTheme()
@@ -138,10 +139,14 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(DefaultThemeColor)
             }
 
-            DisposableEffect(playerConnection, isSystemInDarkTheme) {
-                playerConnection?.onBitmapChanged = { bitmap ->
-                    coroutineScope.launch(Dispatchers.IO) {
-                        themeColor = bitmap?.extractThemeColor() ?: DefaultThemeColor
+            DisposableEffect(playerConnection, enableDynamicTheme, isSystemInDarkTheme) {
+                if (!enableDynamicTheme) {
+                    themeColor = DefaultThemeColor
+                } else {
+                    playerConnection?.onBitmapChanged = { bitmap ->
+                        coroutineScope.launch(Dispatchers.IO) {
+                            themeColor = bitmap?.extractThemeColor() ?: DefaultThemeColor
+                        }
                     }
                 }
                 onDispose {
@@ -475,6 +480,7 @@ class MainActivity : ComponentActivity() {
                                             navController.canNavigateUp && !navigationItems.fastAny { it.route == navBackStackEntry?.destination?.route } -> {
                                                 navController.navigateUp()
                                             }
+
                                             else -> onActiveChange(true)
                                         }
                                     }) {
@@ -534,6 +540,7 @@ class MainActivity : ComponentActivity() {
                                             navController = navController,
                                             onDismiss = { onActiveChange(false) }
                                         )
+
                                         SearchSource.ONLINE -> OnlineSearchScreen(
                                             query = query.text,
                                             onQueryChange = onQueryChange,

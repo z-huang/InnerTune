@@ -164,6 +164,7 @@
     <!-- Settings -->
     <string name="settings">ക്രമീകരണങ്ങൾ</string>
     <string name="appearance">രൂപഭംഗി</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">ഡാർക്ക് തീം</string>
     <string name="dark_theme_on">ഓൺ</string>
     <string name="dark_theme_off">ഓഫ്</string>

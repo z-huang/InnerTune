@@ -158,6 +158,7 @@
     <!-- Settings -->
     <string name="settings">설정</string>
     <string name="appearance">모양</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">다크 테마</string>
     <string name="dark_theme_on">켬</string>
     <string name="dark_theme_off">끔</string>
