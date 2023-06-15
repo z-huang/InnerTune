@@ -1,132 +1,90 @@
 <resources>
-    <!-- Title -->
-    <string name="title_home">Domů</string>
-    <string name="title_songs">Skladby</string>
-    <string name="title_artists">Umělci</string>
-    <string name="title_albums">Alba</string>
-    <string name="title_playlists">Playlisty</string>
-    <string name="title_explore">Procházet</string>
-    <string name="title_settings">Nastavení</string>
-    <string name="title_now_playing">Právě hraje</string>
-    <string name="title_error_report">Hlášení chyb</string>
+    <!-- Bottom navigation -->
+    <string name="home">Domů</string>
+    <string name="songs">Skladby</string>
+    <string name="artists">Umělci</string>
+    <string name="albums">Alba</string>
+    <string name="playlists">Playlisty</string>
 
-    <!-- Preference Title -->
-    <string name="pref_appearance_title">Vzhled</string>
-    <string name="pref_follow_system_accent_title">Podle systému</string>
-    <string name="pref_theme_color_title">Barva motivu</string>
-    <string name="pref_dark_theme_title">Tmavý motiv</string>
-    <string name="dark_theme_on">Zap</string>
-    <string name="dark_theme_off">Vyp</string>
-    <string name="dark_theme_follow_system">Podle systému</string>
-    <string name="pref_default_open_tab_title">Výchozí karta</string>
-    <string name="pref_customize_navigation_tabs">Přizpůsobit navigační karty</string>
-    <string name="pref_lyrics_text_position_title">Pozice textů</string>
-    <string name="align_left">Vlevo</string>
-    <string name="align_center">Uprostřed</string>
-    <string name="align_right">Vpravo</string>
+    <!-- Top bar -->
+    <plurals name="n_selected">
+        <item quantity="one">Vybrána %d</item>
+        <item quantity="few">Vybrány %d</item>
+        <item quantity="many">Vybráno %d</item>
+        <item quantity="other">Vybráno %d</item>
+    </plurals>
 
-    <string name="pref_content_title">Obsah</string>
-    <string name="login">Přihlásit se</string>
-    <string name="pref_content_language_title">Výchozí jazyk obsahu</string>
-    <string name="pref_default_content_country_title">Výchozí země obsahu</string>
-    <string name="pref_enable_proxy_title">Povolit proxy</string>
-    <string name="pref_proxy_type_title">Typ proxy</string>
-    <string name="pref_proxy_url_title">Adresa URL proxy</string>
-    <string name="pref_restart_title">Restartujte pro uplatnění změn</string>
+    <!-- Home -->
+    <string name="history">History</string>
+    <string name="stats">Stats</string>
+    <string name="quick_picks">Quick picks</string>
+    <string name="new_release_albums">New release albums</string>
+    <string name="most_played_songs">Most played songs</string>
 
-    <string name="pref_player_audio_title">Přehrávač a zvuk</string>
-    <string name="pref_audio_quality_title">Kvalita zvuku</string>
-    <string name="audio_quality_auto">Automaticky</string>
-    <string name="audio_quality_high">Vysoká</string>
-    <string name="audio_quality_low">Nízká</string>
-    <string name="pref_persistent_queue_title">Ukládat frontu</string>
-    <string name="pref_skip_silence_title">Přeskakovat ticho</string>
-    <string name="pref_audio_normalization_title">Normalizace zvuku</string>
-    <string name="pref_equalizer_title">Ekvalizér</string>
+    <!-- History -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="last_week">Last week</string>
 
-    <string name="pref_storage_title">Úložiště</string>
-    <string name="pref_open_saf_title">Zobrazit stažené soubory v SAF</string>
-    <string name="pref_open_saf_summary">Nemusí fungovat na všech zařízeních</string>
-    <string name="pref_cache_title">Mezipaměť</string>
-    <string name="pref_image_max_cache_size_title">Maximální velikost mezipaměti obrázků</string>
-    <string name="pref_clear_image_cache_title">Vymazat mezipaměť obrázků</string>
-    <string name="pref_song_max_cache_size_title">Maximální velikost mezipaměti skladeb</string>
-    <string name="size_used">Využito %s</string>
-
-    <string name="pref_general_title">Obecné</string>
-    <string name="pref_auto_download_title">Automatické stahování</string>
-    <string name="pref_auto_download_summary">Stáhnout skladbu při přidání do knihovny</string>
-    <string name="pref_auto_add_song_title">Automaticky přidat skladbu do knihovny</string>
-    <string name="pref_auto_add_song_summary">Přidat skladbu do vaší knihovny po skončení jejího přehrávání</string>
-    <string name="pref_expand_on_play_title">Při přehrání rozšířit spodní přehrávač</string>
-    <string name="pref_notification_more_action_title">Více akcí v oznámení</string>
-    <string name="pref_notification_more_action_summary">Zobrazit tlačítka přidání do knihovny a oblíbení</string>
-
-    <string name="pref_privacy_title">Soukromí</string>
-    <string name="pref_pause_search_history_title">Pozastavit historii vyhledávání</string>
-    <string name="pref_clear_search_history_title">Vymazat historii vyhledávání</string>
-    <string name="clear_search_history_question">Opravdu chcete vymazat celou historii vyhledávání?</string>
-    <string name="pref_enable_kugou_title">Povolit poskytovatele textů KuGou</string>
-
-    <string name="pref_backup_restore_title">Záloha a obnovení</string>
-    <string name="pref_backup_title">Zálohovat</string>
-    <string name="pref_restore_title">Obnovit</string>
-
-    <string name="pref_about_title">O aplikaci</string>
-    <string name="pref_app_version_title">Verze aplikace</string>
-
-    <!-- Colors -->
-    <string name="color_sakura">Sakura</string>
-    <string name="color_red">Červená</string>
-    <string name="color_pink">Růžová</string>
-    <string name="color_purple">Fialová</string>
-    <string name="color_deep_purple">Tmavě fialová</string>
-    <string name="color_indigo">Indigová</string>
-    <string name="color_blue">Modrá</string>
-    <string name="color_light_blue">Světle modrá</string>
-    <string name="color_cyan">Azurová</string>
-    <string name="color_teal">Tyrkysová</string>
-    <string name="color_green">Zelená</string>
-    <string name="color_light_green">Světle zelená</string>
-    <string name="color_lime">Limetková</string>
-    <string name="color_yellow">Žlutá</string>
-    <string name="color_amber">Jantarová</string>
-    <string name="color_orange">Oranžová</string>
-    <string name="color_deep_orange">Tmavě oranžová</string>
-    <string name="color_brown">Hnědá</string>
-    <string name="color_blue_grey">Modře šedá</string>
-
-    <!-- Nav Menu -->
-    <string name="menu_search">Vyhledávání</string>
+    <!-- Search -->
+    <string name="search">Vyhledávání</string>
     <string name="search_yt_music">Hledat v YouTube Music…</string>
     <string name="search_library">Hledat v knihovně…</string>
+    <string name="filter_all">Vše</string>
+    <string name="filter_songs">Skladby</string>
+    <string name="filter_videos">Videa</string>
+    <string name="filter_albums">Alba</string>
+    <string name="filter_artists">Umělci</string>
+    <string name="filter_playlists">Playlisty</string>
+    <string name="filter_community_playlists">Komunitní playlisty</string>
+    <string name="filter_featured_playlists">Doporučené playlisty</string>
+    <string name="no_results_found">No results found</string>
 
-    <!-- Built-in playlist -->
+    <!-- Artist screen -->
+    <string name="from_your_library">Z vaší knihovny</string>
+
+    <!-- Playlist -->
     <string name="liked_songs">Oblíbené skladby</string>
     <string name="downloaded_songs">Stažené skladby</string>
+    <string name="playlist_is_empty">The playlist is empty</string>
 
-    <!-- Popup Menu -->
-    <string name="menu_details">Podrobnosti</string>
-    <string name="menu_edit">Upravit</string>
-    <string name="menu_start_radio">Spustit rádio</string>
-    <string name="menu_play">Přehrát</string>
-    <string name="menu_play_next">Přehrát jako další</string>
-    <string name="menu_add_to_queue">Přidat do fronty</string>
-    <string name="menu_add_to_library">Přidat do knihovny</string>
-    <string name="menu_download">Stáhnout</string>
-    <string name="menu_remove_download">Odebrat stahování</string>
-    <string name="menu_import_playlist">Importovat playlist</string>
-    <string name="menu_add_to_playlist">Přidat do playlistu</string>
-    <string name="menu_view_artist">Zobrazit umělce</string>
-    <string name="menu_view_album">Zobrazit album</string>
-    <string name="menu_refetch">Obnovit</string>
-    <string name="menu_share">Sdílet</string>
-    <string name="menu_delete">Odstranit</string>
-    <string name="menu_search_online">Hledat online</string>
-    <string name="menu_choose_lyrics">Vybrat jiné texty</string>
+    <!-- Button -->
+    <string name="retry">Zkusit znovu</string>
+    <string name="radio">Rádio</string>
+    <string name="shuffle">Náhodně</string>
+
+    <!-- Menu -->
+    <string name="details">Podrobnosti</string>
+    <string name="edit">Upravit</string>
+    <string name="start_radio">Spustit rádio</string>
+    <string name="play">Přehrát</string>
+    <string name="play_next">Přehrát jako další</string>
+    <string name="add_to_queue">Přidat do fronty</string>
+    <string name="add_to_library">Přidat do knihovny</string>
+    <string name="download">Stáhnout</string>
+    <string name="remove_download">Odebrat stahování</string>
+    <string name="import_playlist">Importovat playlist</string>
+    <string name="add_to_playlist">Přidat do playlistu</string>
+    <string name="view_artist">Zobrazit umělce</string>
+    <string name="view_album">Zobrazit album</string>
+    <string name="refetch">Obnovit</string>
+    <string name="share">Sdílet</string>
+    <string name="delete">Odstranit</string>
+    <string name="remove_from_history">Remove from history</string>
+    <string name="search_online">Hledat online</string>
+    <string name="sync">Sync</string>
+
+    <!-- Sort menu -->
+    <string name="sort_by_create_date">Datum přidání</string>
+    <string name="sort_by_name">Název</string>
+    <string name="sort_by_artist">Umělec</string>
+    <string name="sort_by_year">Rok</string>
+    <string name="sort_by_song_count">Počet skladeb</string>
+    <string name="sort_by_length">Délka</string>
+    <string name="sort_by_play_time">Doba přehrávání</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">Podrobnosti</string>
     <string name="media_id">ID média</string>
     <string name="mime_type">Typ MIME</string>
     <string name="codecs">Kodeky</string>
@@ -136,202 +94,155 @@
     <string name="volume">Hlasitost</string>
     <string name="file_size">Velikost souboru</string>
     <string name="unknown">Neznámé</string>
+    <string name="copied">Zkopírováno do schránky</string>
 
-    <string name="dialog_title_edit_lyrics">Upravit texty</string>
-    <string name="dialog_title_search_lyrics">Hledat texty</string>
-    <string name="dialog_title_choose_lyrics">Vybrat texty</string>
+    <string name="edit_lyrics">Upravit texty</string>
+    <string name="search_lyrics">Hledat texty</string>
 
-    <string name="dialog_title_edit_song">Upravit skladbu</string>
+    <string name="edit_song">Upravit skladbu</string>
     <string name="song_title">Název skladby</string>
     <string name="song_artists">Umělci skladby</string>
     <string name="error_song_title_empty">Název skladby nemůže být prázdný.</string>
     <string name="error_song_artist_empty">Umělec skladby nemůže být prázdný.</string>
-    <string name="dialog_button_save">Uložit</string>
+    <string name="save">Uložit</string>
 
-    <string name="dialog_title_create_playlist">Vytvořit playlist</string>
-    <string name="text_view_hint_playlist_name">Název playlistu</string>
+    <string name="choose_playlist">Vybrat playlist</string>
+    <string name="edit_playlist">Upravit playlist</string>
+    <string name="create_playlist">Vytvořit playlist</string>
+    <string name="playlist_name">Název playlistu</string>
     <string name="error_playlist_name_empty">Název playlistu nemůže být prázdný.</string>
 
-    <string name="dialog_title_edit_artist">Upravit umělce</string>
-    <string name="text_view_hint_artist_name">Jméno umělce</string>
+    <string name="edit_artist">Upravit umělce</string>
+    <string name="artist_name">Jméno umělce</string>
     <string name="error_artist_name_empty">Jméno umělce nemůže být prázdné.</string>
 
-    <string name="dialog_title_duplicate_artist">Duplicitní umělci</string>
-    <string name="dialog_msg_duplicate_artist">Umělec %1$s již existuje.</string>
-
-    <string name="dialog_title_choose_playlist">Vybrat playlist</string>
-
-    <string name="dialog_title_edit_playlist">Upravit playlist</string>
-
-    <string name="dialog_title_choose_backup_content">Vybrat obsah zálohy</string>
-    <string name="dialog_title_choose_restore_content">Vybrat obsah obnovení</string>
-    <string name="choice_preferences">Předvolby</string>
-    <string name="choice_database">Databáze</string>
-    <string name="choice_downloaded_songs">Stažené skladby</string>
-    <string name="message_backup_create_success">Záloha úspěšně vytvořena</string>
-    <string name="message_backup_create_failed">Nepodařilo se vytvořit zálohu</string>
-    <string name="message_restore_failed">Nepodařilo se obnovit zálohu</string>
-
-    <!-- Notification -->
-    <string name="channel_name_playback">Hudební přehrávač</string>
-    <string name="channel_name_download">Stáhnout</string>
-
     <!-- Noun -->
-    <plurals name="song_count">
+    <plurals name="n_song">
         <item quantity="one">%d skladba</item>
         <item quantity="few">%d skladby</item>
         <item quantity="many">%d skladeb</item>
         <item quantity="other">%d skladeb</item>
     </plurals>
-    <plurals name="artist_count">
+    <plurals name="n_artist">
         <item quantity="one">%d umělec</item>
         <item quantity="few">%d umělci</item>
         <item quantity="many">%d umělců</item>
         <item quantity="other">%d umělců</item>
     </plurals>
-    <plurals name="album_count">
+    <plurals name="n_album">
         <item quantity="one">%d album</item>
         <item quantity="few">%d alba</item>
         <item quantity="many">%d alb</item>
         <item quantity="other">%d alb</item>
     </plurals>
-    <plurals name="playlist_count">
+    <plurals name="n_playlist">
         <item quantity="one">%d playlist</item>
         <item quantity="few">%d playlisty</item>
         <item quantity="many">%d playlistů</item>
         <item quantity="other">%d playlistů</item>
     </plurals>
 
-    <!-- Button -->
-    <string name="btn_retry">Zkusit znovu</string>
-    <string name="btn_play">Přehrát</string>
-    <string name="btn_play_all">Přehrát vše</string>
-    <string name="btn_radio">Rádio</string>
-    <string name="btn_shuffle">Náhodně</string>
-    <string name="btn_copy_stacktrace">Kopírovat stacktrace</string>
-    <string name="btn_report">Nahlásit</string>
-    <string name="btn_report_on_github">Nahlásit na GitHub</string>
-
-    <!-- Sort Menu -->
-    <string name="sort_by_create_date">Datum přidání</string>
-    <string name="sort_by_name">Název</string>
-    <string name="sort_by_artist">Umělec</string>
-    <string name="sort_by_year">Rok</string>
-    <string name="sort_by_song_count">Počet skladeb</string>
-    <string name="sort_by_length">Délka</string>
-    <string name="sort_by_play_time">Doba přehrávání</string>
-
     <!-- Snackbar -->
-    <plurals name="snackbar_delete_song">
-        <item quantity="one">Byla odstraněna %d skladba.</item>
-        <item quantity="few">Byly odstraněny %d skladby.</item>
-        <item quantity="many">Bylo odstraněna %d skladeb.</item>
-        <item quantity="other">Bylo odstraněno %d skladeb.</item>
-    </plurals>
-    <plurals name="n_selected">
-        <item quantity="one">Vybrána %d</item>
-        <item quantity="few">Vybrány %d</item>
-        <item quantity="many">Vybráno %d</item>
-        <item quantity="other">Vybráno %d</item>
-    </plurals>
-    <string name="snackbar_undo">Zrušit</string>
-    <string name="snackbar_url_error">Tuto adresu nelze identifikovat.</string>
-    <plurals name="snackbar_song_play_next">
-        <item quantity="one">Skladba bude hrát jako další</item>
-        <item quantity="few">%d skladby budou hrát jako další</item>
-        <item quantity="many">%d skladeb bude hrát jako další</item>
-        <item quantity="other">%d skladeb bude hrát jako další</item>
-    </plurals>
-    <plurals name="snackbar_artist_play_next">
-        <item quantity="one">Umělec bude hrát jako další</item>
-        <item quantity="few">%d umělci budou hrát jako další</item>
-        <item quantity="many">%d umělců bude hrát jako další</item>
-        <item quantity="other">%d umělců bude hrát jako další</item>
-    </plurals>
-    <plurals name="snackbar_album_play_next">
-        <item quantity="one">Album bude hrát jako další</item>
-        <item quantity="few">%d alba budou hrát jako další</item>
-        <item quantity="many">%d alb bude hrát jako další</item>
-        <item quantity="other">%d alb bude hrát jako další</item>
-    </plurals>
-    <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">Playlist bude hrát jako další</item>
-        <item quantity="few">%d playlisty budou hrát jako další</item>
-        <item quantity="many">%d playlistů bude hrát jako další</item>
-        <item quantity="other">%d playlistů bude hrát jako další</item>
-    </plurals>
-    <string name="snackbar_play_next">Vybrané budou přehrány jako další</string>
-    <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">Skladba přidána do fronty</item>
-        <item quantity="few">%d skladby přidány do fronty</item>
-        <item quantity="many">%d skladeb přidáno do fronty</item>
-        <item quantity="other">%d skladeb přidáno do fronty</item>
-    </plurals>
-    <plurals name="snackbar_artist_added_to_queue">
-        <item quantity="one">Umělec přidán do fronty</item>
-        <item quantity="few">%d umělci přidáni do fronty</item>
-        <item quantity="many">%d umělců přidáno do fronty</item>
-        <item quantity="other">%d umělců přidáno do fronty</item>
-    </plurals>
-    <plurals name="snackbar_album_added_to_queue">
-        <item quantity="one">Album přidáno do fronty</item>
-        <item quantity="few">%d alba přidány do fronty</item>
-        <item quantity="many">%d alb přidáno do fronty</item>
-        <item quantity="other">%d alb přidáno do fronty</item>
-    </plurals>
-    <plurals name="snackbar_playlist_added_to_queue">
-        <item quantity="one">Playlist přidán do fronty</item>
-        <item quantity="few">%d playlisty přidány do fronty</item>
-        <item quantity="many">%d playlistů přidáno do fronty</item>
-        <item quantity="other">%d playlistů přidáno do fronty</item>
-    </plurals>
-    <string name="snackbar_added_to_queue">Vybrané přidány do fronty</string>
-    <string name="snackbar_added_to_library">Přidáno do knihovny</string>
-    <string name="snackbar_removed_from_library">Odebráno z knihovny</string>
     <string name="snackbar_playlist_imported">Playlist importován</string>
-    <string name="snackbar_added_to_playlist">Přidáno do playlistu %1$s</string>
-    <plurals name="snackbar_download_song">
-        <item quantity="one">Stáhnout skladbu</item>
-        <item quantity="few">Stáhnout %d skladby</item>
-        <item quantity="many">Stáhnout %d skladeb</item>
-        <item quantity="other">Stáhnout %d skladeb</item>
+
+    <!-- Player -->
+    <string name="lyrics_not_found">Texty nenalezeny</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="end_of_song">End of song</string>
+    <plurals name="minute">
+        <item quantity="one">1 minute</item>
+        <item quantity="few">%d minutes</item>
+        <item quantity="many">%d minutes</item>
     </plurals>
-    <string name="snackbar_removed_download">Odebrané stahování</string>
-    <string name="snackbar_action_view">Zobrazit</string>
-
-    <!-- Custom Action -->
-    <string name="action_like">Oblíbené</string>
-    <string name="action_remove_like">Odebrat z oblíbených</string>
-    <string name="action_add_to_library">Přidat do knihovny</string>
-    <string name="action_remove_from_library">Odebrat z knihovny</string>
-
-    <!-- Search Filter -->
-    <string name="search_filter_all">Vše</string>
-    <string name="search_filter_songs">Skladby</string>
-    <string name="search_filter_videos">Videa</string>
-    <string name="search_filter_albums">Alba</string>
-    <string name="search_filter_artists">Umělci</string>
-    <string name="search_filter_playlists">Playlisty</string>
-    <string name="search_filter_community_playlists">Komunitní playlisty</string>
-    <string name="search_filter_featured_playlists">Doporučené playlisty</string>
-
-    <string name="system_default">Podle systému</string>
-    <string name="header_from_your_library">Z vaší knihovny</string>
-
-    <!-- Error Activity -->
-    <string name="sorry_for_error">Omlouváme se, tohle se nemělo stát.</string>
-    <string name="copied">Zkopírováno do schránky</string>
-
-    <!-- Player Error Message -->
     <string name="error_no_stream">Není dostupný žádný stream</string>
     <string name="error_no_internet">Není dostupné připojení k internetu</string>
     <string name="error_timeout">Vypršel čas</string>
     <string name="error_unknown">Neznámá chyba</string>
 
+    <!-- Player action -->
+    <string name="action_like">Oblíbené</string>
+    <string name="action_remove_like">Odebrat z oblíbených</string>
+    <string name="action_add_to_library">Přidat do knihovny</string>
+    <string name="action_remove_from_library">Odebrat z knihovny</string>
+
     <!-- Queue Title -->
     <string name="queue_all_songs">Všechny skladby</string>
     <string name="queue_searched_songs">Hledané skladby</string>
 
-    <!-- Lyrics View -->
-    <string name="lyrics_not_found">Texty nenalezeny</string>
+    <!-- Notification name -->
+    <string name="music_player">Hudební přehrávač</string>
+
+    <!-- Settings -->
+    <string name="settings">Nastavení</string>
+    <string name="appearance">Vzhled</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="dark_theme">Tmavý motiv</string>
+    <string name="dark_theme_on">Zap</string>
+    <string name="dark_theme_off">Vyp</string>
+    <string name="dark_theme_follow_system">Podle systému</string>
+    <string name="pure_black">Pure black</string>
+    <string name="default_open_tab">Výchozí karta</string>
+    <string name="customize_navigation_tabs">Přizpůsobit navigační karty</string>
+    <string name="lyrics_text_position">Pozice textů</string>
+    <string name="left">Vlevo</string>
+    <string name="center">Uprostřed</string>
+    <string name="right">Vpravo</string>
+
+    <string name="content">Obsah</string>
+    <string name="login">Přihlásit se</string>
+    <string name="content_language">Výchozí jazyk obsahu</string>
+    <string name="content_country">Výchozí země obsahu</string>
+    <string name="system_default">Podle systému</string>
+    <string name="enable_proxy">Povolit proxy</string>
+    <string name="proxy_type">Typ proxy</string>
+    <string name="proxy_url">Adresa URL proxy</string>
+    <string name="restart_to_take_effect">Restartujte pro uplatnění změn</string>
+
+    <string name="player_and_audio">Přehrávač a zvuk</string>
+    <string name="audio_quality">Kvalita zvuku</string>
+    <string name="audio_quality_auto">Automaticky</string>
+    <string name="audio_quality_high">Vysoká</string>
+    <string name="audio_quality_low">Nízká</string>
+    <string name="persistent_queue">Ukládat frontu</string>
+    <string name="skip_silence">Přeskakovat ticho</string>
+    <string name="audio_normalization">Normalizace zvuku</string>
+    <string name="equalizer">Ekvalizér</string>
+
+    <string name="storage">Úložiště</string>
+    <string name="cache">Mezipaměť</string>
+    <string name="image_cache">Image Cache</string>
+    <string name="song_cache">Song Cache</string>
+    <string name="max_cache_size">Max cache size</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="max_image_cache_size">Maximální velikost mezipaměti obrázků</string>
+    <string name="clear_image_cache">Vymazat mezipaměť obrázků</string>
+    <string name="max_song_cache_size">Maximální velikost mezipaměti skladeb</string>
+    <string name="clear_song_cache">Clear song cache</string>
+    <string name="size_used">Využito %s</string>
+
+    <string name="general">Obecné</string>
+    <string name="auto_download">Automatické stahování</string>
+    <string name="auto_download_desc">Stáhnout skladbu při přidání do knihovny</string>
+    <string name="auto_add_song">Automaticky přidat skladbu do knihovny</string>
+    <string name="auto_add_song_desc">Přidat skladbu do vaší knihovny po skončení jejího přehrávání</string>
+    <string name="expand_on_play">Při přehrání rozšířit spodní přehrávač</string>
+    <string name="notification_more_action">Více akcí v oznámení</string>
+    <string name="notification_more_action_desc">Zobrazit tlačítka přidání do knihovny a oblíbení</string>
+
+    <string name="privacy">Soukromí</string>
+    <string name="pause_listen_history">Pause listen history</string>
+    <string name="pause_search_history">Pozastavit historii vyhledávání</string>
+    <string name="clear_search_history">Vymazat historii vyhledávání</string>
+    <string name="clear_search_history_confirm">Opravdu chcete vymazat celou historii vyhledávání?</string>
+    <string name="enable_kugou">Povolit poskytovatele textů KuGou</string>
+
+    <string name="backup_restore">Záloha a obnovení</string>
+    <string name="backup">Zálohovat</string>
+    <string name="restore">Obnovit</string>
+    <string name="backup_create_success">Záloha úspěšně vytvořena</string>
+    <string name="backup_create_failed">Nepodařilo se vytvořit zálohu</string>
+    <string name="restore_failed">Nepodařilo se obnovit zálohu</string>
+
+    <string name="about">O aplikaci</string>
+    <string name="app_version">Verze aplikace</string>
 </resources>

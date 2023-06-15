@@ -3,14 +3,14 @@ package com.zionhuang.music.playback.queues
 import com.google.android.exoplayer2.MediaItem
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.WatchEndpoint
-import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.models.MediaMetadata
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class YouTubeQueue(
     private val endpoint: WatchEndpoint,
-    item: YTItem? = null,
+    override val preloadItem: MediaMetadata? = null,
 ) : Queue {
     private var continuation: String? = null
 
@@ -22,7 +22,7 @@ class YouTubeQueue(
         return Queue.Status(
             title = nextResult.title,
             items = nextResult.items.map { it.toMediaItem() },
-            index = nextResult.currentIndex ?: 0
+            mediaItemIndex = nextResult.currentIndex ?: 0
         )
     }
 

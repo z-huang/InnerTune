@@ -1,132 +1,87 @@
 <resources>
-    <!-- Title -->
-    <string name="title_home">Home</string>
-    <string name="title_songs">노래</string>
-    <string name="title_artists">아티스트</string>
-    <string name="title_albums">Albums</string>
-    <string name="title_playlists">플레이리스트</string>
-    <string name="title_explore">탐색</string>
-    <string name="title_settings">설정</string>
-    <string name="title_now_playing">재생 중</string>
-    <string name="title_error_report">Error report</string>
+    <!-- Bottom navigation -->
+    <string name="home">Home</string>
+    <string name="songs">노래</string>
+    <string name="artists">아티스트</string>
+    <string name="albums">Albums</string>
+    <string name="playlists">플레이리스트</string>
 
-    <!-- Preference Title -->
-    <string name="pref_appearance_title">모양</string>
-    <string name="pref_follow_system_accent_title">시스템 테마</string>
-    <string name="pref_theme_color_title">테마 색상</string>
-    <string name="pref_dark_theme_title">다크 테마</string>
-    <string name="dark_theme_on">켬</string>
-    <string name="dark_theme_off">끔</string>
-    <string name="dark_theme_follow_system">시스템</string>
-    <string name="pref_default_open_tab_title">Default open tab</string>
-    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <!-- Top bar -->
+    <plurals name="n_selected">
+        <item quantity="other">%d 선택됨</item>
+    </plurals>
 
-    <string name="pref_content_title">콘텐츠</string>
-    <string name="login">Login</string>
-    <string name="pref_content_language_title">기본 콘텐츠 언어</string>
-    <string name="pref_default_content_country_title">기본 콘텐츠 국가</string>
-    <string name="pref_enable_proxy_title">Enable proxy</string>
-    <string name="pref_proxy_type_title">Proxy type</string>
-    <string name="pref_proxy_url_title">Proxy URL</string>
-    <string name="pref_restart_title">Restart to take effect</string>
+    <!-- Home -->
+    <string name="history">History</string>
+    <string name="stats">Stats</string>
+    <string name="quick_picks">Quick picks</string>
+    <string name="new_release_albums">New release albums</string>
+    <string name="most_played_songs">Most played songs</string>
 
-    <string name="pref_player_audio_title">Player and audio</string>
-    <string name="pref_audio_quality_title">Audio quality</string>
-    <string name="audio_quality_auto">Auto</string>
-    <string name="audio_quality_high">High</string>
-    <string name="audio_quality_low">Low</string>
-    <string name="pref_persistent_queue_title">Persistent queue</string>
-    <string name="pref_skip_silence_title">Skip silence</string>
-    <string name="pref_audio_normalization_title">Audio normalization</string>
-    <string name="pref_equalizer_title">Equalizer</string>
+    <!-- History -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="last_week">Last week</string>
 
-    <string name="pref_storage_title">Storage</string>
-    <string name="pref_open_saf_title">View downloaded files in SAF</string>
-    <string name="pref_open_saf_summary">This may not work in some devices</string>
-    <string name="pref_cache_title">Cache</string>
-    <string name="pref_image_max_cache_size_title">Max image cache size</string>
-    <string name="pref_clear_image_cache_title">Clear image cache</string>
-    <string name="pref_song_max_cache_size_title">Max song cache size</string>
-    <string name="size_used">%s used</string>
-
-    <string name="pref_general_title">General</string>
-    <string name="pref_auto_download_title">자동 다운로드</string>
-    <string name="pref_auto_download_summary">라이브러리에 추가할 때 노래 다운로드</string>
-    <string name="pref_auto_add_song_title">라이브러리에 노래 자동 추가</string>
-    <string name="pref_auto_add_song_summary">재생이 완료되면 라이브러리에 노래 추가</string>
-    <string name="pref_expand_on_play_title">플레이 시 하단 플레이어 확장</string>
-    <string name="pref_notification_more_action_title">More actions in notification</string>
-    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
-
-    <string name="pref_privacy_title">Privacy</string>
-    <string name="pref_pause_search_history_title">Pause search history</string>
-    <string name="pref_clear_search_history_title">Clear search history</string>
-    <string name="clear_search_history_question">Are you sure to clear all search history?</string>
-    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
-
-    <string name="pref_backup_restore_title">Backup and restore</string>
-    <string name="pref_backup_title">Backup</string>
-    <string name="pref_restore_title">Restore</string>
-
-    <string name="pref_about_title">정보</string>
-    <string name="pref_app_version_title">앱 버전</string>
-
-    <!-- Colors -->
-    <string name="color_sakura">사쿠라</string>
-    <string name="color_red">빨강</string>
-    <string name="color_pink">핑크</string>
-    <string name="color_purple">보라</string>
-    <string name="color_deep_purple">짙은 보라</string>
-    <string name="color_indigo">남색</string>
-    <string name="color_blue">파랑</string>
-    <string name="color_light_blue">라이트 블루</string>
-    <string name="color_cyan">청록색</string>
-    <string name="color_teal">암청색</string>
-    <string name="color_green">초록</string>
-    <string name="color_light_green">연두</string>
-    <string name="color_lime">라임</string>
-    <string name="color_yellow">노랑</string>
-    <string name="color_amber">호박색</string>
-    <string name="color_orange">주황색</string>
-    <string name="color_deep_orange">딥 오렌지</string>
-    <string name="color_brown">갈색</string>
-    <string name="color_blue_grey">블루 그레이</string>
-
-    <!-- Nav Menu -->
-    <string name="menu_search">검색</string>
+    <!-- Search -->
+    <string name="search">검색</string>
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
+    <string name="filter_all">모두</string>
+    <string name="filter_songs">노래</string>
+    <string name="filter_videos">비디오</string>
+    <string name="filter_albums">앨범</string>
+    <string name="filter_artists">아티스트</string>
+    <string name="filter_playlists">플레이리스트</string>
+    <string name="filter_community_playlists">Community playlists</string>
+    <string name="filter_featured_playlists">Featured playlists</string>
+    <string name="no_results_found">No results found</string>
 
-    <!-- Built-in playlist -->
+    <!-- Artist screen -->
+    <string name="from_your_library">From your library</string>
+
+    <!-- Playlist -->
     <string name="liked_songs">Liked songs</string>
     <string name="downloaded_songs">Downloaded songs</string>
+    <string name="playlist_is_empty">The playlist is empty</string>
 
-    <!-- Popup Menu -->
-    <string name="menu_details">Details</string>
-    <string name="menu_edit">수정</string>
-    <string name="menu_start_radio">Start radio</string>
-    <string name="menu_play">Play</string>
-    <string name="menu_play_next">다음 노래 재생</string>
-    <string name="menu_add_to_queue">목록에 추가</string>
-    <string name="menu_add_to_library">라이브러리에 추가</string>
-    <string name="menu_download">다운로드</string>
-    <string name="menu_remove_download">다운로드 제거</string>
-    <string name="menu_import_playlist">Import playlist</string>
-    <string name="menu_add_to_playlist">플레이리스트에 추가</string>
-    <string name="menu_view_artist">View artist</string>
-    <string name="menu_view_album">View album</string>
-    <string name="menu_refetch">Refetch</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_delete">삭제</string>
-    <string name="menu_search_online">Search online</string>
-    <string name="menu_choose_lyrics">Choose other lyrics</string>
+    <!-- Button -->
+    <string name="retry">다시</string>
+    <string name="radio">Radio</string>
+    <string name="shuffle">셔플</string>
+
+    <!-- Menu -->
+    <string name="details">Details</string>
+    <string name="edit">수정</string>
+    <string name="start_radio">Start radio</string>
+    <string name="play">Play</string>
+    <string name="play_next">다음 노래 재생</string>
+    <string name="add_to_queue">목록에 추가</string>
+    <string name="add_to_library">라이브러리에 추가</string>
+    <string name="download">다운로드</string>
+    <string name="remove_download">다운로드 제거</string>
+    <string name="import_playlist">Import playlist</string>
+    <string name="add_to_playlist">플레이리스트에 추가</string>
+    <string name="view_artist">View artist</string>
+    <string name="view_album">View album</string>
+    <string name="refetch">Refetch</string>
+    <string name="share">Share</string>
+    <string name="delete">삭제</string>
+    <string name="remove_from_history">Remove from history</string>
+    <string name="search_online">Search online</string>
+    <string name="sync">Sync</string>
+
+    <!-- Sort menu -->
+    <string name="sort_by_create_date">추가된 날짜</string>
+    <string name="sort_by_name">이름</string>
+    <string name="sort_by_artist">아티스트</string>
+    <string name="sort_by_year">Year</string>
+    <string name="sort_by_song_count">Song count</string>
+    <string name="sort_by_length">Length</string>
+    <string name="sort_by_play_time">Play time</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">Details</string>
     <string name="media_id">Media id</string>
     <string name="mime_type">MIME type</string>
     <string name="codecs">Codecs</string>
@@ -136,166 +91,141 @@
     <string name="volume">Volume</string>
     <string name="file_size">File size</string>
     <string name="unknown">Unknown</string>
+    <string name="copied">Copied to clipboard</string>
 
-    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
-    <string name="dialog_title_search_lyrics">Search lyrics</string>
-    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
+    <string name="edit_lyrics">Edit lyrics</string>
+    <string name="search_lyrics">Search lyrics</string>
 
-    <string name="dialog_title_edit_song">노래 편집</string>
+    <string name="edit_song">노래 편집</string>
     <string name="song_title">노래 제목</string>
     <string name="song_artists">노래 아티스트</string>
     <string name="error_song_title_empty">노래 제목은 비워둘 수 없습니다.</string>
     <string name="error_song_artist_empty">노래 아티스트는 비워둘 수 없습니다.</string>
-    <string name="dialog_button_save">저장</string>
+    <string name="save">저장</string>
 
-    <string name="dialog_title_create_playlist">플레이리스트 만들기</string>
-    <string name="text_view_hint_playlist_name">플레이리스트 이름</string>
+    <string name="choose_playlist">플레이리스트 선택</string>
+    <string name="edit_playlist">플레이리스트 수정</string>
+    <string name="create_playlist">플레이리스트 만들기</string>
+    <string name="playlist_name">플레이리스트 이름</string>
     <string name="error_playlist_name_empty">플레이리스트 이름은 비워둘 수 없습니다.</string>
 
-    <string name="dialog_title_edit_artist">아티스트 수정</string>
-    <string name="text_view_hint_artist_name">아티스트 이름</string>
+    <string name="edit_artist">아티스트 수정</string>
+    <string name="artist_name">아티스트 이름</string>
     <string name="error_artist_name_empty">아티스트 이름은 비워둘 수 없습니다.</string>
 
-    <string name="dialog_title_duplicate_artist">중복 아티스트</string>
-    <string name="dialog_msg_duplicate_artist">아티스트 %1$s이(가) 이미 존재합니다.</string>
-
-    <string name="dialog_title_choose_playlist">플레이리스트 선택</string>
-
-    <string name="dialog_title_edit_playlist">플레이리스트 수정</string>
-
-    <string name="dialog_title_choose_backup_content">Choose backup content</string>
-    <string name="dialog_title_choose_restore_content">Choose restore content</string>
-    <string name="choice_preferences">Preferences</string>
-    <string name="choice_database">Database</string>
-    <string name="choice_downloaded_songs">Downloaded songs</string>
-    <string name="message_backup_create_success">Backup created successfully</string>
-    <string name="message_backup_create_failed">Couldn\'t create backup</string>
-    <string name="message_restore_failed">Failed to restore backup</string>
-
-    <!-- Notification -->
-    <string name="channel_name_playback">음악 플레이어</string>
-    <string name="channel_name_download">다운로드</string>
-
     <!-- Noun -->
-    <plurals name="song_count">
+    <plurals name="n_song">
         <item quantity="other">%d 노래</item>
     </plurals>
-    <plurals name="artist_count">
+    <plurals name="n_artist">
         <item quantity="other">%d artists</item>
     </plurals>
-    <plurals name="album_count">
+    <plurals name="n_album">
         <item quantity="other">%d albums</item>
     </plurals>
-    <plurals name="playlist_count">
+    <plurals name="n_playlist">
         <item quantity="other">%d playlists</item>
     </plurals>
 
-    <!-- Button -->
-    <string name="btn_retry">다시</string>
-    <string name="btn_play">Play</string>
-    <string name="btn_play_all">모두 재생</string>
-    <string name="btn_radio">Radio</string>
-    <string name="btn_shuffle">셔플</string>
-    <string name="btn_copy_stacktrace">Copy stacktrace</string>
-    <string name="btn_report">Report</string>
-    <string name="btn_report_on_github">Report on GitHub</string>
-
-    <!-- Sort Menu -->
-    <string name="sort_by_create_date">추가된 날짜</string>
-    <string name="sort_by_name">이름</string>
-    <string name="sort_by_artist">아티스트</string>
-    <string name="sort_by_year">Year</string>
-    <string name="sort_by_song_count">Song count</string>
-    <string name="sort_by_length">Length</string>
-    <string name="sort_by_play_time">Play time</string>
-
     <!-- Snackbar -->
-    <plurals name="snackbar_delete_song">
-        <item quantity="other">%d 노래가 삭제되었습니다.</item>
-    </plurals>
-    <plurals name="n_selected">
-        <item quantity="other">%d 선택됨</item>
-    </plurals>
-    <string name="snackbar_undo">되돌리기</string>
-    <string name="snackbar_url_error">Can\'t identify this url.</string>
-    <plurals name="snackbar_song_play_next">
-        <item quantity="one">Song will play next</item>
-        <item quantity="other">%d songs will play next</item>
-    </plurals>
-    <plurals name="snackbar_artist_play_next">
-        <item quantity="one">Artist will play next</item>
-        <item quantity="other">%d artists will play next</item>
-    </plurals>
-    <plurals name="snackbar_album_play_next">
-        <item quantity="one">Album will play next</item>
-        <item quantity="other">%d albums will play next</item>
-    </plurals>
-    <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">Playlist will play next</item>
-        <item quantity="other">%d playlists will play next</item>
-    </plurals>
-    <string name="snackbar_play_next">Selected will play next</string>
-    <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">Song added to queue</item>
-        <item quantity="other">%d songs added to queue</item>
-    </plurals>
-    <plurals name="snackbar_artist_added_to_queue">
-        <item quantity="one">Artist added to queue</item>
-        <item quantity="other">%d artists added to queue</item>
-    </plurals>
-    <plurals name="snackbar_album_added_to_queue">
-        <item quantity="one">Album added to queue</item>
-        <item quantity="other">%d albums added to queue</item>
-    </plurals>
-    <plurals name="snackbar_playlist_added_to_queue">
-        <item quantity="one">Playlist added to queue</item>
-        <item quantity="other">%d playlists added to queue</item>
-    </plurals>
-    <string name="snackbar_added_to_queue">Selected added to queue</string>
-    <string name="snackbar_added_to_library">Added to library</string>
-    <string name="snackbar_removed_from_library">Removed from library</string>
     <string name="snackbar_playlist_imported">Playlist imported</string>
-    <string name="snackbar_added_to_playlist">Added to %1$s</string>
-    <plurals name="snackbar_download_song">
-        <item quantity="one">Start downloading song</item>
-        <item quantity="other">Start downloading %d songs</item>
+
+    <!-- Player -->
+    <string name="lyrics_not_found">Lyrics not found</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="end_of_song">End of song</string>
+    <plurals name="minute">
+        <item quantity="other">%d minutes</item>
     </plurals>
-    <string name="snackbar_removed_download">Removed download</string>
-    <string name="snackbar_action_view">View</string>
-
-    <!-- Custom Action -->
-    <string name="action_like">Like</string>
-    <string name="action_remove_like">Remove like</string>
-    <string name="action_add_to_library">라이브러리에 추가</string>
-    <string name="action_remove_from_library">Remove from library</string>
-
-    <!-- Search Filter -->
-    <string name="search_filter_all">모두</string>
-    <string name="search_filter_songs">노래</string>
-    <string name="search_filter_videos">비디오</string>
-    <string name="search_filter_albums">앨범</string>
-    <string name="search_filter_artists">아티스트</string>
-    <string name="search_filter_playlists">플레이리스트</string>
-    <string name="search_filter_community_playlists">Community playlists</string>
-    <string name="search_filter_featured_playlists">Featured playlists</string>
-
-    <string name="system_default">시스템 기본값</string>
-    <string name="header_from_your_library">From your library</string>
-
-    <!-- Error Activity -->
-    <string name="sorry_for_error">Sorry, that should not have happened.</string>
-    <string name="copied">Copied to clipboard</string>
-
-    <!-- Player Error Message -->
     <string name="error_no_stream">No stream available</string>
     <string name="error_no_internet">No network connection</string>
     <string name="error_timeout">Timeout</string>
     <string name="error_unknown">Unknown error</string>
 
+    <!-- Player action -->
+    <string name="action_like">Like</string>
+    <string name="action_remove_like">Remove like</string>
+    <string name="action_add_to_library">라이브러리에 추가</string>
+    <string name="action_remove_from_library">Remove from library</string>
+
     <!-- Queue Title -->
     <string name="queue_all_songs">All songs</string>
     <string name="queue_searched_songs">Searched songs</string>
 
-    <!-- Lyrics View -->
-    <string name="lyrics_not_found">Lyrics not found</string>
+    <!-- Notification name -->
+    <string name="music_player">음악 플레이어</string>
+
+    <!-- Settings -->
+    <string name="settings">설정</string>
+    <string name="appearance">모양</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="dark_theme">다크 테마</string>
+    <string name="dark_theme_on">켬</string>
+    <string name="dark_theme_off">끔</string>
+    <string name="dark_theme_follow_system">시스템</string>
+    <string name="pure_black">Pure black</string>
+    <string name="default_open_tab">Default open tab</string>
+    <string name="customize_navigation_tabs">Customize navigation tabs</string>
+    <string name="lyrics_text_position">Lyrics text position</string>
+    <string name="left">Left</string>
+    <string name="center">Center</string>
+    <string name="right">Right</string>
+
+    <string name="content">콘텐츠</string>
+    <string name="login">Login</string>
+    <string name="content_language">기본 콘텐츠 언어</string>
+    <string name="content_country">기본 콘텐츠 국가</string>
+    <string name="system_default">시스템 기본값</string>
+    <string name="enable_proxy">Enable proxy</string>
+    <string name="proxy_type">Proxy type</string>
+    <string name="proxy_url">Proxy URL</string>
+    <string name="restart_to_take_effect">Restart to take effect</string>
+
+    <string name="player_and_audio">Player and audio</string>
+    <string name="audio_quality">Audio quality</string>
+    <string name="audio_quality_auto">Auto</string>
+    <string name="audio_quality_high">High</string>
+    <string name="audio_quality_low">Low</string>
+    <string name="persistent_queue">Persistent queue</string>
+    <string name="skip_silence">Skip silence</string>
+    <string name="audio_normalization">Audio normalization</string>
+    <string name="equalizer">Equalizer</string>
+
+    <string name="storage">Storage</string>
+    <string name="cache">Cache</string>
+    <string name="image_cache">Image Cache</string>
+    <string name="song_cache">Song Cache</string>
+    <string name="max_cache_size">Max cache size</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="max_image_cache_size">Max image cache size</string>
+    <string name="clear_image_cache">Clear image cache</string>
+    <string name="max_song_cache_size">Max song cache size</string>
+    <string name="clear_song_cache">Clear song cache</string>
+    <string name="size_used">%s used</string>
+
+    <string name="general">General</string>
+    <string name="auto_download">자동 다운로드</string>
+    <string name="auto_download_desc">라이브러리에 추가할 때 노래 다운로드</string>
+    <string name="auto_add_song">라이브러리에 노래 자동 추가</string>
+    <string name="auto_add_song_desc">재생이 완료되면 라이브러리에 노래 추가</string>
+    <string name="expand_on_play">플레이 시 하단 플레이어 확장</string>
+    <string name="notification_more_action">More actions in notification</string>
+    <string name="notification_more_action_desc">Show add to library and like buttons</string>
+
+    <string name="privacy">Privacy</string>
+    <string name="pause_listen_history">Pause listen history</string>
+    <string name="pause_search_history">Pause search history</string>
+    <string name="clear_search_history">Clear search history</string>
+    <string name="clear_search_history_confirm">Are you sure to clear all search history?</string>
+    <string name="enable_kugou">Enable KuGou lyrics provider</string>
+
+    <string name="backup_restore">Backup and restore</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="backup_create_success">Backup created successfully</string>
+    <string name="backup_create_failed">Couldn\'t create backup</string>
+    <string name="restore_failed">Failed to restore backup</string>
+
+    <string name="about">정보</string>
+    <string name="app_version">앱 버전</string>
 </resources>

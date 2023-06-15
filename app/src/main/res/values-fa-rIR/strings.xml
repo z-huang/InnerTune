@@ -1,132 +1,88 @@
-<resources>
-    <!-- Title -->
-    <string name="title_home">خانه</string>
-    <string name="title_songs">آهنگ‌ها</string>
-    <string name="title_artists">هنرمندها</string>
-    <string name="title_albums">آلبوم‌ها</string>
-    <string name="title_playlists">لیست‌پخش‌ها</string>
-    <string name="title_explore">کاوش</string>
-    <string name="title_settings">تنظیمات</string>
-    <string name="title_now_playing">در حال پخش</string>
-    <string name="title_error_report">گزارش خطا</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Bottom navigation -->
+    <string name="home">خانه</string>
+    <string name="songs">آهنگ‌ها</string>
+    <string name="artists">هنرمندها</string>
+    <string name="albums">آلبوم‌ها</string>
+    <string name="playlists">لیست‌پخش‌ها</string>
 
-    <!-- Preference Title -->
-    <string name="pref_appearance_title">ظاهر</string>
-    <string name="pref_follow_system_accent_title">پیروی از تم سیستم</string>
-    <string name="pref_theme_color_title">رنگ تم</string>
-    <string name="pref_dark_theme_title">تم تاریک</string>
-    <string name="dark_theme_on">روشن</string>
-    <string name="dark_theme_off">خاموش</string>
-    <string name="dark_theme_follow_system">پیروی از سیستم</string>
-    <string name="pref_default_open_tab_title">زبانه باز پیش‌فرض</string>
-    <string name="pref_customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="pref_lyrics_text_position_title">Lyrics text position</string>
-    <string name="align_left">Left</string>
-    <string name="align_center">Center</string>
-    <string name="align_right">Right</string>
+    <!-- Top bar -->
+    <plurals name="n_selected">
+        <item quantity="one">%d انتخاب‌شده</item>
+        <item quantity="other">%d انتخاب‌شده‌اند</item>
+    </plurals>
 
-    <string name="pref_content_title">محتوا</string>
-    <string name="login">Login</string>
-    <string name="pref_content_language_title">زبان پیش‌فرض محتوا</string>
-    <string name="pref_default_content_country_title">کشور پیش‌فرض محتوا</string>
-    <string name="pref_enable_proxy_title">فعال‌کردن پروکسی</string>
-    <string name="pref_proxy_type_title">نوع پروکسی</string>
-    <string name="pref_proxy_url_title">آدرس‌اینترنتی پروکسی</string>
-    <string name="pref_restart_title">راه‌اندازی‌مجدد برای اعمال اثر</string>
+    <!-- Home -->
+    <string name="history">History</string>
+    <string name="stats">Stats</string>
+    <string name="quick_picks">Quick picks</string>
+    <string name="new_release_albums">New release albums</string>
+    <string name="most_played_songs">Most played songs</string>
 
-    <string name="pref_player_audio_title">پخش‌کننده و صدا</string>
-    <string name="pref_audio_quality_title">کیفیت صدا</string>
-    <string name="audio_quality_auto">خودکار</string>
-    <string name="audio_quality_high">بالا</string>
-    <string name="audio_quality_low">پایین</string>
-    <string name="pref_persistent_queue_title">Persistent queue</string>
-    <string name="pref_skip_silence_title">Skip silence</string>
-    <string name="pref_audio_normalization_title">Audio normalization</string>
-    <string name="pref_equalizer_title">اکولایزر</string>
+    <!-- History -->
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="last_week">Last week</string>
 
-    <string name="pref_storage_title">Storage</string>
-    <string name="pref_open_saf_title">View downloaded files in SAF</string>
-    <string name="pref_open_saf_summary">This may not work in some devices</string>
-    <string name="pref_cache_title">Cache</string>
-    <string name="pref_image_max_cache_size_title">Max image cache size</string>
-    <string name="pref_clear_image_cache_title">Clear image cache</string>
-    <string name="pref_song_max_cache_size_title">Max song cache size</string>
-    <string name="size_used">%s used</string>
-
-    <string name="pref_general_title">عمومی</string>
-    <string name="pref_auto_download_title">بارگیری خودکار</string>
-    <string name="pref_auto_download_summary">بارگیری آهنگ با اضافه‌شدن به کتاب‌خانه</string>
-    <string name="pref_auto_add_song_title">افزودن خودکار آهنگ به کتاب‌خانه</string>
-    <string name="pref_auto_add_song_summary">افزودن آهنگ به کتاب‌خانه پس از اتمام پخش</string>
-    <string name="pref_expand_on_play_title">گسترش پخش‌کننده‌ی پایین هنگام پخش</string>
-    <string name="pref_notification_more_action_title">More actions in notification</string>
-    <string name="pref_notification_more_action_summary">Show add to library and like buttons</string>
-
-    <string name="pref_privacy_title">حریم‌خصوصی</string>
-    <string name="pref_pause_search_history_title">متوقف‌کردن تاریخچه جستجو</string>
-    <string name="pref_clear_search_history_title">پاک‌کردن تاریخچه جستجو</string>
-    <string name="clear_search_history_question">آیا برای پاک‌کردن تمام سابقه جستجو مطمئن هستید؟</string>
-    <string name="pref_enable_kugou_title">Enable KuGou lyrics provider</string>
-
-    <string name="pref_backup_restore_title">پشتیبان‌گیری و بازگردانی</string>
-    <string name="pref_backup_title">پشتیبان‌گیری</string>
-    <string name="pref_restore_title">بازگردانی</string>
-
-    <string name="pref_about_title">درباره</string>
-    <string name="pref_app_version_title">نسخه‌ی برنامه</string>
-
-    <!-- Colors -->
-    <string name="color_sakura">ساکورا</string>
-    <string name="color_red">قرمز</string>
-    <string name="color_pink">صورتی</string>
-    <string name="color_purple">بنفش</string>
-    <string name="color_deep_purple">آبی تیره</string>
-    <string name="color_indigo">نیلی</string>
-    <string name="color_blue">آبی</string>
-    <string name="color_light_blue">آبی روشن</string>
-    <string name="color_cyan">فیروزه‌ای</string>
-    <string name="color_teal">سبزآبی</string>
-    <string name="color_green">سبز</string>
-    <string name="color_light_green">سبز روشن</string>
-    <string name="color_lime">لیمویی</string>
-    <string name="color_yellow">زرد</string>
-    <string name="color_amber">کهربایی</string>
-    <string name="color_orange">نارنجی</string>
-    <string name="color_deep_orange">نارنجی تیره</string>
-    <string name="color_brown">قهوه‌ای</string>
-    <string name="color_blue_grey">خاکستری آبی</string>
-
-    <!-- Nav Menu -->
-    <string name="menu_search">جستجو</string>
+    <!-- Search -->
+    <string name="search">جستجو</string>
     <string name="search_yt_music">جستجو در یوتیوب موزیک…</string>
     <string name="search_library">جستجوی کتاب‌خانه…</string>
+    <string name="filter_all">همه</string>
+    <string name="filter_songs">آهنگ‌ها</string>
+    <string name="filter_videos">فیلم‌ها</string>
+    <string name="filter_albums">آلبوم‌ها</string>
+    <string name="filter_artists">هنرمندها</string>
+    <string name="filter_playlists">لیست‌پخش‌ها</string>
+    <string name="filter_community_playlists">لیست‌پخش‌های انجمن</string>
+    <string name="filter_featured_playlists">لیست‌پخش‌های ویژه</string>
+    <string name="no_results_found">No results found</string>
 
-    <!-- Built-in playlist -->
+    <!-- Artist screen -->
+    <string name="from_your_library">از کتابخانه شما</string>
+
+    <!-- Playlist -->
     <string name="liked_songs">آهنگ‌های موردپسند</string>
     <string name="downloaded_songs">آهنگ‌های بارگیری‌شده</string>
+    <string name="playlist_is_empty">The playlist is empty</string>
 
-    <!-- Popup Menu -->
-    <string name="menu_details">Details</string>
-    <string name="menu_edit">ویرایش</string>
-    <string name="menu_start_radio">راه‌اندازی رادیو</string>
-    <string name="menu_play">پخش</string>
-    <string name="menu_play_next">پخش بعدی</string>
-    <string name="menu_add_to_queue">اضافه‌کردن به صف</string>
-    <string name="menu_add_to_library">اضافه‌کردن به کتاب‌خانه</string>
-    <string name="menu_download">بارگیری</string>
-    <string name="menu_remove_download">حذف بارگیری</string>
-    <string name="menu_import_playlist">واردکردن لیست‌پخش</string>
-    <string name="menu_add_to_playlist">اضافه‌کردن به لیست‌پخش</string>
-    <string name="menu_view_artist">مشاهده‌ی هنرمند</string>
-    <string name="menu_view_album">مشاهده‌ی آلبوم</string>
-    <string name="menu_refetch">نوسازی</string>
-    <string name="menu_share">هم‌رسانی</string>
-    <string name="menu_delete">حذف</string>
-    <string name="menu_search_online">Search online</string>
-    <string name="menu_choose_lyrics">Choose other lyrics</string>
+    <!-- Button -->
+    <string name="retry">تلاش‌مجدد</string>
+    <string name="radio">رادیو</string>
+    <string name="shuffle">بُرزدن</string>
+
+    <!-- Menu -->
+    <string name="details">Details</string>
+    <string name="edit">ویرایش</string>
+    <string name="start_radio">راه‌اندازی رادیو</string>
+    <string name="play">پخش</string>
+    <string name="play_next">پخش بعدی</string>
+    <string name="add_to_queue">اضافه‌کردن به صف</string>
+    <string name="add_to_library">اضافه‌کردن به کتاب‌خانه</string>
+    <string name="download">بارگیری</string>
+    <string name="remove_download">حذف بارگیری</string>
+    <string name="import_playlist">واردکردن لیست‌پخش</string>
+    <string name="add_to_playlist">اضافه‌کردن به لیست‌پخش</string>
+    <string name="view_artist">مشاهده‌ی هنرمند</string>
+    <string name="view_album">مشاهده‌ی آلبوم</string>
+    <string name="refetch">نوسازی</string>
+    <string name="share">هم‌رسانی</string>
+    <string name="delete">حذف</string>
+    <string name="remove_from_history">Remove from history</string>
+    <string name="search_online">Search online</string>
+    <string name="sync">Sync</string>
+
+    <!-- Sort menu -->
+    <string name="sort_by_create_date">تاریخ اضافه‌شده</string>
+    <string name="sort_by_name">نام</string>
+    <string name="sort_by_artist">هنرمند</string>
+    <string name="sort_by_year">سال</string>
+    <string name="sort_by_song_count">تعداد آهنگ</string>
+    <string name="sort_by_length">طول</string>
+    <string name="sort_by_play_time">زمان پخش</string>
 
     <!-- Dialog -->
-    <string name="dialog_title_details">Details</string>
     <string name="media_id">Media id</string>
     <string name="mime_type">MIME type</string>
     <string name="codecs">Codecs</string>
@@ -136,172 +92,146 @@
     <string name="volume">Volume</string>
     <string name="file_size">File size</string>
     <string name="unknown">Unknown</string>
+    <string name="copied">در بریده‌دان کپی‌شد</string>
 
-    <string name="dialog_title_edit_lyrics">Edit lyrics</string>
-    <string name="dialog_title_search_lyrics">Search lyrics</string>
-    <string name="dialog_title_choose_lyrics">Choose lyrics</string>
+    <string name="edit_lyrics">Edit lyrics</string>
+    <string name="search_lyrics">Search lyrics</string>
 
-    <string name="dialog_title_edit_song">ویرایش آهنگ</string>
+    <string name="edit_song">ویرایش آهنگ</string>
     <string name="song_title">عنوان آهنگ</string>
     <string name="song_artists">هنرمند آهنگ</string>
     <string name="error_song_title_empty">عنوان آهنگ نمی تواند خالی باشد.</string>
     <string name="error_song_artist_empty">هنرمند آهنگ نمی تواند خالی باشد.</string>
-    <string name="dialog_button_save">ذخیره</string>
+    <string name="save">ذخیره</string>
 
-    <string name="dialog_title_create_playlist">ایجاد لیست‌پخش</string>
-    <string name="text_view_hint_playlist_name">نام لیست‌پخش</string>
+    <string name="choose_playlist">انتخاب لیست‌پخش</string>
+    <string name="edit_playlist">ویرایش لیست‌پخش</string>
+    <string name="create_playlist">ایجاد لیست‌پخش</string>
+    <string name="playlist_name">نام لیست‌پخش</string>
     <string name="error_playlist_name_empty">نام لیست‌پخش نمی تواند خالی باشد.</string>
 
-    <string name="dialog_title_edit_artist">ویرایش هنرمند</string>
-    <string name="text_view_hint_artist_name">نام هنرمند</string>
+    <string name="edit_artist">ویرایش هنرمند</string>
+    <string name="artist_name">نام هنرمند</string>
     <string name="error_artist_name_empty">نام هنرمند نمی تواند خالی باشد.</string>
 
-    <string name="dialog_title_duplicate_artist">هنرمندهای تکراری</string>
-    <string name="dialog_msg_duplicate_artist">هنرمند %1$s درحال‌حاضر وجوددارد.</string>
-
-    <string name="dialog_title_choose_playlist">انتخاب لیست‌پخش</string>
-
-    <string name="dialog_title_edit_playlist">ویرایش لیست‌پخش</string>
-
-    <string name="dialog_title_choose_backup_content">انتخاب محتوای پشتیبان</string>
-    <string name="dialog_title_choose_restore_content">انتخاب محتوای بازگردان</string>
-    <string name="choice_preferences">ترجیح‌ها</string>
-    <string name="choice_database">پایگاه‌داده</string>
-    <string name="choice_downloaded_songs">آهنگ‌های دانلودشده</string>
-    <string name="message_backup_create_success">پشتیبان باموفقیت ایجادشد</string>
-    <string name="message_backup_create_failed">پشتیبان ایجاد نشد</string>
-    <string name="message_restore_failed">بازیابی پشتیبان انجام‌نشد</string>
-
-    <!-- Notification -->
-    <string name="channel_name_playback">پخش‌کننده موسیقی</string>
-    <string name="channel_name_download">بارگیری</string>
-
     <!-- Noun -->
-    <plurals name="song_count">
+    <plurals name="n_song">
         <item quantity="one">%d آهنگ</item>
         <item quantity="other">%d آهنگ‌ها</item>
     </plurals>
-    <plurals name="artist_count">
+    <plurals name="n_artist">
         <item quantity="one">%d هنرمند</item>
         <item quantity="other">%d هنرمندها</item>
     </plurals>
-    <plurals name="album_count">
+    <plurals name="n_album">
         <item quantity="one">%d آلبوم</item>
         <item quantity="other">%d آلبوم‌ها</item>
     </plurals>
-    <plurals name="playlist_count">
+    <plurals name="n_playlist">
         <item quantity="one">%d لیست‌پخش</item>
         <item quantity="other">%d لیست‌پخش‌ها</item>
     </plurals>
 
-    <!-- Button -->
-    <string name="btn_retry">تلاش‌مجدد</string>
-    <string name="btn_play">پخش</string>
-    <string name="btn_play_all">پخش همه</string>
-    <string name="btn_radio">رادیو</string>
-    <string name="btn_shuffle">بُرزدن</string>
-    <string name="btn_copy_stacktrace">رونوشت ردیابی‌پشته</string>
-    <string name="btn_report">گزارش</string>
-    <string name="btn_report_on_github">گزارش در گیت‌هاب</string>
-
-    <!-- Sort Menu -->
-    <string name="sort_by_create_date">تاریخ اضافه‌شده</string>
-    <string name="sort_by_name">نام</string>
-    <string name="sort_by_artist">هنرمند</string>
-    <string name="sort_by_year">سال</string>
-    <string name="sort_by_song_count">تعداد آهنگ</string>
-    <string name="sort_by_length">طول</string>
-    <string name="sort_by_play_time">زمان پخش</string>
-
     <!-- Snackbar -->
-    <plurals name="snackbar_delete_song">
-        <item quantity="one">%d آهنگ حذف‌شده‌است.</item>
-        <item quantity="other">%d آهنگ‌ها حذف‌شده‌اند.</item>
-    </plurals>
-    <plurals name="n_selected">
-        <item quantity="one">%d انتخاب‌شده</item>
-        <item quantity="other">%d انتخاب‌شده‌اند</item>
-    </plurals>
-    <string name="snackbar_undo">واگرد</string>
-    <string name="snackbar_url_error">نمی توان این آدرس‌اینترنتی را شناسایی کرد.</string>
-    <plurals name="snackbar_song_play_next">
-        <item quantity="one">%d آهنگ بعدی پخش‌خواهدشد</item>
-        <item quantity="other">%d آهنگ‌ بعدی پخش‌خواهندشد</item>
-    </plurals>
-    <plurals name="snackbar_artist_play_next">
-        <item quantity="one">%d هنرمند پخش‌خواهدشد</item>
-        <item quantity="other">%d هنرمند پخش‌خواهندشد</item>
-    </plurals>
-    <plurals name="snackbar_album_play_next">
-        <item quantity="one">%d آلبوم پخش‌خواهدشد</item>
-        <item quantity="other">%d آلبوم پخش‌خواهندشد</item>
-    </plurals>
-    <plurals name="snackbar_playlist_play_next">
-        <item quantity="one">%d لیست‌پخش پخش‌خواهدشد</item>
-        <item quantity="other">%d لیست‌پخش پخش‌خواهندشد</item>
-    </plurals>
-    <string name="snackbar_play_next">انتخاب‌ها پخش‌خواهند شد</string>
-    <plurals name="snackbar_song_added_to_queue">
-        <item quantity="one">%d آهنگ به‌صف اضافه‌شد</item>
-        <item quantity="other">%d آهنگ به‌صف اضافه‌شدند</item>
-    </plurals>
-    <plurals name="snackbar_artist_added_to_queue">
-        <item quantity="one">%d هنرمند به‌صف اضافه‌شد</item>
-        <item quantity="other">%d هنرمند به‌صف اضافه‌شدند</item>
-    </plurals>
-    <plurals name="snackbar_album_added_to_queue">
-        <item quantity="one">%d آلبوم به‌صف اضافه‌شد</item>
-        <item quantity="other">%d آلبوم به‌صف اضافه شدند</item>
-    </plurals>
-    <plurals name="snackbar_playlist_added_to_queue">
-        <item quantity="one">%d لیست‌پخش به‌صف اضافه‌شد</item>
-        <item quantity="other">%d لیست‌پخش‌ها به‌صف اضافه‌شد</item>
-    </plurals>
-    <string name="snackbar_added_to_queue">انتخاب‌شده به صف اضافه‌شد</string>
-    <string name="snackbar_added_to_library">به کتاب‌خانه اضافه‌شد</string>
-    <string name="snackbar_removed_from_library">حذف از کتاب‌خانه</string>
     <string name="snackbar_playlist_imported">لیست‌پخش واردشد</string>
-    <string name="snackbar_added_to_playlist">اضافه‌شده به %1$s</string>
-    <plurals name="snackbar_download_song">
-        <item quantity="one">شروع به‌بارگیری شد %d آهنگ</item>
-        <item quantity="other">شروع به‌بارگیری شدند %d ‌آهنگ‌های</item>
+
+    <!-- Player -->
+    <string name="lyrics_not_found">Lyrics not found</string>
+    <string name="sleep_timer">Sleep timer</string>
+    <string name="end_of_song">End of song</string>
+    <plurals name="minute">
+        <item quantity="one" tools:ignore="ImpliedQuantity">1 minute</item>
+        <item quantity="other">%d minutes</item>
     </plurals>
-    <string name="snackbar_removed_download">حذف بارگیری</string>
-    <string name="snackbar_action_view">نما</string>
-
-    <!-- Custom Action -->
-    <string name="action_like">پسندیدن</string>
-    <string name="action_remove_like">حذف پسندیدن</string>
-    <string name="action_add_to_library">اضافه‌کردن به کتاب‌خانه</string>
-    <string name="action_remove_from_library">حذف از کتاب‌خانه</string>
-
-    <!-- Search Filter -->
-    <string name="search_filter_all">همه</string>
-    <string name="search_filter_songs">آهنگ‌ها</string>
-    <string name="search_filter_videos">فیلم‌ها</string>
-    <string name="search_filter_albums">آلبوم‌ها</string>
-    <string name="search_filter_artists">هنرمندها</string>
-    <string name="search_filter_playlists">لیست‌پخش‌ها</string>
-    <string name="search_filter_community_playlists">لیست‌پخش‌های انجمن</string>
-    <string name="search_filter_featured_playlists">لیست‌پخش‌های ویژه</string>
-
-    <string name="system_default">پیش فرض سیستم</string>
-    <string name="header_from_your_library">از کتابخانه شما</string>
-
-    <!-- Error Activity -->
-    <string name="sorry_for_error">متاسفم، نباید این اتفاق می افتاد.</string>
-    <string name="copied">در بریده‌دان کپی‌شد</string>
-
-    <!-- Player Error Message -->
     <string name="error_no_stream">No stream available</string>
     <string name="error_no_internet">No network connection</string>
     <string name="error_timeout">Timeout</string>
     <string name="error_unknown">Unknown error</string>
 
+    <!-- Player action -->
+    <string name="action_like">پسندیدن</string>
+    <string name="action_remove_like">حذف پسندیدن</string>
+    <string name="action_add_to_library">اضافه‌کردن به کتاب‌خانه</string>
+    <string name="action_remove_from_library">حذف از کتاب‌خانه</string>
+
     <!-- Queue Title -->
     <string name="queue_all_songs">All songs</string>
     <string name="queue_searched_songs">Searched songs</string>
 
-    <!-- Lyrics View -->
-    <string name="lyrics_not_found">Lyrics not found</string>
+    <!-- Notification name -->
+    <string name="music_player">پخش‌کننده موسیقی</string>
+
+    <!-- Settings -->
+    <string name="settings">تنظیمات</string>
+    <string name="appearance">ظاهر</string>
+    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="dark_theme">تم تاریک</string>
+    <string name="dark_theme_on">روشن</string>
+    <string name="dark_theme_off">خاموش</string>
+    <string name="dark_theme_follow_system">پیروی از سیستم</string>
+    <string name="pure_black">Pure black</string>
+    <string name="default_open_tab">زبانه باز پیش‌فرض</string>
+    <string name="customize_navigation_tabs">Customize navigation tabs</string>
+    <string name="lyrics_text_position">Lyrics text position</string>
+    <string name="left">Left</string>
+    <string name="center">Center</string>
+    <string name="right">Right</string>
+
+    <string name="content">محتوا</string>
+    <string name="login">Login</string>
+    <string name="content_language">زبان پیش‌فرض محتوا</string>
+    <string name="content_country">کشور پیش‌فرض محتوا</string>
+    <string name="system_default">پیش فرض سیستم</string>
+    <string name="enable_proxy">فعال‌کردن پروکسی</string>
+    <string name="proxy_type">نوع پروکسی</string>
+    <string name="proxy_url">آدرس‌اینترنتی پروکسی</string>
+    <string name="restart_to_take_effect">راه‌اندازی‌مجدد برای اعمال اثر</string>
+
+    <string name="player_and_audio">پخش‌کننده و صدا</string>
+    <string name="audio_quality">کیفیت صدا</string>
+    <string name="audio_quality_auto">خودکار</string>
+    <string name="audio_quality_high">بالا</string>
+    <string name="audio_quality_low">پایین</string>
+    <string name="persistent_queue">Persistent queue</string>
+    <string name="skip_silence">Skip silence</string>
+    <string name="audio_normalization">Audio normalization</string>
+    <string name="equalizer">اکولایزر</string>
+
+    <string name="storage">Storage</string>
+    <string name="cache">Cache</string>
+    <string name="image_cache">Image Cache</string>
+    <string name="song_cache">Song Cache</string>
+    <string name="max_cache_size">Max cache size</string>
+    <string name="unlimited">Unlimited</string>
+    <string name="max_image_cache_size">Max image cache size</string>
+    <string name="clear_image_cache">Clear image cache</string>
+    <string name="max_song_cache_size">Max song cache size</string>
+    <string name="clear_song_cache">Clear song cache</string>
+    <string name="size_used">%s used</string>
+
+    <string name="general">عمومی</string>
+    <string name="auto_download">بارگیری خودکار</string>
+    <string name="auto_download_desc">بارگیری آهنگ با اضافه‌شدن به کتاب‌خانه</string>
+    <string name="auto_add_song">افزودن خودکار آهنگ به کتاب‌خانه</string>
+    <string name="auto_add_song_desc">افزودن آهنگ به کتاب‌خانه پس از اتمام پخش</string>
+    <string name="expand_on_play">گسترش پخش‌کننده‌ی پایین هنگام پخش</string>
+    <string name="notification_more_action">More actions in notification</string>
+    <string name="notification_more_action_desc">Show add to library and like buttons</string>
+
+    <string name="privacy">حریم‌خصوصی</string>
+    <string name="pause_listen_history">Pause listen history</string>
+    <string name="pause_search_history">متوقف‌کردن تاریخچه جستجو</string>
+    <string name="clear_search_history">پاک‌کردن تاریخچه جستجو</string>
+    <string name="clear_search_history_confirm">آیا برای پاک‌کردن تمام سابقه جستجو مطمئن هستید؟</string>
+    <string name="enable_kugou">Enable KuGou lyrics provider</string>
+
+    <string name="backup_restore">پشتیبان‌گیری و بازگردانی</string>
+    <string name="backup">پشتیبان‌گیری</string>
+    <string name="restore">بازگردانی</string>
+    <string name="backup_create_success">پشتیبان باموفقیت ایجادشد</string>
+    <string name="backup_create_failed">پشتیبان ایجاد نشد</string>
+    <string name="restore_failed">بازیابی پشتیبان انجام‌نشد</string>
+
+    <string name="about">درباره</string>
+    <string name="app_version">نسخه‌ی برنامه</string>
 </resources>

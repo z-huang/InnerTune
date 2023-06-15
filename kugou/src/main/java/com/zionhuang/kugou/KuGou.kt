@@ -59,15 +59,27 @@ object KuGou {
         } ?: throw IllegalStateException("No lyrics candidate")
     }
 
-    suspend fun getAllLyrics(title: String, artist: String, duration: Int): Result<List<String>> = runCatching {
+    suspend fun getAllLyrics(title: String, artist: String, duration: Int, callback: (String) -> Unit) {
         val keyword = generateKeyword(title, artist)
-        val candidates = searchSongs(keyword).data.info
-            .filter { duration == -1 || abs(it.duration - duration) <= DURATION_TOLERANCE } // if duration == -1, we don't care duration
-            .mapNotNull {
-                searchLyricsByHash(it.hash).candidates.firstOrNull()
-            } + searchLyricsByKeyword(keyword, duration).candidates
-        candidates.map {
-            downloadLyrics(it.id, it.accesskey).content.decodeBase64String().normalize(keyword)
+        searchSongs(keyword).data.info.forEach {
+            if (duration == -1 || abs(it.duration - duration) <= DURATION_TOLERANCE) {
+                searchLyricsByHash(it.hash).candidates.firstOrNull()?.let { candidate ->
+                    callback(
+                        downloadLyrics(candidate.id, candidate.accesskey)
+                            .content
+                            .decodeBase64String()
+                            .normalize(keyword)
+                    )
+                }
+            }
+        }
+        searchLyricsByKeyword(keyword, duration).candidates.forEach { candidate ->
+            callback(
+                downloadLyrics(candidate.id, candidate.accesskey)
+                    .content
+                    .decodeBase64String()
+                    .normalize(keyword)
+            )
         }
     }
 
@@ -129,7 +141,7 @@ object KuGou {
         .replace("\\(.*\\)".toRegex(), "")
         .replace("（.*）".toRegex(), "")
 
-    private fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
+    fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
 
     private fun String.normalize(keyword: Pair<String, String>): String = replace("&apos;", "'").lines().filter { line ->
         line matches ACCEPTED_REGEX
@@ -174,6 +186,7 @@ object KuGou {
     private fun String.toSimplifiedChinese() = ZhConverterUtil.toSimple(this)
     private fun String.toTraditionalChinese() = ZhConverterUtil.toTraditional(this)
 
+    @Suppress("RegExpRedundantEscape")
     private val ACCEPTED_REGEX = "\\[(\\d\\d):(\\d\\d)\\.(\\d{2,3})\\].*".toRegex()
     private val BANNED_REGEX = ".+].+[:：].+".toRegex()
 
