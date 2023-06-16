@@ -67,11 +67,11 @@ body:
         If your bug includes a crash, please use `adb logcat` or other ways to provide logs.
 
   - type: input
-    id: music-version
+    id: app-version
     attributes:
-      label: Music version
+      label: InnerTune version
       description: |
-        You can find your Music version in **Settings**.
+        You can find your InnerTune version in **Settings**.
       placeholder: |
         Example: "0.2.1-beta"
     validations:
