@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId = "com.zionhuang.music"
         minSdk = 24
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 15
         versionName = "0.4.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -1,6 +1,6 @@
 # InnerTune
 
-<img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" height="72">
+<img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" height="72">
 
 Make your own music library with any song from YouTube Music.  
 No ads, free, and simple.
@@ -14,9 +14,8 @@ No ads, free, and simple.
 
 > **Note**
 >
-> **1.** The project is currently in an unstable stage, so there should be many bugs. If you encounter one, please report by opening an issue.
->
-> **2.** The icon of this app is temporary. It will be changed in the future.
+> The project is currently in an unstable stage, so there should be many bugs. If you encounter one,
+> please report by opening an issue.
 
 With this app, you're like getting a free music streaming service. You can listen to music from YouTube Music and build your own library. What's more, songs can be downloaded for offline playback. You can also create playlists to organize your songs. The aim of _InnerTune_ is to enable everyone to listen to music at no cost by an easy-to-use, practical and ad-free application.
 
