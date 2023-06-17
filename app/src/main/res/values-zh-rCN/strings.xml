@@ -12,17 +12,17 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="new_release_albums">New release albums</string>
-    <string name="most_played_songs">Most played songs</string>
+    <string name="history">历史记录</string>
+    <string name="stats">统计</string>
+    <string name="quick_picks">歌曲快选</string>
+    <string name="new_release_albums">新专辑</string>
+    <string name="most_played_songs">最常播放</string>
 
     <!-- History -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_week">This week</string>
-    <string name="last_week">Last week</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <string name="this_week">这周</string>
+    <string name="last_week">上周</string>
 
     <!-- Search -->
     <string name="search">搜索</string>
@@ -36,7 +36,7 @@
     <string name="filter_playlists">播放列表</string>
     <string name="filter_community_playlists">社区播放列表</string>
     <string name="filter_featured_playlists">精选播放列表</string>
-    <string name="no_results_found">No results found</string>
+    <string name="no_results_found">找不到结果</string>
 
     <!-- Artist screen -->
     <string name="from_your_library">来自您的媒体库</string>
@@ -44,7 +44,7 @@
     <!-- Playlist -->
     <string name="liked_songs">喜欢的歌曲</string>
     <string name="downloaded_songs">已下载的歌曲</string>
-    <string name="playlist_is_empty">The playlist is empty</string>
+    <string name="playlist_is_empty">播放列表为空</string>
 
     <!-- Button -->
     <string name="retry">重试</string>
@@ -57,20 +57,20 @@
     <string name="start_radio">收听电台</string>
     <string name="play">播放</string>
     <string name="play_next">接下来播放</string>
-    <string name="add_to_queue">添加到队列</string>
-    <string name="add_to_library">添加到媒体库</string>
+    <string name="add_to_queue">加入播放队列</string>
+    <string name="add_to_library">加入媒体库</string>
     <string name="download">下载</string>
-    <string name="remove_download">移除下载</string>
+    <string name="remove_download">删除下载</string>
     <string name="import_playlist">导入播放列表</string>
-    <string name="add_to_playlist">添加到播放列表</string>
+    <string name="add_to_playlist">加入播放列表</string>
     <string name="view_artist">浏览音乐人</string>
     <string name="view_album">浏览专辑</string>
     <string name="refetch">刷新</string>
     <string name="share">分享</string>
     <string name="delete">移除</string>
-    <string name="remove_from_history">Remove from history</string>
+    <string name="remove_from_history">从记录中移除</string>
     <string name="search_online">在线搜索</string>
-    <string name="sync">Sync</string>
+    <string name="sync">同步</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">新建时间</string>
@@ -83,7 +83,7 @@
 
     <!-- Dialog -->
     <string name="media_id">媒体 ID</string>
-    <string name="mime_type">媒体类型</string>
+    <string name="mime_type">MIME 类型</string>
     <string name="codecs">编码</string>
     <string name="bitrate">比特率</string>
     <string name="sample_rate">采样率</string>
@@ -131,21 +131,21 @@
     <string name="snackbar_playlist_imported">已导入此播放列表</string>
 
     <!-- Player -->
-    <string name="lyrics_not_found">无歌词</string>
-    <string name="sleep_timer">Sleep timer</string>
-    <string name="end_of_song">End of song</string>
+    <string name="lyrics_not_found">没有歌词</string>
+    <string name="sleep_timer">睡眠定时器</string>
+    <string name="end_of_song">这首歌曲播放完毕</string>
     <plurals name="minute">
         <item quantity="other">%d 分钟</item>
     </plurals>
-    <string name="error_no_stream">无可用音源</string>
-    <string name="error_no_internet">无网络连接</string>
+    <string name="error_no_stream">没有可用音源</string>
+    <string name="error_no_internet">没有网络连接</string>
     <string name="error_timeout">连接超时</string>
     <string name="error_unknown">未知错误</string>
 
     <!-- Player action -->
     <string name="action_like">喜欢</string>
     <string name="action_remove_like">取消喜欢</string>
-    <string name="action_add_to_library">添加到媒体库</string>
+    <string name="action_add_to_library">加入媒体库</string>
     <string name="action_remove_from_library">从媒体库中移除</string>
 
     <!-- Queue Title -->
@@ -158,12 +158,12 @@
     <!-- Settings -->
     <string name="settings">设置</string>
     <string name="appearance">外观</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="enable_dynamic_theme">启用动态主题</string>
     <string name="dark_theme">深色主题</string>
     <string name="dark_theme_on">开</string>
     <string name="dark_theme_off">关</string>
     <string name="dark_theme_follow_system">跟随系统</string>
-    <string name="pure_black">Pure black</string>
+    <string name="pure_black">纯黑</string>
     <string name="default_open_tab">默认启动选项卡</string>
     <string name="customize_navigation_tabs">自定义导航选项卡</string>
     <string name="lyrics_text_position">歌词文字位置</string>
@@ -178,7 +178,7 @@
     <string name="system_default">系统默认</string>
     <string name="enable_proxy">启用代理</string>
     <string name="proxy_type">代理类型</string>
-    <string name="proxy_url">代理链接</string>
+    <string name="proxy_url">代理 URL</string>
     <string name="restart_to_take_effect">重启以应用变更</string>
 
     <string name="player_and_audio">播放器与音频</string>
@@ -187,33 +187,33 @@
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
     <string name="persistent_queue">保留播放队列</string>
-    <string name="skip_silence">跳过歌曲头尾无声片段</string>
+    <string name="skip_silence">跳过无声片段</string>
     <string name="audio_normalization">标准化音量</string>
     <string name="equalizer">均衡器</string>
 
-    <string name="storage">存储</string>
+    <string name="storage">储存</string>
     <string name="cache">缓存</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="max_image_cache_size">最大图像缓存大小</string>
+    <string name="image_cache">图像缓存</string>
+    <string name="song_cache">歌曲缓存</string>
+    <string name="max_cache_size">最大缓存大小</string>
+    <string name="unlimited">无限制</string>
+    <string name="max_image_cache_size">图像缓存大小</string>
     <string name="clear_image_cache">清除图像缓存</string>
-    <string name="max_song_cache_size">最大歌曲缓存大小</string>
-    <string name="clear_song_cache">Clear song cache</string>
+    <string name="max_song_cache_size">歌曲缓存大小</string>
+    <string name="clear_song_cache">清除歌曲缓存</string>
     <string name="size_used">已使用 %s</string>
 
-    <string name="general">通用</string>
+    <string name="general">一般</string>
     <string name="auto_download">自动下载</string>
-    <string name="auto_download_desc">自动下载新添加的歌曲</string>
-    <string name="auto_add_song">自动将音乐添加到媒体库</string>
-    <string name="auto_add_song_desc">播放结束时添加到媒体库</string>
-    <string name="expand_on_play">播放音乐时展开播放器</string>
+    <string name="auto_download_desc">自动下载新增的歌曲</string>
+    <string name="auto_add_song">自动将音乐加入媒体库</string>
+    <string name="auto_add_song_desc">在播放结束时加入媒体库</string>
+    <string name="expand_on_play">在播放音乐时展开播放器</string>
     <string name="notification_more_action">在通知显示更多按钮</string>
-    <string name="notification_more_action_desc">显示“添加到媒体库”和“喜欢”按钮</string>
+    <string name="notification_more_action_desc">显示“加入媒体库”和“喜欢”按钮</string>
 
     <string name="privacy">隐私</string>
-    <string name="pause_listen_history">Pause listen history</string>
+    <string name="pause_listen_history">暂停观看记录</string>
     <string name="pause_search_history">暂停搜索记录</string>
     <string name="clear_search_history">清除搜索记录</string>
     <string name="clear_search_history_confirm">您确定要清除所有搜索记录吗？</string>
