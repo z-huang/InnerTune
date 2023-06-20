@@ -1,10 +1,6 @@
 package com.zionhuang.music.models
 
-import android.support.v4.media.MediaDescriptionCompat
-import android.support.v4.media.MediaMetadataCompat.*
 import androidx.compose.runtime.Immutable
-import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.ui.utils.resize
@@ -29,21 +25,6 @@ data class MediaMetadata(
         val title: String,
     ) : Serializable
 
-    fun toMediaDescription(): MediaDescriptionCompat = builder
-        .setMediaId(id)
-        .setTitle(title)
-        .setSubtitle(artists.joinToString { it.name })
-        .setDescription(artists.joinToString { it.name })
-        .setIconUri(thumbnailUrl?.resize(544, 544)?.toUri())
-        .setExtras(
-            bundleOf(
-                METADATA_KEY_DURATION to duration * 1000L,
-                METADATA_KEY_ARTIST to artists.joinToString { it.name },
-                METADATA_KEY_ALBUM to album?.title
-            )
-        )
-        .build()
-
     fun toSongEntity() = SongEntity(
         id = id,
         title = title,
@@ -52,10 +33,6 @@ data class MediaMetadata(
         albumId = album?.id,
         albumName = album?.title
     )
-
-    companion object {
-        private val builder = MediaDescriptionCompat.Builder()
-    }
 }
 
 fun Song.toMediaMetadata() = MediaMetadata(

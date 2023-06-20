@@ -112,7 +112,3 @@ fun PrivacySettings(
         scrollBehavior = scrollBehavior
     )
 }
-
-enum class AudioQuality {
-    AUTO, HIGH, LOW
-}

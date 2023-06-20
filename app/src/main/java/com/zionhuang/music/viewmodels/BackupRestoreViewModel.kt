@@ -13,7 +13,7 @@ import com.zionhuang.music.extensions.div
 import com.zionhuang.music.extensions.zipInputStream
 import com.zionhuang.music.extensions.zipOutputStream
 import com.zionhuang.music.playback.MusicService
-import com.zionhuang.music.playback.SongPlayer
+import com.zionhuang.music.playback.MusicService.Companion.PERSISTENT_QUEUE_FILE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -79,7 +79,7 @@ class BackupRestoreViewModel @Inject constructor(
                 }
             }
             context.stopService(Intent(context, MusicService::class.java))
-            context.filesDir.resolve(SongPlayer.PERSISTENT_QUEUE_FILE).delete()
+            context.filesDir.resolve(PERSISTENT_QUEUE_FILE).delete()
             context.startActivity(Intent(context, MainActivity::class.java))
             exitProcess(0)
         }.onFailure {

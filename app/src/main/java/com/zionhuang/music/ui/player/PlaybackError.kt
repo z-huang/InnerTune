@@ -13,7 +13,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.google.android.exoplayer2.PlaybackException
+import androidx.media3.common.PlaybackException
 import com.zionhuang.music.R
 
 @Composable

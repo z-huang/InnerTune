@@ -34,8 +34,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
 import androidx.navigation.NavController
-import com.google.android.exoplayer2.source.ShuffleOrder.DefaultShuffleOrder
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
@@ -81,8 +81,8 @@ fun Queue(
 
     var showLyrics by rememberPreference(ShowLyricsKey, defaultValue = false)
 
-    val sleepTimerEnabled = remember(playerConnection.songPlayer.sleepTimerTriggerTime, playerConnection.songPlayer.pauseWhenSongEnd) {
-        playerConnection.songPlayer.sleepTimerTriggerTime != -1L || playerConnection.songPlayer.pauseWhenSongEnd
+    val sleepTimerEnabled = remember(playerConnection.service.sleepTimerTriggerTime, playerConnection.service.pauseWhenSongEnd) {
+        playerConnection.service.sleepTimerTriggerTime != -1L || playerConnection.service.pauseWhenSongEnd
     }
 
     var sleepTimerTimeLeft by remember {
@@ -92,10 +92,10 @@ fun Queue(
     LaunchedEffect(sleepTimerEnabled) {
         if (sleepTimerEnabled) {
             while (isActive) {
-                sleepTimerTimeLeft = if (playerConnection.songPlayer.pauseWhenSongEnd) {
+                sleepTimerTimeLeft = if (playerConnection.service.pauseWhenSongEnd) {
                     playerConnection.player.duration - playerConnection.player.currentPosition
                 } else {
-                    playerConnection.songPlayer.sleepTimerTriggerTime - System.currentTimeMillis()
+                    playerConnection.service.sleepTimerTriggerTime - System.currentTimeMillis()
                 }
                 delay(1000L)
             }
@@ -119,7 +119,7 @@ fun Queue(
                 TextButton(
                     onClick = {
                         showSleepTimerDialog = false
-                        playerConnection.songPlayer.setSleepTimer(sleepTimerValue.roundToInt())
+                        playerConnection.service.setSleepTimer(sleepTimerValue.roundToInt())
                     }
                 ) {
                     Text(stringResource(android.R.string.ok))
@@ -149,7 +149,7 @@ fun Queue(
                     OutlinedButton(
                         onClick = {
                             showSleepTimerDialog = false
-                            playerConnection.songPlayer.setSleepTimer(-1)
+                            playerConnection.service.setSleepTimer(-1)
                         }
                     ) {
                         Text(stringResource(R.string.end_of_song))
@@ -260,7 +260,7 @@ fun Queue(
                             style = MaterialTheme.typography.labelLarge,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50))
-                                .clickable(onClick = playerConnection.songPlayer::clearSleepTimer)
+                                .clickable(onClick = playerConnection.service::clearSleepTimer)
                                 .padding(8.dp)
                         )
                     } else {
@@ -486,7 +486,7 @@ fun PlayerMenu(
 ) {
     mediaMetadata ?: return
     val context = LocalContext.current
-    val playerVolume = playerConnection.songPlayer.playerVolume.collectAsState()
+    val playerVolume = playerConnection.service.playerVolume.collectAsState()
     val activityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 
     var showSelectArtistDialog by rememberSaveable {
@@ -539,7 +539,7 @@ fun PlayerMenu(
 
         BigSeekBar(
             progressProvider = playerVolume::value,
-            onProgressChange = { playerConnection.songPlayer.playerVolume.value = it },
+            onProgressChange = { playerConnection.service.playerVolume.value = it },
             modifier = Modifier.weight(1f)
         )
     }
@@ -556,7 +556,7 @@ fun PlayerMenu(
             icon = R.drawable.ic_radio,
             title = R.string.start_radio
         ) {
-            playerConnection.songPlayer.startRadioSeamlessly()
+            playerConnection.service.startRadioSeamlessly()
             onDismiss()
         }
         GridMenuItem(
