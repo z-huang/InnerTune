@@ -14,6 +14,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.util.encodeBase64
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import java.net.Proxy
@@ -104,11 +105,13 @@ class InnerTube {
         continuation: String? = null,
     ) = httpClient.post("search") {
         configYTClient(client)
-        setBody(SearchBody(
-            context = client.toContext(locale, visitorData),
-            query = query,
-            params = params
-        ))
+        setBody(
+            SearchBody(
+                context = client.toContext(locale, visitorData),
+                query = query,
+                params = params
+            )
+        )
         parameter("continuation", continuation)
         parameter("ctoken", continuation)
     }
@@ -119,11 +122,13 @@ class InnerTube {
         playlistId: String?,
     ) = httpClient.post("player") {
         configYTClient(client)
-        setBody(PlayerBody(
-            context = client.toContext(locale, visitorData),
-            videoId = videoId,
-            playlistId = playlistId
-        ))
+        setBody(
+            PlayerBody(
+                context = client.toContext(locale, visitorData),
+                videoId = videoId,
+                playlistId = playlistId
+            )
+        )
     }
 
     suspend fun browse(
@@ -133,11 +138,13 @@ class InnerTube {
         continuation: String? = null,
     ) = httpClient.post("browse") {
         configYTClient(client)
-        setBody(BrowseBody(
-            context = client.toContext(locale, visitorData),
-            browseId = browseId,
-            params = params
-        ))
+        setBody(
+            BrowseBody(
+                context = client.toContext(locale, visitorData),
+                browseId = browseId,
+                params = params
+            )
+        )
         parameter("continuation", continuation)
         parameter("ctoken", continuation)
         if (continuation != null) {
@@ -155,15 +162,17 @@ class InnerTube {
         continuation: String? = null,
     ) = httpClient.post("next") {
         configYTClient(client)
-        setBody(NextBody(
-            context = client.toContext(locale, visitorData),
-            videoId = videoId,
-            playlistId = playlistId,
-            playlistSetVideoId = playlistSetVideoId,
-            index = index,
-            params = params,
-            continuation = continuation
-        ))
+        setBody(
+            NextBody(
+                context = client.toContext(locale, visitorData),
+                videoId = videoId,
+                playlistId = playlistId,
+                playlistSetVideoId = playlistSetVideoId,
+                index = index,
+                params = params,
+                continuation = continuation
+            )
+        )
     }
 
     suspend fun getSearchSuggestions(
@@ -171,10 +180,12 @@ class InnerTube {
         input: String,
     ) = httpClient.post("music/get_search_suggestions") {
         configYTClient(client)
-        setBody(GetSearchSuggestionsBody(
-            context = client.toContext(locale, visitorData),
-            input = input
-        ))
+        setBody(
+            GetSearchSuggestionsBody(
+                context = client.toContext(locale, visitorData),
+                input = input
+            )
+        )
     }
 
     suspend fun getQueue(
@@ -183,11 +194,29 @@ class InnerTube {
         playlistId: String?,
     ) = httpClient.post("music/get_queue") {
         configYTClient(client)
-        setBody(GetQueueBody(
-            context = client.toContext(locale, visitorData),
-            videoIds = videoIds,
-            playlistId = playlistId
-        ))
+        setBody(
+            GetQueueBody(
+                context = client.toContext(locale, visitorData),
+                videoIds = videoIds,
+                playlistId = playlistId
+            )
+        )
+    }
+
+    suspend fun getTranscript(
+        client: YouTubeClient,
+        videoId: String,
+    ) = httpClient.post("https://music.youtube.com/youtubei/v1/get_transcript") {
+        parameter("key", "AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX3")
+        headers {
+            append("Content-Type", "application/json")
+        }
+        setBody(
+            GetTranscriptBody(
+                context = client.toContext(locale, null),
+                params = "\n${11.toChar()}$videoId".encodeBase64()
+            )
+        )
     }
 
     suspend fun getSwJsData() = httpClient.get("https://music.youtube.com/sw.js_data")

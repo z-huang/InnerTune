@@ -1,13 +1,47 @@
 package com.zionhuang.innertube
 
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AccountInfo
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.Artist
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SearchSuggestions
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.models.WatchEndpoint.WatchEndpointMusicSupportedConfigs.WatchEndpointMusicConfig.Companion.MUSIC_VIDEO_TYPE_ATV
 import com.zionhuang.innertube.models.YouTubeClient.Companion.ANDROID_MUSIC
+import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB
 import com.zionhuang.innertube.models.YouTubeClient.Companion.WEB_REMIX
-import com.zionhuang.innertube.models.response.*
-import com.zionhuang.innertube.pages.*
-import io.ktor.client.call.*
-import io.ktor.client.statement.*
+import com.zionhuang.innertube.models.YouTubeLocale
+import com.zionhuang.innertube.models.getContinuation
+import com.zionhuang.innertube.models.oddElements
+import com.zionhuang.innertube.models.response.AccountMenuResponse
+import com.zionhuang.innertube.models.response.BrowseResponse
+import com.zionhuang.innertube.models.response.GetQueueResponse
+import com.zionhuang.innertube.models.response.GetSearchSuggestionsResponse
+import com.zionhuang.innertube.models.response.GetTranscriptResponse
+import com.zionhuang.innertube.models.response.NextResponse
+import com.zionhuang.innertube.models.response.PlayerResponse
+import com.zionhuang.innertube.models.response.SearchResponse
+import com.zionhuang.innertube.models.splitBySeparator
+import com.zionhuang.innertube.pages.AlbumPage
+import com.zionhuang.innertube.pages.ArtistItemsContinuationPage
+import com.zionhuang.innertube.pages.ArtistItemsPage
+import com.zionhuang.innertube.pages.ArtistPage
+import com.zionhuang.innertube.pages.NewReleaseAlbumPage
+import com.zionhuang.innertube.pages.NextPage
+import com.zionhuang.innertube.pages.NextResult
+import com.zionhuang.innertube.pages.PlaylistContinuationPage
+import com.zionhuang.innertube.pages.PlaylistPage
+import com.zionhuang.innertube.pages.RelatedPage
+import com.zionhuang.innertube.pages.SearchPage
+import com.zionhuang.innertube.pages.SearchResult
+import com.zionhuang.innertube.pages.SearchSuggestionPage
+import com.zionhuang.innertube.pages.SearchSummary
+import com.zionhuang.innertube.pages.SearchSummaryPage
+import io.ktor.client.call.body
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray
@@ -305,9 +339,8 @@ object YouTube {
                             ?.musicPlayButtonRenderer?.playNavigationEndpoint
                             ?.watchEndpoint?.watchEndpointMusicSupportedConfigs
                             ?.watchEndpointMusicConfig?.musicVideoType == MUSIC_VIDEO_TYPE_ATV
-                    ) {
-                        songs.add(item)
-                    }
+                    ) songs.add(item)
+
                     is AlbumItem -> albums.add(item)
                     is ArtistItem -> artists.add(item)
                     is PlaylistItem -> playlists.add(item)
@@ -328,6 +361,17 @@ object YouTube {
                     NextPage.fromPlaylistPanelVideoRenderer(renderer)
                 }
             }
+    }
+
+    suspend fun transcript(videoId: String): Result<String> = runCatching {
+        val response = innerTube.getTranscript(WEB, videoId).body<GetTranscriptResponse>()
+        response.actions[0].updateEngagementPanelAction.content.transcriptRenderer.body.transcriptBodyRenderer.cueGroups.joinToString(separator = "\n") { group ->
+            val time = group.transcriptCueGroupRenderer.cues[0].transcriptCueRenderer.startOffsetMs
+            val text = group.transcriptCueGroupRenderer.cues[0].transcriptCueRenderer.cue.simpleText
+                .trim('♪')
+                .trim(' ')
+            "[%02d:%02d.%03d]$text".format(time / 60000, (time / 1000) % 60, time % 1000)
+        }
     }
 
     suspend fun visitorData(): Result<String> = runCatching {
