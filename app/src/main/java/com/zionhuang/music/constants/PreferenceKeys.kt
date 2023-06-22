@@ -18,6 +18,11 @@ val ProxyUrlKey = stringPreferencesKey("proxyUrl")
 val ProxyTypeKey = stringPreferencesKey("proxyType")
 
 val AudioQualityKey = stringPreferencesKey("audioQuality")
+
+enum class AudioQuality {
+    AUTO, HIGH, LOW
+}
+
 val PersistentQueueKey = booleanPreferencesKey("persistentQueue")
 val SkipSilenceKey = booleanPreferencesKey("skipSilence")
 val AudioNormalizationKey = booleanPreferencesKey("audioNormalization")

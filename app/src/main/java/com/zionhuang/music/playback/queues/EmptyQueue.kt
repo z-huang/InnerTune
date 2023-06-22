@@ -1,6 +1,6 @@
 package com.zionhuang.music.playback.queues
 
-import com.google.android.exoplayer2.MediaItem
+import androidx.media3.common.MediaItem
 import com.zionhuang.music.models.MediaMetadata
 
 object EmptyQueue : Queue {

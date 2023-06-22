@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -39,6 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import androidx.core.view.WindowCompat
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -46,8 +51,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
+import coil.imageLoader
+import coil.request.ImageRequest
+import com.google.common.util.concurrent.MoreExecutors
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
@@ -86,7 +92,8 @@ import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -123,8 +130,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        // Connect to service so that notification and background playing will work
+        val sessionToken = SessionToken(this, ComponentName(this, MusicService::class.java))
+        val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
+        controllerFuture.addListener(
+            { controllerFuture.get() },
+            MoreExecutors.directExecutor()
+        )
+
         setContent {
-            val coroutineScope = rememberCoroutineScope()
             val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
             val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
             val pureBlack by rememberPreference(PureBlackKey, defaultValue = false)
@@ -139,18 +153,24 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(DefaultThemeColor)
             }
 
-            DisposableEffect(playerConnection, enableDynamicTheme, isSystemInDarkTheme) {
-                if (!enableDynamicTheme) {
+            LaunchedEffect(playerConnection, enableDynamicTheme, isSystemInDarkTheme) {
+                val playerConnection = playerConnection
+                if (!enableDynamicTheme || playerConnection == null) {
                     themeColor = DefaultThemeColor
-                } else {
-                    playerConnection?.onBitmapChanged = { bitmap ->
-                        coroutineScope.launch(Dispatchers.IO) {
-                            themeColor = bitmap?.extractThemeColor() ?: DefaultThemeColor
-                        }
-                    }
+                    return@LaunchedEffect
                 }
-                onDispose {
-                    playerConnection?.onBitmapChanged = {}
+                playerConnection.service.currentMediaMetadata.collectLatest { song ->
+                    themeColor = if (song != null) {
+                        withContext(Dispatchers.IO) {
+                            val result = imageLoader.execute(
+                                ImageRequest.Builder(this@MainActivity)
+                                    .data(song.thumbnailUrl)
+                                    .allowHardware(false) // pixel access is not supported on Config#HARDWARE bitmaps
+                                    .build()
+                            )
+                            (result.drawable as BitmapDrawable).bitmap.extractThemeColor()
+                        }
+                    } else DefaultThemeColor
                 }
             }
 
@@ -216,7 +236,8 @@ class MainActivity : ComponentActivity() {
                     }
                     val navigationBarHeight by animateDpAsState(
                         targetValue = if (shouldShowNavigationBar) NavigationBarHeight else 0.dp,
-                        animationSpec = NavigationBarAnimationSpec
+                        animationSpec = NavigationBarAnimationSpec,
+                        label = ""
                     )
 
                     val playerBottomSheetState = rememberBottomSheetState(
@@ -529,6 +550,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Crossfade(
                                     targetState = searchSource,
+                                    label = "",
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .padding(bottom = if (!playerBottomSheetState.isDismissed) MiniPlayerHeight else 0.dp)

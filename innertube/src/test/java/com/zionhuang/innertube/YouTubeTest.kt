@@ -7,10 +7,11 @@ import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_FEATURED_PL
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_SONG
 import com.zionhuang.innertube.YouTube.SearchFilter.Companion.FILTER_VIDEO
 import com.zionhuang.innertube.models.WatchEndpoint
-import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
-import io.ktor.client.request.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.request.get
+import io.ktor.client.request.headers
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -163,6 +164,12 @@ class YouTubeTest {
         val relatedEndpoint = YouTube.next(WatchEndpoint(videoId = "Z6ji6kls_OA")).getOrThrow().relatedEndpoint!!
         val relatedPage = YouTube.related(relatedEndpoint).getOrThrow()
         assertTrue(relatedPage.songs.isNotEmpty())
+    }
+
+    @Test
+    fun transcript() = runBlocking {
+        val lyrics = YouTube.transcript("7G0ovtPqHnI").getOrThrow()
+        assertTrue(lyrics.isNotEmpty())
     }
 
     companion object {

@@ -8,7 +8,7 @@ import android.provider.DocumentsContract.Document
 import android.provider.DocumentsContract.Document.MIME_TYPE_DIR
 import android.provider.DocumentsContract.Root
 import android.provider.DocumentsProvider
-import com.google.android.exoplayer2.util.FileTypes
+import androidx.media3.common.FileTypes
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.db.MusicDatabase

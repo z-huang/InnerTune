@@ -83,6 +83,10 @@ kapt {
 }
 
 dependencies {
+    implementation(libs.guava)
+    implementation(libs.coroutines.guava)
+    implementation(libs.concurrent.futures)
+
     implementation(libs.activity)
     implementation(libs.navigation)
     implementation(libs.hilt.navigation)
@@ -109,9 +113,9 @@ dependencies {
 
     implementation(libs.shimmer)
 
-    implementation(libs.exoplayer)
-    implementation(libs.exoplayer.mediasession)
-    implementation(libs.exoplayer.okhttp)
+    implementation(libs.media3)
+    implementation(libs.media3.session)
+    implementation(libs.media3.okhttp)
 
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)

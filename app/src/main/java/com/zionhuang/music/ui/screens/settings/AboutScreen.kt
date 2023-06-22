@@ -44,6 +44,8 @@ fun AboutScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(Modifier.height(4.dp))
+
         Image(
             painter = painterResource(R.drawable.ic_launcher_monochrome),
             contentDescription = null,

@@ -1,10 +1,17 @@
 package com.zionhuang.music.playback
 
 import android.graphics.Bitmap
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player.*
-import com.google.android.exoplayer2.Timeline
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.common.Player.COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM
+import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT_MEDIA_ITEM
+import androidx.media3.common.Player.COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM
+import androidx.media3.common.Player.REPEAT_MODE_ALL
+import androidx.media3.common.Player.REPEAT_MODE_OFF
+import androidx.media3.common.Player.REPEAT_MODE_ONE
+import androidx.media3.common.Player.STATE_IDLE
+import androidx.media3.common.Timeline
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.extensions.currentMetadata
 import com.zionhuang.music.extensions.getCurrentQueueIndex
@@ -19,10 +26,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlayerConnection(
     val database: MusicDatabase,
-    private val binder: MusicBinder,
-) : Listener {
-    val songPlayer = binder.songPlayer
-    val player = binder.player
+    binder: MusicBinder,
+) : Player.Listener {
+    val service = binder.service
+    val player = service.player
 
     val playbackState = MutableStateFlow(STATE_IDLE)
     val playWhenReady = MutableStateFlow(player.playWhenReady)
@@ -51,42 +58,42 @@ class PlayerConnection(
     var onBitmapChanged: (Bitmap?) -> Unit = {}
         set(value) {
             field = value
-            binder.songPlayer.bitmapProvider.onBitmapChanged = value
+            service.bitmapProvider.onBitmapChanged = value
         }
 
     val error = MutableStateFlow<PlaybackException?>(null)
 
     init {
-        binder.player.addListener(this)
-        binder.songPlayer.bitmapProvider.onBitmapChanged = onBitmapChanged
+        player.addListener(this)
+        service.bitmapProvider.onBitmapChanged = onBitmapChanged
 
-        playbackState.value = binder.player.playbackState
-        playWhenReady.value = binder.player.playWhenReady
-        mediaMetadata.value = binder.player.currentMetadata
-        queueTitle.value = binder.songPlayer.queueTitle
-        queueWindows.value = binder.player.getQueueWindows()
-        currentWindowIndex.value = binder.player.getCurrentQueueIndex()
-        currentMediaItemIndex.value = binder.player.currentMediaItemIndex
-        shuffleModeEnabled.value = binder.player.shuffleModeEnabled
-        repeatMode.value = binder.player.repeatMode
+        playbackState.value = player.playbackState
+        playWhenReady.value = player.playWhenReady
+        mediaMetadata.value = player.currentMetadata
+        queueTitle.value = service.queueTitle
+        queueWindows.value = player.getQueueWindows()
+        currentWindowIndex.value = player.getCurrentQueueIndex()
+        currentMediaItemIndex.value = player.currentMediaItemIndex
+        shuffleModeEnabled.value = player.shuffleModeEnabled
+        repeatMode.value = player.repeatMode
     }
 
     fun playQueue(queue: Queue) {
-        binder.songPlayer.playQueue(queue)
+        service.playQueue(queue)
     }
 
     fun playNext(item: MediaItem) = playNext(listOf(item))
     fun playNext(items: List<MediaItem>) {
-        binder.songPlayer.playNext(items)
+        service.playNext(items)
     }
 
     fun addToQueue(item: MediaItem) = addToQueue(listOf(item))
     fun addToQueue(items: List<MediaItem>) {
-        binder.songPlayer.addToQueue(items)
+        service.addToQueue(items)
     }
 
     fun toggleRepeatMode() {
-        binder.player.let {
+        player.let {
             it.repeatMode = when (it.repeatMode) {
                 REPEAT_MODE_OFF -> REPEAT_MODE_ALL
                 REPEAT_MODE_ALL -> REPEAT_MODE_ONE
@@ -97,11 +104,11 @@ class PlayerConnection(
     }
 
     fun toggleLike() {
-        binder.songPlayer.toggleLike()
+        service.toggleLike()
     }
 
     fun toggleLibrary() {
-        binder.songPlayer.toggleLibrary()
+        service.toggleLibrary()
     }
 
     override fun onPlaybackStateChanged(state: Int) {
@@ -116,22 +123,22 @@ class PlayerConnection(
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         mediaMetadata.value = mediaItem?.metadata
         currentMediaItemIndex.value = player.currentMediaItemIndex
-        currentWindowIndex.value = binder.player.getCurrentQueueIndex()
+        currentWindowIndex.value = player.getCurrentQueueIndex()
         updateCanSkipPreviousAndNext()
     }
 
     override fun onTimelineChanged(timeline: Timeline, reason: Int) {
-        queueWindows.value = binder.player.getQueueWindows()
-        queueTitle.value = binder.songPlayer.queueTitle
+        queueWindows.value = player.getQueueWindows()
+        queueTitle.value = service.queueTitle
         currentMediaItemIndex.value = player.currentMediaItemIndex
-        currentWindowIndex.value = binder.player.getCurrentQueueIndex()
+        currentWindowIndex.value = player.getCurrentQueueIndex()
         updateCanSkipPreviousAndNext()
     }
 
     override fun onShuffleModeEnabledChanged(enabled: Boolean) {
         shuffleModeEnabled.value = enabled
-        queueWindows.value = binder.player.getQueueWindows()
-        currentWindowIndex.value = binder.player.getCurrentQueueIndex()
+        queueWindows.value = player.getQueueWindows()
+        currentWindowIndex.value = player.getCurrentQueueIndex()
         updateCanSkipPreviousAndNext()
     }
 
@@ -159,7 +166,7 @@ class PlayerConnection(
     }
 
     fun dispose() {
-        songPlayer.bitmapProvider.onBitmapChanged = {}
+        service.bitmapProvider.onBitmapChanged = {}
         player.removeListener(this)
     }
 }

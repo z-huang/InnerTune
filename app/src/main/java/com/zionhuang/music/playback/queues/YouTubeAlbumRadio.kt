@@ -1,6 +1,6 @@
 package com.zionhuang.music.playback.queues
 
-import com.google.android.exoplayer2.MediaItem
+import androidx.media3.common.MediaItem
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.extensions.toMediaItem

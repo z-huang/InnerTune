@@ -1,13 +1,12 @@
 package com.zionhuang.music.extensions
 
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.Player.REPEAT_MODE_OFF
-import com.google.android.exoplayer2.Timeline
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.Player.REPEAT_MODE_OFF
+import androidx.media3.common.Timeline
 import com.zionhuang.music.models.MediaMetadata
-import java.util.*
-import kotlin.collections.AbstractList
+import java.util.ArrayDeque
 
 fun Player.togglePlayPause() {
     playWhenReady = !playWhenReady
@@ -57,17 +56,6 @@ fun Player.getCurrentQueueIndex(): Int {
         }
     }
     return index
-}
-
-fun Player.mediaItemIndexOf(mediaId: String?): Int? {
-    if (mediaId == null) return null
-    for (i in 0 until mediaItemCount) {
-        val item = getMediaItemAt(i)
-        if (item.mediaId == mediaId) {
-            return i
-        }
-    }
-    return null
 }
 
 val Player.currentMetadata: MediaMetadata?
