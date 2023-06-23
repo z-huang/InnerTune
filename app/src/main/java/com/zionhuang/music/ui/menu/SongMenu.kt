@@ -3,12 +3,31 @@ package com.zionhuang.music.ui.menu
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,19 +41,36 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
+import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
-import com.zionhuang.music.db.entities.*
+import com.zionhuang.music.db.entities.Event
+import com.zionhuang.music.db.entities.Playlist
+import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.PlaylistSongMap
+import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
+import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.component.GridMenu
+import com.zionhuang.music.ui.component.GridMenuItem
+import com.zionhuang.music.ui.component.ListDialog
+import com.zionhuang.music.ui.component.ListItem
+import com.zionhuang.music.ui.component.PlaylistListItem
+import com.zionhuang.music.ui.component.SongListItem
+import com.zionhuang.music.ui.component.TextFieldDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -49,7 +85,7 @@ fun SongMenu(
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
-    val songState = database.song(originalSong.id).collectAsState(initial = originalSong)
+    val songState = database.songWithDownload(originalSong.id, LocalDownloadUtil.current).collectAsState(initial = originalSong)
     val song = songState.value ?: originalSong
 
     var showEditDialog by rememberSaveable {
@@ -263,12 +299,57 @@ fun SongMenu(
         ) {
             showChoosePlaylistDialog = true
         }
-        GridMenuItem(
-            icon = R.drawable.ic_file_download,
-            title = R.string.download,
-            enabled = false
-        ) {
+        when (song.download?.state) {
+            STATE_COMPLETED -> {
+                GridMenuItem(
+                    icon = R.drawable.offline,
+                    title = R.string.remove_download
+                ) {
+                    DownloadService.sendRemoveDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        song.id,
+                        false
+                    )
+                }
+            }
 
+            STATE_DOWNLOADING -> {
+                GridMenuItem(
+                    icon = {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    },
+                    title = R.string.downloading
+                ) {
+                    DownloadService.sendRemoveDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        song.id,
+                        false
+                    )
+                }
+            }
+
+            else -> {
+                GridMenuItem(
+                    icon = R.drawable.download,
+                    title = R.string.download
+                ) {
+                    val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
+                        .setCustomCacheKey(song.id)
+                        .setData(song.song.title.toByteArray())
+                        .build()
+                    DownloadService.sendAddDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        downloadRequest,
+                        false
+                    )
+                }
+            }
         }
         GridMenuItem(
             icon = R.drawable.ic_artist,

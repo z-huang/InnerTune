@@ -63,6 +63,7 @@
     <string name="add_to_queue">Добавить в очередь</string>
     <string name="add_to_library">Добавить в библиотеку</string>
     <string name="download">Загрузить</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">Удалить из загруженных</string>
     <string name="import_playlist">Импортировать плейлист</string>
     <string name="add_to_playlist">Добавить в плейлист</string>

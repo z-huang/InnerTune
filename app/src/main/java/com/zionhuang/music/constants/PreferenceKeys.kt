@@ -41,6 +41,8 @@ val EnableKugouKey = booleanPreferencesKey("enableKugou")
 
 val SongSortTypeKey = stringPreferencesKey("songSortType")
 val SongSortDescendingKey = booleanPreferencesKey("songSortDescending")
+val DownloadedSongSortTypeKey = stringPreferencesKey("songSortType")
+val DownloadedSongSortDescendingKey = booleanPreferencesKey("songSortDescending")
 val ArtistSortTypeKey = stringPreferencesKey("artistSortType")
 val ArtistSortDescendingKey = booleanPreferencesKey("artistSortDescending")
 val AlbumSortTypeKey = stringPreferencesKey("albumSortType")
@@ -52,6 +54,10 @@ val ArtistSongSortDescendingKey = booleanPreferencesKey("artistSongSortDescendin
 
 enum class SongSortType {
     CREATE_DATE, NAME, ARTIST
+}
+
+enum class DownloadedSongSortType {
+    NAME, ARTIST
 }
 
 enum class ArtistSortType {

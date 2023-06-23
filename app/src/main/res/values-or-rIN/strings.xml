@@ -61,6 +61,7 @@
     <string name="add_to_queue">ଧାଡିରେ ଯୋଡନ୍ତୁ</string>
     <string name="add_to_library">ଲାଇବ୍ରେରୀରେ ଯୋଡନ୍ତୁ</string>
     <string name="download">ଡାଉନଲୋଡ୍ କରନ୍ତୁ</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">ଡାଉନଲୋଡ୍ ଅପସାରଣ କରନ୍ତୁ</string>
     <string name="import_playlist">ପ୍ଲେଲିଷ୍ଟ ଆମଦାନୀ କରନ୍ତୁ</string>
     <string name="add_to_playlist">ପ୍ଲେ ଲିଷ୍ଟରେ ଯୋଡନ୍ତୁ</string>

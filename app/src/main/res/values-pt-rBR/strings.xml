@@ -61,6 +61,7 @@
     <string name="add_to_queue">Adicionar à fila</string>
     <string name="add_to_library">Adicionar à biblioteca</string>
     <string name="download">Download</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">Remover download</string>
     <string name="import_playlist">Importar playlist</string>
     <string name="add_to_playlist">Adicionar à playlist</string>

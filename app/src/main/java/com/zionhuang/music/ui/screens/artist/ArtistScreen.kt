@@ -4,13 +4,41 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,14 +54,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AppBarHeight
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.component.AutoResizeText
+import com.zionhuang.music.ui.component.FontSizeRange
+import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.SongListItem
+import com.zionhuang.music.ui.component.YouTubeGridItem
+import com.zionhuang.music.ui.component.YouTubeListItem
 import com.zionhuang.music.ui.component.shimmer.ButtonPlaceholder
 import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
@@ -263,6 +300,16 @@ fun ArtistScreen(
                             YouTubeListItem(
                                 item = song as SongItem,
                                 badges = {
+                                    if (song.id in likedSongIds) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_favorite),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.error,
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .padding(end = 2.dp)
+                                        )
+                                    }
                                     if (song.explicit) {
                                         Icon(
                                             painter = painterResource(R.drawable.ic_explicit),
@@ -276,16 +323,6 @@ fun ArtistScreen(
                                         Icon(
                                             painter = painterResource(R.drawable.ic_library_add_check),
                                             contentDescription = null,
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .padding(end = 2.dp)
-                                        )
-                                    }
-                                    if (song.id in likedSongIds) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_favorite),
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.error,
                                             modifier = Modifier
                                                 .size(18.dp)
                                                 .padding(end = 2.dp)
@@ -380,6 +417,7 @@ fun ArtistScreen(
                                                                 coroutineScope = coroutineScope,
                                                                 onDismiss = menuState::dismiss
                                                             )
+
                                                             is AlbumItem -> YouTubeAlbumMenu(
                                                                 album = item,
                                                                 navController = navController,
@@ -387,11 +425,13 @@ fun ArtistScreen(
                                                                 coroutineScope = coroutineScope,
                                                                 onDismiss = menuState::dismiss
                                                             )
+
                                                             is ArtistItem -> YouTubeArtistMenu(
                                                                 artist = item,
                                                                 playerConnection = playerConnection,
                                                                 onDismiss = menuState::dismiss
                                                             )
+
                                                             is PlaylistItem -> {}
                                                         }
                                                     }

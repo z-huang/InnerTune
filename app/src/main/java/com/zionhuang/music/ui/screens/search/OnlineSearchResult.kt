@@ -120,18 +120,6 @@ fun OnlineSearchResult(
         YouTubeListItem(
             item = item,
             badges = {
-                if (item is SongItem && item.id in librarySongIds ||
-                    item is AlbumItem && item.id in libraryAlbumIds ||
-                    item is PlaylistItem && item.id in libraryPlaylistIds
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_library_add_check),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .padding(end = 2.dp)
-                    )
-                }
                 if (item is SongItem && item.id in likedSongIds) {
                     Icon(
                         painter = painterResource(R.drawable.ic_favorite),
@@ -145,6 +133,18 @@ fun OnlineSearchResult(
                 if (item.explicit) {
                     Icon(
                         painter = painterResource(R.drawable.ic_explicit),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(end = 2.dp)
+                    )
+                }
+                if (item is SongItem && item.id in librarySongIds ||
+                    item is AlbumItem && item.id in libraryAlbumIds ||
+                    item is PlaylistItem && item.id in libraryPlaylistIds
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_library_add_check),
                         contentDescription = null,
                         modifier = Modifier
                             .size(18.dp)

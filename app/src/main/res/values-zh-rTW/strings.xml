@@ -60,6 +60,7 @@
     <string name="add_to_queue">加入待播清單</string>
     <string name="add_to_library">加入媒體庫</string>
     <string name="download">下載</string>
+    <string name="downloading">下載中</string>
     <string name="remove_download">刪除下載</string>
     <string name="import_playlist">匯入播放清單</string>
     <string name="add_to_playlist">加入播放清單</string>

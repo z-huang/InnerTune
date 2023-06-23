@@ -22,10 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.exoplayer.offline.Download
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -52,6 +55,7 @@ fun HomeScreen(
     mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
+    val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -139,17 +143,58 @@ fun HomeScreen(
                         items(
                             items = quickPicks,
                             key = { it.id }
-                        ) { song ->
+                        ) { originalSong ->
+                            val song by database.songWithDownload(originalSong.id, LocalDownloadUtil.current).collectAsState(initial = originalSong)
+
                             SongListItem(
-                                song = song,
-                                isPlaying = song.id == mediaMetadata?.id,
+                                song = song!!,
+                                badges = {
+                                    if (song!!.song.liked) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_favorite),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.error,
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .padding(end = 2.dp)
+                                        )
+                                    }
+                                    if (song!!.song.inLibrary != null) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_library_add_check),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .padding(end = 2.dp)
+                                        )
+                                    }
+                                    when (song!!.download?.state) {
+                                        Download.STATE_COMPLETED -> Icon(
+                                            painter = painterResource(R.drawable.offline),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .padding(end = 2.dp)
+                                        )
+
+                                        Download.STATE_DOWNLOADING -> CircularProgressIndicator(
+                                            strokeWidth = 2.dp,
+                                            modifier = Modifier
+                                                .size(16.dp)
+                                                .padding(end = 2.dp)
+                                        )
+
+                                        else -> {}
+                                    }
+                                },
+                                isPlaying = song!!.id == mediaMetadata?.id,
                                 playWhenReady = playWhenReady,
                                 trailingContent = {
                                     IconButton(
                                         onClick = {
                                             menuState.show {
                                                 SongMenu(
-                                                    originalSong = song,
+                                                    originalSong = song!!,
                                                     navController = navController,
                                                     playerConnection = playerConnection,
                                                     coroutineScope = coroutineScope,
@@ -167,7 +212,7 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .width(horizontalLazyGridItemWidth)
                                     .clickable {
-                                        playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
+                                        playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song!!.id), song!!.toMediaMetadata()))
                                     }
                             )
                         }

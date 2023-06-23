@@ -52,7 +52,8 @@ fun StorageSettings(
 ) {
     val context = LocalContext.current
     val imageDiskCache = context.imageLoader.diskCache ?: return
-    val playerCache = LocalPlayerConnection.current?.service?.cache ?: return
+    val playerCache = LocalPlayerConnection.current?.service?.playerCache ?: return
+    val downloadCache = LocalPlayerConnection.current?.service?.downloadCache ?: return
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -61,6 +62,9 @@ fun StorageSettings(
     }
     var playerCacheSize by remember {
         mutableStateOf(playerCache.cacheSpace)
+    }
+    var downloadCacheSize by remember {
+        mutableStateOf(downloadCache.cacheSpace)
     }
 
     LaunchedEffect(imageDiskCache) {
@@ -75,6 +79,12 @@ fun StorageSettings(
             playerCacheSize = playerCache.cacheSpace
         }
     }
+    LaunchedEffect(downloadCache) {
+        while (isActive) {
+            delay(500)
+            downloadCacheSize = downloadCache.cacheSpace
+        }
+    }
 
     val (maxImageCacheSize, onMaxImageCacheSizeChange) = rememberPreference(key = MaxImageCacheSizeKey, defaultValue = 512)
     val (maxSongCacheSize, onMaxSongCacheSizeChange) = rememberPreference(key = MaxSongCacheSizeKey, defaultValue = 1024)
@@ -85,37 +95,13 @@ fun StorageSettings(
             .verticalScroll(rememberScrollState())
     ) {
         PreferenceGroupTitle(
-            title = stringResource(R.string.image_cache)
-        )
-
-        LinearProgressIndicator(
-            progress = (imageCacheSize.toFloat() / imageDiskCache.maxSize).coerceIn(0f, 1f),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 6.dp)
+            title = stringResource(R.string.downloaded_songs)
         )
 
         Text(
-            text = stringResource(R.string.size_used, "${formatFileSize(imageCacheSize)} / ${formatFileSize(imageDiskCache.maxSize)}"),
+            text = stringResource(R.string.size_used, formatFileSize(downloadCacheSize)),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-        )
-
-        ListPreference(
-            title = stringResource(R.string.max_cache_size),
-            selectedValue = maxImageCacheSize,
-            values = listOf(128, 256, 512, 1024, 2048, 4096, 8192),
-            valueText = { formatFileSize(it * 1024 * 1024L) },
-            onValueSelected = onMaxImageCacheSizeChange
-        )
-
-        PreferenceEntry(
-            title = stringResource(R.string.clear_image_cache),
-            onClick = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    imageDiskCache.clear()
-                }
-            },
         )
 
         PreferenceGroupTitle(
@@ -160,6 +146,40 @@ fun StorageSettings(
                     playerCache.keys.forEach { key ->
                         playerCache.removeResource(key)
                     }
+                }
+            },
+        )
+
+        PreferenceGroupTitle(
+            title = stringResource(R.string.image_cache)
+        )
+
+        LinearProgressIndicator(
+            progress = (imageCacheSize.toFloat() / imageDiskCache.maxSize).coerceIn(0f, 1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 6.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.size_used, "${formatFileSize(imageCacheSize)} / ${formatFileSize(imageDiskCache.maxSize)}"),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+        )
+
+        ListPreference(
+            title = stringResource(R.string.max_cache_size),
+            selectedValue = maxImageCacheSize,
+            values = listOf(128, 256, 512, 1024, 2048, 4096, 8192),
+            valueText = { formatFileSize(it * 1024 * 1024L) },
+            onValueSelected = onMaxImageCacheSizeChange
+        )
+
+        PreferenceEntry(
+            title = stringResource(R.string.clear_image_cache),
+            onClick = {
+                coroutineScope.launch(Dispatchers.IO) {
+                    imageDiskCache.clear()
                 }
             },
         )

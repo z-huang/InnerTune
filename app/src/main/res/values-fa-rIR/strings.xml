@@ -61,6 +61,7 @@
     <string name="add_to_queue">اضافه‌کردن به صف</string>
     <string name="add_to_library">اضافه‌کردن به کتاب‌خانه</string>
     <string name="download">بارگیری</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">حذف بارگیری</string>
     <string name="import_playlist">واردکردن لیست‌پخش</string>
     <string name="add_to_playlist">اضافه‌کردن به لیست‌پخش</string>

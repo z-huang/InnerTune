@@ -6,10 +6,12 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.extensions.toEnum
+import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.utils.dataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,16 +26,28 @@ import javax.inject.Inject
 class LibrarySongsViewModel @Inject constructor(
     @ApplicationContext context: Context,
     database: MusicDatabase,
+    downloadUtil: DownloadUtil,
 ) : ViewModel() {
-    val allSongs = context.dataStore.data
-        .map {
-            it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE) to (it[SongSortDescendingKey] ?: true)
+    val allSongs = combine(
+        context.dataStore.data
+            .map {
+                it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE) to (it[SongSortDescendingKey] ?: true)
+            }
+            .distinctUntilChanged()
+            .flatMapLatest { (sortType, descending) ->
+                database.songs(sortType, descending)
+            },
+        downloadUtil.downloads
+    ) { songs, downloads ->
+        songs.toMutableList().apply {
+            downloads.forEach { (id, download) ->
+                val index = indexOfFirst { it.id == id }
+                if (index != -1) {
+                    set(index, get(index).copy(download = download))
+                }
+            }
         }
-        .distinctUntilChanged()
-        .flatMapLatest { (sortType, descending) ->
-            database.songs(sortType, descending)
-        }
-        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
 @HiltViewModel
@@ -91,12 +105,16 @@ class LibraryAlbumsViewModel @Inject constructor(
 class LibraryPlaylistsViewModel @Inject constructor(
     @ApplicationContext context: Context,
     database: MusicDatabase,
+    downloadUtil: DownloadUtil,
 ) : ViewModel() {
     val likedSongCount = database.likedSongsCount()
         .stateIn(viewModelScope, SharingStarted.Lazily, 0)
 
-    val downloadedSongCount = database.downloadedSongsCount()
-        .stateIn(viewModelScope, SharingStarted.Lazily, 0)
+    val downloadedSongCount = downloadUtil.downloads.map {
+        it.count { (_, download) ->
+            download.state == STATE_COMPLETED
+        }
+    }
 
     val allPlaylists = context.dataStore.data
         .map {

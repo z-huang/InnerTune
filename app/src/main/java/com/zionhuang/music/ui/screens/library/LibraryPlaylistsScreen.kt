@@ -2,12 +2,29 @@ package com.zionhuang.music.ui.screens.library
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -20,11 +37,20 @@ import androidx.navigation.NavController
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
+import com.zionhuang.music.constants.CONTENT_TYPE_HEADER
+import com.zionhuang.music.constants.CONTENT_TYPE_PLAYLIST
+import com.zionhuang.music.constants.ListThumbnailSize
+import com.zionhuang.music.constants.PlaylistSortDescendingKey
+import com.zionhuang.music.constants.PlaylistSortType
+import com.zionhuang.music.constants.PlaylistSortTypeKey
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
-import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.component.ListItem
+import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.PlaylistListItem
+import com.zionhuang.music.ui.component.SortHeader
+import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.ui.menu.PlaylistMenu
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
@@ -45,7 +71,7 @@ fun LibraryPlaylistsScreen(
     val (sortDescending, onSortDescendingChange) = rememberPreference(PlaylistSortDescendingKey, true)
 
     val likedSongCount by viewModel.likedSongCount.collectAsState()
-    val downloadedSongCount by viewModel.downloadedSongCount.collectAsState()
+    val downloadedSongCount by viewModel.downloadedSongCount.collectAsState(0)
     val playlists by viewModel.allPlaylists.collectAsState()
 
     var showAddPlaylistDialog by rememberSaveable {

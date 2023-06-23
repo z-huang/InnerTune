@@ -2,11 +2,28 @@ package com.zionhuang.music.ui.screens.playlist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,10 +36,14 @@ import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.DownloadedSongSortDescendingKey
+import com.zionhuang.music.constants.DownloadedSongSortType
+import com.zionhuang.music.constants.DownloadedSongSortTypeKey
 import com.zionhuang.music.constants.SongSortDescendingKey
 import com.zionhuang.music.constants.SongSortType
 import com.zionhuang.music.constants.SongSortTypeKey
-import com.zionhuang.music.db.entities.PlaylistEntity
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
+import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.LocalMenuState
@@ -50,6 +71,8 @@ fun BuiltInPlaylistScreen(
 
     val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(SongSortDescendingKey, true)
+    val (dlSortType, onDlSortTypeChange) = rememberEnumPreference(DownloadedSongSortTypeKey, DownloadedSongSortType.NAME)
+    val (dlSortDescending, onDlSortDescendingChange) = rememberPreference(DownloadedSongSortDescendingKey, true)
 
     val songs by viewModel.songs.collectAsState()
     val playlistLength = remember(songs) {
@@ -58,8 +81,8 @@ fun BuiltInPlaylistScreen(
     val playlistName = remember {
         context.getString(
             when (viewModel.playlistId) {
-                PlaylistEntity.LIKED_PLAYLIST_ID -> R.string.liked_songs
-                PlaylistEntity.DOWNLOADED_PLAYLIST_ID -> R.string.downloaded_songs
+                LIKED_PLAYLIST_ID -> R.string.liked_songs
+                DOWNLOADED_PLAYLIST_ID -> R.string.downloaded_songs
                 else -> error("Unknown playlist id")
             }
         )
@@ -74,23 +97,42 @@ fun BuiltInPlaylistScreen(
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item {
-                SortHeader(
-                    sortType = sortType,
-                    sortDescending = sortDescending,
-                    onSortTypeChange = onSortTypeChange,
-                    onSortDescendingChange = onSortDescendingChange,
-                    sortTypeText = { sortType ->
-                        when (sortType) {
-                            SongSortType.CREATE_DATE -> R.string.sort_by_create_date
-                            SongSortType.NAME -> R.string.sort_by_name
-                            SongSortType.ARTIST -> R.string.sort_by_artist
-                        }
-                    },
-                    trailingText = joinByBullet(
-                        makeTimeString(playlistLength * 1000L),
-                        pluralStringResource(R.plurals.n_song, songs.size, songs.size)
+                if (viewModel.playlistId == LIKED_PLAYLIST_ID) {
+                    SortHeader(
+                        sortType = sortType,
+                        sortDescending = sortDescending,
+                        onSortTypeChange = onSortTypeChange,
+                        onSortDescendingChange = onSortDescendingChange,
+                        sortTypeText = { sortType ->
+                            when (sortType) {
+                                SongSortType.CREATE_DATE -> R.string.sort_by_create_date
+                                SongSortType.NAME -> R.string.sort_by_name
+                                SongSortType.ARTIST -> R.string.sort_by_artist
+                            }
+                        },
+                        trailingText = joinByBullet(
+                            makeTimeString(playlistLength * 1000L),
+                            pluralStringResource(R.plurals.n_song, songs.size, songs.size)
+                        )
                     )
-                )
+                } else {
+                    SortHeader(
+                        sortType = dlSortType,
+                        sortDescending = dlSortDescending,
+                        onSortTypeChange = onDlSortTypeChange,
+                        onSortDescendingChange = onDlSortDescendingChange,
+                        sortTypeText = { sortType ->
+                            when (sortType) {
+                                DownloadedSongSortType.NAME -> R.string.sort_by_name
+                                DownloadedSongSortType.ARTIST -> R.string.sort_by_artist
+                            }
+                        },
+                        trailingText = joinByBullet(
+                            makeTimeString(playlistLength * 1000L),
+                            pluralStringResource(R.plurals.n_song, songs.size, songs.size)
+                        )
+                    )
+                }
             }
 
             itemsIndexed(

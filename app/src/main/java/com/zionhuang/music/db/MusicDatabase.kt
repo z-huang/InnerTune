@@ -48,7 +48,6 @@ class MusicDatabase(
         SongAlbumMap::class,
         AlbumArtistMap::class,
         PlaylistSongMap::class,
-        DownloadEntity::class,
         SearchHistory::class,
         FormatEntity::class,
         LyricsEntity::class,
@@ -60,7 +59,7 @@ class MusicDatabase(
         SortedSongAlbumMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 9,
+    version = 10,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
@@ -69,7 +68,8 @@ class MusicDatabase(
         AutoMigration(from = 5, to = 6, spec = Migration5To6::class),
         AutoMigration(from = 6, to = 7, spec = Migration6To7::class),
         AutoMigration(from = 7, to = 8, spec = Migration7To8::class),
-        AutoMigration(from = 8, to = 9)
+        AutoMigration(from = 8, to = 9),
+        AutoMigration(from = 9, to = 10, spec = Migration9To10::class)
     ]
 )
 @TypeConverters(Converters::class)
@@ -301,3 +301,8 @@ class Migration6To7 : AutoMigrationSpec {
     DeleteColumn(tableName = "song", columnName = "modifyDate")
 )
 class Migration7To8 : AutoMigrationSpec
+
+@DeleteTable.Entries(
+    DeleteTable(tableName = "download")
+)
+class Migration9To10 : AutoMigrationSpec

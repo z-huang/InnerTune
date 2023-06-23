@@ -61,6 +61,7 @@
     <string name="add_to_queue">Várósorhoz ad</string>
     <string name="add_to_library">Könyvtárhoz ad</string>
     <string name="download">Letöltés</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">Letöltés eltávolítása</string>
     <string name="import_playlist">Lista importálása</string>
     <string name="add_to_playlist">Lejátszólistához ad</string>

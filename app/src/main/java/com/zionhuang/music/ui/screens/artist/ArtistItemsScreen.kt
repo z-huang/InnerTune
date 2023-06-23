@@ -13,14 +13,29 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -93,18 +108,6 @@ fun ArtistItemsScreen(
                 YouTubeListItem(
                     item = item,
                     badges = {
-                        if (item is SongItem && item.id in librarySongIds ||
-                            item is AlbumItem && item.id in libraryAlbumIds ||
-                            item is PlaylistItem && item.id in libraryPlaylistIds
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_library_add_check),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
                         if (item is SongItem && item.id in likedSongIds) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_favorite),
@@ -118,6 +121,18 @@ fun ArtistItemsScreen(
                         if (item.explicit) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_explicit),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .padding(end = 2.dp)
+                            )
+                        }
+                        if (item is SongItem && item.id in librarySongIds ||
+                            item is AlbumItem && item.id in libraryAlbumIds ||
+                            item is PlaylistItem && item.id in libraryPlaylistIds
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_library_add_check),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(18.dp)

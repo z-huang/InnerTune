@@ -567,7 +567,7 @@ fun PlayerMenu(
 
         }
         GridMenuItem(
-            icon = R.drawable.ic_file_download,
+            icon = R.drawable.download,
             title = R.string.download,
             enabled = false
         ) {

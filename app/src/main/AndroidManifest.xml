@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -129,16 +130,14 @@
             </intent-filter>
         </service>
 
-        <provider
-            android:name=".provider.SongsProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="true"
-            android:grantUriPermissions="true"
-            android:permission="android.permission.MANAGE_DOCUMENTS">
+        <service
+            android:name=".playback.ExoDownloadService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+                <action android:name="androidx.media3.exoplayer.downloadService.action.RESTART" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </provider>
+        </service>
 
         <meta-data
             android:name="com.google.android.gms.car.application"

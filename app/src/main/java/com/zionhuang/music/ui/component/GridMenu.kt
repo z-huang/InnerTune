@@ -3,7 +3,13 @@ package com.zionhuang.music.ui.component
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -41,6 +47,25 @@ fun LazyGridScope.GridMenuItem(
     @StringRes title: Int,
     enabled: Boolean = true,
     onClick: () -> Unit,
+) = GridMenuItem(
+    modifier = modifier,
+    icon = {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null
+        )
+    },
+    title = title,
+    enabled = enabled,
+    onClick = onClick
+)
+
+fun LazyGridScope.GridMenuItem(
+    modifier: Modifier = Modifier,
+    icon: @Composable BoxScope.() -> Unit,
+    @StringRes title: Int,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
 ) {
     item {
         Column(
@@ -55,16 +80,12 @@ fun LazyGridScope.GridMenuItem(
                 .padding(12.dp)
         ) {
             Box(
-                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = null
-                )
-            }
+                    .weight(1f),
+                contentAlignment = Alignment.Center,
+                content = icon
+            )
             Text(
                 text = stringResource(title),
                 style = MaterialTheme.typography.labelLarge,

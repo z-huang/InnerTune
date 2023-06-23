@@ -60,6 +60,7 @@
     <string name="add_to_queue">목록에 추가</string>
     <string name="add_to_library">라이브러리에 추가</string>
     <string name="download">다운로드</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">다운로드 제거</string>
     <string name="import_playlist">Import playlist</string>
     <string name="add_to_playlist">플레이리스트에 추가</string>

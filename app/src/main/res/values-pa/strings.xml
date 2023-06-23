@@ -61,6 +61,7 @@
     <string name="add_to_queue">ਕਤਾਰ ਵਿੱਚ ਜੋੜ੍ਹੋ</string>
     <string name="add_to_library">ਲਾਇਬ੍ਰੇਰੀ ਵਿੱਚ ਸ਼ਾਮਿਲ ਕਰੋ</string>
     <string name="download">ਡਾਊਨਲੋਡ</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">ਡਾਊਨਲੋਡ ਹਟਾਓ</string>
     <string name="import_playlist">ਪਲੇਲਿਸਟ ਅਯਾਤ ਕਰੋ</string>
     <string name="add_to_playlist">ਪਲੇਲਿਸਟ ਵਿੱਚ ਸ਼ਾਮਿਲ ਕਰੋ</string>

@@ -2,12 +2,24 @@ package com.zionhuang.music.ui.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -20,7 +32,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -138,18 +154,6 @@ fun OnlineSearchScreen(
             YouTubeListItem(
                 item = item,
                 badges = {
-                    if (item is SongItem && item.id in librarySongIds ||
-                        item is AlbumItem && item.id in libraryAlbumIds ||
-                        item is PlaylistItem && item.id in libraryPlaylistIds
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_library_add_check),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(18.dp)
-                                .padding(end = 2.dp)
-                        )
-                    }
                     if (item is SongItem && item.id in likedSongIds) {
                         Icon(
                             painter = painterResource(R.drawable.ic_favorite),
@@ -163,6 +167,18 @@ fun OnlineSearchScreen(
                     if (item.explicit) {
                         Icon(
                             painter = painterResource(R.drawable.ic_explicit),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .padding(end = 2.dp)
+                        )
+                    }
+                    if (item is SongItem && item.id in librarySongIds ||
+                        item is AlbumItem && item.id in libraryAlbumIds ||
+                        item is PlaylistItem && item.id in libraryPlaylistIds
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_library_add_check),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(18.dp)
@@ -183,14 +199,17 @@ fun OnlineSearchScreen(
                                 playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
                                 onDismiss()
                             }
+
                             is AlbumItem -> {
                                 navController.navigate("album/${item.id}")
                                 onDismiss()
                             }
+
                             is ArtistItem -> {
                                 navController.navigate("artist/${item.id}")
                                 onDismiss()
                             }
+
                             is PlaylistItem -> {}
                         }
                     }

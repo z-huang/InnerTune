@@ -9,7 +9,6 @@ The project is currently in an unstable stage. If you encounter bugs, please rep
 * Play songs without ads
 * Download music for offline playback
 * Local library management
-* Export downloaded songs via SAF
 * Cache songs
 * (Synchronized) lyrics
 * Audio normalization

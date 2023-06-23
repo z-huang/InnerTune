@@ -1,6 +1,7 @@
 package com.zionhuang.music.db.entities
 
 import androidx.compose.runtime.Immutable
+import androidx.media3.exoplayer.offline.Download
 import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Junction
@@ -32,6 +33,8 @@ data class Song @JvmOverloads constructor(
     )
     @Ignore
     val album: AlbumEntity? = null,
+    @Ignore
+    val download: Download? = null,
 ) : LocalItem() {
     override val id: String
         get() = song.id

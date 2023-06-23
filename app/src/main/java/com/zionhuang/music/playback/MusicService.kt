@@ -38,14 +38,12 @@ import androidx.media3.common.Player.EVENT_TIMELINE_CHANGED
 import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.Player.STATE_IDLE
 import androidx.media3.common.Timeline
-import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.database.DatabaseProvider
+import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.ResolvingDataSource
-import androidx.media3.datasource.cache.Cache
 import androidx.media3.datasource.cache.CacheDataSource
-import androidx.media3.datasource.cache.CacheEvictor
-import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
-import androidx.media3.datasource.cache.NoOpCacheEvictor
+import androidx.media3.datasource.cache.CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
 import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.DefaultRenderersFactory
@@ -84,7 +82,6 @@ import com.zionhuang.music.constants.AudioNormalizationKey
 import com.zionhuang.music.constants.AudioQuality
 import com.zionhuang.music.constants.AudioQualityKey
 import com.zionhuang.music.constants.AutoAddToLibraryKey
-import com.zionhuang.music.constants.MaxSongCacheSizeKey
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.CommandToggleLibrary
@@ -105,7 +102,8 @@ import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYL
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.RelatedSongMap
 import com.zionhuang.music.db.entities.Song
-import com.zionhuang.music.db.entities.SongEntity
+import com.zionhuang.music.di.DownloadCache
+import com.zionhuang.music.di.PlayerCache
 import com.zionhuang.music.extensions.collect
 import com.zionhuang.music.extensions.collectLatest
 import com.zionhuang.music.extensions.currentMetadata
@@ -124,7 +122,6 @@ import com.zionhuang.music.utils.CoilBitmapLoader
 import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.enumPreference
 import com.zionhuang.music.utils.get
-import com.zionhuang.music.utils.getSongFile
 import com.zionhuang.music.utils.preference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -147,7 +144,6 @@ import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import timber.log.Timber
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.ConnectException
@@ -158,6 +154,7 @@ import javax.inject.Inject
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.minutes
+
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 @AndroidEntryPoint
@@ -198,8 +195,17 @@ class MusicService : MediaLibraryService(),
     var sleepTimerTriggerTime by mutableStateOf(-1L)
     var pauseWhenSongEnd by mutableStateOf(false)
 
-    private lateinit var cacheEvictor: CacheEvictor
-    lateinit var cache: Cache
+    @Inject
+    lateinit var databaseProvider: DatabaseProvider
+
+    @Inject
+    @PlayerCache
+    lateinit var playerCache: SimpleCache
+
+    @Inject
+    @DownloadCache
+    lateinit var downloadCache: SimpleCache
+
     lateinit var player: ExoPlayer
     private lateinit var mediaSession: MediaLibrarySession
 
@@ -211,11 +217,6 @@ class MusicService : MediaLibraryService(),
                     setSmallIcon(R.drawable.small_icon)
                 }
         )
-        cacheEvictor = when (val cacheSize = dataStore[MaxSongCacheSizeKey] ?: 1024) {
-            -1 -> NoOpCacheEvictor()
-            else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
-        }
-        cache = SimpleCache(cacheDir.resolve("exoplayer"), cacheEvictor, StandaloneDatabaseProvider(this))
         player = ExoPlayer.Builder(this)
             .setMediaSourceFactory(createMediaSourceFactory())
             .setRenderersFactory(createRenderersFactory())
@@ -596,16 +597,25 @@ class MusicService : MediaLibraryService(),
                 .build()
         )
 
-    private fun createCacheDataSource() = CacheDataSource.Factory()
-        .setCache(cache)
-        .setUpstreamDataSourceFactory(DefaultDataSource.Factory(this, createOkHttpDataSourceFactory()))
+    private fun createCacheDataSource(): CacheDataSource.Factory {
+        return CacheDataSource.Factory()
+            .setCache(downloadCache)
+            .setUpstreamDataSourceFactory(
+                CacheDataSource.Factory()
+                    .setCache(playerCache)
+                    .setUpstreamDataSourceFactory(DefaultDataSource.Factory(this, createOkHttpDataSourceFactory()))
+            )
+            .setCacheWriteDataSinkFactory(null)
+            .setFlags(FLAG_IGNORE_CACHE_ON_ERROR)
+    }
 
-    private fun createDataSourceFactory(): ResolvingDataSource.Factory {
+    private fun createDataSourceFactory(): DataSource.Factory {
         val songUrlCache = HashMap<String, Pair<String, Long>>()
         return ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
             val mediaId = dataSpec.key ?: error("No media id")
+            val length = if (dataSpec.length >= 0) dataSpec.length else 0
 
-            if (cache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)) {
+            if (downloadCache.isCached(mediaId, dataSpec.position, length) || playerCache.isCached(mediaId, dataSpec.position, length)) {
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
                 return@Factory dataSpec
             }
@@ -618,12 +628,6 @@ class MusicService : MediaLibraryService(),
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
             val playedFormat = runBlocking(Dispatchers.IO) { database.format(mediaId).first() }
-            val song = runBlocking(Dispatchers.IO) { database.song(mediaId).first() }
-            if (playedFormat != null && song?.song?.downloadState == SongEntity.STATE_DOWNLOADED) {
-                scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
-                return@Factory dataSpec.withUri(getSongFile(this, mediaId).toUri())
-            }
-
             val playerResponse = runBlocking(Dispatchers.IO) {
                 YouTube.player(mediaId)
             }.getOrElse { throwable ->
@@ -646,7 +650,7 @@ class MusicService : MediaLibraryService(),
             val format =
                 if (playedFormat != null) {
                     playerResponse.streamingData?.adaptiveFormats?.find {
-                        // Use itag to identify previous played format
+                        // Use itag to identify previously played format
                         it.itag == playedFormat.itag
                     }
                 } else {
@@ -753,7 +757,7 @@ class MusicService : MediaLibraryService(),
         mediaSession.release()
         player.removeListener(this)
         player.release()
-        cache.release()
+        playerCache.release()
         super.onDestroy()
     }
 
@@ -878,7 +882,6 @@ class MusicService : MediaLibraryService(),
         browser: MediaSession.ControllerInfo,
         mediaId: String,
     ): ListenableFuture<LibraryResult<MediaItem>> = scope.future(Dispatchers.IO) {
-        Timber.d("onGetItem: $mediaId")
         database.song(mediaId).first()?.toMediaItem()?.let {
             LibraryResult.ofItem(it, null)
         } ?: LibraryResult.ofError(LibraryResult.RESULT_ERROR_UNKNOWN)

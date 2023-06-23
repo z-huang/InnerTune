@@ -61,6 +61,7 @@
     <string name="add_to_queue">Zur Warteschlange hinzufügen</string>
     <string name="add_to_library">Zur Bibliothek hinzufügen</string>
     <string name="download">Herunterladen</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">Download entfernen</string>
     <string name="import_playlist">Wiedergabeliste importieren</string>
     <string name="add_to_playlist">Zur Wiedergabeliste hinzufügen</string>

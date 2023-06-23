@@ -61,6 +61,7 @@ import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYL
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.SearchHistory
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
@@ -100,6 +101,10 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var database: MusicDatabase
+
+    @Inject
+    lateinit var downloadUtil: DownloadUtil
+
     private var playerConnection by mutableStateOf<PlayerConnection?>(null)
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -316,6 +321,7 @@ class MainActivity : ComponentActivity() {
                         LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.background),
                         LocalPlayerConnection provides playerConnection,
                         LocalPlayerAwareWindowInsets provides playerAwareWindowInsets,
+                        LocalDownloadUtil provides downloadUtil,
                         LocalShimmerTheme provides ShimmerTheme
                     ) {
                         NavHost(
@@ -662,3 +668,4 @@ const val ACTION_SHOW_BOTTOM_SHEET = "show_bottom_sheet"
 val LocalDatabase = staticCompositionLocalOf<MusicDatabase> { error("No database provided") }
 val LocalPlayerConnection = staticCompositionLocalOf<PlayerConnection?> { error("No PlayerConnection provided") }
 val LocalPlayerAwareWindowInsets = compositionLocalOf<WindowInsets> { error("No WindowInsets provided") }
+val LocalDownloadUtil = staticCompositionLocalOf<DownloadUtil> { error("No DownloadUtil provided") }

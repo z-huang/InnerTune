@@ -60,6 +60,7 @@
     <string name="add_to_queue">Tambahkan ke antrian</string>
     <string name="add_to_library">Tambahkan ke perpustakaan</string>
     <string name="download">Unduh</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">Hapus unduhan</string>
     <string name="import_playlist">Pindahkan ke daftar putar</string>
     <string name="add_to_playlist">Tambahkan ke daftar putar</string>

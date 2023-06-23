@@ -62,6 +62,7 @@
     <string name="add_to_queue">Ajouter à la file d\'attente</string>
     <string name="add_to_library">Ajouter à la bibliothèque</string>
     <string name="download">Télécharger</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">Supprimer le téléchargement</string>
     <string name="import_playlist">Import playlist</string>
     <string name="add_to_playlist">Ajouter à la liste de lecture</string>

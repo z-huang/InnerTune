@@ -61,6 +61,7 @@
     <string name="add_to_queue">Sıraya ekle</string>
     <string name="add_to_library">Kütüphaneye ekle</string>
     <string name="download">İndir</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">İndirmeyi kaldır</string>
     <string name="import_playlist">Çalma listesini içe aktar</string>
     <string name="add_to_playlist">Çalma listesine ekle</string>

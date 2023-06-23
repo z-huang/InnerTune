@@ -61,6 +61,7 @@
     <string name="add_to_queue">Voeg toe aan wachtrij</string>
     <string name="add_to_library">Voeg toe aan bibliotheek</string>
     <string name="download">Downloaden</string>
+    <string name="downloading">Downloading</string>
     <string name="remove_download">Verwijder download</string>
     <string name="import_playlist">Importeer afspeellijst</string>
     <string name="add_to_playlist">Voeg toe aan afspeellijst</string>

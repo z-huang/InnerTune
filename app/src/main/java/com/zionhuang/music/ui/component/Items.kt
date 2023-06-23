@@ -6,10 +6,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -24,8 +27,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
+import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.*
+import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.Album
@@ -155,6 +161,24 @@ fun SongListItem(
                     .size(18.dp)
                     .padding(end = 2.dp)
             )
+        }
+        when (song.download?.state) {
+            STATE_COMPLETED -> Icon(
+                painter = painterResource(R.drawable.offline),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+
+            STATE_DOWNLOADING -> CircularProgressIndicator(
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .size(16.dp)
+                    .padding(end = 2.dp)
+            )
+
+            else -> {}
         }
     },
     isPlaying: Boolean = false,
@@ -287,6 +311,7 @@ fun PlaylistListItem(
                 contentDescription = null,
                 modifier = Modifier.size(ListThumbnailSize)
             )
+
             1 -> AsyncImage(
                 model = playlist.thumbnails[0],
                 contentDescription = null,
@@ -295,6 +320,7 @@ fun PlaylistListItem(
                     .size(ListThumbnailSize)
                     .clip(RoundedCornerShape(ThumbnailCornerRadius))
             )
+
             else -> Box(
                 modifier = Modifier
                     .size(ListThumbnailSize)
@@ -376,7 +402,31 @@ fun YouTubeListItem(
         is ArtistItem -> null
         is PlaylistItem -> joinByBullet(item.author.name, item.songCountText)
     },
-    badges = badges,
+    badges = {
+        badges()
+
+        if (item is SongItem) {
+            val downloads by LocalDownloadUtil.current.downloads.collectAsState()
+            when (downloads[item.id]?.state) {
+                STATE_COMPLETED -> Icon(
+                    painter = painterResource(R.drawable.offline),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(18.dp)
+                        .padding(end = 2.dp)
+                )
+
+                STATE_DOWNLOADING -> CircularProgressIndicator(
+                    strokeWidth = 2.dp,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(end = 2.dp)
+                )
+
+                else -> {}
+            }
+        }
+    },
     thumbnailContent = {
         Box(
             contentAlignment = Alignment.Center,
