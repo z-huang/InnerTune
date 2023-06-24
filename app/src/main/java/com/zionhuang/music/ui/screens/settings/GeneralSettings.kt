@@ -38,27 +38,27 @@ fun GeneralSettings(
         SwitchPreference(
             title = stringResource(R.string.auto_add_song),
             description = stringResource(R.string.auto_add_song_desc),
-            icon = R.drawable.ic_library_add,
+            icon = R.drawable.library_add,
             checked = autoAddToLibrary,
             onCheckedChange = onAutoAddToLibraryChange
         )
         SwitchPreference(
             title = stringResource(R.string.auto_download),
             description = stringResource(R.string.auto_download_desc),
-            icon = R.drawable.ic_save_alt,
+            icon = R.drawable.download,
             checked = autoDownload,
             onCheckedChange = onAutoDownloadChange
         )
         SwitchPreference(
             title = stringResource(R.string.expand_on_play),
-            icon = R.drawable.ic_open_in_full,
+            icon = R.drawable.open_in_full,
             checked = expandOnPlay,
             onCheckedChange = onExpandOnPlayChange
         )
         SwitchPreference(
             title = stringResource(R.string.notification_more_action),
             description = stringResource(R.string.notification_more_action_desc),
-            icon = R.drawable.ic_notifications,
+            icon = R.drawable.notifications,
             checked = notificationMoreAction,
             onCheckedChange = onNotificationMoreActionChange
         )
@@ -69,7 +69,7 @@ fun GeneralSettings(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

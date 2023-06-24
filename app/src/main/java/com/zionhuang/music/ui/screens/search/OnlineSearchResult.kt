@@ -150,7 +150,7 @@ fun OnlineSearchResult(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_more_vert),
+                        painter = painterResource(R.drawable.more_vert),
                         contentDescription = null
                     )
                 }
@@ -203,7 +203,7 @@ fun OnlineSearchResult(
             if (searchSummary?.summaries?.isEmpty() == true) {
                 item {
                     EmptyPlaceholder(
-                        icon = R.drawable.ic_search,
+                        icon = R.drawable.search,
                         text = stringResource(R.string.no_results_found)
                     )
                 }
@@ -228,7 +228,7 @@ fun OnlineSearchResult(
             if (itemsPage?.items?.isEmpty() == true) {
                 item {
                     EmptyPlaceholder(
-                        icon = R.drawable.ic_search,
+                        icon = R.drawable.search,
                         text = stringResource(R.string.no_results_found)
                     )
                 }

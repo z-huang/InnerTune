@@ -216,7 +216,7 @@ fun BottomSheetPlayer(
             ) {
                 Box(modifier = Modifier.weight(1f)) {
                     ResizableIconButton(
-                        icon = if (currentSong?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border,
+                        icon = if (currentSong?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .size(32.dp)
@@ -228,7 +228,7 @@ fun BottomSheetPlayer(
 
                 Box(modifier = Modifier.weight(1f)) {
                     ResizableIconButton(
-                        icon = R.drawable.ic_skip_previous,
+                        icon = R.drawable.skip_previous,
                         enabled = canSkipPrevious,
                         modifier = Modifier
                             .size(32.dp)
@@ -247,7 +247,7 @@ fun BottomSheetPlayer(
                         .clickable(onClick = playerConnection.player::togglePlayPause)
                 ) {
                     Image(
-                        painter = painterResource(if (playWhenReady) R.drawable.ic_pause else R.drawable.ic_play),
+                        painter = painterResource(if (playWhenReady) R.drawable.pause else R.drawable.play),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
                         modifier = Modifier
@@ -260,7 +260,7 @@ fun BottomSheetPlayer(
 
                 Box(modifier = Modifier.weight(1f)) {
                     ResizableIconButton(
-                        icon = R.drawable.ic_skip_next,
+                        icon = R.drawable.skip_next,
                         enabled = canSkipNext,
                         modifier = Modifier
                             .size(32.dp)
@@ -272,8 +272,8 @@ fun BottomSheetPlayer(
                 Box(modifier = Modifier.weight(1f)) {
                     ResizableIconButton(
                         icon = when (repeatMode) {
-                            REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.ic_repeat
-                            REPEAT_MODE_ONE -> R.drawable.ic_repeat_one
+                            REPEAT_MODE_OFF, REPEAT_MODE_ALL -> R.drawable.repeat
+                            REPEAT_MODE_ONE -> R.drawable.repeat_one
                             else -> throw IllegalStateException()
                         },
                         modifier = Modifier

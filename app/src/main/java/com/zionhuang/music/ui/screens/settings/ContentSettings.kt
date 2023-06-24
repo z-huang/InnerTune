@@ -41,7 +41,7 @@ fun ContentSettings(
     ) {
         ListPreference(
             title = stringResource(R.string.content_language),
-            icon = R.drawable.ic_language,
+            icon = R.drawable.language,
             selectedValue = contentLanguage,
             values = listOf(SYSTEM_DEFAULT) + LanguageCodeToName.keys.toList(),
             valueText = {
@@ -53,7 +53,7 @@ fun ContentSettings(
         )
         ListPreference(
             title = stringResource(R.string.content_country),
-            icon = R.drawable.ic_place,
+            icon = R.drawable.location_on,
             selectedValue = contentCountry,
             values = listOf(SYSTEM_DEFAULT) + CountryCodeToName.keys.toList(),
             valueText = {
@@ -95,7 +95,7 @@ fun ContentSettings(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

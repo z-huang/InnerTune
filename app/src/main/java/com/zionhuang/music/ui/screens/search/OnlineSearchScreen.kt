@@ -195,7 +195,7 @@ fun SuggestionItem(
             .padding(end = SearchBarIconOffsetX)
     ) {
         Icon(
-            painterResource(if (online) R.drawable.ic_search else R.drawable.ic_history),
+            painterResource(if (online) R.drawable.search else R.drawable.history),
             contentDescription = null,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
@@ -215,7 +215,7 @@ fun SuggestionItem(
                 modifier = Modifier.alpha(0.5f)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_close),
+                    painter = painterResource(R.drawable.close),
                     contentDescription = null
                 )
             }
@@ -226,7 +226,7 @@ fun SuggestionItem(
             modifier = Modifier.alpha(0.5f)
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_arrow_top_left),
+                painter = painterResource(R.drawable.arrow_top_left),
                 contentDescription = null
             )
         }

@@ -41,13 +41,13 @@ fun AppearanceSettings(
     ) {
         SwitchPreference(
             title = stringResource(R.string.enable_dynamic_theme),
-            icon = R.drawable.ic_palette,
+            icon = R.drawable.palette,
             checked = dynamicTheme,
             onCheckedChange = onDynamicThemeChange
         )
         EnumListPreference(
             title = stringResource(R.string.dark_theme),
-            icon = R.drawable.ic_dark_mode,
+            icon = R.drawable.dark_mode,
             selectedValue = darkMode,
             onValueSelected = onDarkModeChange,
             valueText = {
@@ -66,7 +66,7 @@ fun AppearanceSettings(
         )
         EnumListPreference(
             title = stringResource(R.string.default_open_tab),
-            icon = R.drawable.ic_tab,
+            icon = R.drawable.tab,
             selectedValue = defaultOpenTab,
             onValueSelected = onDefaultOpenTabChange,
             valueText = {
@@ -81,7 +81,7 @@ fun AppearanceSettings(
         )
         EnumListPreference(
             title = stringResource(R.string.lyrics_text_position),
-            icon = R.drawable.ic_lyrics,
+            icon = R.drawable.lyrics,
             selectedValue = lyricsPosition,
             onValueSelected = onLyricsPositionChange,
             valueText = {
@@ -99,7 +99,7 @@ fun AppearanceSettings(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

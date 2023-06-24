@@ -76,24 +76,24 @@ fun PrivacySettings(
     ) {
         SwitchPreference(
             title = stringResource(R.string.pause_listen_history),
-            icon = R.drawable.ic_history,
+            icon = R.drawable.history,
             checked = pauseListenHistory,
             onCheckedChange = onPauseListenHistoryChange
         )
         SwitchPreference(
             title = stringResource(R.string.pause_search_history),
-            icon = R.drawable.ic_manage_search,
+            icon = R.drawable.manage_search,
             checked = pauseSearchHistory,
             onCheckedChange = onPauseSearchHistoryChange
         )
         PreferenceEntry(
             title = stringResource(R.string.clear_search_history),
-            icon = R.drawable.ic_clear_all,
+            icon = R.drawable.clear_all,
             onClick = { showClearHistoryDialog = true }
         )
         SwitchPreference(
             title = stringResource(R.string.enable_kugou),
-            icon = R.drawable.ic_lyrics,
+            icon = R.drawable.lyrics,
             checked = enableKugou,
             onCheckedChange = onEnableKugouChange
         )
@@ -104,7 +104,7 @@ fun PrivacySettings(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

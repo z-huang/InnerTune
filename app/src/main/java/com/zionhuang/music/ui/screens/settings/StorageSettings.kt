@@ -190,7 +190,7 @@ fun StorageSettings(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

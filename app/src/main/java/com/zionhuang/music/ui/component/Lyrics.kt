@@ -242,7 +242,7 @@ fun Lyrics(
                 }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_more_horiz),
+                    painter = painterResource(id = R.drawable.more_horiz),
                     contentDescription = null
                 )
             }
@@ -268,7 +268,7 @@ fun LyricsMenu(
     if (showEditDialog) {
         TextFieldDialog(
             onDismiss = { showEditDialog = false },
-            icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
+            icon = { Icon(painter = painterResource(R.drawable.edit), contentDescription = null) },
             title = { Text(text = mediaMetadataProvider().title) },
             initialTextFieldValue = TextFieldValue(lyricsProvider()?.lyrics.orEmpty()),
             singleLine = false,
@@ -314,7 +314,7 @@ fun LyricsMenu(
         DefaultDialog(
             modifier = Modifier.verticalScroll(rememberScrollState()),
             onDismiss = { showSearchDialog = false },
-            icon = { Icon(painter = painterResource(R.drawable.ic_search), contentDescription = null) },
+            icon = { Icon(painter = painterResource(R.drawable.search), contentDescription = null) },
             title = { Text(stringResource(R.string.search_lyrics)) },
             buttons = {
                 TextButton(
@@ -424,7 +424,7 @@ fun LyricsMenu(
                             )
                             if (result.lyrics.startsWith("[")) {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_sync),
+                                    painter = painterResource(R.drawable.sync),
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.secondary,
                                     modifier = Modifier
@@ -441,7 +441,7 @@ fun LyricsMenu(
                         }
                     ) {
                         Icon(
-                            painter = painterResource(if (index == expandedItemIndex) R.drawable.ic_expand_less else R.drawable.ic_expand_more),
+                            painter = painterResource(if (index == expandedItemIndex) R.drawable.expand_less else R.drawable.expand_more),
                             contentDescription = null
                         )
                     }
@@ -470,20 +470,20 @@ fun LyricsMenu(
         )
     ) {
         GridMenuItem(
-            icon = R.drawable.ic_edit,
+            icon = R.drawable.edit,
             title = R.string.edit
         ) {
             showEditDialog = true
         }
         GridMenuItem(
-            icon = R.drawable.ic_cached,
+            icon = R.drawable.cached,
             title = R.string.refetch
         ) {
             onDismiss()
             viewModel.refetchLyrics(mediaMetadataProvider(), lyricsProvider())
         }
         GridMenuItem(
-            icon = R.drawable.ic_search,
+            icon = R.drawable.search,
             title = R.string.search,
         ) {
             showSearchDialog = true

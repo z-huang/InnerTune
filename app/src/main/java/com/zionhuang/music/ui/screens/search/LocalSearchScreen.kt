@@ -3,13 +3,29 @@ package com.zionhuang.music.ui.screens.search
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -30,7 +46,12 @@ import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
-import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.component.AlbumListItem
+import com.zionhuang.music.ui.component.ArtistListItem
+import com.zionhuang.music.ui.component.EmptyPlaceholder
+import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.PlaylistListItem
+import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.viewmodels.LocalFilter
 import com.zionhuang.music.viewmodels.LocalSearchViewModel
@@ -126,7 +147,7 @@ fun LocalSearchScreen(
                             )
 
                             Icon(
-                                painter = painterResource(R.drawable.ic_navigate_next),
+                                painter = painterResource(R.drawable.navigate_next),
                                 contentDescription = null
                             )
                         }
@@ -160,7 +181,7 @@ fun LocalSearchScreen(
                                     }
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_more_vert),
+                                        painter = painterResource(R.drawable.more_vert),
                                         contentDescription = null
                                     )
                                 }
@@ -217,7 +238,7 @@ fun LocalSearchScreen(
                     key = "no_result"
                 ) {
                     EmptyPlaceholder(
-                        icon = R.drawable.ic_search,
+                        icon = R.drawable.search,
                         text = stringResource(R.string.no_results_found)
                     )
                 }

@@ -194,7 +194,7 @@ fun OnlinePlaylistScreen(
                                             }
                                         ) {
                                             Icon(
-                                                painter = painterResource(R.drawable.ic_input),
+                                                painter = painterResource(R.drawable.input),
                                                 contentDescription = null
                                             )
                                         }
@@ -213,7 +213,7 @@ fun OnlinePlaylistScreen(
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_shuffle),
+                                        painter = painterResource(R.drawable.shuffle),
                                         contentDescription = null,
                                         modifier = Modifier.size(ButtonDefaults.IconSize)
                                     )
@@ -229,7 +229,7 @@ fun OnlinePlaylistScreen(
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_radio),
+                                        painter = painterResource(R.drawable.radio),
                                         contentDescription = null,
                                         modifier = Modifier.size(ButtonDefaults.IconSize)
                                     )
@@ -263,7 +263,7 @@ fun OnlinePlaylistScreen(
                                     }
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_more_vert),
+                                        painter = painterResource(R.drawable.more_vert),
                                         contentDescription = null
                                     )
                                 }
@@ -323,7 +323,7 @@ fun OnlinePlaylistScreen(
             navigationIcon = {
                 IconButton(onClick = navController::navigateUp) {
                     Icon(
-                        painterResource(R.drawable.ic_arrow_back),
+                        painterResource(R.drawable.arrow_back),
                         contentDescription = null
                     )
                 }

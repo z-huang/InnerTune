@@ -157,7 +157,7 @@ fun SongListItem(
     badges: @Composable RowScope.() -> Unit = {
         if (song.song.liked) {
             Icon(
-                painter = painterResource(R.drawable.ic_favorite),
+                painter = painterResource(R.drawable.favorite),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier
@@ -167,7 +167,7 @@ fun SongListItem(
         }
         if (showInLibraryIcon && song.song.inLibrary != null) {
             Icon(
-                painter = painterResource(R.drawable.ic_library_add_check),
+                painter = painterResource(R.drawable.library_add_check),
                 contentDescription = null,
                 modifier = Modifier
                     .size(18.dp)
@@ -322,7 +322,7 @@ fun PlaylistListItem(
     thumbnailContent = {
         when (playlist.thumbnails.size) {
             0 -> Icon(
-                painter = painterResource(R.drawable.ic_queue_music),
+                painter = painterResource(R.drawable.queue_music),
                 contentDescription = null,
                 modifier = Modifier.size(ListThumbnailSize)
             )
@@ -413,7 +413,7 @@ fun YouTubeListItem(
 
         if (item is SongItem && song?.song?.liked == true) {
             Icon(
-                painter = painterResource(R.drawable.ic_favorite),
+                painter = painterResource(R.drawable.favorite),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier
@@ -423,7 +423,7 @@ fun YouTubeListItem(
         }
         if (item.explicit) {
             Icon(
-                painter = painterResource(R.drawable.ic_explicit),
+                painter = painterResource(R.drawable.explicit),
                 contentDescription = null,
                 modifier = Modifier
                     .size(18.dp)
@@ -435,7 +435,7 @@ fun YouTubeListItem(
             item is PlaylistItem && playlist != null
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_library_add_check),
+                painter = painterResource(R.drawable.library_add_check),
                 contentDescription = null,
                 modifier = Modifier
                     .size(18.dp)
@@ -532,7 +532,7 @@ fun YouTubeGridItem(
 
         if (item is SongItem && song?.song?.liked == true) {
             Icon(
-                painter = painterResource(R.drawable.ic_favorite),
+                painter = painterResource(R.drawable.favorite),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier
@@ -542,7 +542,7 @@ fun YouTubeGridItem(
         }
         if (item.explicit) {
             Icon(
-                painter = painterResource(R.drawable.ic_explicit),
+                painter = painterResource(R.drawable.explicit),
                 contentDescription = null,
                 modifier = Modifier
                     .size(18.dp)
@@ -554,7 +554,7 @@ fun YouTubeGridItem(
             item is PlaylistItem && playlist != null
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_library_add_check),
+                painter = painterResource(R.drawable.library_add_check),
                 contentDescription = null,
                 modifier = Modifier
                     .size(18.dp)
@@ -638,7 +638,7 @@ fun YouTubeGridItem(
                         )
                     } else {
                         Icon(
-                            painter = painterResource(R.drawable.ic_play),
+                            painter = painterResource(R.drawable.play),
                             contentDescription = null,
                             tint = Color.White
                         )

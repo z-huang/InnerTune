@@ -47,7 +47,7 @@ fun BackupAndRestore(
     ) {
         PreferenceEntry(
             title = stringResource(R.string.backup),
-            icon = R.drawable.ic_backup,
+            icon = R.drawable.backup,
             onClick = {
                 val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
                 backupLauncher.launch("${context.getString(R.string.app_name)}_${LocalDateTime.now().format(formatter)}.backup")
@@ -55,7 +55,7 @@ fun BackupAndRestore(
         )
         PreferenceEntry(
             title = stringResource(R.string.restore),
-            icon = R.drawable.ic_restore,
+            icon = R.drawable.restore,
             onClick = {
                 restoreLauncher.launch(arrayOf("application/octet-stream"))
             }
@@ -67,7 +67,7 @@ fun BackupAndRestore(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

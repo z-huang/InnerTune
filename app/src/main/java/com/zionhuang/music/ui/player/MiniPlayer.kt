@@ -99,7 +99,7 @@ fun MiniPlayer(
                             )
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_info),
+                            painter = painterResource(R.drawable.info),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier
@@ -135,7 +135,7 @@ fun MiniPlayer(
                 onClick = playerConnection.player::togglePlayPause
             ) {
                 Icon(
-                    painter = painterResource(if (playWhenReady) R.drawable.ic_pause else R.drawable.ic_play),
+                    painter = painterResource(if (playWhenReady) R.drawable.pause else R.drawable.play),
                     contentDescription = null
                 )
             }
@@ -144,7 +144,7 @@ fun MiniPlayer(
                 onClick = playerConnection.player::seekToNext
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_skip_next),
+                    painter = painterResource(R.drawable.skip_next),
                     contentDescription = null
                 )
             }

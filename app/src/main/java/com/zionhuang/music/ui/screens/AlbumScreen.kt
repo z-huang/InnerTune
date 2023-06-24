@@ -205,7 +205,7 @@ fun AlbumScreen(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }
@@ -294,7 +294,7 @@ fun LocalAlbumHeader(
                         }
                     ) {
                         Icon(
-                            painter = painterResource(if (inLibrary) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
+                            painter = painterResource(if (inLibrary) R.drawable.library_add_check else R.drawable.library_add),
                             contentDescription = null
                         )
                     }
@@ -318,7 +318,7 @@ fun LocalAlbumHeader(
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_play),
+                    painter = painterResource(R.drawable.play),
                     contentDescription = null,
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
@@ -341,7 +341,7 @@ fun LocalAlbumHeader(
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_shuffle),
+                    painter = painterResource(R.drawable.shuffle),
                     contentDescription = null,
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
@@ -440,7 +440,7 @@ fun RemoteAlbumHeader(
                         }
                     ) {
                         Icon(
-                            painter = painterResource(if (inLibrary) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
+                            painter = painterResource(if (inLibrary) R.drawable.library_add_check else R.drawable.library_add),
                             contentDescription = null
                         )
                     }
@@ -464,7 +464,7 @@ fun RemoteAlbumHeader(
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_play),
+                    painter = painterResource(R.drawable.play),
                     contentDescription = null,
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
@@ -487,7 +487,7 @@ fun RemoteAlbumHeader(
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_shuffle),
+                    painter = painterResource(R.drawable.shuffle),
                     contentDescription = null,
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )

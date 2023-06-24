@@ -2,12 +2,36 @@ package com.zionhuang.music.ui.screens.playlist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,9 +64,18 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.ListQueue
-import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.component.AutoResizeText
+import com.zionhuang.music.ui.component.EmptyPlaceholder
+import com.zionhuang.music.ui.component.FontSizeRange
+import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.SongListItem
+import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.ui.menu.SongMenu
-import com.zionhuang.music.ui.utils.reordering.*
+import com.zionhuang.music.ui.utils.reordering.ReorderingLazyColumn
+import com.zionhuang.music.ui.utils.reordering.animateItemPlacement
+import com.zionhuang.music.ui.utils.reordering.draggedItem
+import com.zionhuang.music.ui.utils.reordering.rememberReorderingState
+import com.zionhuang.music.ui.utils.reordering.reorder
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +116,7 @@ fun LocalPlaylistScreen(
     if (showEditDialog) {
         playlist?.playlist?.let { playlistEntity ->
             TextFieldDialog(
-                icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
+                icon = { Icon(painter = painterResource(R.drawable.edit), contentDescription = null) },
                 title = { Text(text = stringResource(R.string.edit_playlist)) },
                 onDismiss = { showEditDialog = false },
                 initialTextFieldValue = TextFieldValue(playlistEntity.name, TextRange(playlistEntity.name.length)),
@@ -115,7 +148,7 @@ fun LocalPlaylistScreen(
             item {
                 if (playlist.songCount == 0) {
                     EmptyPlaceholder(
-                        icon = R.drawable.ic_music_note,
+                        icon = R.drawable.music_note,
                         text = stringResource(R.string.playlist_is_empty)
                     )
                 } else {
@@ -188,7 +221,7 @@ fun LocalPlaylistScreen(
                                         onClick = { showEditDialog = true }
                                     ) {
                                         Icon(
-                                            painter = painterResource(R.drawable.ic_edit),
+                                            painter = painterResource(R.drawable.edit),
                                             contentDescription = null
                                         )
                                     }
@@ -216,7 +249,7 @@ fun LocalPlaylistScreen(
                                             }
                                         ) {
                                             Icon(
-                                                painter = painterResource(R.drawable.ic_sync),
+                                                painter = painterResource(R.drawable.sync),
                                                 contentDescription = null
                                             )
                                         }
@@ -239,7 +272,7 @@ fun LocalPlaylistScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_play),
+                                    painter = painterResource(R.drawable.play),
                                     contentDescription = null,
                                     modifier = Modifier.size(ButtonDefaults.IconSize)
                                 )
@@ -260,7 +293,7 @@ fun LocalPlaylistScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_shuffle),
+                                    painter = painterResource(R.drawable.shuffle),
                                     contentDescription = null,
                                     modifier = Modifier.size(ButtonDefaults.IconSize)
                                 )
@@ -295,7 +328,7 @@ fun LocalPlaylistScreen(
                         }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_more_vert),
+                            painter = painterResource(R.drawable.more_vert),
                             contentDescription = null
                         )
                     }
@@ -305,7 +338,7 @@ fun LocalPlaylistScreen(
                         modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_drag_handle),
+                            painter = painterResource(R.drawable.drag_handle),
                             contentDescription = null
                         )
                     }
@@ -332,7 +365,7 @@ fun LocalPlaylistScreen(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

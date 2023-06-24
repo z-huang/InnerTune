@@ -343,13 +343,13 @@ class MusicService : MediaLibraryService(),
                 listOf(
                     CommandButton.Builder()
                         .setDisplayName(getString(if (song?.song?.inLibrary != null) R.string.action_remove_from_library else R.string.action_add_to_library))
-                        .setIconResId(if (song?.song?.inLibrary != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add)
+                        .setIconResId(if (song?.song?.inLibrary != null) R.drawable.library_add_check else R.drawable.library_add)
                         .setSessionCommand(CommandToggleLibrary)
                         .setEnabled(song != null)
                         .build(),
                     CommandButton.Builder()
                         .setDisplayName(getString(if (currentSong?.song?.liked == true) R.string.action_remove_like else R.string.action_like))
-                        .setIconResId(if (song?.song?.liked == true) R.drawable.ic_favorite else R.drawable.ic_favorite_border)
+                        .setIconResId(if (song?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border)
                         .setSessionCommand(CommandToggleLike)
                         .setEnabled(song != null)
                         .build()
@@ -824,10 +824,10 @@ class MusicService : MediaLibraryService(),
         LibraryResult.ofItemList(
             when (parentId) {
                 ROOT -> listOf(
-                    mediaItem(SONG, getString(R.string.songs), null, drawableUri(R.drawable.ic_music_note), true, MEDIA_TYPE_PLAYLIST),
-                    mediaItem(ARTIST, getString(R.string.artists), null, drawableUri(R.drawable.ic_artist), true, MEDIA_TYPE_FOLDER_ARTISTS),
-                    mediaItem(ALBUM, getString(R.string.albums), null, drawableUri(R.drawable.ic_album), true, MEDIA_TYPE_FOLDER_ALBUMS),
-                    mediaItem(PLAYLIST, getString(R.string.playlists), null, drawableUri(R.drawable.ic_queue_music), true, MEDIA_TYPE_FOLDER_PLAYLISTS)
+                    mediaItem(SONG, getString(R.string.songs), null, drawableUri(R.drawable.music_note), true, MEDIA_TYPE_PLAYLIST),
+                    mediaItem(ARTIST, getString(R.string.artists), null, drawableUri(R.drawable.artist), true, MEDIA_TYPE_FOLDER_ARTISTS),
+                    mediaItem(ALBUM, getString(R.string.albums), null, drawableUri(R.drawable.album), true, MEDIA_TYPE_FOLDER_ALBUMS),
+                    mediaItem(PLAYLIST, getString(R.string.playlists), null, drawableUri(R.drawable.queue_music), true, MEDIA_TYPE_FOLDER_PLAYLISTS)
                 )
 
                 SONG -> database.songsByCreateDateDesc().first().map { it.toMediaItem(parentId) }
@@ -843,8 +843,8 @@ class MusicService : MediaLibraryService(),
                     val likedSongCount = database.likedSongsCount().first()
                     val downloadedSongCount = database.downloadedSongsCount().first()
                     listOf(
-                        mediaItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.n_song, likedSongCount, likedSongCount), drawableUri(R.drawable.ic_favorite), true, MEDIA_TYPE_PLAYLIST),
-                        mediaItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.n_song, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.ic_save_alt), true, MEDIA_TYPE_PLAYLIST)
+                        mediaItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.n_song, likedSongCount, likedSongCount), drawableUri(R.drawable.favorite), true, MEDIA_TYPE_PLAYLIST),
+                        mediaItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.n_song, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.download), true, MEDIA_TYPE_PLAYLIST)
                     ) + database.playlistsByCreateDateDesc().first().map { playlist ->
                         mediaItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.n_song, playlist.songCount, playlist.songCount), playlist.thumbnails.firstOrNull()?.toUri(), true, MEDIA_TYPE_PLAYLIST)
                     }

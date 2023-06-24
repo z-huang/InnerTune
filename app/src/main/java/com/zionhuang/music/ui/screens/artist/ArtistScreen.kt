@@ -161,7 +161,7 @@ fun ArtistScreen(
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_shuffle),
+                                        painter = painterResource(R.drawable.shuffle),
                                         contentDescription = null,
                                         modifier = Modifier.size(ButtonDefaults.IconSize)
                                     )
@@ -181,7 +181,7 @@ fun ArtistScreen(
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_radio),
+                                        painter = painterResource(R.drawable.radio),
                                         contentDescription = null,
                                         modifier = Modifier.size(ButtonDefaults.IconSize)
                                     )
@@ -213,7 +213,7 @@ fun ArtistScreen(
                                 )
                             }
                             Icon(
-                                painter = painterResource(R.drawable.ic_navigate_next),
+                                painter = painterResource(R.drawable.navigate_next),
                                 contentDescription = null
                             )
                         }
@@ -242,7 +242,7 @@ fun ArtistScreen(
                                     }
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_more_vert),
+                                        painter = painterResource(R.drawable.more_vert),
                                         contentDescription = null
                                     )
                                 }
@@ -278,7 +278,7 @@ fun ArtistScreen(
                             }
                             if (section.moreEndpoint != null) {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_navigate_next),
+                                    painter = painterResource(R.drawable.navigate_next),
                                     contentDescription = null
                                 )
                             }
@@ -309,7 +309,7 @@ fun ArtistScreen(
                                         }
                                     ) {
                                         Icon(
-                                            painter = painterResource(R.drawable.ic_more_vert),
+                                            painter = painterResource(R.drawable.more_vert),
                                             contentDescription = null
                                         )
                                     }
@@ -434,7 +434,7 @@ fun ArtistScreen(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

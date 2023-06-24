@@ -103,7 +103,7 @@ fun HistoryScreen(
                             }
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_more_vert),
+                                painter = painterResource(R.drawable.more_vert),
                                 contentDescription = null
                             )
                         }
@@ -129,7 +129,7 @@ fun HistoryScreen(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

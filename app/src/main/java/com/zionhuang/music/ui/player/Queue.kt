@@ -113,7 +113,7 @@ fun Queue(
         AlertDialog(
             properties = DialogProperties(usePlatformDefaultWidth = false),
             onDismissRequest = { showSleepTimerDialog = false },
-            icon = { Icon(painter = painterResource(R.drawable.ic_bedtime), contentDescription = null) },
+            icon = { Icon(painter = painterResource(R.drawable.bedtime), contentDescription = null) },
             title = { Text(stringResource(R.string.sleep_timer)) },
             confirmButton = {
                 TextButton(
@@ -169,7 +169,7 @@ fun Queue(
             onDismissRequest = { showDetailsDialog = false },
             icon = {
                 Icon(
-                    painter = painterResource(R.drawable.ic_info),
+                    painter = painterResource(R.drawable.info),
                     contentDescription = null
                 )
             },
@@ -240,13 +240,13 @@ fun Queue(
             ) {
                 IconButton(onClick = { state.expandSoft() }) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_queue_music),
+                        painter = painterResource(R.drawable.queue_music),
                         contentDescription = null
                     )
                 }
                 IconButton(onClick = { showLyrics = !showLyrics }) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_lyrics),
+                        painter = painterResource(R.drawable.lyrics),
                         contentDescription = null,
                         modifier = Modifier.alpha(if (showLyrics) 1f else 0.5f)
                     )
@@ -266,7 +266,7 @@ fun Queue(
                     } else {
                         IconButton(onClick = { showSleepTimerDialog = true }) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_bedtime),
+                                painter = painterResource(R.drawable.bedtime),
                                 contentDescription = null
                             )
                         }
@@ -274,7 +274,7 @@ fun Queue(
                 }
                 IconButton(onClick = playerConnection::toggleLibrary) {
                     Icon(
-                        painter = painterResource(if (currentSong?.song?.inLibrary != null) R.drawable.ic_library_add_check else R.drawable.ic_library_add),
+                        painter = painterResource(if (currentSong?.song?.inLibrary != null) R.drawable.library_add_check else R.drawable.library_add),
                         contentDescription = null
                     )
                 }
@@ -293,7 +293,7 @@ fun Queue(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_more_horiz),
+                        painter = painterResource(R.drawable.more_horiz),
                         contentDescription = null
                     )
                 }
@@ -347,7 +347,7 @@ fun Queue(
                     playWhenReady = playWhenReady,
                     trailingContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_drag_handle),
+                            painter = painterResource(R.drawable.drag_handle),
                             contentDescription = null,
                             modifier = Modifier
                                 .reorder(
@@ -460,14 +460,14 @@ fun Queue(
                 }
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_shuffle),
+                    painter = painterResource(R.drawable.shuffle),
                     contentDescription = null,
                     modifier = Modifier.alpha(if (shuffleModeEnabled) 1f else 0.5f)
                 )
             }
 
             Icon(
-                painter = painterResource(R.drawable.ic_expand_more),
+                painter = painterResource(R.drawable.expand_more),
                 contentDescription = null,
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -532,7 +532,7 @@ fun PlayerMenu(
             .padding(top = 24.dp, bottom = 12.dp)
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_volume_up),
+            painter = painterResource(R.drawable.volume_up),
             contentDescription = null,
             modifier = Modifier.size(28.dp)
         )
@@ -553,14 +553,14 @@ fun PlayerMenu(
         )
     ) {
         GridMenuItem(
-            icon = R.drawable.ic_radio,
+            icon = R.drawable.radio,
             title = R.string.start_radio
         ) {
             playerConnection.service.startRadioSeamlessly()
             onDismiss()
         }
         GridMenuItem(
-            icon = R.drawable.ic_playlist_add,
+            icon = R.drawable.playlist_add,
             title = R.string.add_to_playlist,
             enabled = false
         ) {
@@ -574,7 +574,7 @@ fun PlayerMenu(
 
         }
         GridMenuItem(
-            icon = R.drawable.ic_artist,
+            icon = R.drawable.artist,
             title = R.string.view_artist
         ) {
             if (mediaMetadata.artists.size == 1) {
@@ -587,7 +587,7 @@ fun PlayerMenu(
         }
         if (mediaMetadata.album != null) {
             GridMenuItem(
-                icon = R.drawable.ic_album,
+                icon = R.drawable.album,
                 title = R.string.view_album
             ) {
                 navController.navigate("album/${mediaMetadata.album.id}")
@@ -596,7 +596,7 @@ fun PlayerMenu(
             }
         }
         GridMenuItem(
-            icon = R.drawable.ic_share,
+            icon = R.drawable.share,
             title = R.string.share
         ) {
             val intent = Intent().apply {
@@ -608,14 +608,14 @@ fun PlayerMenu(
             onDismiss()
         }
         GridMenuItem(
-            icon = R.drawable.ic_info,
+            icon = R.drawable.info,
             title = R.string.details
         ) {
             onShowDetailsDialog()
             onDismiss()
         }
         GridMenuItem(
-            icon = R.drawable.ic_equalizer,
+            icon = R.drawable.equalizer,
             title = R.string.equalizer
         ) {
             val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {

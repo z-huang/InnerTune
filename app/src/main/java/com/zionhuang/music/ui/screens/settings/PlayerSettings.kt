@@ -40,7 +40,7 @@ fun PlayerSettings(
     ) {
         EnumListPreference(
             title = stringResource(R.string.audio_quality),
-            icon = R.drawable.ic_graphic_eq,
+            icon = R.drawable.graphic_eq,
             selectedValue = audioQuality,
             onValueSelected = onAudioQualityChange,
             valueText = {
@@ -53,19 +53,19 @@ fun PlayerSettings(
         )
         SwitchPreference(
             title = stringResource(R.string.persistent_queue),
-            icon = R.drawable.ic_queue_music,
+            icon = R.drawable.queue_music,
             checked = persistentQueue,
             onCheckedChange = onPersistentQueueChange
         )
         SwitchPreference(
             title = stringResource(R.string.skip_silence),
-            icon = R.drawable.ic_skip_next,
+            icon = R.drawable.skip_next,
             checked = skipSilence,
             onCheckedChange = onSkipSilenceChange
         )
         SwitchPreference(
             title = stringResource(R.string.audio_normalization),
-            icon = R.drawable.ic_volume_up,
+            icon = R.drawable.volume_up,
             checked = audioNormalization,
             onCheckedChange = onAudioNormalizationChange
         )
@@ -76,7 +76,7 @@ fun PlayerSettings(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

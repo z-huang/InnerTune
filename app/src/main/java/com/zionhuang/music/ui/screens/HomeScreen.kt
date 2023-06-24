@@ -95,20 +95,20 @@ fun HomeScreen(
                 ) {
                     NavigationTile(
                         title = stringResource(R.string.history),
-                        icon = R.drawable.ic_history,
+                        icon = R.drawable.history,
                         onClick = { navController.navigate("history") },
                         modifier = Modifier.weight(1f)
                     )
                     NavigationTile(
                         title = stringResource(R.string.stats),
-                        icon = R.drawable.ic_trending_up,
+                        icon = R.drawable.trending_up,
                         onClick = { navController.navigate("stats") },
                         enabled = false,
                         modifier = Modifier.weight(1f)
                     )
                     NavigationTile(
                         title = stringResource(R.string.settings),
-                        icon = R.drawable.ic_settings,
+                        icon = R.drawable.settings,
                         onClick = { navController.navigate("settings") },
                         modifier = Modifier.weight(1f)
                     )
@@ -159,7 +159,7 @@ fun HomeScreen(
                                         }
                                     ) {
                                         Icon(
-                                            painter = painterResource(R.drawable.ic_more_vert),
+                                            painter = painterResource(R.drawable.more_vert),
                                             contentDescription = null
                                         )
                                     }
@@ -195,7 +195,7 @@ fun HomeScreen(
                         }
 
                         Icon(
-                            painter = painterResource(R.drawable.ic_navigate_next),
+                            painter = painterResource(R.drawable.navigate_next),
                             contentDescription = null
                         )
                     }
@@ -258,7 +258,7 @@ fun HomeScreen(
                         }
                     }) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_casino),
+                        painter = painterResource(R.drawable.casino),
                         contentDescription = null
                     )
                 }

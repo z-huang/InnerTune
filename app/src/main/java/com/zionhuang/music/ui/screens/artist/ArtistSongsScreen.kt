@@ -2,10 +2,23 @@ package com.zionhuang.music.ui.screens.artist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,7 +34,11 @@ import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
+import com.zionhuang.music.constants.ArtistSongSortDescendingKey
+import com.zionhuang.music.constants.ArtistSongSortType
+import com.zionhuang.music.constants.ArtistSongSortTypeKey
+import com.zionhuang.music.constants.CONTENT_TYPE_HEADER
+import com.zionhuang.music.constants.CONTENT_TYPE_SONG
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.LocalMenuState
@@ -101,7 +118,7 @@ fun ArtistSongsScreen(
                             }
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_more_vert),
+                                painter = painterResource(R.drawable.more_vert),
                                 contentDescription = null
                             )
                         }
@@ -127,7 +144,7 @@ fun ArtistSongsScreen(
             navigationIcon = {
                 IconButton(onClick = navController::navigateUp) {
                     Icon(
-                        painterResource(R.drawable.ic_arrow_back),
+                        painterResource(R.drawable.arrow_back),
                         contentDescription = null
                     )
                 }
@@ -153,7 +170,7 @@ fun ArtistSongsScreen(
             }
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_shuffle),
+                painter = painterResource(R.drawable.shuffle),
                 contentDescription = null
             )
         }

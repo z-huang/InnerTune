@@ -102,7 +102,7 @@ fun LibrarySongsScreen(
                             }
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_more_vert),
+                                painter = painterResource(R.drawable.more_vert),
                                 contentDescription = null
                             )
                         }
@@ -140,7 +140,7 @@ fun LibrarySongsScreen(
                 }
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_shuffle),
+                    painter = painterResource(R.drawable.shuffle),
                     contentDescription = null
                 )
             }

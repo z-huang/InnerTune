@@ -27,42 +27,42 @@ fun SettingsScreen(
     ) {
         PreferenceEntry(
             title = stringResource(R.string.appearance),
-            icon = R.drawable.ic_palette,
+            icon = R.drawable.palette,
             onClick = { navController.navigate("settings/appearance") }
         )
         PreferenceEntry(
             title = stringResource(R.string.content),
-            icon = R.drawable.ic_language,
+            icon = R.drawable.language,
             onClick = { navController.navigate("settings/content") }
         )
         PreferenceEntry(
             title = stringResource(R.string.player_and_audio),
-            icon = R.drawable.ic_play,
+            icon = R.drawable.play,
             onClick = { navController.navigate("settings/player") }
         )
         PreferenceEntry(
             title = stringResource(R.string.storage),
-            icon = R.drawable.ic_storage,
+            icon = R.drawable.storage,
             onClick = { navController.navigate("settings/storage") }
         )
         PreferenceEntry(
             title = stringResource(R.string.general),
-            icon = R.drawable.ic_testing,
+            icon = R.drawable.testing,
             onClick = { navController.navigate("settings/general") }
         )
         PreferenceEntry(
             title = stringResource(R.string.privacy),
-            icon = R.drawable.ic_security,
+            icon = R.drawable.security,
             onClick = { navController.navigate("settings/privacy") }
         )
         PreferenceEntry(
             title = stringResource(R.string.backup_restore),
-            icon = R.drawable.ic_settings_backup_restore,
+            icon = R.drawable.restore,
             onClick = { navController.navigate("settings/backup_restore") }
         )
         PreferenceEntry(
             title = stringResource(R.string.about),
-            icon = R.drawable.ic_info,
+            icon = R.drawable.info,
             onClick = { navController.navigate("settings/about") }
         )
     }
@@ -72,7 +72,7 @@ fun SettingsScreen(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

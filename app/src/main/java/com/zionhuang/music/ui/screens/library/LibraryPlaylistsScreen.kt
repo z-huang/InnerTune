@@ -80,7 +80,7 @@ fun LibraryPlaylistsScreen(
 
     if (showAddPlaylistDialog) {
         TextFieldDialog(
-            icon = { Icon(painter = painterResource(R.drawable.ic_add), contentDescription = null) },
+            icon = { Icon(painter = painterResource(R.drawable.add), contentDescription = null) },
             title = { Text(text = stringResource(R.string.create_playlist)) },
             onDismiss = { showAddPlaylistDialog = false },
             onDone = { playlistName ->
@@ -130,7 +130,7 @@ fun LibraryPlaylistsScreen(
                     subtitle = pluralStringResource(R.plurals.n_song, likedSongCount, likedSongCount),
                     thumbnailContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_favorite),
+                            painter = painterResource(R.drawable.favorite),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(ListThumbnailSize)
@@ -186,7 +186,7 @@ fun LibraryPlaylistsScreen(
                             }
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_more_vert),
+                                painter = painterResource(R.drawable.more_vert),
                                 contentDescription = null
                             )
                         }
@@ -212,7 +212,7 @@ fun LibraryPlaylistsScreen(
             onClick = { showAddPlaylistDialog = true }
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_add),
+                painter = painterResource(R.drawable.add),
                 contentDescription = null
             )
         }

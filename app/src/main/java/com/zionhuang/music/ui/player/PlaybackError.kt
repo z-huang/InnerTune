@@ -31,7 +31,7 @@ fun PlaybackError(
         }
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_info),
+            painter = painterResource(R.drawable.info),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.error
         )

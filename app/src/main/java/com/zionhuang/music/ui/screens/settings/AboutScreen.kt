@@ -47,7 +47,7 @@ fun AboutScreen(
         Spacer(Modifier.height(4.dp))
 
         Image(
-            painter = painterResource(R.drawable.ic_launcher_monochrome),
+            painter = painterResource(R.drawable.launcher_monochrome),
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
@@ -95,7 +95,7 @@ fun AboutScreen(
                 onClick = { uriHandler.openUri("https://github.com/z-huang/InnerTune") }
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_github),
+                    painter = painterResource(R.drawable.github),
                     contentDescription = null
                 )
             }
@@ -126,7 +126,7 @@ fun AboutScreen(
         navigationIcon = {
             IconButton(onClick = navController::navigateUp) {
                 Icon(
-                    painterResource(R.drawable.ic_arrow_back),
+                    painterResource(R.drawable.arrow_back),
                     contentDescription = null
                 )
             }

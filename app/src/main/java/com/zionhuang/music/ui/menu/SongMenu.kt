@@ -111,7 +111,7 @@ fun SongMenu(
 
     if (showEditDialog) {
         TextFieldDialog(
-            icon = { Icon(painter = painterResource(R.drawable.ic_edit), contentDescription = null) },
+            icon = { Icon(painter = painterResource(R.drawable.edit), contentDescription = null) },
             title = { Text(text = stringResource(R.string.edit_song)) },
             onDismiss = { showEditDialog = false },
             initialTextFieldValue = TextFieldValue(song.song.title, TextRange(song.song.title.length)),
@@ -133,7 +133,7 @@ fun SongMenu(
                     title = stringResource(R.string.create_playlist),
                     thumbnailContent = {
                         Image(
-                            painter = painterResource(R.drawable.ic_add),
+                            painter = painterResource(R.drawable.add),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                             modifier = Modifier.size(ListThumbnailSize)
@@ -170,7 +170,7 @@ fun SongMenu(
 
     if (showCreatePlaylistDialog) {
         TextFieldDialog(
-            icon = { Icon(painter = painterResource(R.drawable.ic_add), contentDescription = null) },
+            icon = { Icon(painter = painterResource(R.drawable.add), contentDescription = null) },
             title = { Text(text = stringResource(R.string.create_playlist)) },
             onDismiss = { showCreatePlaylistDialog = false },
             onDone = { playlistName ->
@@ -243,7 +243,7 @@ fun SongMenu(
                 }
             ) {
                 Icon(
-                    painter = painterResource(if (song.song.liked) R.drawable.ic_favorite else R.drawable.ic_favorite_border),
+                    painter = painterResource(if (song.song.liked) R.drawable.favorite else R.drawable.favorite_border),
                     tint = MaterialTheme.colorScheme.error,
                     contentDescription = null
                 )
@@ -262,34 +262,34 @@ fun SongMenu(
         )
     ) {
         GridMenuItem(
-            icon = R.drawable.ic_radio,
+            icon = R.drawable.radio,
             title = R.string.start_radio
         ) {
             onDismiss()
             playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
         }
         GridMenuItem(
-            icon = R.drawable.ic_playlist_play,
+            icon = R.drawable.playlist_play,
             title = R.string.play_next
         ) {
             onDismiss()
             playerConnection.playNext(song.toMediaItem())
         }
         GridMenuItem(
-            icon = R.drawable.ic_queue_music,
+            icon = R.drawable.queue_music,
             title = R.string.add_to_queue
         ) {
             onDismiss()
             playerConnection.addToQueue((song.toMediaItem()))
         }
         GridMenuItem(
-            icon = R.drawable.ic_edit,
+            icon = R.drawable.edit,
             title = R.string.edit
         ) {
             showEditDialog = true
         }
         GridMenuItem(
-            icon = R.drawable.ic_playlist_add,
+            icon = R.drawable.playlist_add,
             title = R.string.add_to_playlist
         ) {
             showChoosePlaylistDialog = true
@@ -301,7 +301,7 @@ fun SongMenu(
             title = song.song.title
         )
         GridMenuItem(
-            icon = R.drawable.ic_artist,
+            icon = R.drawable.artist,
             title = R.string.view_artist
         ) {
             if (song.artists.size == 1) {
@@ -313,7 +313,7 @@ fun SongMenu(
         }
         if (song.song.albumId != null) {
             GridMenuItem(
-                icon = R.drawable.ic_album,
+                icon = R.drawable.album,
                 title = R.string.view_album
             ) {
                 onDismiss()
@@ -321,7 +321,7 @@ fun SongMenu(
             }
         }
         GridMenuItem(
-            icon = R.drawable.ic_share,
+            icon = R.drawable.share,
             title = R.string.share
         ) {
             onDismiss()
@@ -334,7 +334,7 @@ fun SongMenu(
         }
         if (song.song.inLibrary == null) {
             GridMenuItem(
-                icon = R.drawable.ic_library_add,
+                icon = R.drawable.library_add,
                 title = R.string.add_to_library
             ) {
                 database.query {
@@ -343,7 +343,7 @@ fun SongMenu(
             }
         } else {
             GridMenuItem(
-                icon = R.drawable.ic_delete,
+                icon = R.drawable.delete,
                 title = R.string.delete
             ) {
                 database.query {
@@ -353,7 +353,7 @@ fun SongMenu(
         }
         if (event != null) {
             GridMenuItem(
-                icon = R.drawable.ic_delete,
+                icon = R.drawable.delete,
                 title = R.string.remove_from_history
             ) {
                 onDismiss()

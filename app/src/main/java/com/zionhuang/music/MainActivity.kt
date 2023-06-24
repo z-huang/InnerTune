@@ -514,9 +514,9 @@ class MainActivity : ComponentActivity() {
                                         Icon(
                                             painterResource(
                                                 if (active || (navController.canNavigateUp && !navigationItems.fastAny { it.route == navBackStackEntry?.destination?.route })) {
-                                                    R.drawable.ic_arrow_back
+                                                    R.drawable.arrow_back
                                                 } else {
-                                                    R.drawable.ic_search
+                                                    R.drawable.search
                                                 }
                                             ),
                                             contentDescription = null
@@ -530,7 +530,7 @@ class MainActivity : ComponentActivity() {
                                                 onClick = { onQueryChange(TextFieldValue("")) }
                                             ) {
                                                 Icon(
-                                                    painter = painterResource(R.drawable.ic_close),
+                                                    painter = painterResource(R.drawable.close),
                                                     contentDescription = null
                                                 )
                                             }
@@ -543,8 +543,8 @@ class MainActivity : ComponentActivity() {
                                             Icon(
                                                 painter = painterResource(
                                                     when (searchSource) {
-                                                        SearchSource.LOCAL -> R.drawable.ic_library_music
-                                                        SearchSource.ONLINE -> R.drawable.ic_language
+                                                        SearchSource.LOCAL -> R.drawable.library_music
+                                                        SearchSource.ONLINE -> R.drawable.language
                                                     }
                                                 ),
                                                 contentDescription = null
