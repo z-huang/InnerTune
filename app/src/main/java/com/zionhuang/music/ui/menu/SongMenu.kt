@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,11 +40,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
-import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
-import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
-import androidx.media3.exoplayer.offline.DownloadRequest
-import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.WatchEndpoint
@@ -61,9 +55,9 @@ import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
-import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
@@ -85,8 +79,9 @@ fun SongMenu(
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
-    val songState = database.songWithDownload(originalSong.id, LocalDownloadUtil.current).collectAsState(initial = originalSong)
+    val songState = database.song(originalSong.id).collectAsState(initial = originalSong)
     val song = songState.value ?: originalSong
+    val download by LocalDownloadUtil.current.getDownload(originalSong.id).collectAsState(initial = null)
 
     var showEditDialog by rememberSaveable {
         mutableStateOf(false)
@@ -299,58 +294,12 @@ fun SongMenu(
         ) {
             showChoosePlaylistDialog = true
         }
-        when (song.download?.state) {
-            STATE_COMPLETED -> {
-                GridMenuItem(
-                    icon = R.drawable.offline,
-                    title = R.string.remove_download
-                ) {
-                    DownloadService.sendRemoveDownload(
-                        context,
-                        ExoDownloadService::class.java,
-                        song.id,
-                        false
-                    )
-                }
-            }
-
-            STATE_DOWNLOADING -> {
-                GridMenuItem(
-                    icon = {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp
-                        )
-                    },
-                    title = R.string.downloading
-                ) {
-                    DownloadService.sendRemoveDownload(
-                        context,
-                        ExoDownloadService::class.java,
-                        song.id,
-                        false
-                    )
-                }
-            }
-
-            else -> {
-                GridMenuItem(
-                    icon = R.drawable.download,
-                    title = R.string.download
-                ) {
-                    val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
-                        .setCustomCacheKey(song.id)
-                        .setData(song.song.title.toByteArray())
-                        .build()
-                    DownloadService.sendAddDownload(
-                        context,
-                        ExoDownloadService::class.java,
-                        downloadRequest,
-                        false
-                    )
-                }
-            }
-        }
+        DownloadGridMenu(
+            context = context,
+            download = download,
+            songId = song.id,
+            title = song.song.title
+        )
         GridMenuItem(
             icon = R.drawable.ic_artist,
             title = R.string.view_artist
@@ -388,7 +337,6 @@ fun SongMenu(
                 icon = R.drawable.ic_library_add,
                 title = R.string.add_to_library
             ) {
-                onDismiss()
                 database.query {
                     update(song.song.toggleLibrary())
                 }
@@ -398,7 +346,6 @@ fun SongMenu(
                 icon = R.drawable.ic_delete,
                 title = R.string.delete
             ) {
-                onDismiss()
                 database.query {
                     update(song.song.toggleLibrary())
                 }

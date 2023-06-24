@@ -4,8 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,7 +14,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -51,7 +48,6 @@ import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeArtistMenu
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.ArtistItemsViewModel
-import com.zionhuang.music.viewmodels.MainViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -59,17 +55,11 @@ fun ArtistItemsScreen(
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
     viewModel: ArtistItemsViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
-
-    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
-    val likedSongIds by mainViewModel.likedSongIds.collectAsState()
-    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
-    val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
 
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -107,39 +97,6 @@ fun ArtistItemsScreen(
             ) { item ->
                 YouTubeListItem(
                     item = item,
-                    badges = {
-                        if (item is SongItem && item.id in likedSongIds) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_favorite),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.error,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                        if (item.explicit) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_explicit),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                        if (item is SongItem && item.id in librarySongIds ||
-                            item is AlbumItem && item.id in libraryAlbumIds ||
-                            item is PlaylistItem && item.id in libraryPlaylistIds
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_library_add_check),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                    },
                     isPlaying = when (item) {
                         is SongItem -> mediaMetadata?.id == item.id
                         is AlbumItem -> mediaMetadata?.album?.id == item.id
@@ -214,39 +171,6 @@ fun ArtistItemsScreen(
             ) { item ->
                 YouTubeGridItem(
                     item = item,
-                    badges = {
-                        if (item is SongItem && item.id in librarySongIds ||
-                            item is AlbumItem && item.id in libraryAlbumIds ||
-                            item is PlaylistItem && item.id in libraryPlaylistIds
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_library_add_check),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                        if (item is SongItem && item.id in likedSongIds) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_favorite),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.error,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                        if (item.explicit) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_explicit),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                    },
                     isPlaying = when (item) {
                         is SongItem -> mediaMetadata?.id == item.id
                         is AlbumItem -> mediaMetadata?.album?.id == item.id

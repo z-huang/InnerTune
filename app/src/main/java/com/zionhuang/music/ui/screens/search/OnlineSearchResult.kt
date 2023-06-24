@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -73,7 +72,6 @@ import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeArtistMenu
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
-import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.launch
 
@@ -82,17 +80,11 @@ import kotlinx.coroutines.launch
 fun OnlineSearchResult(
     navController: NavController,
     viewModel: OnlineSearchViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
-
-    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
-    val likedSongIds by mainViewModel.likedSongIds.collectAsState()
-    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
-    val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
@@ -119,39 +111,6 @@ fun OnlineSearchResult(
     val ytItemContent: @Composable LazyItemScope.(YTItem) -> Unit = { item: YTItem ->
         YouTubeListItem(
             item = item,
-            badges = {
-                if (item is SongItem && item.id in likedSongIds) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_favorite),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .padding(end = 2.dp)
-                    )
-                }
-                if (item.explicit) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_explicit),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .padding(end = 2.dp)
-                    )
-                }
-                if (item is SongItem && item.id in librarySongIds ||
-                    item is AlbumItem && item.id in libraryAlbumIds ||
-                    item is PlaylistItem && item.id in libraryPlaylistIds
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_library_add_check),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .padding(end = 2.dp)
-                    )
-                }
-            },
             isPlaying = when (item) {
                 is SongItem -> mediaMetadata?.id == item.id
                 is AlbumItem -> mediaMetadata?.album?.id == item.id

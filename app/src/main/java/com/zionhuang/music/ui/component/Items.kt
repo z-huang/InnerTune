@@ -31,6 +31,7 @@ import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.*
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
@@ -151,6 +152,8 @@ fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
     albumIndex: Int? = null,
+    showInLibraryIcon: Boolean = false,
+    showDownloadIcon: Boolean = true,
     badges: @Composable RowScope.() -> Unit = {
         if (song.song.liked) {
             Icon(
@@ -162,23 +165,35 @@ fun SongListItem(
                     .padding(end = 2.dp)
             )
         }
-        when (song.download?.state) {
-            STATE_COMPLETED -> Icon(
-                painter = painterResource(R.drawable.offline),
+        if (showInLibraryIcon && song.song.inLibrary != null) {
+            Icon(
+                painter = painterResource(R.drawable.ic_library_add_check),
                 contentDescription = null,
                 modifier = Modifier
                     .size(18.dp)
                     .padding(end = 2.dp)
             )
+        }
+        if (showDownloadIcon) {
+            val download by LocalDownloadUtil.current.getDownload(song.id).collectAsState(initial = null)
+            when (download?.state) {
+                STATE_COMPLETED -> Icon(
+                    painter = painterResource(R.drawable.offline),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(18.dp)
+                        .padding(end = 2.dp)
+                )
 
-            STATE_DOWNLOADING -> CircularProgressIndicator(
-                strokeWidth = 2.dp,
-                modifier = Modifier
-                    .size(16.dp)
-                    .padding(end = 2.dp)
-            )
+                STATE_DOWNLOADING -> CircularProgressIndicator(
+                    strokeWidth = 2.dp,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(end = 2.dp)
+                )
 
-            else -> {}
+                else -> {}
+            }
         }
     },
     isPlaying: Boolean = false,
@@ -390,21 +405,43 @@ fun YouTubeListItem(
     item: YTItem,
     modifier: Modifier = Modifier,
     albumIndex: Int? = null,
-    badges: @Composable RowScope.() -> Unit = {},
-    isPlaying: Boolean = false,
-    playWhenReady: Boolean = false,
-    trailingContent: @Composable RowScope.() -> Unit = {},
-) = ListItem(
-    title = item.title,
-    subtitle = when (item) {
-        is SongItem -> joinByBullet(item.artists.joinToString { it.name }, makeTimeString(item.duration?.times(1000L)))
-        is AlbumItem -> joinByBullet(item.artists?.joinToString { it.name }, item.year?.toString())
-        is ArtistItem -> null
-        is PlaylistItem -> joinByBullet(item.author.name, item.songCountText)
-    },
-    badges = {
-        badges()
+    badges: @Composable RowScope.() -> Unit = {
+        val database = LocalDatabase.current
+        val song by database.song(item.id).collectAsState(initial = null)
+        val album by database.album(item.id).collectAsState(initial = null)
+        val playlist by database.playlist(item.id).collectAsState(initial = null)
 
+        if (item is SongItem && song?.song?.liked == true) {
+            Icon(
+                painter = painterResource(R.drawable.ic_favorite),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
+        if (item.explicit) {
+            Icon(
+                painter = painterResource(R.drawable.ic_explicit),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
+        if (item is SongItem && song?.song?.inLibrary != null ||
+            item is AlbumItem && album != null ||
+            item is PlaylistItem && playlist != null
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_library_add_check),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
         if (item is SongItem) {
             val downloads by LocalDownloadUtil.current.downloads.collectAsState()
             when (downloads[item.id]?.state) {
@@ -427,6 +464,18 @@ fun YouTubeListItem(
             }
         }
     },
+    isPlaying: Boolean = false,
+    playWhenReady: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
+) = ListItem(
+    title = item.title,
+    subtitle = when (item) {
+        is SongItem -> joinByBullet(item.artists.joinToString { it.name }, makeTimeString(item.duration?.times(1000L)))
+        is AlbumItem -> joinByBullet(item.artists?.joinToString { it.name }, item.year?.toString())
+        is ArtistItem -> null
+        is PlaylistItem -> joinByBullet(item.author.name, item.songCountText)
+    },
+    badges = badges,
     thumbnailContent = {
         Box(
             contentAlignment = Alignment.Center,
@@ -475,7 +524,65 @@ fun YouTubeListItem(
 fun YouTubeGridItem(
     item: YTItem,
     modifier: Modifier = Modifier,
-    badges: @Composable RowScope.() -> Unit = {},
+    badges: @Composable RowScope.() -> Unit = {
+        val database = LocalDatabase.current
+        val song by database.song(item.id).collectAsState(initial = null)
+        val album by database.album(item.id).collectAsState(initial = null)
+        val playlist by database.playlist(item.id).collectAsState(initial = null)
+
+        if (item is SongItem && song?.song?.liked == true) {
+            Icon(
+                painter = painterResource(R.drawable.ic_favorite),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
+        if (item.explicit) {
+            Icon(
+                painter = painterResource(R.drawable.ic_explicit),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
+        if (item is SongItem && song?.song?.inLibrary != null ||
+            item is AlbumItem && album != null ||
+            item is PlaylistItem && playlist != null
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_library_add_check),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
+        if (item is SongItem) {
+            val downloads by LocalDownloadUtil.current.downloads.collectAsState()
+            when (downloads[item.id]?.state) {
+                STATE_COMPLETED -> Icon(
+                    painter = painterResource(R.drawable.offline),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(18.dp)
+                        .padding(end = 2.dp)
+                )
+
+                STATE_DOWNLOADING -> CircularProgressIndicator(
+                    strokeWidth = 2.dp,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .padding(end = 2.dp)
+                )
+
+                else -> {}
+            }
+        }
+    },
     isPlaying: Boolean = false,
     playWhenReady: Boolean = false,
     fillMaxWidth: Boolean = false,

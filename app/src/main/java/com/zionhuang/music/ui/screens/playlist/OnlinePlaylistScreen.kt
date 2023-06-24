@@ -74,7 +74,6 @@ import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
-import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlinePlaylistViewModel
 import kotlinx.coroutines.launch
 
@@ -84,7 +83,6 @@ fun OnlinePlaylistScreen(
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
     viewModel: OnlinePlaylistViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val menuState = LocalMenuState.current
@@ -92,9 +90,6 @@ fun OnlinePlaylistScreen(
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
-
-    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
-    val likedSongIds by mainViewModel.likedSongIds.collectAsState()
 
     val playlist by viewModel.playlist.collectAsState()
     val songs by viewModel.playlistSongs.collectAsState()
@@ -251,36 +246,6 @@ fun OnlinePlaylistScreen(
                     ) { song ->
                         YouTubeListItem(
                             item = song,
-                            badges = {
-                                if (song.id in likedSongIds) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_favorite),
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .padding(end = 2.dp)
-                                    )
-                                }
-                                if (song.explicit) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_explicit),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .padding(end = 2.dp)
-                                    )
-                                }
-                                if (song.id in librarySongIds) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_library_add_check),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                            .padding(end = 2.dp)
-                                    )
-                                }
-                            },
                             isPlaying = mediaMetadata?.id == song.id,
                             playWhenReady = playWhenReady,
                             trailingContent = {

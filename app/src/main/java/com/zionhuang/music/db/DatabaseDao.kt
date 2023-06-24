@@ -12,10 +12,8 @@ import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
-import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.ui.utils.resize
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 
@@ -133,11 +131,6 @@ interface DatabaseDao {
     @Transaction
     @Query("SELECT * FROM song WHERE id IN (:songIds)")
     fun songs(songIds: List<String>): Flow<List<Song>>
-
-    fun songWithDownload(songId: String?, downloadUtil: DownloadUtil): Flow<Song?> =
-        combine(song(songId), downloadUtil.downloads) { song, downloads ->
-            song?.copy(download = downloads[song.id])
-        }
 
     @Query("SELECT * FROM format WHERE id = :id")
     fun format(id: String?): Flow<FormatEntity?>

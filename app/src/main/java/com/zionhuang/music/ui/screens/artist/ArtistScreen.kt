@@ -82,7 +82,6 @@ import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.ui.utils.fadingEdge
 import com.zionhuang.music.ui.utils.resize
 import com.zionhuang.music.viewmodels.ArtistViewModel
-import com.zionhuang.music.viewmodels.MainViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -90,18 +89,12 @@ fun ArtistScreen(
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
     viewModel: ArtistViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
     val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
-
-    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
-    val likedSongIds by mainViewModel.likedSongIds.collectAsState()
-    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
-    val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
 
     val artistPage = viewModel.artistPage
     val librarySongs by viewModel.librarySongs.collectAsState()
@@ -299,36 +292,6 @@ fun ArtistScreen(
                         ) { song ->
                             YouTubeListItem(
                                 item = song as SongItem,
-                                badges = {
-                                    if (song.id in likedSongIds) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_favorite),
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.error,
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .padding(end = 2.dp)
-                                        )
-                                    }
-                                    if (song.explicit) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_explicit),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .padding(end = 2.dp)
-                                        )
-                                    }
-                                    if (song.id in librarySongIds) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_library_add_check),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .padding(end = 2.dp)
-                                        )
-                                    }
-                                },
                                 isPlaying = mediaMetadata?.id == song.id,
                                 playWhenReady = playWhenReady,
                                 trailingContent = {
@@ -367,30 +330,6 @@ fun ArtistScreen(
                                 ) { item ->
                                     YouTubeGridItem(
                                         item = item,
-                                        badges = {
-                                            if (item is SongItem && item.id in librarySongIds ||
-                                                item is AlbumItem && item.id in libraryAlbumIds ||
-                                                item is PlaylistItem && item.id in libraryPlaylistIds
-                                            ) {
-                                                Icon(
-                                                    painter = painterResource(R.drawable.ic_library_add_check),
-                                                    contentDescription = null,
-                                                    modifier = Modifier
-                                                        .size(18.dp)
-                                                        .padding(end = 2.dp)
-                                                )
-                                            }
-                                            if (item is SongItem && item.id in likedSongIds) {
-                                                Icon(
-                                                    painter = painterResource(R.drawable.ic_favorite),
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.error,
-                                                    modifier = Modifier
-                                                        .size(18.dp)
-                                                        .padding(end = 2.dp)
-                                                )
-                                            }
-                                        },
                                         isPlaying = when (item) {
                                             is SongItem -> mediaMetadata?.id == item.id
                                             is AlbumItem -> mediaMetadata?.album?.id == item.id

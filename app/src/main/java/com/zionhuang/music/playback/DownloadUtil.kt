@@ -21,8 +21,10 @@ import com.zionhuang.music.di.DownloadCache
 import com.zionhuang.music.utils.enumPreference
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -109,6 +111,8 @@ class DownloadUtil @Inject constructor(
         )
     }
     val downloads = MutableStateFlow<Map<String, Download>>(emptyMap())
+
+    fun getDownload(songId: String): Flow<Download?> = downloads.map { it[songId] }
 
     init {
         val result = mutableMapOf<String, Download>()

@@ -3,12 +3,15 @@ package com.zionhuang.music.ui.screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,7 +31,6 @@ import com.zionhuang.music.ui.component.YouTubeGridItem
 import com.zionhuang.music.ui.component.shimmer.GridItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
-import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.NewReleaseViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -37,14 +39,11 @@ fun NewReleaseScreen(
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
     viewModel: NewReleaseViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
-
-    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
 
     val newReleaseAlbums by viewModel.newReleaseAlbums.collectAsState()
 
@@ -60,26 +59,6 @@ fun NewReleaseScreen(
         ) { album ->
             YouTubeGridItem(
                 item = album,
-                badges = {
-                    if (album.id in libraryAlbumIds) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_library_add_check),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(18.dp)
-                                .padding(end = 2.dp)
-                        )
-                    }
-                    if (album.explicit) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_explicit),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(18.dp)
-                                .padding(end = 2.dp)
-                        )
-                    }
-                },
                 isPlaying = mediaMetadata?.album?.id == album.id,
                 playWhenReady = playWhenReady,
                 fillMaxWidth = true,

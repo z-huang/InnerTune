@@ -6,14 +6,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +43,6 @@ import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.SearchBarIconOffsetX
 import com.zionhuang.music.ui.component.YouTubeListItem
-import com.zionhuang.music.viewmodels.MainViewModel
 import com.zionhuang.music.viewmodels.OnlineSearchSuggestionViewModel
 import kotlinx.coroutines.flow.drop
 
@@ -58,18 +55,12 @@ fun OnlineSearchScreen(
     onSearch: (String) -> Unit,
     onDismiss: () -> Unit,
     viewModel: OnlineSearchSuggestionViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel(),
 ) {
     val database = LocalDatabase.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
-
-    val librarySongIds by mainViewModel.librarySongIds.collectAsState()
-    val likedSongIds by mainViewModel.likedSongIds.collectAsState()
-    val libraryAlbumIds by mainViewModel.libraryAlbumIds.collectAsState()
-    val libraryPlaylistIds by mainViewModel.libraryPlaylistIds.collectAsState()
 
     val viewState by viewModel.viewState.collectAsState()
 
@@ -153,39 +144,6 @@ fun OnlineSearchScreen(
         ) { item ->
             YouTubeListItem(
                 item = item,
-                badges = {
-                    if (item is SongItem && item.id in likedSongIds) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_favorite),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier
-                                .size(18.dp)
-                                .padding(end = 2.dp)
-                        )
-                    }
-                    if (item.explicit) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_explicit),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(18.dp)
-                                .padding(end = 2.dp)
-                        )
-                    }
-                    if (item is SongItem && item.id in librarySongIds ||
-                        item is AlbumItem && item.id in libraryAlbumIds ||
-                        item is PlaylistItem && item.id in libraryPlaylistIds
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_library_add_check),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(18.dp)
-                                .padding(end = 2.dp)
-                        )
-                    }
-                },
                 isPlaying = when (item) {
                     is SongItem -> mediaMetadata?.id == item.id
                     is AlbumItem -> mediaMetadata?.album?.id == item.id

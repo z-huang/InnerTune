@@ -3,10 +3,20 @@ package com.zionhuang.music.ui.screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -76,27 +86,7 @@ fun HistoryScreen(
                     song = event.song,
                     isPlaying = event.song.id == mediaMetadata?.id,
                     playWhenReady = playWhenReady,
-                    badges = {
-                        if (event.song.song.inLibrary != null) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_library_add_check),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                        if (event.song.song.liked) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_favorite),
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.error,
-                                modifier = Modifier
-                                    .size(18.dp)
-                                    .padding(end = 2.dp)
-                            )
-                        }
-                    },
+                    showInLibraryIcon = true,
                     trailingContent = {
                         IconButton(
                             onClick = {

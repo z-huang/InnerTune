@@ -153,7 +153,7 @@ fun LibraryPlaylistsScreen(
                     subtitle = pluralStringResource(R.plurals.n_song, downloadedSongCount, downloadedSongCount),
                     thumbnailContent = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_save_alt),
+                            painter = painterResource(R.drawable.offline),
                             contentDescription = null,
                             modifier = Modifier.size(ListThumbnailSize)
                         )
