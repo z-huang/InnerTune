@@ -59,6 +59,7 @@
     <string name="play_next">接著播放</string>
     <string name="add_to_queue">加入待播清單</string>
     <string name="add_to_library">加入媒體庫</string>
+    <string name="remove_from_library">從音樂庫中移除</string>
     <string name="download">下載</string>
     <string name="downloading">下載中</string>
     <string name="remove_download">刪除下載</string>
@@ -146,8 +147,6 @@
     <!-- Player action -->
     <string name="action_like">喜歡</string>
     <string name="action_remove_like">取消喜歡</string>
-    <string name="action_add_to_library">加入音樂庫</string>
-    <string name="action_remove_from_library">從音樂庫中移除</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">全部歌曲</string>

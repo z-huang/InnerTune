@@ -342,7 +342,7 @@ class MusicService : MediaLibraryService(),
             if (dataStore.get(NotificationMoreActionKey, true))
                 listOf(
                     CommandButton.Builder()
-                        .setDisplayName(getString(if (song?.song?.inLibrary != null) R.string.action_remove_from_library else R.string.action_add_to_library))
+                        .setDisplayName(getString(if (song?.song?.inLibrary != null) R.string.remove_from_library else R.string.add_to_library))
                         .setIconResId(if (song?.song?.inLibrary != null) R.drawable.library_add_check else R.drawable.library_add)
                         .setSessionCommand(CommandToggleLibrary)
                         .setEnabled(song != null)

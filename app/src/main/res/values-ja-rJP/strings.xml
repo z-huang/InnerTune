@@ -59,6 +59,7 @@
     <string name="play_next">次に再生</string>
     <string name="add_to_queue">キューに追加</string>
     <string name="add_to_library">ライブラリに追加</string>
+    <string name="remove_from_library">ライブラリから削除</string>
     <string name="download">ダウンロード</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">ダウンロードを削除</string>
@@ -146,8 +147,6 @@
     <!-- Player action -->
     <string name="action_like">いいね</string>
     <string name="action_remove_like">いいねを削除</string>
-    <string name="action_add_to_library">ライブラリに追加</string>
-    <string name="action_remove_from_library">ライブラリから削除</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">すべての曲</string>

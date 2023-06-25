@@ -60,6 +60,7 @@
     <string name="play_next">അടുത്തത് പ്ലേ ചെയ്യുക</string>
     <string name="add_to_queue">ക്യൂവിൽ ചേർക്കുക</string>
     <string name="add_to_library">ലൈബ്രറിയിലേക്ക് ചേർക്കുക</string>
+    <string name="remove_from_library">Remove from library</string>
     <string name="download">ഡൗൺലോഡ്</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">ഡൗൺലോഡ് നീക്കം ചെയ്യുക</string>
@@ -152,8 +153,6 @@
     <!-- Player action -->
     <string name="action_like">Like</string>
     <string name="action_remove_like">Remove like</string>
-    <string name="action_add_to_library">ലൈബ്രറിയിലേക്ക് ചേർക്കുക</string>
-    <string name="action_remove_from_library">Remove from library</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">All songs</string>

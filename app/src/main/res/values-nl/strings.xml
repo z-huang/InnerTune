@@ -60,6 +60,7 @@
     <string name="play_next">Volgende afspelen</string>
     <string name="add_to_queue">Voeg toe aan wachtrij</string>
     <string name="add_to_library">Voeg toe aan bibliotheek</string>
+    <string name="remove_from_library">Verwijderen van bibliotheek</string>
     <string name="download">Downloaden</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">Verwijder download</string>
@@ -152,8 +153,6 @@
     <!-- Player action -->
     <string name="action_like">Like</string>
     <string name="action_remove_like">Verwijder like</string>
-    <string name="action_add_to_library">Toevoegen aan bibliotheek</string>
-    <string name="action_remove_from_library">Verwijderen van bibliotheek</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Alle nummers</string>

@@ -60,6 +60,7 @@
     <string name="play_next">Tocar em seguida</string>
     <string name="add_to_queue">Adicionar à fila</string>
     <string name="add_to_library">Adicionar à biblioteca</string>
+    <string name="remove_from_library">Remover da biblioteca</string>
     <string name="download">Download</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">Remover download</string>
@@ -152,8 +153,6 @@
     <!-- Player action -->
     <string name="action_like">Favoritar</string>
     <string name="action_remove_like">Remover dos favoritos</string>
-    <string name="action_add_to_library">Adicionar à biblioteca</string>
-    <string name="action_remove_from_library">Remover da biblioteca</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Todas as músicas</string>

@@ -62,6 +62,7 @@
     <string name="play_next">Přehrát jako další</string>
     <string name="add_to_queue">Přidat do fronty</string>
     <string name="add_to_library">Přidat do knihovny</string>
+    <string name="remove_from_library">Odebrat z knihovny</string>
     <string name="download">Stáhnout</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">Odebrat stahování</string>
@@ -163,8 +164,6 @@
     <!-- Player action -->
     <string name="action_like">Oblíbené</string>
     <string name="action_remove_like">Odebrat z oblíbených</string>
-    <string name="action_add_to_library">Přidat do knihovny</string>
-    <string name="action_remove_from_library">Odebrat z knihovny</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Všechny skladby</string>

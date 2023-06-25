@@ -60,6 +60,7 @@
     <string name="play_next">ପରବର୍ତ୍ତୀ ରେ ଚଲାନ୍ତୁ</string>
     <string name="add_to_queue">ଧାଡିରେ ଯୋଡନ୍ତୁ</string>
     <string name="add_to_library">ଲାଇବ୍ରେରୀରେ ଯୋଡନ୍ତୁ</string>
+    <string name="remove_from_library">ଲାଇବ୍ରେରୀରୁ ଅପସାରଣ କରନ୍ତୁ</string>
     <string name="download">ଡାଉନଲୋଡ୍ କରନ୍ତୁ</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">ଡାଉନଲୋଡ୍ ଅପସାରଣ କରନ୍ତୁ</string>
@@ -152,8 +153,6 @@
     <!-- Player action -->
     <string name="action_like">ପସନ୍ଦ କରନ୍ତୁ</string>
     <string name="action_remove_like">ପଶନ୍ଦ ଅପସାରଣ କରନ୍ତୁ</string>
-    <string name="action_add_to_library">ଲାଇବ୍ରେରୀରେ ଯୋଡନ୍ତୁ</string>
-    <string name="action_remove_from_library">ଲାଇବ୍ରେରୀରୁ ଅପସାରଣ କରନ୍ତୁ</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">ସମସ୍ତ ଗୀତ</string>

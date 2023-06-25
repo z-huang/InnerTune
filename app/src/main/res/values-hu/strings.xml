@@ -60,6 +60,7 @@
     <string name="play_next">Következő</string>
     <string name="add_to_queue">Várósorhoz ad</string>
     <string name="add_to_library">Könyvtárhoz ad</string>
+    <string name="remove_from_library">Eltávolít a könyvtárból</string>
     <string name="download">Letöltés</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">Letöltés eltávolítása</string>
@@ -152,8 +153,6 @@
     <!-- Player action -->
     <string name="action_like">Tetszik</string>
     <string name="action_remove_like">Lájk eltávolítása</string>
-    <string name="action_add_to_library">Könyvtárhoz ad</string>
-    <string name="action_remove_from_library">Eltávolít a könyvtárból</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Minden dal</string>

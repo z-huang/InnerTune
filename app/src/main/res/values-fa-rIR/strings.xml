@@ -60,6 +60,7 @@
     <string name="play_next">پخش بعدی</string>
     <string name="add_to_queue">اضافه‌کردن به صف</string>
     <string name="add_to_library">اضافه‌کردن به کتاب‌خانه</string>
+    <string name="remove_from_library">حذف از کتاب‌خانه</string>
     <string name="download">بارگیری</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">حذف بارگیری</string>
@@ -152,8 +153,6 @@
     <!-- Player action -->
     <string name="action_like">پسندیدن</string>
     <string name="action_remove_like">حذف پسندیدن</string>
-    <string name="action_add_to_library">اضافه‌کردن به کتاب‌خانه</string>
-    <string name="action_remove_from_library">حذف از کتاب‌خانه</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">All songs</string>

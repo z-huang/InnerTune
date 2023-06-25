@@ -59,6 +59,7 @@
     <string name="play_next">Putar selanjutnya</string>
     <string name="add_to_queue">Tambahkan ke antrian</string>
     <string name="add_to_library">Tambahkan ke perpustakaan</string>
+    <string name="remove_from_library">Hapus dari perpustakaan</string>
     <string name="download">Unduh</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">Hapus unduhan</string>
@@ -146,8 +147,6 @@
     <!-- Player action -->
     <string name="action_like">Suka</string>
     <string name="action_remove_like">Hapus suka</string>
-    <string name="action_add_to_library">Tambahkan ke perpustakaan</string>
-    <string name="action_remove_from_library">Hapus dari perpustakaan</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Semua lagu</string>

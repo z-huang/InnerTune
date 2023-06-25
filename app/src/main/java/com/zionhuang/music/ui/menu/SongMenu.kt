@@ -343,8 +343,8 @@ fun SongMenu(
             }
         } else {
             GridMenuItem(
-                icon = R.drawable.delete,
-                title = R.string.delete
+                icon = R.drawable.library_add_check,
+                title = R.string.remove_from_library
             ) {
                 database.query {
                     update(song.song.toggleLibrary())

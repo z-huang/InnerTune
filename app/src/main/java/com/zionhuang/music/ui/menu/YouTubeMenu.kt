@@ -148,7 +148,7 @@ fun YouTubeSongMenu(
         if (librarySong?.song?.inLibrary != null) {
             GridMenuItem(
                 icon = R.drawable.library_add_check,
-                title = R.string.action_remove_from_library
+                title = R.string.remove_from_library
             ) {
                 database.query {
                     inLibrary(song.id, null)
@@ -157,7 +157,7 @@ fun YouTubeSongMenu(
         } else {
             GridMenuItem(
                 icon = R.drawable.library_add,
-                title = R.string.action_add_to_library
+                title = R.string.add_to_library
             ) {
                 database.transaction {
                     insert(song.toMediaMetadata())
@@ -312,7 +312,7 @@ fun YouTubeAlbumMenu(
         if (libraryAlbum != null) {
             GridMenuItem(
                 icon = R.drawable.library_add_check,
-                title = R.string.action_remove_from_library
+                title = R.string.remove_from_library
             ) {
                 database.query {
                     libraryAlbum?.album?.let(::delete)
@@ -321,7 +321,7 @@ fun YouTubeAlbumMenu(
         } else {
             GridMenuItem(
                 icon = R.drawable.library_add,
-                title = R.string.action_add_to_library
+                title = R.string.add_to_library
             ) {
                 coroutineScope.launch(Dispatchers.IO) {
                     YouTube.album(album.browseId).onSuccess { albumPage ->

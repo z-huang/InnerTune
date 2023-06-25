@@ -62,6 +62,7 @@
     <string name="play_next">Відтворити наступним</string>
     <string name="add_to_queue">Додати в чергу</string>
     <string name="add_to_library">Додати до бібліотеки</string>
+    <string name="remove_from_library">Видалити з бібліотеки</string>
     <string name="download">Завантажити</string>
     <string name="downloading">Downloading</string>
     <string name="remove_download">Видалити із завантажених</string>
@@ -164,8 +165,6 @@
     <!-- Player action -->
     <string name="action_like">Поставити «Подобається»</string>
     <string name="action_remove_like">Прибрати «Подобається»</string>
-    <string name="action_add_to_library">Додати до бібліотеки</string>
-    <string name="action_remove_from_library">Видалити з бібліотеки</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Всі композиції</string>
