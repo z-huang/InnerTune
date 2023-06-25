@@ -865,7 +865,9 @@ class MusicService : MediaLibraryService(),
                         when (val playlistId = parentId.removePrefix("$PLAYLIST/")) {
                             LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, true)
                             DOWNLOADED_PLAYLIST_ID -> database.downloadedSongs(SongSortType.CREATE_DATE, true)
-                            else -> database.playlistSongs(playlistId)
+                            else -> database.playlistSongs(playlistId).map { list ->
+                                list.map { it.song }
+                            }
                         }.first().map {
                             it.toMediaItem(parentId)
                         }
@@ -937,7 +939,9 @@ class MusicService : MediaLibraryService(),
                 val songs = when (playlistId) {
                     LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, descending = true).first()
                     DOWNLOADED_PLAYLIST_ID -> database.downloadedSongs(SongSortType.CREATE_DATE, descending = true).first()
-                    else -> database.playlistSongs(playlistId).first()
+                    else -> database.playlistSongs(playlistId).map { list ->
+                        list.map { it.song }
+                    }.first()
                 }
                 MediaSession.MediaItemsWithStartPosition(
                     songs.map { it.toMediaItem() },

@@ -103,8 +103,8 @@ interface DatabaseDao {
     fun albumSongs(albumId: String): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT song.* FROM playlist_song_map JOIN song ON playlist_song_map.songId = song.id WHERE playlistId = :playlistId ORDER BY position")
-    fun playlistSongs(playlistId: String): Flow<List<Song>>
+    @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId ORDER BY position")
+    fun playlistSongs(playlistId: String): Flow<List<PlaylistSong>>
 
     @Transaction
     @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL ORDER BY inLibrary DESC")
@@ -444,6 +444,9 @@ interface DatabaseDao {
 
     @Delete
     fun delete(playlist: PlaylistEntity)
+
+    @Delete
+    fun delete(playlistSongMap: PlaylistSongMap)
 
     @Delete
     fun delete(lyrics: LyricsEntity)

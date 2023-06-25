@@ -16,14 +16,17 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -31,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +64,6 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.AlbumThumbnailSize
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.db.entities.PlaylistSongMap
-import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.ListQueue
@@ -97,7 +100,7 @@ fun LocalPlaylistScreen(
     val playlist by viewModel.playlist.collectAsState()
     val songs by viewModel.playlistSongs.collectAsState()
     val playlistLength = remember(songs) {
-        songs.fastSumBy { it.song.duration }
+        songs.fastSumBy { it.song.song.duration }
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -264,7 +267,7 @@ fun LocalPlaylistScreen(
                                     playerConnection.playQueue(
                                         ListQueue(
                                             title = playlist.playlist.name,
-                                            items = songs.map(Song::toMediaItem)
+                                            items = songs.map { it.song.toMediaItem() }
                                         )
                                     )
                                 },
@@ -285,7 +288,7 @@ fun LocalPlaylistScreen(
                                     playerConnection.playQueue(
                                         ListQueue(
                                             title = playlist.playlist.name,
-                                            items = songs.shuffled().map(Song::toMediaItem)
+                                            items = songs.shuffled().map { it.song.toMediaItem() }
                                         )
                                     )
                                 },
@@ -307,55 +310,80 @@ fun LocalPlaylistScreen(
         }
 
         itemsIndexed(
-            items = songs
+            items = songs,
+            key = { _, song -> song.map.id }
         ) { index, song ->
-            SongListItem(
-                song = song,
-                isPlaying = song.id == mediaMetadata?.id,
-                playWhenReady = playWhenReady,
-                trailingContent = {
-                    IconButton(
-                        onClick = {
-                            menuState.show {
-                                SongMenu(
-                                    originalSong = song,
-                                    navController = navController,
-                                    playerConnection = playerConnection,
-                                    coroutineScope = coroutineScope,
-                                    onDismiss = menuState::dismiss
+            val currentItem by rememberUpdatedState(song)
+            val dismissState = rememberDismissState(
+                positionalThreshold = { totalDistance ->
+                    totalDistance
+                },
+                confirmValueChange = { dismissValue ->
+                    if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
+                        database.transaction {
+                            move(currentItem.map.playlistId, currentItem.map.position, Int.MAX_VALUE)
+                            delete(currentItem.map.copy(position = Int.MAX_VALUE))
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                }
+            )
+
+            SwipeToDismiss(
+                state = dismissState,
+                background = {},
+                dismissContent = {
+                    SongListItem(
+                        song = song.song,
+                        isPlaying = song.song.id == mediaMetadata?.id,
+                        playWhenReady = playWhenReady,
+                        trailingContent = {
+                            IconButton(
+                                onClick = {
+                                    menuState.show {
+                                        SongMenu(
+                                            originalSong = song.song,
+                                            navController = navController,
+                                            playerConnection = playerConnection,
+                                            coroutineScope = coroutineScope,
+                                            onDismiss = menuState::dismiss
+                                        )
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.more_vert),
+                                    contentDescription = null
                                 )
                             }
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.more_vert),
-                            contentDescription = null
-                        )
-                    }
 
-                    IconButton(
-                        onClick = { },
-                        modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.drag_handle),
-                            contentDescription = null
-                        )
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .combinedClickable {
-                        playerConnection.playQueue(
-                            ListQueue(
-                                title = playlist!!.playlist.name,
-                                items = songs.map(Song::toMediaItem),
-                                startIndex = index
-                            )
-                        )
-                    }
-                    .animateItemPlacement(reorderingState = reorderingState)
-                    .draggedItem(reorderingState = reorderingState, index = index)
+                            IconButton(
+                                onClick = { },
+                                modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.drag_handle),
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .combinedClickable {
+                                playerConnection.playQueue(
+                                    ListQueue(
+                                        title = playlist!!.playlist.name,
+                                        items = songs.map { it.song.toMediaItem() },
+                                        startIndex = index
+                                    )
+                                )
+                            }
+                            .animateItemPlacement(reorderingState = reorderingState)
+                            .draggedItem(reorderingState = reorderingState, index = index)
+                    )
+                }
             )
         }
     }
