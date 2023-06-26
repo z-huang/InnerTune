@@ -142,6 +142,7 @@ fun HomeScreen(
 
                             SongListItem(
                                 song = song!!,
+                                showInLibraryIcon = true,
                                 isPlaying = song!!.id == mediaMetadata?.id,
                                 playWhenReady = playWhenReady,
                                 trailingContent = {

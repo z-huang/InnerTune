@@ -1,9 +1,24 @@
 package com.zionhuang.music.ui.component
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -14,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,11 +44,18 @@ import androidx.compose.ui.util.fastForEachIndexed
 import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
 import coil.compose.AsyncImage
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
-import com.zionhuang.music.constants.*
+import com.zionhuang.music.constants.GridThumbnailHeight
+import com.zionhuang.music.constants.ListItemHeight
+import com.zionhuang.music.constants.ListThumbnailSize
+import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.db.entities.Playlist
@@ -249,7 +270,6 @@ fun SongListItem(
     modifier = modifier
 )
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ArtistListItem(
     artist: Artist,
@@ -271,7 +291,6 @@ fun ArtistListItem(
     modifier = modifier
 )
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AlbumListItem(
     album: Album,
@@ -310,7 +329,6 @@ fun AlbumListItem(
     modifier = modifier
 )
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PlaylistListItem(
     playlist: Playlist,
