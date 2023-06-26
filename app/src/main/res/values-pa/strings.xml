@@ -45,7 +45,7 @@
     <!-- Playlist -->
     <string name="liked_songs">ਪਸੰਦ ਕੀਤੇ ਗੀਤ</string>
     <string name="downloaded_songs">ਡਾਊਨਲੋਡ ਕੀਤੇ ਗੀਤ</string>
-    <string name="playlist_is_empty">ਪਲੇਅਲਿਸਟ ਖਾਲੀ ਹੈ</string>
+    <string name="playlist_is_empty">ਪਲੇਲਿਸਟ ਖਾਲੀ ਹੈ</string>
 
     <!-- Button -->
     <string name="retry">ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
@@ -169,7 +169,7 @@
     <string name="dark_theme_on">ਚਾਲੂ</string>
     <string name="dark_theme_off">ਬੰਦ</string>
     <string name="dark_theme_follow_system">ਸਿਸਟਮ ਦੀ ਪਾਲਣਾ ਕਰੋ</string>
-    <string name="pure_black">ਪੂਰਾ ਕਾਲ੍ਹਾ</string>
+    <string name="pure_black">ਸ਼ਾਹ ਕਾਲ੍ਹਾ</string>
     <string name="default_open_tab">ਡੀਫ਼ਾਲਟ ਟੈਬ</string>
     <string name="customize_navigation_tabs">ਨੈਵੀਗੇਸ਼ਨ ਟੈਬਾਂ ਨੂੰ ਆਪਣੀ ਪਸੰਦ ਦਾ ਢਾਲੋ</string>
     <string name="lyrics_text_position">ਬੋਲਾਂ ਦੀ ਸਥਿਤੀ</string>
@@ -201,7 +201,7 @@
     <string name="cache">ਕੈਸ਼ੇ</string>
     <string name="image_cache">ਚਿੱਤਰ ਕੈਸ਼ੇ</string>
     <string name="song_cache">ਗੀਤ ਕੈਸ਼ੇ</string>
-    <string name="max_cache_size">ਵੱਧੋ- ਵੱਧ ਕੈਸ਼ੇ ਆਕਾਰ</string>
+    <string name="max_cache_size">ਵੱਧੋ-ਵੱਧ ਕੈਸ਼ੇ ਆਕਾਰ</string>
     <string name="unlimited">ਅਸੀਮਤ</string>
     <string name="clear_all_downloads">ਸਭ ਡਾਊਨਲੋਡ ਸਾਫ਼ ਕਰੋ</string>
     <string name="max_image_cache_size">ਅਧਿਕਤਮ ਚਿੱਤਰ ਕੈਸ਼ੇ ਆਕਾਰ</string>
