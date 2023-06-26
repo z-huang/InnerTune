@@ -178,7 +178,7 @@ fun YouTubeSongMenu(
         }
         DownloadGridMenu(
             state = download?.state,
-            onRequestDownload = {
+            onDownload = {
                 database.transaction {
                     insert(song.toMediaMetadata())
                 }

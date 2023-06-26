@@ -232,7 +232,7 @@ fun SongMenu(
         }
         DownloadGridMenu(
             state = download?.state,
-            onRequestDownload = {
+            onDownload = {
                 val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
                     .setCustomCacheKey(song.id)
                     .setData(song.song.title.toByteArray())

@@ -200,7 +200,7 @@ fun AlbumMenu(
         }
         DownloadGridMenu(
             state = downloadState,
-            onRequestDownload = {
+            onDownload = {
                 songs.forEach { song ->
                     val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
                         .setCustomCacheKey(song.id)

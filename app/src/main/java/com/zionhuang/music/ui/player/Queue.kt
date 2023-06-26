@@ -34,18 +34,26 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.net.toUri
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.exoplayer.offline.DownloadService
 import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
 import androidx.navigation.NavController
+import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ShowLyricsKey
+import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.extensions.move
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.menu.AddToPlaylistDialog
 import com.zionhuang.music.ui.utils.reordering.ReorderingLazyColumn
 import com.zionhuang.music.ui.utils.reordering.draggedItem
 import com.zionhuang.music.ui.utils.reordering.rememberReorderingState
@@ -486,8 +494,34 @@ fun PlayerMenu(
 ) {
     mediaMetadata ?: return
     val context = LocalContext.current
+    val database = LocalDatabase.current
     val playerVolume = playerConnection.service.playerVolume.collectAsState()
     val activityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
+
+    val download by LocalDownloadUtil.current.getDownload(mediaMetadata.id).collectAsState(initial = null)
+
+    var showChoosePlaylistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    AddToPlaylistDialog(
+        isVisible = showChoosePlaylistDialog,
+        onAdd = { playlist ->
+            database.transaction {
+                insert(mediaMetadata)
+                insert(
+                    PlaylistSongMap(
+                        songId = mediaMetadata.id,
+                        playlistId = playlist.id,
+                        position = playlist.songCount
+                    )
+                )
+            }
+        },
+        onDismiss = {
+            showChoosePlaylistDialog = false
+        }
+    )
 
     var showSelectArtistDialog by rememberSaveable {
         mutableStateOf(false)
@@ -561,18 +595,36 @@ fun PlayerMenu(
         }
         GridMenuItem(
             icon = R.drawable.playlist_add,
-            title = R.string.add_to_playlist,
-            enabled = false
+            title = R.string.add_to_playlist
         ) {
-
+            showChoosePlaylistDialog = true
         }
-        GridMenuItem(
-            icon = R.drawable.download,
-            title = R.string.download,
-            enabled = false
-        ) {
-
-        }
+        DownloadGridMenu(
+            state = download?.state,
+            onDownload = {
+                database.transaction {
+                    insert(mediaMetadata)
+                }
+                val downloadRequest = DownloadRequest.Builder(mediaMetadata.id, mediaMetadata.id.toUri())
+                    .setCustomCacheKey(mediaMetadata.id)
+                    .setData(mediaMetadata.title.toByteArray())
+                    .build()
+                DownloadService.sendAddDownload(
+                    context,
+                    ExoDownloadService::class.java,
+                    downloadRequest,
+                    false
+                )
+            },
+            onRemoveDownload = {
+                DownloadService.sendRemoveDownload(
+                    context,
+                    ExoDownloadService::class.java,
+                    mediaMetadata.id,
+                    false
+                )
+            }
+        )
         GridMenuItem(
             icon = R.drawable.artist,
             title = R.string.view_artist
