@@ -26,6 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.AlbumItem
@@ -39,6 +42,7 @@ import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
+import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeAlbumRadio
 import com.zionhuang.music.playback.queues.YouTubeQueue
@@ -173,14 +177,29 @@ fun YouTubeSongMenu(
 
         }
         DownloadGridMenu(
-            context = context,
-            download = download,
-            songId = song.id,
-            title = song.title,
-            beforeDownload = {
+            state = download?.state,
+            onRequestDownload = {
                 database.transaction {
                     insert(song.toMediaMetadata())
                 }
+                val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
+                    .setCustomCacheKey(song.id)
+                    .setData(song.title.toByteArray())
+                    .build()
+                DownloadService.sendAddDownload(
+                    context,
+                    ExoDownloadService::class.java,
+                    downloadRequest,
+                    false
+                )
+            },
+            onRemoveDownload = {
+                DownloadService.sendRemoveDownload(
+                    context,
+                    ExoDownloadService::class.java,
+                    song.id,
+                    false
+                )
             }
         )
         if (artists.isNotEmpty()) {

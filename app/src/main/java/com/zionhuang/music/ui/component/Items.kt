@@ -26,8 +26,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
 import coil.compose.AsyncImage
@@ -305,6 +310,59 @@ fun AlbumListItem(
         pluralStringResource(R.plurals.n_song, album.album.songCount, album.album.songCount),
         album.album.year?.toString()
     ),
+    badges = {
+        val database = LocalDatabase.current
+        val downloadUtil = LocalDownloadUtil.current
+        var songs by remember {
+            mutableStateOf(emptyList<Song>())
+        }
+
+        LaunchedEffect(Unit) {
+            database.albumSongs(album.id).collect {
+                songs = it
+            }
+        }
+
+        var downloadState by remember {
+            mutableStateOf(Download.STATE_STOPPED)
+        }
+
+        LaunchedEffect(songs) {
+            if (songs.isEmpty()) return@LaunchedEffect
+            downloadUtil.downloads.collect { downloads ->
+                downloadState =
+                    if (songs.all { downloads[it.id]?.state == STATE_COMPLETED })
+                        STATE_COMPLETED
+                    else if (songs.all {
+                            downloads[it.id]?.state == Download.STATE_QUEUED
+                                    || downloads[it.id]?.state == STATE_DOWNLOADING
+                                    || downloads[it.id]?.state == STATE_COMPLETED
+                        })
+                        STATE_DOWNLOADING
+                    else
+                        Download.STATE_STOPPED
+            }
+        }
+
+        when (downloadState) {
+            STATE_COMPLETED -> Icon(
+                painter = painterResource(R.drawable.offline),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+
+            STATE_DOWNLOADING -> CircularProgressIndicator(
+                strokeWidth = 2.dp,
+                modifier = Modifier
+                    .size(16.dp)
+                    .padding(end = 2.dp)
+            )
+
+            else -> {}
+        }
+    },
     thumbnailContent = {
         AsyncImage(
             model = album.album.thumbnailUrl,

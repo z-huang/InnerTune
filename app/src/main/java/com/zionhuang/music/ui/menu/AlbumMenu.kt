@@ -29,9 +29,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
+import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
+import androidx.media3.exoplayer.offline.Download.STATE_QUEUED
+import androidx.media3.exoplayer.offline.Download.STATE_STOPPED
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
@@ -39,7 +47,9 @@ import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
+import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
@@ -53,6 +63,7 @@ fun AlbumMenu(
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val downloadUtil = LocalDownloadUtil.current
     var songs by remember {
         mutableStateOf(emptyList<Song>())
     }
@@ -60,6 +71,27 @@ fun AlbumMenu(
     LaunchedEffect(Unit) {
         database.albumSongs(album.id).collect {
             songs = it
+        }
+    }
+
+    var downloadState by remember {
+        mutableStateOf(STATE_STOPPED)
+    }
+
+    LaunchedEffect(songs) {
+        if (songs.isEmpty()) return@LaunchedEffect
+        downloadUtil.downloads.collect { downloads ->
+            downloadState =
+                if (songs.all { downloads[it.id]?.state == STATE_COMPLETED })
+                    STATE_COMPLETED
+                else if (songs.all {
+                        downloads[it.id]?.state == STATE_QUEUED
+                                || downloads[it.id]?.state == STATE_DOWNLOADING
+                                || downloads[it.id]?.state == STATE_COMPLETED
+                    })
+                    STATE_DOWNLOADING
+                else
+                    STATE_STOPPED
         }
     }
 
@@ -166,6 +198,33 @@ fun AlbumMenu(
         ) {
             showChoosePlaylistDialog = true
         }
+        DownloadGridMenu(
+            state = downloadState,
+            onRequestDownload = {
+                songs.forEach { song ->
+                    val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
+                        .setCustomCacheKey(song.id)
+                        .setData(song.song.title.toByteArray())
+                        .build()
+                    DownloadService.sendAddDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        downloadRequest,
+                        false
+                    )
+                }
+            },
+            onRemoveDownload = {
+                songs.forEach { song ->
+                    DownloadService.sendRemoveDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        song.id,
+                        false
+                    )
+                }
+            }
+        )
         GridMenuItem(
             icon = R.drawable.artist,
             title = R.string.view_artist

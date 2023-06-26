@@ -1,6 +1,5 @@
 package com.zionhuang.music.ui.component
 
-import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -29,12 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.media3.exoplayer.offline.Download
-import androidx.media3.exoplayer.offline.DownloadRequest
-import androidx.media3.exoplayer.offline.DownloadService
 import com.zionhuang.music.R
-import com.zionhuang.music.playback.ExoDownloadService
 
 val GridMenuItemHeight = 96.dp
 
@@ -108,26 +103,19 @@ fun LazyGridScope.GridMenuItem(
     }
 }
 
+
 fun LazyGridScope.DownloadGridMenu(
-    context: Context,
-    download: Download?,
-    songId: String,
-    title: String,
-    beforeDownload: () -> Unit = {},
+    @Download.State state: Int?,
+    onRemoveDownload: () -> Unit,
+    onRequestDownload: () -> Unit,
 ) {
-    when (download?.state) {
+    when (state) {
         Download.STATE_COMPLETED -> {
             GridMenuItem(
                 icon = R.drawable.offline,
-                title = R.string.remove_download
-            ) {
-                DownloadService.sendRemoveDownload(
-                    context,
-                    ExoDownloadService::class.java,
-                    songId,
-                    false
-                )
-            }
+                title = R.string.remove_download,
+                onClick = onRemoveDownload
+            )
         }
 
         Download.STATE_DOWNLOADING -> {
@@ -138,35 +126,17 @@ fun LazyGridScope.DownloadGridMenu(
                         strokeWidth = 2.dp
                     )
                 },
-                title = R.string.downloading
-            ) {
-                DownloadService.sendRemoveDownload(
-                    context,
-                    ExoDownloadService::class.java,
-                    songId,
-                    false
-                )
-            }
+                title = R.string.downloading,
+                onClick = onRemoveDownload
+            )
         }
 
         else -> {
             GridMenuItem(
                 icon = R.drawable.download,
-                title = R.string.download
-            ) {
-                beforeDownload()
-
-                val downloadRequest = DownloadRequest.Builder(songId, songId.toUri())
-                    .setCustomCacheKey(songId)
-                    .setData(title.toByteArray())
-                    .build()
-                DownloadService.sendAddDownload(
-                    context,
-                    ExoDownloadService::class.java,
-                    downloadRequest,
-                    false
-                )
-            }
+                title = R.string.download,
+                onClick = onRequestDownload
+            )
         }
     }
 }
