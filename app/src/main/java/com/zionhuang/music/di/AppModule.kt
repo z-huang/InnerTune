@@ -57,5 +57,5 @@ object AppModule {
     @Provides
     @DownloadCache
     fun provideDownloadCache(@ApplicationContext context: Context, databaseProvider: DatabaseProvider): SimpleCache =
-        SimpleCache(context.cacheDir.resolve("download"), NoOpCacheEvictor(), databaseProvider)
+        SimpleCache(context.filesDir.resolve("download"), NoOpCacheEvictor(), databaseProvider)
 }
