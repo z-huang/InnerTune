@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.screens.playlist
 
+import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -198,6 +199,22 @@ fun OnlinePlaylistScreen(
                                         ) {
                                             Icon(
                                                 painter = painterResource(R.drawable.input),
+                                                contentDescription = null
+                                            )
+                                        }
+
+                                        IconButton(
+                                            onClick = {
+                                                val intent = Intent().apply {
+                                                    action = Intent.ACTION_SEND
+                                                    type = "text/plain"
+                                                    putExtra(Intent.EXTRA_TEXT, playlist.shareLink)
+                                                }
+                                                context.startActivity(Intent.createChooser(intent, null))
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.share),
                                                 contentDescription = null
                                             )
                                         }
