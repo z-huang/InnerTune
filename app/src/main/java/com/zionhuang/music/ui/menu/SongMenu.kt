@@ -82,14 +82,6 @@ fun SongMenu(
         mutableStateOf(false)
     }
 
-    var showChoosePlaylistDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    var showSelectArtistDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     if (showEditDialog) {
         TextFieldDialog(
             icon = { Icon(painter = painterResource(R.drawable.edit), contentDescription = null) },
@@ -103,6 +95,10 @@ fun SongMenu(
                 }
             }
         )
+    }
+
+    var showChoosePlaylistDialog by rememberSaveable {
+        mutableStateOf(false)
     }
 
     AddToPlaylistDialog(
@@ -120,6 +116,10 @@ fun SongMenu(
         },
         onDismiss = { showChoosePlaylistDialog = false }
     )
+
+    var showSelectArtistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     if (showSelectArtistDialog) {
         ListDialog(
@@ -232,7 +232,7 @@ fun SongMenu(
         }
         DownloadGridMenu(
             state = download?.state,
-            onRequestDownload = {
+            onDownload = {
                 val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
                     .setCustomCacheKey(song.id)
                     .setData(song.song.title.toByteArray())

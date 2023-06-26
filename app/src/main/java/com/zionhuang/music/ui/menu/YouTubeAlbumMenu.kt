@@ -9,13 +9,12 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,75 +22,75 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
-import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
-import androidx.media3.exoplayer.offline.Download.STATE_QUEUED
-import androidx.media3.exoplayer.offline.Download.STATE_STOPPED
+import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
-import com.zionhuang.music.constants.ListThumbnailSize
-import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.PlaylistSongMap
-import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
+import com.zionhuang.music.playback.queues.YouTubeAlbumRadio
 import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun AlbumMenu(
-    album: Album,
+fun YouTubeAlbumMenu(
+    album: AlbumItem,
     navController: NavController,
     playerConnection: PlayerConnection,
+    coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
     val downloadUtil = LocalDownloadUtil.current
-    var songs by remember {
-        mutableStateOf(emptyList<Song>())
+    val libraryAlbum by database.album(album.id).collectAsState(initial = null)
+    var albumPage: AlbumPage? by remember {
+        mutableStateOf(null)
     }
 
     LaunchedEffect(Unit) {
-        database.albumSongs(album.id).collect {
-            songs = it
+        YouTube.album(album.browseId).onSuccess {
+            albumPage = it
         }
     }
 
     var downloadState by remember {
-        mutableStateOf(STATE_STOPPED)
+        mutableStateOf(Download.STATE_STOPPED)
     }
 
-    LaunchedEffect(songs) {
-        if (songs.isEmpty()) return@LaunchedEffect
+    LaunchedEffect(albumPage) {
+        val songs = albumPage?.songs?.map { it.id } ?: return@LaunchedEffect
         downloadUtil.downloads.collect { downloads ->
             downloadState =
-                if (songs.all { downloads[it.id]?.state == STATE_COMPLETED })
-                    STATE_COMPLETED
+                if (songs.all { downloads[it]?.state == Download.STATE_COMPLETED })
+                    Download.STATE_COMPLETED
                 else if (songs.all {
-                        downloads[it.id]?.state == STATE_QUEUED
-                                || downloads[it.id]?.state == STATE_DOWNLOADING
-                                || downloads[it.id]?.state == STATE_COMPLETED
+                        downloads[it]?.state == Download.STATE_QUEUED
+                                || downloads[it]?.state == Download.STATE_DOWNLOADING
+                                || downloads[it]?.state == Download.STATE_COMPLETED
                     })
-                    STATE_DOWNLOADING
+                    Download.STATE_DOWNLOADING
                 else
-                    STATE_STOPPED
+                    Download.STATE_STOPPED
         }
     }
 
@@ -99,38 +98,41 @@ fun AlbumMenu(
         mutableStateOf(false)
     }
 
-    var showSelectArtistDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     AddToPlaylistDialog(
         isVisible = showChoosePlaylistDialog,
         onAdd = { playlist ->
+            var position = playlist.songCount
             database.transaction {
-                songs.map { it.id }
-                    .forEach {
-                        insert(
-                            PlaylistSongMap(
-                                songId = it,
-                                playlistId = playlist.id,
-                                position = playlist.songCount
+                albumPage?.let { albumPage ->
+                    albumPage.songs
+                        .map { it.toMediaMetadata() }
+                        .onEach(::insert)
+                        .forEach { song ->
+                            insert(
+                                PlaylistSongMap(
+                                    songId = song.id,
+                                    playlistId = playlist.id,
+                                    position = position++
+                                )
                             )
-                        )
-                    }
+                        }
+                }
             }
         },
-        onDismiss = {
-            showChoosePlaylistDialog = false
-        }
+        onDismiss = { showChoosePlaylistDialog = false }
     )
+
+    var showSelectArtistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     if (showSelectArtistDialog) {
         ListDialog(
             onDismiss = { showSelectArtistDialog = false }
         ) {
             items(
-                items = album.artists,
-                key = { it.id }
+                items = album.artists.orEmpty(),
+                key = { it.id!! }
             ) { artist ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -144,27 +146,25 @@ fun AlbumMenu(
                         .padding(horizontal = 12.dp),
                 ) {
                     Box(
-                        modifier = Modifier.padding(8.dp),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.CenterStart,
+                        modifier = Modifier
+                            .fillParentMaxWidth()
+                            .height(ListItemHeight)
+                            .clickable {
+                                showSelectArtistDialog = false
+                                onDismiss()
+                                navController.navigate("artist/${artist.id}")
+                            }
+                            .padding(horizontal = 24.dp),
                     ) {
-                        AsyncImage(
-                            model = artist.thumbnailUrl,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(ListThumbnailSize)
-                                .clip(CircleShape)
+                        Text(
+                            text = artist.name,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
-                    Text(
-                        text = artist.name,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 8.dp)
-                    )
                 }
             }
         }
@@ -179,19 +179,50 @@ fun AlbumMenu(
         )
     ) {
         GridMenuItem(
+            icon = R.drawable.radio,
+            title = R.string.start_radio
+        ) {
+            playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
+            onDismiss()
+        }
+        GridMenuItem(
             icon = R.drawable.playlist_play,
             title = R.string.play_next
         ) {
+            albumPage?.songs
+                ?.map { it.toMediaItem() }
+                ?.let(playerConnection::playNext)
             onDismiss()
-            playerConnection.playNext(songs.map { it.toMediaItem() })
         }
         GridMenuItem(
             icon = R.drawable.queue_music,
             title = R.string.add_to_queue
         ) {
+            albumPage?.songs
+                ?.map { it.toMediaItem() }
+                ?.let(playerConnection::addToQueue)
             onDismiss()
-            playerConnection.addToQueue(songs.map { it.toMediaItem() })
         }
+        if (libraryAlbum != null) {
+            GridMenuItem(
+                icon = R.drawable.library_add_check,
+                title = R.string.remove_from_library
+            ) {
+                database.query {
+                    libraryAlbum?.album?.let(::delete)
+                }
+            }
+        } else {
+            GridMenuItem(
+                icon = R.drawable.library_add,
+                title = R.string.add_to_library
+            ) {
+                database.transaction {
+                    albumPage?.let(::insert)
+                }
+            }
+        }
+
         GridMenuItem(
             icon = R.drawable.playlist_add,
             title = R.string.add_to_playlist
@@ -201,10 +232,10 @@ fun AlbumMenu(
         DownloadGridMenu(
             state = downloadState,
             onDownload = {
-                songs.forEach { song ->
+                albumPage?.songs?.forEach { song ->
                     val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
                         .setCustomCacheKey(song.id)
-                        .setData(song.song.title.toByteArray())
+                        .setData(song.title.toByteArray())
                         .build()
                     DownloadService.sendAddDownload(
                         context,
@@ -215,7 +246,7 @@ fun AlbumMenu(
                 }
             },
             onRemoveDownload = {
-                songs.forEach { song ->
+                albumPage?.songs?.forEach { song ->
                     DownloadService.sendRemoveDownload(
                         context,
                         ExoDownloadService::class.java,
@@ -225,37 +256,30 @@ fun AlbumMenu(
                 }
             }
         )
-        GridMenuItem(
-            icon = R.drawable.artist,
-            title = R.string.view_artist
-        ) {
-            if (album.artists.size == 1) {
-                navController.navigate("artist/${album.artists[0].id}")
-                onDismiss()
-            } else {
-                showSelectArtistDialog = true
+        album.artists?.let { artists ->
+            GridMenuItem(
+                icon = R.drawable.artist,
+                title = R.string.view_artist
+            ) {
+                if (artists.size == 1) {
+                    navController.navigate("artist/${artists[0].id}")
+                    onDismiss()
+                } else {
+                    showSelectArtistDialog = true
+                }
             }
         }
         GridMenuItem(
             icon = R.drawable.share,
             title = R.string.share
         ) {
-            onDismiss()
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/${album.album.id}")
+                putExtra(Intent.EXTRA_TEXT, album.shareLink)
             }
             context.startActivity(Intent.createChooser(intent, null))
-        }
-        GridMenuItem(
-            icon = R.drawable.delete,
-            title = R.string.delete
-        ) {
             onDismiss()
-            database.query {
-                delete(album.album)
-            }
         }
     }
 }
