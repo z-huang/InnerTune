@@ -82,14 +82,6 @@ fun SongMenu(
         mutableStateOf(false)
     }
 
-    var showChoosePlaylistDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    var showSelectArtistDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     if (showEditDialog) {
         TextFieldDialog(
             icon = { Icon(painter = painterResource(R.drawable.edit), contentDescription = null) },
@@ -103,6 +95,10 @@ fun SongMenu(
                 }
             }
         )
+    }
+
+    var showChoosePlaylistDialog by rememberSaveable {
+        mutableStateOf(false)
     }
 
     AddToPlaylistDialog(
@@ -120,6 +116,10 @@ fun SongMenu(
         },
         onDismiss = { showChoosePlaylistDialog = false }
     )
+
+    var showSelectArtistDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
 
     if (showSelectArtistDialog) {
         ListDialog(
