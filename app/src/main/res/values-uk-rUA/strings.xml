@@ -215,6 +215,7 @@
     <string name="song_cache">Кеш аудіо</string>
     <string name="max_cache_size">Максимальний розмір кешу</string>
     <string name="unlimited">Необмежено</string>
+    <string name="clear_all_downloads">Clear all downloads</string>
     <string name="max_image_cache_size">Макс. розмір кешу зображень</string>
     <string name="clear_image_cache">Очистити кеш зображень</string>
     <string name="max_song_cache_size">Макс. розмір кешу аудіо</string>

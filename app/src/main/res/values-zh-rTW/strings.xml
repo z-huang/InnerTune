@@ -197,6 +197,7 @@
     <string name="song_cache">歌曲快取</string>
     <string name="max_cache_size">最大快取大小</string>
     <string name="unlimited">無限制</string>
+    <string name="clear_all_downloads">清除所有下載</string>
     <string name="max_image_cache_size">圖片快取大小</string>
     <string name="clear_image_cache">清除圖片快取</string>
     <string name="max_song_cache_size">歌曲快取大小</string>

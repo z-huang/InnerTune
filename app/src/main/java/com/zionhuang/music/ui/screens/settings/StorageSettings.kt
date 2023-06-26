@@ -104,6 +104,17 @@ fun StorageSettings(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
         )
 
+        PreferenceEntry(
+            title = stringResource(R.string.clear_all_downloads),
+            onClick = {
+                coroutineScope.launch(Dispatchers.IO) {
+                    downloadCache.keys.forEach { key ->
+                        downloadCache.removeResource(key)
+                    }
+                }
+            },
+        )
+
         PreferenceGroupTitle(
             title = stringResource(R.string.song_cache)
         )

@@ -203,6 +203,7 @@
     <string name="song_cache">Şarkı Önbelleği</string>
     <string name="max_cache_size">Maksimum önbellek boyutu</string>
     <string name="unlimited">Sınırsız</string>
+    <string name="clear_all_downloads">Clear all downloads</string>
     <string name="max_image_cache_size">Maksimum görüntü önbellek boyutu</string>
     <string name="clear_image_cache">Görüntü önbelleğini temizle</string>
     <string name="max_song_cache_size">Maksimum şarkı önbellek boyutu</string>

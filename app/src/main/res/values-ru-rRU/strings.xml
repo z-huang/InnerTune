@@ -215,6 +215,7 @@
     <string name="song_cache">Кэш аудио</string>
     <string name="max_cache_size">Максимальный размер кэша</string>
     <string name="unlimited">Неограниченный</string>
+    <string name="clear_all_downloads">Clear all downloads</string>
     <string name="max_image_cache_size">Макс. размер кэша изображений</string>
     <string name="clear_image_cache">Очистить кэш изображений</string>
     <string name="max_song_cache_size">Макс. размер кэша аудио</string>

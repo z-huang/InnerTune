@@ -197,6 +197,7 @@
     <string name="song_cache">歌曲缓存</string>
     <string name="max_cache_size">最大缓存大小</string>
     <string name="unlimited">无限制</string>
+    <string name="clear_all_downloads">Clear all downloads</string>
     <string name="max_image_cache_size">图像缓存大小</string>
     <string name="clear_image_cache">清除图像缓存</string>
     <string name="max_song_cache_size">歌曲缓存大小</string>

@@ -203,6 +203,7 @@
     <string name="song_cache">Song Cache</string>
     <string name="max_cache_size">Max cache size</string>
     <string name="unlimited">Unlimited</string>
+    <string name="clear_all_downloads">Clear all downloads</string>
     <string name="max_image_cache_size">ਅਧਿਕਤਮ ਚਿੱਤਰ ਕੈਸ਼ੇ ਆਕਾਰ</string>
     <string name="clear_image_cache">ਚਿੱਤਰ ਕੈਸ਼ੇ ਸਾਫ਼ ਕਰੋ</string>
     <string name="max_song_cache_size">ਅਧਿਕਤਮ ਗੀਤ ਕੈਸ਼ੇ ਆਕਾਰ</string>

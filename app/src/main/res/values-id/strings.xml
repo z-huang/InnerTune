@@ -197,6 +197,7 @@
     <string name="song_cache">Song Cache</string>
     <string name="max_cache_size">Max cache size</string>
     <string name="unlimited">Unlimited</string>
+    <string name="clear_all_downloads">Clear all downloads</string>
     <string name="max_image_cache_size">Ukuran gambar data sementara (cache) maksimum</string>
     <string name="clear_image_cache">Bersihkan gambar data sementara (cache)</string>
     <string name="max_song_cache_size">Ukuran lagu data sementara (cache) maksimum</string>

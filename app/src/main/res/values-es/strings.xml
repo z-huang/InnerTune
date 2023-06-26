@@ -203,6 +203,7 @@
     <string name="song_cache">Caché de canciones</string>
     <string name="max_cache_size">Tamaño máximo de la caché</string>
     <string name="unlimited">Ilimitado</string>
+    <string name="clear_all_downloads">Clear all downloads</string>
     <string name="max_image_cache_size">Tamaño máximo de la caché de imágenes</string>
     <string name="clear_image_cache">Borrar la caché de imágenes</string>
     <string name="max_song_cache_size">Tamaño máximo de la caché de canciones</string>
