@@ -288,7 +288,7 @@ class MusicService : MediaLibraryService(),
         }
 
         dataStore.data
-            .map { it[SkipSilenceKey] ?: true }
+            .map { it[SkipSilenceKey] ?: false }
             .distinctUntilChanged()
             .collectLatest(scope) {
                 player.skipSilenceEnabled = it
