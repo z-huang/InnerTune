@@ -175,7 +175,10 @@ fun OnlinePlaylistScreen(
                                         IconButton(
                                             onClick = {
                                                 database.transaction {
-                                                    val playlistEntity = PlaylistEntity(name = playlist.title)
+                                                    val playlistEntity = PlaylistEntity(
+                                                        name = playlist.title,
+                                                        browseId = playlist.id
+                                                    )
                                                     insert(playlistEntity)
                                                     songs.map(SongItem::toMediaMetadata)
                                                         .onEach(::insert)
