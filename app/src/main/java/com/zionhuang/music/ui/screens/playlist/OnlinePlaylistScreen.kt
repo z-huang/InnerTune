@@ -244,8 +244,7 @@ fun OnlinePlaylistScreen(
                     }
 
                     items(
-                        items = songs,
-                        key = { it.id }
+                        items = songs
                     ) { song ->
                         YouTubeListItem(
                             item = song,
