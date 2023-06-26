@@ -118,7 +118,7 @@ fun LazyGridScope.DownloadGridMenu(
             )
         }
 
-        Download.STATE_DOWNLOADING -> {
+        Download.STATE_QUEUED, Download.STATE_DOWNLOADING -> {
             GridMenuItem(
                 icon = {
                     CircularProgressIndicator(

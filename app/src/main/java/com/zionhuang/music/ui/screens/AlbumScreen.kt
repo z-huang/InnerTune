@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -19,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,11 +30,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
@@ -42,12 +49,17 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.exoplayer.offline.Download
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -57,6 +69,7 @@ import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AutoResizeText
 import com.zionhuang.music.ui.component.FontSizeRange
@@ -79,12 +92,39 @@ fun AlbumScreen(
     scrollBehavior: TopAppBarScrollBehavior,
     viewModel: AlbumViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val viewState by viewModel.viewState.collectAsState()
     val inLibrary by viewModel.inLibrary.collectAsState()
+
+    val downloadUtil = LocalDownloadUtil.current
+    var downloadState by remember {
+        mutableStateOf(Download.STATE_STOPPED)
+    }
+
+    LaunchedEffect(viewState) {
+        val viewState = viewState ?: return@LaunchedEffect
+        val songs = when (viewState) {
+            is AlbumViewState.Local -> viewState.albumWithSongs.songs.map { it.id }
+            is AlbumViewState.Remote -> viewState.albumPage.songs.map { it.id }
+        }
+        downloadUtil.downloads.collect { downloads ->
+            downloadState =
+                if (songs.all { downloads[it]?.state == Download.STATE_COMPLETED })
+                    Download.STATE_COMPLETED
+                else if (songs.all {
+                        downloads[it]?.state == Download.STATE_QUEUED
+                                || downloads[it]?.state == Download.STATE_DOWNLOADING
+                                || downloads[it]?.state == Download.STATE_COMPLETED
+                    })
+                    Download.STATE_DOWNLOADING
+                else
+                    Download.STATE_STOPPED
+        }
+    }
 
     LazyColumn(
         contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
@@ -96,6 +136,31 @@ fun AlbumScreen(
                         LocalAlbumHeader(
                             albumWithSongs = viewState.albumWithSongs,
                             inLibrary = inLibrary,
+                            downloadState = downloadState,
+                            onDownload = {
+                                viewState.albumWithSongs.songs.forEach { song ->
+                                    val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
+                                        .setCustomCacheKey(song.id)
+                                        .setData(song.song.title.toByteArray())
+                                        .build()
+                                    DownloadService.sendAddDownload(
+                                        context,
+                                        ExoDownloadService::class.java,
+                                        downloadRequest,
+                                        false
+                                    )
+                                }
+                            },
+                            onRemoveDownload = {
+                                viewState.albumWithSongs.songs.forEach { song ->
+                                    DownloadService.sendRemoveDownload(
+                                        context,
+                                        ExoDownloadService::class.java,
+                                        song.id,
+                                        false
+                                    )
+                                }
+                            },
                             navController = navController
                         )
                     }
@@ -123,11 +188,37 @@ fun AlbumScreen(
                         )
                     }
                 }
+
                 is AlbumViewState.Remote -> {
                     item {
                         RemoteAlbumHeader(
                             albumPage = viewState.albumPage,
                             inLibrary = inLibrary,
+                            downloadState = downloadState,
+                            onDownload = {
+                                viewState.albumPage.songs.forEach { song ->
+                                    val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
+                                        .setCustomCacheKey(song.id)
+                                        .setData(song.title.toByteArray())
+                                        .build()
+                                    DownloadService.sendAddDownload(
+                                        context,
+                                        ExoDownloadService::class.java,
+                                        downloadRequest,
+                                        false
+                                    )
+                                }
+                            },
+                            onRemoveDownload = {
+                                viewState.albumPage.songs.forEach { song ->
+                                    DownloadService.sendRemoveDownload(
+                                        context,
+                                        ExoDownloadService::class.java,
+                                        song.id,
+                                        false
+                                    )
+                                }
+                            },
                             navController = navController
                         )
                     }
@@ -156,6 +247,7 @@ fun AlbumScreen(
                         )
                     }
                 }
+
                 null -> {
                     item {
                         ShimmerHost {
@@ -218,8 +310,12 @@ fun AlbumScreen(
 fun LocalAlbumHeader(
     albumWithSongs: AlbumWithSongs,
     inLibrary: Boolean,
+    downloadState: Int,
+    onDownload: () -> Unit,
+    onRemoveDownload: () -> Unit,
     navController: NavController,
 ) {
+    val context = LocalContext.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val database = LocalDatabase.current
 
@@ -298,6 +394,51 @@ fun LocalAlbumHeader(
                             contentDescription = null
                         )
                     }
+
+                    when (downloadState) {
+                        Download.STATE_COMPLETED -> {
+                            IconButton(onClick = onRemoveDownload) {
+                                Icon(
+                                    painter = painterResource(R.drawable.offline),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+
+                        Download.STATE_DOWNLOADING -> {
+                            IconButton(onClick = onRemoveDownload) {
+                                CircularProgressIndicator(
+                                    strokeWidth = 2.dp,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
+
+                        else -> {
+                            IconButton(onClick = onDownload) {
+                                Icon(
+                                    painter = painterResource(R.drawable.download),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+
+                    IconButton(
+                        onClick = {
+                            val intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/${albumWithSongs.album.id}")
+                            }
+                            context.startActivity(Intent.createChooser(intent, null))
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.share),
+                            contentDescription = null
+                        )
+                    }
                 }
             }
         }
@@ -356,8 +497,12 @@ fun LocalAlbumHeader(
 fun RemoteAlbumHeader(
     albumPage: AlbumPage,
     inLibrary: Boolean,
+    downloadState: Int,
+    onDownload: () -> Unit,
+    onRemoveDownload: () -> Unit,
     navController: NavController,
 ) {
+    val context = LocalContext.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val database = LocalDatabase.current
 
@@ -441,6 +586,51 @@ fun RemoteAlbumHeader(
                     ) {
                         Icon(
                             painter = painterResource(if (inLibrary) R.drawable.library_add_check else R.drawable.library_add),
+                            contentDescription = null
+                        )
+                    }
+
+                    when (downloadState) {
+                        Download.STATE_COMPLETED -> {
+                            IconButton(onClick = onRemoveDownload) {
+                                Icon(
+                                    painter = painterResource(R.drawable.offline),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+
+                        Download.STATE_DOWNLOADING -> {
+                            IconButton(onClick = onRemoveDownload) {
+                                CircularProgressIndicator(
+                                    strokeWidth = 2.dp,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                        }
+
+                        else -> {
+                            IconButton(onClick = onDownload) {
+                                Icon(
+                                    painter = painterResource(R.drawable.download),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    }
+
+                    IconButton(
+                        onClick = {
+                            val intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, albumPage.album.shareLink)
+                            }
+                            context.startActivity(Intent.createChooser(intent, null))
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.share),
                             contentDescription = null
                         )
                     }

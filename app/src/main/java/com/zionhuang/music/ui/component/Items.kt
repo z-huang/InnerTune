@@ -48,6 +48,7 @@ import androidx.compose.ui.util.fastForEachIndexed
 import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
+import androidx.media3.exoplayer.offline.Download.STATE_QUEUED
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.AlbumItem
 import com.zionhuang.innertube.models.ArtistItem
@@ -211,7 +212,7 @@ fun SongListItem(
                         .padding(end = 2.dp)
                 )
 
-                STATE_DOWNLOADING -> CircularProgressIndicator(
+                STATE_QUEUED, STATE_DOWNLOADING -> CircularProgressIndicator(
                     strokeWidth = 2.dp,
                     modifier = Modifier
                         .size(16.dp)
@@ -334,7 +335,7 @@ fun AlbumListItem(
                     if (songs.all { downloads[it.id]?.state == STATE_COMPLETED })
                         STATE_COMPLETED
                     else if (songs.all {
-                            downloads[it.id]?.state == Download.STATE_QUEUED
+                            downloads[it.id]?.state == STATE_QUEUED
                                     || downloads[it.id]?.state == STATE_DOWNLOADING
                                     || downloads[it.id]?.state == STATE_COMPLETED
                         })
@@ -529,7 +530,7 @@ fun YouTubeListItem(
                         .padding(end = 2.dp)
                 )
 
-                STATE_DOWNLOADING -> CircularProgressIndicator(
+                STATE_QUEUED, STATE_DOWNLOADING -> CircularProgressIndicator(
                     strokeWidth = 2.dp,
                     modifier = Modifier
                         .size(16.dp)
