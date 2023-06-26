@@ -13,69 +13,54 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalDatabase
-import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
-import com.zionhuang.music.db.entities.Event
+import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
-import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.PlayerConnection
-import com.zionhuang.music.playback.queues.YouTubeQueue
-import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
-import com.zionhuang.music.ui.component.SongListItem
-import com.zionhuang.music.ui.component.TextFieldDialog
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun SongMenu(
-    originalSong: Song,
-    event: Event? = null,
+fun AlbumMenu(
+    album: Album,
     navController: NavController,
     playerConnection: PlayerConnection,
-    coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
-    val songState = database.song(originalSong.id).collectAsState(initial = originalSong)
-    val song = songState.value ?: originalSong
-    val download by LocalDownloadUtil.current.getDownload(originalSong.id).collectAsState(initial = null)
+    var songs by remember {
+        mutableStateOf(emptyList<Song>())
+    }
 
-    var showEditDialog by rememberSaveable {
-        mutableStateOf(false)
+    LaunchedEffect(Unit) {
+        database.albumSongs(album.id).collect {
+            songs = it
+        }
     }
 
     var showChoosePlaylistDialog by rememberSaveable {
@@ -86,35 +71,25 @@ fun SongMenu(
         mutableStateOf(false)
     }
 
-    if (showEditDialog) {
-        TextFieldDialog(
-            icon = { Icon(painter = painterResource(R.drawable.edit), contentDescription = null) },
-            title = { Text(text = stringResource(R.string.edit_song)) },
-            onDismiss = { showEditDialog = false },
-            initialTextFieldValue = TextFieldValue(song.song.title, TextRange(song.song.title.length)),
-            onDone = { title ->
-                onDismiss()
-                database.query {
-                    update(song.song.copy(title = title))
-                }
-            }
-        )
-    }
-
     AddToPlaylistDialog(
         isVisible = showChoosePlaylistDialog,
         onAdd = { playlist ->
-            database.query {
-                insert(
-                    PlaylistSongMap(
-                        songId = song.id,
-                        playlistId = playlist.id,
-                        position = playlist.songCount
-                    )
-                )
+            database.transaction {
+                songs.map { it.id }
+                    .forEach {
+                        insert(
+                            PlaylistSongMap(
+                                songId = it,
+                                playlistId = playlist.id,
+                                position = playlist.songCount
+                            )
+                        )
+                    }
             }
         },
-        onDismiss = { showChoosePlaylistDialog = false }
+        onDismiss = {
+            showChoosePlaylistDialog = false
+        }
     )
 
     if (showSelectArtistDialog) {
@@ -122,7 +97,7 @@ fun SongMenu(
             onDismiss = { showSelectArtistDialog = false }
         ) {
             items(
-                items = song.artists,
+                items = album.artists,
                 key = { it.id }
             ) { artist ->
                 Row(
@@ -163,28 +138,6 @@ fun SongMenu(
         }
     }
 
-    SongListItem(
-        song = song,
-        badges = {},
-        trailingContent = {
-            IconButton(
-                onClick = {
-                    database.query {
-                        update(song.song.toggleLike())
-                    }
-                }
-            ) {
-                Icon(
-                    painter = painterResource(if (song.song.liked) R.drawable.favorite else R.drawable.favorite_border),
-                    tint = MaterialTheme.colorScheme.error,
-                    contentDescription = null
-                )
-            }
-        }
-    )
-
-    Divider()
-
     GridMenu(
         contentPadding = PaddingValues(
             start = 8.dp,
@@ -194,31 +147,18 @@ fun SongMenu(
         )
     ) {
         GridMenuItem(
-            icon = R.drawable.radio,
-            title = R.string.start_radio
-        ) {
-            onDismiss()
-            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
-        }
-        GridMenuItem(
             icon = R.drawable.playlist_play,
             title = R.string.play_next
         ) {
             onDismiss()
-            playerConnection.playNext(song.toMediaItem())
+            playerConnection.playNext(songs.map { it.toMediaItem() })
         }
         GridMenuItem(
             icon = R.drawable.queue_music,
             title = R.string.add_to_queue
         ) {
             onDismiss()
-            playerConnection.addToQueue((song.toMediaItem()))
-        }
-        GridMenuItem(
-            icon = R.drawable.edit,
-            title = R.string.edit
-        ) {
-            showEditDialog = true
+            playerConnection.addToQueue(songs.map { it.toMediaItem() })
         }
         GridMenuItem(
             icon = R.drawable.playlist_add,
@@ -226,30 +166,15 @@ fun SongMenu(
         ) {
             showChoosePlaylistDialog = true
         }
-        DownloadGridMenu(
-            context = context,
-            download = download,
-            songId = song.id,
-            title = song.song.title
-        )
         GridMenuItem(
             icon = R.drawable.artist,
             title = R.string.view_artist
         ) {
-            if (song.artists.size == 1) {
-                navController.navigate("artist/${song.artists[0].id}")
+            if (album.artists.size == 1) {
+                navController.navigate("artist/${album.artists[0].id}")
                 onDismiss()
             } else {
                 showSelectArtistDialog = true
-            }
-        }
-        if (song.song.albumId != null) {
-            GridMenuItem(
-                icon = R.drawable.album,
-                title = R.string.view_album
-            ) {
-                onDismiss()
-                navController.navigate("album/${song.song.albumId}")
             }
         }
         GridMenuItem(
@@ -260,38 +185,17 @@ fun SongMenu(
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${song.id}")
+                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/${album.album.id}")
             }
             context.startActivity(Intent.createChooser(intent, null))
         }
-        if (song.song.inLibrary == null) {
-            GridMenuItem(
-                icon = R.drawable.library_add,
-                title = R.string.add_to_library
-            ) {
-                database.query {
-                    update(song.song.toggleLibrary())
-                }
-            }
-        } else {
-            GridMenuItem(
-                icon = R.drawable.library_add_check,
-                title = R.string.remove_from_library
-            ) {
-                database.query {
-                    update(song.song.toggleLibrary())
-                }
-            }
-        }
-        if (event != null) {
-            GridMenuItem(
-                icon = R.drawable.delete,
-                title = R.string.remove_from_history
-            ) {
-                onDismiss()
-                database.query {
-                    delete(event)
-                }
+        GridMenuItem(
+            icon = R.drawable.delete,
+            title = R.string.delete
+        ) {
+            onDismiss()
+            database.query {
+                delete(album.album)
             }
         }
     }
