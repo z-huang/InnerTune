@@ -71,6 +71,7 @@ import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeArtistMenu
+import com.zionhuang.music.ui.menu.YouTubePlaylistMenu
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.launch
@@ -144,7 +145,13 @@ fun OnlineSearchResult(
                                     onDismiss = menuState::dismiss
                                 )
 
-                                is PlaylistItem -> {}
+                                is PlaylistItem -> YouTubePlaylistMenu(
+                                    playlist = item,
+                                    navController = navController,
+                                    playerConnection = playerConnection,
+                                    coroutineScope = coroutineScope,
+                                    onDismiss = menuState::dismiss
+                                )
                             }
                         }
                     }

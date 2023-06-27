@@ -168,7 +168,10 @@ fun OnlineSearchScreen(
                                 onDismiss()
                             }
 
-                            is PlaylistItem -> {}
+                            is PlaylistItem -> {
+                                navController.navigate("online_playlist/${item.id}")
+                                onDismiss()
+                            }
                         }
                     }
                     .animateItemPlacement()
