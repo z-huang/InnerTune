@@ -1,7 +1,0 @@
-<br><b>Migliorato</b>
-
-* Aggiunto supporto alle icone tematiche su Android 13 (#157)
-
-<br><b>Sistemato</b>
-
-* Sistemata la riproduzione dei brani che non avveniva (#161)

@@ -377,13 +377,13 @@ object YouTube {
 
     suspend fun transcript(videoId: String): Result<String> = runCatching {
         val response = innerTube.getTranscript(WEB, videoId).body<GetTranscriptResponse>()
-        response.actions[0].updateEngagementPanelAction.content.transcriptRenderer.body.transcriptBodyRenderer.cueGroups.joinToString(separator = "\n") { group ->
+        response.actions?.firstOrNull()?.updateEngagementPanelAction?.content?.transcriptRenderer?.body?.transcriptBodyRenderer?.cueGroups?.joinToString(separator = "\n") { group ->
             val time = group.transcriptCueGroupRenderer.cues[0].transcriptCueRenderer.startOffsetMs
             val text = group.transcriptCueGroupRenderer.cues[0].transcriptCueRenderer.cue.simpleText
                 .trim('♪')
                 .trim(' ')
             "[%02d:%02d.%03d]$text".format(time / 60000, (time / 1000) % 60, time % 1000)
-        }
+        }!!
     }
 
     suspend fun visitorData(): Result<String> = runCatching {

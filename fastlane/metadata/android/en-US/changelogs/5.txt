@@ -1,27 +1,8 @@
-<br><b>New</b>
-
 * App updater (Preview)
 * Share button function in bottom control fragment
 * Open YouTube urls by this app #11
 * You can now search for YouTube Music albums
 * Remove download of a song
-
-<br><b>Improved</b>
-
 * Show channel or playlist name in search fragment title
 * Scrollable search filter chip group
-
-<br><b>Fixed</b>
-
-* Fixed artwork updates incorrectly when preloading the next song
-* Fixed play artist songs not working
-* Fixed media notification PendingIntent mutability flag missing, causing Android S+ to crash #6
-* Fixed can't add songs to library #9
-* Auto download not working
-* Auto add song to library not working
-
-<br><b>Development</b>
-
-* Bumped NewPipe Extractor from 0.21.13 to 0.21.14
-* Upload APK in GitHub Action
-* Added Fastlane structure
+* Minor fixes

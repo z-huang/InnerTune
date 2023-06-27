@@ -54,7 +54,6 @@ import androidx.media3.exoplayer.analytics.PlaybackStatsListener
 import androidx.media3.exoplayer.audio.AudioCapabilities
 import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.audio.SilenceSkippingAudioProcessor
-import androidx.media3.exoplayer.audio.SilenceSkippingAudioProcessor.DEFAULT_SILENCE_THRESHOLD_LEVEL
 import androidx.media3.exoplayer.audio.SonicAudioProcessor
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
@@ -668,7 +667,7 @@ class MusicService : MediaLibraryService(),
                 .setAudioProcessorChain(
                     DefaultAudioSink.DefaultAudioProcessorChain(
                         emptyArray(),
-                        SilenceSkippingAudioProcessor(2_000_000, 20_000, DEFAULT_SILENCE_THRESHOLD_LEVEL),
+                        SilenceSkippingAudioProcessor(2_000_000, 20_000, 256),
                         SonicAudioProcessor()
                     )
                 )

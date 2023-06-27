@@ -1,43 +1,9 @@
-In this version, we are saying goodbye to NewPipe Extractor and introducing a new library: <b><i>Innertube</i></b>! This change makes more powerful features possible! The primary updates are as follows:
+In this version, we are using a new library: <b><i>Innertube</i></b>, which makes more powerful features possible!
 * Browse everything as in YouTube Music
-* New home page to browse suggestions and find new music releases #43 #68 #124
+* New home page to browse suggestions and find new music releases
 * Search result summary tab
 * Loading stream is faster
 
 Credit: vfsfitvnm/ViMusic, tombulled/innertube, zerodytrash/YouTube-Internal-Clients
 
-⚠️ Note: For users upgrading from v0.3.3 or below, you will see your library songs without thumbnails after upgrade. To fix this, select all songs in your library, and do "Refetch". The app will refetch the thumbnails and update every song's artists.
-
-<br><b>New</b>
-
-* Richer search suggestions
-* Search history feature #93
-* Search library songs/artists/albums/playlists in new UI #7 #17 #30
-* New bottom navigation bar design
-* You can now add albums to library
-* Import playlists / add playlist links to library #81 #152
-* Batch operation for almost every list items #116
-* Sort library songs, artists, albums and playlists #20
-* Shuffle library songs #134
-* Better playlist layout design
-* Voice search #150
-* Equalizer #77
-* Proxy support (HTTP) #130
-* Click current bottom navigation item to scroll to top
-
-<br><b>Improved</b>
-
-* Change popup menu to bottom sheet dialog menu
-* Add background for the play button
-* Improved transition animation
-* Add missing setting preference icons (theme color and dark theme)
-* Add themed icon for Android 13 #157
-* Improved library item sort UI #18
-* Album/artist menu is working #28
-* Show song album name in "Songs" tab
-
-<br><b>Fixed</b>
-
-* Song data not correctly shown when cast to car #26
-* Downloads being deleted by Android #121
-* Too slow to load first song #48
+⚠️ Note: For users upgrading from <0.3.3, please select all songs in your library and do "Refetch" to get thumbnails shown.

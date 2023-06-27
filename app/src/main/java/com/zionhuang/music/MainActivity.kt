@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
+import androidx.core.net.toUri
+import androidx.core.util.Consumer
 import androidx.core.view.WindowCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -55,6 +57,8 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import com.google.common.util.concurrent.MoreExecutors
 import com.valentinilk.shimmer.LocalShimmerTheme
+import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
@@ -65,6 +69,7 @@ import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
+import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.component.shimmer.ShimmerTheme
 import com.zionhuang.music.ui.player.BottomSheetPlayer
@@ -94,6 +99,9 @@ import com.zionhuang.music.utils.rememberPreference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -106,6 +114,7 @@ class MainActivity : ComponentActivity() {
     lateinit var downloadUtil: DownloadUtil
 
     private var playerConnection by mutableStateOf<PlayerConnection?>(null)
+    private var mediaController: MediaController? = null
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             if (service is MusicBinder) {
@@ -129,6 +138,11 @@ class MainActivity : ComponentActivity() {
         unbindService(serviceConnection)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaController?.release()
+    }
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,9 +153,10 @@ class MainActivity : ComponentActivity() {
         val sessionToken = SessionToken(this, ComponentName(this, MusicService::class.java))
         val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
         controllerFuture.addListener(
-            { controllerFuture.get() },
+            { mediaController = controllerFuture.get() },
             MoreExecutors.directExecutor()
         )
+
 
         setContent {
             val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
@@ -310,6 +325,46 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    val coroutineScope = rememberCoroutineScope()
+                    DisposableEffect(Unit) {
+                        val listener = Consumer<Intent> { intent ->
+                            val uri = intent.data ?: intent.extras?.getString(Intent.EXTRA_TEXT)?.toUri() ?: return@Consumer
+                            when (val path = uri.pathSegments.firstOrNull()) {
+                                "playlist" -> uri.getQueryParameter("list")?.let { playlistId ->
+                                    if (playlistId.startsWith("OLAK5uy_")) {
+                                        coroutineScope.launch {
+                                            YouTube.albumSongs(playlistId).onSuccess { songs ->
+                                                songs.firstOrNull()?.album?.id?.let { browseId ->
+                                                    navController.navigate("album/$browseId")
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        navController.navigate("online_playlist/$playlistId")
+                                    }
+                                }
+
+                                "channel", "c" -> uri.lastPathSegment?.let { artistId ->
+                                    navController.navigate("artist/$artistId")
+                                }
+
+                                else -> when {
+                                    path == "watch" -> uri.getQueryParameter("v")
+                                    uri.host == "youtu.be" -> path
+                                    else -> null
+                                }?.let { videoId ->
+                                    coroutineScope.launch {
+                                        snapshotFlow { playerConnection }.filterNotNull().first()
+                                            .playQueue(YouTubeQueue(WatchEndpoint(videoId = videoId)))
+                                    }
+                                }
+                            }
+                        }
+
+                        addOnNewIntentListener(listener)
+                        onDispose { removeOnNewIntentListener(listener) }
+                    }
+
                     CompositionLocalProvider(
                         LocalDatabase provides database,
                         LocalContentColor provides contentColorFor(MaterialTheme.colorScheme.background),
@@ -361,15 +416,11 @@ class MainActivity : ComponentActivity() {
                                 OnlineSearchResult(navController)
                             }
                             composable(
-                                route = "album/{albumId}?playlistId={playlistId}",
+                                route = "album/{albumId}",
                                 arguments = listOf(
                                     navArgument("albumId") {
                                         type = NavType.StringType
                                     },
-                                    navArgument("playlistId") {
-                                        type = NavType.StringType
-                                        nullable = true
-                                    }
                                 )
                             ) {
                                 AlbumScreen(navController, scrollBehavior)
@@ -651,6 +702,10 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             window.navigationBarColor = (if (isDark) Color.Transparent else Color.Black.copy(alpha = 0.2f)).toArgb()
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
     }
 }
 

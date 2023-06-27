@@ -1,9 +1,0 @@
-<br><b>Sistemato</b>
-
-* Sistemata l'animazione della ridimensione del contenuto principale
-* Sistemato il malfunzionamento del tema scuro #69
-* Se si rinomina un artista non si perdono più brani dalla libreria #75
-
-<br><b>Aggiornamenti di traduzione</b>
-* Finlandese (grazie a @teemue) #67
-* Italiano (grazie a @airon90) #71

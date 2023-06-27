@@ -1,27 +1,6 @@
-<b>New</b>
-
 * Start radio from library songs
-* Default open tab setting #92
-* Audio quality setting #80
+* Default open tab setting
+* Audio quality setting
 * Pause or clear search history
-* Backup and restore #57
-
-<b>Improved</b>
-
-* Reduce error message text size
-* Use material dialogs in the preferences #195
-* Reorganized settings #162
-* Support SOCKS proxy #180
-* Retain search query when clicking search in search result fragment #185
-* Support Pano Scrobbler #14
-* Handle most errors and let user report them
-* Download local playlist songs #8
-* Support minimum API 24 #210
-* Remove in-app updater
-
-<b>Fixed</b>
-
-* Fix delete album action
-* Fix not found by other 3rd party equalizer apps #33
-* Fix some crash caused by MissingFieldException
-* Fix search error when results contain radio link
+* Backup and restore
+* Support SOCKS proxy
