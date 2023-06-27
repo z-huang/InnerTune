@@ -1,5 +1,6 @@
 package com.zionhuang.music.extensions
 
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,3 +17,5 @@ fun <T> Flow<T>.collectLatest(scope: CoroutineScope, action: suspend (value: T) 
         collectLatest(action)
     }
 }
+
+val SilentHandler = CoroutineExceptionHandler { _, _ -> }

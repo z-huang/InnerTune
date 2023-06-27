@@ -173,7 +173,7 @@ class MainActivity : ComponentActivity() {
                                     .allowHardware(false) // pixel access is not supported on Config#HARDWARE bitmaps
                                     .build()
                             )
-                            (result.drawable as BitmapDrawable).bitmap.extractThemeColor()
+                            (result.drawable as? BitmapDrawable)?.bitmap?.extractThemeColor() ?: DefaultThemeColor
                         }
                     } else DefaultThemeColor
                 }
