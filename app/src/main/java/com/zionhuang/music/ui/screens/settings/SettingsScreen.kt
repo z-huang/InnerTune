@@ -46,11 +46,6 @@ fun SettingsScreen(
             onClick = { navController.navigate("settings/storage") }
         )
         PreferenceEntry(
-            title = stringResource(R.string.general),
-            icon = R.drawable.testing,
-            onClick = { navController.navigate("settings/general") }
-        )
-        PreferenceEntry(
             title = stringResource(R.string.privacy),
             icon = R.drawable.security,
             onClick = { navController.navigate("settings/privacy") }

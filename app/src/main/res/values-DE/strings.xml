@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s verwendet</string>
 
-    <string name="general">Allgemein</string>
-    <string name="auto_download">Automatisches Herunterladen</string>
-    <string name="auto_download_desc">Lied herunterladen, wenn es zur Bibliothek hinzugefügt wird</string>
-    <string name="auto_add_song">Lied automatisch zur Bibliothek hinzufügen</string>
-    <string name="auto_add_song_desc">Lied zu Ihrer Bibliothek hinzufügen, wenn es fertig abgespielt ist</string>
-    <string name="expand_on_play">Erweitern des unteren Spielers im Spiel</string>
-    <string name="notification_more_action">Weitere Aktionen in der Benachrichtigung</string>
-    <string name="notification_more_action_desc">Schaltflächen "Zur Bibliothek hinzufügen" und "Gefällt mir" anzeigen</string>
-
     <string name="privacy">Privatsphäre</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Suchverlauf anhalten</string>

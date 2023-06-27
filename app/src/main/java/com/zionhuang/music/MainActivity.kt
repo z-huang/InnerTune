@@ -295,18 +295,12 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    val expandOnPlay by rememberPreference(ExpandOnPlayKey, defaultValue = false)
-
                     DisposableEffect(playerConnection, playerBottomSheetState) {
                         val player = playerConnection?.player ?: return@DisposableEffect onDispose { }
                         val listener = object : Player.Listener {
                             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                                 if (reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED && mediaItem != null && playerBottomSheetState.isDismissed) {
-                                    if (expandOnPlay) {
-                                        playerBottomSheetState.expandSoft()
-                                    } else {
-                                        playerBottomSheetState.collapseSoft()
-                                    }
+                                    playerBottomSheetState.collapseSoft()
                                 }
                             }
                         }
@@ -462,9 +456,6 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("settings/storage") {
                                 StorageSettings(navController, scrollBehavior)
-                            }
-                            composable("settings/general") {
-                                GeneralSettings(navController, scrollBehavior)
                             }
                             composable("settings/privacy") {
                                 PrivacySettings(navController, scrollBehavior)
@@ -662,8 +653,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-const val ACTION_SHOW_BOTTOM_SHEET = "show_bottom_sheet"
 
 val LocalDatabase = staticCompositionLocalOf<MusicDatabase> { error("No database provided") }
 val LocalPlayerConnection = staticCompositionLocalOf<PlayerConnection?> { error("No PlayerConnection provided") }

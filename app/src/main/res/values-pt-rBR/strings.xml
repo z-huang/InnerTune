@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s usados</string>
 
-    <string name="general">Geral</string>
-    <string name="auto_download">Fazer download automaticamente</string>
-    <string name="auto_download_desc">Fazer download de música quando adicionada à biblioteca</string>
-    <string name="auto_add_song">Adicionar música à biblioteca automaticamente</string>
-    <string name="auto_add_song_desc">Adicionar música à sua biblioteca quando terminar de ser reproduzida</string>
-    <string name="expand_on_play">Expandir player ao reproduzir</string>
-    <string name="notification_more_action">More actions in notification</string>
-    <string name="notification_more_action_desc">Show add to library and like buttons</string>
-
     <string name="privacy">Privacidade</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Pausar histórico de pesquisa</string>

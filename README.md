@@ -39,7 +39,6 @@ With this app, you're like getting a free music streaming service. You can liste
 - Like songs
 - local playlist management
 - Add links to your favorite YouTube Music playlists
-- Export downloaded songs via SAF
 
 ### Player
 

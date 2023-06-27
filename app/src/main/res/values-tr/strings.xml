@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Şarkı önbelleğini temizle</string>
     <string name="size_used">%s kullanıldı</string>
 
-    <string name="general">Genel</string>
-    <string name="auto_download">Otomatik indirme</string>
-    <string name="auto_download_desc">Kütüphaneye eklendiğinde şarkıyı indirir</string>
-    <string name="auto_add_song">Kütüphaneye otomatik şarkı ekle</string>
-    <string name="auto_add_song_desc">Şarkı bittiğinde kütüphaneye ekler</string>
-    <string name="expand_on_play">Oyun sırasında alttaki oyuncuyu genişlet</string>
-    <string name="notification_more_action">Bildirimde daha fazla eylem</string>
-    <string name="notification_more_action_desc">Kütüphaneye ekle ve beğen düğmelerini gösterir</string>
-
     <string name="privacy">Gizlilik</string>
     <string name="pause_listen_history">Dinleme geçmişini duraklat</string>
     <string name="pause_search_history">Arama geçmişini duraklat</string>

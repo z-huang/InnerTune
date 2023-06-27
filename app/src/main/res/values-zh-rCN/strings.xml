@@ -204,15 +204,6 @@
     <string name="clear_song_cache">清除歌曲缓存</string>
     <string name="size_used">已使用 %s</string>
 
-    <string name="general">一般</string>
-    <string name="auto_download">自动下载</string>
-    <string name="auto_download_desc">自动下载新增的歌曲</string>
-    <string name="auto_add_song">自动将音乐加入媒体库</string>
-    <string name="auto_add_song_desc">在播放结束时加入媒体库</string>
-    <string name="expand_on_play">在播放音乐时展开播放器</string>
-    <string name="notification_more_action">在通知显示更多按钮</string>
-    <string name="notification_more_action_desc">显示“加入媒体库”和“喜欢”按钮</string>
-
     <string name="privacy">隐私</string>
     <string name="pause_listen_history">暂停观看记录</string>
     <string name="pause_search_history">暂停搜索记录</string>

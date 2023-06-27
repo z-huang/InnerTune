@@ -210,15 +210,6 @@
     <string name="clear_song_cache">ਗੀਤ ਕੈਸ਼ ਸਾਫ਼ ਕਰੋ</string>
     <string name="size_used">%s ਵਰਤਿਆ ਗਿਆ</string>
 
-    <string name="general">ਜਨਰਲ</string>
-    <string name="auto_download">ਆਟੋ ਡਾਊਨਲੋਡ</string>
-    <string name="auto_download_desc">ਲਾਇਬ੍ਰੇਰੀ ਵਿੱਚ ਸ਼ਾਮਲ ਕੀਤੇ ਜਾਣ ਤੇ ਗੀਤ ਡਾਊਨਲੋਡ ਕਰੋ</string>
-    <string name="auto_add_song">ਲਾਇਬ੍ਰੇਰੀ ਵਿੱਚ ਗੀਤ ਆਟੋ ਸ਼ਾਮਲ ਕਰੋ</string>
-    <string name="auto_add_song_desc">ਗੀਤ ਪੂਰਾ ਚੱਲ ਜਾਣ ਤੇ ਆਪਣੀ ਲਾਇਬ੍ਰੇਰੀ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ</string>
-    <string name="expand_on_play">ਚਲਾਉਣ ਤੇ ਹੇਠਲੇ ਪਲੇਅਰ ਦਾ ਵਿਸਤਾਰ ਕਰੋ</string>
-    <string name="notification_more_action">ਨੋਟੀਫਿਕੇਸ਼ਨ ਵਿੱਚ ਹੋਰ ਕਾਰਵਾਈਆਂ</string>
-    <string name="notification_more_action_desc">ਲਾਇਬ੍ਰੇਰੀ ਵਿੱਚ ਜੋੜੋ ਅਤੇ ਪਸੰਦ ਬਟਨ ਵਿਖਾਓ</string>
-
     <string name="privacy">ਗੋਪਨੀਯਤਾ</string>
     <string name="pause_listen_history">ਸੁਣਨ ਦਾ ਅਤੀਤ ਰੋਕੋ</string>
     <string name="pause_search_history">ਖੋਜ ਇਤਿਹਾਸ ਨੂੰ ਰੋਕੋ</string>

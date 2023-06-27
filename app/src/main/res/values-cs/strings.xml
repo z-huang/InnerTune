@@ -221,15 +221,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">Využito %s</string>
 
-    <string name="general">Obecné</string>
-    <string name="auto_download">Automatické stahování</string>
-    <string name="auto_download_desc">Stáhnout skladbu při přidání do knihovny</string>
-    <string name="auto_add_song">Automaticky přidat skladbu do knihovny</string>
-    <string name="auto_add_song_desc">Přidat skladbu do vaší knihovny po skončení jejího přehrávání</string>
-    <string name="expand_on_play">Při přehrání rozšířit spodní přehrávač</string>
-    <string name="notification_more_action">Více akcí v oznámení</string>
-    <string name="notification_more_action_desc">Zobrazit tlačítka přidání do knihovny a oblíbení</string>
-
     <string name="privacy">Soukromí</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Pozastavit historii vyhledávání</string>

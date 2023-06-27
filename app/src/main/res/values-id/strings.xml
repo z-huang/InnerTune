@@ -204,15 +204,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s digunakan</string>
 
-    <string name="general">Umum</string>
-    <string name="auto_download">Unduh secara otomatis</string>
-    <string name="auto_download_desc">Unduh lagu saat ditambahkan ke perpustakaan</string>
-    <string name="auto_add_song">Tambahkan lagu secara otomatis ke perpustakaan</string>
-    <string name="auto_add_song_desc">Tambahkan lagu ke perpustakaan Anda saat selesai diputar</string>
-    <string name="expand_on_play">Perluas pemutar bawah saat diputar</string>
-    <string name="notification_more_action">Lebih banyak tindakan dalam pemberitahuan</string>
-    <string name="notification_more_action_desc">Tampilkan tombol tambahkan ke perpustakaan dan suka</string>
-
     <string name="privacy">Privasi</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Jeda riwayat pencarian</string>

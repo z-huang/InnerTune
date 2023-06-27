@@ -30,11 +30,6 @@ val AudioNormalizationKey = booleanPreferencesKey("audioNormalization")
 val MaxImageCacheSizeKey = intPreferencesKey("maxImageCacheSize")
 val MaxSongCacheSizeKey = intPreferencesKey("maxSongCacheSize")
 
-val AutoAddToLibraryKey = booleanPreferencesKey("autoAddToLibrary")
-val AutoDownloadKey = booleanPreferencesKey("autoDownload")
-val ExpandOnPlayKey = booleanPreferencesKey("expandOnPlay")
-val NotificationMoreActionKey = booleanPreferencesKey("notificationMoreAction")
-
 val PauseListenHistoryKey = booleanPreferencesKey("pauseListenHistory")
 val PauseSearchHistoryKey = booleanPreferencesKey("pauseSearchHistory")
 val EnableKugouKey = booleanPreferencesKey("enableKugou")

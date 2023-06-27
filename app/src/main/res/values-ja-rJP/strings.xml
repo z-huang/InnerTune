@@ -204,15 +204,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s 使用中</string>
 
-    <string name="general">一般</string>
-    <string name="auto_download">自動ダウンロード</string>
-    <string name="auto_download_desc">ライブラリに追加したら曲をダウンロードする</string>
-    <string name="auto_add_song">曲を自動でライブラリに追加</string>
-    <string name="auto_add_song_desc">再生が終了したら曲をライブラリに追加する</string>
-    <string name="expand_on_play">プレイヤーを再生時に展開</string>
-    <string name="notification_more_action">通知にもっとアクションを表示</string>
-    <string name="notification_more_action_desc">「ライブラリに追加」と「いいね」ボタンを表示する</string>
-
     <string name="privacy">プライバシー</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">履歴の記録を一時停止</string>

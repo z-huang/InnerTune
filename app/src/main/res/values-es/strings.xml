@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Borrar la caché de canciones</string>
     <string name="size_used">%s usado</string>
 
-    <string name="general">General</string>
-    <string name="auto_download">Descarga automática</string>
-    <string name="auto_download_desc">Descargar canción cuando se agregue a la biblioteca</string>
-    <string name="auto_add_song">Agregar canción automáticamente a la biblioteca</string>
-    <string name="auto_add_song_desc">Agrega la canción a tu biblioteca cuando termine de reproducirse</string>
-    <string name="expand_on_play">Expandir reproductor inferior al reproducir</string>
-    <string name="notification_more_action">Más acciones en la notificación</string>
-    <string name="notification_more_action_desc">Mostrar botones de añadir a la biblioteca y dar me gusta</string>
-
     <string name="privacy">Privacidad</string>
     <string name="pause_listen_history">Pausar historial de escucha</string>
     <string name="pause_search_history">Pausar historial de búsquedas</string>

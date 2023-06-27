@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s used</string>
 
-    <string name="general">General</string>
-    <string name="auto_download">Automatisk nedladdning</string>
-    <string name="auto_download_desc">Ladda ner låt när det läggs till i biblioteket</string>
-    <string name="auto_add_song">Lägg till låt i biblioteket automatiskt</string>
-    <string name="auto_add_song_desc">Lägg till låten i biblioteket efter det spelats klart</string>
-    <string name="expand_on_play">Utöka bottenspelaren vid låtspel</string>
-    <string name="notification_more_action">More actions in notification</string>
-    <string name="notification_more_action_desc">Show add to library and like buttons</string>
-
     <string name="privacy">Privacy</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Pause search history</string>

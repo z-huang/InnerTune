@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s használva</string>
 
-    <string name="general">Általános</string>
-    <string name="auto_download">Auto. letöltés</string>
-    <string name="auto_download_desc">Töltse le a dalt, amikor hozzáadja a könyvtárhoz</string>
-    <string name="auto_add_song">Dal auto. hozzáadása a könyvtárhoz</string>
-    <string name="auto_add_song_desc">Adja hozzá a dalt a könyvtárához, amikor a lejátszás befejeződött</string>
-    <string name="expand_on_play">Bontsa ki az alsó lejátszót lejátszás közben</string>
-    <string name="notification_more_action">További műveletek az értesítésben</string>
-    <string name="notification_more_action_desc">Könyvtárhoz adás és tetszés gombok megjelenítése</string>
-
     <string name="privacy">Adatvédelem</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Keresési előzmények szüneteltetése</string>

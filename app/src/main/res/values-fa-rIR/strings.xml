@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s used</string>
 
-    <string name="general">عمومی</string>
-    <string name="auto_download">بارگیری خودکار</string>
-    <string name="auto_download_desc">بارگیری آهنگ با اضافه‌شدن به کتاب‌خانه</string>
-    <string name="auto_add_song">افزودن خودکار آهنگ به کتاب‌خانه</string>
-    <string name="auto_add_song_desc">افزودن آهنگ به کتاب‌خانه پس از اتمام پخش</string>
-    <string name="expand_on_play">گسترش پخش‌کننده‌ی پایین هنگام پخش</string>
-    <string name="notification_more_action">More actions in notification</string>
-    <string name="notification_more_action_desc">Show add to library and like buttons</string>
-
     <string name="privacy">حریم‌خصوصی</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">متوقف‌کردن تاریخچه جستجو</string>

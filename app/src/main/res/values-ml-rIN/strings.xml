@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s used</string>
 
-    <string name="general">പൊതുവായ</string>
-    <string name="auto_download">യാന്ത്രിക ഡൗൺലോഡ്</string>
-    <string name="auto_download_desc">ലൈബ്രറിയിൽ ചേർക്കുമ്പോൾ പാട്ട് ഡൗൺലോഡ് ചെയ്യുക</string>
-    <string name="auto_add_song">ലൈബ്രറിയിലേക്ക് പാട്ട് സ്വയമേവ ചേർക്കുക</string>
-    <string name="auto_add_song_desc">നിങ്ങളുടെ ലൈബ്രറി പ്ലേ ചെയ്യുമ്പോൾ പാട്ട് ചേർക്കുക</string>
-    <string name="expand_on_play">താഴെയുള്ള പ്ലേയർ വികസിപ്പിക്കുക</string>
-    <string name="notification_more_action">More actions in notification</string>
-    <string name="notification_more_action_desc">Show add to library and like buttons</string>
-
     <string name="privacy">സ്വകാര്യത</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">തിരയൽ ചരിത്രം താൽക്കാലികമായി നിർത്തുക</string>

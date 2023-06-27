@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s ବ୍ୟବହୃତ</string>
 
-    <string name="general">ସାଧାରଣ</string>
-    <string name="auto_download">ସ୍ଵତଃ ଡାଉନଲଡ୍</string>
-    <string name="auto_download_desc">ଲାଇବ୍ରେରୀରେ ଯୋଡି ହେଲେ ଗୀତ ଡାଉନଲୋଡ୍ କରନ୍ତୁ</string>
-    <string name="auto_add_song">ଲାଇବ୍ରେରୀରେ ସ୍ଵତଃ ଗୀତ ଯୋଡନ୍ତୁ</string>
-    <string name="auto_add_song_desc">ଯେତେବେଳେ ଏହା ଚାଲିବା ସମାପ୍ତ ହେବ ସେତେବେଳେ ତୁମର ଲାଇବ୍ରେରୀରେ ଗୀତ ଯୋଡ</string>
-    <string name="expand_on_play">ପ୍ଲେ ଉପରେ ନିମ୍ନ ପ୍ଲେୟାର୍ ବିସ୍ତାର କରନ୍ତୁ</string>
-    <string name="notification_more_action">ବିଜ୍ଞପ୍ତିରେ ଅଧିକ କାର୍ଯ୍ୟ</string>
-    <string name="notification_more_action_desc">ଲାଇବ୍ରେରୀରେ ଯୋଡନ୍ତୁ ଏବଂ ବଟନ୍ ପସନ୍ଦ କରନ୍ତୁ</string>
-
     <string name="privacy">ଗୋପନୀୟତା</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">ସନ୍ଧାନ ଇତିହାସକୁ ବିରତି ଦିଅ</string>

@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s used</string>
 
-    <string name="general">General</string>
-    <string name="auto_download">Automaattinen lataus</string>
-    <string name="auto_download_desc">Lataa kirjastoon lisätyt kappaleet automaattisesti</string>
-    <string name="auto_add_song">Automaattinen vienti kirjastoon</string>
-    <string name="auto_add_song_desc">Lisää kappale kirjastoon automaattisesti, kun se on soitettu</string>
-    <string name="expand_on_play">Laajenna alapalkki toistaessa</string>
-    <string name="notification_more_action">More actions in notification</string>
-    <string name="notification_more_action_desc">Show add to library and like buttons</string>
-
     <string name="privacy">Privacy</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Pause search history</string>

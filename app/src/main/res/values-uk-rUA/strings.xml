@@ -222,15 +222,6 @@
     <string name="clear_song_cache">Очистити кеш аудіо</string>
     <string name="size_used">%s використано</string>
 
-    <string name="general">Загальні</string>
-    <string name="auto_download">Автоматичне завантаження</string>
-    <string name="auto_download_desc">Завантажувати композицію після додавання до бібліотеки</string>
-    <string name="auto_add_song">Автоматичне додавання композиції до бібліотеки</string>
-    <string name="auto_add_song_desc">Додати композицію до бібліотеки після завершення відтворення</string>
-    <string name="expand_on_play">Розгорнути нижню панель під час відтворення</string>
-    <string name="notification_more_action">Дії в панелі сповіщень</string>
-    <string name="notification_more_action_desc">Показувати кнопки «Додати до бібліотеки» та «Подобається»</string>
-
     <string name="privacy">Конфіденційність</string>
     <string name="pause_listen_history">Призупинити історію прослуховувань</string>
     <string name="pause_search_history">Призупинити історію пошуку</string>

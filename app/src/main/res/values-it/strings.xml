@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s usato</string>
 
-    <string name="general">Generale</string>
-    <string name="auto_download">Scaricamento automatico</string>
-    <string name="auto_download_desc">Scarica la canzone quando viene aggiunta alla libreria</string>
-    <string name="auto_add_song">Aggiunta automatica nella libreria</string>
-    <string name="auto_add_song_desc">Aggiungi la canzone nella tua libreria quando viene terminato l\'ascolto</string>
-    <string name="expand_on_play">Espandi il riproduttore in basso quando inizia un ascolto</string>
-    <string name="notification_more_action">Ulteriori azioni in notifica</string>
-    <string name="notification_more_action_desc">Mostra i bottoni Aggiungi alla libreria e Mi piace</string>
-
     <string name="privacy">Privacy</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Sospendi la cronologia delle ricerche</string>

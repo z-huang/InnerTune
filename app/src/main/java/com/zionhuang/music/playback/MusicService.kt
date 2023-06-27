@@ -75,18 +75,15 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.models.response.PlayerResponse
-import com.zionhuang.music.ACTION_SHOW_BOTTOM_SHEET
 import com.zionhuang.music.MainActivity
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AudioNormalizationKey
 import com.zionhuang.music.constants.AudioQuality
 import com.zionhuang.music.constants.AudioQualityKey
-import com.zionhuang.music.constants.AutoAddToLibraryKey
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIBRARY
 import com.zionhuang.music.constants.MediaSessionConstants.ACTION_TOGGLE_LIKE
 import com.zionhuang.music.constants.MediaSessionConstants.CommandToggleLibrary
 import com.zionhuang.music.constants.MediaSessionConstants.CommandToggleLike
-import com.zionhuang.music.constants.NotificationMoreActionKey
 import com.zionhuang.music.constants.PauseListenHistoryKey
 import com.zionhuang.music.constants.PersistentQueueKey
 import com.zionhuang.music.constants.PlayerVolumeKey
@@ -123,7 +120,6 @@ import com.zionhuang.music.utils.CoilBitmapLoader
 import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.enumPreference
 import com.zionhuang.music.utils.get
-import com.zionhuang.music.utils.preference
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -174,7 +170,6 @@ class MusicService : MediaLibraryService(),
     private lateinit var connectivityManager: ConnectivityManager
     val bitmapProvider = BitmapProvider(this)
 
-    private val autoAddSong by preference(this, AutoAddToLibraryKey, true)
     private val audioQuality by enumPreference(this, AudioQualityKey, AudioQuality.AUTO)
 
     private var currentQueue: Queue = EmptyQueue
@@ -242,9 +237,7 @@ class MusicService : MediaLibraryService(),
                 PendingIntent.getActivity(
                     this,
                     0,
-                    Intent(this, MainActivity::class.java).apply {
-                        action = ACTION_SHOW_BOTTOM_SHEET
-                    },
+                    Intent(this, MainActivity::class.java),
                     PendingIntent.FLAG_IMMUTABLE
                 )
             )
@@ -310,13 +303,6 @@ class MusicService : MediaLibraryService(),
             }
         }
 
-        dataStore.data
-            .map { it[NotificationMoreActionKey] ?: true }
-            .distinctUntilChanged()
-            .collectLatest(scope) {
-                updateNotification(currentSong)
-            }
-
         if (dataStore.get(PersistentQueueKey, true)) {
             runCatching {
                 filesDir.resolve(PERSISTENT_QUEUE_FILE).inputStream().use { fis ->
@@ -340,22 +326,20 @@ class MusicService : MediaLibraryService(),
 
     private fun updateNotification(song: Song?) {
         mediaSession.setCustomLayout(
-            if (dataStore.get(NotificationMoreActionKey, true))
-                listOf(
-                    CommandButton.Builder()
-                        .setDisplayName(getString(if (song?.song?.inLibrary != null) R.string.remove_from_library else R.string.add_to_library))
-                        .setIconResId(if (song?.song?.inLibrary != null) R.drawable.library_add_check else R.drawable.library_add)
-                        .setSessionCommand(CommandToggleLibrary)
-                        .setEnabled(song != null)
-                        .build(),
-                    CommandButton.Builder()
-                        .setDisplayName(getString(if (currentSong?.song?.liked == true) R.string.action_remove_like else R.string.action_like))
-                        .setIconResId(if (song?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border)
-                        .setSessionCommand(CommandToggleLike)
-                        .setEnabled(song != null)
-                        .build()
-                )
-            else emptyList()
+            listOf(
+                CommandButton.Builder()
+                    .setDisplayName(getString(if (song?.song?.inLibrary != null) R.string.remove_from_library else R.string.add_to_library))
+                    .setIconResId(if (song?.song?.inLibrary != null) R.drawable.library_add_check else R.drawable.library_add)
+                    .setSessionCommand(CommandToggleLibrary)
+                    .setEnabled(song != null)
+                    .build(),
+                CommandButton.Builder()
+                    .setDisplayName(getString(if (currentSong?.song?.liked == true) R.string.action_remove_like else R.string.action_like))
+                    .setIconResId(if (song?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border)
+                    .setSessionCommand(CommandToggleLike)
+                    .setEnabled(song != null)
+                    .build()
+            )
         )
     }
 
@@ -460,12 +444,6 @@ class MusicService : MediaLibraryService(),
         }
     }
 
-    private fun addToLibrary(mediaMetadata: com.zionhuang.music.models.MediaMetadata) {
-        database.query {
-            insert(mediaMetadata)
-        }
-    }
-
     fun setSleepTimer(minute: Int) {
         sleepTimerJob?.cancel()
         sleepTimerJob = null
@@ -531,14 +509,6 @@ class MusicService : MediaLibraryService(),
         }
     }
 
-    override fun onPositionDiscontinuity(oldPosition: Player.PositionInfo, newPosition: Player.PositionInfo, @Player.DiscontinuityReason reason: Int) {
-        if (reason == Player.DISCONTINUITY_REASON_AUTO_TRANSITION && autoAddSong) {
-            oldPosition.mediaItem?.metadata?.let {
-                addToLibrary(it)
-            }
-        }
-    }
-
     override fun onPlaybackStateChanged(@Player.State playbackState: Int) {
         if (playbackState == STATE_IDLE) {
             currentQueue = EmptyQueue
@@ -546,11 +516,6 @@ class MusicService : MediaLibraryService(),
             updateQueueTitle("")
         }
         if (playbackState == STATE_ENDED) {
-            if (autoAddSong) {
-                player.currentMetadata?.let {
-                    addToLibrary(it)
-                }
-            }
             if (pauseWhenSongEnd) {
                 pauseWhenSongEnd = false
                 player.pause()
@@ -825,29 +790,29 @@ class MusicService : MediaLibraryService(),
         LibraryResult.ofItemList(
             when (parentId) {
                 ROOT -> listOf(
-                    mediaItem(SONG, getString(R.string.songs), null, drawableUri(R.drawable.music_note), true, MEDIA_TYPE_PLAYLIST),
-                    mediaItem(ARTIST, getString(R.string.artists), null, drawableUri(R.drawable.artist), true, MEDIA_TYPE_FOLDER_ARTISTS),
-                    mediaItem(ALBUM, getString(R.string.albums), null, drawableUri(R.drawable.album), true, MEDIA_TYPE_FOLDER_ALBUMS),
-                    mediaItem(PLAYLIST, getString(R.string.playlists), null, drawableUri(R.drawable.queue_music), true, MEDIA_TYPE_FOLDER_PLAYLISTS)
+                    browsableMediaItem(SONG, getString(R.string.songs), null, drawableUri(R.drawable.music_note), MEDIA_TYPE_PLAYLIST),
+                    browsableMediaItem(ARTIST, getString(R.string.artists), null, drawableUri(R.drawable.artist), MEDIA_TYPE_FOLDER_ARTISTS),
+                    browsableMediaItem(ALBUM, getString(R.string.albums), null, drawableUri(R.drawable.album), MEDIA_TYPE_FOLDER_ALBUMS),
+                    browsableMediaItem(PLAYLIST, getString(R.string.playlists), null, drawableUri(R.drawable.queue_music), MEDIA_TYPE_FOLDER_PLAYLISTS)
                 )
 
                 SONG -> database.songsByCreateDateDesc().first().map { it.toMediaItem(parentId) }
                 ARTIST -> database.artistsByCreateDateDesc().first().map { artist ->
-                    mediaItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.n_song, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri(), true, MEDIA_TYPE_ARTIST)
+                    browsableMediaItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.n_song, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri(), MEDIA_TYPE_ARTIST)
                 }
 
                 ALBUM -> database.albumsByCreateDateDesc().first().map { album ->
-                    mediaItem("$ALBUM/${album.id}", album.album.title, album.artists.joinToString(), album.album.thumbnailUrl?.toUri(), true, MEDIA_TYPE_ALBUM)
+                    browsableMediaItem("$ALBUM/${album.id}", album.album.title, album.artists.joinToString(), album.album.thumbnailUrl?.toUri(), MEDIA_TYPE_ALBUM)
                 }
 
                 PLAYLIST -> {
                     val likedSongCount = database.likedSongsCount().first()
                     val downloadedSongCount = database.downloadedSongsCount().first()
                     listOf(
-                        mediaItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.n_song, likedSongCount, likedSongCount), drawableUri(R.drawable.favorite), true, MEDIA_TYPE_PLAYLIST),
-                        mediaItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.n_song, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.download), true, MEDIA_TYPE_PLAYLIST)
+                        browsableMediaItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.n_song, likedSongCount, likedSongCount), drawableUri(R.drawable.favorite), MEDIA_TYPE_PLAYLIST),
+                        browsableMediaItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.n_song, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.download), MEDIA_TYPE_PLAYLIST)
                     ) + database.playlistsByCreateDateDesc().first().map { playlist ->
-                        mediaItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.n_song, playlist.songCount, playlist.songCount), playlist.thumbnails.firstOrNull()?.toUri(), true, MEDIA_TYPE_PLAYLIST)
+                        browsableMediaItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.n_song, playlist.songCount, playlist.songCount), playlist.thumbnails.firstOrNull()?.toUri(), MEDIA_TYPE_PLAYLIST)
                     }
                 }
 
@@ -962,7 +927,7 @@ class MusicService : MediaLibraryService(),
         .appendPath(resources.getResourceEntryName(id))
         .build()
 
-    private fun mediaItem(id: String, title: String, subtitle: String?, iconUri: Uri?, browsable: Boolean = false, mediaType: Int = MEDIA_TYPE_MUSIC) =
+    private fun browsableMediaItem(id: String, title: String, subtitle: String?, iconUri: Uri?, mediaType: Int = MEDIA_TYPE_MUSIC) =
         MediaItem.Builder()
             .setMediaId(id)
             .setMediaMetadata(
@@ -971,8 +936,8 @@ class MusicService : MediaLibraryService(),
                     .setSubtitle(subtitle)
                     .setArtist(subtitle)
                     .setArtworkUri(iconUri)
-                    .setIsPlayable(!browsable)
-                    .setIsBrowsable(browsable)
+                    .setIsPlayable(false)
+                    .setIsBrowsable(true)
                     .setMediaType(mediaType)
                     .build()
             )

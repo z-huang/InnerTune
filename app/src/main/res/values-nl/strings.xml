@@ -210,15 +210,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s gebruikt</string>
 
-    <string name="general">Algemeen</string>
-    <string name="auto_download">Automatisch downloaden</string>
-    <string name="auto_download_desc">Download nummer wanneer toegevoegd aan bibliotheek</string>
-    <string name="auto_add_song">Nummer automatisch toevoegen aan bibliotheek</string>
-    <string name="auto_add_song_desc">Voeg een nummer toe aan uw bibliotheek wanneer het afspelen is voltooid</string>
-    <string name="expand_on_play">Vouw de onderste speler uit tijdens het spelen</string>
-    <string name="notification_more_action">Meer acties in melding</string>
-    <string name="notification_more_action_desc">Toon toevoegen aan bibliotheek en like-knoppen</string>
-
     <string name="privacy">Privacy</string>
     <string name="pause_listen_history">Pauzeer de zoekgeschiedenis</string>
     <string name="pause_search_history">Pause search history</string>

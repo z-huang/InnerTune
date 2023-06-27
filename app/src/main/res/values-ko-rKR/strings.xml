@@ -204,15 +204,6 @@
     <string name="clear_song_cache">Clear song cache</string>
     <string name="size_used">%s used</string>
 
-    <string name="general">General</string>
-    <string name="auto_download">자동 다운로드</string>
-    <string name="auto_download_desc">라이브러리에 추가할 때 노래 다운로드</string>
-    <string name="auto_add_song">라이브러리에 노래 자동 추가</string>
-    <string name="auto_add_song_desc">재생이 완료되면 라이브러리에 노래 추가</string>
-    <string name="expand_on_play">플레이 시 하단 플레이어 확장</string>
-    <string name="notification_more_action">More actions in notification</string>
-    <string name="notification_more_action_desc">Show add to library and like buttons</string>
-
     <string name="privacy">Privacy</string>
     <string name="pause_listen_history">Pause listen history</string>
     <string name="pause_search_history">Pause search history</string>
