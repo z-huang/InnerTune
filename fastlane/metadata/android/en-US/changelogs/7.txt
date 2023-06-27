@@ -1,28 +1,8 @@
-<br><b>New</b>
-
 * Material You #25
 * Dark mode settings
 * Show an icon indicating if a song is in your library in search fragment
-
-<br><b>Improved</b>
-
 * Make search filter bar fixed
 * Move song downloaded icon to second line
 * Smoother transition animation
 * Merge artists with same name (#50)
-
-<br><b>Fixed</b>
-
-* "Update available" showing after update
-* Handle audio becoming noisy #16
-* Fix app crashed when fetching search suggestions without Internet connection #38
-* Fix content covered by player (#31)
-
-<br><b>Translation updates</b>
-
-* French (by @kayoo123) #34
-* Korean (by @hands8142) #39
-* Italian (by @airon90) #36
-* Brazilian Portuguese (by @eumunhoz) #51
-* Finnish (by @teemue) #59
-* Japanese (by @HiSubway) #60
+* Minor fixes

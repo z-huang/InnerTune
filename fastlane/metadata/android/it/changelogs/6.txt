@@ -1,4 +1,0 @@
-<br><b>Sistemato</b>
-
-* Sistemato l'errore che non permetteva il caricamento di nessun brano da YouTube #27, TeamNewPipe/NewPipe#8202
-* Sistemato l'errore nei video per adulti di YouTube, la cui riproduzione veniva bloccata TeamNewPipe/NewPipeExtractor#832
