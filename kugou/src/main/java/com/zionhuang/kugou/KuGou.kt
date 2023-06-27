@@ -60,22 +60,20 @@ object KuGou {
         searchSongs(keyword).data.info.forEach {
             if (duration == -1 || abs(it.duration - duration) <= DURATION_TOLERANCE) {
                 searchLyricsByHash(it.hash).candidates.firstOrNull()?.let { candidate ->
-                    callback(
-                        downloadLyrics(candidate.id, candidate.accesskey)
-                            .content
-                            .decodeBase64String()
-                            .normalize(keyword)
-                    )
+                    downloadLyrics(candidate.id, candidate.accesskey)
+                        .content
+                        .decodeBase64String()
+                        .normalize(keyword)
+                        ?.let(callback)
                 }
             }
         }
         searchLyricsByKeyword(keyword, duration).candidates.forEach { candidate ->
-            callback(
-                downloadLyrics(candidate.id, candidate.accesskey)
-                    .content
-                    .decodeBase64String()
-                    .normalize(keyword)
-            )
+            downloadLyrics(candidate.id, candidate.accesskey)
+                .content
+                .decodeBase64String()
+                .normalize(keyword)
+                ?.let(callback)
         }
     }
 
@@ -145,7 +143,7 @@ object KuGou {
 
     fun generateKeyword(title: String, artist: String) = normalizeTitle(title) to normalizeArtist(artist)
 
-    private fun String.normalize(keyword: Pair<String, String>): String =
+    private fun String.normalize(keyword: Pair<String, String>): String? =
         replace("&apos;", "'").lines().filter { line ->
             line matches ACCEPTED_REGEX
         }.let {
@@ -167,7 +165,9 @@ object KuGou {
                 }
             }
             it.dropLast(tailCutLine)
-        }.let { lines ->
+        }.takeIf {
+            it.isNotEmpty() && "纯音乐，请欣赏" !in it[0]
+        }?.let { lines ->
             val firstLine = lines.firstOrNull()?.toSimplifiedChinese() ?: return@let lines
             val (title, artist) = keyword
             if (title.toSimplifiedChinese() in firstLine ||
@@ -175,7 +175,7 @@ object KuGou {
             ) {
                 lines.drop(1)
             } else lines
-        }.joinToString(separator = "\n").let {
+        }?.joinToString(separator = "\n")?.let {
             if (useTraditionalChinese) it.normalizeForTraditionalChinese()
             else it
         }
