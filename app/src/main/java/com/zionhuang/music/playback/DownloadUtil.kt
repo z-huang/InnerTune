@@ -7,6 +7,7 @@ import androidx.core.net.toUri
 import androidx.media3.common.PlaybackException
 import androidx.media3.database.DatabaseProvider
 import androidx.media3.datasource.ResolvingDataSource
+import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.offline.Download
@@ -18,6 +19,7 @@ import com.zionhuang.music.constants.AudioQualityKey
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.FormatEntity
 import com.zionhuang.music.di.DownloadCache
+import com.zionhuang.music.di.PlayerCache
 import com.zionhuang.music.utils.enumPreference
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -38,18 +40,28 @@ class DownloadUtil @Inject constructor(
     val database: MusicDatabase,
     val databaseProvider: DatabaseProvider,
     @DownloadCache val downloadCache: SimpleCache,
+    @PlayerCache val playerCache: SimpleCache,
 ) {
     private val connectivityManager = context.getSystemService<ConnectivityManager>()!!
     private val audioQuality by enumPreference(context, AudioQualityKey, AudioQuality.AUTO)
     private val songUrlCache = HashMap<String, Pair<String, Long>>()
     private val dataSourceFactory = ResolvingDataSource.Factory(
-        OkHttpDataSource.Factory(
-            OkHttpClient.Builder()
-                .proxy(YouTube.proxy)
-                .build()
-        )
+        CacheDataSource.Factory()
+            .setCache(playerCache)
+            .setUpstreamDataSourceFactory(
+                OkHttpDataSource.Factory(
+                    OkHttpClient.Builder()
+                        .proxy(YouTube.proxy)
+                        .build()
+                )
+            )
     ) { dataSpec ->
         val mediaId = dataSpec.key ?: error("No media id")
+        val length = if (dataSpec.length >= 0) dataSpec.length else 1
+
+        if (playerCache.isCached(mediaId, dataSpec.position, length)) {
+            return@Factory dataSpec
+        }
 
         songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
             return@Factory dataSpec.withUri(it.first.toUri())
