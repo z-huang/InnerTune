@@ -179,20 +179,20 @@
 
     <string name="content">İçerik</string>
     <string name="login">Giriş yap</string>
-    <string name="content_language">Varsayılan içerik dili</string>
-    <string name="content_country">İçerik için varsayılan ülke</string>
+    <string name="content_language">Varsayılan dil</string>
+    <string name="content_country">Varsayılan ülke</string>
     <string name="system_default">Sistem varsayılanı</string>
     <string name="enable_proxy">Proxy\'yi etkinleştir</string>
     <string name="proxy_type">Proxy türü</string>
     <string name="proxy_url">Proxy URL\'si</string>
     <string name="restart_to_take_effect">Etkinleşmek için yeniden başlat</string>
 
-    <string name="player_and_audio">Müzik çalar ve ses</string>
+    <string name="player_and_audio">Müzik çalar ve Ses</string>
     <string name="audio_quality">Ses kalitesi</string>
     <string name="audio_quality_auto">Otomatik</string>
     <string name="audio_quality_high">Yüksek</string>
     <string name="audio_quality_low">Düşük</string>
-    <string name="persistent_queue">Sürekli sıra</string>
+    <string name="persistent_queue">Devamlı şarkı sırası</string>
     <string name="skip_silence">Sessizliği atla</string>
     <string name="audio_normalization">Ses normalleştirme</string>
     <string name="equalizer">Ekolayzer</string>
@@ -203,7 +203,7 @@
     <string name="song_cache">Şarkı Önbelleği</string>
     <string name="max_cache_size">Maksimum önbellek boyutu</string>
     <string name="unlimited">Sınırsız</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="clear_all_downloads">Tüm indirilenleri temizle</string>
     <string name="max_image_cache_size">Maksimum görüntü önbellek boyutu</string>
     <string name="clear_image_cache">Görüntü önbelleğini temizle</string>
     <string name="max_song_cache_size">Maksimum şarkı önbellek boyutu</string>
@@ -217,7 +217,7 @@
     <string name="clear_search_history_confirm">Tüm arama geçmişini temizlediğinizden emin misiniz?</string>
     <string name="enable_kugou">KuGou şarkı sözleri sağlayıcısını etkinleştir</string>
 
-    <string name="backup_restore">Yedekleme ve geri yükleme</string>
+    <string name="backup_restore">Yedekleme ve Geri yükleme</string>
     <string name="backup">Yedekle</string>
     <string name="restore">Geri yükle</string>
     <string name="backup_create_success">Yedekleme başarıyla oluşturuldu</string>
