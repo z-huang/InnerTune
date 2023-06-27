@@ -104,6 +104,7 @@ import com.zionhuang.music.db.entities.RelatedSongMap
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.di.DownloadCache
 import com.zionhuang.music.di.PlayerCache
+import com.zionhuang.music.extensions.SilentHandler
 import com.zionhuang.music.extensions.collect
 import com.zionhuang.music.extensions.collectLatest
 import com.zionhuang.music.extensions.currentMetadata
@@ -401,7 +402,7 @@ class MusicService : MediaLibraryService(),
             player.playWhenReady = playWhenReady
         }
 
-        scope.launch {
+        scope.launch(SilentHandler) {
             val initialStatus = withContext(Dispatchers.IO) { queue.getInitialStatus() }
             if (queue.preloadItem != null && player.playbackState == STATE_IDLE) return@launch
             initialStatus.title?.let { queueTitle ->
@@ -422,7 +423,7 @@ class MusicService : MediaLibraryService(),
         val currentMediaMetadata = player.currentMetadata ?: return
         if (player.currentMediaItemIndex > 0) player.removeMediaItems(0, player.currentMediaItemIndex)
         if (player.currentMediaItemIndex < player.mediaItemCount - 1) player.removeMediaItems(player.currentMediaItemIndex + 1, player.mediaItemCount)
-        scope.launch {
+        scope.launch(SilentHandler) {
             val radioQueue = YouTubeQueue(endpoint = WatchEndpoint(videoId = currentMediaMetadata.id))
             val initialStatus = radioQueue.getInitialStatus()
             initialStatus.title?.let { queueTitle ->
@@ -514,7 +515,7 @@ class MusicService : MediaLibraryService(),
             player.mediaItemCount - player.currentMediaItemIndex <= 5 &&
             currentQueue.hasNextPage()
         ) {
-            scope.launch {
+            scope.launch(SilentHandler) {
                 val mediaItems = currentQueue.nextPage()
                 if (player.playbackState != STATE_IDLE) {
                     player.addMediaItems(mediaItems)
