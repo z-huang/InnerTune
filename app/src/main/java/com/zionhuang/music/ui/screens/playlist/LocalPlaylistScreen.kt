@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,6 +29,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -40,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -51,13 +54,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.compose.ui.util.fastSumBy
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.exoplayer.offline.Download
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.utils.completed
 import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -66,6 +74,7 @@ import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
+import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AutoResizeText
 import com.zionhuang.music.ui.component.EmptyPlaceholder
@@ -91,6 +100,7 @@ fun LocalPlaylistScreen(
     scrollBehavior: TopAppBarScrollBehavior,
     viewModel: LocalPlaylistViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val menuState = LocalMenuState.current
     val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -109,6 +119,28 @@ fun LocalPlaylistScreen(
     val showTopBarTitle by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex > 0
+        }
+    }
+
+    val downloadUtil = LocalDownloadUtil.current
+    var downloadState by remember {
+        mutableStateOf(Download.STATE_STOPPED)
+    }
+
+    LaunchedEffect(songs) {
+        if (songs.isEmpty()) return@LaunchedEffect
+        downloadUtil.downloads.collect { downloads ->
+            downloadState =
+                if (songs.all { downloads[it.song.id]?.state == Download.STATE_COMPLETED })
+                    Download.STATE_COMPLETED
+                else if (songs.all {
+                        downloads[it.song.id]?.state == Download.STATE_QUEUED
+                                || downloads[it.song.id]?.state == Download.STATE_DOWNLOADING
+                                || downloads[it.song.id]?.state == Download.STATE_COMPLETED
+                    })
+                    Download.STATE_DOWNLOADING
+                else
+                    Download.STATE_STOPPED
         }
     }
 
@@ -255,6 +287,72 @@ fun LocalPlaylistScreen(
                                                 painter = painterResource(R.drawable.sync),
                                                 contentDescription = null
                                             )
+                                        }
+                                    }
+
+                                    when (downloadState) {
+                                        Download.STATE_COMPLETED -> {
+                                            IconButton(
+                                                onClick = {
+                                                    songs.forEach { song ->
+                                                        DownloadService.sendRemoveDownload(
+                                                            context,
+                                                            ExoDownloadService::class.java,
+                                                            song.song.id,
+                                                            false
+                                                        )
+                                                    }
+                                                }
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.offline),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                        }
+
+                                        Download.STATE_DOWNLOADING -> {
+                                            IconButton(
+                                                onClick = {
+                                                    songs.forEach { song ->
+                                                        DownloadService.sendRemoveDownload(
+                                                            context,
+                                                            ExoDownloadService::class.java,
+                                                            song.song.id,
+                                                            false
+                                                        )
+                                                    }
+                                                }
+                                            ) {
+                                                CircularProgressIndicator(
+                                                    strokeWidth = 2.dp,
+                                                    modifier = Modifier.size(24.dp)
+                                                )
+                                            }
+                                        }
+
+                                        else -> {
+                                            IconButton(
+                                                onClick = {
+                                                    songs.forEach { song ->
+                                                        val downloadRequest = DownloadRequest.Builder(song.song.id, song.song.id.toUri())
+                                                            .setCustomCacheKey(song.song.id)
+                                                            .setData(song.song.song.title.toByteArray())
+                                                            .build()
+                                                        DownloadService.sendAddDownload(
+                                                            context,
+                                                            ExoDownloadService::class.java,
+                                                            downloadRequest,
+                                                            false
+                                                        )
+                                                    }
+                                                }
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.download),
+                                                    contentDescription = null
+                                                )
+                                            }
                                         }
                                     }
                                 }
