@@ -185,7 +185,7 @@
     <string name="enable_proxy">Proxy\'yi etkinleştir</string>
     <string name="proxy_type">Proxy türü</string>
     <string name="proxy_url">Proxy URL\'si</string>
-    <string name="restart_to_take_effect">Etkinleşmek için yeniden başlat</string>
+    <string name="restart_to_take_effect">Etkinleştirmek için yeniden başlatın</string>
 
     <string name="player_and_audio">Müzik çalar ve Ses</string>
     <string name="audio_quality">Ses kalitesi</string>
@@ -214,7 +214,7 @@
     <string name="pause_listen_history">Dinleme geçmişini duraklat</string>
     <string name="pause_search_history">Arama geçmişini duraklat</string>
     <string name="clear_search_history">Arama geçmişini temizle</string>
-    <string name="clear_search_history_confirm">Tüm arama geçmişini temizlediğinizden emin misiniz?</string>
+    <string name="clear_search_history_confirm">Tüm arama geçmişini temizlemekten emin misiniz?</string>
     <string name="enable_kugou">KuGou şarkı sözleri sağlayıcısını etkinleştir</string>
 
     <string name="backup_restore">Yedekleme ve Geri yükleme</string>
