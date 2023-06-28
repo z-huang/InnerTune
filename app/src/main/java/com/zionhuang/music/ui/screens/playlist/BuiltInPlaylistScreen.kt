@@ -142,6 +142,7 @@ fun BuiltInPlaylistScreen(
                 SongListItem(
                     song = song,
                     showLikedIcon = viewModel.playlistId != LIKED_PLAYLIST_ID,
+                    showInLibraryIcon = true,
                     showDownloadIcon = viewModel.playlistId != DOWNLOADED_PLAYLIST_ID,
                     isPlaying = song.id == mediaMetadata?.id,
                     playWhenReady = playWhenReady,
