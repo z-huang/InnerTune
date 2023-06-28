@@ -70,6 +70,9 @@ import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AlbumThumbnailSize
+import com.zionhuang.music.constants.PlaylistSongSortDescendingKey
+import com.zionhuang.music.constants.PlaylistSongSortType
+import com.zionhuang.music.constants.PlaylistSongSortTypeKey
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.extensions.toMediaItem
@@ -81,6 +84,7 @@ import com.zionhuang.music.ui.component.EmptyPlaceholder
 import com.zionhuang.music.ui.component.FontSizeRange
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
+import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.ui.utils.reordering.ReorderingLazyColumn
@@ -89,6 +93,8 @@ import com.zionhuang.music.ui.utils.reordering.draggedItem
 import com.zionhuang.music.ui.utils.reordering.rememberReorderingState
 import com.zionhuang.music.ui.utils.reordering.reorder
 import com.zionhuang.music.utils.makeTimeString
+import com.zionhuang.music.utils.rememberEnumPreference
+import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -112,6 +118,8 @@ fun LocalPlaylistScreen(
     val playlistLength = remember(songs) {
         songs.fastSumBy { it.song.song.duration }
     }
+    val (sortType, onSortTypeChange) = rememberEnumPreference(PlaylistSongSortTypeKey, PlaylistSongSortType.CUSTOM)
+    val (sortDescending, onSortDescendingChange) = rememberPreference(PlaylistSongSortDescendingKey, true)
 
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
@@ -180,13 +188,15 @@ fun LocalPlaylistScreen(
         contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
     ) {
         playlist?.let { playlist ->
-            item {
-                if (playlist.songCount == 0) {
+            if (playlist.songCount == 0) {
+                item {
                     EmptyPlaceholder(
                         icon = R.drawable.music_note,
                         text = stringResource(R.string.playlist_is_empty)
                     )
-                } else {
+                }
+            } else {
+                item {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         modifier = Modifier.padding(12.dp)
@@ -404,6 +414,23 @@ fun LocalPlaylistScreen(
                         }
                     }
                 }
+
+                item {
+                    SortHeader(
+                        sortType = sortType,
+                        sortDescending = sortDescending,
+                        onSortTypeChange = onSortTypeChange,
+                        onSortDescendingChange = onSortDescendingChange,
+                        sortTypeText = { sortType ->
+                            when (sortType) {
+                                PlaylistSongSortType.CUSTOM -> R.string.sort_by_custom
+                                PlaylistSongSortType.NAME -> R.string.sort_by_name
+                                PlaylistSongSortType.ARTIST -> R.string.sort_by_artist
+                            }
+                        },
+                        trailingText = ""
+                    )
+                }
             }
         }
 
@@ -457,14 +484,16 @@ fun LocalPlaylistScreen(
                                 )
                             }
 
-                            IconButton(
-                                onClick = { },
-                                modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.drag_handle),
-                                    contentDescription = null
-                                )
+                            if (sortType == PlaylistSongSortType.CUSTOM) {
+                                IconButton(
+                                    onClick = { },
+                                    modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.drag_handle),
+                                        contentDescription = null
+                                    )
+                                }
                             }
                         },
                         modifier = Modifier

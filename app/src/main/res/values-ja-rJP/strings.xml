@@ -82,6 +82,7 @@
     <string name="sort_by_song_count">曲数</string>
     <string name="sort_by_length">長さ</string>
     <string name="sort_by_play_time">再生時間</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">メディアID</string>

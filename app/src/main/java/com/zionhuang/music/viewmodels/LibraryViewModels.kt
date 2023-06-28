@@ -26,28 +26,15 @@ import javax.inject.Inject
 class LibrarySongsViewModel @Inject constructor(
     @ApplicationContext context: Context,
     database: MusicDatabase,
-    downloadUtil: DownloadUtil,
 ) : ViewModel() {
-    val allSongs = combine(
-        context.dataStore.data
-            .map {
-                it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE) to (it[SongSortDescendingKey] ?: true)
-            }
-            .distinctUntilChanged()
-            .flatMapLatest { (sortType, descending) ->
-                database.songs(sortType, descending)
-            },
-        downloadUtil.downloads
-    ) { songs, downloads ->
-        songs.toMutableList().apply {
-            downloads.forEach { (id, download) ->
-                val index = indexOfFirst { it.id == id }
-                if (index != -1) {
-                    set(index, get(index).copy(download = download))
-                }
-            }
+    val allSongs = context.dataStore.data
+        .map {
+            it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE) to (it[SongSortDescendingKey] ?: true)
         }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+        .distinctUntilChanged()
+        .flatMapLatest { (sortType, descending) ->
+            database.songs(sortType, descending)
+        }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
 @HiltViewModel

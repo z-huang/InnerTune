@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">പാട്ടുകളുടെ എണ്ണം</string>
     <string name="sort_by_length">ദൈർഘ്യം</string>
     <string name="sort_by_play_time">Play time</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">Media id</string>

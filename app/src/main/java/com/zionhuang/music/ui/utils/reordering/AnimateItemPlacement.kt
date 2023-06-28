@@ -5,6 +5,6 @@ import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.ui.Modifier
 
 context(LazyItemScope)
-        @ExperimentalFoundationApi
+@ExperimentalFoundationApi
 fun Modifier.animateItemPlacement(reorderingState: ReorderingState) =
     if (!reorderingState.isDragging) animateItemPlacement() else this

@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">Aantal nummers</string>
     <string name="sort_by_length">Duur</string>
     <string name="sort_by_play_time">Speeltijd</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">Media id</string>

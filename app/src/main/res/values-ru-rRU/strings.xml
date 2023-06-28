@@ -85,6 +85,7 @@
     <string name="sort_by_song_count">Количество треков</string>
     <string name="sort_by_length">Длительность</string>
     <string name="sort_by_play_time">Количество воспр.</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">Media id</string>

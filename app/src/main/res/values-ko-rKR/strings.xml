@@ -82,6 +82,7 @@
     <string name="sort_by_song_count">Song count</string>
     <string name="sort_by_length">Length</string>
     <string name="sort_by_play_time">Play time</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">Media id</string>

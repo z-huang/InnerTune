@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.PlaylistSongSortType
 
 @Composable
 inline fun <reified T : Enum<T>> SortHeader(
@@ -85,14 +86,16 @@ inline fun <reified T : Enum<T>> SortHeader(
             }
         }
 
-        ResizableIconButton(
-            icon = if (sortDescending) R.drawable.arrow_downward else R.drawable.arrow_upward,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .size(32.dp)
-                .padding(8.dp),
-            onClick = { onSortDescendingChange(!sortDescending) }
-        )
+        if (sortType != PlaylistSongSortType.CUSTOM) {
+            ResizableIconButton(
+                icon = if (sortDescending) R.drawable.arrow_downward else R.drawable.arrow_upward,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .size(32.dp)
+                    .padding(8.dp),
+                onClick = { onSortDescendingChange(!sortDescending) }
+            )
+        }
 
         Spacer(Modifier.weight(1f))
 

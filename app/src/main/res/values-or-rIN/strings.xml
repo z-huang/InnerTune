@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">ସଙ୍ଗୀତ ସଂଖ୍ୟା</string>
     <string name="sort_by_length">ସମୟ</string>
     <string name="sort_by_play_time">ଚାଲିଥିବା ସମୟ</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">ମିଡିଆ id</string>

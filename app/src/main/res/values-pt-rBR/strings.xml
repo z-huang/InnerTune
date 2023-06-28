@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">Número da faixa</string>
     <string name="sort_by_length">Tamanho</string>
     <string name="sort_by_play_time">Tempo de reprodução</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">Media id</string>

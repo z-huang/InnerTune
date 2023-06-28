@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">Número de canciones</string>
     <string name="sort_by_length">Duración</string>
     <string name="sort_by_play_time">Tiempo de reproducción</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">ID multimedia</string>

@@ -85,6 +85,7 @@
     <string name="sort_by_song_count">Počet skladeb</string>
     <string name="sort_by_length">Délka</string>
     <string name="sort_by_play_time">Doba přehrávání</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">ID média</string>

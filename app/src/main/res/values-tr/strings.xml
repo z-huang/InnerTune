@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">Şarkı sayısı</string>
     <string name="sort_by_length">Uzunluk</string>
     <string name="sort_by_play_time">Çalma süresi</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">Medya kimliği</string>

@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">تعداد آهنگ</string>
     <string name="sort_by_length">طول</string>
     <string name="sort_by_play_time">زمان پخش</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">Media id</string>

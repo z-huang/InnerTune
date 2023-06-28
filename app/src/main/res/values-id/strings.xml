@@ -82,6 +82,7 @@
     <string name="sort_by_song_count">Hitungan lagu</string>
     <string name="sort_by_length">Ukuran</string>
     <string name="sort_by_play_time">Waktu dimainkan</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">ID media</string>

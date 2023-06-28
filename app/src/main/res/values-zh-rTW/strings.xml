@@ -82,6 +82,7 @@
     <string name="sort_by_song_count">歌曲總數</string>
     <string name="sort_by_length">長度</string>
     <string name="sort_by_play_time">播放時間</string>
+    <string name="sort_by_custom">自訂順序</string>
 
     <!-- Dialog -->
     <string name="media_id">Id</string>

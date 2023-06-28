@@ -83,6 +83,7 @@
     <string name="sort_by_song_count">ਗਿਣਤੀ</string>
     <string name="sort_by_length">ਲੰਬਾਈ</string>
     <string name="sort_by_play_time">ਚਲਾਉਣ ਦਾ ਸਮਾਂ</string>
+    <string name="sort_by_custom">Custom order</string>
 
     <!-- Dialog -->
     <string name="media_id">ਮੀਡੀਆ ਆਈਡੀ</string>
