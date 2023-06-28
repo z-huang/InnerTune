@@ -1,6 +1,5 @@
 package com.zionhuang.music.ui.screens
 
-import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -67,6 +66,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.AlbumThumbnailSize
 import com.zionhuang.music.constants.CONTENT_TYPE_SONG
 import com.zionhuang.music.constants.ThumbnailCornerRadius
+import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
@@ -81,7 +81,9 @@ import com.zionhuang.music.ui.component.shimmer.ButtonPlaceholder
 import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
+import com.zionhuang.music.ui.menu.AlbumMenu
 import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.AlbumViewModel
 import com.zionhuang.music.viewmodels.AlbumViewState
@@ -361,9 +363,9 @@ fun LocalAlbumHeader(
     onRemoveDownload: () -> Unit,
     navController: NavController,
 ) {
-    val context = LocalContext.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val database = LocalDatabase.current
+    val menuState = LocalMenuState.current
 
     Column(
         modifier = Modifier.padding(12.dp)
@@ -472,16 +474,19 @@ fun LocalAlbumHeader(
 
                     IconButton(
                         onClick = {
-                            val intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                type = "text/plain"
-                                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/${albumWithSongs.album.id}")
+                            menuState.show {
+                                AlbumMenu(
+                                    album = Album(albumWithSongs.album, albumWithSongs.artists),
+                                    navController = navController,
+                                    playerConnection = playerConnection,
+                                    showDeleteButton = false,
+                                    onDismiss = menuState::dismiss
+                                )
                             }
-                            context.startActivity(Intent.createChooser(intent, null))
                         }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.share),
+                            painter = painterResource(R.drawable.more_vert),
                             contentDescription = null
                         )
                     }
@@ -548,9 +553,10 @@ fun RemoteAlbumHeader(
     onRemoveDownload: () -> Unit,
     navController: NavController,
 ) {
-    val context = LocalContext.current
     val playerConnection = LocalPlayerConnection.current ?: return
+    val menuState = LocalMenuState.current
     val database = LocalDatabase.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.padding(12.dp)
@@ -667,16 +673,19 @@ fun RemoteAlbumHeader(
 
                     IconButton(
                         onClick = {
-                            val intent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                type = "text/plain"
-                                putExtra(Intent.EXTRA_TEXT, albumPage.album.shareLink)
+                            menuState.show {
+                                YouTubeAlbumMenu(
+                                    album = albumPage.album,
+                                    navController = navController,
+                                    playerConnection = playerConnection,
+                                    coroutineScope = coroutineScope,
+                                    onDismiss = menuState::dismiss
+                                )
                             }
-                            context.startActivity(Intent.createChooser(intent, null))
                         }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.share),
+                            painter = painterResource(R.drawable.more_vert),
                             contentDescription = null
                         )
                     }

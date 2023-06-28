@@ -59,6 +59,7 @@ fun AlbumMenu(
     album: Album,
     navController: NavController,
     playerConnection: PlayerConnection,
+    showDeleteButton: Boolean = true,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -248,13 +249,15 @@ fun AlbumMenu(
             }
             context.startActivity(Intent.createChooser(intent, null))
         }
-        GridMenuItem(
-            icon = R.drawable.delete,
-            title = R.string.delete
-        ) {
-            onDismiss()
-            database.query {
-                delete(album.album)
+        if (showDeleteButton) {
+            GridMenuItem(
+                icon = R.drawable.delete,
+                title = R.string.delete
+            ) {
+                onDismiss()
+                database.query {
+                    delete(album.album)
+                }
             }
         }
     }
