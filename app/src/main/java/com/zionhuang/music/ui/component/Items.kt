@@ -179,10 +179,11 @@ fun SongListItem(
     song: Song,
     modifier: Modifier = Modifier,
     albumIndex: Int? = null,
+    showLikedIcon: Boolean = true,
     showInLibraryIcon: Boolean = false,
     showDownloadIcon: Boolean = true,
     badges: @Composable RowScope.() -> Unit = {
-        if (song.song.liked) {
+        if (showLikedIcon && song.song.liked) {
             Icon(
                 painter = painterResource(R.drawable.favorite),
                 contentDescription = null,

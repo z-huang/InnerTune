@@ -141,6 +141,7 @@ fun BuiltInPlaylistScreen(
             ) { index, song ->
                 SongListItem(
                     song = song,
+                    showLikedIcon = viewModel.playlistId != LIKED_PLAYLIST_ID,
                     showDownloadIcon = viewModel.playlistId != DOWNLOADED_PLAYLIST_ID,
                     isPlaying = song.id == mediaMetadata?.id,
                     playWhenReady = playWhenReady,
