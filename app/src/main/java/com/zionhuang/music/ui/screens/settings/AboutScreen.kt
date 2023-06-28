@@ -88,6 +88,14 @@ fun AboutScreen(
             }
         }
 
+        Spacer(Modifier.height(4.dp))
+
+        Text(
+            text = "by Zion Huang",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.secondary
+        )
+
         Spacer(Modifier.height(8.dp))
 
         Row {
