@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.utils.completed
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.R
@@ -33,6 +34,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun YouTubePlaylistMenu(
     playlist: PlaylistItem,
+    songs: List<SongItem> = emptyList(),
     navController: NavController,
     playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
@@ -49,10 +51,14 @@ fun YouTubePlaylistMenu(
         isVisible = showChoosePlaylistDialog,
         onAdd = { targetPlaylist ->
             coroutineScope.launch(Dispatchers.IO) {
-                YouTube.playlist(playlist.id).completed().onSuccess { page ->
-                    var position = targetPlaylist.songCount
+                var position = targetPlaylist.songCount
+                songs.ifEmpty {
+                    withContext(Dispatchers.IO) {
+                        YouTube.playlist(playlist.id).completed().getOrNull()?.songs.orEmpty()
+                    }
+                }.let { songs ->
                     database.transaction {
-                        page.songs
+                        songs
                             .map { it.toMediaMetadata() }
                             .onEach(::insert)
                             .forEach { song ->
@@ -107,10 +113,12 @@ fun YouTubePlaylistMenu(
             title = R.string.play_next
         ) {
             coroutineScope.launch {
-                withContext(Dispatchers.IO) {
-                    YouTube.playlist(playlist.id).completed()
-                }.onSuccess { page ->
-                    playerConnection.playNext(page.songs.map { it.toMediaItem() })
+                songs.ifEmpty {
+                    withContext(Dispatchers.IO) {
+                        YouTube.playlist(playlist.id).completed().getOrNull()?.songs.orEmpty()
+                    }
+                }.let { songs ->
+                    playerConnection.playNext(songs.map { it.toMediaItem() })
                 }
             }
             onDismiss()
@@ -120,10 +128,12 @@ fun YouTubePlaylistMenu(
             title = R.string.add_to_queue
         ) {
             coroutineScope.launch(Dispatchers.IO) {
-                withContext(Dispatchers.IO) {
-                    YouTube.playlist(playlist.id).completed()
-                }.onSuccess { page ->
-                    playerConnection.addToQueue(page.songs.map { it.toMediaItem() })
+                songs.ifEmpty {
+                    withContext(Dispatchers.IO) {
+                        YouTube.playlist(playlist.id).completed().getOrNull()?.songs.orEmpty()
+                    }
+                }.let { songs ->
+                    playerConnection.addToQueue(songs.map { it.toMediaItem() })
                 }
             }
             onDismiss()

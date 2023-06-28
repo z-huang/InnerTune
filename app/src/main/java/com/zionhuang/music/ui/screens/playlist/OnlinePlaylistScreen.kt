@@ -1,6 +1,5 @@
 package com.zionhuang.music.ui.screens.playlist
 
-import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -74,6 +73,7 @@ import com.zionhuang.music.ui.component.shimmer.ButtonPlaceholder
 import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
+import com.zionhuang.music.ui.menu.YouTubePlaylistMenu
 import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.OnlinePlaylistViewModel
 import kotlinx.coroutines.launch
@@ -205,16 +205,20 @@ fun OnlinePlaylistScreen(
 
                                         IconButton(
                                             onClick = {
-                                                val intent = Intent().apply {
-                                                    action = Intent.ACTION_SEND
-                                                    type = "text/plain"
-                                                    putExtra(Intent.EXTRA_TEXT, playlist.shareLink)
+                                                menuState.show {
+                                                    YouTubePlaylistMenu(
+                                                        playlist = playlist,
+                                                        songs = songs,
+                                                        navController = navController,
+                                                        playerConnection = playerConnection,
+                                                        coroutineScope = coroutineScope,
+                                                        onDismiss = menuState::dismiss
+                                                    )
                                                 }
-                                                context.startActivity(Intent.createChooser(intent, null))
                                             }
                                         ) {
                                             Icon(
-                                                painter = painterResource(R.drawable.share),
+                                                painter = painterResource(R.drawable.more_vert),
                                                 contentDescription = null
                                             )
                                         }
