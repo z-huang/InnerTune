@@ -34,7 +34,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -100,7 +99,6 @@ fun AlbumScreen(
 ) {
     val context = LocalContext.current
     val menuState = LocalMenuState.current
-    val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -114,10 +112,10 @@ fun AlbumScreen(
     }
 
     LaunchedEffect(viewState) {
-        val viewState = viewState ?: return@LaunchedEffect
-        val songs = when (viewState) {
-            is AlbumViewState.Local -> viewState.albumWithSongs.songs.map { it.id }
-            is AlbumViewState.Remote -> viewState.albumPage.songs.map { it.id }
+        val songs = when (val state = viewState) {
+            is AlbumViewState.Local -> state.albumWithSongs.songs.map { it.id }
+            is AlbumViewState.Remote -> state.albumPage.songs.map { it.id }
+            else -> return@LaunchedEffect
         }
         downloadUtil.downloads.collect { downloads ->
             downloadState =
@@ -190,7 +188,6 @@ fun AlbumScreen(
                                                 originalSong = song,
                                                 navController = navController,
                                                 playerConnection = playerConnection,
-                                                coroutineScope = coroutineScope,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }
@@ -269,7 +266,6 @@ fun AlbumScreen(
                                                 song = song,
                                                 navController = navController,
                                                 playerConnection = playerConnection,
-                                                coroutineScope = coroutineScope,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }
@@ -556,7 +552,6 @@ fun RemoteAlbumHeader(
     val playerConnection = LocalPlayerConnection.current ?: return
     val menuState = LocalMenuState.current
     val database = LocalDatabase.current
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.padding(12.dp)
@@ -678,7 +673,6 @@ fun RemoteAlbumHeader(
                                     album = albumPage.album,
                                     navController = navController,
                                     playerConnection = playerConnection,
-                                    coroutineScope = coroutineScope,
                                     onDismiss = menuState::dismiss
                                 )
                             }

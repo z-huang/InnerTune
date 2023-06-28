@@ -17,13 +17,16 @@
     <string name="stats">ਅੰਕੜੇ</string>
     <string name="quick_picks">ਉਂਗਲਾਂ ਤੇ ਚੁਣੇ ਗੀਤ</string>
     <string name="new_release_albums">ਨਵੀਆਂ ਜਾਰੀ ਐਲਬਮਾਂ</string>
-    <string name="most_played_songs">ਵੱਧ ਸੁਣੇ ਗਏ ਗੀਤ</string>
 
     <!-- History -->
     <string name="today">ਅੱਜ</string>
     <string name="yesterday">ਕੱਲ੍ਹ</string>
     <string name="this_week">ਇਸ ਹਫਤੇ</string>
     <string name="last_week">ਪਿਛਲੇ ਹਫਤੇ</string>
+
+    <!-- Stats -->
+    <string name="most_played_songs">ਵੱਧ ਸੁਣੇ ਗਏ ਗੀਤ</string>
+    <string name="most_played_artists">Most played artists</string>
 
     <!-- Search -->
     <string name="search">ਖੋਜੋ</string>

@@ -16,13 +16,16 @@
     <string name="stats">Stats</string>
     <string name="quick_picks">Quick picks</string>
     <string name="new_release_albums">New release albums</string>
-    <string name="most_played_songs">Most played songs</string>
 
     <!-- History -->
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="this_week">This week</string>
     <string name="last_week">Last week</string>
+
+    <!-- Stats -->
+    <string name="most_played_songs">Most played songs</string>
+    <string name="most_played_artists">Most played artists</string>
 
     <!-- Search -->
     <string name="search">Caru</string>

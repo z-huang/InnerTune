@@ -16,13 +16,16 @@
     <string name="stats">统计</string>
     <string name="quick_picks">歌曲快选</string>
     <string name="new_release_albums">新专辑</string>
-    <string name="most_played_songs">最常播放</string>
 
     <!-- History -->
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>
     <string name="this_week">这周</string>
     <string name="last_week">上周</string>
+
+    <!-- Stats -->
+    <string name="most_played_songs">最常播放</string>
+    <string name="most_played_artists">Most played artists</string>
 
     <!-- Search -->
     <string name="search">搜索</string>

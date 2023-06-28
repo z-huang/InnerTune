@@ -209,7 +209,6 @@ fun OnlinePlaylistScreen(
                                                     YouTubePlaylistMenu(
                                                         playlist = playlist,
                                                         songs = songs,
-                                                        navController = navController,
                                                         playerConnection = playerConnection,
                                                         coroutineScope = coroutineScope,
                                                         onDismiss = menuState::dismiss
@@ -279,7 +278,6 @@ fun OnlinePlaylistScreen(
                                                 song = song,
                                                 navController = navController,
                                                 playerConnection = playerConnection,
-                                                coroutineScope = coroutineScope,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }

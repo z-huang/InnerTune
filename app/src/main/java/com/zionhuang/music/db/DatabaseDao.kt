@@ -59,34 +59,6 @@ interface DatabaseDao {
             songs.filter { it.song.liked }
         }
 
-    @Transaction
-    @Query(
-        """
-        SELECT song.*
-        FROM (SELECT *, COUNT(1) AS referredCount
-              FROM related_song_map
-              GROUP BY relatedSongId) map
-                 JOIN song ON song.id = map.relatedSongId
-        WHERE songId IN (SELECT *
-                         FROM (SELECT songId
-                               FROM event
-                               WHERE timestamp > :now - 86400000 * 7
-                               GROUP BY songId
-                               ORDER BY SUM(playTime) DESC
-                               LIMIT 5)
-                         UNION
-                         SELECT *
-                         FROM (SELECT songId
-                               FROM event
-                               ORDER BY ROWID DESC
-                               LIMIT 5))
-          AND totalPlayTime < 30000
-        ORDER BY referredCount DESC
-        LIMIT 100
-    """
-    )
-    fun quickPicks(now: Long = System.currentTimeMillis()): Flow<List<Song>>
-
     @Query("SELECT COUNT(1) FROM song WHERE liked")
     fun likedSongsCount(): Flow<Int>
 
@@ -123,6 +95,60 @@ interface DatabaseDao {
     @Transaction
     @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL LIMIT :previewSize")
     fun artistSongsPreview(artistId: String, previewSize: Int = 3): Flow<List<Song>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT song.*
+        FROM (SELECT *, COUNT(1) AS referredCount
+              FROM related_song_map
+              GROUP BY relatedSongId) map
+                 JOIN song ON song.id = map.relatedSongId
+        WHERE songId IN (SELECT *
+                         FROM (SELECT songId
+                               FROM event
+                               WHERE timestamp > :now - 86400000 * 7
+                               GROUP BY songId
+                               ORDER BY SUM(playTime) DESC
+                               LIMIT 5)
+                         UNION
+                         SELECT *
+                         FROM (SELECT songId
+                               FROM event
+                               ORDER BY ROWID DESC
+                               LIMIT 5))
+          AND totalPlayTime < 30000
+        ORDER BY referredCount DESC
+        LIMIT 100
+    """
+    )
+    fun quickPicks(now: Long = System.currentTimeMillis()): Flow<List<Song>>
+
+    @Transaction
+    @Query("SELECT * FROM song ORDER BY totalPlayTime DESC LIMIT :limit")
+    fun mostPlayedSongs(limit: Int = 6): Flow<List<Song>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT artist.*,
+               totalPlayTime,
+               (SELECT COUNT(1)
+                FROM song_artist_map
+                         JOIN song ON song_artist_map.songId = song.id
+                WHERE artistId = artist.id
+                  AND song.inLibrary IS NOT NULL) AS songCount
+        FROM (SELECT artistId, SUM(playtime) AS totalPlaytime
+              FROM (SELECT *, (SELECT totalPlayTime FROM song WHERE id = songId) AS playtime
+                    FROM song_artist_map)
+              GROUP BY artistId)
+                 JOIN artist
+                      ON artist.id = artistId
+        ORDER BY totalPlaytime DESC
+        LIMIT :limit
+    """
+    )
+    fun mostPlayerArtists(limit: Int = 6): Flow<List<Artist>>
 
     @Transaction
     @Query("SELECT * FROM song WHERE id = :songId")

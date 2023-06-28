@@ -60,7 +60,6 @@ fun HomeScreen(
     val newReleaseAlbums by viewModel.newReleaseAlbums.collectAsState()
 
     val isRefreshing by viewModel.isRefreshing.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
     val mostPlayedLazyGridState = rememberLazyGridState()
 
     SwipeRefresh(
@@ -103,7 +102,6 @@ fun HomeScreen(
                         title = stringResource(R.string.stats),
                         icon = R.drawable.trending_up,
                         onClick = { navController.navigate("stats") },
-                        enabled = false,
                         modifier = Modifier.weight(1f)
                     )
                     NavigationTile(
@@ -153,7 +151,6 @@ fun HomeScreen(
                                                     originalSong = song!!,
                                                     navController = navController,
                                                     playerConnection = playerConnection,
-                                                    coroutineScope = coroutineScope,
                                                     onDismiss = menuState::dismiss
                                                 )
                                             }
@@ -225,7 +222,6 @@ fun HomeScreen(
                                                     album = album,
                                                     navController = navController,
                                                     playerConnection = playerConnection,
-                                                    coroutineScope = coroutineScope,
                                                     onDismiss = menuState::dismiss
                                                 )
                                             }

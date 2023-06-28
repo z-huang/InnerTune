@@ -61,7 +61,6 @@ import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.TextFieldDialog
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SongMenu(
@@ -69,7 +68,6 @@ fun SongMenu(
     event: Event? = null,
     navController: NavController,
     playerConnection: PlayerConnection,
-    coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current

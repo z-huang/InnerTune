@@ -113,7 +113,6 @@ fun ArtistItemsScreen(
                                             song = item,
                                             navController = navController,
                                             playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss
                                         )
 
@@ -121,7 +120,6 @@ fun ArtistItemsScreen(
                                             album = item,
                                             navController = navController,
                                             playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss
                                         )
 
@@ -133,7 +131,6 @@ fun ArtistItemsScreen(
 
                                         is PlaylistItem -> YouTubePlaylistMenu(
                                             playlist = item,
-                                            navController = navController,
                                             playerConnection = playerConnection,
                                             coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss
@@ -205,7 +202,6 @@ fun ArtistItemsScreen(
                                             song = item,
                                             navController = navController,
                                             playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss
                                         )
 
@@ -213,7 +209,6 @@ fun ArtistItemsScreen(
                                             album = item,
                                             navController = navController,
                                             playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss
                                         )
 
@@ -225,7 +220,6 @@ fun ArtistItemsScreen(
 
                                         is PlaylistItem -> YouTubePlaylistMenu(
                                             playlist = item,
-                                            navController = navController,
                                             playerConnection = playerConnection,
                                             coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss

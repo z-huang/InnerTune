@@ -49,14 +49,12 @@ import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun YouTubeAlbumMenu(
     album: AlbumItem,
     navController: NavController,
     playerConnection: PlayerConnection,
-    coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current

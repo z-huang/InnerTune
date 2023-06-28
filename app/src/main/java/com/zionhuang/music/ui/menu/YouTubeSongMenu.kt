@@ -62,7 +62,6 @@ import com.zionhuang.music.ui.component.ListDialog
 import com.zionhuang.music.ui.component.ListItem
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
-import kotlinx.coroutines.CoroutineScope
 import java.time.LocalDateTime
 
 @Composable
@@ -70,7 +69,6 @@ fun YouTubeSongMenu(
     song: SongItem,
     navController: NavController,
     playerConnection: PlayerConnection,
-    coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current

@@ -12,7 +12,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
@@ -35,7 +34,6 @@ import kotlinx.coroutines.withContext
 fun YouTubePlaylistMenu(
     playlist: PlaylistItem,
     songs: List<SongItem> = emptyList(),
-    navController: NavController,
     playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,

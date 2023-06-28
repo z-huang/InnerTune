@@ -19,13 +19,16 @@
     <string name="stats">Статистика</string>
     <string name="quick_picks">Быстрый выбор</string>
     <string name="new_release_albums">Новые релизы альбомов</string>
-    <string name="most_played_songs">Самые популярные песни</string>
 
     <!-- History -->
     <string name="today">Сегодня</string>
     <string name="yesterday">Вчера</string>
     <string name="this_week">На этой неделе</string>
     <string name="last_week">На прошлой неделе</string>
+
+    <!-- Stats -->
+    <string name="most_played_songs">Самые популярные песни</string>
+    <string name="most_played_artists">Most played artists</string>
 
     <!-- Search -->
     <string name="search">Поиск</string>

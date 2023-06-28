@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -68,7 +67,6 @@ fun LocalSearchScreen(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val menuState = LocalMenuState.current
-    val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
     val playWhenReady by playerConnection.playWhenReady.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -170,13 +168,11 @@ fun LocalSearchScreen(
                                             SongMenu(
                                                 originalSong = item,
                                                 navController = navController,
-                                                playerConnection = playerConnection,
-                                                coroutineScope = coroutineScope,
-                                                onDismiss = {
-                                                    onDismiss()
-                                                    menuState.dismiss()
-                                                }
-                                            )
+                                                playerConnection = playerConnection
+                                            ) {
+                                                onDismiss()
+                                                menuState.dismiss()
+                                            }
                                         }
                                     }
                                 ) {
@@ -200,6 +196,7 @@ fun LocalSearchScreen(
                                 }
                                 .animateItemPlacement()
                         )
+
                         is Album -> AlbumListItem(
                             album = item,
                             isPlaying = item.id == mediaMetadata?.album?.id,
@@ -211,6 +208,7 @@ fun LocalSearchScreen(
                                 }
                                 .animateItemPlacement()
                         )
+
                         is Artist -> ArtistListItem(
                             artist = item,
                             modifier = Modifier
@@ -220,6 +218,7 @@ fun LocalSearchScreen(
                                 }
                                 .animateItemPlacement()
                         )
+
                         is Playlist -> PlaylistListItem(
                             playlist = item,
                             modifier = Modifier

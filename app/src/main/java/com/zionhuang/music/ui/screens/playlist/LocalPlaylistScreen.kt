@@ -472,7 +472,6 @@ fun LocalPlaylistScreen(
                                             originalSong = song.song,
                                             navController = navController,
                                             playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss
                                         )
                                     }

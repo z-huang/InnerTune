@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -87,8 +86,6 @@ fun BuiltInPlaylistScreen(
             }
         )
     }
-
-    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -154,7 +151,6 @@ fun BuiltInPlaylistScreen(
                                         originalSong = song,
                                         navController = navController,
                                         playerConnection = playerConnection,
-                                        coroutineScope = coroutineScope,
                                         onDismiss = menuState::dismiss
                                     )
                                 }

@@ -17,7 +17,6 @@
     <string name="stats">İstatistikler</string>
     <string name="quick_picks">Hızlı seçimler</string>
     <string name="new_release_albums">Yeni çıkan albümler</string>
-    <string name="most_played_songs">En çok çalınan şarkılar</string>
 
     <!-- History -->
     <string name="today">Bugün</string>
@@ -25,10 +24,14 @@
     <string name="this_week">Bu hafta</string>
     <string name="last_week">Geçen hafta</string>
 
+    <!-- Stats -->
+    <string name="most_played_songs">En çok çalınan şarkılar</string>
+    <string name="most_played_artists">Most played artists</string>
+
     <!-- Search -->
     <string name="search">Arama</string>
-    <string name="search_yt_music">YouTube Müzik\'te Ara...</string>
-    <string name="search_library">Kütüphanede ara...</string>
+    <string name="search_yt_music">YouTube Müzik\'te Ara…</string>
+    <string name="search_library">Kütüphanede ara…</string>
     <string name="filter_all">Hepsi</string>
     <string name="filter_songs">Şarkılar</string>
     <string name="filter_videos">Videolar</string>

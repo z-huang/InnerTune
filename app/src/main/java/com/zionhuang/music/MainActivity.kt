@@ -409,6 +409,9 @@ class MainActivity : ComponentActivity() {
                             composable("history") {
                                 HistoryScreen(navController)
                             }
+                            composable("stats") {
+                                StatsScreen(navController)
+                            }
                             composable("new_release") {
                                 NewReleaseScreen(navController, scrollBehavior)
                             }
@@ -711,7 +714,6 @@ class MainActivity : ComponentActivity() {
                                                 song = song,
                                                 navController = navController,
                                                 playerConnection = playerConnection,
-                                                coroutineScope = coroutineScope,
                                                 onDismiss = { sharedSong = null }
                                             )
                                         }

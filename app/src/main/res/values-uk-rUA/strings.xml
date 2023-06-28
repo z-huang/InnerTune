@@ -19,13 +19,16 @@
     <string name="stats">Статистика</string>
     <string name="quick_picks">Швидкий вибір</string>
     <string name="new_release_albums">Нові релізи альбомів</string>
-    <string name="most_played_songs">Найбільш програвані пісні</string>
 
     <!-- History -->
     <string name="today">Сьогодні</string>
     <string name="yesterday">Вчора</string>
     <string name="this_week">Цього тижня</string>
     <string name="last_week">Минулого тижня</string>
+
+    <!-- Stats -->
+    <string name="most_played_songs">Найбільш програвані пісні</string>
+    <string name="most_played_artists">Most played artists</string>
 
     <!-- Search -->
     <string name="search">Пошук</string>
