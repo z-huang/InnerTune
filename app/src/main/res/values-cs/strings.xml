@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Bottom navigation -->
     <string name="home">Domů</string>
     <string name="songs">Skladby</string>
@@ -235,6 +235,12 @@
     <string name="backup_restore">Záloha a obnovení</string>
     <string name="backup">Zálohovat</string>
     <string name="restore">Obnovit</string>
+    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
+    <string name="imported_playlist">Imported playlist</string>
+    <plurals name="import_success" tools:ignore="MissingQuantity">
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
+    </plurals>
     <string name="backup_create_success">Záloha úspěšně vytvořena</string>
     <string name="backup_create_failed">Nepodařilo se vytvořit zálohu</string>
     <string name="restore_failed">Nepodařilo se obnovit zálohu</string>

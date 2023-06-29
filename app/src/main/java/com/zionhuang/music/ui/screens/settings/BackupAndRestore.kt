@@ -39,6 +39,11 @@ fun BackupAndRestore(
             viewModel.restore(context, uri)
         }
     }
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            viewModel.import(context, uri)
+        }
+    }
 
     Column(
         Modifier
@@ -58,6 +63,14 @@ fun BackupAndRestore(
             icon = R.drawable.restore,
             onClick = {
                 restoreLauncher.launch(arrayOf("application/octet-stream"))
+            }
+        )
+        PreferenceEntry(
+            title = stringResource(R.string.import_playlist),
+            description = stringResource(R.string.choose_csv_file_from_google_takeout),
+            icon = R.drawable.input,
+            onClick = {
+                importLauncher.launch(arrayOf("*/*"))
             }
         )
     }

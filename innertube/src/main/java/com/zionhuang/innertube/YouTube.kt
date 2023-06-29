@@ -410,7 +410,7 @@ object YouTube {
         }
     }
 
-    private const val MAX_GET_QUEUE_SIZE = 1000
+    const val MAX_GET_QUEUE_SIZE = 1000
 
     private const val VISITOR_DATA_PREFIX = "Cgt"
 

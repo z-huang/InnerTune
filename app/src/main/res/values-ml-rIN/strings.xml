@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Bottom navigation -->
     <string name="home">ഹോം</string>
     <string name="songs">പാട്ടുകൾ</string>
@@ -224,6 +224,12 @@
     <string name="backup_restore">ബാക്കപ്പും വീണ്ടെടുക്കലും</string>
     <string name="backup">ബാക്കപ്പ്</string>
     <string name="restore">വീണ്ടെടുക്കൽ</string>
+    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
+    <string name="imported_playlist">Imported playlist</string>
+    <plurals name="import_success" tools:ignore="MissingQuantity">
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
+    </plurals>
     <string name="backup_create_success">ബാക്കപ്പ് സൃഷ്‌ടിച്ചു</string>
     <string name="backup_create_failed">ബാക്കപ്പ് സൃഷ്ടിക്കാൻ കഴിഞ്ഞില്ല</string>
     <string name="restore_failed">ബാക്കപ്പ് പുനഃസ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല</string>
