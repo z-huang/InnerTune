@@ -58,7 +58,7 @@ enum class DownloadedSongSortType {
 }
 
 enum class PlaylistSongSortType {
-    CUSTOM, NAME, ARTIST
+    CUSTOM, CREATE_DATE, NAME, ARTIST
 }
 
 enum class ArtistSortType {

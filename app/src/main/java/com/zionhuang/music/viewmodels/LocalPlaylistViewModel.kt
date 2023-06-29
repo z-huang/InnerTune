@@ -39,6 +39,7 @@ class LocalPlaylistViewModel @Inject constructor(
     ) { songs, (sortType, sortDescending) ->
         when (sortType) {
             PlaylistSongSortType.CUSTOM -> songs
+            PlaylistSongSortType.CREATE_DATE -> songs.sortedBy { it.map.id }
             PlaylistSongSortType.NAME -> songs.sortedBy { it.song.song.title }
             PlaylistSongSortType.ARTIST -> songs.sortedBy { song ->
                 song.song.artists.joinToString { it.name }
