@@ -110,7 +110,13 @@ interface DatabaseDao {
               FROM related_song_map
               GROUP BY relatedSongId) map
                  JOIN song ON song.id = map.relatedSongId
-        WHERE songId IN (SELECT *
+        WHERE songId IN (SELECT songId
+                         FROM (SELECT songId
+                               FROM event
+                               ORDER BY ROWID DESC
+                               LIMIT 5)
+                         UNION
+                         SELECT songId
                          FROM (SELECT songId
                                FROM event
                                WHERE timestamp > :now - 86400000 * 7
@@ -118,12 +124,11 @@ interface DatabaseDao {
                                ORDER BY SUM(playTime) DESC
                                LIMIT 5)
                          UNION
-                         SELECT *
-                         FROM (SELECT songId
-                               FROM event
-                               ORDER BY ROWID DESC
-                               LIMIT 5))
-          AND totalPlayTime < 30000
+                         SELECT id
+                         FROM (SELECT id
+                               FROM song
+                               ORDER BY totalPlayTime DESC
+                               LIMIT 10))
         ORDER BY referredCount DESC
         LIMIT 100
     """
