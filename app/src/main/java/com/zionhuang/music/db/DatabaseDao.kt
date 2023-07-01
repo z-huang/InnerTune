@@ -19,18 +19,6 @@ import java.time.LocalDateTime
 
 @Dao
 interface DatabaseDao {
-    @Query("SELECT id FROM song WHERE inLibrary IS NOT NULL")
-    fun allSongId(): Flow<List<String>>
-
-    @Query("SELECT id FROM song WHERE liked")
-    fun allLikedSongId(): Flow<List<String>>
-
-    @Query("SELECT id FROM album")
-    fun allAlbumId(): Flow<List<String>>
-
-    @Query("SELECT id FROM playlist")
-    fun allPlaylistId(): Flow<List<String>>
-
     @Transaction
     @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY rowId DESC")
     fun songsByRowIdDesc(): Flow<List<Song>>
@@ -54,10 +42,28 @@ interface DatabaseDao {
             }
         }.map { it.reversed(!descending) }
 
+    @Transaction
+    @Query("SELECT * FROM song WHERE liked ORDER BY rowId DESC")
+    fun likedSongsByRowIdDesc(): Flow<List<Song>>
+
+    @Transaction
+    @Query("SELECT * FROM song WHERE liked ORDER BY inLibrary DESC")
+    fun likedSongsByCreateDateDesc(): Flow<List<Song>>
+
+    @Transaction
+    @Query("SELECT * FROM song WHERE liked ORDER BY title DESC")
+    fun likedSongsByNameDesc(): Flow<List<Song>>
+
     fun likedSongs(sortType: SongSortType, descending: Boolean) =
-        songs(sortType, descending).map { songs ->
-            songs.filter { it.song.liked }
-        }
+        when (sortType) {
+            SongSortType.CREATE_DATE -> likedSongsByCreateDateDesc()
+            SongSortType.NAME -> likedSongsByNameDesc()
+            SongSortType.ARTIST -> likedSongsByRowIdDesc().map { songs ->
+                songs.sortedWith(compareBy { song ->
+                    song.artists.joinToString(separator = "") { it.name }
+                })
+            }
+        }.map { it.reversed(!descending) }
 
     @Query("SELECT COUNT(1) FROM song WHERE liked")
     fun likedSongsCount(): Flow<Int>
