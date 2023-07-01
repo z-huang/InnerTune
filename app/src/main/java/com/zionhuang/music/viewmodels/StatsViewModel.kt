@@ -14,6 +14,6 @@ class StatsViewModel @Inject constructor(
 ) : ViewModel() {
     val mostPlayedSongs = database.mostPlayedSongs()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
-    val mostPlayedArtists = database.mostPlayerArtists()
+    val mostPlayedArtists = database.mostPlayedArtists()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }

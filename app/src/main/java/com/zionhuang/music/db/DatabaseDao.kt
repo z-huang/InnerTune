@@ -159,7 +159,7 @@ interface DatabaseDao {
         LIMIT :limit
     """
     )
-    fun mostPlayerArtists(limit: Int = 6): Flow<List<Artist>>
+    fun mostPlayedArtists(limit: Int = 6): Flow<List<Artist>>
 
     @Transaction
     @Query("SELECT * FROM song WHERE id = :songId")
@@ -276,7 +276,7 @@ interface DatabaseDao {
     fun searchDownloadedSongs(query: String, previewSize: Int = Int.MAX_VALUE): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM song_artist_map WHERE artistId = artist.id) AS songCount FROM artist WHERE name LIKE '%' || :query || '%' LIMIT :previewSize")
+    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE name LIKE '%' || :query || '%'  AND songCount > 0 LIMIT :previewSize")
     fun searchArtists(query: String, previewSize: Int = Int.MAX_VALUE): Flow<List<Artist>>
 
     @Transaction
