@@ -55,20 +55,25 @@ class BuiltInPlaylistViewModel @Inject constructor(
                     downloads.filter { (_, download) ->
                         download.state == STATE_COMPLETED
                     }.keys.toList()
-                )
+                ).map { songs ->
+                    songs.map { it to downloads[it.id] }
+                }
             },
             context.dataStore.data
                 .map {
-                    it[DownloadedSongSortTypeKey].toEnum(DownloadedSongSortType.NAME) to (it[DownloadedSongSortDescendingKey] ?: true)
+                    it[DownloadedSongSortTypeKey].toEnum(DownloadedSongSortType.CREATE_DATE) to (it[DownloadedSongSortDescendingKey] ?: true)
                 }
                 .distinctUntilChanged()
         ) { songs, (sortType, descending) ->
             when (sortType) {
-                DownloadedSongSortType.NAME -> songs.sortedBy { it.song.title }
+                DownloadedSongSortType.CREATE_DATE -> songs.sortedBy { it.second?.updateTimeMs ?: 0L }
+                DownloadedSongSortType.NAME -> songs.sortedBy { it.first.song.title }
                 DownloadedSongSortType.ARTIST -> songs.sortedBy { song ->
-                    song.artists.joinToString(separator = "") { it.name }
+                    song.first.artists.joinToString(separator = "") { it.name }
                 }
-            }.reversed(!descending)
+            }
+                .map { it.first }
+                .reversed(!descending)
         }
 
         else -> error("Unknown playlist id")

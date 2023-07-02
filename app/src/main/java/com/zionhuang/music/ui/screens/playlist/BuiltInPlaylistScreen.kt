@@ -71,7 +71,7 @@ fun BuiltInPlaylistScreen(
 
     val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(SongSortDescendingKey, true)
-    val (dlSortType, onDlSortTypeChange) = rememberEnumPreference(DownloadedSongSortTypeKey, DownloadedSongSortType.NAME)
+    val (dlSortType, onDlSortTypeChange) = rememberEnumPreference(DownloadedSongSortTypeKey, DownloadedSongSortType.CREATE_DATE)
     val (dlSortDescending, onDlSortDescendingChange) = rememberPreference(DownloadedSongSortDescendingKey, true)
 
     val songs by viewModel.songs.collectAsState()
@@ -121,6 +121,7 @@ fun BuiltInPlaylistScreen(
                         onSortDescendingChange = onDlSortDescendingChange,
                         sortTypeText = { sortType ->
                             when (sortType) {
+                                DownloadedSongSortType.CREATE_DATE -> R.string.sort_by_create_date
                                 DownloadedSongSortType.NAME -> R.string.sort_by_name
                                 DownloadedSongSortType.ARTIST -> R.string.sort_by_artist
                             }
