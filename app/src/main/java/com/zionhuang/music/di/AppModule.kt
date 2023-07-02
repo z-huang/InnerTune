@@ -45,7 +45,7 @@ object AppModule {
     @PlayerCache
     fun providePlayerCache(@ApplicationContext context: Context, databaseProvider: DatabaseProvider): SimpleCache =
         SimpleCache(
-            context.cacheDir.resolve("exoplayer"),
+            context.filesDir.resolve("exoplayer"),
             when (val cacheSize = context.dataStore[MaxSongCacheSizeKey] ?: 1024) {
                 -1 -> NoOpCacheEvictor()
                 else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
