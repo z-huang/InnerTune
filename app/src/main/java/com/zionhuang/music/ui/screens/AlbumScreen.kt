@@ -69,6 +69,7 @@ import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.AlbumWithSongs
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AutoResizeText
@@ -202,13 +203,17 @@ fun AlbumScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .combinedClickable {
-                                    playerConnection.playQueue(
-                                        ListQueue(
-                                            title = viewState.albumWithSongs.album.title,
-                                            items = viewState.albumWithSongs.songs.map { it.toMediaItem() },
-                                            startIndex = index
+                                    if (song.id == mediaMetadata?.id) {
+                                        playerConnection.player.togglePlayPause()
+                                    } else {
+                                        playerConnection.playQueue(
+                                            ListQueue(
+                                                title = viewState.albumWithSongs.album.title,
+                                                items = viewState.albumWithSongs.songs.map { it.toMediaItem() },
+                                                startIndex = index
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                         )
                     }
@@ -280,13 +285,17 @@ fun AlbumScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .combinedClickable {
-                                    playerConnection.playQueue(
-                                        ListQueue(
-                                            title = viewState.albumPage.album.title,
-                                            items = viewState.albumPage.songs.map { it.toMediaItem() },
-                                            startIndex = index
+                                    if (song.id == mediaMetadata?.id) {
+                                        playerConnection.player.togglePlayPause()
+                                    } else {
+                                        playerConnection.playQueue(
+                                            ListQueue(
+                                                title = viewState.albumPage.album.title,
+                                                items = viewState.albumPage.songs.map { it.toMediaItem() },
+                                                startIndex = index
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                         )
                     }

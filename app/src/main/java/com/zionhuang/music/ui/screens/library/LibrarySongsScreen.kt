@@ -24,6 +24,7 @@ import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
@@ -107,13 +108,17 @@ fun LibrarySongsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-                            playerConnection.playQueue(
-                                ListQueue(
-                                    title = context.getString(R.string.queue_all_songs),
-                                    items = songs.map { it.toMediaItem() },
-                                    startIndex = index
+                            if (song.id == mediaMetadata?.id) {
+                                playerConnection.player.togglePlayPause()
+                            } else {
+                                playerConnection.playQueue(
+                                    ListQueue(
+                                        title = context.getString(R.string.queue_all_songs),
+                                        items = songs.map { it.toMediaItem() },
+                                        startIndex = index
+                                    )
                                 )
-                            )
+                            }
                         }
                         .animateItemPlacement()
                 )
@@ -130,10 +135,12 @@ fun LibrarySongsScreen(
                     )
                     .padding(16.dp),
                 onClick = {
-                    playerConnection.playQueue(ListQueue(
-                        title = context.getString(R.string.queue_all_songs),
-                        items = songs.shuffled().map { it.toMediaItem() },
-                    ))
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = context.getString(R.string.queue_all_songs),
+                            items = songs.shuffled().map { it.toMediaItem() },
+                        )
+                    )
                 }
             ) {
                 Icon(

@@ -44,6 +44,7 @@ import com.zionhuang.music.constants.SongSortTypeKey
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
@@ -165,13 +166,17 @@ fun BuiltInPlaylistScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-                            playerConnection.playQueue(
-                                ListQueue(
-                                    title = playlistName,
-                                    items = songs.map { it.toMediaItem() },
-                                    startIndex = index
+                            if (song.id == mediaMetadata?.id) {
+                                playerConnection.player.togglePlayPause()
+                            } else {
+                                playerConnection.playQueue(
+                                    ListQueue(
+                                        title = playlistName,
+                                        items = songs.map { it.toMediaItem() },
+                                        startIndex = index
+                                    )
                                 )
-                            )
+                            }
                         }
                         .animateItemPlacement()
                 )

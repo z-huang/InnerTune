@@ -62,6 +62,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.AppBarHeight
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.SearchFilterHeight
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.EmptyPlaceholder
@@ -162,7 +163,14 @@ fun OnlineSearchResult(
             modifier = Modifier
                 .clickable {
                     when (item) {
-                        is SongItem -> playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                        is SongItem -> {
+                            if (item.id == mediaMetadata?.id) {
+                                playerConnection.player.togglePlayPause()
+                            } else {
+                                playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                            }
+                        }
+
                         is AlbumItem -> navController.navigate("album/${item.id}")
                         is ArtistItem -> navController.navigate("artist/${item.id}")
                         is PlaylistItem -> navController.navigate("online_playlist/${item.id}")

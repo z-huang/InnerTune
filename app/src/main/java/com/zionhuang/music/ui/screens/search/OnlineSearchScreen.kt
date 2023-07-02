@@ -39,6 +39,7 @@ import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.SuggestionItemHeight
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.SearchBarIconOffsetX
@@ -154,8 +155,12 @@ fun OnlineSearchScreen(
                     .clickable {
                         when (item) {
                             is SongItem -> {
-                                playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
-                                onDismiss()
+                                if (item.id == mediaMetadata?.id) {
+                                    playerConnection.player.togglePlayPause()
+                                } else {
+                                    playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = item.id), item.toMediaMetadata()))
+                                    onDismiss()
+                                }
                             }
 
                             is AlbumItem -> {

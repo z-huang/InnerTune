@@ -76,6 +76,7 @@ import com.zionhuang.music.constants.PlaylistSongSortTypeKey
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.queues.ListQueue
@@ -499,13 +500,17 @@ fun LocalPlaylistScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .combinedClickable {
-                                playerConnection.playQueue(
-                                    ListQueue(
-                                        title = playlist!!.playlist.name,
-                                        items = songs.map { it.song.toMediaItem() },
-                                        startIndex = index
+                                if (song.song.id == mediaMetadata?.id) {
+                                    playerConnection.player.togglePlayPause()
+                                } else {
+                                    playerConnection.playQueue(
+                                        ListQueue(
+                                            title = playlist!!.playlist.name,
+                                            items = songs.map { it.song.toMediaItem() },
+                                            startIndex = index
+                                        )
                                     )
-                                )
+                                }
                             }
                             .animateItemPlacement(reorderingState = reorderingState)
                             .draggedItem(reorderingState = reorderingState, index = index)

@@ -44,6 +44,7 @@ import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AlbumListItem
 import com.zionhuang.music.ui.component.ArtistListItem
@@ -184,15 +185,19 @@ fun LocalSearchScreen(
                             },
                             modifier = Modifier
                                 .clickable {
-                                    val songs = result.map
-                                        .getOrDefault(LocalFilter.SONG, emptyList())
-                                        .filterIsInstance<Song>()
-                                        .map { it.toMediaItem() }
-                                    playerConnection.playQueue(ListQueue(
-                                        title = context.getString(R.string.queue_searched_songs),
-                                        items = songs,
-                                        startIndex = songs.indexOfFirst { it.mediaId == item.id }
-                                    ))
+                                    if (item.id == mediaMetadata?.id) {
+                                        playerConnection.player.togglePlayPause()
+                                    } else {
+                                        val songs = result.map
+                                            .getOrDefault(LocalFilter.SONG, emptyList())
+                                            .filterIsInstance<Song>()
+                                            .map { it.toMediaItem() }
+                                        playerConnection.playQueue(ListQueue(
+                                            title = context.getString(R.string.queue_searched_songs),
+                                            items = songs,
+                                            startIndex = songs.indexOfFirst { it.mediaId == item.id }
+                                        ))
+                                    }
                                 }
                                 .animateItemPlacement()
                         )

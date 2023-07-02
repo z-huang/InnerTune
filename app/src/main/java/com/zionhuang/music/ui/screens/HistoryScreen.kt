@@ -31,6 +31,7 @@ import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.LocalMenuState
@@ -108,12 +109,16 @@ fun HistoryScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-                            playerConnection.playQueue(
-                                YouTubeQueue(
-                                    endpoint = WatchEndpoint(videoId = event.song.id),
-                                    preloadItem = event.song.toMediaMetadata()
+                            if (event.song.id == mediaMetadata?.id) {
+                                playerConnection.player.togglePlayPause()
+                            } else {
+                                playerConnection.playQueue(
+                                    YouTubeQueue(
+                                        endpoint = WatchEndpoint(videoId = event.song.id),
+                                        preloadItem = event.song.toMediaMetadata()
+                                    )
                                 )
-                            )
+                            }
                         }
                         .animateItemPlacement()
                 )

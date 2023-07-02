@@ -39,6 +39,7 @@ import com.zionhuang.music.constants.ArtistSongSortTypeKey
 import com.zionhuang.music.constants.CONTENT_TYPE_HEADER
 import com.zionhuang.music.constants.CONTENT_TYPE_SONG
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
@@ -123,13 +124,17 @@ fun ArtistSongsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable {
-                            playerConnection.playQueue(
-                                ListQueue(
-                                    title = context.getString(R.string.queue_all_songs),
-                                    items = songs.map { it.toMediaItem() },
-                                    startIndex = index
+                            if (song.id == mediaMetadata?.id) {
+                                playerConnection.player.togglePlayPause()
+                            } else {
+                                playerConnection.playQueue(
+                                    ListQueue(
+                                        title = context.getString(R.string.queue_all_songs),
+                                        items = songs.map { it.toMediaItem() },
+                                        startIndex = index
+                                    )
                                 )
-                            )
+                            }
                         }
                         .animateItemPlacement()
                 )
