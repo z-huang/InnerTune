@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.Player
 import androidx.media3.common.Player.STATE_BUFFERING
 import coil.compose.AsyncImage
 import com.zionhuang.music.LocalPlayerConnection
@@ -135,7 +136,7 @@ fun MiniPlayer(
                 onClick = playerConnection.player::togglePlayPause
             ) {
                 Icon(
-                    painter = painterResource(if (playWhenReady) R.drawable.pause else R.drawable.play),
+                    painter = painterResource(if (playWhenReady && playbackState != Player.STATE_ENDED) R.drawable.pause else R.drawable.play),
                     contentDescription = null
                 )
             }
