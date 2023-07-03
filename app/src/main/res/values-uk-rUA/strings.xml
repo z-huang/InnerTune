@@ -27,8 +27,8 @@
     <string name="last_week">Минулого тижня</string>
 
     <!-- Stats -->
-    <string name="most_played_songs">Найбільш програвані пісні</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_songs">Найпопулярніші пісні</string>
+    <string name="most_played_artists">Найпопулярніші виконавці</string>
 
     <!-- Search -->
     <string name="search">Пошук</string>
@@ -67,7 +67,7 @@
     <string name="add_to_library">Додати до бібліотеки</string>
     <string name="remove_from_library">Видалити з бібліотеки</string>
     <string name="download">Завантажити</string>
-    <string name="downloading">Downloading</string>
+    <string name="downloading">Завантаження</string>
     <string name="remove_download">Видалити із завантажених</string>
     <string name="import_playlist">Імпортувати плейлист</string>
     <string name="add_to_playlist">Додати в плейлист</string>
@@ -88,38 +88,38 @@
     <string name="sort_by_song_count">Кількість треків</string>
     <string name="sort_by_length">Тривалість</string>
     <string name="sort_by_play_time">Кількість відтворень</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Корист. порядок</string>
 
     <!-- Dialog -->
-    <string name="media_id">Media id</string>
-    <string name="mime_type">MIME type</string>
-    <string name="codecs">Codecs</string>
-    <string name="bitrate">Bitrate</string>
-    <string name="sample_rate">Sample rate</string>
-    <string name="loudness">Loudness</string>
-    <string name="volume">Volume</string>
-    <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
+    <string name="media_id">Ідентифікатор медіа</string>
+    <string name="mime_type">Тип MIME</string>
+    <string name="codecs">Кодеки</string>
+    <string name="bitrate">Бітрейт</string>
+    <string name="sample_rate">Частота дискретизації</string>
+    <string name="loudness">Гучність</string>
+    <string name="volume">Рівень гучності</string>
+    <string name="file_size">Розмір файлу</string>
+    <string name="unknown">Невідомо</string>
     <string name="copied">Скопійовано</string>
 
     <string name="edit_lyrics">Редагувати текст пісні</string>
     <string name="search_lyrics">Пошук тексту пісні</string>
 
     <string name="edit_song">Редагувати композицію</string>
-    <string name="song_title">Song title</string>
-    <string name="song_artists">Song artists</string>
+    <string name="song_title">Назва композиції</string>
+    <string name="song_artists">Виконавці композиції</string>
     <string name="error_song_title_empty">Вкажіть назву композиції</string>
-    <string name="error_song_artist_empty">Вкажіть виконавця композиції</string>
+    <string name="error_song_artist_empty">Вкажіть виконавців композиції</string>
     <string name="save">Зберегти</string>
 
     <string name="choose_playlist">Вибрати плейлист</string>
     <string name="edit_playlist">Редагувати плейлист</string>
     <string name="create_playlist">Створити плейлист</string>
-    <string name="playlist_name">Playlist name</string>
+    <string name="playlist_name">Назва плейлиста</string>
     <string name="error_playlist_name_empty">Вкажіть назву плейлиста</string>
 
     <string name="edit_artist">Редагувати виконавця</string>
-    <string name="artist_name">Artist name</string>
+    <string name="artist_name">Ім\'я виконавця</string>
     <string name="error_artist_name_empty">Вкажіть ім\'я виконавця</string>
 
     <!-- Noun -->
@@ -175,12 +175,12 @@
     <string name="queue_searched_songs">Шукані пісні</string>
 
     <!-- Notification name -->
-    <string name="music_player">Music Player</string>
+    <string name="music_player">Музичний плеєр</string>
 
     <!-- Settings -->
     <string name="settings">Параметри</string>
     <string name="appearance">Зовнішній вигляд</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="enable_dynamic_theme">Увімкнути динамічну тему</string>
     <string name="dark_theme">Темна тема</string>
     <string name="dark_theme_on">Увімк.</string>
     <string name="dark_theme_off">Вимк.</string>
@@ -219,7 +219,7 @@
     <string name="song_cache">Кеш аудіо</string>
     <string name="max_cache_size">Максимальний розмір кешу</string>
     <string name="unlimited">Необмежено</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="clear_all_downloads">Очистити всі завантаження</string>
     <string name="max_image_cache_size">Макс. розмір кешу зображень</string>
     <string name="clear_image_cache">Очистити кеш зображень</string>
     <string name="max_song_cache_size">Макс. розмір кешу аудіо</string>
@@ -236,16 +236,18 @@
     <string name="backup_restore">Резервне копіювання</string>
     <string name="backup">Створити резервну копію</string>
     <string name="restore">Відновити з резервної копії</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
+    <string name="choose_csv_file_from_google_takeout">Виберіть csv-файл із Google Takeout</string>
+    <string name="imported_playlist">Імпортований плейлист</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">Імпортовано \"%s\" з %d треком</item>
+        <item quantity="few">Імпортовано \"%s\" з %d треками</item>
+        <item quantity="many">Імпортовано \"%s\" з %d треками</item>
+        <item quantity="other">Імпортовано \"%s\" з %d треками</item>
     </plurals>
     <string name="backup_create_success">Резервну копію створено успішно</string>
     <string name="backup_create_failed">Не вдалося створити резервну копію</string>
     <string name="restore_failed">Не вдалося відновити з резервної копії</string>
 
     <string name="about">Про програму</string>
-    <string name="app_version">Версія додатка</string>
+    <string name="app_version">Версія застосунку</string>
 </resources>

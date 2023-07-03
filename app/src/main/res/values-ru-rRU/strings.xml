@@ -28,7 +28,7 @@
 
     <!-- Stats -->
     <string name="most_played_songs">Самые популярные песни</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_artists">Самые популярные исполнители</string>
 
     <!-- Search -->
     <string name="search">Поиск</string>
@@ -67,7 +67,7 @@
     <string name="add_to_library">Добавить в библиотеку</string>
     <string name="remove_from_library">Удалить из библиотеки</string>
     <string name="download">Загрузить</string>
-    <string name="downloading">Downloading</string>
+    <string name="downloading">Загрузка</string>
     <string name="remove_download">Удалить из загруженных</string>
     <string name="import_playlist">Импортировать плейлист</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
@@ -88,38 +88,38 @@
     <string name="sort_by_song_count">Количество треков</string>
     <string name="sort_by_length">Длительность</string>
     <string name="sort_by_play_time">Количество воспр.</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Польз. порядок</string>
 
     <!-- Dialog -->
-    <string name="media_id">Media id</string>
-    <string name="mime_type">MIME type</string>
-    <string name="codecs">Codecs</string>
-    <string name="bitrate">Bitrate</string>
-    <string name="sample_rate">Sample rate</string>
-    <string name="loudness">Loudness</string>
-    <string name="volume">Volume</string>
-    <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
+    <string name="media_id">Идентификатор медиа</string>
+    <string name="mime_type">Тип MIME</string>
+    <string name="codecs">Кодеки</string>
+    <string name="bitrate">Битрейт</string>
+    <string name="sample_rate">Частота дискретизации</string>
+    <string name="loudness">Громкость</string>
+    <string name="volume">Уровень громкости</string>
+    <string name="file_size">Размер файла</string>
+    <string name="unknown">Неизвестно</string>
     <string name="copied">Скопировано</string>
 
     <string name="edit_lyrics">Редактировать текст песни</string>
     <string name="search_lyrics">Поиск текста песни</string>
 
     <string name="edit_song">Редактировать композицию</string>
-    <string name="song_title">Song title</string>
-    <string name="song_artists">Song artists</string>
+    <string name="song_title">Название композиции</string>
+    <string name="song_artists">Исполнители композиции</string>
     <string name="error_song_title_empty">Укажите название композиции</string>
-    <string name="error_song_artist_empty">Укажите исполнителя композиции</string>
+    <string name="error_song_artist_empty">Укажите исполнителей композиции</string>
     <string name="save">Сохранить</string>
 
     <string name="choose_playlist">Выбрать плейлист</string>
     <string name="edit_playlist">Редактировать плейлист</string>
     <string name="create_playlist">Создать плейлист</string>
-    <string name="playlist_name">Playlist name</string>
+    <string name="playlist_name">Название плейлиста</string>
     <string name="error_playlist_name_empty">Укажите название плейлиста</string>
 
     <string name="edit_artist">Редактировать исполнителя</string>
-    <string name="artist_name">Artist name</string>
+    <string name="artist_name">Имя исполнителя</string>
     <string name="error_artist_name_empty">Укажите имя исполнителя</string>
 
     <!-- Noun -->
@@ -175,12 +175,12 @@
     <string name="queue_searched_songs">Искомые композиции</string>
 
     <!-- Notification name -->
-    <string name="music_player">Music Player</string>
+    <string name="music_player">Музыкальный плеер</string>
 
     <!-- Settings -->
     <string name="settings">Настройки</string>
     <string name="appearance">Внешний вид</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="enable_dynamic_theme">Включить динамическую тему</string>
     <string name="dark_theme">Темная тема</string>
     <string name="dark_theme_on">Вкл.</string>
     <string name="dark_theme_off">Выкл.</string>
@@ -219,7 +219,7 @@
     <string name="song_cache">Кэш аудио</string>
     <string name="max_cache_size">Максимальный размер кэша</string>
     <string name="unlimited">Неограниченный</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="clear_all_downloads">Очистить все загрузки</string>
     <string name="max_image_cache_size">Макс. размер кэша изображений</string>
     <string name="clear_image_cache">Очистить кэш изображений</string>
     <string name="max_song_cache_size">Макс. размер кэша аудио</string>
@@ -236,11 +236,13 @@
     <string name="backup_restore">Резервное копирование</string>
     <string name="backup">Создать резервную копию</string>
     <string name="restore">Восстановить из резервной копии</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
+    <string name="choose_csv_file_from_google_takeout">Выберите csv-файл из Google Takeout</string>
+    <string name="imported_playlist">Импортированный плейлист</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">Импортировано \"%s\" с %d треком</item>
+        <item quantity="few">Импортировано \"%s\" с %d треками</item>
+        <item quantity="many">Импортировано \"%s\" с %d треками</item>
+        <item quantity="other">Импортировано \"%s\" с %d треками</item>
     </plurals>
     <string name="backup_create_success">Резервная копия создана успешно</string>
     <string name="backup_create_failed">Не удалось создать резервную копию</string>
