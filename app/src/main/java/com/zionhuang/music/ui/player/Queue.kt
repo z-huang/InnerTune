@@ -8,16 +8,58 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -52,7 +94,15 @@ import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
-import com.zionhuang.music.ui.component.*
+import com.zionhuang.music.ui.component.BigSeekBar
+import com.zionhuang.music.ui.component.BottomSheet
+import com.zionhuang.music.ui.component.BottomSheetState
+import com.zionhuang.music.ui.component.DownloadGridMenu
+import com.zionhuang.music.ui.component.GridMenu
+import com.zionhuang.music.ui.component.GridMenuItem
+import com.zionhuang.music.ui.component.ListDialog
+import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.MediaMetadataListItem
 import com.zionhuang.music.ui.menu.AddToPlaylistDialog
 import com.zionhuang.music.ui.utils.reordering.ReorderingLazyColumn
 import com.zionhuang.music.ui.utils.reordering.draggedItem
@@ -66,7 +116,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Queue(
     state: BottomSheetState,
@@ -349,43 +399,60 @@ fun Queue(
                 items = queueWindows,
                 key = { _, item -> item.uid.hashCode() }
             ) { index, window ->
-                MediaMetadataListItem(
-                    mediaMetadata = window.mediaItem.metadata!!,
-                    isActive = index == currentWindowIndex,
-                    isPlaying = isPlaying,
-                    trailingContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.drag_handle),
-                            contentDescription = null,
+                val currentItem by rememberUpdatedState(window)
+                val dismissState = rememberDismissState(
+                    positionalThreshold = { totalDistance ->
+                        totalDistance
+                    },
+                    confirmValueChange = { dismissValue ->
+                        if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
+                            playerConnection.player.removeMediaItem(currentItem.firstPeriodIndex)
+                        }
+                        true
+                    }
+                )
+                SwipeToDismiss(
+                    state = dismissState,
+                    background = {},
+                    dismissContent = {
+                        MediaMetadataListItem(
+                            mediaMetadata = window.mediaItem.metadata!!,
+                            isActive = index == currentWindowIndex,
+                            isPlaying = isPlaying,
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.drag_handle),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .reorder(
+                                            reorderingState = reorderingState,
+                                            index = index
+                                        )
+                                        .clickable(
+                                            enabled = false,
+                                            onClick = {}
+                                        )
+                                        .padding(8.dp)
+                                )
+                            },
                             modifier = Modifier
-                                .reorder(
+                                .fillMaxWidth()
+                                .clickable {
+                                    coroutineScope.launch(Dispatchers.Main) {
+                                        if (index == currentWindowIndex) {
+                                            playerConnection.player.togglePlayPause()
+                                        } else {
+                                            playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
+                                            playerConnection.player.playWhenReady = true
+                                        }
+                                    }
+                                }
+                                .draggedItem(
                                     reorderingState = reorderingState,
                                     index = index
                                 )
-                                .clickable(
-                                    enabled = false,
-                                    onClick = {}
-                                )
-                                .padding(8.dp)
                         )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            coroutineScope.launch(Dispatchers.Main) {
-                                if (index == currentWindowIndex) {
-                                    playerConnection.player.togglePlayPause()
-                                } else {
-                                    playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
-                                    playerConnection.player.playWhenReady = true
-                                }
-                            }
-                        }
-//                        .animateItemPlacement(reorderingState = reorderingState)
-                        .draggedItem(
-                            reorderingState = reorderingState,
-                            index = index
-                        )
+                    }
                 )
             }
         }
