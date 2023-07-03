@@ -82,12 +82,12 @@ fun PlayingIndicator(
 @Composable
 fun PlayingIndicatorBox(
     modifier: Modifier = Modifier,
-    isPlaying: Boolean,
+    isActive: Boolean,
     playWhenReady: Boolean,
     color: Color = Color.White,
 ) {
     AnimatedVisibility(
-        visible = isPlaying,
+        visible = isActive,
         enter = fadeIn(tween(500)),
         exit = fadeOut(tween(500))
     ) {

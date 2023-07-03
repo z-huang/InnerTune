@@ -95,7 +95,7 @@ fun ArtistScreen(
     val menuState = LocalMenuState.current
     val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val artistPage = viewModel.artistPage
@@ -227,8 +227,8 @@ fun ArtistScreen(
                     ) { song ->
                         SongListItem(
                             song = song,
-                            isPlaying = song.id == mediaMetadata?.id,
-                            playWhenReady = playWhenReady,
+                            isActive = song.id == mediaMetadata?.id,
+                            isPlaying = isPlaying,
                             trailingContent = {
                                 IconButton(
                                     onClick = {
@@ -297,8 +297,8 @@ fun ArtistScreen(
                         ) { song ->
                             YouTubeListItem(
                                 item = song as SongItem,
-                                isPlaying = mediaMetadata?.id == song.id,
-                                playWhenReady = playWhenReady,
+                                isActive = mediaMetadata?.id == song.id,
+                                isPlaying = isPlaying,
                                 trailingContent = {
                                     IconButton(
                                         onClick = {
@@ -338,12 +338,12 @@ fun ArtistScreen(
                                 ) { item ->
                                     YouTubeGridItem(
                                         item = item,
-                                        isPlaying = when (item) {
+                                        isActive = when (item) {
                                             is SongItem -> mediaMetadata?.id == item.id
                                             is AlbumItem -> mediaMetadata?.album?.id == item.id
                                             else -> false
                                         },
-                                        playWhenReady = playWhenReady,
+                                        isPlaying = isPlaying,
                                         modifier = Modifier
                                             .combinedClickable(
                                                 onClick = {

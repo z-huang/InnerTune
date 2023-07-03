@@ -33,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.media3.common.Player
 import androidx.media3.common.Player.STATE_BUFFERING
 import coil.compose.AsyncImage
 import com.zionhuang.music.LocalPlayerConnection
@@ -47,14 +46,14 @@ import com.zionhuang.music.ui.component.LinearProgressIndicator
 @Composable
 fun MiniPlayer(
     mediaMetadata: MediaMetadata?,
-    playbackState: Int,
-    playWhenReady: Boolean,
     position: Long,
     duration: Long,
     modifier: Modifier = Modifier,
 ) {
     mediaMetadata ?: return
     val playerConnection = LocalPlayerConnection.current ?: return
+    val isPlaying by playerConnection.isPlaying.collectAsState()
+    val playbackState by playerConnection.playbackState.collectAsState()
     val canSkipNext by playerConnection.canSkipNext.collectAsState()
     val error by playerConnection.error.collectAsState()
 
@@ -136,7 +135,7 @@ fun MiniPlayer(
                 onClick = playerConnection.player::togglePlayPause
             ) {
                 Icon(
-                    painter = painterResource(if (playWhenReady && playbackState != Player.STATE_ENDED) R.drawable.pause else R.drawable.play),
+                    painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
                     contentDescription = null
                 )
             }

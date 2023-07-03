@@ -90,7 +90,7 @@ fun OnlinePlaylistScreen(
     val menuState = LocalMenuState.current
     val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val playlist by viewModel.playlist.collectAsState()
@@ -269,8 +269,8 @@ fun OnlinePlaylistScreen(
                     ) { song ->
                         YouTubeListItem(
                             item = song,
-                            isPlaying = mediaMetadata?.id == song.id,
-                            playWhenReady = playWhenReady,
+                            isActive = mediaMetadata?.id == song.id,
+                            isPlaying = isPlaying,
                             trailingContent = {
                                 IconButton(
                                     onClick = {

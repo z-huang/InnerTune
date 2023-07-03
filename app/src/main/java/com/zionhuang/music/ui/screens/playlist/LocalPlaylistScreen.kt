@@ -111,7 +111,7 @@ fun LocalPlaylistScreen(
     val menuState = LocalMenuState.current
     val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val playlist by viewModel.playlist.collectAsState()
@@ -464,8 +464,8 @@ fun LocalPlaylistScreen(
                 dismissContent = {
                     SongListItem(
                         song = song.song,
-                        isPlaying = song.song.id == mediaMetadata?.id,
-                        playWhenReady = playWhenReady,
+                        isActive = song.song.id == mediaMetadata?.id,
+                        isPlaying = isPlaying,
                         trailingContent = {
                             IconButton(
                                 onClick = {

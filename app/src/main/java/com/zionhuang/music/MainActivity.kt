@@ -45,6 +45,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import androidx.core.util.Consumer
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
@@ -119,7 +120,7 @@ class MainActivity : ComponentActivity() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             if (service is MusicBinder) {
-                playerConnection = PlayerConnection(database, service)
+                playerConnection = PlayerConnection(service, database, lifecycleScope)
             }
         }
 

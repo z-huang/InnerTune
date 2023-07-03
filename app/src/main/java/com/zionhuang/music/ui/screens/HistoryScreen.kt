@@ -49,7 +49,7 @@ fun HistoryScreen(
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val events by viewModel.events.collectAsState()
@@ -83,8 +83,8 @@ fun HistoryScreen(
             ) { event ->
                 SongListItem(
                     song = event.song,
-                    isPlaying = event.song.id == mediaMetadata?.id,
-                    playWhenReady = playWhenReady,
+                    isActive = event.song.id == mediaMetadata?.id,
+                    isPlaying = isPlaying,
                     showInLibraryIcon = true,
                     trailingContent = {
                         IconButton(

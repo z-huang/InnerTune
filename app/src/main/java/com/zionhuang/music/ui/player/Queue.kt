@@ -79,7 +79,7 @@ fun Queue(
     val menuState = LocalMenuState.current
 
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
 
     val currentWindowIndex by playerConnection.currentWindowIndex.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -351,8 +351,8 @@ fun Queue(
             ) { index, window ->
                 MediaMetadataListItem(
                     mediaMetadata = window.mediaItem.metadata!!,
-                    isPlaying = index == currentWindowIndex,
-                    playWhenReady = playWhenReady,
+                    isActive = index == currentWindowIndex,
+                    isPlaying = isPlaying,
                     trailingContent = {
                         Icon(
                             painter = painterResource(R.drawable.drag_handle),

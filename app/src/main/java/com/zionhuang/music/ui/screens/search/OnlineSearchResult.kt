@@ -85,7 +85,7 @@ fun OnlineSearchResult(
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
@@ -113,12 +113,12 @@ fun OnlineSearchResult(
     val ytItemContent: @Composable LazyItemScope.(YTItem) -> Unit = { item: YTItem ->
         YouTubeListItem(
             item = item,
-            isPlaying = when (item) {
+            isActive = when (item) {
                 is SongItem -> mediaMetadata?.id == item.id
                 is AlbumItem -> mediaMetadata?.album?.id == item.id
                 else -> false
             },
-            playWhenReady = playWhenReady,
+            isPlaying = isPlaying,
             trailingContent = {
                 IconButton(
                     onClick = {

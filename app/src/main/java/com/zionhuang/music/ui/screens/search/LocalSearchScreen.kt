@@ -69,7 +69,7 @@ fun LocalSearchScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val searchFilter by viewModel.filter.collectAsState()
@@ -161,7 +161,7 @@ fun LocalSearchScreen(
                     when (item) {
                         is Song -> SongListItem(
                             song = item,
-                            isPlaying = item.id == mediaMetadata?.id,
+                            isActive = item.id == mediaMetadata?.id,
                             trailingContent = {
                                 IconButton(
                                     onClick = {
@@ -204,8 +204,8 @@ fun LocalSearchScreen(
 
                         is Album -> AlbumListItem(
                             album = item,
-                            isPlaying = item.id == mediaMetadata?.album?.id,
-                            playWhenReady = playWhenReady,
+                            isActive = item.id == mediaMetadata?.album?.id,
+                            isPlaying = isPlaying,
                             modifier = Modifier
                                 .clickable {
                                     onDismiss()

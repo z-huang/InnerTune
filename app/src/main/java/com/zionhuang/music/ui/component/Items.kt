@@ -224,8 +224,8 @@ fun SongListItem(
             }
         }
     },
+    isActive: Boolean = false,
     isPlaying: Boolean = false,
-    playWhenReady: Boolean = false,
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = song.song.title,
@@ -241,7 +241,7 @@ fun SongListItem(
         ) {
             if (albumIndex != null) {
                 AnimatedVisibility(
-                    visible = !isPlaying,
+                    visible = !isActive,
                     enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
                     exit = shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
                 ) {
@@ -261,8 +261,8 @@ fun SongListItem(
             }
 
             PlayingIndicatorBox(
-                isPlaying = isPlaying,
-                playWhenReady = playWhenReady,
+                isActive = isActive,
+                playWhenReady = isPlaying,
                 color = if (albumIndex != null) MaterialTheme.colorScheme.onBackground else Color.White,
                 modifier = Modifier
                     .fillMaxSize()
@@ -302,8 +302,8 @@ fun ArtistListItem(
 fun AlbumListItem(
     album: Album,
     modifier: Modifier = Modifier,
+    isActive: Boolean = false,
     isPlaying: Boolean = false,
-    playWhenReady: Boolean = false,
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = album.album.title,
@@ -375,8 +375,8 @@ fun AlbumListItem(
         )
 
         PlayingIndicatorBox(
-            isPlaying = isPlaying,
-            playWhenReady = playWhenReady,
+            isActive = isActive,
+            playWhenReady = isPlaying,
             modifier = Modifier
                 .size(ListThumbnailSize)
                 .background(
@@ -445,8 +445,8 @@ fun PlaylistListItem(
 fun MediaMetadataListItem(
     mediaMetadata: MediaMetadata,
     modifier: Modifier,
+    isActive: Boolean = false,
     isPlaying: Boolean = false,
-    playWhenReady: Boolean = false,
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = mediaMetadata.title,
@@ -464,8 +464,8 @@ fun MediaMetadataListItem(
         )
 
         PlayingIndicatorBox(
-            isPlaying = isPlaying,
-            playWhenReady = playWhenReady,
+            isActive = isActive,
+            playWhenReady = isPlaying,
             modifier = Modifier
                 .size(ListThumbnailSize)
                 .background(
@@ -542,8 +542,8 @@ fun YouTubeListItem(
             }
         }
     },
+    isActive: Boolean = false,
     isPlaying: Boolean = false,
-    playWhenReady: Boolean = false,
     trailingContent: @Composable RowScope.() -> Unit = {},
 ) = ListItem(
     title = item.title,
@@ -562,7 +562,7 @@ fun YouTubeListItem(
             val thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius)
             if (albumIndex != null) {
                 AnimatedVisibility(
-                    visible = !isPlaying,
+                    visible = !isActive,
                     enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
                     exit = shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
                 ) {
@@ -582,8 +582,8 @@ fun YouTubeListItem(
             }
 
             PlayingIndicatorBox(
-                isPlaying = isPlaying,
-                playWhenReady = playWhenReady,
+                isActive = isActive,
+                playWhenReady = isPlaying,
                 color = if (albumIndex != null) MaterialTheme.colorScheme.onBackground else Color.White,
                 modifier = Modifier
                     .fillMaxSize()
@@ -661,8 +661,8 @@ fun YouTubeGridItem(
             }
         }
     },
+    isActive: Boolean = false,
     isPlaying: Boolean = false,
-    playWhenReady: Boolean = false,
     fillMaxWidth: Boolean = false,
 ) {
     val thumbnailShape = if (item is ArtistItem) CircleShape else RoundedCornerShape(ThumbnailCornerRadius)
@@ -696,7 +696,7 @@ fun YouTubeGridItem(
             )
 
             androidx.compose.animation.AnimatedVisibility(
-                visible = isPlaying,
+                visible = isActive,
                 enter = fadeIn(tween(500)),
                 exit = fadeOut(tween(500))
             ) {
@@ -709,7 +709,7 @@ fun YouTubeGridItem(
                             shape = thumbnailShape
                         )
                 ) {
-                    if (playWhenReady) {
+                    if (isPlaying) {
                         PlayingIndicator(
                             color = Color.White,
                             modifier = Modifier.height(24.dp)

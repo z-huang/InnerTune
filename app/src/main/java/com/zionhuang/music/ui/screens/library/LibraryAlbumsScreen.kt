@@ -38,7 +38,7 @@ fun LibraryAlbumsScreen(
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val (sortType, onSortTypeChange) = rememberEnumPreference(AlbumSortTypeKey, AlbumSortType.CREATE_DATE)
@@ -82,8 +82,8 @@ fun LibraryAlbumsScreen(
             ) { album ->
                 AlbumListItem(
                     album = album,
-                    isPlaying = album.id == mediaMetadata?.album?.id,
-                    playWhenReady = playWhenReady,
+                    isActive = album.id == mediaMetadata?.album?.id,
+                    isPlaying = isPlaying,
                     trailingContent = {
                         IconButton(
                             onClick = {

@@ -10,7 +10,7 @@ import androidx.media3.common.Player.COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import androidx.media3.common.Player.REPEAT_MODE_ONE
-import androidx.media3.common.Player.STATE_IDLE
+import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.Timeline
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.extensions.currentMetadata
@@ -19,20 +19,28 @@ import com.zionhuang.music.extensions.getQueueWindows
 import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.queues.Queue
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlayerConnection(
-    val database: MusicDatabase,
     binder: MusicBinder,
+    val database: MusicDatabase,
+    scope: CoroutineScope,
 ) : Player.Listener {
     val service = binder.service
     val player = service.player
 
-    val playbackState = MutableStateFlow(STATE_IDLE)
+    val playbackState = MutableStateFlow(player.playbackState)
     val playWhenReady = MutableStateFlow(player.playWhenReady)
+    val isPlaying = combine(playbackState, playWhenReady) { playbackState, playWhenReady ->
+        playWhenReady && playbackState != STATE_ENDED
+    }.stateIn(scope, SharingStarted.Lazily, player.playWhenReady && player.playbackState != STATE_ENDED)
     val mediaMetadata = MutableStateFlow(player.currentMetadata)
     val currentSong = mediaMetadata.flatMapLatest {
         database.song(it?.id)

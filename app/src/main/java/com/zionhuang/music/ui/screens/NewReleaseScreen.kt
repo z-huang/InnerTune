@@ -41,7 +41,7 @@ fun NewReleaseScreen(
 ) {
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val newReleaseAlbums by viewModel.newReleaseAlbums.collectAsState()
@@ -56,8 +56,8 @@ fun NewReleaseScreen(
         ) { album ->
             YouTubeGridItem(
                 item = album,
-                isPlaying = mediaMetadata?.album?.id == album.id,
-                playWhenReady = playWhenReady,
+                isActive = mediaMetadata?.album?.id == album.id,
+                isPlaying = isPlaying,
                 fillMaxWidth = true,
                 modifier = Modifier
                     .combinedClickable(

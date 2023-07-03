@@ -66,7 +66,7 @@ fun BuiltInPlaylistScreen(
     val context = LocalContext.current
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
@@ -143,8 +143,8 @@ fun BuiltInPlaylistScreen(
                     showLikedIcon = viewModel.playlistId != LIKED_PLAYLIST_ID,
                     showInLibraryIcon = true,
                     showDownloadIcon = viewModel.playlistId != DOWNLOADED_PLAYLIST_ID,
-                    isPlaying = song.id == mediaMetadata?.id,
-                    playWhenReady = playWhenReady,
+                    isActive = song.id == mediaMetadata?.id,
+                    isPlaying = isPlaying,
                     trailingContent = {
                         IconButton(
                             onClick = {

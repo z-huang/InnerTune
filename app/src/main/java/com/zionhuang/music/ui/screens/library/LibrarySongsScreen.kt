@@ -43,7 +43,7 @@ fun LibrarySongsScreen(
     val context = LocalContext.current
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
@@ -84,8 +84,8 @@ fun LibrarySongsScreen(
             ) { index, song ->
                 SongListItem(
                     song = song,
-                    isPlaying = song.id == mediaMetadata?.id,
-                    playWhenReady = playWhenReady,
+                    isActive = song.id == mediaMetadata?.id,
+                    isPlaying = isPlaying,
                     trailingContent = {
                         IconButton(
                             onClick = {

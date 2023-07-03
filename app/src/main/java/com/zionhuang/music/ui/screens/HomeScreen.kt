@@ -54,7 +54,7 @@ fun HomeScreen(
     val menuState = LocalMenuState.current
     val database = LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
-    val playWhenReady by playerConnection.playWhenReady.collectAsState()
+    val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val quickPicks by viewModel.quickPicks.collectAsState()
@@ -142,8 +142,8 @@ fun HomeScreen(
                             SongListItem(
                                 song = song!!,
                                 showInLibraryIcon = true,
-                                isPlaying = song!!.id == mediaMetadata?.id,
-                                playWhenReady = playWhenReady,
+                                isActive = song!!.id == mediaMetadata?.id,
+                                isPlaying = isPlaying,
                                 trailingContent = {
                                     IconButton(
                                         onClick = {
@@ -214,8 +214,8 @@ fun HomeScreen(
                         ) { album ->
                             YouTubeGridItem(
                                 item = album,
-                                isPlaying = mediaMetadata?.album?.id == album.id,
-                                playWhenReady = playWhenReady,
+                                isActive = mediaMetadata?.album?.id == album.id,
+                                isPlaying = isPlaying,
                                 modifier = Modifier
                                     .combinedClickable(
                                         onClick = {
