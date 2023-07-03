@@ -143,7 +143,6 @@ interface DatabaseDao {
     @Query(
         """
         SELECT artist.*,
-               totalPlayTime,
                (SELECT COUNT(1)
                 FROM song_artist_map
                          JOIN song ON song_artist_map.songId = song.id

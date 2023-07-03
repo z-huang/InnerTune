@@ -5,6 +5,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -74,12 +75,8 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-
-    arguments {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
@@ -117,11 +114,9 @@ dependencies {
     implementation(libs.media3.session)
     implementation(libs.media3.okhttp)
 
-    implementation(libs.paging.runtime)
-    implementation(libs.paging.compose)
-
     implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
+    annotationProcessor(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.room.ktx)
 
     implementation(libs.apache.lang3)
