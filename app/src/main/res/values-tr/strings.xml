@@ -216,6 +216,8 @@
 
     <string name="privacy">Gizlilik</string>
     <string name="pause_listen_history">Dinleme geçmişini duraklat</string>
+    <string name="clear_listen_history">Clear listen history</string>
+    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
     <string name="pause_search_history">Arama geçmişini duraklat</string>
     <string name="clear_search_history">Arama geçmişini temizle</string>
     <string name="clear_search_history_confirm">Tüm arama geçmişini temizlemekten emin misiniz?</string>

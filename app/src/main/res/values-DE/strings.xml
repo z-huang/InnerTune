@@ -216,6 +216,8 @@
 
     <string name="privacy">Privatsphäre</string>
     <string name="pause_listen_history">Pause listen history</string>
+    <string name="clear_listen_history">Clear listen history</string>
+    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
     <string name="pause_search_history">Suchverlauf anhalten</string>
     <string name="clear_search_history">Suchverlauf löschen</string>
     <string name="clear_search_history_confirm">Sind Sie sicher, dass Sie den gesamten Suchverlauf löschen?</string>

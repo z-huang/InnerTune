@@ -216,6 +216,8 @@
 
     <string name="privacy">Privacy</string>
     <string name="pause_listen_history">Pauzeer de zoekgeschiedenis</string>
+    <string name="clear_listen_history">Clear listen history</string>
+    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
     <string name="pause_search_history">Pause search history</string>
     <string name="clear_search_history">Verwijder zoekgeschiedenis</string>
     <string name="clear_search_history_confirm">Weet je zeker dat je de zoekgeschiedenis wil wissen?</string>

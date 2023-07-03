@@ -228,6 +228,8 @@
 
     <string name="privacy">Конфиденциальность</string>
     <string name="pause_listen_history">Приостановить историю прослушивания</string>
+    <string name="clear_listen_history">Clear listen history</string>
+    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
     <string name="pause_search_history">Приостановить историю поиска</string>
     <string name="clear_search_history">Очистить историю поиска</string>
     <string name="clear_search_history_confirm">Вы уверены, что хотите очистить всю историю поиска?</string>
@@ -239,10 +241,8 @@
     <string name="choose_csv_file_from_google_takeout">Выберите csv-файл из Google Takeout</string>
     <string name="imported_playlist">Импортированный плейлист</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Импортировано \"%s\" с %d треком</item>
-        <item quantity="few">Импортировано \"%s\" с %d треками</item>
-        <item quantity="many">Импортировано \"%s\" с %d треками</item>
-        <item quantity="other">Импортировано \"%s\" с %d треками</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">Резервная копия создана успешно</string>
     <string name="backup_create_failed">Не удалось создать резервную копию</string>

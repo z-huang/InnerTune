@@ -34,13 +34,48 @@ fun PrivacySettings(
     val (pauseSearchHistory, onPauseSearchHistoryChange) = rememberPreference(key = PauseSearchHistoryKey, defaultValue = false)
     val (enableKugou, onEnableKugouChange) = rememberPreference(key = EnableKugouKey, defaultValue = true)
 
-    var showClearHistoryDialog by remember {
+    var showClearListenHistoryDialog by remember {
         mutableStateOf(false)
     }
 
-    if (showClearHistoryDialog) {
+    if (showClearListenHistoryDialog) {
         DefaultDialog(
-            onDismiss = { showClearHistoryDialog = false },
+            onDismiss = { showClearListenHistoryDialog = false },
+            content = {
+                Text(
+                    text = stringResource(R.string.clear_listen_history_confirm),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(horizontal = 18.dp)
+                )
+            },
+            buttons = {
+                TextButton(
+                    onClick = { showClearListenHistoryDialog = false }
+                ) {
+                    Text(text = stringResource(android.R.string.cancel))
+                }
+
+                TextButton(
+                    onClick = {
+                        showClearListenHistoryDialog = false
+                        database.query {
+                            clearListenHistory()
+                        }
+                    }
+                ) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
+            }
+        )
+    }
+
+    var showClearSearchHistoryDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showClearSearchHistoryDialog) {
+        DefaultDialog(
+            onDismiss = { showClearSearchHistoryDialog = false },
             content = {
                 Text(
                     text = stringResource(R.string.clear_search_history_confirm),
@@ -50,14 +85,14 @@ fun PrivacySettings(
             },
             buttons = {
                 TextButton(
-                    onClick = { showClearHistoryDialog = false }
+                    onClick = { showClearSearchHistoryDialog = false }
                 ) {
                     Text(text = stringResource(android.R.string.cancel))
                 }
 
                 TextButton(
                     onClick = {
-                        showClearHistoryDialog = false
+                        showClearSearchHistoryDialog = false
                         database.query {
                             clearSearchHistory()
                         }
@@ -80,6 +115,11 @@ fun PrivacySettings(
             checked = pauseListenHistory,
             onCheckedChange = onPauseListenHistoryChange
         )
+        PreferenceEntry(
+            title = stringResource(R.string.clear_listen_history),
+            icon = R.drawable.clear_all,
+            onClick = { showClearListenHistoryDialog = true }
+        )
         SwitchPreference(
             title = stringResource(R.string.pause_search_history),
             icon = R.drawable.manage_search,
@@ -89,7 +129,7 @@ fun PrivacySettings(
         PreferenceEntry(
             title = stringResource(R.string.clear_search_history),
             icon = R.drawable.clear_all,
-            onClick = { showClearHistoryDialog = true }
+            onClick = { showClearSearchHistoryDialog = true }
         )
         SwitchPreference(
             title = stringResource(R.string.enable_kugou),

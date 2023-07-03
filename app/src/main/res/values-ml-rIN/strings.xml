@@ -216,6 +216,8 @@
 
     <string name="privacy">സ്വകാര്യത</string>
     <string name="pause_listen_history">Pause listen history</string>
+    <string name="clear_listen_history">Clear listen history</string>
+    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
     <string name="pause_search_history">തിരയൽ ചരിത്രം താൽക്കാലികമായി നിർത്തുക</string>
     <string name="clear_search_history">തിരയൽ ചരിത്രം മായ്‌ക്കുക</string>
     <string name="clear_search_history_confirm">എല്ലാ തിരയൽ ചരിത്രവും മായ്‌ക്കണമെന്ന് ഉറപ്പാണോ?</string>

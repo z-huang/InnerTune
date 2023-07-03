@@ -290,6 +290,9 @@ interface DatabaseDao {
     @Query("SELECT * FROM event ORDER BY rowId DESC")
     fun events(): Flow<List<EventWithSong>>
 
+    @Query("DELETE FROM event")
+    fun clearListenHistory()
+
     @Query("SELECT * FROM search_history WHERE `query` LIKE :query || '%' ORDER BY id DESC")
     fun searchHistory(query: String = ""): Flow<List<SearchHistory>>
 

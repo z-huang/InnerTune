@@ -210,6 +210,8 @@
 
     <string name="privacy">隱私</string>
     <string name="pause_listen_history">暫停觀看記錄</string>
+    <string name="clear_listen_history">清除觀看記錄</string>
+    <string name="clear_listen_history_confirm">您確定要清除所有觀看記錄嗎？</string>
     <string name="pause_search_history">暫停搜尋記錄</string>
     <string name="clear_search_history">清除搜尋記錄</string>
     <string name="clear_search_history_confirm">您確定要清除所有搜尋記錄嗎？</string>

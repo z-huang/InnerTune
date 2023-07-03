@@ -216,6 +216,8 @@
 
     <string name="privacy">ਗੋਪਨੀਯਤਾ</string>
     <string name="pause_listen_history">ਸੁਣਨ ਦਾ ਅਤੀਤ ਰੋਕੋ</string>
+    <string name="clear_listen_history">Clear listen history</string>
+    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
     <string name="pause_search_history">ਖੋਜ ਇਤਿਹਾਸ ਨੂੰ ਰੋਕੋ</string>
     <string name="clear_search_history">ਖੋਜ ਇਤਿਹਾਸ ਸਾਫ਼ ਕਰੋ</string>
     <string name="clear_search_history_confirm">ਕੀ ਤੁਸੀਂ ਸਾਰੇ ਖੋਜ ਇਤਿਹਾਸ ਨੂੰ ਸਾਫ਼ ਕਰਨ ਲਈ ਯਕੀਨੀ ਹੋ?</string>
