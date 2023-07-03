@@ -140,6 +140,8 @@
 
     <!-- Snackbar -->
     <string name="snackbar_playlist_imported">Wiedergabeliste importiert</string>
+    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
+    <string name="undo">Undo</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Liedtext nicht gefunden</string>

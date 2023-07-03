@@ -135,6 +135,8 @@
 
     <!-- Snackbar -->
     <string name="snackbar_playlist_imported">已匯入此播放清單</string>
+    <string name="removed_song_from_playlist">已將「%s」從播放清單移除</string>
+    <string name="undo">復原</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">沒有歌詞</string>

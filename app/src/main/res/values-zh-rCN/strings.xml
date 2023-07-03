@@ -135,6 +135,8 @@
 
     <!-- Snackbar -->
     <string name="snackbar_playlist_imported">已导入此播放列表</string>
+    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
+    <string name="undo">Undo</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">没有歌词</string>

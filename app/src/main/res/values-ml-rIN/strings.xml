@@ -140,6 +140,8 @@
 
     <!-- Snackbar -->
     <string name="snackbar_playlist_imported">പ്ലേലിസ്റ്റ് ഇറക്കുമതി ചെയ്തു</string>
+    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
+    <string name="undo">Undo</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Lyrics not found</string>
