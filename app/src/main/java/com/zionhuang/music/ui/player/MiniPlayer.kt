@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +42,6 @@ import com.zionhuang.music.constants.MiniPlayerHeight
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
-import com.zionhuang.music.ui.component.LinearProgressIndicator
 
 @Composable
 fun MiniPlayer(
@@ -64,7 +64,6 @@ fun MiniPlayer(
             .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
     ) {
         LinearProgressIndicator(
-            indeterminate = playbackState == STATE_BUFFERING,
             progress = (position.toFloat() / duration).coerceIn(0f, 1f),
             modifier = Modifier
                 .fillMaxWidth()
