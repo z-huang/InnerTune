@@ -150,7 +150,7 @@
 
     <!-- Snackbar -->
     <string name="snackbar_playlist_imported">Плейлист импортирован</string>
-    <string name="removed_song_from_playlist">Удалено «%s» из плейлиста</string>
+    <string name="removed_song_from_playlist">«%s» удалено из списка воспроизведения</string>
     <string name="undo">Отменить</string>
 
     <!-- Player -->
