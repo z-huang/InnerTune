@@ -51,6 +51,7 @@ import androidx.media3.common.C
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
 import androidx.media3.common.Player.REPEAT_MODE_ONE
+import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.Player.STATE_READY
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerConnection
@@ -242,10 +243,17 @@ fun BottomSheetPlayer(
                         .size(72.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .clickable(onClick = playerConnection.player::togglePlayPause)
+                        .clickable {
+                            if (playbackState == STATE_ENDED) {
+                                playerConnection.player.seekTo(0, 0)
+                                playerConnection.player.playWhenReady = true
+                            } else {
+                                playerConnection.player.togglePlayPause()
+                            }
+                        }
                 ) {
                     Image(
-                        painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
+                        painter = painterResource(if (playbackState == STATE_ENDED) R.drawable.replay else if (isPlaying) R.drawable.pause else R.drawable.play),
                         contentDescription = null,
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
                         modifier = Modifier

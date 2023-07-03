@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.media3.common.Player.STATE_BUFFERING
+import androidx.media3.common.Player
 import coil.compose.AsyncImage
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -131,10 +131,17 @@ fun MiniPlayer(
             }
 
             IconButton(
-                onClick = playerConnection.player::togglePlayPause
+                onClick = {
+                    if (playbackState == Player.STATE_ENDED) {
+                        playerConnection.player.seekTo(0, 0)
+                        playerConnection.player.playWhenReady = true
+                    } else {
+                        playerConnection.player.togglePlayPause()
+                    }
+                }
             ) {
                 Icon(
-                    painter = painterResource(if (isPlaying) R.drawable.pause else R.drawable.play),
+                    painter = painterResource(if (playbackState == Player.STATE_ENDED) R.drawable.replay else if (isPlaying) R.drawable.pause else R.drawable.play),
                     contentDescription = null
                 )
             }
