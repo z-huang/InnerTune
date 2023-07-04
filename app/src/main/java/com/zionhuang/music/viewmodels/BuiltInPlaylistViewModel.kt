@@ -73,7 +73,7 @@ class BuiltInPlaylistViewModel @Inject constructor(
                 }
             }
                 .map { it.first }
-                .reversed(!descending)
+                .reversed(descending)
         }
 
         else -> error("Unknown playlist id")
