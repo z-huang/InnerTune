@@ -239,11 +239,13 @@ class MainActivity : ComponentActivity() {
                     var searchSource by rememberEnumPreference(SearchSourceKey, SearchSource.ONLINE)
 
                     val onSearch: (String) -> Unit = {
-                        onActiveChange(false)
-                        navController.navigate("search/$it")
-                        if (dataStore[PauseSearchHistoryKey] != true) {
-                            database.query {
-                                insert(SearchHistory(query = it))
+                        if (it.isNotEmpty()) {
+                            onActiveChange(false)
+                            navController.navigate("search/$it")
+                            if (dataStore[PauseSearchHistoryKey] != true) {
+                                database.query {
+                                    insert(SearchHistory(query = it))
+                                }
                             }
                         }
                     }
