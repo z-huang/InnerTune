@@ -36,13 +36,13 @@ inline fun <reified T : Enum<T>> SortHeader(
     crossinline onSortDescendingChange: (Boolean) -> Unit,
     crossinline sortTypeText: (T) -> Int,
     trailingText: String,
+    modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text = stringResource(sortTypeText(sortType)),
