@@ -13,24 +13,24 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
-    <string name="new_release_albums">New release albums</string>
+    <string name="history">Geschiedenis</string>
+    <string name="stats">Statistieken</string>
+    <string name="quick_picks">Snelle keuzes</string>
+    <string name="quick_picks_empty">Beluister een aantal nummers om je snelle keuzes te genereren</string>
+    <string name="new_release_albums">Nieuwe albums</string>
 
     <!-- History -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_week">This week</string>
-    <string name="last_week">Last week</string>
+    <string name="today">Vandaag</string>
+    <string name="yesterday">Gisteren</string>
+    <string name="this_week">Deze week</string>
+    <string name="last_week">Vorige week</string>
 
     <!-- Stats -->
-    <string name="most_played_songs">Most played songs</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_songs">Meest afgespeelde nummers</string>
+    <string name="most_played_artists">Meest afgespeelde artiesten</string>
 
     <!-- Search -->
-    <string name="search">Search</string>
+    <string name="search">Zoeken</string>
     <string name="search_yt_music">Zoeken via YouTube Music…</string>
     <string name="search_library">Zoeken in bibliotheek…</string>
     <string name="filter_all">Alles</string>
@@ -41,7 +41,7 @@
     <string name="filter_playlists">Afspeellijsten</string>
     <string name="filter_community_playlists">Afspeellijsten van de community</string>
     <string name="filter_featured_playlists">Voorgestelde afspeellijsten</string>
-    <string name="no_results_found">No results found</string>
+    <string name="no_results_found">Geen resultaten gevonden</string>
 
     <!-- Artist screen -->
     <string name="from_your_library">Verwijderen van bibliotheek</string>
@@ -49,7 +49,7 @@
     <!-- Playlist -->
     <string name="liked_songs">Favoriete nummers</string>
     <string name="downloaded_songs">Gedownloade nummers</string>
-    <string name="playlist_is_empty">The playlist is empty</string>
+    <string name="playlist_is_empty">Afspeellijst is leeg</string>
 
     <!-- Button -->
     <string name="retry">Opnieuw</string>
@@ -75,9 +75,9 @@
     <string name="refetch">Ververs</string>
     <string name="share">Delen</string>
     <string name="delete">Verwijderen</string>
-    <string name="remove_from_history">Remove from history</string>
+    <string name="remove_from_history">Verwijder uit geschiedenis</string>
     <string name="search_online">Zoek online</string>
-    <string name="sync">Sync</string>
+    <string name="sync">Synchroniseer</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Datum toegevoegd</string>
@@ -87,7 +87,7 @@
     <string name="sort_by_song_count">Aantal nummers</string>
     <string name="sort_by_length">Duur</string>
     <string name="sort_by_play_time">Speeltijd</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Aangepaste volgorde</string>
 
     <!-- Dialog -->
     <string name="media_id">Media id</string>
@@ -99,7 +99,7 @@
     <string name="volume">Volume</string>
     <string name="file_size">Bestandsgrootte</string>
     <string name="unknown">Onbekend</string>
-    <string name="copied">Copied to clipboard</string>
+    <string name="copied">Gekopieerd naar klembord</string>
 
     <string name="edit_lyrics">Bewerk songtekst</string>
     <string name="search_lyrics">Zoek naar songtekst</string>
@@ -123,34 +123,34 @@
 
     <!-- Noun -->
     <plurals name="n_song">
-        <item quantity="one">%d song</item>
-        <item quantity="other">%d songs</item>
+        <item quantity="one">%d nummer</item>
+        <item quantity="other">%d nummers</item>
     </plurals>
     <plurals name="n_artist">
-        <item quantity="one">%d artist</item>
-        <item quantity="other">%d artists</item>
+        <item quantity="one">%d artiest</item>
+        <item quantity="other">%d artiesten</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d album</item>
         <item quantity="other">%d albums</item>
     </plurals>
     <plurals name="n_playlist">
-        <item quantity="one">%d playlist</item>
-        <item quantity="other">%d playlists</item>
+        <item quantity="one">%d afspeellijst</item>
+        <item quantity="other">%d afspeellijsten</item>
     </plurals>
 
     <!-- Snackbar -->
-    <string name="snackbar_playlist_imported">Playlist imported</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="undo">Undo</string>
+    <string name="snackbar_playlist_imported">Afspeellijst geimporteerd</string>
+    <string name="removed_song_from_playlist">\"%s\" van afspeelijst verwijderd</string>
+    <string name="undo">Ongedaan maken</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Songtekst niet gevonden</string>
-    <string name="sleep_timer">Sleep timer</string>
-    <string name="end_of_song">End of song</string>
+    <string name="sleep_timer">Slaap timer</string>
+    <string name="end_of_song">Einde van nummer</string>
     <plurals name="minute">
-        <item quantity="one">1 minute</item>
-        <item quantity="other">%d minutes</item>
+        <item quantity="one">1 minuut</item>
+        <item quantity="other">%d minuten</item>
     </plurals>
     <string name="error_no_stream">Geen stream beschikbaar</string>
     <string name="error_no_internet">Geen netwerkverbinding</string>
@@ -166,17 +166,17 @@
     <string name="queue_searched_songs">Opgezochte nummers</string>
 
     <!-- Notification name -->
-    <string name="music_player">Music Player</string>
+    <string name="music_player">Muziekspeler</string>
 
     <!-- Settings -->
     <string name="settings">Instellingen</string>
     <string name="appearance">Uiterlijk</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="enable_dynamic_theme">Dynamisch thema inschakelen</string>
     <string name="dark_theme">Donker thema</string>
     <string name="dark_theme_on">Aan</string>
     <string name="dark_theme_off">Uit</string>
     <string name="dark_theme_follow_system">Volg systeem</string>
-    <string name="pure_black">Pure black</string>
+    <string name="pure_black">Zuiver zwart</string>
     <string name="default_open_tab">Standaard tabblad</string>
     <string name="customize_navigation_tabs">Pas tabbladen aan</string>
     <string name="lyrics_text_position">Songtekst positie</string>
@@ -206,34 +206,34 @@
 
     <string name="storage">Opslag</string>
     <string name="cache">Cache</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
-    <string name="max_image_cache_size">Max image cache size</string>
-    <string name="clear_image_cache">Clear image cache</string>
-    <string name="max_song_cache_size">Max song cache size</string>
-    <string name="clear_song_cache">Clear song cache</string>
+    <string name="image_cache">Afbeeldingen Cache</string>
+    <string name="song_cache">Nummer Cache</string>
+    <string name="max_cache_size">Maximale cache grootte</string>
+    <string name="unlimited">Ongelimiteerd</string>
+    <string name="clear_all_downloads">Wis alle downloads</string>
+    <string name="max_image_cache_size">Max. grootte cache voor afbeeldingen</string>
+    <string name="clear_image_cache">Wis afbeeldingen cache</string>
+    <string name="max_song_cache_size">Max. grootte cache voor nummers</string>
+    <string name="clear_song_cache">Wis nummer cache</string>
     <string name="size_used">%s gebruikt</string>
 
     <string name="privacy">Privacy</string>
-    <string name="pause_listen_history">Pauzeer de zoekgeschiedenis</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
-    <string name="pause_search_history">Pause search history</string>
-    <string name="clear_search_history">Verwijder zoekgeschiedenis</string>
+    <string name="pause_listen_history">Pauzeer luistergeschiedenis</string>
+    <string name="clear_listen_history">Luistergeschiedenis wisseny</string>
+    <string name="clear_listen_history_confirm">>Weet je zeker dat je de luistergeschiedenis wil wissen?</string>
+    <string name="pause_search_history">Pauzeer zoekgeschiedenis</string>
+    <string name="clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="clear_search_history_confirm">Weet je zeker dat je de zoekgeschiedenis wil wissen?</string>
     <string name="enable_kugou">Schakel KuGou songtekst provider in</string>
 
     <string name="backup_restore">Backup en herstel</string>
     <string name="backup">Backup</string>
     <string name="restore">Herstellen</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
+    <string name="choose_csv_file_from_google_takeout">Kies een csv-bestand van Google Takeout</string>
+    <string name="imported_playlist">Afspeellijst geimporteerd</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">\"%s\" geimporteerd met %d nummer</item>
+        <item quantity="other">\"%s\" geimporteerd met %d nummers</item>
     </plurals>
     <string name="backup_create_success">Back-up succesvol gemaakt.</string>
     <string name="backup_create_failed">Back-up maken mislukt.</string>
