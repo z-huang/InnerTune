@@ -75,6 +75,7 @@ import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AlbumThumbnailSize
+import com.zionhuang.music.constants.PlaylistEditLockKey
 import com.zionhuang.music.constants.PlaylistSongSortDescendingKey
 import com.zionhuang.music.constants.PlaylistSongSortType
 import com.zionhuang.music.constants.PlaylistSongSortTypeKey
@@ -126,6 +127,7 @@ fun LocalPlaylistScreen(
     }
     val (sortType, onSortTypeChange) = rememberEnumPreference(PlaylistSongSortTypeKey, PlaylistSongSortType.CUSTOM)
     val (sortDescending, onSortDescendingChange) = rememberPreference(PlaylistSongSortDescendingKey, true)
+    var locked by rememberPreference(PlaylistEditLockKey, defaultValue = false)
 
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
@@ -426,21 +428,36 @@ fun LocalPlaylistScreen(
                     }
 
                     item {
-                        SortHeader(
-                            sortType = sortType,
-                            sortDescending = sortDescending,
-                            onSortTypeChange = onSortTypeChange,
-                            onSortDescendingChange = onSortDescendingChange,
-                            sortTypeText = { sortType ->
-                                when (sortType) {
-                                    PlaylistSongSortType.CUSTOM -> R.string.sort_by_custom
-                                    PlaylistSongSortType.CREATE_DATE -> R.string.sort_by_create_date
-                                    PlaylistSongSortType.NAME -> R.string.sort_by_name
-                                    PlaylistSongSortType.ARTIST -> R.string.sort_by_artist
-                                }
-                            },
-                            trailingText = ""
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            SortHeader(
+                                sortType = sortType,
+                                sortDescending = sortDescending,
+                                onSortTypeChange = onSortTypeChange,
+                                onSortDescendingChange = onSortDescendingChange,
+                                sortTypeText = { sortType ->
+                                    when (sortType) {
+                                        PlaylistSongSortType.CUSTOM -> R.string.sort_by_custom
+                                        PlaylistSongSortType.CREATE_DATE -> R.string.sort_by_create_date
+                                        PlaylistSongSortType.NAME -> R.string.sort_by_name
+                                        PlaylistSongSortType.ARTIST -> R.string.sort_by_artist
+                                    }
+                                },
+                                trailingText = "",
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            IconButton(
+                                onClick = { locked = !locked },
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(if (locked) R.drawable.lock else R.drawable.lock_open),
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -477,65 +494,73 @@ fun LocalPlaylistScreen(
                     }
                 )
 
-                SwipeToDismiss(
-                    state = dismissState,
-                    background = {},
-                    dismissContent = {
-                        SongListItem(
-                            song = song.song,
-                            isActive = song.song.id == mediaMetadata?.id,
-                            isPlaying = isPlaying,
-                            trailingContent = {
-                                IconButton(
-                                    onClick = {
-                                        menuState.show {
-                                            SongMenu(
-                                                originalSong = song.song,
-                                                navController = navController,
-                                                playerConnection = playerConnection,
-                                                onDismiss = menuState::dismiss
-                                            )
-                                        }
+                val content: @Composable () -> Unit = {
+                    SongListItem(
+                        song = song.song,
+                        isActive = song.song.id == mediaMetadata?.id,
+                        isPlaying = isPlaying,
+                        trailingContent = {
+                            IconButton(
+                                onClick = {
+                                    menuState.show {
+                                        SongMenu(
+                                            originalSong = song.song,
+                                            navController = navController,
+                                            playerConnection = playerConnection,
+                                            onDismiss = menuState::dismiss
+                                        )
                                     }
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.more_vert),
+                                    contentDescription = null
+                                )
+                            }
+
+                            if (sortType == PlaylistSongSortType.CUSTOM && !locked) {
+                                IconButton(
+                                    onClick = { },
+                                    modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.more_vert),
+                                        painter = painterResource(R.drawable.drag_handle),
                                         contentDescription = null
                                     )
                                 }
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .combinedClickable {
+                                if (song.song.id == mediaMetadata?.id) {
+                                    playerConnection.player.togglePlayPause()
+                                } else {
+                                    playerConnection.playQueue(
+                                        ListQueue(
+                                            title = playlist!!.playlist.name,
+                                            items = songs.map { it.song.toMediaItem() },
+                                            startIndex = index
+                                        )
+                                    )
+                                }
+                            }
+                            .animateItemPlacement(reorderingState = reorderingState)
+                            .draggedItem(reorderingState = reorderingState, index = index)
+                    )
+                }
 
-                                if (sortType == PlaylistSongSortType.CUSTOM) {
-                                    IconButton(
-                                        onClick = { },
-                                        modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.drag_handle),
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .combinedClickable {
-                                    if (song.song.id == mediaMetadata?.id) {
-                                        playerConnection.player.togglePlayPause()
-                                    } else {
-                                        playerConnection.playQueue(
-                                            ListQueue(
-                                                title = playlist!!.playlist.name,
-                                                items = songs.map { it.song.toMediaItem() },
-                                                startIndex = index
-                                            )
-                                        )
-                                    }
-                                }
-                                .animateItemPlacement(reorderingState = reorderingState)
-                                .draggedItem(reorderingState = reorderingState, index = index)
-                        )
-                    }
-                )
+                if (locked) {
+                    content()
+                } else {
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = {},
+                        dismissContent = {
+                            content()
+                        }
+                    )
+                }
             }
         }
 
