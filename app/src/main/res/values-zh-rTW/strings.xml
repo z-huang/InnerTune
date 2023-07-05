@@ -135,8 +135,9 @@
     </plurals>
 
     <!-- Snackbar -->
-    <string name="snackbar_playlist_imported">已匯入此播放清單</string>
+    <string name="playlist_imported">已匯入此播放清單</string>
     <string name="removed_song_from_playlist">已將「%s」從播放清單移除</string>
+    <string name="playlist_synced">同步完成</string>
     <string name="undo">復原</string>
 
     <!-- Player -->

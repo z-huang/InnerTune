@@ -150,8 +150,9 @@
     </plurals>
 
     <!-- Snackbar -->
-    <string name="snackbar_playlist_imported">Плейлист импортирован</string>
+    <string name="playlist_imported">Плейлист импортирован</string>
     <string name="removed_song_from_playlist">«%s» удалено из списка воспроизведения</string>
+    <string name="playlist_synced">Playlist synced</string>
     <string name="undo">Отменить</string>
 
     <!-- Player -->

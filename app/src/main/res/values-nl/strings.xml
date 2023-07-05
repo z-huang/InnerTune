@@ -140,8 +140,9 @@
     </plurals>
 
     <!-- Snackbar -->
-    <string name="snackbar_playlist_imported">Afspeellijst geimporteerd</string>
+    <string name="playlist_imported">Afspeellijst geimporteerd</string>
     <string name="removed_song_from_playlist">\"%s\" van afspeelijst verwijderd</string>
+    <string name="playlist_synced">Playlist synced</string>
     <string name="undo">Ongedaan maken</string>
 
     <!-- Player -->
@@ -232,8 +233,8 @@
     <string name="choose_csv_file_from_google_takeout">Kies een csv-bestand van Google Takeout</string>
     <string name="imported_playlist">Afspeellijst geimporteerd</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">\"%s\" geimporteerd met %d nummer</item>
-        <item quantity="other">\"%s\" geimporteerd met %d nummers</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">Back-up succesvol gemaakt.</string>
     <string name="backup_create_failed">Back-up maken mislukt.</string>

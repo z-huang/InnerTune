@@ -193,7 +193,7 @@ fun OnlinePlaylistScreen(
                                                         }
                                                         .forEach(::insert)
                                                     coroutineScope.launch {
-                                                        snackbarHostState.showSnackbar(context.getString(R.string.snackbar_playlist_imported))
+                                                        snackbarHostState.showSnackbar(context.getString(R.string.playlist_imported))
                                                     }
                                                 }
                                             }

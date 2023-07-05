@@ -302,6 +302,7 @@ fun LocalPlaylistScreen(
                                                                 }
                                                                 .forEach(::insert)
                                                         }
+                                                        snackbarHostState.showSnackbar(context.getString(R.string.playlist_synced))
                                                     }
                                                 }
                                             ) {
@@ -450,7 +451,7 @@ fun LocalPlaylistScreen(
 
                             IconButton(
                                 onClick = { locked = !locked },
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                modifier = Modifier.padding(horizontal = 6.dp)
                             ) {
                                 Icon(
                                     painter = painterResource(if (locked) R.drawable.lock else R.drawable.lock_open),

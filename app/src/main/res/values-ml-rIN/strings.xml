@@ -140,8 +140,9 @@
     </plurals>
 
     <!-- Snackbar -->
-    <string name="snackbar_playlist_imported">പ്ലേലിസ്റ്റ് ഇറക്കുമതി ചെയ്തു</string>
+    <string name="playlist_imported">പ്ലേലിസ്റ്റ് ഇറക്കുമതി ചെയ്തു</string>
     <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
+    <string name="playlist_synced">Playlist synced</string>
     <string name="undo">Undo</string>
 
     <!-- Player -->

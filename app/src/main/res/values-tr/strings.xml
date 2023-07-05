@@ -140,8 +140,9 @@
     </plurals>
 
     <!-- Snackbar -->
-    <string name="snackbar_playlist_imported">Çalma listesi içe aktarıldı</string>
+    <string name="playlist_imported">Çalma listesi içe aktarıldı</string>
     <string name="removed_song_from_playlist">Çalma listesinden \"%s\" kaldırıldı</string>
+    <string name="playlist_synced">Playlist synced</string>
     <string name="undo">Geri al</string>
 
     <!-- Player -->
@@ -232,8 +233,8 @@
     <string name="choose_csv_file_from_google_takeout">Google Takeout\'tan bir csv dosyası seçin</string>
     <string name="imported_playlist">Çalma listesi içe aktarıldı</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">\"%s\" %d şarkı ile aktarıldı</item>
-        <item quantity="other">\"%s\" %d şarkı ile aktarıldı</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">Yedekleme başarıyla oluşturuldu</string>
     <string name="backup_create_failed">Yedekleme oluşturulamadı</string>
