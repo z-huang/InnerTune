@@ -233,7 +233,7 @@
     <string name="imported_playlist">Çalma listesi içe aktarıldı</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
         <item quantity="one">\"%s\" %d şarkı ile aktarıldı</item>
-        <item quantity="other"\"%s\" %d şarkı ile aktarıldı</item>
+        <item quantity="other">\"%s\" %d şarkı ile aktarıldı</item>
     </plurals>
     <string name="backup_create_success">Yedekleme başarıyla oluşturuldu</string>
     <string name="backup_create_failed">Yedekleme oluşturulamadı</string>
