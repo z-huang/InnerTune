@@ -16,6 +16,7 @@
     <string name="history">Historial</string>
     <string name="stats">Estadísticas</string>
     <string name="quick_picks">Selecciones rápidas</string>
+    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
     <string name="new_release_albums">Nuevos lanzamientos</string>
 
     <!-- History -->

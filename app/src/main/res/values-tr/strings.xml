@@ -16,6 +16,7 @@
     <string name="history">Geçmiş</string>
     <string name="stats">İstatistikler</string>
     <string name="quick_picks">Hızlı seçimler</string>
+    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
     <string name="new_release_albums">Yeni çıkan albümler</string>
 
     <!-- History -->

@@ -18,6 +18,7 @@
     <string name="history">История</string>
     <string name="stats">Статистика</string>
     <string name="quick_picks">Быстрый выбор</string>
+    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
     <string name="new_release_albums">Новые релизы альбомов</string>
 
     <!-- History -->
@@ -243,10 +244,8 @@
     <string name="choose_csv_file_from_google_takeout">Выбрать csv-файл из Google Takeout</string>
     <string name="imported_playlist">Импортированный плейлист</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Импортировано «%s» с %d композицией</item>
-        <item quantity="few">Импортировано «%s» с %d композициями</item>
-        <item quantity="many">Импортировано «%s» с %d композициями</item>
-        <item quantity="other">Импортировано «%s» с %d композициями</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">Резервная копия создана успешно</string>
     <string name="backup_create_failed">Не удалось создать резервную копию</string>

@@ -113,66 +113,80 @@ fun HomeScreen(
                     )
                 }
 
-                if (quickPicks.isNotEmpty()) {
-                    Text(
-                        text = stringResource(R.string.quick_picks),
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                            .padding(12.dp)
-                    )
+                Text(
+                    text = stringResource(R.string.quick_picks),
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
+                        .padding(12.dp)
+                )
 
-                    LazyHorizontalGrid(
-                        state = mostPlayedLazyGridState,
-                        rows = GridCells.Fixed(4),
-                        flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
-                        contentPadding = WindowInsets.systemBars
-                            .only(WindowInsetsSides.Horizontal)
-                            .asPaddingValues(),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(ListItemHeight * 4)
-                    ) {
-                        items(
-                            items = quickPicks,
-                            key = { it.id }
-                        ) { originalSong ->
-                            val song by database.song(originalSong.id).collectAsState(initial = originalSong)
+                quickPicks?.let { quickPicks ->
+                    if (quickPicks.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(ListItemHeight * 4)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.quick_picks_empty),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    } else {
+                        LazyHorizontalGrid(
+                            state = mostPlayedLazyGridState,
+                            rows = GridCells.Fixed(4),
+                            flingBehavior = rememberSnapFlingBehavior(snapLayoutInfoProvider),
+                            contentPadding = WindowInsets.systemBars
+                                .only(WindowInsetsSides.Horizontal)
+                                .asPaddingValues(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(ListItemHeight * 4)
+                        ) {
+                            items(
+                                items = quickPicks,
+                                key = { it.id }
+                            ) { originalSong ->
+                                val song by database.song(originalSong.id).collectAsState(initial = originalSong)
 
-                            SongListItem(
-                                song = song!!,
-                                showInLibraryIcon = true,
-                                isActive = song!!.id == mediaMetadata?.id,
-                                isPlaying = isPlaying,
-                                trailingContent = {
-                                    IconButton(
-                                        onClick = {
-                                            menuState.show {
-                                                SongMenu(
-                                                    originalSong = song!!,
-                                                    navController = navController,
-                                                    playerConnection = playerConnection,
-                                                    onDismiss = menuState::dismiss
-                                                )
+                                SongListItem(
+                                    song = song!!,
+                                    showInLibraryIcon = true,
+                                    isActive = song!!.id == mediaMetadata?.id,
+                                    isPlaying = isPlaying,
+                                    trailingContent = {
+                                        IconButton(
+                                            onClick = {
+                                                menuState.show {
+                                                    SongMenu(
+                                                        originalSong = song!!,
+                                                        navController = navController,
+                                                        playerConnection = playerConnection,
+                                                        onDismiss = menuState::dismiss
+                                                    )
+                                                }
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.more_vert),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .width(horizontalLazyGridItemWidth)
+                                        .clickable {
+                                            if (song!!.id == mediaMetadata?.id) {
+                                                playerConnection.player.togglePlayPause()
+                                            } else {
+                                                playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song!!.id), song!!.toMediaMetadata()))
                                             }
                                         }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.more_vert),
-                                            contentDescription = null
-                                        )
-                                    }
-                                },
-                                modifier = Modifier
-                                    .width(horizontalLazyGridItemWidth)
-                                    .clickable {
-                                        if (song!!.id == mediaMetadata?.id) {
-                                            playerConnection.player.togglePlayPause()
-                                        } else {
-                                            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song!!.id), song!!.toMediaMetadata()))
-                                        }
-                                    }
-                            )
+                                )
+                            }
                         }
                     }
                 }
@@ -241,7 +255,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()))
             }
 
-            if (quickPicks.isNotEmpty() || newReleaseAlbums.isNotEmpty()) {
+            if (!quickPicks.isNullOrEmpty() || newReleaseAlbums.isNotEmpty()) {
                 FloatingActionButton(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -251,8 +265,8 @@ fun HomeScreen(
                         )
                         .padding(16.dp),
                     onClick = {
-                        if (Random.nextBoolean() && quickPicks.isNotEmpty()) {
-                            val song = quickPicks.random()
+                        if (Random.nextBoolean() && !quickPicks.isNullOrEmpty()) {
+                            val song = quickPicks!!.random()
                             playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
                         } else if (newReleaseAlbums.isNotEmpty()) {
                             val album = newReleaseAlbums.random()

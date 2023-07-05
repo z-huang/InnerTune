@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     val isRefreshing = MutableStateFlow(false)
 
-    val quickPicks = MutableStateFlow<List<Song>>(emptyList())
+    val quickPicks = MutableStateFlow<List<Song>?>(null)
     val newReleaseAlbums = MutableStateFlow<List<AlbumItem>>(emptyList())
 
     private suspend fun load() {
