@@ -1,6 +1,7 @@
 package com.zionhuang.innertube
 
 import com.zionhuang.innertube.encoder.brotli
+import com.zionhuang.innertube.models.Context
 import com.zionhuang.innertube.models.YouTubeClient
 import com.zionhuang.innertube.models.YouTubeLocale
 import com.zionhuang.innertube.models.body.*
@@ -124,12 +125,25 @@ class InnerTube {
         configYTClient(client)
         setBody(
             PlayerBody(
-                context = client.toContext(locale, visitorData),
+                context = client.toContext(locale, visitorData).let {
+                    if (client == YouTubeClient.TVHTML5) {
+                        it.copy(
+                            thirdParty = Context.ThirdParty(
+                                embedUrl = "https://www.youtube.com/watch?v=${videoId}"
+                            )
+                        )
+                    } else it
+                },
                 videoId = videoId,
                 playlistId = playlistId
             )
         )
     }
+
+    suspend fun pipedStreams(videoId: String) =
+        httpClient.get("https://watchapi.whatever.social/streams/${videoId}") {
+            contentType(ContentType.Application.Json)
+        }
 
     suspend fun browse(
         client: YouTubeClient,

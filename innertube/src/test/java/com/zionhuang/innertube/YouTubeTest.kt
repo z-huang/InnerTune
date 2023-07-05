@@ -13,7 +13,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Ignore
 import org.junit.Test
@@ -26,7 +25,7 @@ class YouTubeTest {
     fun `Check 'player' endpoint`() = runBlocking {
         VIDEO_IDS.forEach { videoId ->
             val playerResponse = youTube.player(videoId).getOrThrow()
-            assertEquals(videoId, playerResponse.videoDetails.videoId)
+            assertTrue(playerResponse.playabilityStatus.status == "OK")
         }
     }
 
@@ -35,7 +34,7 @@ class YouTubeTest {
         VIDEO_IDS.forEach { videoId ->
             val playerResponse = youTube.player(videoId).getOrThrow()
             val format = playerResponse.streamingData!!.adaptiveFormats[0]
-            val url = format.url
+            val url = format.url!!
             println(url)
             val response = HttpClient(OkHttp).get(url) {
                 headers {
@@ -175,8 +174,8 @@ class YouTubeTest {
     companion object {
         private val VIDEO_IDS = listOf(
             "4H-N260cPCg",
-            "jF4KKOsoyDs"
-//            "x8VYWazR5mE" Login required
+            "jF4KKOsoyDs",
+            "x8VYWazR5mE" // Login required
         )
 
         private const val PLAYLIST_ID = "RDAMVM_WVXrDmm-P0"

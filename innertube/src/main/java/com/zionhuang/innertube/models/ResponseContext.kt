@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ResponseContext(
     val visitorData: String?,
-    val serviceTrackingParams: List<ServiceTrackingParam>,
+    val serviceTrackingParams: List<ServiceTrackingParam>?,
 ) {
     @Serializable
     data class ServiceTrackingParam(

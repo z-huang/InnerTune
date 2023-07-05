@@ -108,8 +108,8 @@ class DownloadUtil @Inject constructor(
             )
         }
 
-        songUrlCache[mediaId] = format.url to playerResponse.streamingData!!.expiresInSeconds * 1000L
-        dataSpec.withUri(format.url.toUri())
+        songUrlCache[mediaId] = format.url!! to playerResponse.streamingData!!.expiresInSeconds * 1000L
+        dataSpec.withUri(format.url!!.toUri())
     }
     val downloadNotificationHelper = DownloadNotificationHelper(context, ExoDownloadService.CHANNEL_ID)
     val downloadManager: DownloadManager = DownloadManager(context, databaseProvider, downloadCache, dataSourceFactory, Executor(Runnable::run)).apply {

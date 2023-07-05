@@ -54,5 +54,12 @@ data class YouTubeClient(
             userAgent = USER_AGENT_WEB,
             referer = REFERER_YOUTUBE_MUSIC
         )
+
+        val TVHTML5 = YouTubeClient(
+            clientName = "TVHTML5_SIMPLY_EMBEDDED_PLAYER",
+            clientVersion = "2.0",
+            api_key = "AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8",
+            userAgent = "Mozilla/5.0 (PlayStation 4 5.55) AppleWebKit/601.2 (KHTML, like Gecko)"
+        )
     }
 }
