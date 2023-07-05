@@ -55,7 +55,7 @@ import java.net.Proxy
  * Modified from [ViMusic](https://github.com/vfsfitvnm/ViMusic)
  */
 object YouTube {
-    val innerTube = InnerTube()
+    private val innerTube = InnerTube()
 
     var locale: YouTubeLocale
         get() = innerTube.locale
@@ -334,21 +334,21 @@ object YouTube {
                     } + result.items,
                     lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(1)?.tabRenderer?.endpoint?.browseEndpoint,
                     relatedEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(2)?.tabRenderer?.endpoint?.browseEndpoint,
-                    currentIndex = playlistPanelRenderer.currentIndex
+                    currentIndex = playlistPanelRenderer.currentIndex,
+                    endpoint = watchPlaylistEndpoint
                 )
             }
         }
         NextResult(
             title = playlistPanelRenderer.title,
             items = playlistPanelRenderer.contents.mapNotNull {
-                it.playlistPanelVideoRenderer?.let { renderer ->
-                    NextPage.fromPlaylistPanelVideoRenderer(renderer)
-                }
+                it.playlistPanelVideoRenderer?.let(NextPage::fromPlaylistPanelVideoRenderer)
             },
             currentIndex = playlistPanelRenderer.currentIndex,
             lyricsEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(1)?.tabRenderer?.endpoint?.browseEndpoint,
             relatedEndpoint = response.contents.singleColumnMusicWatchNextResultsRenderer.tabbedRenderer.watchNextTabbedResultsRenderer.tabs.getOrNull(2)?.tabRenderer?.endpoint?.browseEndpoint,
-            continuation = playlistPanelRenderer.continuations?.getContinuation()
+            continuation = playlistPanelRenderer.continuations?.getContinuation(),
+            endpoint = endpoint
         )
     }
 

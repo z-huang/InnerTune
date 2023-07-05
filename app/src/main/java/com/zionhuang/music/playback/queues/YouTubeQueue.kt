@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 
 class YouTubeQueue(
-    private val endpoint: WatchEndpoint,
+    private var endpoint: WatchEndpoint,
     override val preloadItem: MediaMetadata? = null,
 ) : Queue {
     private var continuation: String? = null
@@ -18,6 +18,7 @@ class YouTubeQueue(
         val nextResult = withContext(IO) {
             YouTube.next(endpoint, continuation).getOrThrow()
         }
+        endpoint = nextResult.endpoint
         continuation = nextResult.continuation
         return Queue.Status(
             title = nextResult.title,
@@ -32,6 +33,7 @@ class YouTubeQueue(
         val nextResult = withContext(IO) {
             YouTube.next(endpoint, continuation).getOrThrow()
         }
+        endpoint = nextResult.endpoint
         continuation = nextResult.continuation
         return nextResult.items.map { it.toMediaItem() }
     }

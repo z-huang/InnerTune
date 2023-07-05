@@ -107,15 +107,14 @@ class YouTubeTest {
 
     @Test
     fun `Check 'next' continuation`() = runBlocking {
-        val videoId = "qivRUhepWVA"
-        val playlistId = "RDEMQWAKLFUHzBCn9nEsPHDYAw"
+        val endpoint = WatchEndpoint(videoId = "afXwxtQLvZM")
         var count = 5
-        var nextResult = youTube.next(WatchEndpoint(videoId = videoId, playlistId = playlistId)).getOrThrow()
+        var nextResult = youTube.next(endpoint).getOrThrow()
         while (nextResult.continuation != null && count > 0) {
             nextResult.items.forEach {
                 println(it.title)
             }
-            nextResult = youTube.next(WatchEndpoint(videoId = videoId, playlistId = playlistId), nextResult.continuation).getOrThrow()
+            nextResult = youTube.next(nextResult.endpoint, nextResult.continuation).getOrThrow()
             count -= 1
         }
         nextResult.items.forEach {

@@ -33,6 +33,7 @@ import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.ArtistListItem
 import com.zionhuang.music.ui.component.LocalMenuState
@@ -104,7 +105,8 @@ fun StatsScreen(
                         } else {
                             playerConnection.playQueue(
                                 YouTubeQueue(
-                                    endpoint = WatchEndpoint(song.id)
+                                    endpoint = WatchEndpoint(song.id),
+                                    preloadItem = song.toMediaMetadata()
                                 )
                             )
                         }

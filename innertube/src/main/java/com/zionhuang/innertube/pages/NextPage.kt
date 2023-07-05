@@ -1,6 +1,13 @@
 package com.zionhuang.innertube.pages
 
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.Album
+import com.zionhuang.innertube.models.Artist
+import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.PlaylistPanelVideoRenderer
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.innertube.models.oddElements
+import com.zionhuang.innertube.models.splitBySeparator
 import com.zionhuang.innertube.utils.parseTime
 
 data class NextResult(
@@ -10,6 +17,7 @@ data class NextResult(
     val lyricsEndpoint: BrowseEndpoint? = null,
     val relatedEndpoint: BrowseEndpoint? = null,
     val continuation: String?,
+    val endpoint: WatchEndpoint, // current or continuation next endpoint
 )
 
 object NextPage {
