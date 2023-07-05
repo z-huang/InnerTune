@@ -30,16 +30,13 @@ A Material 3 YouTube Music client for Android
 ## Screenshots
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="200" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="200" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg" width="200" />
 </p>
 <p float="left">
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/07.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/08.jpg" width="170" />
-  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/09.jpg" width="170" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg" width="200" />
+  <img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/fastlane/metadata/android/en-US/images/phoneScreenshots/05.jpg" width="200" />
 </p>
 
 > **Warning**
@@ -67,8 +64,15 @@ Follow the [instruction](https://developer.android.com/guide/topics/resources/lo
 create a pull request. If possible, please build the app beforehand and make sure there is no error
 before you create a pull request.
 
+## Donate
+
+If you like InnerTune, you're welcome to send a donation.
+
+<a href="https://liberapay.com/zionhuang"><img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/assets/liberapay.png" alt="Liberapay" height="60" ></a>
+<a href="https://www.buymeacoffee.com/zionhuang"><img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/assets/buymeacoffee.png" alt="Liberapay" height="60" ></a>
+
 ## Credit
 
 I want to give credit to [vfsfitvnm/ViMusic](https://github.com/vfsfitvnm/ViMusic) for being an
-example of Jetpack Compose and music player. It helped me a lot on my way to learn Compose and
+example of Jetpack Compose music player. It helped me a lot on my way to learn Compose and
 Android development.
