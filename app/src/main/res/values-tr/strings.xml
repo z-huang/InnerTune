@@ -16,7 +16,7 @@
     <string name="history">Geçmiş</string>
     <string name="stats">İstatistikler</string>
     <string name="quick_picks">Hızlı seçimler</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Hızlı seçimlerinizi oluşturmak için birkaç şarkı dinleyin</string>
     <string name="new_release_albums">Yeni çıkan albümler</string>
 
     <!-- History -->
@@ -26,8 +26,8 @@
     <string name="last_week">Geçen hafta</string>
 
     <!-- Stats -->
-    <string name="most_played_songs">En çok çalınan şarkılar</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_songs">En çok dinlenen şarkılar</string>
+    <string name="most_played_artists">En çok dinlenen sanatçılar</string>
 
     <!-- Search -->
     <string name="search">Arama</string>
@@ -66,7 +66,7 @@
     <string name="add_to_library">Kütüphaneye ekle</string>
     <string name="remove_from_library">Kütüphaneden kaldır</string>
     <string name="download">İndir</string>
-    <string name="downloading">Downloading</string>
+    <string name="downloading">İndiriliyor</string>
     <string name="remove_download">İndirmeyi kaldır</string>
     <string name="import_playlist">Çalma listesini içe aktar</string>
     <string name="add_to_playlist">Çalma listesine ekle</string>
@@ -87,7 +87,7 @@
     <string name="sort_by_song_count">Şarkı sayısı</string>
     <string name="sort_by_length">Uzunluk</string>
     <string name="sort_by_play_time">Çalma süresi</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Özel sıralama</string>
 
     <!-- Dialog -->
     <string name="media_id">Medya kimliği</string>
@@ -95,8 +95,8 @@
     <string name="codecs">Kodekler</string>
     <string name="bitrate">Bit hızı</string>
     <string name="sample_rate">Örnek hızı</string>
-    <string name="loudness">Ses yüksekliği</string>
-    <string name="volume">Ses şiddeti</string>
+    <string name="loudness">Ses şiddeti</string>
+    <string name="volume">Ses yüksekliği</string>
     <string name="file_size">Dosya boyutu</string>
     <string name="unknown">Bilinmiyor</string>
     <string name="copied">Panoya kopyalandı</string>
@@ -141,8 +141,8 @@
 
     <!-- Snackbar -->
     <string name="snackbar_playlist_imported">Çalma listesi içe aktarıldı</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="undo">Undo</string>
+    <string name="removed_song_from_playlist">Çalma listesinden \"%s\" kaldırıldı</string>
+    <string name="undo">Geri al</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Şarkı sözleri bulunamadı</string>
@@ -194,7 +194,7 @@
     <string name="proxy_url">Proxy URL\'si</string>
     <string name="restart_to_take_effect">Etkinleştirmek için yeniden başlatın</string>
 
-    <string name="player_and_audio">Müzik çalar ve Ses</string>
+    <string name="player_and_audio">Müzik çalar ve ses</string>
     <string name="audio_quality">Ses kalitesi</string>
     <string name="audio_quality_auto">Otomatik</string>
     <string name="audio_quality_high">Yüksek</string>
@@ -219,21 +219,21 @@
 
     <string name="privacy">Gizlilik</string>
     <string name="pause_listen_history">Dinleme geçmişini duraklat</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
+    <string name="clear_listen_history">Dinleme geçmişini temizle</string>
+    <string name="clear_listen_history_confirm">Tüm dinleme geçmişini temizlemekten emin misiniz?</string>
     <string name="pause_search_history">Arama geçmişini duraklat</string>
     <string name="clear_search_history">Arama geçmişini temizle</string>
     <string name="clear_search_history_confirm">Tüm arama geçmişini temizlemekten emin misiniz?</string>
     <string name="enable_kugou">KuGou şarkı sözleri sağlayıcısını etkinleştir</string>
 
-    <string name="backup_restore">Yedekleme ve Geri yükleme</string>
+    <string name="backup_restore">Yedekleme ve geri yükleme</string>
     <string name="backup">Yedekle</string>
     <string name="restore">Geri yükle</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
+    <string name="choose_csv_file_from_google_takeout">Google Takeout\'tan bir csv dosyası seçin</string>
+    <string name="imported_playlist">Çalma listesi içe aktarıldı</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">\"%s\" %d şarkı ile aktarıldı</item>
+        <item quantity="other"\"%s\" %d şarkı ile aktarıldı</item>
     </plurals>
     <string name="backup_create_success">Yedekleme başarıyla oluşturuldu</string>
     <string name="backup_create_failed">Yedekleme oluşturulamadı</string>
