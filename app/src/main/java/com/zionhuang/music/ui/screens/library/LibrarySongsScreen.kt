@@ -1,10 +1,14 @@
 package com.zionhuang.music.ui.screens.library
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +34,7 @@ import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.utils.isScrollingUp
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibrarySongsViewModel
@@ -51,10 +56,13 @@ fun LibrarySongsScreen(
 
     val songs by viewModel.allSongs.collectAsState()
 
+    val lazyListState = rememberLazyListState()
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
+            state = lazyListState,
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item(
@@ -125,15 +133,19 @@ fun LibrarySongsScreen(
             }
         }
 
-        if (songs.isNotEmpty()) {
+        AnimatedVisibility(
+            visible = songs.isNotEmpty() && lazyListState.isScrollingUp(),
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .windowInsetsPadding(
+                    LocalPlayerAwareWindowInsets.current
+                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                )
+        ) {
             FloatingActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .windowInsetsPadding(
-                        LocalPlayerAwareWindowInsets.current
-                            .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                    )
-                    .padding(16.dp),
+                modifier = Modifier.padding(16.dp),
                 onClick = {
                     playerConnection.playQueue(
                         ListQueue(

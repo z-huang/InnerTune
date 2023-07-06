@@ -1,5 +1,8 @@
 package com.zionhuang.music.ui.screens.artist
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -12,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -45,6 +49,7 @@ import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.utils.isScrollingUp
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.ArtistSongsViewModel
@@ -68,10 +73,13 @@ fun ArtistSongsScreen(
     val artist by viewModel.artist.collectAsState()
     val songs by viewModel.songs.collectAsState()
 
+    val lazyListState = rememberLazyListState()
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
+            state = lazyListState,
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item(
@@ -154,27 +162,33 @@ fun ArtistSongsScreen(
             scrollBehavior = scrollBehavior
         )
 
-        FloatingActionButton(
+        AnimatedVisibility(
+            visible = lazyListState.isScrollingUp(),
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .windowInsetsPadding(
                     LocalPlayerAwareWindowInsets.current
                         .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
                 )
-                .padding(16.dp),
-            onClick = {
-                playerConnection.playQueue(
-                    ListQueue(
-                        title = artist?.name,
-                        items = songs.shuffled().map { it.toMediaItem() },
+        ) {
+            FloatingActionButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = {
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = artist?.name,
+                            items = songs.shuffled().map { it.toMediaItem() },
+                        )
                     )
+                }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.shuffle),
+                    contentDescription = null
                 )
             }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.shuffle),
-                contentDescription = null
-            )
         }
     }
 }

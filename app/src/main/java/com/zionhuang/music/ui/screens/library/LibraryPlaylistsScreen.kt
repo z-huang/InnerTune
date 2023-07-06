@@ -1,5 +1,8 @@
 package com.zionhuang.music.ui.screens.library
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,6 +55,7 @@ import com.zionhuang.music.ui.component.PlaylistListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.ui.menu.PlaylistMenu
+import com.zionhuang.music.ui.utils.isScrollingUp
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibraryPlaylistsViewModel
@@ -72,6 +77,8 @@ fun LibraryPlaylistsScreen(
     val likedSongCount by viewModel.likedSongCount.collectAsState()
     val downloadedSongCount by viewModel.downloadedSongCount.collectAsState(0)
     val playlists by viewModel.allPlaylists.collectAsState()
+
+    val lazyListState = rememberLazyListState()
 
     var showAddPlaylistDialog by rememberSaveable {
         mutableStateOf(false)
@@ -98,6 +105,7 @@ fun LibraryPlaylistsScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyColumn(
+            state = lazyListState,
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
             item(
@@ -200,20 +208,26 @@ fun LibraryPlaylistsScreen(
             }
         }
 
-        FloatingActionButton(
+        AnimatedVisibility(
+            visible = lazyListState.isScrollingUp(),
+            enter = slideInVertically { it },
+            exit = slideOutVertically { it },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .windowInsetsPadding(
                     LocalPlayerAwareWindowInsets.current
                         .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
                 )
-                .padding(16.dp),
-            onClick = { showAddPlaylistDialog = true }
         ) {
-            Icon(
-                painter = painterResource(R.drawable.add),
-                contentDescription = null
-            )
+            FloatingActionButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = { showAddPlaylistDialog = true }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.add),
+                    contentDescription = null
+                )
+            }
         }
     }
 }
