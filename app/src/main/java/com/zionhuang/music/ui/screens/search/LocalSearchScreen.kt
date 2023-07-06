@@ -162,6 +162,7 @@ fun LocalSearchScreen(
                         is Song -> SongListItem(
                             song = item,
                             isActive = item.id == mediaMetadata?.id,
+                            isPlaying = isPlaying,
                             trailingContent = {
                                 IconButton(
                                     onClick = {
