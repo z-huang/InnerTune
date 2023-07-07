@@ -13,7 +13,7 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history"Előzmény</string>
+    <string name="history">Előzmény</string>
     <string name="stats">Statisztika</string>
     <string name="quick_picks">Gyors választás</string>
     <string name="quick_picks_empty">Hallgasson meg néhány dalt a gyors választások elkészítéséhez</string>
