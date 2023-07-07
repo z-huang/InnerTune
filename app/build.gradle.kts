@@ -16,14 +16,9 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 24
         targetSdk = 33
-        versionCode = 15
-        versionName = "0.4.4"
+        versionCode = 16
+        versionName = "0.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf("room.schemaLocation" to "$projectDir/schemas")
-            }
-        }
     }
     buildTypes {
         release {
