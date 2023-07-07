@@ -9,13 +9,6 @@ data class MusicNavigationButtonRenderer(
     val iconStyle: IconStyle?,
     val clickCommand: NavigationEndpoint,
 ) {
-    fun toItem() = NavigationItem(
-        title = buttonText.toString(),
-        icon = iconStyle?.icon?.iconType,
-        stripeColor = solid?.leftStripeColor,
-        navigationEndpoint = clickCommand
-    )
-
     @Serializable
     data class Solid(
         val leftStripeColor: Long,

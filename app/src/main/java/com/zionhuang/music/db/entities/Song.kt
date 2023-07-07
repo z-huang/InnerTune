@@ -1,12 +1,11 @@
 package com.zionhuang.music.db.entities
 
-import android.os.Parcelable
+import androidx.compose.runtime.Immutable
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
+@Immutable
 data class Song @JvmOverloads constructor(
     @Embedded val song: SongEntity,
     @Relation(
@@ -31,8 +30,7 @@ data class Song @JvmOverloads constructor(
         )
     )
     val album: AlbumEntity? = null,
-    val position: Int? = -1,
-) : LocalItem(), Parcelable {
+) : LocalItem() {
     override val id: String
         get() = song.id
 }

@@ -1,8 +1,10 @@
 package com.zionhuang.music.playback.queues
 
-import com.google.android.exoplayer2.MediaItem
+import androidx.media3.common.MediaItem
+import com.zionhuang.music.models.MediaMetadata
 
 interface Queue {
+    val preloadItem: MediaMetadata?
     suspend fun getInitialStatus(): Status
     fun hasNextPage(): Boolean
     suspend fun nextPage(): List<MediaItem>
@@ -10,7 +12,7 @@ interface Queue {
     data class Status(
         val title: String?,
         val items: List<MediaItem>,
-        val index: Int,
+        val mediaItemIndex: Int,
         val position: Long = 0L,
     )
 }

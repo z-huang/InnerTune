@@ -1,9 +1,25 @@
 package com.zionhuang.innertube.utils
 
-import java.io.UnsupportedEncodingException
-import java.net.URL
-import java.net.URLDecoder
+import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.pages.PlaylistPage
 import java.security.MessageDigest
+
+suspend fun Result<PlaylistPage>.completed() = runCatching {
+    val page = getOrThrow()
+    val songs = page.songs.toMutableList()
+    var continuation = page.songsContinuation
+    while (continuation != null) {
+        val continuationPage = YouTube.playlistContinuation(continuation).getOrNull() ?: break
+        songs += continuationPage.songs
+        continuation = continuationPage.continuation
+    }
+    PlaylistPage(
+        playlist = page.playlist,
+        songs = songs,
+        songsContinuation = null,
+        continuation = page.continuation
+    )
+}
 
 fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x".format(eachByte) }
 
@@ -15,65 +31,17 @@ fun parseCookieString(cookie: String): Map<String, String> =
         key to value
     }
 
-
-fun isHTTP(url: URL): Boolean {
-    // Make sure it's HTTP or HTTPS
-    val protocol = url.protocol
-    if (protocol != "http" && protocol != "https") {
-        return false
-    }
-    val usesDefaultPort = url.port == url.defaultPort
-    val setsNoPort = url.port == -1
-    return setsNoPort || usesDefaultPort
-}
-
-fun isYoutubeURL(url: URL): Boolean {
-    val host = url.host
-    return host.equals("youtube.com", ignoreCase = true)
-            || host.equals("www.youtube.com", ignoreCase = true)
-            || host.equals("m.youtube.com", ignoreCase = true)
-            || host.equals("music.youtube.com", ignoreCase = true)
-}
-
-/**
- * Get the value of a URL-query by name.
- *
- *
- *
- * If an url-query is give multiple times, only the value of the first query is returned.
- *
- *
- * @param url           the url to be used
- * @param parameterName the pattern that will be used to check the url
- * @return a string that contains the value of the query parameter or `null` if nothing
- * was found
- */
-fun getQueryValue(
-    url: URL,
-    parameterName: String,
-): String? {
-    val urlQuery = url.query
-    if (urlQuery != null) {
-        for (param in urlQuery.split("&".toRegex())) {
-            val params = param.split("=".toRegex(), 2)
-            val query = try {
-                URLDecoder.decode(params[0], "UTF-8")
-            } catch (e: UnsupportedEncodingException) {
-                // Cannot decode string with UTF-8, using the string without decoding
-                params[0]
-            }
-            if (query == parameterName) {
-                return try {
-                    URLDecoder.decode(params[1], "UTF-8")
-                } catch (e: UnsupportedEncodingException) {
-                    // Cannot decode string with UTF-8, using the string without decoding
-                    params[1]
-                }
-            }
+fun String.parseTime(): Int? {
+    try {
+        val parts = split(":").map { it.toInt() }
+        if (parts.size == 2) {
+            return parts[0] * 60 + parts[1]
         }
+        if (parts.size == 3) {
+            return parts[0] * 3600 + parts[1] * 60 + parts[2]
+        }
+    } catch (e: Exception) {
+        return null
     }
     return null
 }
-
-fun isYoutubeChannelMixId(playlistId: String): Boolean =
-    playlistId.startsWith("RDCM")

@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Decode Keystore
         id: decode_keystore
@@ -18,7 +18,7 @@ jobs:
           encodedString: ${{ secrets.KEYSTORE }}
 
       - name: set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: 11
           distribution: "temurin"
