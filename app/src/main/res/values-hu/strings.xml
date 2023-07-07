@@ -49,7 +49,7 @@
     <!-- Playlist -->
     <string name="liked_songs">Lájkolt dalok</string>
     <string name="downloaded_songs">Letöltött dalok</string>
-    <string name="playlist_is_empty"A lejátszólista üres</string>
+    <string name="playlist_is_empty">A lejátszólista üres</string>
 
     <!-- Button -->
     <string name="retry">Újra</string>
