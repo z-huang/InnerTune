@@ -55,6 +55,7 @@ import androidx.media3.exoplayer.audio.AudioCapabilities
 import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.audio.SilenceSkippingAudioProcessor
 import androidx.media3.exoplayer.audio.SonicAudioProcessor
+import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
 import androidx.media3.extractor.ExtractorsFactory
@@ -160,6 +161,9 @@ class MusicService : MediaLibraryService(),
     MediaLibraryService.MediaLibrarySession.Callback {
     @Inject
     lateinit var database: MusicDatabase
+
+    @Inject
+    lateinit var downloadUtil: DownloadUtil
 
     @Inject
     lateinit var lyricsHelper: LyricsHelper
@@ -795,29 +799,29 @@ class MusicService : MediaLibraryService(),
                     browsableMediaItem(PLAYLIST, getString(R.string.playlists), null, drawableUri(R.drawable.queue_music), MEDIA_TYPE_FOLDER_PLAYLISTS)
                 )
 
-                SONG -> database.songsByCreateDateDesc().first().map { it.toMediaItem(parentId) }
-                ARTIST -> database.artistsByCreateDateDesc().first().map { artist ->
+                SONG -> database.songsByCreateDateAsc().first().map { it.toMediaItem(parentId) }
+                ARTIST -> database.artistsByCreateDateAsc().first().map { artist ->
                     browsableMediaItem("$ARTIST/${artist.id}", artist.artist.name, resources.getQuantityString(R.plurals.n_song, artist.songCount, artist.songCount), artist.artist.thumbnailUrl?.toUri(), MEDIA_TYPE_ARTIST)
                 }
 
-                ALBUM -> database.albumsByCreateDateDesc().first().map { album ->
+                ALBUM -> database.albumsByCreateDateAsc().first().map { album ->
                     browsableMediaItem("$ALBUM/${album.id}", album.album.title, album.artists.joinToString(), album.album.thumbnailUrl?.toUri(), MEDIA_TYPE_ALBUM)
                 }
 
                 PLAYLIST -> {
                     val likedSongCount = database.likedSongsCount().first()
-                    val downloadedSongCount = database.downloadedSongsCount().first()
+                    val downloadedSongCount = downloadUtil.downloads.value.size
                     listOf(
                         browsableMediaItem("$PLAYLIST/$LIKED_PLAYLIST_ID", getString(R.string.liked_songs), resources.getQuantityString(R.plurals.n_song, likedSongCount, likedSongCount), drawableUri(R.drawable.favorite), MEDIA_TYPE_PLAYLIST),
                         browsableMediaItem("$PLAYLIST/$DOWNLOADED_PLAYLIST_ID", getString(R.string.downloaded_songs), resources.getQuantityString(R.plurals.n_song, downloadedSongCount, downloadedSongCount), drawableUri(R.drawable.download), MEDIA_TYPE_PLAYLIST)
-                    ) + database.playlistsByCreateDateDesc().first().map { playlist ->
+                    ) + database.playlistsByCreateDateAsc().first().map { playlist ->
                         browsableMediaItem("$PLAYLIST/${playlist.id}", playlist.playlist.name, resources.getQuantityString(R.plurals.n_song, playlist.songCount, playlist.songCount), playlist.thumbnails.firstOrNull()?.toUri(), MEDIA_TYPE_PLAYLIST)
                     }
                 }
 
                 else -> when {
                     parentId.startsWith("$ARTIST/") ->
-                        database.artistSongsByCreateDateDesc(parentId.removePrefix("$ARTIST/")).first().map {
+                        database.artistSongsByCreateDateAsc(parentId.removePrefix("$ARTIST/")).first().map {
                             it.toMediaItem(parentId)
                         }
 
@@ -829,7 +833,19 @@ class MusicService : MediaLibraryService(),
                     parentId.startsWith("$PLAYLIST/") ->
                         when (val playlistId = parentId.removePrefix("$PLAYLIST/")) {
                             LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, true)
-                            DOWNLOADED_PLAYLIST_ID -> database.downloadedSongs(SongSortType.CREATE_DATE, true)
+                            DOWNLOADED_PLAYLIST_ID -> {
+                                val downloads = downloadUtil.downloads.value
+                                database.songs(
+                                    downloads.filter { (_, download) ->
+                                        download.state == Download.STATE_COMPLETED
+                                    }.keys.toList()
+                                ).map { songs ->
+                                    songs.map { it to downloads[it.id] }
+                                        .sortedBy { it.second?.updateTimeMs ?: 0L }
+                                        .map { it.first }
+                                }
+                            }
+
                             else -> database.playlistSongs(playlistId).map { list ->
                                 list.map { it.song }
                             }
@@ -868,7 +884,7 @@ class MusicService : MediaLibraryService(),
         when (path.firstOrNull()) {
             SONG -> {
                 val songId = path.getOrNull(1) ?: return@future defaultResult
-                val allSongs = database.songsByCreateDateDesc().first()
+                val allSongs = database.songsByCreateDateAsc().first()
                 MediaSession.MediaItemsWithStartPosition(
                     allSongs.map { it.toMediaItem() },
                     allSongs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0,
@@ -879,7 +895,7 @@ class MusicService : MediaLibraryService(),
             ARTIST -> {
                 val songId = path.getOrNull(2) ?: return@future defaultResult
                 val artistId = path.getOrNull(1) ?: return@future defaultResult
-                val songs = database.artistSongsByCreateDateDesc(artistId).first()
+                val songs = database.artistSongsByCreateDateAsc(artistId).first()
                 MediaSession.MediaItemsWithStartPosition(
                     songs.map { it.toMediaItem() },
                     songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0,
@@ -902,12 +918,24 @@ class MusicService : MediaLibraryService(),
                 val songId = path.getOrNull(2) ?: return@future defaultResult
                 val playlistId = path.getOrNull(1) ?: return@future defaultResult
                 val songs = when (playlistId) {
-                    LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, descending = true).first()
-                    DOWNLOADED_PLAYLIST_ID -> database.downloadedSongs(SongSortType.CREATE_DATE, descending = true).first()
+                    LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, descending = true)
+                    DOWNLOADED_PLAYLIST_ID -> {
+                        val downloads = downloadUtil.downloads.value
+                        database.songs(
+                            downloads.filter { (_, download) ->
+                                download.state == Download.STATE_COMPLETED
+                            }.keys.toList()
+                        ).map { songs ->
+                            songs.map { it to downloads[it.id] }
+                                .sortedBy { it.second?.updateTimeMs ?: 0L }
+                                .map { it.first }
+                        }
+                    }
+
                     else -> database.playlistSongs(playlistId).map { list ->
                         list.map { it.song }
-                    }.first()
-                }
+                    }
+                }.first()
                 MediaSession.MediaItemsWithStartPosition(
                     songs.map { it.toMediaItem() },
                     songs.indexOfFirst { it.id == songId }.takeIf { it != -1 } ?: 0,

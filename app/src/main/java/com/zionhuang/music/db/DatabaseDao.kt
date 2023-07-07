@@ -7,7 +7,6 @@ import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.innertube.pages.ArtistPage
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.entities.*
-import com.zionhuang.music.db.entities.SongEntity.Companion.STATE_DOWNLOADED
 import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.models.MediaMetadata
@@ -20,61 +19,53 @@ import java.time.LocalDateTime
 @Dao
 interface DatabaseDao {
     @Transaction
-    @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY rowId DESC")
-    fun songsByRowIdDesc(): Flow<List<Song>>
+    @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY rowId")
+    fun songsByRowIdAsc(): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY inLibrary DESC")
-    fun songsByCreateDateDesc(): Flow<List<Song>>
+    @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY inLibrary")
+    fun songsByCreateDateAsc(): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY title DESC")
-    fun songsByNameDesc(): Flow<List<Song>>
+    @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY title")
+    fun songsByNameAsc(): Flow<List<Song>>
 
     fun songs(sortType: SongSortType, descending: Boolean) =
         when (sortType) {
-            SongSortType.CREATE_DATE -> songsByCreateDateDesc()
-            SongSortType.NAME -> songsByNameDesc()
-            SongSortType.ARTIST -> songsByRowIdDesc().map { songs ->
-                songs.sortedWith(compareBy { song ->
+            SongSortType.CREATE_DATE -> songsByCreateDateAsc()
+            SongSortType.NAME -> songsByNameAsc()
+            SongSortType.ARTIST -> songsByRowIdAsc().map { songs ->
+                songs.sortedBy { song ->
                     song.artists.joinToString(separator = "") { it.name }
-                })
+                }
             }
-        }.map { it.reversed(!descending) }
+        }.map { it.reversed(descending) }
 
     @Transaction
-    @Query("SELECT * FROM song WHERE liked ORDER BY rowId DESC")
-    fun likedSongsByRowIdDesc(): Flow<List<Song>>
+    @Query("SELECT * FROM song WHERE liked ORDER BY rowId")
+    fun likedSongsByRowIdAsc(): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song WHERE liked ORDER BY inLibrary DESC")
-    fun likedSongsByCreateDateDesc(): Flow<List<Song>>
+    @Query("SELECT * FROM song WHERE liked ORDER BY inLibrary")
+    fun likedSongsByCreateDateAsc(): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song WHERE liked ORDER BY title DESC")
-    fun likedSongsByNameDesc(): Flow<List<Song>>
+    @Query("SELECT * FROM song WHERE liked ORDER BY title")
+    fun likedSongsByNameAsc(): Flow<List<Song>>
 
     fun likedSongs(sortType: SongSortType, descending: Boolean) =
         when (sortType) {
-            SongSortType.CREATE_DATE -> likedSongsByCreateDateDesc()
-            SongSortType.NAME -> likedSongsByNameDesc()
-            SongSortType.ARTIST -> likedSongsByRowIdDesc().map { songs ->
-                songs.sortedWith(compareBy { song ->
+            SongSortType.CREATE_DATE -> likedSongsByCreateDateAsc()
+            SongSortType.NAME -> likedSongsByNameAsc()
+            SongSortType.ARTIST -> likedSongsByRowIdAsc().map { songs ->
+                songs.sortedBy { song ->
                     song.artists.joinToString(separator = "") { it.name }
-                })
+                }
             }
-        }.map { it.reversed(!descending) }
+        }.map { it.reversed(descending) }
 
     @Query("SELECT COUNT(1) FROM song WHERE liked")
     fun likedSongsCount(): Flow<Int>
-
-    fun downloadedSongs(sortType: SongSortType, descending: Boolean) =
-        songs(sortType, descending).map { songs ->
-            songs.filter { it.song.downloadState == STATE_DOWNLOADED }
-        }
-
-    @Query("SELECT COUNT(*) FROM song WHERE downloadState = $STATE_DOWNLOADED")
-    fun downloadedSongsCount(): Flow<Int>
 
     @Transaction
     @Query("SELECT song.* FROM song JOIN song_album_map ON song.id = song_album_map.songId WHERE song_album_map.albumId = :albumId")
@@ -85,18 +76,18 @@ interface DatabaseDao {
     fun playlistSongs(playlistId: String): Flow<List<PlaylistSong>>
 
     @Transaction
-    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL ORDER BY inLibrary DESC")
-    fun artistSongsByCreateDateDesc(artistId: String): Flow<List<Song>>
+    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL ORDER BY inLibrary")
+    fun artistSongsByCreateDateAsc(artistId: String): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL ORDER BY title DESC")
-    fun artistSongsByNameDesc(artistId: String): Flow<List<Song>>
+    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL ORDER BY title")
+    fun artistSongsByNameAsc(artistId: String): Flow<List<Song>>
 
     fun artistSongs(artistId: String, sortType: ArtistSongSortType, descending: Boolean) =
         when (sortType) {
-            ArtistSongSortType.CREATE_DATE -> artistSongsByCreateDateDesc(artistId)
-            ArtistSongSortType.NAME -> artistSongsByNameDesc(artistId)
-        }.map { it.reversed(!descending) }
+            ArtistSongSortType.CREATE_DATE -> artistSongsByCreateDateAsc(artistId)
+            ArtistSongSortType.NAME -> artistSongsByNameAsc(artistId)
+        }.map { it.reversed(descending) }
 
     @Transaction
     @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL LIMIT :previewSize")
@@ -175,65 +166,65 @@ interface DatabaseDao {
     fun lyrics(id: String?): Flow<LyricsEntity?>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE songCount > 0 ORDER BY rowId DESC")
-    fun artistsByCreateDateDesc(): Flow<List<Artist>>
+    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE songCount > 0 ORDER BY rowId")
+    fun artistsByCreateDateAsc(): Flow<List<Artist>>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE songCount > 0 ORDER BY name DESC")
-    fun artistsByNameDesc(): Flow<List<Artist>>
+    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE songCount > 0 ORDER BY name")
+    fun artistsByNameAsc(): Flow<List<Artist>>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE songCount > 0 ORDER BY songCount DESC")
-    fun artistsBySongCountDesc(): Flow<List<Artist>>
+    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE songCount > 0 ORDER BY songCount")
+    fun artistsBySongCountAsc(): Flow<List<Artist>>
 
     fun artists(sortType: ArtistSortType, descending: Boolean) =
         when (sortType) {
-            ArtistSortType.CREATE_DATE -> artistsByCreateDateDesc()
-            ArtistSortType.NAME -> artistsByNameDesc()
-            ArtistSortType.SONG_COUNT -> artistsBySongCountDesc()
-        }.map { it.reversed(!descending) }
+            ArtistSortType.CREATE_DATE -> artistsByCreateDateAsc()
+            ArtistSortType.NAME -> artistsByNameAsc()
+            ArtistSortType.SONG_COUNT -> artistsBySongCountAsc()
+        }.map { it.reversed(descending) }
 
     @Query("SELECT * FROM artist WHERE id = :id")
     fun artist(id: String): Flow<ArtistEntity?>
 
     @Transaction
-    @Query("SELECT * FROM album ORDER BY rowId DESC")
-    fun albumsByRowIdDesc(): Flow<List<Album>>
+    @Query("SELECT * FROM album ORDER BY rowId")
+    fun albumsByRowIdAsc(): Flow<List<Album>>
 
     @Transaction
-    @Query("SELECT * FROM album ORDER BY createDate DESC")
-    fun albumsByCreateDateDesc(): Flow<List<Album>>
+    @Query("SELECT * FROM album ORDER BY createDate")
+    fun albumsByCreateDateAsc(): Flow<List<Album>>
 
     @Transaction
-    @Query("SELECT * FROM album ORDER BY title DESC")
-    fun albumsByNameDesc(): Flow<List<Album>>
+    @Query("SELECT * FROM album ORDER BY title")
+    fun albumsByNameAsc(): Flow<List<Album>>
 
     @Transaction
-    @Query("SELECT * FROM album ORDER BY year DESC")
-    fun albumsByYearDesc(): Flow<List<Album>>
+    @Query("SELECT * FROM album ORDER BY year")
+    fun albumsByYearAsc(): Flow<List<Album>>
 
     @Transaction
-    @Query("SELECT * FROM album ORDER BY songCount DESC")
-    fun albumsBySongCountDesc(): Flow<List<Album>>
+    @Query("SELECT * FROM album ORDER BY songCount")
+    fun albumsBySongCountAsc(): Flow<List<Album>>
 
     @Transaction
-    @Query("SELECT * FROM album ORDER BY duration DESC")
-    fun albumsByLengthDesc(): Flow<List<Album>>
+    @Query("SELECT * FROM album ORDER BY duration")
+    fun albumsByLengthAsc(): Flow<List<Album>>
 
     fun albums(sortType: AlbumSortType, descending: Boolean) =
         when (sortType) {
-            AlbumSortType.CREATE_DATE -> albumsByCreateDateDesc()
-            AlbumSortType.NAME -> albumsByNameDesc()
-            AlbumSortType.ARTIST -> albumsByRowIdDesc().map { albums ->
-                albums.sortedWith(compareBy { album ->
+            AlbumSortType.CREATE_DATE -> albumsByCreateDateAsc()
+            AlbumSortType.NAME -> albumsByNameAsc()
+            AlbumSortType.ARTIST -> albumsByRowIdAsc().map { albums ->
+                albums.sortedBy { album ->
                     album.artists.joinToString(separator = "") { it.name }
-                })
+                }
             }
 
-            AlbumSortType.YEAR -> albumsByYearDesc()
-            AlbumSortType.SONG_COUNT -> albumsBySongCountDesc()
-            AlbumSortType.LENGTH -> albumsByLengthDesc()
-        }.map { it.reversed(!descending) }
+            AlbumSortType.YEAR -> albumsByYearAsc()
+            AlbumSortType.SONG_COUNT -> albumsBySongCountAsc()
+            AlbumSortType.LENGTH -> albumsByLengthAsc()
+        }.map { it.reversed(descending) }
 
     @Transaction
     @Query("SELECT * FROM album WHERE id = :id")
@@ -244,23 +235,23 @@ interface DatabaseDao {
     fun albumWithSongs(albumId: String): Flow<AlbumWithSongs?>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY rowId DESC")
-    fun playlistsByCreateDateDesc(): Flow<List<Playlist>>
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY rowId")
+    fun playlistsByCreateDateAsc(): Flow<List<Playlist>>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY name DESC")
-    fun playlistsByNameDesc(): Flow<List<Playlist>>
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY name")
+    fun playlistsByNameAsc(): Flow<List<Playlist>>
 
     @Transaction
-    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY songCount DESC")
-    fun playlistsBySongCountDesc(): Flow<List<Playlist>>
+    @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist ORDER BY songCount")
+    fun playlistsBySongCountAsc(): Flow<List<Playlist>>
 
     fun playlists(sortType: PlaylistSortType, descending: Boolean) =
         when (sortType) {
-            PlaylistSortType.CREATE_DATE -> playlistsByCreateDateDesc()
-            PlaylistSortType.NAME -> playlistsByNameDesc()
-            PlaylistSortType.SONG_COUNT -> playlistsBySongCountDesc()
-        }.map { it.reversed(!descending) }
+            PlaylistSortType.CREATE_DATE -> playlistsByCreateDateAsc()
+            PlaylistSortType.NAME -> playlistsByNameAsc()
+            PlaylistSortType.SONG_COUNT -> playlistsBySongCountAsc()
+        }.map { it.reversed(descending) }
 
     @Transaction
     @Query("SELECT *, (SELECT COUNT(*) FROM playlist_song_map WHERE playlistId = playlist.id) AS songCount FROM playlist WHERE id = :playlistId")
@@ -269,10 +260,6 @@ interface DatabaseDao {
     @Transaction
     @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND inLibrary IS NOT NULL LIMIT :previewSize")
     fun searchSongs(query: String, previewSize: Int = Int.MAX_VALUE): Flow<List<Song>>
-
-    @Transaction
-    @Query("SELECT * FROM song WHERE title LIKE '%' || :query || '%' AND downloadState = $STATE_DOWNLOADED LIMIT :previewSize")
-    fun searchDownloadedSongs(query: String, previewSize: Int = Int.MAX_VALUE): Flow<List<Song>>
 
     @Transaction
     @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE name LIKE '%' || :query || '%'  AND songCount > 0 LIMIT :previewSize")

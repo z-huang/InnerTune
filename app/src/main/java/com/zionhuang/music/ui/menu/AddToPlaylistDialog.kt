@@ -43,8 +43,8 @@ fun AddToPlaylistDialog(
     }
 
     LaunchedEffect(Unit) {
-        database.playlistsByCreateDateDesc().collect {
-            playlists = it
+        database.playlistsByCreateDateAsc().collect {
+            playlists = it.asReversed()
         }
     }
 
