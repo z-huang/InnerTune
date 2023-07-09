@@ -284,6 +284,7 @@ fun Queue(
     BottomSheet(
         state = state,
         backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(NavigationBarDefaults.Elevation),
+        collapsedColor = MaterialTheme.colorScheme.secondaryContainer,
         modifier = modifier,
         collapsedContent = {
             Row(
