@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.zionhuang.music.constants.NavigationBarAnimationSpec
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ fun BottomSheet(
     state: BottomSheetState,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    collapsedColor: Color = backgroundColor,
     onDismiss: (() -> Unit)? = null,
     collapsedContent: @Composable BoxScope.() -> Unit,
     content: @Composable BoxScope.() -> Unit,
@@ -79,10 +81,7 @@ fun BottomSheet(
         if (!state.isCollapsed) {
             BoxWithConstraints(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .graphicsLayer {
-                        alpha = ((state.progress - 0.25f) * 4).coerceIn(0f, 1f)
-                    },
+                    .fillMaxSize(),
                 content = content
             )
         }
@@ -93,15 +92,22 @@ fun BottomSheet(
                     .graphicsLayer {
                         alpha = 1f - (state.progress * 4).coerceAtMost(1f)
                     }
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = state::expandSoft
-                    )
-                    .fillMaxWidth()
-                    .height(state.collapsedBound),
-                content = collapsedContent
-            )
+                    .zIndex(1f)
+                    .background(collapsedColor)
+                    .fillMaxSize(),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = state::expandSoft
+                        )
+                        .fillMaxWidth()
+                        .height(state.collapsedBound),
+                    content = collapsedContent
+                )
+            }
         }
     }
 }
