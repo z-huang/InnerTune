@@ -16,7 +16,7 @@
     <string name="history">Historial</string>
     <string name="stats">Estadísticas</string>
     <string name="quick_picks">Selecciones rápidas</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Escucha algunas canciones para generar tus selecciones rápidas</string>
     <string name="new_release_albums">Nuevos lanzamientos</string>
 
     <!-- History -->
@@ -27,7 +27,7 @@
 
     <!-- Stats -->
     <string name="most_played_songs">Canciones más reproducidas</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_artists">Artistas más reproducidos</string>
 
     <!-- Search -->
     <string name="search">Buscar</string>
@@ -66,7 +66,7 @@
     <string name="add_to_library">Agregar a la biblioteca</string>
     <string name="remove_from_library">Quitar de la biblioteca</string>
     <string name="download">Descargar</string>
-    <string name="downloading">Downloading</string>
+    <string name="downloading">Descargando</string>
     <string name="remove_download">Borrar descarga</string>
     <string name="import_playlist">Importar lista de reproducción</string>
     <string name="add_to_playlist">Agregar a la lista de reproducción</string>
@@ -87,7 +87,7 @@
     <string name="sort_by_song_count">Número de canciones</string>
     <string name="sort_by_length">Duración</string>
     <string name="sort_by_play_time">Tiempo de reproducción</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Orden personalizado</string>
 
     <!-- Dialog -->
     <string name="media_id">ID multimedia</string>
@@ -141,9 +141,9 @@
 
     <!-- Snackbar -->
     <string name="playlist_imported">Lista de reproducción importada</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="playlist_synced">Playlist synced</string>
-    <string name="undo">Undo</string>
+    <string name="removed_song_from_playlist">Eliminado \"%s\" de la lista de reproducción</string>
+    <string name="playlist_synced">Lista de reproducción sincronizada</string>
+    <string name="undo">Deshacer</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Letras no encontradas</string>
@@ -211,7 +211,7 @@
     <string name="song_cache">Caché de canciones</string>
     <string name="max_cache_size">Tamaño máximo de la caché</string>
     <string name="unlimited">Ilimitado</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="clear_all_downloads">Borrar todas las descargas</string>
     <string name="max_image_cache_size">Tamaño máximo de la caché de imágenes</string>
     <string name="clear_image_cache">Borrar la caché de imágenes</string>
     <string name="max_song_cache_size">Tamaño máximo de la caché de canciones</string>
@@ -219,9 +219,9 @@
     <string name="size_used">%s usado</string>
 
     <string name="privacy">Privacidad</string>
-    <string name="pause_listen_history">Pausar historial de escucha</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
+    <string name="pause_listen_history">Pausar historial de escuchas</string>
+    <string name="clear_listen_history">Borrar historial de escuchas</string>
+    <string name="clear_listen_history_confirm">¿Estás seguro de que quieres borrar todo el historial de escuchas?</string>
     <string name="pause_search_history">Pausar historial de búsquedas</string>
     <string name="clear_search_history">Borrar historial de búsquedas</string>
     <string name="clear_search_history_confirm">¿Estás seguro de que quieres borrar todo el historial de búsquedas?</string>
@@ -230,11 +230,11 @@
     <string name="backup_restore">Copias de seguridad y restauración</string>
     <string name="backup">Hacer copia de seguridad</string>
     <string name="restore">Restaurar</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
+    <string name="choose_csv_file_from_google_takeout">Selecciona un archivo csv de Google Takeout</string>
+    <string name="imported_playlist">Lista de reproducción importada</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">Importado \"%s\" con %d canción</item>
+        <item quantity="other">Importado \"%s\" con %d canciones</item>
     </plurals>
     <string name="backup_create_success">Copia de seguridad creada con éxito</string>
     <string name="backup_create_failed">No se ha podido crear la copia de seguridad</string>
