@@ -221,20 +221,20 @@
     <string name="privacy">Privatsphäre</string>
     <string name="pause_listen_history">Pausieren des Hörverlaufs/string>
     <string name="clear_listen_history">Hörverlauf löschen</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
+    <string name="clear_listen_history_confirm">Sind Sie sicher, dass Sie den gesamten Hörverlauf löschen wollen?</string>
     <string name="pause_search_history">Suchverlauf anhalten</string>
     <string name="clear_search_history">Suchverlauf löschen</string>
-    <string name="clear_search_history_confirm">Sind Sie sicher, dass Sie den gesamten Suchverlauf löschen?</string>
+    <string name="clear_search_history_confirm">Sind Sie sicher, dass Sie den gesamten Suchverlauf löschen wollen?</string>
     <string name="enable_kugou">KuGou-Liedtextanbieter aktivieren</string>
 
     <string name="backup_restore">Sichern und Wiederherstellen</string>
     <string name="backup">Datensicherung</string>
     <string name="restore">Wiederherstellen</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
+    <string name="choose_csv_file_from_google_takeout">Wählen Sie eine csv-Datei von Google Takeout</string>
+    <string name="imported_playlist">Importierte Wiedergabeliste</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">Importiert \"%s\" mit %d Song</item>
+        <item quantity="other">Importiert \"%s\" mit %d Songs</item>
     </plurals>
     <string name="backup_create_success">Sicherung erfolgreich erstellt</string>
     <string name="backup_create_failed">Konnte keine Sicherung erstellen</string>
