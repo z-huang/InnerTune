@@ -219,7 +219,7 @@
     <string name="size_used">%s verwendet</string>
 
     <string name="privacy">Privatsphäre</string>
-    <string name="pause_listen_history">Pausieren des Hörverlaufs/string>
+    <string name="pause_listen_history">Pausieren des Hörverlaufs</string>
     <string name="clear_listen_history">Hörverlauf löschen</string>
     <string name="clear_listen_history_confirm">Sind Sie sicher, dass Sie den gesamten Hörverlauf löschen wollen?</string>
     <string name="pause_search_history">Suchverlauf anhalten</string>
