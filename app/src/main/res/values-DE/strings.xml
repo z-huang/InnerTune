@@ -13,11 +13,11 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
-    <string name="new_release_albums">New release albums</string>
+    <string name="history">Wiedergabeverlauf</string>
+    <string name="stats">Statistiken</string>
+    <string name="quick_picks">Schnellauswahl</string>
+    <string name="quick_picks_empty">Hören Sie sich einige Songs an, um Ihre Schnellauswahl zu treffen</string>
+    <string name="new_release_albums">Neu veröffentlichte Alben</string>
 
     <!-- History -->
     <string name="today">Today</string>
