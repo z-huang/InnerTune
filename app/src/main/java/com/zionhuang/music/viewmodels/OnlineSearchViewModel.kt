@@ -33,8 +33,8 @@ class OnlineSearchViewModel @Inject constructor(
                     }
                 } else {
                     if (viewStateMap[filter.value] == null) {
-                        viewStateMap[filter.value] = YouTube.search(query, filter).getOrNull()?.let {
-                            ItemsPage(it.items, it.continuation)
+                        viewStateMap[filter.value] = YouTube.search(query, filter).getOrNull()?.let { result ->
+                            ItemsPage(result.items.distinctBy { it.id }, result.continuation)
                         }
                     }
                 }
