@@ -13,21 +13,21 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
-    <string name="new_release_albums">New release albums</string>
+    <string name="history">Wiedergabeverlauf</string>
+    <string name="stats">Statistiken</string>
+    <string name="quick_picks">Schnellauswahl</string>
+    <string name="quick_picks_empty">Hören Sie sich einige Songs an, um Ihre Schnellauswahl zu treffen</string>
+    <string name="new_release_albums">Neu veröffentlichte Alben</string>
 
     <!-- History -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_week">This week</string>
-    <string name="last_week">Last week</string>
+    <string name="today">Heute</string>
+    <string name="yesterday">Gestern</string>
+    <string name="this_week">Diese Woche</string>
+    <string name="last_week">Letzte Woche</string>
 
     <!-- Stats -->
-    <string name="most_played_songs">Most played songs</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_songs">Meist gespielte Songs</string>
+    <string name="most_played_artists">Meist gespielte Künstler</string>
 
     <!-- Search -->
     <string name="search">Suche</string>
@@ -41,7 +41,7 @@
     <string name="filter_playlists">Wiedergabelisten</string>
     <string name="filter_community_playlists">Community-Wiedergabelisten</string>
     <string name="filter_featured_playlists">Ausgewählte Wiedergabelisten</string>
-    <string name="no_results_found">No results found</string>
+    <string name="no_results_found">Keine Ergebnisse gefunden</string>
 
     <!-- Artist screen -->
     <string name="from_your_library">Aus der Bibliothek</string>
@@ -49,7 +49,7 @@
     <!-- Playlist -->
     <string name="liked_songs">Beliebte Titel</string>
     <string name="downloaded_songs">Heruntergeladene Titel</string>
-    <string name="playlist_is_empty">The playlist is empty</string>
+    <string name="playlist_is_empty">Die Wiedergabeliste ist leer</string>
 
     <!-- Button -->
     <string name="retry">Wiederholen</string>
@@ -75,7 +75,7 @@
     <string name="refetch">Neu laden</string>
     <string name="share">Teilen</string>
     <string name="delete">Löschen</string>
-    <string name="remove_from_history">Remove from history</string>
+    <string name="remove_from_history">aus dem Wiedergabeverlauf entfernen</string>
     <string name="search_online">Online-Suche</string>
     <string name="sync">Sync</string>
 
@@ -87,7 +87,7 @@
     <string name="sort_by_song_count">Anzahl der Lieder</string>
     <string name="sort_by_length">Länge</string>
     <string name="sort_by_play_time">Spielzeit</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Individuelle Reinfolge</string>
 
     <!-- Dialog -->
     <string name="media_id">Medien-ID</string>
@@ -141,17 +141,17 @@
 
     <!-- Snackbar -->
     <string name="playlist_imported">Wiedergabeliste importiert</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="playlist_synced">Playlist synced</string>
-    <string name="undo">Undo</string>
+    <string name="removed_song_from_playlist">Entfernt \"%s\" aus der Wiedergabeliste</string>
+    <string name="playlist_synced">Wiedergabeliste synchronisiert</string>
+    <string name="undo">Rückgängig machen</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Liedtext nicht gefunden</string>
-    <string name="sleep_timer">Sleep timer</string>
-    <string name="end_of_song">End of song</string>
+    <string name="sleep_timer">Schlaf-Timer</string>
+    <string name="end_of_song">Ende des Liedes</string>
     <plurals name="minute">
         <item quantity="one">1 minute</item>
-        <item quantity="other">%d minutes</item>
+        <item quantity="other">%d Minuten</item>
     </plurals>
     <string name="error_no_stream">Kein Stream verfügbar</string>
     <string name="error_no_internet">Keine Netzverbindung</string>
@@ -172,12 +172,12 @@
     <!-- Settings -->
     <string name="settings">Einstellungen</string>
     <string name="appearance">Erscheinungsbild</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="enable_dynamic_theme">Dynamisches Design aktivieren</string>
     <string name="dark_theme">Dunkles Thema</string>
     <string name="dark_theme_on">An</string>
     <string name="dark_theme_off">Aus</string>
     <string name="dark_theme_follow_system">System folgen</string>
-    <string name="pure_black">Pure black</string>
+    <string name="pure_black">Reines Schwarz</string>
     <string name="default_open_tab">Standardmäßig geöffnete Registerkarte</string>
     <string name="customize_navigation_tabs">Anpassen der Navigationsregisterkarten</string>
     <string name="lyrics_text_position">Position des Liedtextes</string>
@@ -210,31 +210,31 @@
     <string name="image_cache">Image Cache</string>
     <string name="song_cache">Song Cache</string>
     <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="unlimited">Unbegrenzt</string>
+    <string name="clear_all_downloads">Alle Downloads entfernen</string>
     <string name="max_image_cache_size">Maximale Größe des Bild-Caches</string>
     <string name="clear_image_cache">Bild-Cache löschen</string>
     <string name="max_song_cache_size">Maximale Größe des Song-Cache</string>
-    <string name="clear_song_cache">Clear song cache</string>
+    <string name="clear_song_cache">Song-Cache löschen</string>
     <string name="size_used">%s verwendet</string>
 
     <string name="privacy">Privatsphäre</string>
-    <string name="pause_listen_history">Pause listen history</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
+    <string name="pause_listen_history">Pausieren des Hörverlaufs</string>
+    <string name="clear_listen_history">Hörverlauf löschen</string>
+    <string name="clear_listen_history_confirm">Sind Sie sicher, dass Sie den gesamten Hörverlauf löschen wollen?</string>
     <string name="pause_search_history">Suchverlauf anhalten</string>
     <string name="clear_search_history">Suchverlauf löschen</string>
-    <string name="clear_search_history_confirm">Sind Sie sicher, dass Sie den gesamten Suchverlauf löschen?</string>
+    <string name="clear_search_history_confirm">Sind Sie sicher, dass Sie den gesamten Suchverlauf löschen wollen?</string>
     <string name="enable_kugou">KuGou-Liedtextanbieter aktivieren</string>
 
     <string name="backup_restore">Sichern und Wiederherstellen</string>
     <string name="backup">Datensicherung</string>
     <string name="restore">Wiederherstellen</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
+    <string name="choose_csv_file_from_google_takeout">Wählen Sie eine csv-Datei von Google Takeout</string>
+    <string name="imported_playlist">Importierte Wiedergabeliste</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">Importiert \"%s\" mit %d Song</item>
+        <item quantity="other">Importiert \"%s\" mit %d Songs</item>
     </plurals>
     <string name="backup_create_success">Sicherung erfolgreich erstellt</string>
     <string name="backup_create_failed">Konnte keine Sicherung erstellen</string>
