@@ -61,6 +61,7 @@ import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.ui.component.BottomSheet
 import com.zionhuang.music.ui.component.BottomSheetState
+import com.zionhuang.music.ui.component.PlayPauseAnimatedButton
 import com.zionhuang.music.ui.component.ResizableIconButton
 import com.zionhuang.music.ui.component.rememberBottomSheetState
 import com.zionhuang.music.utils.makeTimeString
@@ -238,28 +239,15 @@ fun BottomSheetPlayer(
 
                 Spacer(Modifier.width(8.dp))
 
-                Box(
-                    modifier = Modifier
-                        .size(72.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .clickable {
-                            if (playbackState == STATE_ENDED) {
-                                playerConnection.player.seekTo(0, 0)
-                                playerConnection.player.playWhenReady = true
-                            } else {
-                                playerConnection.player.togglePlayPause()
-                            }
-                        }
+                PlayPauseAnimatedButton(
+                    isPlaying = isPlaying, playbackState = playbackState,
                 ) {
-                    Image(
-                        painter = painterResource(if (playbackState == STATE_ENDED) R.drawable.replay else if (isPlaying) R.drawable.pause else R.drawable.play),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .size(36.dp)
-                    )
+                    if (playbackState == STATE_ENDED) {
+                        playerConnection.player.seekTo(0, 0)
+                        playerConnection.player.playWhenReady = true
+                    } else {
+                        playerConnection.player.togglePlayPause()
+                    }
                 }
 
                 Spacer(Modifier.width(8.dp))
