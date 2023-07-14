@@ -52,15 +52,15 @@ val ArtistSongSortDescendingKey = booleanPreferencesKey("artistSongSortDescendin
 val PlaylistEditLockKey = booleanPreferencesKey("playlistEditLock")
 
 enum class SongSortType {
-    CREATE_DATE, NAME, ARTIST
+    CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
 enum class DownloadedSongSortType {
-    CREATE_DATE, NAME, ARTIST
+    CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
 enum class PlaylistSongSortType {
-    CUSTOM, CREATE_DATE, NAME, ARTIST
+    CUSTOM, CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
 enum class ArtistSortType {
@@ -68,7 +68,7 @@ enum class ArtistSortType {
 }
 
 enum class ArtistSongSortType {
-    CREATE_DATE, NAME
+    CREATE_DATE, NAME, PLAY_TIME
 }
 
 enum class AlbumSortType {

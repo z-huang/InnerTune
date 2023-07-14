@@ -114,6 +114,7 @@ fun BuiltInPlaylistScreen(
                                 SongSortType.CREATE_DATE -> R.string.sort_by_create_date
                                 SongSortType.NAME -> R.string.sort_by_name
                                 SongSortType.ARTIST -> R.string.sort_by_artist
+                                SongSortType.PLAY_TIME -> R.string.sort_by_play_time
                             }
                         },
                         trailingText = joinByBullet(
@@ -132,6 +133,7 @@ fun BuiltInPlaylistScreen(
                                 DownloadedSongSortType.CREATE_DATE -> R.string.sort_by_create_date
                                 DownloadedSongSortType.NAME -> R.string.sort_by_name
                                 DownloadedSongSortType.ARTIST -> R.string.sort_by_artist
+                                DownloadedSongSortType.PLAY_TIME -> R.string.sort_by_play_time
                             }
                         },
                         trailingText = joinByBullet(

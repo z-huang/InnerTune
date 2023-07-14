@@ -71,6 +71,7 @@ class BuiltInPlaylistViewModel @Inject constructor(
                 DownloadedSongSortType.ARTIST -> songs.sortedBy { song ->
                     song.first.artists.joinToString(separator = "") { it.name }
                 }
+                DownloadedSongSortType.PLAY_TIME -> songs.sortedBy { it.first.song.totalPlayTime }
             }
                 .map { it.first }
                 .reversed(descending)

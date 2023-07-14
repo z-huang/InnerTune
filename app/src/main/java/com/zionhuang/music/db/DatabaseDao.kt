@@ -30,6 +30,10 @@ interface DatabaseDao {
     @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY title")
     fun songsByNameAsc(): Flow<List<Song>>
 
+    @Transaction
+    @Query("SELECT * FROM song WHERE inLibrary IS NOT NULL ORDER BY totalPlayTime")
+    fun songsByPlayTimeAsc(): Flow<List<Song>>
+
     fun songs(sortType: SongSortType, descending: Boolean) =
         when (sortType) {
             SongSortType.CREATE_DATE -> songsByCreateDateAsc()
@@ -39,6 +43,7 @@ interface DatabaseDao {
                     song.artists.joinToString(separator = "") { it.name }
                 }
             }
+            SongSortType.PLAY_TIME -> songsByPlayTimeAsc()
         }.map { it.reversed(descending) }
 
     @Transaction
@@ -53,6 +58,10 @@ interface DatabaseDao {
     @Query("SELECT * FROM song WHERE liked ORDER BY title")
     fun likedSongsByNameAsc(): Flow<List<Song>>
 
+    @Transaction
+    @Query("SELECT * FROM song WHERE liked ORDER BY totalPlayTime")
+    fun likedSongsByPlayTimeAsc(): Flow<List<Song>>
+
     fun likedSongs(sortType: SongSortType, descending: Boolean) =
         when (sortType) {
             SongSortType.CREATE_DATE -> likedSongsByCreateDateAsc()
@@ -62,6 +71,7 @@ interface DatabaseDao {
                     song.artists.joinToString(separator = "") { it.name }
                 }
             }
+            SongSortType.PLAY_TIME -> likedSongsByPlayTimeAsc()
         }.map { it.reversed(descending) }
 
     @Query("SELECT COUNT(1) FROM song WHERE liked")
@@ -83,10 +93,15 @@ interface DatabaseDao {
     @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL ORDER BY title")
     fun artistSongsByNameAsc(artistId: String): Flow<List<Song>>
 
+    @Transaction
+    @Query("SELECT song.* FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = :artistId AND inLibrary IS NOT NULL ORDER BY totalPlayTime")
+    fun artistSongsByPlayTimeAsc(artistId: String): Flow<List<Song>>
+
     fun artistSongs(artistId: String, sortType: ArtistSongSortType, descending: Boolean) =
         when (sortType) {
             ArtistSongSortType.CREATE_DATE -> artistSongsByCreateDateAsc(artistId)
             ArtistSongSortType.NAME -> artistSongsByNameAsc(artistId)
+            ArtistSongSortType.PLAY_TIME -> artistSongsByPlayTimeAsc(artistId)
         }.map { it.reversed(descending) }
 
     @Transaction
