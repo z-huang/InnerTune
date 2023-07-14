@@ -1,27 +1,17 @@
-Con quest'app, avrai un servizio di streaming musicale gratuito. Puoi ascoltare musica da YouTube Music e crearti la tua libreria musicale personale. Inoltre, i brani possono essere scaricati per un ascolto offline. Puoi anche creare delle playlist per organizzare la tua musica. L'obiettivo di <i>InnerTune</i> è quello di dare la possibilità a chiunque di ascoltare musica senza costi e facilmente, in maniera pratica e priva di pubblicità.
-
-<br><b>Nota:</b>
-
-Il progetto è attualmente in una fase instabile. Se trovi degli errori, per favore segnalali facendolo su <a href='https://github.com/z-huang/InnerTune'>GitHub</a>.
+Un client di YouTube Music in Material 3 per Android
 
 <br><b>Caratteristiche:</b>
 
-* Ascolta brani senza nessuna pubblicità
-* Naviga attraverso quasi tutte le pagine di YouTube Music
-* Cerca brani, video, playlist e canali da YouTube Music
-* Apri link di YouTube Music
-* Salva brani, album e playlist in un database locale
-* Scarica musica per un ascolto offline
-* Modifica il titolo dei brani
-* Aggiungi collegamenti alle tue playlist preferite di YouTube Music
-* Riproduttore in Material Design
-* Riproduzione anche con lo schermo bloccato
-* Controlli in notifica
-* Passa al prossimo brano o a quello precedente
-* Modalità a ripetizione o casuale
-* Modifica la coda dei brani in riproduzione
-* Temi personalizzati
-* Tema scuro
-* Localizzazione
-* Proxy
-* Backup e ripristina
+- Ascolto dei brani da YT/YT Music senza pubblicità
+- Riproduzione in background
+- Ricerca dei brani, video, album e playlist da YouTube Music
+- Gestione della libreria
+- Cache e download dei brani per la riproduzione offline
+- Testi sincronizzati
+- Salto del silenzio
+- Normalizzazione dell'audio
+- Tema dinamico
+- Varie lingue disponibili
+- Supporto per Android Auto
+- Scelte rapide personalizzate
+- Material 3
