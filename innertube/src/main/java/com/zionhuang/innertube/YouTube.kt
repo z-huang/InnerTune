@@ -5,6 +5,7 @@ import com.zionhuang.innertube.models.AlbumItem
 import com.zionhuang.innertube.models.Artist
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.GridRenderer
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SearchSuggestions
 import com.zionhuang.innertube.models.SongItem
@@ -235,21 +236,22 @@ object YouTube {
 
     suspend fun playlist(playlistId: String): Result<PlaylistPage> = runCatching {
         val response = innerTube.browse(WEB_REMIX, "VL$playlistId").body<BrowseResponse>()
+        val header = response.header?.musicDetailHeaderRenderer ?: response.header?.musicEditablePlaylistDetailHeaderRenderer?.header?.musicDetailHeaderRenderer!!
         PlaylistPage(
             playlist = PlaylistItem(
                 id = playlistId,
-                title = response.header?.musicDetailHeaderRenderer?.title?.runs?.firstOrNull()?.text!!,
-                author = response.header.musicDetailHeaderRenderer.subtitle.runs?.getOrNull(2)?.let {
+                title = header.title.runs?.firstOrNull()?.text!!,
+                author = header.subtitle.runs?.getOrNull(2)?.let {
                     Artist(
                         name = it.text,
                         id = it.navigationEndpoint?.browseEndpoint?.browseId
                     )
-                }!!,
-                songCountText = response.header.musicDetailHeaderRenderer.secondSubtitle.runs?.firstOrNull()?.text,
-                thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.croppedSquareThumbnailRenderer?.getThumbnailUrl()!!,
+                },
+                songCountText = header.secondSubtitle.runs?.firstOrNull()?.text,
+                thumbnail = header.thumbnail.croppedSquareThumbnailRenderer?.getThumbnailUrl()!!,
                 playEndpoint = null,
-                shuffleEndpoint = response.header.musicDetailHeaderRenderer.menu.menuRenderer.topLevelButtons?.firstOrNull()?.buttonRenderer?.navigationEndpoint?.watchPlaylistEndpoint!!,
-                radioEndpoint = response.header.musicDetailHeaderRenderer.menu.menuRenderer.items.find {
+                shuffleEndpoint = header.menu.menuRenderer.topLevelButtons?.firstOrNull()?.buttonRenderer?.navigationEndpoint?.watchPlaylistEndpoint!!,
+                radioEndpoint = header.menu.menuRenderer.items.find {
                     it.menuNavigationItemRenderer?.icon?.iconType == "MIX"
                 }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint!!
             ),
@@ -293,6 +295,16 @@ object YouTube {
                 NewReleaseAlbumPage.fromMusicTwoRowItemRenderer(renderer)
             }
         }.orEmpty()
+    }
+
+    suspend fun likedPlaylists(): Result<List<PlaylistItem>> = runCatching {
+        val response = innerTube.browse(WEB_REMIX, browseId = "FEmusic_liked_playlists").body<BrowseResponse>()
+        response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()?.gridRenderer?.items!!
+            .drop(1) // the first item is "create new playlist"
+            .mapNotNull(GridRenderer.Item::musicTwoRowItemRenderer)
+            .mapNotNull {
+                ArtistItemsPage.fromMusicTwoRowItemRenderer(it) as? PlaylistItem
+            }
     }
 
     suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {

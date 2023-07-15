@@ -15,6 +15,7 @@
     <!-- Home -->
     <string name="history">Cronologia</string>
     <string name="stats">Statistiche</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Scelte rapide</string>
     <string name="quick_picks_empty">Ascolta alcuni brani per generare le tue scelte rapide</string>
     <string name="new_release_albums">Nuovi album in uscita</string>
@@ -110,7 +111,7 @@
     <string name="error_song_title_empty">Il titolo del brano non può essere vuoto.</string>
     <string name="error_song_artist_empty">L\'artista del brano non può essere vuoto.</string>
     <string name="save">Salva</string>
-    
+
     <string name="choose_playlist">Scegli una playlist</string>
     <string name="edit_playlist">Modifica playlist</string>
     <string name="create_playlist">Crea playlist</string>
@@ -233,8 +234,8 @@
     <string name="choose_csv_file_from_google_takeout">Scegli un file csv da Google Takeout</string>
     <string name="imported_playlist">Playlist importata</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Importato \"%s\" con %d brano</item>
-        <item quantity="other">Importato \"%s\" con %d brani</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">Backup creato con successo</string>
     <string name="backup_create_failed">Impossibile eseguire il backup</string>

@@ -14,6 +14,7 @@
     <!-- Home -->
     <string name="history">History</string>
     <string name="stats">Stats</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Quick picks</string>
     <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
     <string name="new_release_albums">New release albums</string>

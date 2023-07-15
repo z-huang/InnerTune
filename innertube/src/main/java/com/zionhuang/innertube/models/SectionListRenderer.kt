@@ -12,7 +12,7 @@ data class SectionListRenderer(
 ) {
     @Serializable
     data class Header(
-        val chipCloudRenderer: ChipCloudRenderer,
+        val chipCloudRenderer: ChipCloudRenderer?,
     ) {
         @Serializable
         data class ChipCloudRenderer(

@@ -15,6 +15,7 @@
     <!-- Home -->
     <string name="history">Előzmény</string>
     <string name="stats">Statisztika</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Gyors választás</string>
     <string name="quick_picks_empty">Hallgasson meg néhány dalt a gyors választások elkészítéséhez</string>
     <string name="new_release_albums">Új kiadású albumok</string>
@@ -233,8 +234,8 @@
     <string name="choose_csv_file_from_google_takeout">Válasszon egy csv-fájlt a Google Takeout-ból</string>
     <string name="imported_playlist">Importált lejátszási lista</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">\"%s\" importálva %d dallal</item>
-        <item quantity="other">\"%s\" importálva %d dallal</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">A bizt.mentés sikeresen létrehozva</string>
     <string name="backup_create_failed">Nem sikerült biztonsági mentést készíteni</string>

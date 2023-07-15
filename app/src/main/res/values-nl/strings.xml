@@ -15,6 +15,7 @@
     <!-- Home -->
     <string name="history">Geschiedenis</string>
     <string name="stats">Statistieken</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Snelle keuzes</string>
     <string name="quick_picks_empty">Beluister een aantal nummers om je snelle keuzes te genereren</string>
     <string name="new_release_albums">Nieuwe albums</string>

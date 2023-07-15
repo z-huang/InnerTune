@@ -15,6 +15,7 @@
     <!-- Home -->
     <string name="history">Wiedergabeverlauf</string>
     <string name="stats">Statistiken</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Schnellauswahl</string>
     <string name="quick_picks_empty">Hören Sie sich einige Songs an, um Ihre Schnellauswahl zu treffen</string>
     <string name="new_release_albums">Neu veröffentlichte Alben</string>
@@ -233,8 +234,8 @@
     <string name="choose_csv_file_from_google_takeout">Wählen Sie eine csv-Datei von Google Takeout</string>
     <string name="imported_playlist">Importierte Wiedergabeliste</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Importiert \"%s\" mit %d Song</item>
-        <item quantity="other">Importiert \"%s\" mit %d Songs</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">Sicherung erfolgreich erstellt</string>
     <string name="backup_create_failed">Konnte keine Sicherung erstellen</string>

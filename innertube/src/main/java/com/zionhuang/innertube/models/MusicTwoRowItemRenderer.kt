@@ -14,9 +14,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MusicTwoRowItemRenderer(
     val title: Runs,
-    val subtitle: Runs,
+    val subtitle: Runs?,
     val subtitleBadges: List<Badges>?,
-    val menu: Menu,
+    val menu: Menu?,
     val thumbnailRenderer: ThumbnailRenderer,
     val navigationEndpoint: NavigationEndpoint,
     val thumbnailOverlay: MusicResponsiveListItemRenderer.Overlay?,

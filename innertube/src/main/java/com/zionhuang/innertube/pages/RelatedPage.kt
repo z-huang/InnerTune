@@ -1,6 +1,15 @@
 package com.zionhuang.innertube.pages
 
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.Album
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.Artist
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.MusicResponsiveListItemRenderer
+import com.zionhuang.innertube.models.MusicTwoRowItemRenderer
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.YTItem
+import com.zionhuang.innertube.models.oddElements
 
 data class RelatedPage(
     val songs: List<SongItem>,
@@ -44,7 +53,7 @@ data class RelatedPage(
                         ?.watchPlaylistEndpoint?.playlistId ?: return null,
                     title = renderer.title.runs?.firstOrNull()?.text ?: return null,
                     artists = null,
-                    year = renderer.subtitle.runs?.lastOrNull()?.text?.toIntOrNull(),
+                    year = renderer.subtitle?.runs?.lastOrNull()?.text?.toIntOrNull(),
                     thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
                     explicit = renderer.subtitleBadges?.find {
                         it.musicInlineBadgeRenderer.icon.iconType == "MUSIC_EXPLICIT_BADGE"
@@ -53,7 +62,7 @@ data class RelatedPage(
                 renderer.isPlaylist -> PlaylistItem(
                     id = renderer.navigationEndpoint.browseEndpoint?.browseId?.removePrefix("VL") ?: return null,
                     title = renderer.title.runs?.firstOrNull()?.text ?: return null,
-                    author = renderer.subtitle.runs?.getOrNull(2)?.let {
+                    author = renderer.subtitle?.runs?.getOrNull(2)?.let {
                         Artist(
                             name = it.text,
                             id = it.navigationEndpoint?.browseEndpoint?.browseId
@@ -65,7 +74,7 @@ data class RelatedPage(
                         ?.musicItemThumbnailOverlayRenderer?.content
                         ?.musicPlayButtonRenderer?.playNavigationEndpoint
                         ?.watchPlaylistEndpoint ?: return null,
-                    shuffleEndpoint = renderer.menu.menuRenderer.items.find {
+                    shuffleEndpoint = renderer.menu?.menuRenderer?.items?.find {
                         it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE"
                     }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null,
                     radioEndpoint = renderer.menu.menuRenderer.items.find {
@@ -77,7 +86,7 @@ data class RelatedPage(
                         id = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
                         title = renderer.title.runs?.firstOrNull()?.text ?: return null,
                         thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
-                        shuffleEndpoint = renderer.menu.menuRenderer.items.find {
+                        shuffleEndpoint = renderer.menu?.menuRenderer?.items?.find {
                             it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE"
                         }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null,
                         radioEndpoint = renderer.menu.menuRenderer.items.find {

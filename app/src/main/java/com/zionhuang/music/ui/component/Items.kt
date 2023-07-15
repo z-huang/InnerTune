@@ -551,7 +551,7 @@ fun YouTubeListItem(
         is SongItem -> joinByBullet(item.artists.joinToString { it.name }, makeTimeString(item.duration?.times(1000L)))
         is AlbumItem -> joinByBullet(item.artists?.joinToString { it.name }, item.year?.toString())
         is ArtistItem -> null
-        is PlaylistItem -> joinByBullet(item.author.name, item.songCountText)
+        is PlaylistItem -> joinByBullet(item.author?.name, item.songCountText)
     },
     badges = badges,
     thumbnailContent = {
@@ -744,7 +744,7 @@ fun YouTubeGridItem(
                 is SongItem -> joinByBullet(item.artists.joinToString { it.name }, makeTimeString(item.duration?.times(1000L)))
                 is AlbumItem -> joinByBullet(item.artists?.joinToString { it.name }, item.year?.toString())
                 is ArtistItem -> null
-                is PlaylistItem -> joinByBullet(item.author.name, item.songCountText)
+                is PlaylistItem -> joinByBullet(item.author?.name, item.songCountText)
             }
 
             if (subtitle != null) {

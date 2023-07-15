@@ -1,6 +1,19 @@
 package com.zionhuang.innertube.pages
 
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.Album
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.Artist
+import com.zionhuang.innertube.models.ArtistItem
+import com.zionhuang.innertube.models.BrowseEndpoint
+import com.zionhuang.innertube.models.MusicCarouselShelfRenderer
+import com.zionhuang.innertube.models.MusicResponsiveListItemRenderer
+import com.zionhuang.innertube.models.MusicShelfRenderer
+import com.zionhuang.innertube.models.MusicTwoRowItemRenderer
+import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.innertube.models.SectionListRenderer
+import com.zionhuang.innertube.models.SongItem
+import com.zionhuang.innertube.models.YTItem
+import com.zionhuang.innertube.models.oddElements
 
 data class ArtistSection(
     val title: String,
@@ -76,7 +89,7 @@ data class ArtistPage(
                     SongItem(
                         id = renderer.navigationEndpoint.watchEndpoint?.videoId ?: return null,
                         title = renderer.title.runs?.firstOrNull()?.text ?: return null,
-                        artists = listOfNotNull(renderer.subtitle.runs?.firstOrNull()?.let {
+                        artists = listOfNotNull(renderer.subtitle?.runs?.firstOrNull()?.let {
                             Artist(
                                 name = it.text,
                                 id = it.navigationEndpoint?.browseEndpoint?.browseId
@@ -99,7 +112,7 @@ data class ArtistPage(
                             ?.watchPlaylistEndpoint?.playlistId ?: return null,
                         title = renderer.title.runs?.firstOrNull()?.text ?: return null,
                         artists = null,
-                        year = renderer.subtitle.runs?.lastOrNull()?.text?.toIntOrNull(),
+                        year = renderer.subtitle?.runs?.lastOrNull()?.text?.toIntOrNull(),
                         thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
                         explicit = renderer.subtitleBadges?.find {
                             it.musicInlineBadgeRenderer.icon.iconType == "MUSIC_EXPLICIT_BADGE"
@@ -112,7 +125,7 @@ data class ArtistPage(
                         id = renderer.navigationEndpoint.browseEndpoint?.browseId?.removePrefix("VL") ?: return null,
                         title = renderer.title.runs?.firstOrNull()?.text ?: return null,
                         author = Artist(
-                            name = renderer.subtitle.runs?.lastOrNull()?.text ?: return null,
+                            name = renderer.subtitle?.runs?.lastOrNull()?.text ?: return null,
                             id = null
                         ),
                         songCountText = null,
@@ -121,7 +134,7 @@ data class ArtistPage(
                             ?.musicItemThumbnailOverlayRenderer?.content
                             ?.musicPlayButtonRenderer?.playNavigationEndpoint
                             ?.watchPlaylistEndpoint ?: return null,
-                        shuffleEndpoint = renderer.menu.menuRenderer.items.find {
+                        shuffleEndpoint = renderer.menu?.menuRenderer?.items?.find {
                             it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE"
                         }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null,
                         radioEndpoint = renderer.menu.menuRenderer.items.find {
@@ -134,7 +147,7 @@ data class ArtistPage(
                         id = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
                         title = renderer.title.runs?.lastOrNull()?.text ?: return null,
                         thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
-                        shuffleEndpoint = renderer.menu.menuRenderer.items.find {
+                        shuffleEndpoint = renderer.menu?.menuRenderer?.items?.find {
                             it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE"
                         }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null,
                         radioEndpoint = renderer.menu.menuRenderer.items.find {

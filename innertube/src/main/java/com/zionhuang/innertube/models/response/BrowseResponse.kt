@@ -1,6 +1,14 @@
 package com.zionhuang.innertube.models.response
 
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.Button
+import com.zionhuang.innertube.models.Continuation
+import com.zionhuang.innertube.models.Menu
+import com.zionhuang.innertube.models.MusicShelfRenderer
+import com.zionhuang.innertube.models.ResponseContext
+import com.zionhuang.innertube.models.Runs
+import com.zionhuang.innertube.models.SectionListRenderer
+import com.zionhuang.innertube.models.Tabs
+import com.zionhuang.innertube.models.ThumbnailRenderer
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -39,6 +47,7 @@ data class BrowseResponse(
     data class Header(
         val musicImmersiveHeaderRenderer: MusicImmersiveHeaderRenderer?,
         val musicDetailHeaderRenderer: MusicDetailHeaderRenderer?,
+        val musicEditablePlaylistDetailHeaderRenderer: MusicEditablePlaylistDetailHeaderRenderer?,
         val musicVisualHeaderRenderer: MusicVisualHeaderRenderer?,
         val musicHeaderRenderer: MusicHeaderRenderer?,
     ) {
@@ -61,6 +70,16 @@ data class BrowseResponse(
             val thumbnail: ThumbnailRenderer,
             val menu: Menu,
         )
+
+        @Serializable
+        data class MusicEditablePlaylistDetailHeaderRenderer(
+            val header: Header,
+        ) {
+            @Serializable
+            data class Header(
+                val musicDetailHeaderRenderer: MusicDetailHeaderRenderer,
+            )
+        }
 
         @Serializable
         data class MusicVisualHeaderRenderer(

@@ -530,6 +530,12 @@ class MainActivity : ComponentActivity() {
                             composable("settings/about") {
                                 AboutScreen(navController, scrollBehavior)
                             }
+                            composable("login") {
+                                LoginScreen(navController)
+                            }
+                            composable("account") {
+                                AccountScreen(navController, scrollBehavior)
+                            }
                         }
 
                         AnimatedVisibility(
@@ -602,6 +608,24 @@ class MainActivity : ComponentActivity() {
                                                         SearchSource.ONLINE -> R.drawable.language
                                                     }
                                                 ),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    } else if (navBackStackEntry?.destination?.route in listOf(
+                                            Screens.Home.route,
+                                            Screens.Songs.route,
+                                            Screens.Artists.route,
+                                            Screens.Albums.route,
+                                            Screens.Playlists.route
+                                        )
+                                    ) {
+                                        IconButton(
+                                            onClick = {
+                                                navController.navigate("settings")
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.settings),
                                                 contentDescription = null
                                             )
                                         }

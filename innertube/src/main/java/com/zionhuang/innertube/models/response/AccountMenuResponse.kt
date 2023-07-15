@@ -34,8 +34,8 @@ data class AccountMenuResponse(
                             val email: Runs,
                         ) {
                             fun toAccountInfo() = AccountInfo(
-                                accountName.toString(),
-                                email.toString()
+                                accountName.runs!!.first().text,
+                                email.runs!!.first().text
                             )
                         }
                     }

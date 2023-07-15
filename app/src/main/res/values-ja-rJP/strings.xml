@@ -14,6 +14,7 @@
     <!-- Home -->
     <string name="history">履歴</string>
     <string name="stats">統計</string>
+    <string name="account">Account</string>
     <string name="quick_picks">ピックアップ</string>
     <string name="quick_picks_empty">何曲か再生するとピックアップが生成できます</string>
     <string name="new_release_albums">新作アルバム</string>
@@ -227,8 +228,8 @@
     <string name="choose_csv_file_from_google_takeout">Google TakeoutからCSVファイルを選択してください</string>
     <string name="imported_playlist">インポートしたプレイリスト</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">\"%s\" から %d 曲をインポートしました</item>
-        <item quantity="other">\"%s\" から %d 曲をインポートしました</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">バックアップの作成に成功しました</string>
     <string name="backup_create_failed">バックアップを作成できませんでした</string>

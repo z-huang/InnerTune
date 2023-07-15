@@ -17,6 +17,7 @@
     <!-- Home -->
     <string name="history">Історія</string>
     <string name="stats">Статистика</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Швидкий вибір</string>
     <string name="quick_picks_empty">Послухайте кілька пісень, щоб створити ваш швидкий вибір</string>
     <string name="new_release_albums">Нові релізи альбомів</string>
@@ -245,8 +246,8 @@
     <string name="choose_csv_file_from_google_takeout">Вибрати csv-файл із Google Takeout</string>
     <string name="imported_playlist">Імпортований плейлист</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Імпортовано «%s» з %d композицією</item>
-        <item quantity="other">Імпортовано «%s» з %d композиціями</item>
+        <item quantity="one">Imported \"%s\" with %d song</item>
+        <item quantity="other">Imported \"%s\" with %d songs</item>
     </plurals>
     <string name="backup_create_success">Резервну копію створено успішно</string>
     <string name="backup_create_failed">Не вдалося створити резервну копію</string>

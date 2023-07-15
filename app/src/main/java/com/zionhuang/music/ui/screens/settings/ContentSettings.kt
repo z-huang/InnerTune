@@ -6,15 +6,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.zionhuang.innertube.utils.parseCookieString
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.ui.component.EditTextPreference
 import com.zionhuang.music.ui.component.ListPreference
+import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.PreferenceGroupTitle
 import com.zionhuang.music.ui.component.SwitchPreference
 import com.zionhuang.music.utils.rememberEnumPreference
@@ -27,6 +31,12 @@ fun ContentSettings(
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
+    val accountName by rememberPreference(AccountNameKey, "")
+    val accountEmail by rememberPreference(AccountEmailKey, "")
+    val innerTubeCookie by rememberPreference(InnerTubeCookieKey, "")
+    val isLoggedIn = remember(innerTubeCookie) {
+        "SAPISID" in parseCookieString(innerTubeCookie)
+    }
     val (contentLanguage, onContentLanguageChange) = rememberPreference(key = ContentLanguageKey, defaultValue = "system")
     val (contentCountry, onContentCountryChange) = rememberPreference(key = ContentCountryKey, defaultValue = "system")
     val (proxyEnabled, onProxyEnabledChange) = rememberPreference(key = ProxyEnabledKey, defaultValue = false)
@@ -39,6 +49,12 @@ fun ContentSettings(
             .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
     ) {
+        PreferenceEntry(
+            title = if (isLoggedIn) accountName else stringResource(R.string.login),
+            description = if (isLoggedIn) accountEmail else null,
+            icon = R.drawable.person,
+            onClick = { navController.navigate("login") }
+        )
         ListPreference(
             title = stringResource(R.string.content_language),
             icon = R.drawable.language,

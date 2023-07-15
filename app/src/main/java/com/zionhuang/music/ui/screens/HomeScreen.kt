@@ -26,10 +26,12 @@ import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.innertube.utils.parseCookieString
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.InnerTubeCookieKey
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
@@ -41,6 +43,7 @@ import com.zionhuang.music.ui.component.YouTubeGridItem
 import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.utils.SnapLayoutInfoProvider
+import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.HomeViewModel
 import kotlin.random.Random
 
@@ -62,6 +65,11 @@ fun HomeScreen(
 
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val mostPlayedLazyGridState = rememberLazyGridState()
+
+    val innerTubeCookie by rememberPreference(InnerTubeCookieKey, "")
+    val isLoggedIn = remember(innerTubeCookie) {
+        "SAPISID" in parseCookieString(innerTubeCookie)
+    }
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
@@ -99,18 +107,24 @@ fun HomeScreen(
                         onClick = { navController.navigate("history") },
                         modifier = Modifier.weight(1f)
                     )
+
                     NavigationTile(
                         title = stringResource(R.string.stats),
                         icon = R.drawable.trending_up,
                         onClick = { navController.navigate("stats") },
                         modifier = Modifier.weight(1f)
                     )
-                    NavigationTile(
-                        title = stringResource(R.string.settings),
-                        icon = R.drawable.settings,
-                        onClick = { navController.navigate("settings") },
-                        modifier = Modifier.weight(1f)
-                    )
+
+                    if (isLoggedIn) {
+                        NavigationTile(
+                            title = stringResource(R.string.account),
+                            icon = R.drawable.person,
+                            onClick = {
+                                navController.navigate("account")
+                            },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
 
                 Text(
