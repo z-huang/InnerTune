@@ -17,8 +17,8 @@
     <!-- Home -->
     <string name="history">Історія</string>
     <string name="stats">Статистика</string>
-    <string name="mood_and_genres">Mood and Genres</string>
-    <string name="account">Account</string>
+    <string name="mood_and_genres">Настрій та жанри</string>
+    <string name="account">Акаунт</string>
     <string name="quick_picks">Швидкий вибір</string>
     <string name="quick_picks_empty">Послухайте кілька пісень, щоб створити ваш швидкий вибір</string>
     <string name="new_release_albums">Нові релізи альбомів</string>
@@ -154,7 +154,7 @@
     <!-- Snackbar -->
     <string name="playlist_imported">Плейлист імпортовано</string>
     <string name="removed_song_from_playlist">«%s» видалено зі списку відтворення</string>
-    <string name="playlist_synced">Playlist synced</string>
+    <string name="playlist_synced">Плейлист синхронізовано</string>
     <string name="undo">Скасувати</string>
 
     <!-- Player -->
