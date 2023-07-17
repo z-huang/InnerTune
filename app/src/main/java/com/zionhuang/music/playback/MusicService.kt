@@ -171,7 +171,6 @@ class MusicService : MediaLibraryService(),
     private val binder = MusicBinder()
 
     private lateinit var connectivityManager: ConnectivityManager
-    val bitmapProvider = BitmapProvider(this)
 
     private val audioQuality by enumPreference(this, AudioQualityKey, AudioQuality.AUTO)
 
@@ -502,9 +501,6 @@ class MusicService : MediaLibraryService(),
                     player.addMediaItems(mediaItems)
                 }
             }
-        }
-        if (mediaItem == null) {
-            bitmapProvider.clear()
         }
         if (pauseWhenSongEnd) {
             pauseWhenSongEnd = false
