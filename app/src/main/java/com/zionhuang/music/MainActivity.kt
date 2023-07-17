@@ -415,6 +415,12 @@ class MainActivity : ComponentActivity() {
                             composable("stats") {
                                 StatsScreen(navController)
                             }
+                            composable("mood_and_genres") {
+                                MoodAndGenresScreen(navController, scrollBehavior)
+                            }
+                            composable("account") {
+                                AccountScreen(navController, scrollBehavior)
+                            }
                             composable("new_release") {
                                 NewReleaseScreen(navController, scrollBehavior)
                             }
@@ -506,6 +512,21 @@ class MainActivity : ComponentActivity() {
                                     LocalPlaylistScreen(navController, scrollBehavior)
                                 }
                             }
+                            composable(
+                                route = "youtube_browse/{browseId}?params={params}",
+                                arguments = listOf(
+                                    navArgument("browseId") {
+                                        type = NavType.StringType
+                                        nullable = true
+                                    },
+                                    navArgument("params") {
+                                        type = NavType.StringType
+                                        nullable = true
+                                    }
+                                )
+                            ) {
+                                YouTubeBrowseScreen(navController, scrollBehavior)
+                            }
                             composable("settings") {
                                 SettingsScreen(navController, scrollBehavior)
                             }
@@ -532,9 +553,6 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("login") {
                                 LoginScreen(navController)
-                            }
-                            composable("account") {
-                                AccountScreen(navController, scrollBehavior)
                             }
                         }
 

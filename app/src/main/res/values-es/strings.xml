@@ -15,6 +15,7 @@
     <!-- Home -->
     <string name="history">Historial</string>
     <string name="stats">Estadísticas</string>
+    <string name="mood_and_genres">Mood and Genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">Selecciones rápidas</string>
     <string name="quick_picks_empty">Escucha algunas canciones para generar tus selecciones rápidas</string>

@@ -103,11 +103,11 @@ data class ArtistPage(
                         } != null
                     )
                 }
+
                 renderer.isAlbum -> {
                     AlbumItem(
                         browseId = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
-                        playlistId = renderer.thumbnailOverlay
-                            ?.musicItemThumbnailOverlayRenderer?.content
+                        playlistId = renderer.thumbnailOverlay?.musicItemThumbnailOverlayRenderer?.content
                             ?.musicPlayButtonRenderer?.playNavigationEndpoint
                             ?.watchPlaylistEndpoint?.playlistId ?: return null,
                         title = renderer.title.runs?.firstOrNull()?.text ?: return null,
@@ -119,6 +119,7 @@ data class ArtistPage(
                         } != null
                     )
                 }
+
                 renderer.isPlaylist -> {
                     // Playlist from YouTube Music
                     PlaylistItem(
@@ -142,6 +143,7 @@ data class ArtistPage(
                         }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null
                     )
                 }
+
                 renderer.isArtist -> {
                     ArtistItem(
                         id = renderer.navigationEndpoint.browseEndpoint?.browseId ?: return null,
@@ -155,6 +157,7 @@ data class ArtistPage(
                         }?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null,
                     )
                 }
+
                 else -> null
             }
         }

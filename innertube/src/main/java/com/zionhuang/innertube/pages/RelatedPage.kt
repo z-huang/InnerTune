@@ -67,8 +67,8 @@ data class RelatedPage(
                             name = it.text,
                             id = it.navigationEndpoint?.browseEndpoint?.browseId
                         )
-                    } ?: return null,
-                    songCountText = renderer.subtitle.runs.getOrNull(4)?.text,
+                    },
+                    songCountText = renderer.subtitle?.runs?.getOrNull(4)?.text,
                     thumbnail = renderer.thumbnailRenderer.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
                     playEndpoint = renderer.thumbnailOverlay
                         ?.musicItemThumbnailOverlayRenderer?.content

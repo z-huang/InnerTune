@@ -6,6 +6,7 @@ import com.zionhuang.innertube.models.Artist
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.innertube.models.GridRenderer
+import com.zionhuang.innertube.models.MusicCarouselShelfRenderer
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SearchSuggestions
 import com.zionhuang.innertube.models.SongItem
@@ -32,6 +33,8 @@ import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.innertube.pages.ArtistItemsContinuationPage
 import com.zionhuang.innertube.pages.ArtistItemsPage
 import com.zionhuang.innertube.pages.ArtistPage
+import com.zionhuang.innertube.pages.BrowseResult
+import com.zionhuang.innertube.pages.MoodAndGenres
 import com.zionhuang.innertube.pages.NewReleaseAlbumPage
 import com.zionhuang.innertube.pages.NextPage
 import com.zionhuang.innertube.pages.NextResult
@@ -295,6 +298,42 @@ object YouTube {
                 NewReleaseAlbumPage.fromMusicTwoRowItemRenderer(renderer)
             }
         }.orEmpty()
+    }
+
+    suspend fun moodAndGenres(): Result<List<MoodAndGenres>> = runCatching {
+        val response = innerTube.browse(WEB_REMIX, browseId = "FEmusic_moods_and_genres").body<BrowseResponse>()
+        response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents!!
+            .mapNotNull(MoodAndGenres.Companion::fromSectionListRendererContent)
+    }
+
+    suspend fun browse(browseId: String, params: String?): Result<BrowseResult> = runCatching {
+        val response = innerTube.browse(WEB_REMIX, browseId = browseId, params = params).body<BrowseResponse>()
+        BrowseResult(
+            title = response.header?.musicHeaderRenderer?.title?.runs?.firstOrNull()?.text,
+            items = response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.mapNotNull { content ->
+                when {
+                    content.gridRenderer != null -> {
+                        BrowseResult.Item(
+                            title = content.gridRenderer.header?.gridHeaderRenderer?.title?.runs?.firstOrNull()?.text,
+                            items = content.gridRenderer.items
+                                .mapNotNull(GridRenderer.Item::musicTwoRowItemRenderer)
+                                .mapNotNull(RelatedPage.Companion::fromMusicTwoRowItemRenderer)
+                        )
+                    }
+
+                    content.musicCarouselShelfRenderer != null -> {
+                        BrowseResult.Item(
+                            title = content.musicCarouselShelfRenderer.header?.musicCarouselShelfBasicHeaderRenderer?.title?.runs?.firstOrNull()?.text,
+                            items = content.musicCarouselShelfRenderer.contents
+                                .mapNotNull(MusicCarouselShelfRenderer.Content::musicTwoRowItemRenderer)
+                                .mapNotNull(RelatedPage.Companion::fromMusicTwoRowItemRenderer)
+                        )
+                    }
+
+                    else -> null
+                }
+            }.orEmpty()
+        )
     }
 
     suspend fun likedPlaylists(): Result<List<PlaylistItem>> = runCatching {

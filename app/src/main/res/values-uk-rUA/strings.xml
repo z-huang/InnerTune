@@ -17,6 +17,7 @@
     <!-- Home -->
     <string name="history">Історія</string>
     <string name="stats">Статистика</string>
+    <string name="mood_and_genres">Mood and Genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">Швидкий вибір</string>
     <string name="quick_picks_empty">Послухайте кілька пісень, щоб створити ваш швидкий вибір</string>

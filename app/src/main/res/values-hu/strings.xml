@@ -15,6 +15,7 @@
     <!-- Home -->
     <string name="history">Előzmény</string>
     <string name="stats">Statisztika</string>
+    <string name="mood_and_genres">Mood and Genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">Gyors választás</string>
     <string name="quick_picks_empty">Hallgasson meg néhány dalt a gyors választások elkészítéséhez</string>

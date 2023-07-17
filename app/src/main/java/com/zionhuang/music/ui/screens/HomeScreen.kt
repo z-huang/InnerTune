@@ -15,7 +15,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -96,7 +95,7 @@ fun HomeScreen(
                 Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding()))
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier
                         .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
                         .padding(horizontal = 12.dp, vertical = 6.dp)
@@ -112,6 +111,13 @@ fun HomeScreen(
                         title = stringResource(R.string.stats),
                         icon = R.drawable.trending_up,
                         onClick = { navController.navigate("stats") },
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    NavigationTile(
+                        title = stringResource(R.string.mood_and_genres),
+                        icon = R.drawable.mood,
+                        onClick = { navController.navigate("mood_and_genres") },
                         modifier = Modifier.weight(1f)
                     )
 
@@ -303,28 +309,23 @@ fun NavigationTile(
     @DrawableRes icon: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
-            .clip(RoundedCornerShape(6.dp))
-            .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
-            .clickable(enabled = enabled, onClick = onClick)
-            .padding(12.dp)
-            .alpha(if (enabled) 1f else 0.5f)
+            .clip(RoundedCornerShape(4.dp))
+            .clickable(onClick = onClick)
+            .padding(4.dp),
     ) {
         Icon(
             painter = painterResource(icon),
             contentDescription = null
         )
 
-        Spacer(Modifier.height(6.dp))
-
         Text(
             text = title,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.labelMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
