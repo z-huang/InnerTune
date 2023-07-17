@@ -17,8 +17,8 @@
     <!-- Home -->
     <string name="history">История</string>
     <string name="stats">Статистика</string>
-    <string name="mood_and_genres">Mood and Genres</string>
-    <string name="account">Account</string>
+    <string name="mood_and_genres">Настроение и жанры</string>
+    <string name="account">Аккаунт</string>
     <string name="quick_picks">Быстрый выбор</string>
     <string name="quick_picks_empty">Послушайте несколько песен, чтобы создать ваш быстрый выбор</string>
     <string name="new_release_albums">Новые релизы альбомов</string>
@@ -154,7 +154,7 @@
     <!-- Snackbar -->
     <string name="playlist_imported">Плейлист импортирован</string>
     <string name="removed_song_from_playlist">«%s» удалено из списка воспроизведения</string>
-    <string name="playlist_synced">Playlist synced</string>
+    <string name="playlist_synced">Плейлист синхронизирован</string>
     <string name="undo">Отменить</string>
 
     <!-- Player -->
