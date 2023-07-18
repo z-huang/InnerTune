@@ -1,6 +1,5 @@
 package com.zionhuang.music.ui.screens
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.*
@@ -10,15 +9,12 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,7 +32,10 @@ import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeAlbumRadio
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.ui.component.HideOnScrollFAB
 import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.NavigationTile
+import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.YouTubeGridItem
 import com.zionhuang.music.ui.menu.SongMenu
@@ -60,7 +59,7 @@ fun HomeScreen(
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val quickPicks by viewModel.quickPicks.collectAsState()
-    val newReleaseAlbums by viewModel.newReleaseAlbums.collectAsState()
+    val explorePage by viewModel.explorePage.collectAsState()
 
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     val mostPlayedLazyGridState = rememberLazyGridState()
@@ -69,6 +68,8 @@ fun HomeScreen(
     val isLoggedIn = remember(innerTubeCookie) {
         "SAPISID" in parseCookieString(innerTubeCookie)
     }
+
+    val scrollState = rememberScrollState()
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
@@ -90,7 +91,7 @@ fun HomeScreen(
             }
 
             Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
+                modifier = Modifier.verticalScroll(scrollState)
             ) {
                 Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding()))
 
@@ -114,13 +115,6 @@ fun HomeScreen(
                         modifier = Modifier.weight(1f)
                     )
 
-                    NavigationTile(
-                        title = stringResource(R.string.mood_and_genres),
-                        icon = R.drawable.mood,
-                        onClick = { navController.navigate("mood_and_genres") },
-                        modifier = Modifier.weight(1f)
-                    )
-
                     if (isLoggedIn) {
                         NavigationTile(
                             title = stringResource(R.string.account),
@@ -133,12 +127,8 @@ fun HomeScreen(
                     }
                 }
 
-                Text(
-                    text = stringResource(R.string.quick_picks),
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                        .padding(12.dp)
+                NavigationTitle(
+                    title = stringResource(R.string.quick_picks)
                 )
 
                 quickPicks?.let { quickPicks ->
@@ -211,31 +201,13 @@ fun HomeScreen(
                     }
                 }
 
-                if (newReleaseAlbums.isNotEmpty()) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
-                            .clickable {
-                                navController.navigate("new_release")
-                            }
-                            .padding(12.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.new_release_albums),
-                                style = MaterialTheme.typography.headlineSmall
-                            )
+                explorePage?.newReleaseAlbums?.let { newReleaseAlbums ->
+                    NavigationTitle(
+                        title = stringResource(R.string.new_release_albums),
+                        onClick = {
+                            navController.navigate("new_release")
                         }
-
-                        Icon(
-                            painter = painterResource(R.drawable.navigate_next),
-                            contentDescription = null
-                        )
-                    }
+                    )
 
                     LazyRow(
                         contentPadding = WindowInsets.systemBars
@@ -272,62 +244,50 @@ fun HomeScreen(
                     }
                 }
 
+                explorePage?.moodAndGenres?.let { moodAndGenres ->
+                    NavigationTitle(
+                        title = stringResource(R.string.mood_and_genres),
+                        onClick = {
+                            navController.navigate("mood_and_genres")
+                        }
+                    )
+
+                    LazyHorizontalGrid(
+                        rows = GridCells.Fixed(4),
+                        contentPadding = PaddingValues(6.dp),
+                        modifier = Modifier.height(MoodAndGenresButtonHeight * 4 + 12.dp)
+                    ) {
+                        items(moodAndGenres) {
+                            MoodAndGenresButton(
+                                title = it.title,
+                                onClick = {
+                                    navController.navigate("youtube_browse/${it.endpoint.browseId}?params=${it.endpoint.params}")
+                                },
+                                modifier = Modifier
+                                    .padding(6.dp)
+                                    .width(180.dp)
+                            )
+                        }
+                    }
+                }
+
                 Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateBottomPadding()))
             }
 
-            if (!quickPicks.isNullOrEmpty() || newReleaseAlbums.isNotEmpty()) {
-                FloatingActionButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .windowInsetsPadding(
-                            LocalPlayerAwareWindowInsets.current
-                                .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                        )
-                        .padding(16.dp),
-                    onClick = {
-                        if (Random.nextBoolean() && !quickPicks.isNullOrEmpty()) {
-                            val song = quickPicks!!.random()
-                            playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
-                        } else if (newReleaseAlbums.isNotEmpty()) {
-                            val album = newReleaseAlbums.random()
-                            playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
-                        }
-                    }) {
-                    Icon(
-                        painter = painterResource(R.drawable.casino),
-                        contentDescription = null
-                    )
+            HideOnScrollFAB(
+                visible = !quickPicks.isNullOrEmpty() || explorePage?.newReleaseAlbums?.isNotEmpty() == true,
+                scrollState = scrollState,
+                icon = R.drawable.casino,
+                onClick = {
+                    if (Random.nextBoolean() && !quickPicks.isNullOrEmpty()) {
+                        val song = quickPicks!!.random()
+                        playerConnection.playQueue(YouTubeQueue(WatchEndpoint(videoId = song.id), song.toMediaMetadata()))
+                    } else if (explorePage?.newReleaseAlbums?.isNotEmpty() == true) {
+                        val album = explorePage?.newReleaseAlbums!!.random()
+                        playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
+                    }
                 }
-            }
+            )
         }
-    }
-}
-
-@Composable
-fun NavigationTile(
-    title: String,
-    @DrawableRes icon: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = modifier
-            .clip(RoundedCornerShape(4.dp))
-            .clickable(onClick = onClick)
-            .padding(4.dp),
-    ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null
-        )
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.labelMedium,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
     }
 }
