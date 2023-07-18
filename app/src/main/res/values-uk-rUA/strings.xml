@@ -17,8 +17,8 @@
     <!-- Home -->
     <string name="history">Історія</string>
     <string name="stats">Статистика</string>
-    <string name="mood_and_genres">Mood and Genres</string>
-    <string name="account">Account</string>
+    <string name="mood_and_genres">Настрій та жанри</string>
+    <string name="account">Акаунт</string>
     <string name="quick_picks">Швидкий вибір</string>
     <string name="quick_picks_empty">Послухайте кілька пісень, щоб створити ваш швидкий вибір</string>
     <string name="new_release_albums">Нові релізи альбомів</string>
@@ -151,22 +151,28 @@
         <item quantity="other">%d плейлистів</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="one">%d тиждень</item>
+        <item quantity="few">%d тижні</item>
+        <item quantity="many">%d тижнів</item>
+        <item quantity="other">%d тижнів</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d місяць</item>
+        <item quantity="few">%d місяці</item>
+        <item quantity="many">%d місяців</item>
+        <item quantity="other">%d місяців</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d рік</item>
+        <item quantity="few">%d роки</item>
+        <item quantity="many">%d років</item>
+        <item quantity="other">%d років</item>
     </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Плейлист імпортовано</string>
     <string name="removed_song_from_playlist">«%s» видалено зі списку відтворення</string>
-    <string name="playlist_synced">Playlist synced</string>
+    <string name="playlist_synced">Плейлист синхронізовано</string>
     <string name="undo">Скасувати</string>
 
     <!-- Player -->
@@ -259,8 +265,8 @@
     <string name="choose_csv_file_from_google_takeout">Вибрати csv-файл із Google Takeout</string>
     <string name="imported_playlist">Імпортований плейлист</string>
     <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
+        <item quantity="one">Імпортовано «%s» з %d композицією</item>
+        <item quantity="other">Імпортовано «%s» з %d композиціями</item>
     </plurals>
     <string name="backup_create_success">Резервну копію створено успішно</string>
     <string name="backup_create_failed">Не вдалося створити резервну копію</string>
