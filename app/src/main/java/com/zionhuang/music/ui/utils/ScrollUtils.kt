@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.utils
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -21,6 +22,18 @@ fun LazyListState.isScrollingUp(): Boolean {
             }.also {
                 previousIndex = firstVisibleItemIndex
                 previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
+}
+
+@Composable
+fun ScrollState.isScrollingUp(): Boolean {
+    var previousScrollOffset by remember(this) { mutableStateOf(value) }
+    return remember(this) {
+        derivedStateOf {
+            (previousScrollOffset >= value).also {
+                previousScrollOffset = value
             }
         }
     }.value

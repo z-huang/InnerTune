@@ -69,6 +69,7 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.AutoResizeText
 import com.zionhuang.music.ui.component.FontSizeRange
 import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.YouTubeGridItem
 import com.zionhuang.music.ui.component.YouTubeListItem
@@ -197,28 +198,12 @@ fun ArtistScreen(
 
                 if (librarySongs.isNotEmpty()) {
                     item {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    navController.navigate("artist/${viewModel.artistId}/songs")
-                                }
-                                .padding(12.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.from_your_library),
-                                    style = MaterialTheme.typography.headlineMedium
-                                )
+                        NavigationTitle(
+                            title = stringResource(R.string.from_your_library),
+                            onClick = {
+                                navController.navigate("artist/${viewModel.artistId}/songs")
                             }
-                            Icon(
-                                painter = painterResource(R.drawable.navigate_next),
-                                contentDescription = null
-                            )
-                        }
+                        )
                     }
 
                     items(
@@ -264,30 +249,12 @@ fun ArtistScreen(
 
                 artistPage.sections.fastForEach { section ->
                     item {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(enabled = section.moreEndpoint != null) {
-                                    navController.navigate("artist/${viewModel.artistId}/items?browseId=${section.moreEndpoint?.browseId}?params=${section.moreEndpoint?.params}")
-                                }
-                                .padding(12.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Text(
-                                    text = section.title,
-                                    style = MaterialTheme.typography.headlineMedium
-                                )
+                        NavigationTitle(
+                            title = section.title,
+                            onClick = {
+                                navController.navigate("artist/${viewModel.artistId}/items?browseId=${section.moreEndpoint?.browseId}?params=${section.moreEndpoint?.params}")
                             }
-                            if (section.moreEndpoint != null) {
-                                Icon(
-                                    painter = painterResource(R.drawable.navigate_next),
-                                    contentDescription = null
-                                )
-                            }
-                        }
+                        )
                     }
 
                     if ((section.items.firstOrNull() as? SongItem)?.album != null) {

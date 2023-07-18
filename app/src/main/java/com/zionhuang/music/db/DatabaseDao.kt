@@ -43,6 +43,7 @@ interface DatabaseDao {
                     song.artists.joinToString(separator = "") { it.name }
                 }
             }
+
             SongSortType.PLAY_TIME -> songsByPlayTimeAsc()
         }.map { it.reversed(descending) }
 
@@ -71,6 +72,7 @@ interface DatabaseDao {
                     song.artists.joinToString(separator = "") { it.name }
                 }
             }
+
             SongSortType.PLAY_TIME -> likedSongsByPlayTimeAsc()
         }.map { it.reversed(descending) }
 
@@ -142,29 +144,44 @@ interface DatabaseDao {
     fun quickPicks(now: Long = System.currentTimeMillis()): Flow<List<Song>>
 
     @Transaction
-    @Query("SELECT * FROM song ORDER BY totalPlayTime DESC LIMIT :limit")
-    fun mostPlayedSongs(limit: Int = 6): Flow<List<Song>>
+    @Query(
+        """
+        SELECT *
+        FROM song
+        WHERE id IN (SELECT songId
+                     FROM event
+                     WHERE timestamp > :fromTimeStamp
+                     GROUP BY songId
+                     ORDER BY SUM(playTime) DESC
+                     LIMIT :limit)
+    """
+    )
+    fun mostPlayedSongs(fromTimeStamp: Long, limit: Int = 6): Flow<List<Song>>
 
     @Transaction
     @Query(
         """
-        SELECT artist.*,
+        SELECT *,
                (SELECT COUNT(1)
                 FROM song_artist_map
                          JOIN song ON song_artist_map.songId = song.id
                 WHERE artistId = artist.id
                   AND song.inLibrary IS NOT NULL) AS songCount
-        FROM (SELECT artistId, SUM(playtime) AS totalPlaytime
-              FROM (SELECT *, (SELECT totalPlayTime FROM song WHERE id = songId) AS playtime
-                    FROM song_artist_map)
-              GROUP BY artistId)
-                 JOIN artist
-                      ON artist.id = artistId
-        ORDER BY totalPlaytime DESC
-        LIMIT :limit
+        FROM artist
+                 JOIN(SELECT artistId, SUM(songTotalPlayTime) AS totalPlayTime
+                      FROM song_artist_map
+                               JOIN (SELECT songId, SUM(playTime) AS songTotalPlayTime
+                                     FROM event
+                                     WHERE timestamp > :fromTimeStamp
+                                     GROUP BY songId) AS e
+                                    ON song_artist_map.songId = e.songId
+                      GROUP BY artistId
+                      ORDER BY totalPlayTime DESC
+                      LIMIT :limit)
+                     ON artist.id = artistId
     """
     )
-    fun mostPlayedArtists(limit: Int = 6): Flow<List<Artist>>
+    fun mostPlayedArtists(fromTimeStamp: Long, limit: Int = 6): Flow<List<Artist>>
 
     @Transaction
     @Query("SELECT * FROM song WHERE id = :songId")

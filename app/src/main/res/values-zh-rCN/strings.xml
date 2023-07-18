@@ -17,7 +17,7 @@
     <string name="mood_and_genres">Mood and Genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">歌曲快选</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Listen to songs to generate your quick picks</string>
     <string name="new_release_albums">新专辑</string>
 
     <!-- History -->
@@ -134,6 +134,18 @@
     </plurals>
     <plurals name="n_playlist">
         <item quantity="other">%d 个播放列表</item>
+    </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
     </plurals>
 
     <!-- Snackbar -->

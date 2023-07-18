@@ -1,23 +1,15 @@
 package com.zionhuang.music.ui.screens.library
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,12 +21,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalDatabase
@@ -49,13 +39,13 @@ import com.zionhuang.music.constants.PlaylistSortTypeKey
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
+import com.zionhuang.music.ui.component.HideOnScrollFAB
 import com.zionhuang.music.ui.component.ListItem
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.PlaylistListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.ui.menu.PlaylistMenu
-import com.zionhuang.music.ui.utils.isScrollingUp
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibraryPlaylistsViewModel
@@ -208,26 +198,12 @@ fun LibraryPlaylistsScreen(
             }
         }
 
-        AnimatedVisibility(
-            visible = lazyListState.isScrollingUp(),
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .windowInsetsPadding(
-                    LocalPlayerAwareWindowInsets.current
-                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                )
-        ) {
-            FloatingActionButton(
-                modifier = Modifier.padding(16.dp),
-                onClick = { showAddPlaylistDialog = true }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.add),
-                    contentDescription = null
-                )
+        HideOnScrollFAB(
+            lazyListState = lazyListState,
+            icon = R.drawable.add,
+            onClick = {
+                showAddPlaylistDialog = true
             }
-        }
+        )
     }
 }

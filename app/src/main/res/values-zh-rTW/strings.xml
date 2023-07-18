@@ -135,6 +135,15 @@
     <plurals name="n_playlist">
         <item quantity="other">%d 個播放清單</item>
     </plurals>
+    <plurals name="n_week">
+        <item quantity="other">%d 週</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="other">%d 個月</item>
+    </plurals>
+    <plurals name="n_year">
+        <item quantity="other">%d 年</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">已匯入此播放清單</string>

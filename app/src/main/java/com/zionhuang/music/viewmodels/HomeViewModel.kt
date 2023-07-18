@@ -3,7 +3,7 @@ package com.zionhuang.music.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
-import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.pages.ExplorePage
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,12 +20,14 @@ class HomeViewModel @Inject constructor(
     val isRefreshing = MutableStateFlow(false)
 
     val quickPicks = MutableStateFlow<List<Song>?>(null)
-    val newReleaseAlbums = MutableStateFlow<List<AlbumItem>>(emptyList())
+    val explorePage = MutableStateFlow<ExplorePage?>(null)
 
     private suspend fun load() {
         quickPicks.value = database.quickPicks().first().shuffled().take(20)
-        YouTube.newReleaseAlbumsPreview().onSuccess {
-            newReleaseAlbums.value = it
+        YouTube.explore().onSuccess {
+            explorePage.value = it
+        }.onFailure {
+            it.printStackTrace()
         }
     }
 

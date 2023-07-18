@@ -34,6 +34,7 @@ import com.zionhuang.innertube.pages.ArtistItemsContinuationPage
 import com.zionhuang.innertube.pages.ArtistItemsPage
 import com.zionhuang.innertube.pages.ArtistPage
 import com.zionhuang.innertube.pages.BrowseResult
+import com.zionhuang.innertube.pages.ExplorePage
 import com.zionhuang.innertube.pages.MoodAndGenres
 import com.zionhuang.innertube.pages.NewReleaseAlbumPage
 import com.zionhuang.innertube.pages.NextPage
@@ -281,14 +282,20 @@ object YouTube {
         )
     }
 
-
-    suspend fun newReleaseAlbumsPreview(): Result<List<AlbumItem>> = runCatching {
+    suspend fun explore(): Result<ExplorePage> = runCatching {
         val response = innerTube.browse(WEB_REMIX, browseId = "FEmusic_explore").body<BrowseResponse>()
-        response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.getOrNull(1)?.musicCarouselShelfRenderer?.contents?.mapNotNull {
-            it.musicTwoRowItemRenderer?.let { renderer ->
-                NewReleaseAlbumPage.fromMusicTwoRowItemRenderer(renderer)
-            }
-        }.orEmpty()
+        ExplorePage(
+            newReleaseAlbums = response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.getOrNull(1)?.musicCarouselShelfRenderer?.contents
+                ?.mapNotNull {
+                    it.musicTwoRowItemRenderer?.let { renderer ->
+                        NewReleaseAlbumPage.fromMusicTwoRowItemRenderer(renderer)
+                    }
+                }.orEmpty(),
+            moodAndGenres = response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.getOrNull(2)?.musicCarouselShelfRenderer?.contents
+                ?.mapNotNull(MusicCarouselShelfRenderer.Content::musicNavigationButtonRenderer)
+                ?.mapNotNull(MoodAndGenres.Companion::fromMusicNavigationButtonRenderer)
+                .orEmpty()
+        )
     }
 
     suspend fun newReleaseAlbums(): Result<List<AlbumItem>> = runCatching {
