@@ -150,6 +150,18 @@
         <item quantity="many">%d плейлистов</item>
         <item quantity="other">%d плейлистов</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Плейлист импортирован</string>

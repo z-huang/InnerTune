@@ -140,6 +140,18 @@
         <item quantity="one">%d ਪਲੇਲਿਸਟ</item>
         <item quantity="other">%d ਪਲੇਲਿਸਟਾਂ</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">ਪਲੇਲਿਸਟ ਅਯਾਤ ਕੀਤੀ ਗਈ</string>

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,8 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.models.WatchEndpoint
@@ -35,6 +32,7 @@ import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.menu.SongMenu
 import com.zionhuang.music.viewmodels.DateAgo
@@ -60,20 +58,17 @@ fun HistoryScreen(
     ) {
         events.forEach { (dateAgo, events) ->
             stickyHeader {
-                Text(
-                    text = when (dateAgo) {
+                NavigationTitle(
+                    title = when (dateAgo) {
                         DateAgo.Today -> stringResource(R.string.today)
                         DateAgo.Yesterday -> stringResource(R.string.yesterday)
                         DateAgo.ThisWeek -> stringResource(R.string.this_week)
                         DateAgo.LastWeek -> stringResource(R.string.last_week)
                         is DateAgo.Other -> dateAgo.date.format(DateTimeFormatter.ofPattern("yyyy/MM"))
                     },
-                    style = MaterialTheme.typography.headlineMedium,
-                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.background)
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
                 )
             }
 
