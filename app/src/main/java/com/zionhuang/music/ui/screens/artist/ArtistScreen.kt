@@ -251,8 +251,10 @@ fun ArtistScreen(
                     item {
                         NavigationTitle(
                             title = section.title,
-                            onClick = {
-                                navController.navigate("artist/${viewModel.artistId}/items?browseId=${section.moreEndpoint?.browseId}?params=${section.moreEndpoint?.params}")
+                            onClick = section.moreEndpoint?.let {
+                                {
+                                    navController.navigate("artist/${viewModel.artistId}/items?browseId=${it.browseId}?params=${it.params}")
+                                }
                             }
                         )
                     }
