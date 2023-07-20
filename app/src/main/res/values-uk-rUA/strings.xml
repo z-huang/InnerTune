@@ -32,6 +32,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Найпопулярніші пісні</string>
     <string name="most_played_artists">Найпопулярніші виконавці</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Пошук</string>

@@ -45,7 +45,9 @@ import com.zionhuang.music.ui.component.ArtistListItem
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
+import com.zionhuang.music.ui.component.YouTubeListItem
 import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.viewmodels.StatsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -62,6 +64,7 @@ fun StatsScreen(
     val statPeriod by viewModel.statPeriod.collectAsState()
     val mostPlayedSongs by viewModel.mostPlayedSongs.collectAsState()
     val mostPlayedArtists by viewModel.mostPlayedArtists.collectAsState()
+    val mostPlayedAlbums by viewModel.mostPlayedAlbums.collectAsState()
 
     LazyColumn(
         contentPadding = LocalPlayerAwareWindowInsets.current.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom).asPaddingValues(),
@@ -99,6 +102,7 @@ fun StatsScreen(
                 }
             }
         }
+
         item {
             NavigationTitle(stringResource(R.string.most_played_songs))
         }
@@ -146,6 +150,7 @@ fun StatsScreen(
                     .animateItemPlacement()
             )
         }
+
         item {
             NavigationTitle(stringResource(R.string.most_played_artists))
         }
@@ -162,6 +167,46 @@ fun StatsScreen(
                     }
                     .animateItemPlacement()
             )
+        }
+
+        if (mostPlayedAlbums.isNotEmpty()) {
+            item {
+                NavigationTitle(stringResource(R.string.most_played_albums))
+            }
+            items(
+                items = mostPlayedAlbums,
+                key = { it.id }
+            ) { item ->
+                YouTubeListItem(
+                    item = item,
+                    isActive = mediaMetadata?.album?.id == item.id,
+                    isPlaying = isPlaying,
+                    trailingContent = {
+                        IconButton(
+                            onClick = {
+                                menuState.show {
+                                    YouTubeAlbumMenu(
+                                        album = item,
+                                        navController = navController,
+                                        playerConnection = playerConnection,
+                                        onDismiss = menuState::dismiss
+                                    )
+                                }
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.more_vert),
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .clickable {
+                            navController.navigate("album/${item.id}")
+                        }
+                        .animateItemPlacement()
+                )
+            }
         }
     }
 

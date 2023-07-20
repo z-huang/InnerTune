@@ -30,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Canciones más reproducidas</string>
     <string name="most_played_artists">Artistas más reproducidos</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Buscar</string>

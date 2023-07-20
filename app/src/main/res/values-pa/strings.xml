@@ -30,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">ਵੱਧ ਸੁਣੇ ਗਏ ਗੀਤ</string>
     <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">ਖੋਜੋ</string>

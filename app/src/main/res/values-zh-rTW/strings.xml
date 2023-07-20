@@ -29,6 +29,7 @@
     <!-- Stats -->
     <string name="most_played_songs">最常播放的歌曲</string>
     <string name="most_played_artists">最常播放的藝人</string>
+    <string name="most_played_albums">最常播放的專輯</string>
 
     <!-- Search -->
     <string name="search">搜尋</string>

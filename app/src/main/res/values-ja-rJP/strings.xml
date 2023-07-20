@@ -29,6 +29,7 @@
     <!-- Stats -->
     <string name="most_played_songs">最も再生された曲</string>
     <string name="most_played_artists">最も再生されたアーティスト</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">検索</string>

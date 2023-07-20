@@ -30,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">A legtöbbet játszott dalok</string>
     <string name="most_played_artists">A legtöbbet játszott előadók</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Keresés</string>
