@@ -15,7 +15,7 @@
     <!-- Home -->
     <string name="history">Cronologia</string>
     <string name="stats">Statistiche</string>
-    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="mood_and_genres">Mood e generi</string>
     <string name="account">Account</string>
     <string name="quick_picks">Scelte rapide</string>
     <string name="quick_picks_empty">Ascolta alcuni brani per generare le tue scelte rapide</string>
@@ -30,7 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Brani più ascoltati</string>
     <string name="most_played_artists">Artisti più ascoltati</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_albums">Album più ascoltati</string>
 
     <!-- Search -->
     <string name="search">Cerca</string>
@@ -142,16 +142,16 @@
         <item quantity="other">%d playlist</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="one">%d settimana</item>
+        <item quantity="other">%d settimane</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d mese</item>
+        <item quantity="other">%d mesi</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d anno</item>
+        <item quantity="other">%d anni</item>
     </plurals>
 
     <!-- Snackbar -->
