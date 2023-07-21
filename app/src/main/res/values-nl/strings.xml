@@ -15,7 +15,7 @@
     <!-- Home -->
     <string name="history">Geschiedenis</string>
     <string name="stats">Statistieken</string>
-    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="mood_and_genres">Stemmingen en genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">Snelle keuzes</string>
     <string name="quick_picks_empty">Beluister een aantal nummers om je snelle keuzes te genereren</string>
@@ -30,12 +30,12 @@
     <!-- Stats -->
     <string name="most_played_songs">Meest afgespeelde nummers</string>
     <string name="most_played_artists">Meest afgespeelde artiesten</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_albums">Meest afgespeelde artiesten</string>
 
     <!-- Search -->
     <string name="search">Zoeken</string>
     <string name="search_yt_music">Zoeken via YouTube Music…</string>
-    <string name="search_library">Zoeken in bibliotheek…</string>
+    <string name="search_library">Zoeken in bibliotheek</string>
     <string name="filter_all">Alles</string>
     <string name="filter_songs">Nummers</string>
     <string name="filter_videos">Videos</string>
