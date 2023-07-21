@@ -245,12 +245,7 @@
     <string name="backup_restore">Backup en herstel</string>
     <string name="backup">Backup</string>
     <string name="restore">Herstellen</string>
-    <string name="choose_csv_file_from_google_takeout">Kies een csv-bestand van Google Takeout</string>
     <string name="imported_playlist">Afspeellijst geimporteerd</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">Back-up succesvol gemaakt.</string>
     <string name="backup_create_failed">Back-up maken mislukt.</string>
     <string name="restore_failed">Fout bij terugzetten back-up.</string>

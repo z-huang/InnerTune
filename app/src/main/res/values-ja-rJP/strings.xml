@@ -239,12 +239,7 @@
     <string name="backup_restore">バックアップとリストア</string>
     <string name="backup">バックアップ</string>
     <string name="restore">リストア</string>
-    <string name="choose_csv_file_from_google_takeout">Google TakeoutからCSVファイルを選択してください</string>
     <string name="imported_playlist">インポートしたプレイリスト</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">バックアップの作成に成功しました</string>
     <string name="backup_create_failed">バックアップを作成できませんでした</string>
     <string name="restore_failed">バックアップのリストアに失敗しました</string>

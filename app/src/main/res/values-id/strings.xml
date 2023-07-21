@@ -239,12 +239,7 @@
     <string name="backup_restore">Cadangkan dan pulihkan</string>
     <string name="backup">Cadangkan</string>
     <string name="restore">Pulihkan</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
     <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">Cadangan berhasil dibuat</string>
     <string name="backup_create_failed">Tidak dapat membuat cadangan</string>
     <string name="restore_failed">Gagal untuk memulihkan cadangan</string>
