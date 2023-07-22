@@ -1,5 +1,6 @@
 package com.zionhuang.music.ui.screens.artist
 
+import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +28,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -42,6 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,10 +62,12 @@ import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
+import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.AppBarHeight
+import com.zionhuang.music.db.entities.ArtistEntity
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
@@ -85,6 +90,7 @@ import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.ui.utils.fadingEdge
 import com.zionhuang.music.ui.utils.resize
 import com.zionhuang.music.viewmodels.ArtistViewModel
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -93,6 +99,8 @@ fun ArtistScreen(
     scrollBehavior: TopAppBarScrollBehavior,
     viewModel: ArtistViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    val database = LocalDatabase.current
     val menuState = LocalMenuState.current
     val coroutineScope = rememberCoroutineScope()
     val playerConnection = LocalPlayerConnection.current ?: return
@@ -100,6 +108,7 @@ fun ArtistScreen(
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
     val artistPage = viewModel.artistPage
+    val libraryArtist by viewModel.libraryArtist.collectAsState()
     val librarySongs by viewModel.librarySongs.collectAsState()
 
     val lazyListState = rememberLazyListState()
@@ -415,6 +424,57 @@ fun ArtistScreen(
             IconButton(onClick = navController::navigateUp) {
                 Icon(
                     painterResource(R.drawable.arrow_back),
+                    contentDescription = null
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = {
+                    database.transaction {
+                        val artist = libraryArtist
+                        if (artist != null) {
+                            update(
+                                artist.copy(
+                                    bookmarkedAt = if (artist.bookmarkedAt != null) null else LocalDateTime.now()
+                                )
+                            )
+                        } else {
+                            artistPage?.artist?.let {
+                                insert(
+                                    ArtistEntity(
+                                        id = it.id,
+                                        name = it.title,
+                                        thumbnailUrl = it.thumbnail,
+                                        bookmarkedAt = LocalDateTime.now()
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            ) {
+                Icon(
+                    painter = painterResource(if (libraryArtist?.bookmarkedAt != null) R.drawable.bookmark_filled else R.drawable.bookmark),
+                    tint = if (libraryArtist?.bookmarkedAt != null) MaterialTheme.colorScheme.primary else LocalContentColor.current,
+                    contentDescription = null
+                )
+            }
+
+            IconButton(
+                onClick = {
+                    viewModel.artistPage?.artist?.shareLink?.let { link ->
+                        val intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, link)
+                        }
+                        context.startActivity(Intent.createChooser(intent, null))
+                    }
+                }
+            ) {
+                Icon(
+                    painterResource(R.drawable.share),
                     contentDescription = null
                 )
             }

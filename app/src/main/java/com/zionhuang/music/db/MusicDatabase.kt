@@ -59,7 +59,7 @@ class MusicDatabase(
         SortedSongAlbumMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 10,
+    version = 11,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
@@ -69,7 +69,8 @@ class MusicDatabase(
         AutoMigration(from = 6, to = 7, spec = Migration6To7::class),
         AutoMigration(from = 7, to = 8, spec = Migration7To8::class),
         AutoMigration(from = 8, to = 9),
-        AutoMigration(from = 9, to = 10, spec = Migration9To10::class)
+        AutoMigration(from = 9, to = 10, spec = Migration9To10::class),
+        AutoMigration(from = 10, to = 11, spec = Migration10To11::class)
     ]
 )
 @TypeConverters(Converters::class)
@@ -99,7 +100,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             val albumName: String? = null,
             val liked: Boolean = false,
             val totalPlayTime: Long = 0, // in milliseconds
-            val downloadState: Int = SongEntity.STATE_NOT_DOWNLOADED,
+            val downloadState: Int = 0,
             val createDate: LocalDateTime = LocalDateTime.now(),
             val modifyDate: LocalDateTime = LocalDateTime.now(),
         )
@@ -211,7 +212,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 "artist", SQLiteDatabase.CONFLICT_ABORT, contentValuesOf(
                     "id" to artist.id,
                     "name" to artist.name,
-                    "createDate" to converters.dateToTimestamp(artist.createDate),
+                    "createDate" to converters.dateToTimestamp(artist.lastUpdateTime),
                     "lastUpdateTime" to converters.dateToTimestamp(artist.lastUpdateTime)
                 )
             )
@@ -306,3 +307,11 @@ class Migration7To8 : AutoMigrationSpec
     DeleteTable(tableName = "download")
 )
 class Migration9To10 : AutoMigrationSpec
+
+@DeleteColumn.Entries(
+    DeleteColumn(tableName = "song", columnName = "downloadState"),
+    DeleteColumn(tableName = "artist", columnName = "bannerUrl"),
+    DeleteColumn(tableName = "artist", columnName = "description"),
+    DeleteColumn(tableName = "artist", columnName = "createDate")
+)
+class Migration10To11 : AutoMigrationSpec
