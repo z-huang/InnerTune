@@ -227,11 +227,34 @@ interface DatabaseDao {
     @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE bookmarkedAt IS NOT NULL ORDER BY songCount")
     fun artistsBySongCountAsc(): Flow<List<Artist>>
 
+    @Transaction
+    @Query(
+        """
+        SELECT artist.*,
+               (SELECT COUNT(1)
+                FROM song_artist_map
+                         JOIN song ON song_artist_map.songId = song.id
+                WHERE artistId = artist.id
+                  AND song.inLibrary IS NOT NULL) AS songCount
+        FROM artist
+                 JOIN(SELECT artistId, SUM(totalPlayTime) AS totalPlayTime
+                      FROM song_artist_map
+                      JOIN song
+                      ON song_artist_map.songId = song.id
+                      GROUP BY artistId
+                      ORDER BY totalPlayTime)
+                     ON artist.id = artistId
+                     WHERE bookmarkedAt IS NOT NULL
+    """
+    )
+    fun artistsByPlayTimeAsc(): Flow<List<Artist>>
+
     fun artists(sortType: ArtistSortType, descending: Boolean) =
         when (sortType) {
             ArtistSortType.CREATE_DATE -> artistsByCreateDateAsc()
             ArtistSortType.NAME -> artistsByNameAsc()
             ArtistSortType.SONG_COUNT -> artistsBySongCountAsc()
+            ArtistSortType.PLAY_TIME -> artistsByPlayTimeAsc()
         }.map { it.reversed(descending) }
 
     @Query("SELECT * FROM artist WHERE id = :id")
@@ -261,6 +284,19 @@ interface DatabaseDao {
     @Query("SELECT * FROM album ORDER BY duration")
     fun albumsByLengthAsc(): Flow<List<Album>>
 
+    @Transaction
+    @Query(
+        """
+        SELECT album.*
+        FROM album
+        JOIN song
+        ON song.albumId = album.id
+        GROUP BY album.id
+        ORDER BY SUM(song.totalPlayTime)
+    """
+    )
+    fun albumsByPlayTimeAsc(): Flow<List<Album>>
+
     fun albums(sortType: AlbumSortType, descending: Boolean) =
         when (sortType) {
             AlbumSortType.CREATE_DATE -> albumsByCreateDateAsc()
@@ -274,6 +310,7 @@ interface DatabaseDao {
             AlbumSortType.YEAR -> albumsByYearAsc()
             AlbumSortType.SONG_COUNT -> albumsBySongCountAsc()
             AlbumSortType.LENGTH -> albumsByLengthAsc()
+            AlbumSortType.PLAY_TIME -> albumsByPlayTimeAsc()
         }.map { it.reversed(descending) }
 
     @Transaction

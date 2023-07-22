@@ -64,7 +64,7 @@ enum class PlaylistSongSortType {
 }
 
 enum class ArtistSortType {
-    CREATE_DATE, NAME, SONG_COUNT
+    CREATE_DATE, NAME, SONG_COUNT, PLAY_TIME
 }
 
 enum class ArtistSongSortType {
@@ -72,7 +72,7 @@ enum class ArtistSongSortType {
 }
 
 enum class AlbumSortType {
-    CREATE_DATE, NAME, ARTIST, YEAR, SONG_COUNT, LENGTH
+    CREATE_DATE, NAME, ARTIST, YEAR, SONG_COUNT, LENGTH, PLAY_TIME
 }
 
 enum class PlaylistSortType {
