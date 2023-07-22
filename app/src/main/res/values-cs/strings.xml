@@ -178,6 +178,7 @@
         <item quantity="one">1 minute</item>
         <item quantity="few">%d minutes</item>
         <item quantity="many">%d minutes</item>
+        <item quantity="other">%d minutes</item>
     </plurals>
     <string name="error_no_stream">Není dostupný žádný stream</string>
     <string name="error_no_internet">Není dostupné připojení k internetu</string>
