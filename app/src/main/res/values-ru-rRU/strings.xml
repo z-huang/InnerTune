@@ -17,8 +17,8 @@
     <!-- Home -->
     <string name="history">История</string>
     <string name="stats">Статистика</string>
-    <string name="mood_and_genres">Mood and Genres</string>
-    <string name="account">Account</string>
+    <string name="mood_and_genres">Настроение и жанры</string>
+    <string name="account">Аккаунт</string>
     <string name="quick_picks">Быстрый выбор</string>
     <string name="quick_picks_empty">Послушайте несколько песен, чтобы создать ваш быстрый выбор</string>
     <string name="new_release_albums">Новые релизы альбомов</string>
@@ -32,7 +32,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Самые популярные песни</string>
     <string name="most_played_artists">Самые популярные исполнители</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_albums">Самые популярные альбомы</string>
 
     <!-- Search -->
     <string name="search">Поиск</string>
@@ -152,22 +152,28 @@
         <item quantity="other">%d плейлистов</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="one">%d неделя</item>
+        <item quantity="few">%d недели</item>
+        <item quantity="many">%d недель</item>
+        <item quantity="other">%d недель</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d месяц</item>
+        <item quantity="few">%d месяца</item>
+        <item quantity="many">%d месяцев</item>
+        <item quantity="other">%d месяцев</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d год</item>
+        <item quantity="few">%d года</item>
+        <item quantity="many">%d лет</item>
+        <item quantity="other">%d лет</item>
     </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Плейлист импортирован</string>
     <string name="removed_song_from_playlist">«%s» удалено из списка воспроизведения</string>
-    <string name="playlist_synced">Playlist synced</string>
+    <string name="playlist_synced">Плейлист синхронизирован</string>
     <string name="undo">Отменить</string>
 
     <!-- Player -->
