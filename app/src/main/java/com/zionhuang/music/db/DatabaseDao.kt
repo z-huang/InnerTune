@@ -239,12 +239,12 @@ interface DatabaseDao {
         FROM artist
                  JOIN(SELECT artistId, SUM(totalPlayTime) AS totalPlayTime
                       FROM song_artist_map
-                      JOIN song
-                      ON song_artist_map.songId = song.id
+                               JOIN song
+                                    ON song_artist_map.songId = song.id
                       GROUP BY artistId
                       ORDER BY totalPlayTime)
                      ON artist.id = artistId
-                     WHERE bookmarkedAt IS NOT NULL
+        WHERE bookmarkedAt IS NOT NULL
     """
     )
     fun artistsByPlayTimeAsc(): Flow<List<Artist>>
@@ -289,8 +289,8 @@ interface DatabaseDao {
         """
         SELECT album.*
         FROM album
-        JOIN song
-        ON song.albumId = album.id
+                 JOIN song
+                      ON song.albumId = album.id
         GROUP BY album.id
         ORDER BY SUM(song.totalPlayTime)
     """

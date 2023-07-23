@@ -32,6 +32,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Лепшыя кампазіцыі</string>
     <string name="most_played_artists">Лепшыя выканаўцы</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Пошук</string>
@@ -262,12 +263,7 @@
     <string name="backup_restore">Рэзервовае капіраванне ды аднеўленне </string>
     <string name="backup">Рэзервовае капіраванне</string>
     <string name="restore">Аднаўленне з рэзервовай копіі</string>
-    <string name="choose_csv_file_from_google_takeout">Выбраць cvs-файл з Google Takeout</string>
     <string name="imported_playlist">Імпартаваны плей-ліст</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">\"%s\" імпаправаны з %d песняй</item>
-        <item quantity="other"> \"%s\" імпаправаны з %d песнямі</item>
-    </plurals>
     <string name="backup_create_success">Рэзервовная копія паспяхова створана</string>
     <string name="backup_create_failed">Немагчыма стапрыць рэзервовую копію</string>
     <string name="restore_failed">Немагчыма ужывіць рэзервовую копію</string>
