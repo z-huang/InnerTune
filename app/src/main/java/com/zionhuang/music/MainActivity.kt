@@ -344,6 +344,8 @@ class MainActivity : ComponentActivity() {
                                                 songs.firstOrNull()?.album?.id?.let { browseId ->
                                                     navController.navigate("album/$browseId")
                                                 }
+                                            }.onFailure {
+                                                it.printStackTrace()
                                             }
                                         }
                                     } else {
@@ -365,6 +367,8 @@ class MainActivity : ComponentActivity() {
                                             YouTube.queue(listOf(videoId))
                                         }.onSuccess {
                                             sharedSong = it.firstOrNull()
+                                        }.onFailure {
+                                            it.printStackTrace()
                                         }
                                     }
                                 }

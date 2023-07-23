@@ -26,6 +26,8 @@ class HomeViewModel @Inject constructor(
         quickPicks.value = database.quickPicks().first().shuffled().take(20)
         YouTube.explore().onSuccess {
             explorePage.value = it
+        }.onFailure {
+            it.printStackTrace()
         }
     }
 

@@ -19,6 +19,8 @@ class NewReleaseViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             YouTube.newReleaseAlbums().onSuccess {
                 _newReleaseAlbums.value = it
+            }.onFailure {
+                it.printStackTrace()
             }
         }
     }

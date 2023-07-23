@@ -72,11 +72,13 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
+import androidx.media3.common.PlaybackParameters
 import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
 import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
@@ -114,6 +116,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.math.log2
+import kotlin.math.pow
+import kotlin.math.round
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
@@ -624,13 +629,16 @@ fun PlayerMenu(
         }
     }
 
+    var transposeValue by remember {
+        mutableStateOf(round(12 * log2(playerConnection.player.playbackParameters.pitch)).toInt())
+    }
+
     Row(
         horizontalArrangement = Arrangement.spacedBy(24.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .padding(top = 24.dp, bottom = 12.dp)
+            .padding(horizontal = 24.dp, vertical = 24.dp)
     ) {
         Icon(
             painter = painterResource(R.drawable.volume_up),
@@ -643,6 +651,53 @@ fun PlayerMenu(
             onProgressChange = { playerConnection.service.playerVolume.value = it },
             modifier = Modifier.weight(1f)
         )
+    }
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 6.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.tune),
+            contentDescription = null,
+            modifier = Modifier.size(28.dp)
+        )
+
+        IconButton(
+            enabled = transposeValue > -12,
+            onClick = {
+                transposeValue--
+                playerConnection.player.playbackParameters = PlaybackParameters(1f, 2f.pow(transposeValue.toFloat() / 12))
+            }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.remove),
+                contentDescription = null
+            )
+        }
+
+        Text(
+            text = "${if (transposeValue > 0) "+" else ""}$transposeValue",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.weight(1f)
+        )
+
+        IconButton(
+            enabled = transposeValue < 12,
+            onClick = {
+                transposeValue++
+                playerConnection.player.playbackParameters = PlaybackParameters(1f, 2f.pow(transposeValue.toFloat() / 12))
+            }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.add),
+                contentDescription = null
+            )
+        }
     }
 
     GridMenu(

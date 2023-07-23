@@ -32,6 +32,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Самые популярные песни</string>
     <string name="most_played_artists">Самые популярные исполнители</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Поиск</string>
@@ -150,6 +151,18 @@
         <item quantity="many">%d плейлистов</item>
         <item quantity="other">%d плейлистов</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Плейлист импортирован</string>
@@ -244,12 +257,7 @@
     <string name="backup_restore">Резервное копирование</string>
     <string name="backup">Создать резервную копию</string>
     <string name="restore">Восстановить из резервной копии</string>
-    <string name="choose_csv_file_from_google_takeout">Выбрать csv-файл из Google Takeout</string>
     <string name="imported_playlist">Импортированный плейлист</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">Резервная копия создана успешно</string>
     <string name="backup_create_failed">Не удалось создать резервную копию</string>
     <string name="restore_failed">Не удалось восстановить резервную копию</string>

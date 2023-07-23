@@ -30,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">En çok dinlenen şarkılar</string>
     <string name="most_played_artists">En çok dinlenen sanatçılar</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Arama</string>
@@ -141,22 +142,22 @@
         <item quantity="other">%d çalma listesi</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d hafta</item>
-        <item quantity="other">%d hafta</item>
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d ay</item>
-        <item quantity="other">%d ay</item>
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d yıl</item>
-        <item quantity="other">%d yıl</item>
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
     </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Çalma listesi içe aktarıldı</string>
-    <string name="removed_song_from_playlist">Çalma listesinden \"%s\" kaldırıldı</string>
-    <string name="playlist_synced">Çalma listesi senkronize edildi</string>
+    <string name="removed_song_from_playlist">\"%s\" çalma listesinden kaldırıldı</string>
+    <string name="playlist_synced">Çalma listesi eşitlendi</string>
     <string name="undo">Geri al</string>
 
     <!-- Player -->
@@ -244,12 +245,7 @@
     <string name="backup_restore">Yedekleme ve geri yükleme</string>
     <string name="backup">Yedekle</string>
     <string name="restore">Geri yükle</string>
-    <string name="choose_csv_file_from_google_takeout">Google Takeout\'tan bir csv dosyası seçin</string>
     <string name="imported_playlist">Çalma listesi içe aktarıldı</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">"\"%s\" %d şarkı ile içe aktarıldı</item>
-        <item quantity="other">"\"%s\" %d şarkı ile içe aktarıldı</item>
-    </plurals>
     <string name="backup_create_success">Yedekleme başarıyla oluşturuldu</string>
     <string name="backup_create_failed">Yedekleme oluşturulamadı</string>
     <string name="restore_failed">Yedekleme geri yüklenemedi</string>
