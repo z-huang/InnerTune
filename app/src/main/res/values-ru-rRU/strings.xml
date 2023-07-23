@@ -32,6 +32,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Самые популярные песни</string>
     <string name="most_played_artists">Самые популярные исполнители</string>
+    <string name="most_played_albums">Самые популярные альбомы</string>
 
     <!-- Search -->
     <string name="search">Поиск</string>
@@ -262,12 +263,7 @@
     <string name="backup_restore">Резервное копирование</string>
     <string name="backup">Создать резервную копию</string>
     <string name="restore">Восстановить из резервной копии</string>
-    <string name="choose_csv_file_from_google_takeout">Выбрать csv-файл из Google Takeout</string>
     <string name="imported_playlist">Импортированный плейлист</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Импортировано «%s» с %d композицией</item>
-        <item quantity="other">Импортировано «%s» с %d композициями</item>
-    </plurals>
     <string name="backup_create_success">Резервная копия создана успешно</string>
     <string name="backup_create_failed">Не удалось создать резервную копию</string>
     <string name="restore_failed">Не удалось восстановить резервную копию</string>

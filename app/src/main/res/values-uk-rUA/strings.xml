@@ -32,6 +32,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Найпопулярніші пісні</string>
     <string name="most_played_artists">Найпопулярніші виконавці</string>
+    <string name="most_played_albums">Найпопулярніші альбоми</string>
 
     <!-- Search -->
     <string name="search">Пошук</string>
@@ -262,12 +263,7 @@
     <string name="backup_restore">Резервне копіювання</string>
     <string name="backup">Створити резервну копію</string>
     <string name="restore">Відновити з резервної копії</string>
-    <string name="choose_csv_file_from_google_takeout">Вибрати csv-файл із Google Takeout</string>
     <string name="imported_playlist">Імпортований плейлист</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Імпортовано «%s» з %d композицією</item>
-        <item quantity="other">Імпортовано «%s» з %d композиціями</item>
-    </plurals>
     <string name="backup_create_success">Резервну копію створено успішно</string>
     <string name="backup_create_failed">Не вдалося створити резервну копію</string>
     <string name="restore_failed">Не вдалося відновити з резервної копії</string>

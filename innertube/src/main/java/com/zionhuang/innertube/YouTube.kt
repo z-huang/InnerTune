@@ -148,7 +148,7 @@ object YouTube {
         )
     }
 
-    suspend fun album(browseId: String): Result<AlbumPage> = runCatching {
+    suspend fun album(browseId: String, withSongs: Boolean = true): Result<AlbumPage> = runCatching {
         val response = innerTube.browse(WEB_REMIX, browseId).body<BrowseResponse>()
         val playlistId = response.microformat?.microformatDataRenderer?.urlCanonical?.substringAfterLast('=')!!
         AlbumPage(
@@ -165,7 +165,7 @@ object YouTube {
                 year = response.header.musicDetailHeaderRenderer.subtitle.runs.lastOrNull()?.text?.toIntOrNull(),
                 thumbnail = response.header.musicDetailHeaderRenderer.thumbnail.croppedSquareThumbnailRenderer?.getThumbnailUrl()!!
             ),
-            songs = albumSongs(playlistId).getOrThrow()
+            songs = if (withSongs) albumSongs(playlistId).getOrThrow() else emptyList()
         )
     }
 

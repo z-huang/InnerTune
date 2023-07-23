@@ -29,6 +29,7 @@
     <!-- Stats -->
     <string name="most_played_songs">最常播放的歌曲</string>
     <string name="most_played_artists">最常播放的藝人</string>
+    <string name="most_played_albums">最常播放的專輯</string>
 
     <!-- Search -->
     <string name="search">搜尋</string>
@@ -235,11 +236,7 @@
     <string name="backup_restore">備份與還原</string>
     <string name="backup">備份</string>
     <string name="restore">還原</string>
-    <string name="choose_csv_file_from_google_takeout">選擇從 Google Takeout 匯出的 csv 檔</string>
     <string name="imported_playlist">已匯入的播放清單</string>
-    <plurals name="import_success">
-        <item quantity="other">已匯入「%s」，有%d首歌曲</item>
-    </plurals>
     <string name="backup_create_success">成功建立備份</string>
     <string name="backup_create_failed">無法建立備份</string>
     <string name="restore_failed">無法還原備份</string>

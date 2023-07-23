@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -29,6 +30,15 @@ class StatsViewModel @Inject constructor(
 
     val mostPlayedArtists = statPeriod.flatMapLatest { period ->
         database.mostPlayedArtists(period.toTimeMillis())
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+
+    val mostPlayedAlbums = statPeriod.flatMapLatest { period ->
+        database.mostPlayedAlbums(period.toTimeMillis())
+    }.map { albums ->
+        albums.mapNotNull { id ->
+            YouTube.album(id, withSongs = false).getOrNull()?.album
+        }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     init {

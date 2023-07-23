@@ -30,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Most played songs</string>
     <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">جستجو</string>
@@ -244,12 +245,7 @@
     <string name="backup_restore">پشتیبان‌گیری و بازگردانی</string>
     <string name="backup">پشتیبان‌گیری</string>
     <string name="restore">بازگردانی</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
     <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">پشتیبان باموفقیت ایجادشد</string>
     <string name="backup_create_failed">پشتیبان ایجاد نشد</string>
     <string name="restore_failed">بازیابی پشتیبان انجام‌نشد</string>

@@ -15,7 +15,7 @@
     <!-- Home -->
     <string name="history">Geschiedenis</string>
     <string name="stats">Statistieken</string>
-    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="mood_and_genres">Stemmingen en genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">Snelle keuzes</string>
     <string name="quick_picks_empty">Beluister een aantal nummers om je snelle keuzes te genereren</string>
@@ -30,11 +30,12 @@
     <!-- Stats -->
     <string name="most_played_songs">Meest afgespeelde nummers</string>
     <string name="most_played_artists">Meest afgespeelde artiesten</string>
+    <string name="most_played_albums">Meest afgespeelde artiesten</string>
 
     <!-- Search -->
     <string name="search">Zoeken</string>
     <string name="search_yt_music">Zoeken via YouTube Music…</string>
-    <string name="search_library">Zoeken in bibliotheek…</string>
+    <string name="search_library">Zoeken in bibliotheek</string>
     <string name="filter_all">Alles</string>
     <string name="filter_songs">Nummers</string>
     <string name="filter_videos">Videos</string>
@@ -244,12 +245,7 @@
     <string name="backup_restore">Backup en herstel</string>
     <string name="backup">Backup</string>
     <string name="restore">Herstellen</string>
-    <string name="choose_csv_file_from_google_takeout">Kies een csv-bestand van Google Takeout</string>
     <string name="imported_playlist">Afspeellijst geimporteerd</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">Back-up succesvol gemaakt.</string>
     <string name="backup_create_failed">Back-up maken mislukt.</string>
     <string name="restore_failed">Fout bij terugzetten back-up.</string>
