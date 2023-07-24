@@ -255,7 +255,7 @@ fun HomeScreen(
                     LazyHorizontalGrid(
                         rows = GridCells.Fixed(4),
                         contentPadding = PaddingValues(6.dp),
-                        modifier = Modifier.height(MoodAndGenresButtonHeight * 4 + 12.dp)
+                        modifier = Modifier.height((MoodAndGenresButtonHeight + 12.dp) * 4 + 12.dp)
                     ) {
                         items(moodAndGenres) {
                             MoodAndGenresButton(

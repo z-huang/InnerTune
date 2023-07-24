@@ -129,7 +129,7 @@ fun MoodAndGenresButton(
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp))
             .clickable(onClick = onClick)
-            .padding(12.dp)
+            .padding(horizontal = 12.dp)
     ) {
         Text(
             text = title,
@@ -140,4 +140,4 @@ fun MoodAndGenresButton(
     }
 }
 
-val MoodAndGenresButtonHeight = 54.dp
+val MoodAndGenresButtonHeight = 48.dp
