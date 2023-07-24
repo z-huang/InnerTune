@@ -36,7 +36,7 @@ class PlayerConnection(
     val player = service.player
 
     val playbackState = MutableStateFlow(player.playbackState)
-    val playWhenReady = MutableStateFlow(player.playWhenReady)
+    private val playWhenReady = MutableStateFlow(player.playWhenReady)
     val isPlaying = combine(playbackState, playWhenReady) { playbackState, playWhenReady ->
         playWhenReady && playbackState != STATE_ENDED
     }.stateIn(scope, SharingStarted.Lazily, player.playWhenReady && player.playbackState != STATE_ENDED)
