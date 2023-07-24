@@ -70,6 +70,12 @@ fun Thumbnail(
         }
     }
 
+    LaunchedEffect(showLyrics) {
+        if (!showLyrics) {
+            pagerState.scrollToPage(currentWindowIndex)
+        }
+    }
+
     DisposableEffect(showLyrics) {
         currentView.keepScreenOn = showLyrics
         onDispose {
