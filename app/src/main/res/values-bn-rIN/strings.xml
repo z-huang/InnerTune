@@ -9,6 +9,8 @@
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d নির্বাচিত</item>
+        <item quantity="few">%d নির্বাচিত</item>
+        <item quantity="many">%d নির্বাচিত</item>
         <item quantity="other">%d নির্বাচিত</item>
     </plurals>
 
@@ -127,36 +129,50 @@
     <!-- Noun -->
     <plurals name="n_song">
         <item quantity="one">%d গান</item>
+        <item quantity="few">%d গান</item>
+        <item quantity="many">%d গান</item>
         <item quantity="other">%d গান</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d শিল্পী</item>
+        <item quantity="few">%d শিল্পী</item>
+        <item quantity="many">%d শিল্পী</item>
         <item quantity="other">%d শিল্পী</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d অ্যালবাম</item>
+        <item quantity="few">%d অ্যালবাম</item>
+        <item quantity="many">%d অ্যালবাম</item>
         <item quantity="other">%d অ্যালবাম</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d প্লেলিস্ট</item>
+        <item quantity="few">%d প্লেলিস্ট</item>
+        <item quantity="many">%d প্লেলিস্ট</item>
         <item quantity="other">%d প্লেলিস্ট</item>
     </plurals>
-    <plurals name="n_week" tools:ignore="MissingQuantity">
+    <plurals name="n_week">
         <item quantity="one">%d সপ্তাহ</item>
+        <item quantity="few">%d সপ্তাহ</item>
+        <item quantity="many">%d সপ্তাহ</item>
         <item quantity="other">%d সপ্তাহ</item>
     </plurals>
-    <plurals name="n_month" tools:ignore="MissingQuantity">
+    <plurals name="n_month">
         <item quantity="one">%d মাস</item>
+        <item quantity="few">%d মাস</item>
+        <item quantity="many">%d মাস</item>
         <item quantity="other">%d মাস</item>
     </plurals>
-    <plurals name="n_year" tools:ignore="MissingQuantity">
+    <plurals name="n_year">
         <item quantity="one">%d বছর</item>
+        <item quantity="few">%d বছর</item>
+        <item quantity="many">%d বছর</item>
         <item quantity="other">%d বছর</item>
     </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">আমদানি করা প্লেলিস্ট</string>
-    <string name="removed_song_from_playlist">প্লেলিস্ট থেকে সরানো হয়েছে</string>
+    <string name="removed_song_from_playlist">প্লেলিস্ট থেকে \"%s\" সরানো হয়েছে</string>
     <string name="playlist_synced">সিঙ্ক্রোনাইজ করা প্লেলিস্ট</string>
     <string name="undo">বাতিল করুন</string>
 
@@ -165,7 +181,9 @@
     <string name="sleep_timer">ঘুমের টাইমার</string>
     <string name="end_of_song">গানের শেষ</string>
     <plurals name="minute">
-        <item quantity="one">১ মিনিট</item>
+        <item quantity="one">%d মিনিট</item>
+        <item quantity="few">%d মিনিট</item>
+        <item quantity="many">%d মিনিট</item>
         <item quantity="other">%d মিনিট</item>
     </plurals>
     <string name="error_no_stream">স্ট্রিম উপলব্ধ নয়</string>
