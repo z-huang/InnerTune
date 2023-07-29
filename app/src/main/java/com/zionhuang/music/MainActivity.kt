@@ -220,16 +220,16 @@ class MainActivity : ComponentActivity() {
                     val navigationItems = remember {
                         listOf(Screens.Home, Screens.Songs, Screens.Artists, Screens.Albums, Screens.Playlists)
                     }
-                    val tabOpenedFromShortcut = remember {
-                        when (intent?.action) {
-                            "zionhuang.music.action.SONGS" -> NavigationTab.SONG
-                            "zionhuang.music.action.ALBUMS" -> NavigationTab.ALBUM
-                            "zionhuang.music.action.PLAYLISTS" -> NavigationTab.PLAYLIST
-                            else -> null
-                        }
-                    }
                     val defaultOpenTab = remember {
                         dataStore[DefaultOpenTabKey].toEnum(defaultValue = NavigationTab.HOME)
+                    }
+                    val tabOpenedFromShortcut = remember {
+                        when (intent?.action) {
+                            ACTION_SONGS -> NavigationTab.SONG
+                            ACTION_ALBUMS -> NavigationTab.ALBUM
+                            ACTION_PLAYLISTS -> NavigationTab.PLAYLIST
+                            else -> null
+                        }
                     }
 
                     val (query, onQueryChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -264,7 +264,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     var openSearchImmediately: Boolean by remember {
-                        mutableStateOf(intent?.action == "zionhuang.music.action.SEARCH")
+                        mutableStateOf(intent?.action == ACTION_SEARCH)
                     }
 
                     val shouldShowSearchBar = remember(active, navBackStackEntry) {
@@ -816,6 +816,13 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             window.navigationBarColor = (if (isDark) Color.Transparent else Color.Black.copy(alpha = 0.2f)).toArgb()
         }
+    }
+
+    companion object {
+        const val ACTION_SEARCH = "com.zionhuang.music.action.SEARCH"
+        const val ACTION_SONGS = "com.zionhuang.music.action.SONGS"
+        const val ACTION_ALBUMS = "com.zionhuang.music.action.ALBUMS"
+        const val ACTION_PLAYLISTS = "com.zionhuang.music.action.PLAYLISTS"
     }
 }
 
