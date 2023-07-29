@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -219,6 +220,14 @@ class MainActivity : ComponentActivity() {
                     val navigationItems = remember {
                         listOf(Screens.Home, Screens.Songs, Screens.Artists, Screens.Albums, Screens.Playlists)
                     }
+                    val tabOpenedFromShortcut = remember {
+                        when (intent?.action) {
+                            "zionhuang.music.action.SONGS" -> NavigationTab.SONG
+                            "zionhuang.music.action.ALBUMS" -> NavigationTab.ALBUM
+                            "zionhuang.music.action.PLAYLISTS" -> NavigationTab.PLAYLIST
+                            else -> null
+                        }
+                    }
                     val defaultOpenTab = remember {
                         dataStore[DefaultOpenTabKey].toEnum(defaultValue = NavigationTab.HOME)
                     }
@@ -240,6 +249,8 @@ class MainActivity : ComponentActivity() {
                     }
                     var searchSource by rememberEnumPreference(SearchSourceKey, SearchSource.ONLINE)
 
+                    val searchBarFocusRequester = remember { FocusRequester() }
+
                     val onSearch: (String) -> Unit = {
                         if (it.isNotEmpty()) {
                             onActiveChange(false)
@@ -250,6 +261,10 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
+                    }
+
+                    var openSearchImmediately: Boolean by remember {
+                        mutableStateOf(intent?.action == "zionhuang.music.action.SEARCH")
                     }
 
                     val shouldShowSearchBar = remember(active, navBackStackEntry) {
@@ -393,7 +408,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(
                             navController = navController,
-                            startDestination = when (defaultOpenTab) {
+                            startDestination = when (tabOpenedFromShortcut ?: defaultOpenTab) {
                                 NavigationTab.HOME -> Screens.Home
                                 NavigationTab.SONG -> Screens.Songs
                                 NavigationTab.ARTIST -> Screens.Artists
@@ -657,7 +672,8 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
                                 },
-                                modifier = Modifier.align(Alignment.TopCenter)
+                                focusRequester = searchBarFocusRequester,
+                                modifier = Modifier.align(Alignment.TopCenter),
                             ) {
                                 Crossfade(
                                     targetState = searchSource,
@@ -773,6 +789,14 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    LaunchedEffect(shouldShowSearchBar, openSearchImmediately) {
+                        if (shouldShowSearchBar && openSearchImmediately) {
+                            onActiveChange(true)
+                            searchBarFocusRequester.requestFocus()
+                            openSearchImmediately = false
                         }
                     }
                 }

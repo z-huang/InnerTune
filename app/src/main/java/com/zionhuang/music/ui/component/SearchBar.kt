@@ -68,6 +68,7 @@ fun SearchBar(
     tonalElevation: Dp = SearchBarDefaults.Elevation,
     windowInsets: WindowInsets = WindowInsets.systemBars,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    focusRequester: FocusRequester = remember { FocusRequester() },
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val heightOffsetLimit = with(LocalDensity.current) {
@@ -172,6 +173,7 @@ fun SearchBar(
                     trailingIcon = trailingIcon,
                     colors = colors.inputFieldColors,
                     interactionSource = interactionSource,
+                    focusRequester = focusRequester,
                 )
 
                 if (animationProgress > 0) {
@@ -204,8 +206,8 @@ private fun SearchBarInputField(
     trailingIcon: @Composable (() -> Unit)? = null,
     colors: TextFieldColors = SearchBarDefaults.inputFieldColors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    focusRequester: FocusRequester = remember { FocusRequester() }
 ) {
-    val focusRequester = remember { FocusRequester() }
     val searchSemantics = getString(Strings.SearchBarSearch)
     val suggestionsAvailableSemantics = getString(Strings.SuggestionsAvailable)
     val textColor = LocalTextStyle.current.color.takeOrElse {
