@@ -1,10 +1,11 @@
 package com.zionhuang.music.ui.screens
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,19 +19,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.GridThumbnailHeight
 import com.zionhuang.music.ui.component.LocalMenuState
-import com.zionhuang.music.ui.component.YouTubeListItem
-import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
+import com.zionhuang.music.ui.component.YouTubeGridItem
+import com.zionhuang.music.ui.component.shimmer.GridItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubePlaylistMenu
 import com.zionhuang.music.viewmodels.AccountViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AccountScreen(
     navController: NavController,
@@ -40,55 +43,44 @@ fun AccountScreen(
     val menuState = LocalMenuState.current
     val playerConnection = LocalPlayerConnection.current ?: return
 
-    val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     val playlists by viewModel.playlists.collectAsState()
 
-    LazyColumn(
-        state = lazyListState,
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = GridThumbnailHeight + 24.dp),
         contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
     ) {
-        playlists.let { playlists ->
-            if (playlists == null) {
-                item(key = "loading") {
-                    ShimmerHost {
-                        repeat(8) {
-                            ListItemPlaceHolder()
-                        }
-                    }
-                }
-            } else {
-                items(
-                    items = playlists,
-                    key = { it.id }
-                ) { item ->
-                    YouTubeListItem(
-                        item = item,
-                        trailingContent = {
-                            IconButton(
-                                onClick = {
-                                    menuState.show {
-                                        YouTubePlaylistMenu(
-                                            playlist = item,
-                                            playerConnection = playerConnection,
-                                            coroutineScope = coroutineScope,
-                                            onDismiss = menuState::dismiss
-                                        )
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.more_vert),
-                                    contentDescription = null
+        items(
+            items = playlists.orEmpty(),
+            key = { it.id }
+        ) { item ->
+            YouTubeGridItem(
+                item = item,
+                fillMaxWidth = true,
+                modifier = Modifier
+                    .combinedClickable(
+                        onClick = {
+                            navController.navigate("online_playlist/${item.id}")
+                        },
+                        onLongClick = {
+                            menuState.show {
+                                YouTubePlaylistMenu(
+                                    playlist = item,
+                                    playerConnection = playerConnection,
+                                    coroutineScope = coroutineScope,
+                                    onDismiss = menuState::dismiss
                                 )
                             }
-                        },
-                        modifier = Modifier
-                            .clickable {
-                                navController.navigate("online_playlist/${item.id}")
-                            }
+                        }
                     )
+            )
+        }
+
+        if (playlists == null) {
+            items(8) {
+                ShimmerHost {
+                    GridItemPlaceHolder(fillMaxWidth = true)
                 }
             }
         }
