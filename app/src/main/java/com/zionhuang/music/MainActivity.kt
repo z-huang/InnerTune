@@ -105,6 +105,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URLDecoder
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -241,7 +243,7 @@ class MainActivity : ComponentActivity() {
                     val onSearch: (String) -> Unit = {
                         if (it.isNotEmpty()) {
                             onActiveChange(false)
-                            navController.navigate("search/$it")
+                            navController.navigate("search/${URLEncoder.encode(it, "UTF-8")}")
                             if (dataStore[PauseSearchHistoryKey] != true) {
                                 database.query {
                                     insert(SearchHistory(query = it))
@@ -288,7 +290,9 @@ class MainActivity : ComponentActivity() {
 
                     LaunchedEffect(navBackStackEntry) {
                         if (navBackStackEntry?.destination?.route?.startsWith("search/") == true) {
-                            val searchQuery = navBackStackEntry?.arguments?.getString("query")!!
+                            val searchQuery = withContext(Dispatchers.IO) {
+                                URLDecoder.decode(navBackStackEntry?.arguments?.getString("query")!!, "UTF-8")
+                            }
                             onQueryChange(TextFieldValue(searchQuery, TextRange(searchQuery.length)))
                         } else if (navigationItems.fastAny { it.route == navBackStackEntry?.destination?.route }) {
                             onQueryChange(TextFieldValue())
@@ -675,7 +679,7 @@ class MainActivity : ComponentActivity() {
                                             onQueryChange = onQueryChange,
                                             navController = navController,
                                             onSearch = {
-                                                navController.navigate("search/$it")
+                                                navController.navigate("search/${URLEncoder.encode(it, "UTF-8")}")
                                                 if (dataStore[PauseSearchHistoryKey] != true) {
                                                     database.query {
                                                         insert(SearchHistory(query = it))
