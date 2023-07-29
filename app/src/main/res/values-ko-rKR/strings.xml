@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Bottom navigation -->
     <string name="home">Home</string>
     <string name="songs">노래</string>
@@ -43,6 +43,7 @@
     <string name="filter_playlists">플레이리스트</string>
     <string name="filter_community_playlists">Community playlists</string>
     <string name="filter_featured_playlists">Featured playlists</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->
@@ -136,16 +137,13 @@
     <plurals name="n_playlist">
         <item quantity="other">%d playlists</item>
     </plurals>
-    <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
+    <plurals name="n_week">
         <item quantity="other">%d weeks</item>
     </plurals>
-    <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
+    <plurals name="n_month">
         <item quantity="other">%d months</item>
     </plurals>
-    <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
+    <plurals name="n_year">
         <item quantity="other">%d years</item>
     </plurals>
 

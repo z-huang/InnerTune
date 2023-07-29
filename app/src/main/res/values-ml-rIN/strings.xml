@@ -44,6 +44,7 @@
     <string name="filter_playlists">പ്ലേലിസ്റ്റുകൾ</string>
     <string name="filter_community_playlists">കമ്മ്യൂണിറ്റി പ്ലേലിസ്റ്റുകൾ</string>
     <string name="filter_featured_playlists">തിരഞ്ഞെടുത്ത പ്ലേലിസ്റ്റുകൾ</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->

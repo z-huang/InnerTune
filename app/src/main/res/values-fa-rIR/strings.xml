@@ -44,6 +44,7 @@
     <string name="filter_playlists">لیست‌پخش‌ها</string>
     <string name="filter_community_playlists">لیست‌پخش‌های انجمن</string>
     <string name="filter_featured_playlists">لیست‌پخش‌های ویژه</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->

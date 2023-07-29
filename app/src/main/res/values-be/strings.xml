@@ -46,6 +46,7 @@
     <string name="filter_playlists">Плэй-лісты</string>
     <string name="filter_community_playlists">Плэй-лісты aд cупольнасці</string>
     <string name="filter_featured_playlists">Вартыя ўвагі плэй-лісты</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">Вынікі не знойдзены</string>
 
     <!-- Artist screen -->

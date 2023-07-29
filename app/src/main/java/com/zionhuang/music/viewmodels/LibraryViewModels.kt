@@ -44,11 +44,18 @@ class LibraryArtistsViewModel @Inject constructor(
 ) : ViewModel() {
     val allArtists = context.dataStore.data
         .map {
-            it[ArtistSortTypeKey].toEnum(ArtistSortType.CREATE_DATE) to (it[ArtistSortDescendingKey] ?: true)
+            Triple(
+                it[ArtistViewTypeKey].toEnum(ArtistViewType.ALL),
+                it[ArtistSortTypeKey].toEnum(ArtistSortType.CREATE_DATE),
+                it[ArtistSortDescendingKey] ?: true
+            )
         }
         .distinctUntilChanged()
-        .flatMapLatest { (sortType, descending) ->
-            database.artists(sortType, descending)
+        .flatMapLatest { (viewType, sortType, descending) ->
+            when (viewType) {
+                ArtistViewType.ALL -> database.artists(sortType, descending)
+                ArtistViewType.BOOKMARKED -> database.artistsBookmarked(sortType, descending)
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 

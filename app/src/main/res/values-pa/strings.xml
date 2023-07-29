@@ -44,6 +44,7 @@
     <string name="filter_playlists">ਪਲੇਲਿਸਟਾਂ</string>
     <string name="filter_community_playlists">ਕਮਿਊਨਿਟੀ ਪਲੇਲਿਸਟਾਂ</string>
     <string name="filter_featured_playlists">ਪ੍ਰਦਰਸ਼ਿਤ ਪਲੇਲਿਸਟਾਂ</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">ਕੋਈ ਨਤੀਜੇ ਨਹੀਂ ਲੱਭੇ</string>
 
     <!-- Artist screen -->

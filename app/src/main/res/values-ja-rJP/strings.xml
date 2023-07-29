@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Bottom navigation -->
     <string name="home">ホーム</string>
     <string name="songs">曲</string>
@@ -43,6 +43,7 @@
     <string name="filter_playlists">プレイリスト</string>
     <string name="filter_community_playlists">コミュニティのプレイリスト</string>
     <string name="filter_featured_playlists">おすすめのプレイリスト</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">見つかりませんでした</string>
 
     <!-- Artist screen -->
@@ -136,16 +137,13 @@
     <plurals name="n_playlist">
         <item quantity="other">%d プレイリスト</item>
     </plurals>
-    <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d週間</item>
+    <plurals name="n_week">
         <item quantity="other">%d週間</item>
     </plurals>
-    <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%dか月</item>
+    <plurals name="n_month">
         <item quantity="other">%dか月</item>
     </plurals>
-    <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d年</item>
+    <plurals name="n_year">
         <item quantity="other">%d年</item>
     </plurals>
 

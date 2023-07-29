@@ -44,6 +44,7 @@
     <string name="filter_playlists">Çalma Listeleri</string>
     <string name="filter_community_playlists">Topluluk çalma listeleri</string>
     <string name="filter_featured_playlists">Öne çıkan listeler</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">Sonuç bulunamadı</string>
 
     <!-- Artist screen -->

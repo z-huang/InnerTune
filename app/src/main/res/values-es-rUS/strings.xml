@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Bottom navigation -->
     <string name="home">Home</string>
     <string name="songs">Canciones</string>
@@ -10,6 +10,7 @@
     <plurals name="n_selected">
         <item quantity="one">%d seleccionada</item>
         <item quantity="other">%d seleccionadas</item>
+        <item quantity="many">%d seleccionadas</item>
     </plurals>
 
     <!-- Home -->
@@ -44,6 +45,7 @@
     <string name="filter_playlists">Playlists</string>
     <string name="filter_community_playlists">Community playlists</string>
     <string name="filter_featured_playlists">Featured playlists</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->
@@ -74,7 +76,7 @@
     <string name="import_playlist">Import playlist</string>
     <string name="add_to_playlist">Añadir a una playlist</string>
     <string name="view_artist">View artist</string>
-    <string name="view_album">View album</string>
+    <string name="view_album">View álbum</string>
     <string name="refetch">Refetch</string>
     <string name="share">Share</string>
     <string name="delete">Eliminar</string>
@@ -128,30 +130,37 @@
     <plurals name="n_song">
         <item quantity="one">%d canción</item>
         <item quantity="other">%d canciones</item>
+        <item quantity="many">%d canciones</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d artist</item>
         <item quantity="other">%d artists</item>
+        <item quantity="many">%d artists</item>
     </plurals>
     <plurals name="n_album">
-        <item quantity="one">%d album</item>
+        <item quantity="one">%d álbum</item>
         <item quantity="other">%d albums</item>
+        <item quantity="many">%d albums</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d playlist</item>
         <item quantity="other">%d playlists</item>
+        <item quantity="many">%d playlists</item>
     </plurals>
-    <plurals name="n_week" tools:ignore="MissingQuantity">
+    <plurals name="n_week">
         <item quantity="one">%d week</item>
         <item quantity="other">%d weeks</item>
+        <item quantity="many">%d weeks</item>
     </plurals>
-    <plurals name="n_month" tools:ignore="MissingQuantity">
+    <plurals name="n_month">
         <item quantity="one">%d month</item>
         <item quantity="other">%d months</item>
+        <item quantity="many">%d months</item>
     </plurals>
-    <plurals name="n_year" tools:ignore="MissingQuantity">
+    <plurals name="n_year">
         <item quantity="one">%d year</item>
         <item quantity="other">%d years</item>
+        <item quantity="many">%d years</item>
     </plurals>
 
     <!-- Snackbar -->
@@ -167,6 +176,7 @@
     <plurals name="minute">
         <item quantity="one">1 minute</item>
         <item quantity="other">%d minutes</item>
+        <item quantity="many">%d minutes</item>
     </plurals>
     <string name="error_no_stream">No stream available</string>
     <string name="error_no_internet">No network connection</string>

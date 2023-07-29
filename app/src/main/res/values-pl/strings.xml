@@ -46,6 +46,7 @@
     <string name="filter_playlists">Playlisty</string>
     <string name="filter_community_playlists">Playlisty tworzone przez społeczność</string>
     <string name="filter_featured_playlists">Polecane playlisty</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">Brak wyników</string>
 
     <!-- Artist screen -->

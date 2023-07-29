@@ -49,6 +49,8 @@ val PlaylistSortDescendingKey = booleanPreferencesKey("playlistSortDescending")
 val ArtistSongSortTypeKey = stringPreferencesKey("artistSongSortType")
 val ArtistSongSortDescendingKey = booleanPreferencesKey("artistSongSortDescending")
 
+val ArtistViewTypeKey = stringPreferencesKey("artistViewType")
+
 val PlaylistEditLockKey = booleanPreferencesKey("playlistEditLock")
 
 enum class SongSortType {
@@ -79,10 +81,12 @@ enum class PlaylistSortType {
     CREATE_DATE, NAME, SONG_COUNT
 }
 
+enum class ArtistViewType {
+    ALL, BOOKMARKED
+}
+
 val ShowLyricsKey = booleanPreferencesKey("showLyrics")
 val LyricsTextPositionKey = stringPreferencesKey("lyricsTextPosition")
-
-val NavTabConfigKey = stringPreferencesKey("navTabConfig")
 
 val PlayerVolumeKey = floatPreferencesKey("playerVolume")
 val RepeatModeKey = intPreferencesKey("repeatMode")

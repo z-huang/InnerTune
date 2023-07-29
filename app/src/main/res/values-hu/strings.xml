@@ -44,6 +44,7 @@
     <string name="filter_playlists">Listák</string>
     <string name="filter_community_playlists">Közösségi listák</string>
     <string name="filter_featured_playlists">Kiemelt lejátszási listák</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">Nincs találat</string>
 
     <!-- Artist screen -->

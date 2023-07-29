@@ -44,6 +44,7 @@
     <string name="filter_playlists">ପ୍ଲେଲିଷ୍ଟ ଗୁଡ଼ିକ</string>
     <string name="filter_community_playlists">ସମ୍ପ୍ରଦାୟ ପ୍ଲେଲିଷ୍ଟଗୁଡିକ</string>
     <string name="filter_featured_playlists">ବୈଶିଷ୍ଟ୍ୟଯୁକ୍ତ ତାଲିକାଗୁଡ଼ିକ</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->

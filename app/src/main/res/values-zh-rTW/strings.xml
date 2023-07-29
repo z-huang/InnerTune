@@ -43,6 +43,7 @@
     <string name="filter_playlists">播放清單</string>
     <string name="filter_community_playlists">社群播放清單</string>
     <string name="filter_featured_playlists">精選播放清單</string>
+    <string name="filter_bookmarked">收藏</string>
     <string name="no_results_found">找不到結果</string>
 
     <!-- Artist screen -->

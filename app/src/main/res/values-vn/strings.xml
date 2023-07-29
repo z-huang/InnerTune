@@ -17,8 +17,7 @@
     <string name="mood_and_genres">Tâm trạng và thể loại</string>
     <string name="account">Tài Khoản</string>
     <string name="quick_picks">Chọn nhanh</string>
-    <string name="quick_picks_empty">Nghe các bài hát để tạo danh sách chọn nhanh của bạn
-</string>
+    <string name="quick_picks_empty">Nghe các bài hát để tạo danh sách chọn nhanh của bạn</string>
     <string name="new_release_albums">Các albums mới phát hành</string>
 
     <!-- History -->
@@ -44,6 +43,7 @@
     <string name="filter_playlists">Danh sách phát</string>
     <string name="filter_community_playlists">Danh sách phát cộng đồng</string>
     <string name="filter_featured_playlists">Danh sách phát tiêu biểu</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">Không tìm thấy kết quả</string>
 
     <!-- Artist screen -->

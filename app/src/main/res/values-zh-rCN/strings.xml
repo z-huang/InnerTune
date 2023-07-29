@@ -43,6 +43,7 @@
     <string name="filter_playlists">播放列表</string>
     <string name="filter_community_playlists">社区播放列表</string>
     <string name="filter_featured_playlists">精选播放列表</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">找不到结果</string>
 
     <!-- Artist screen -->
@@ -137,15 +138,12 @@
         <item quantity="other">%d 个播放列表</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
         <item quantity="other">%d weeks</item>
     </plurals>
-    <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
+    <plurals name="n_month">
         <item quantity="other">%d months</item>
     </plurals>
-    <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
+    <plurals name="n_year">
         <item quantity="other">%d years</item>
     </plurals>
 
