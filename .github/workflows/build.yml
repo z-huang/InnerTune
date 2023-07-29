@@ -1,8 +1,16 @@
 name: Build debug APK
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'
+    paths-ignore:
+      - 'README.md'
+      - 'fastlane/**'
+      - 'assets/**'
+      - '.github/**/*.md'
+      - '.github/FUNDING.yml'
+      - '.github/ISSUE_TEMPLATE/**'
 
 jobs:
   build:
@@ -33,7 +41,7 @@ jobs:
           MUSIC_DEBUG_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
 
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app
           path: app/build/outputs/apk/debug/*.apk
