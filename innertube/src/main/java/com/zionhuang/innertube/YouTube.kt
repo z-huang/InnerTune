@@ -239,7 +239,11 @@ object YouTube {
     }
 
     suspend fun playlist(playlistId: String): Result<PlaylistPage> = runCatching {
-        val response = innerTube.browse(WEB_REMIX, "VL$playlistId").body<BrowseResponse>()
+        val response = innerTube.browse(
+            client = WEB_REMIX,
+            browseId = "VL$playlistId",
+            setLogin = true
+        ).body<BrowseResponse>()
         val header = response.header?.musicDetailHeaderRenderer ?: response.header?.musicEditablePlaylistDetailHeaderRenderer?.header?.musicDetailHeaderRenderer!!
         PlaylistPage(
             playlist = PlaylistItem(
@@ -273,7 +277,11 @@ object YouTube {
     }
 
     suspend fun playlistContinuation(continuation: String) = runCatching {
-        val response = innerTube.browse(WEB_REMIX, continuation = continuation).body<BrowseResponse>()
+        val response = innerTube.browse(
+            client = WEB_REMIX,
+            continuation = continuation,
+            setLogin = true
+        ).body<BrowseResponse>()
         PlaylistContinuationPage(
             songs = response.continuationContents?.musicPlaylistShelfContinuation?.contents?.mapNotNull {
                 PlaylistPage.fromMusicResponsiveListItemRenderer(it.musicResponsiveListItemRenderer)
@@ -344,7 +352,11 @@ object YouTube {
     }
 
     suspend fun likedPlaylists(): Result<List<PlaylistItem>> = runCatching {
-        val response = innerTube.browse(WEB_REMIX, browseId = "FEmusic_liked_playlists").body<BrowseResponse>()
+        val response = innerTube.browse(
+            client = WEB_REMIX,
+            browseId = "FEmusic_liked_playlists",
+            setLogin = true
+        ).body<BrowseResponse>()
         response.contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.firstOrNull()?.gridRenderer?.items!!
             .drop(1) // the first item is "create new playlist"
             .mapNotNull(GridRenderer.Item::musicTwoRowItemRenderer)
