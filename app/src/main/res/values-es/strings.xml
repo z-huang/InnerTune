@@ -9,15 +9,15 @@
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d seleccionada</item>
-        <item quantity="other">%d seleccionadas</item>
         <item quantity="many">%d seleccionadas</item>
+        <item quantity="other">%d seleccionadas</item>
     </plurals>
 
     <!-- Home -->
     <string name="history">Historial</string>
     <string name="stats">Estadísticas</string>
-    <string name="mood_and_genres">Mood and Genres</string>
-    <string name="account">Account</string>
+    <string name="mood_and_genres">Ánimo y géneros</string>
+    <string name="account">Cuenta</string>
     <string name="quick_picks">Selecciones rápidas</string>
     <string name="quick_picks_empty">Escucha algunas canciones para generar tus selecciones rápidas</string>
     <string name="new_release_albums">Nuevos lanzamientos</string>
@@ -31,12 +31,12 @@
     <!-- Stats -->
     <string name="most_played_songs">Canciones más reproducidas</string>
     <string name="most_played_artists">Artistas más reproducidos</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_albums">Álbumes más reproducidos</string>
 
     <!-- Search -->
     <string name="search">Buscar</string>
     <string name="search_yt_music">Buscar en Youtube Music…</string>
-    <string name="search_library">Buscar en biblioteca…</string>
+    <string name="search_library">Buscar en la biblioteca…</string>
     <string name="filter_all">Todo</string>
     <string name="filter_songs">Canciones</string>
     <string name="filter_videos">Vídeos</string>
@@ -45,7 +45,7 @@
     <string name="filter_playlists">Listas de reproducción</string>
     <string name="filter_community_playlists">Listas de la comunidad</string>
     <string name="filter_featured_playlists">Listas destacadas</string>
-    <string name="filter_bookmarked">Bookmarked</string>
+    <string name="filter_bookmarked">En marcadores</string>
     <string name="no_results_found">No se han encontrado resultados</string>
 
     <!-- Artist screen -->
@@ -129,38 +129,38 @@
     <!-- Noun -->
     <plurals name="n_song">
         <item quantity="one">%d canción</item>
-        <item quantity="other">%d canciones</item>
         <item quantity="many">%d canciones</item>
+        <item quantity="other">%d canciones</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d artista</item>
-        <item quantity="other">%d artistas</item>
         <item quantity="many">%d artistas</item>
+        <item quantity="other">%d artistas</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d álbum</item>
-        <item quantity="other">%d álbumes</item>
         <item quantity="many">%d álbumes</item>
+        <item quantity="other">%d álbumes</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d lista de reproducción</item>
-        <item quantity="other">%d listas de reproducción</item>
         <item quantity="many">%d listas de reproducción</item>
+        <item quantity="other">%d listas de reproducción</item>
     </plurals>
     <plurals name="n_week">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
-        <item quantity="many">%d weeks</item>
+        <item quantity="one">%d semana</item>
+        <item quantity="many">%d semanas</item>
+        <item quantity="other">%d semanas</item>
     </plurals>
     <plurals name="n_month">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
-        <item quantity="many">%d months</item>
+        <item quantity="one">%d mes</item>
+        <item quantity="many">%d meses</item>
+        <item quantity="other">%d meses</item>
     </plurals>
     <plurals name="n_year">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
-        <item quantity="many">%d years</item>
+        <item quantity="one">%d año</item>
+        <item quantity="many">%d años</item>
+        <item quantity="other">%d años</item>
     </plurals>
 
     <!-- Snackbar -->
@@ -175,8 +175,8 @@
     <string name="end_of_song">Al finalizar la canción</string>
     <plurals name="minute">
         <item quantity="one">1 minuto</item>
-        <item quantity="other">%d minutos</item>
         <item quantity="many">%d minutos</item>
+        <item quantity="other">%d minutos</item>
     </plurals>
     <string name="error_no_stream">No hay un stream disponible</string>
     <string name="error_no_internet">No hay conexión a internet</string>
