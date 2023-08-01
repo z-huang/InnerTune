@@ -46,7 +46,7 @@
     <string name="filter_playlists">Плейлисти</string>
     <string name="filter_community_playlists">Плейлисти спільноти</string>
     <string name="filter_featured_playlists">Обрані плейлисти</string>
-    <string name="filter_bookmarked">Bookmarked</string>
+    <string name="filter_bookmarked">Додано в закладки</string>
     <string name="no_results_found">Результатів не знайдено</string>
 
     <!-- Artist screen -->
