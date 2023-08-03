@@ -30,7 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">En çok dinlenen şarkılar</string>
     <string name="most_played_artists">En çok dinlenen sanatçılar</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_albums">En çok dinlenen albümler</string>
 
     <!-- Search -->
     <string name="search">Arama</string>
@@ -44,7 +44,7 @@
     <string name="filter_playlists">Çalma Listeleri</string>
     <string name="filter_community_playlists">Topluluk çalma listeleri</string>
     <string name="filter_featured_playlists">Öne çıkan listeler</string>
-    <string name="filter_bookmarked">Bookmarked</string>
+    <string name="filter_bookmarked">Favoriler</string>
     <string name="no_results_found">Sonuç bulunamadı</string>
 
     <!-- Artist screen -->
@@ -143,16 +143,16 @@
         <item quantity="other">%d çalma listesi</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="one">%d hafta</item>
+        <item quantity="other">%d hafta</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d ay</item>
+        <item quantity="other">%d ay</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d yıl</item>
+        <item quantity="other">%d yıl</item>
     </plurals>
 
     <!-- Snackbar -->
@@ -254,5 +254,5 @@
     <string name="about">Hakkında</string>
     <string name="app_version">Uygulama sürümü</string>
 
-    <string name="new_version_available">New version available</string>
+    <string name="new_version_available">Yeni sürüm mevcut</string>
 </resources>
