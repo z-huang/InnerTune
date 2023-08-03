@@ -13,7 +13,7 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">Hörverlaufverlauf</string>
+    <string name="history">Hörverlauf</string>
     <string name="stats">Statistiken</string>
     <string name="mood_and_genres">Stimmungen & Genres</string>
     <string name="account">Account</string>
