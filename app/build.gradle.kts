@@ -6,6 +6,9 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    if (System.getenv("PULL_REQUEST") == null) {
+        id("com.google.gms.google-services")
+    }
 }
 
 android {
@@ -35,12 +38,9 @@ android {
     signingConfigs {
         getByName("debug") {
             if (System.getenv("MUSIC_DEBUG_SIGNING_STORE_PASSWORD") != null) {
-                val tmpFilePath = System.getProperty("user.home") + "/work/_temp/Key/"
-                val allFilesFromDir = File(tmpFilePath).listFiles()
-                val keystoreFile = allFilesFromDir?.first()
-                storeFile = keystoreFile ?: file(System.getenv("MUSIC_DEBUG_KEYSTORE_FILE"))
+                storeFile = file(System.getenv("MUSIC_DEBUG_KEYSTORE_FILE"))
                 storePassword = System.getenv("MUSIC_DEBUG_SIGNING_STORE_PASSWORD")
-                keyAlias = System.getenv("MUSIC_DEBUG_SIGNING_KEY_ALIAS")
+                keyAlias = "debug"
                 keyPassword = System.getenv("MUSIC_DEBUG_SIGNING_KEY_PASSWORD")
             }
         }
@@ -123,6 +123,9 @@ dependencies {
     implementation(projects.kugou)
 
     coreLibraryDesugaring(libs.desugaring)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
     implementation(libs.timber)
 }

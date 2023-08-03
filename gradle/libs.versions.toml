@@ -1,5 +1,6 @@
 [versions]
 androidGradlePlugin = "7.4.2"
+googleServices = "4.3.15"
 kotlin = "1.8.0"
 compose-compiler = "1.4.0"
 compose = "1.3.3"
@@ -73,6 +74,10 @@ desugaring = { group = "com.android.tools", name = "desugar_jdk_libs", version =
 junit = { group = "junit", name = "junit", version = "4.13.2" }
 
 timber = { group = "com.jakewharton.timber", name = "timber", version = "4.7.1" }
+
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "32.2.0" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

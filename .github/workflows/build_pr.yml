@@ -19,6 +19,8 @@ jobs:
 
       - name: Build debug APK and run jvm tests
         run: ./gradlew assembleDebug lintDebug testDebugUnitTest --stacktrace -DskipFormatKtlint
+        env:
+          PULL_REQUEST: 'true'
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
