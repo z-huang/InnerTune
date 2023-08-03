@@ -15,7 +15,7 @@
     <!-- Home -->
     <string name="history">Hörverlauf</string>
     <string name="stats">Statistiken</string>
-    <string name="mood_and_genres">Stimmungen & Genres</string>
+    <string name="mood_and_genres">Stimmungen und Genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">Schnellauswahl</string>
     <string name="quick_picks_empty">Hören Sie sich einige Songs an, um Ihre Schnellauswahl zu treffen</string>
