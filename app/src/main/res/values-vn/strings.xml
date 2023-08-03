@@ -252,4 +252,6 @@
 
     <string name="about">Tác giả</string>
     <string name="app_version">Phiên bản ứng dụng</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

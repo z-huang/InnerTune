@@ -253,4 +253,6 @@
 
     <string name="about">ବିଷୟରେ</string>
     <string name="app_version">ଆପ୍ ସଂସ୍କରଣ</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

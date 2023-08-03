@@ -244,4 +244,6 @@
 
     <string name="about">정보</string>
     <string name="app_version">앱 버전</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

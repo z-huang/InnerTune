@@ -1,15 +1,28 @@
 package com.zionhuang.music.ui.component
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -17,10 +30,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun PreferenceEntry(
     modifier: Modifier = Modifier,
-    title: String,
+    title: @Composable () -> Unit,
     description: String? = null,
     content: (@Composable () -> Unit)? = null,
-    @DrawableRes icon: Int? = null,
+    icon: (@Composable () -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
     onClick: () -> Unit,
     isEnabled: Boolean = true,
@@ -40,10 +53,7 @@ fun PreferenceEntry(
             Box(
                 modifier = Modifier.padding(horizontal = 4.dp)
             ) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = null
-                )
+                icon()
             }
 
             Spacer(Modifier.width(12.dp))
@@ -53,10 +63,9 @@ fun PreferenceEntry(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium
-            )
+            ProvideTextStyle(MaterialTheme.typography.titleMedium) {
+                title()
+            }
 
             if (description != null) {
                 Text(
@@ -80,8 +89,8 @@ fun PreferenceEntry(
 @Composable
 fun <T> ListPreference(
     modifier: Modifier = Modifier,
-    title: String,
-    @DrawableRes icon: Int? = null,
+    title: @Composable () -> Unit,
+    icon: (@Composable () -> Unit)? = null,
     selectedValue: T,
     values: List<T>,
     valueText: @Composable (T) -> String,
@@ -134,8 +143,8 @@ fun <T> ListPreference(
 @Composable
 inline fun <reified T : Enum<T>> EnumListPreference(
     modifier: Modifier = Modifier,
-    title: String,
-    @DrawableRes icon: Int,
+    noinline title: @Composable () -> Unit,
+    noinline icon: (@Composable () -> Unit)?,
     selectedValue: T,
     noinline valueText: @Composable (T) -> String,
     noinline onValueSelected: (T) -> Unit,
@@ -156,9 +165,9 @@ inline fun <reified T : Enum<T>> EnumListPreference(
 @Composable
 fun SwitchPreference(
     modifier: Modifier = Modifier,
-    title: String,
+    title: @Composable () -> Unit,
     description: String? = null,
-    @DrawableRes icon: Int? = null,
+    icon: (@Composable () -> Unit)? = null,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     isEnabled: Boolean = true,
@@ -182,8 +191,8 @@ fun SwitchPreference(
 @Composable
 fun EditTextPreference(
     modifier: Modifier = Modifier,
-    title: String,
-    @DrawableRes icon: Int? = null,
+    title: @Composable () -> Unit,
+    icon: (@Composable () -> Unit)? = null,
     value: String,
     onValueChange: (String) -> Unit,
     singleLine: Boolean = true,

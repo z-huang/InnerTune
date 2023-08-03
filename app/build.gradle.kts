@@ -8,6 +8,8 @@ plugins {
     id("com.google.devtools.ksp")
     if (System.getenv("PULL_REQUEST") == null) {
         id("com.google.gms.google-services")
+        id("com.google.firebase.crashlytics")
+        id("com.google.firebase.firebase-perf")
     }
 }
 
@@ -126,6 +128,9 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.perf)
 
     implementation(libs.timber)
 }

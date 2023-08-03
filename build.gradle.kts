@@ -13,6 +13,8 @@ buildscript {
         classpath(libs.gradle)
         classpath(kotlin("gradle-plugin", libs.versions.kotlin.get()))
         classpath(libs.google.services)
+        classpath(libs.firebase.crashlytics.plugin)
+        classpath(libs.firebase.perf.plugin)
     }
 }
 

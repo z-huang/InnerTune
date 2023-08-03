@@ -253,4 +253,6 @@
 
     <string name="about">Tietoa</string>
     <string name="app_version">Sovelluksen versio</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

@@ -253,4 +253,6 @@
 
     <string name="about">Hakkında</string>
     <string name="app_version">Uygulama sürümü</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

@@ -259,4 +259,6 @@
 
     <string name="about">À propos</string>
     <string name="app_version">Version de l\'application</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

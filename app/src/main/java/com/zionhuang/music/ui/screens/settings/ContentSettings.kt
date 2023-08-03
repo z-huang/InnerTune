@@ -50,14 +50,14 @@ fun ContentSettings(
             .verticalScroll(rememberScrollState())
     ) {
         PreferenceEntry(
-            title = if (isLoggedIn) accountName else stringResource(R.string.login),
+            title = { Text(if (isLoggedIn) accountName else stringResource(R.string.login)) },
             description = if (isLoggedIn) accountEmail else null,
-            icon = R.drawable.person,
+            icon = { Icon(painterResource(R.drawable.person), null) },
             onClick = { navController.navigate("login") }
         )
         ListPreference(
-            title = stringResource(R.string.content_language),
-            icon = R.drawable.language,
+            title = { Text(stringResource(R.string.content_language)) },
+            icon = { Icon(painterResource(R.drawable.language), null) },
             selectedValue = contentLanguage,
             values = listOf(SYSTEM_DEFAULT) + LanguageCodeToName.keys.toList(),
             valueText = {
@@ -68,8 +68,8 @@ fun ContentSettings(
             onValueSelected = onContentLanguageChange
         )
         ListPreference(
-            title = stringResource(R.string.content_country),
-            icon = R.drawable.location_on,
+            title = { Text(stringResource(R.string.content_country)) },
+            icon = { Icon(painterResource(R.drawable.location_on), null) },
             selectedValue = contentCountry,
             values = listOf(SYSTEM_DEFAULT) + CountryCodeToName.keys.toList(),
             valueText = {
@@ -85,21 +85,21 @@ fun ContentSettings(
         )
 
         SwitchPreference(
-            title = stringResource(R.string.enable_proxy),
+            title = { Text(stringResource(R.string.enable_proxy)) },
             checked = proxyEnabled,
             onCheckedChange = onProxyEnabledChange
         )
 
         if (proxyEnabled) {
             ListPreference(
-                title = stringResource(R.string.proxy_type),
+                title = { Text(stringResource(R.string.proxy_type)) },
                 selectedValue = proxyType,
                 values = listOf(Proxy.Type.HTTP, Proxy.Type.SOCKS),
                 valueText = { it.name },
                 onValueSelected = onProxyTypeChange
             )
             EditTextPreference(
-                title = stringResource(R.string.proxy_url),
+                title = { Text(stringResource(R.string.proxy_url)) },
                 value = proxyUrl,
                 onValueChange = onProxyUrlChange
             )

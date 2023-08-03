@@ -17,8 +17,10 @@ import androidx.compose.animation.core.*
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material3.*
@@ -26,6 +28,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -61,6 +64,12 @@ import androidx.navigation.navArgument
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.google.common.util.concurrent.MoreExecutors
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ConfigUpdate
+import com.google.firebase.remoteconfig.ConfigUpdateListener
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
@@ -109,6 +118,7 @@ import kotlinx.coroutines.withContext
 import java.net.URLDecoder
 import java.net.URLEncoder
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.hours
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -132,6 +142,7 @@ class MainActivity : ComponentActivity() {
             playerConnection = null
         }
     }
+    private var latestVersion by mutableStateOf(BuildConfig.VERSION_CODE.toLong())
 
     override fun onStart() {
         super.onStart()
@@ -162,6 +173,7 @@ class MainActivity : ComponentActivity() {
             MoreExecutors.directExecutor()
         )
 
+        setupRemoteConfig()
 
         setContent {
             val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
@@ -551,7 +563,7 @@ class MainActivity : ComponentActivity() {
                                 YouTubeBrowseScreen(navController, scrollBehavior)
                             }
                             composable("settings") {
-                                SettingsScreen(navController, scrollBehavior)
+                                SettingsScreen(latestVersion, navController, scrollBehavior)
                             }
                             composable("settings/appearance") {
                                 AppearanceSettings(navController, scrollBehavior)
@@ -660,15 +672,28 @@ class MainActivity : ComponentActivity() {
                                             Screens.Playlists.route
                                         )
                                     ) {
-                                        IconButton(
-                                            onClick = {
-                                                navController.navigate("settings")
-                                            }
+                                        Box(
+                                            contentAlignment = Alignment.Center,
+                                            modifier = Modifier
+                                                .size(48.dp)
+                                                .clip(CircleShape)
+                                                .clickable {
+                                                    navController.navigate("settings")
+                                                }
                                         ) {
-                                            Icon(
-                                                painter = painterResource(R.drawable.settings),
-                                                contentDescription = null
-                                            )
+                                            BadgedBox(
+                                                badge = {
+                                                    if (latestVersion > BuildConfig.VERSION_CODE) {
+                                                        Badge()
+                                                    }
+                                                }
+                                            ) {
+
+                                                Icon(
+                                                    painter = painterResource(R.drawable.settings),
+                                                    contentDescription = null
+                                                )
+                                            }
                                         }
                                     }
                                 },
@@ -816,6 +841,27 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             window.navigationBarColor = (if (isDark) Color.Transparent else Color.Black.copy(alpha = 0.2f)).toArgb()
         }
+    }
+
+    private fun setupRemoteConfig() {
+        val remoteConfig = Firebase.remoteConfig
+        remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 12.hours.inWholeSeconds
+        })
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    latestVersion = remoteConfig.getLong("latest_version")
+                }
+            }
+        remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
+            override fun onError(error: FirebaseRemoteConfigException) {}
+            override fun onUpdate(configUpdate: ConfigUpdate) {
+                remoteConfig.activate().addOnCompleteListener {
+                    latestVersion = remoteConfig.getLong("latest_version")
+                }
+            }
+        })
     }
 
     companion object {

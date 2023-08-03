@@ -244,4 +244,6 @@
 
     <string name="about">關於</string>
     <string name="app_version">應用程式版本</string>
+
+    <string name="new_version_available">發現新版本</string>
 </resources>

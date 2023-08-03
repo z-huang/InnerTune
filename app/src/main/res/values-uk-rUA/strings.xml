@@ -271,4 +271,6 @@
 
     <string name="about">Про програму</string>
     <string name="app_version">Версія застосунку</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

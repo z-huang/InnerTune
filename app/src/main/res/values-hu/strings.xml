@@ -253,4 +253,6 @@
 
     <string name="about">Rólunk</string>
     <string name="app_version">App verzió</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

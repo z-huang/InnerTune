@@ -244,4 +244,6 @@
 
     <string name="about">关于</string>
     <string name="app_version">应用版本</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

@@ -253,4 +253,6 @@
 
     <string name="about">ਦੇ ਬਾਰੇ</string>
     <string name="app_version">ਐਪ ਸੰਸਕਰਣ</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>
