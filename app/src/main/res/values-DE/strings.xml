@@ -13,9 +13,9 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">Wiedergabeverlauf</string>
+    <string name="history">Hörverlaufverlauf</string>
     <string name="stats">Statistiken</string>
-    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="mood_and_genres">Stimmungen & Genres</string>
     <string name="account">Account</string>
     <string name="quick_picks">Schnellauswahl</string>
     <string name="quick_picks_empty">Hören Sie sich einige Songs an, um Ihre Schnellauswahl zu treffen</string>
@@ -30,7 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Meist gespielte Songs</string>
     <string name="most_played_artists">Meist gespielte Künstler</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_albums">Meist gespielte Alben</string>
 
     <!-- Search -->
     <string name="search">Suche</string>
@@ -147,12 +147,12 @@
         <item quantity="other">%d weeks</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d Monat</item>
+        <item quantity="other">%d Monate</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d Jahr</item>
+        <item quantity="other">%d Jahre</item>
     </plurals>
 
     <!-- Snackbar -->
@@ -223,9 +223,9 @@
 
     <string name="storage">Speicher</string>
     <string name="cache">Zwischenspeicher</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
+    <string name="image_cache">Bild-Cache</string>
+    <string name="song_cache">Song-Cache</string>
+    <string name="max_cache_size">Maximale Cache-Größe</string>
     <string name="unlimited">Unbegrenzt</string>
     <string name="clear_all_downloads">Alle Downloads entfernen</string>
     <string name="max_image_cache_size">Maximale Größe des Bild-Caches</string>
