@@ -143,8 +143,8 @@
         <item quantity="other">%d Wiedergabelisten</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="one">%d Woche</item>
+        <item quantity="other">%d Wochen</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
         <item quantity="one">%d Monat</item>
