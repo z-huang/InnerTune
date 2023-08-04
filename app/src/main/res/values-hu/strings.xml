@@ -15,8 +15,8 @@
     <!-- Home -->
     <string name="history">Előzmény</string>
     <string name="stats">Statisztika</string>
-    <string name="mood_and_genres">Mood and Genres</string>
-    <string name="account">Account</string>
+    <string name="mood_and_genres">Hangulat és műfajok</string>
+    <string name="account">Fiók</string>
     <string name="quick_picks">Gyors választás</string>
     <string name="quick_picks_empty">Hallgasson meg néhány dalt a gyors választások elkészítéséhez</string>
     <string name="new_release_albums">Új kiadású albumok</string>
@@ -36,9 +36,9 @@
     <string name="search">Keresés</string>
     <string name="search_yt_music">YouTube Music keresés…</string>
     <string name="search_library">Keresés könyvtárban…</string>
-    <string name="filter_library">Library</string>
-    <string name="filter_liked">Liked</string>
-    <string name="filter_downloaded">Downloaded</string>
+    <string name="filter_library">Könyvtár</string>
+    <string name="filter_liked">Lájkolt</string>
+    <string name="filter_downloaded">Letöltött</string>
     <string name="filter_all">Mind</string>
     <string name="filter_songs">Dalok</string>
     <string name="filter_videos">Videók</string>
@@ -47,7 +47,7 @@
     <string name="filter_playlists">Listák</string>
     <string name="filter_community_playlists">Közösségi listák</string>
     <string name="filter_featured_playlists">Kiemelt lejátszási listák</string>
-    <string name="filter_bookmarked">Bookmarked</string>
+    <string name="filter_bookmarked">Könyvjelzőzött</string>
     <string name="no_results_found">Nincs találat</string>
 
     <!-- Artist screen -->
@@ -146,16 +146,16 @@
         <item quantity="other">%d lejátszólista</item>
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="one">%d hét</item>
+        <item quantity="other">%d hét</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d hónap</item>
+        <item quantity="other">%d hónap</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d év</item>
+        <item quantity="other">%d év</item>
     </plurals>
 
     <!-- Snackbar -->
