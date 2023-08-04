@@ -36,6 +36,9 @@
     <string name="search">ਖੋਜੋ</string>
     <string name="search_yt_music">ਯੂਟਿਊਬ ਮਿਊਜ਼ਿਕ ਖੋਜੋ…</string>
     <string name="search_library">ਲਾਇਬ੍ਰੇਰੀ ਖੋਜੋ…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">ਸਾਰੇ</string>
     <string name="filter_songs">ਗੀਤ</string>
     <string name="filter_videos">ਵੀਡੀਓ</string>

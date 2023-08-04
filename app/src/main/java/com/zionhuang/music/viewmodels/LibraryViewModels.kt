@@ -10,6 +10,7 @@ import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.extensions.toEnum
 import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.utils.dataStore
@@ -26,14 +27,40 @@ import javax.inject.Inject
 class LibrarySongsViewModel @Inject constructor(
     @ApplicationContext context: Context,
     database: MusicDatabase,
+    downloadUtil: DownloadUtil,
 ) : ViewModel() {
     val allSongs = context.dataStore.data
         .map {
-            it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE) to (it[SongSortDescendingKey] ?: true)
+            Triple(
+                it[SongViewTypeKey].toEnum(SongViewType.LIBRARY),
+                it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE),
+                (it[SongSortDescendingKey] ?: true)
+            )
         }
         .distinctUntilChanged()
-        .flatMapLatest { (sortType, descending) ->
-            database.songs(sortType, descending)
+        .flatMapLatest { (viewType, sortType, descending) ->
+            when (viewType) {
+                SongViewType.LIBRARY -> database.songs(sortType, descending)
+                SongViewType.LIKED -> database.likedSongs(sortType, descending)
+                SongViewType.DOWNLOADED -> downloadUtil.downloads.flatMapLatest { downloads ->
+                    database.songs(
+                        downloads.filter { (_, download) ->
+                            download.state == STATE_COMPLETED
+                        }.keys.toList()
+                    ).map { songs ->
+                        when (sortType) {
+                            SongSortType.CREATE_DATE -> songs.sortedBy { downloads[it.id]?.updateTimeMs ?: 0L }
+                            SongSortType.NAME -> songs.sortedBy { it.song.title }
+                            SongSortType.ARTIST -> songs.sortedBy { song ->
+                                song.artists.joinToString(separator = "") { it.name }
+                            }
+
+                            SongSortType.PLAY_TIME -> songs.sortedBy { it.song.totalPlayTime }
+                        }.reversed(descending)
+                    }
+                }
+            }
+
         }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
@@ -45,7 +72,7 @@ class LibraryArtistsViewModel @Inject constructor(
     val allArtists = context.dataStore.data
         .map {
             Triple(
-                it[ArtistViewTypeKey].toEnum(ArtistViewType.ALL),
+                it[ArtistViewTypeKey].toEnum(ArtistViewType.LIBRARY),
                 it[ArtistSortTypeKey].toEnum(ArtistSortType.CREATE_DATE),
                 it[ArtistSortDescendingKey] ?: true
             )
@@ -53,7 +80,7 @@ class LibraryArtistsViewModel @Inject constructor(
         .distinctUntilChanged()
         .flatMapLatest { (viewType, sortType, descending) ->
             when (viewType) {
-                ArtistViewType.ALL -> database.artists(sortType, descending)
+                ArtistViewType.LIBRARY -> database.artists(sortType, descending)
                 ArtistViewType.BOOKMARKED -> database.artistsBookmarked(sortType, descending)
             }
         }
@@ -99,17 +126,7 @@ class LibraryAlbumsViewModel @Inject constructor(
 class LibraryPlaylistsViewModel @Inject constructor(
     @ApplicationContext context: Context,
     database: MusicDatabase,
-    downloadUtil: DownloadUtil,
 ) : ViewModel() {
-    val likedSongCount = database.likedSongsCount()
-        .stateIn(viewModelScope, SharingStarted.Lazily, 0)
-
-    val downloadedSongCount = downloadUtil.downloads.map {
-        it.count { (_, download) ->
-            download.state == STATE_COMPLETED
-        }
-    }
-
     val allPlaylists = context.dataStore.data
         .map {
             it[PlaylistSortTypeKey].toEnum(PlaylistSortType.CREATE_DATE) to (it[PlaylistSortDescendingKey] ?: true)

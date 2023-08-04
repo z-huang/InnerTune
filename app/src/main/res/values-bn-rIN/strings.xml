@@ -36,6 +36,9 @@
     <string name="search">খুঁজুন</string>
     <string name="search_yt_music">খুঁজুন YouTube Music এ</string>
     <string name="search_library">খুঁজুন লাইব্রেরি তে</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">সব</string>
     <string name="filter_songs">সংগীত</string>
     <string name="filter_videos">ভিডিও</string>

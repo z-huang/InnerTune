@@ -36,8 +36,6 @@ val EnableKugouKey = booleanPreferencesKey("enableKugou")
 
 val SongSortTypeKey = stringPreferencesKey("songSortType")
 val SongSortDescendingKey = booleanPreferencesKey("songSortDescending")
-val DownloadedSongSortTypeKey = stringPreferencesKey("songSortType")
-val DownloadedSongSortDescendingKey = booleanPreferencesKey("songSortDescending")
 val PlaylistSongSortTypeKey = stringPreferencesKey("playlistSongSortType")
 val PlaylistSongSortDescendingKey = booleanPreferencesKey("playlistSongSortDescending")
 val ArtistSortTypeKey = stringPreferencesKey("artistSortType")
@@ -49,15 +47,12 @@ val PlaylistSortDescendingKey = booleanPreferencesKey("playlistSortDescending")
 val ArtistSongSortTypeKey = stringPreferencesKey("artistSongSortType")
 val ArtistSongSortDescendingKey = booleanPreferencesKey("artistSongSortDescending")
 
+val SongViewTypeKey = stringPreferencesKey("songViewType")
 val ArtistViewTypeKey = stringPreferencesKey("artistViewType")
 
 val PlaylistEditLockKey = booleanPreferencesKey("playlistEditLock")
 
 enum class SongSortType {
-    CREATE_DATE, NAME, ARTIST, PLAY_TIME
-}
-
-enum class DownloadedSongSortType {
     CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
@@ -81,8 +76,12 @@ enum class PlaylistSortType {
     CREATE_DATE, NAME, SONG_COUNT
 }
 
+enum class SongViewType {
+    LIBRARY, LIKED, DOWNLOADED
+}
+
 enum class ArtistViewType {
-    ALL, BOOKMARKED
+    LIBRARY, BOOKMARKED
 }
 
 val ShowLyricsKey = booleanPreferencesKey("showLyrics")

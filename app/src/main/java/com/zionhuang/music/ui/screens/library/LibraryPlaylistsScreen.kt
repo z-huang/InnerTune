@@ -6,13 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,15 +30,11 @@ import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.CONTENT_TYPE_HEADER
 import com.zionhuang.music.constants.CONTENT_TYPE_PLAYLIST
-import com.zionhuang.music.constants.ListThumbnailSize
 import com.zionhuang.music.constants.PlaylistSortDescendingKey
 import com.zionhuang.music.constants.PlaylistSortType
 import com.zionhuang.music.constants.PlaylistSortTypeKey
 import com.zionhuang.music.db.entities.PlaylistEntity
-import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
-import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.ui.component.HideOnScrollFAB
-import com.zionhuang.music.ui.component.ListItem
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.PlaylistListItem
 import com.zionhuang.music.ui.component.SortHeader
@@ -64,8 +58,6 @@ fun LibraryPlaylistsScreen(
     val (sortType, onSortTypeChange) = rememberEnumPreference(PlaylistSortTypeKey, PlaylistSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(PlaylistSortDescendingKey, true)
 
-    val likedSongCount by viewModel.likedSongCount.collectAsState()
-    val downloadedSongCount by viewModel.downloadedSongCount.collectAsState(0)
     val playlists by viewModel.allPlaylists.collectAsState()
 
     val lazyListState = rememberLazyListState()
@@ -115,51 +107,6 @@ fun LibraryPlaylistsScreen(
                         }
                     },
                     trailingText = pluralStringResource(R.plurals.n_playlist, playlists.size, playlists.size)
-                )
-            }
-
-            item(
-                key = LIKED_PLAYLIST_ID,
-                contentType = CONTENT_TYPE_PLAYLIST
-            ) {
-                ListItem(
-                    title = stringResource(R.string.liked_songs),
-                    subtitle = pluralStringResource(R.plurals.n_song, likedSongCount, likedSongCount),
-                    thumbnailContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.favorite),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(ListThumbnailSize)
-                        )
-                    },
-                    modifier = Modifier
-                        .clickable {
-                            navController.navigate("local_playlist/$LIKED_PLAYLIST_ID")
-                        }
-                        .animateItemPlacement()
-                )
-            }
-
-            item(
-                key = DOWNLOADED_PLAYLIST_ID,
-                contentType = CONTENT_TYPE_PLAYLIST
-            ) {
-                ListItem(
-                    title = stringResource(R.string.downloaded_songs),
-                    subtitle = pluralStringResource(R.plurals.n_song, downloadedSongCount, downloadedSongCount),
-                    thumbnailContent = {
-                        Icon(
-                            painter = painterResource(R.drawable.offline),
-                            contentDescription = null,
-                            modifier = Modifier.size(ListThumbnailSize)
-                        )
-                    },
-                    modifier = Modifier
-                        .clickable {
-                            navController.navigate("local_playlist/$DOWNLOADED_PLAYLIST_ID")
-                        }
-                        .animateItemPlacement()
                 )
             }
 

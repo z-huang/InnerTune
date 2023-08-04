@@ -11,10 +11,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
@@ -24,6 +26,7 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.queues.ListQueue
+import com.zionhuang.music.ui.component.ChipsRow
 import com.zionhuang.music.ui.component.HideOnScrollFAB
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
@@ -45,6 +48,7 @@ fun LibrarySongsScreen(
     val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
+    var viewType by rememberEnumPreference(SongViewTypeKey, SongViewType.LIBRARY)
     val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(SongSortDescendingKey, true)
 
@@ -59,10 +63,19 @@ fun LibrarySongsScreen(
             state = lazyListState,
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
-            item(
-                key = "header",
-                contentType = CONTENT_TYPE_HEADER
-            ) {
+            item(key = "viewType") {
+                ChipsRow(
+                    chips = listOf(
+                        SongViewType.LIBRARY to stringResource(R.string.filter_library),
+                        SongViewType.LIKED to stringResource(R.string.filter_liked),
+                        SongViewType.DOWNLOADED to stringResource(R.string.filter_downloaded)
+                    ),
+                    currentValue = viewType,
+                    onValueUpdate = { viewType = it }
+                )
+            }
+
+            item(key = "header") {
                 SortHeader(
                     sortType = sortType,
                     sortDescending = sortDescending,

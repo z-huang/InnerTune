@@ -36,6 +36,9 @@
     <string name="search">തിരയുക</string>
     <string name="search_yt_music">യൂട്യൂബ് സംഗീതം തിരയുക…</string>
     <string name="search_library">തിരയൽ ലൈബ്രറി…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">എല്ലാം</string>
     <string name="filter_songs">പാട്ടുകൾ</string>
     <string name="filter_videos">വീഡിയോകൾ</string>

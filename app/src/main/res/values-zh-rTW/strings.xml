@@ -35,6 +35,9 @@
     <string name="search">搜尋</string>
     <string name="search_yt_music">搜尋 YouTube Music…</string>
     <string name="search_library">搜尋媒體庫…</string>
+    <string name="filter_library">媒體庫</string>
+    <string name="filter_liked">已按讚</string>
+    <string name="filter_downloaded">已下載</string>
     <string name="filter_all">全部</string>
     <string name="filter_songs">歌曲</string>
     <string name="filter_videos">影片</string>

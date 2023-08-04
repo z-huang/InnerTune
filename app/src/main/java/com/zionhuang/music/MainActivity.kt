@@ -75,8 +75,6 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
-import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
-import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.SearchHistory
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.DownloadUtil
@@ -95,7 +93,6 @@ import com.zionhuang.music.ui.screens.library.LibraryAlbumsScreen
 import com.zionhuang.music.ui.screens.library.LibraryArtistsScreen
 import com.zionhuang.music.ui.screens.library.LibraryPlaylistsScreen
 import com.zionhuang.music.ui.screens.library.LibrarySongsScreen
-import com.zionhuang.music.ui.screens.playlist.BuiltInPlaylistScreen
 import com.zionhuang.music.ui.screens.playlist.LocalPlaylistScreen
 import com.zionhuang.music.ui.screens.playlist.OnlinePlaylistScreen
 import com.zionhuang.music.ui.screens.search.LocalSearchScreen
@@ -539,13 +536,8 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 )
-                            ) { backStackEntry ->
-                                val playlistId = backStackEntry.arguments?.getString("playlistId")!!
-                                if (playlistId == LIKED_PLAYLIST_ID || playlistId == DOWNLOADED_PLAYLIST_ID) {
-                                    BuiltInPlaylistScreen(navController, scrollBehavior)
-                                } else {
-                                    LocalPlaylistScreen(navController, scrollBehavior)
-                                }
+                            ) {
+                                LocalPlaylistScreen(navController, scrollBehavior)
                             }
                             composable(
                                 route = "youtube_browse/{browseId}?params={params}",

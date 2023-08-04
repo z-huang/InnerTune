@@ -36,6 +36,9 @@
     <string name="search">جستجو</string>
     <string name="search_yt_music">جستجو در یوتیوب موزیک…</string>
     <string name="search_library">جستجوی کتاب‌خانه…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">همه</string>
     <string name="filter_songs">آهنگ‌ها</string>
     <string name="filter_videos">فیلم‌ها</string>
