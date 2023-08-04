@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -443,6 +444,7 @@ fun LocalPlaylistScreen(
                                         PlaylistSongSortType.CREATE_DATE -> R.string.sort_by_create_date
                                         PlaylistSongSortType.NAME -> R.string.sort_by_name
                                         PlaylistSongSortType.ARTIST -> R.string.sort_by_artist
+                                        PlaylistSongSortType.PLAY_TIME -> R.string.sort_by_play_time
                                     }
                                 },
                                 trailingText = "",
@@ -481,7 +483,8 @@ fun LocalPlaylistScreen(
                             coroutineScope.launch {
                                 val snackbarResult = snackbarHostState.showSnackbar(
                                     message = context.getString(R.string.removed_song_from_playlist, currentItem.song.song.title),
-                                    actionLabel = context.getString(R.string.undo)
+                                    actionLabel = context.getString(R.string.undo),
+                                    duration = SnackbarDuration.Short
                                 )
                                 if (snackbarResult == SnackbarResult.ActionPerformed) {
                                     database.transaction {

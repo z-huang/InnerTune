@@ -110,30 +110,30 @@ fun PrivacySettings(
             .verticalScroll(rememberScrollState())
     ) {
         SwitchPreference(
-            title = stringResource(R.string.pause_listen_history),
-            icon = R.drawable.history,
+            title = { Text(stringResource(R.string.pause_listen_history)) },
+            icon = { Icon(painterResource(R.drawable.history), null) },
             checked = pauseListenHistory,
             onCheckedChange = onPauseListenHistoryChange
         )
         PreferenceEntry(
-            title = stringResource(R.string.clear_listen_history),
-            icon = R.drawable.clear_all,
+            title = { Text(stringResource(R.string.clear_listen_history)) },
+            icon = { Icon(painterResource(R.drawable.clear_all), null) },
             onClick = { showClearListenHistoryDialog = true }
         )
         SwitchPreference(
-            title = stringResource(R.string.pause_search_history),
-            icon = R.drawable.manage_search,
+            title = { Text(stringResource(R.string.pause_search_history)) },
+            icon = { Icon(painterResource(R.drawable.manage_search), null) },
             checked = pauseSearchHistory,
             onCheckedChange = onPauseSearchHistoryChange
         )
         PreferenceEntry(
-            title = stringResource(R.string.clear_search_history),
-            icon = R.drawable.clear_all,
+            title = { Text(stringResource(R.string.clear_search_history)) },
+            icon = { Icon(painterResource(R.drawable.clear_all), null) },
             onClick = { showClearSearchHistoryDialog = true }
         )
         SwitchPreference(
-            title = stringResource(R.string.enable_kugou),
-            icon = R.drawable.lyrics,
+            title = { Text(stringResource(R.string.enable_kugou)) },
+            icon = { Icon(painterResource(R.drawable.lyrics), null) },
             checked = enableKugou,
             onCheckedChange = onEnableKugouChange
         )

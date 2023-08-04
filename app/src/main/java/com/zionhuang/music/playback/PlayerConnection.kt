@@ -1,6 +1,5 @@
 package com.zionhuang.music.playback
 
-import android.graphics.Bitmap
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
@@ -37,7 +36,7 @@ class PlayerConnection(
     val player = service.player
 
     val playbackState = MutableStateFlow(player.playbackState)
-    val playWhenReady = MutableStateFlow(player.playWhenReady)
+    private val playWhenReady = MutableStateFlow(player.playWhenReady)
     val isPlaying = combine(playbackState, playWhenReady) { playbackState, playWhenReady ->
         playWhenReady && playbackState != STATE_ENDED
     }.stateIn(scope, SharingStarted.Lazily, player.playWhenReady && player.playbackState != STATE_ENDED)
@@ -63,17 +62,10 @@ class PlayerConnection(
     val canSkipPrevious = MutableStateFlow(true)
     val canSkipNext = MutableStateFlow(true)
 
-    var onBitmapChanged: (Bitmap?) -> Unit = {}
-        set(value) {
-            field = value
-            service.bitmapProvider.onBitmapChanged = value
-        }
-
     val error = MutableStateFlow<PlaybackException?>(null)
 
     init {
         player.addListener(this)
-        service.bitmapProvider.onBitmapChanged = onBitmapChanged
 
         playbackState.value = player.playbackState
         playWhenReady.value = player.playWhenReady
@@ -174,7 +166,6 @@ class PlayerConnection(
     }
 
     fun dispose() {
-        service.bitmapProvider.onBitmapChanged = {}
         player.removeListener(this)
     }
 }

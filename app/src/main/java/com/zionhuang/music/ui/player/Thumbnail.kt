@@ -26,6 +26,7 @@ import com.zionhuang.music.ui.utils.HorizontalPager
 import com.zionhuang.music.ui.utils.SnapLayoutInfoProvider
 import com.zionhuang.music.utils.rememberPreference
 import kotlinx.coroutines.flow.drop
+import kotlin.math.abs
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -56,7 +57,11 @@ fun Thumbnail(
     LaunchedEffect(pagerState, currentWindowIndex) {
         if (windows.isNotEmpty()) {
             try {
-                pagerState.animateScrollToPage(currentWindowIndex)
+                if (abs(pagerState.currentPage - currentWindowIndex) <= 1) {
+                    pagerState.animateScrollToPage(currentWindowIndex)
+                } else {
+                    pagerState.scrollToPage(currentWindowIndex)
+                }
             } catch (_: Exception) {
             }
         }
@@ -67,6 +72,12 @@ fun Thumbnail(
             if (!pagerState.isScrollInProgress && index != currentWindowIndex && windows.isNotEmpty()) {
                 playerConnection.player.seekToDefaultPosition(windows[index].firstPeriodIndex)
             }
+        }
+    }
+
+    LaunchedEffect(showLyrics) {
+        if (!showLyrics) {
+            pagerState.scrollToPage(currentWindowIndex)
         }
     }
 

@@ -15,8 +15,10 @@
     <!-- Home -->
     <string name="history">ਅਤੀਤ</string>
     <string name="stats">ਅੰਕੜੇ</string>
+    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="account">Account</string>
     <string name="quick_picks">ਉਂਗਲਾਂ ਤੇ ਚੁਣੇ ਗੀਤ</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Listen to songs to generate your quick picks</string>
     <string name="new_release_albums">ਨਵੀਆਂ ਜਾਰੀ ਐਲਬਮਾਂ</string>
 
     <!-- History -->
@@ -28,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">ਵੱਧ ਸੁਣੇ ਗਏ ਗੀਤ</string>
     <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">ਖੋਜੋ</string>
@@ -41,6 +44,7 @@
     <string name="filter_playlists">ਪਲੇਲਿਸਟਾਂ</string>
     <string name="filter_community_playlists">ਕਮਿਊਨਿਟੀ ਪਲੇਲਿਸਟਾਂ</string>
     <string name="filter_featured_playlists">ਪ੍ਰਦਰਸ਼ਿਤ ਪਲੇਲਿਸਟਾਂ</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">ਕੋਈ ਨਤੀਜੇ ਨਹੀਂ ਲੱਭੇ</string>
 
     <!-- Artist screen -->
@@ -138,6 +142,18 @@
         <item quantity="one">%d ਪਲੇਲਿਸਟ</item>
         <item quantity="other">%d ਪਲੇਲਿਸਟਾਂ</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">ਪਲੇਲਿਸਟ ਅਯਾਤ ਕੀਤੀ ਗਈ</string>
@@ -230,16 +246,13 @@
     <string name="backup_restore">ਬੈਕਅੱਪ ਅਤੇ ਰੀਸਟੋਰ</string>
     <string name="backup">ਬੈਕਅੱਪ</string>
     <string name="restore">ਰੀਸਟੋਰ</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
     <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">ਬੈਕਅੱਪ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ</string>
     <string name="backup_create_failed">ਬੈਕਅੱਪ ਨਹੀਂ ਬਣਾਇਆ ਜਾ ਸਕਿਆ</string>
     <string name="restore_failed">ਬੈਕਅੱਪ ਰੀਸਟੋਰ ਕਰਨਾ ਅਸਫਲ ਰਿਹਾ</string>
 
     <string name="about">ਦੇ ਬਾਰੇ</string>
     <string name="app_version">ਐਪ ਸੰਸਕਰਣ</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

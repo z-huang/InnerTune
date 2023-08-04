@@ -1,23 +1,15 @@
 package com.zionhuang.music.ui.screens.playlist
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -27,12 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastSumBy
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -50,11 +40,11 @@ import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_I
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.queues.ListQueue
+import com.zionhuang.music.ui.component.HideOnScrollFAB
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.menu.SongMenu
-import com.zionhuang.music.ui.utils.isScrollingUp
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberEnumPreference
@@ -114,6 +104,7 @@ fun BuiltInPlaylistScreen(
                                 SongSortType.CREATE_DATE -> R.string.sort_by_create_date
                                 SongSortType.NAME -> R.string.sort_by_name
                                 SongSortType.ARTIST -> R.string.sort_by_artist
+                                SongSortType.PLAY_TIME -> R.string.sort_by_play_time
                             }
                         },
                         trailingText = joinByBullet(
@@ -132,6 +123,7 @@ fun BuiltInPlaylistScreen(
                                 DownloadedSongSortType.CREATE_DATE -> R.string.sort_by_create_date
                                 DownloadedSongSortType.NAME -> R.string.sort_by_name
                                 DownloadedSongSortType.ARTIST -> R.string.sort_by_artist
+                                DownloadedSongSortType.PLAY_TIME -> R.string.sort_by_play_time
                             }
                         },
                         trailingText = joinByBullet(
@@ -205,33 +197,18 @@ fun BuiltInPlaylistScreen(
             scrollBehavior = scrollBehavior
         )
 
-        AnimatedVisibility(
-            visible = songs.isNotEmpty() && lazyListState.isScrollingUp(),
-            enter = slideInVertically { it },
-            exit = slideOutVertically { it },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .windowInsetsPadding(
-                    LocalPlayerAwareWindowInsets.current
-                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
-                )
-        ) {
-            FloatingActionButton(
-                modifier = Modifier.padding(16.dp),
-                onClick = {
-                    playerConnection.playQueue(
-                        ListQueue(
-                            title = playlistName,
-                            items = songs.shuffled().map { it.toMediaItem() },
-                        )
+        HideOnScrollFAB(
+            visible = songs.isNotEmpty(),
+            lazyListState = lazyListState,
+            icon = R.drawable.shuffle,
+            onClick = {
+                playerConnection.playQueue(
+                    ListQueue(
+                        title = playlistName,
+                        items = songs.shuffled().map { it.toMediaItem() },
                     )
-                }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.shuffle),
-                    contentDescription = null
                 )
             }
-        }
+        )
     }
 }

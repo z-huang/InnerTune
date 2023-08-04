@@ -12,13 +12,9 @@ data class ArtistEntity(
     @PrimaryKey val id: String,
     val name: String,
     val thumbnailUrl: String? = null,
-    val bannerUrl: String? = null,
-    val description: String? = null,
-    val createDate: LocalDateTime = LocalDateTime.now(),
     val lastUpdateTime: LocalDateTime = LocalDateTime.now(),
+    val bookmarkedAt: LocalDateTime? = null,
 ) {
-    override fun toString(): String = name
-
     val isYouTubeArtist: Boolean
         get() = id.startsWith("UC")
 

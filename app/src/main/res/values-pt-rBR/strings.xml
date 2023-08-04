@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Bottom navigation -->
     <string name="home">Início</string>
     <string name="songs">Músicas</string>
@@ -10,13 +10,16 @@
     <plurals name="n_selected">
         <item quantity="one">%d selecionada</item>
         <item quantity="other">%d selecionadas</item>
+        <item quantity="many">%d selecionadas</item>
     </plurals>
 
     <!-- Home -->
     <string name="history">History</string>
     <string name="stats">Stats</string>
+    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Listen to songs to generate your quick picks</string>
     <string name="new_release_albums">New release álbuns</string>
 
     <!-- History -->
@@ -28,6 +31,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Most played songs</string>
     <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_albums">Most played álbuns</string>
 
     <!-- Search -->
     <string name="search">Pesquisar</string>
@@ -41,6 +45,7 @@
     <string name="filter_playlists">Playlists</string>
     <string name="filter_community_playlists">Playlists da comunidade</string>
     <string name="filter_featured_playlists">Playlists em destaque</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->
@@ -125,18 +130,37 @@
     <plurals name="n_song">
         <item quantity="one">%d música</item>
         <item quantity="other">%d músicas</item>
+        <item quantity="many">%d músicas</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d artista</item>
         <item quantity="other">%d artistas</item>
+        <item quantity="many">%d artistas</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d álbum</item>
         <item quantity="other">%d álbuns</item>
+        <item quantity="many">%d álbuns</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d playlist</item>
         <item quantity="other">%d playlists</item>
+        <item quantity="many">%d playlists</item>
+    </plurals>
+    <plurals name="n_week">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+        <item quantity="many">%d weeks</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+        <item quantity="many">%d months</item>
+    </plurals>
+    <plurals name="n_year">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+        <item quantity="many">%d years</item>
     </plurals>
 
     <!-- Snackbar -->
@@ -150,8 +174,9 @@
     <string name="sleep_timer">Sleep timer</string>
     <string name="end_of_song">End of song</string>
     <plurals name="minute">
-        <item quantity="one" tools:ignore="ImpliedQuantity">1 minute</item>
+        <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
+        <item quantity="many">%d minutes</item>
     </plurals>
     <string name="error_no_stream">Nenhum canal de reprodução disponível</string>
     <string name="error_no_internet">Sem conexão com à internet</string>
@@ -230,16 +255,13 @@
     <string name="backup_restore">Backup e restauração</string>
     <string name="backup">Backup</string>
     <string name="restore">Restaurar</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
     <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">Backup criado com sucesso</string>
     <string name="backup_create_failed">Não foi possível criar o backup</string>
     <string name="restore_failed">Falha ao restaurar o backup</string>
 
     <string name="about">Sobre</string>
     <string name="app_version">Versão do aplicativo</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

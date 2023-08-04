@@ -39,8 +39,8 @@ fun PlayerSettings(
             .verticalScroll(rememberScrollState())
     ) {
         EnumListPreference(
-            title = stringResource(R.string.audio_quality),
-            icon = R.drawable.graphic_eq,
+            title = { Text(stringResource(R.string.audio_quality)) },
+            icon = { Icon(painterResource(R.drawable.graphic_eq), null) },
             selectedValue = audioQuality,
             onValueSelected = onAudioQualityChange,
             valueText = {
@@ -52,20 +52,20 @@ fun PlayerSettings(
             }
         )
         SwitchPreference(
-            title = stringResource(R.string.persistent_queue),
-            icon = R.drawable.queue_music,
+            title = { Text(stringResource(R.string.persistent_queue)) },
+            icon = { Icon(painterResource(R.drawable.queue_music), null) },
             checked = persistentQueue,
             onCheckedChange = onPersistentQueueChange
         )
         SwitchPreference(
-            title = stringResource(R.string.skip_silence),
-            icon = R.drawable.skip_next,
+            title = { Text(stringResource(R.string.skip_silence)) },
+            icon = { Icon(painterResource(R.drawable.skip_next), null) },
             checked = skipSilence,
             onCheckedChange = onSkipSilenceChange
         )
         SwitchPreference(
-            title = stringResource(R.string.audio_normalization),
-            icon = R.drawable.volume_up,
+            title = { Text(stringResource(R.string.audio_normalization)) },
+            icon = { Icon(painterResource(R.drawable.volume_up), null) },
             checked = audioNormalization,
             onCheckedChange = onAudioNormalizationChange
         )

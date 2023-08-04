@@ -13,21 +13,24 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
-    <string name="new_release_albums">New release albums</string>
+    <string name="history">Előzmény</string>
+    <string name="stats">Statisztika</string>
+    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="account">Account</string>
+    <string name="quick_picks">Gyors választás</string>
+    <string name="quick_picks_empty">Hallgasson meg néhány dalt a gyors választások elkészítéséhez</string>
+    <string name="new_release_albums">Új kiadású albumok</string>
 
     <!-- History -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_week">This week</string>
-    <string name="last_week">Last week</string>
+    <string name="today">Ma</string>
+    <string name="yesterday">Tegnap</string>
+    <string name="this_week">A héten</string>
+    <string name="last_week">Múlt héten</string>
 
     <!-- Stats -->
-    <string name="most_played_songs">Most played songs</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_songs">A legtöbbet játszott dalok</string>
+    <string name="most_played_artists">A legtöbbet játszott előadók</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Keresés</string>
@@ -41,7 +44,8 @@
     <string name="filter_playlists">Listák</string>
     <string name="filter_community_playlists">Közösségi listák</string>
     <string name="filter_featured_playlists">Kiemelt lejátszási listák</string>
-    <string name="no_results_found">No results found</string>
+    <string name="filter_bookmarked">Bookmarked</string>
+    <string name="no_results_found">Nincs találat</string>
 
     <!-- Artist screen -->
     <string name="from_your_library">Saját könyvtárból</string>
@@ -49,7 +53,7 @@
     <!-- Playlist -->
     <string name="liked_songs">Lájkolt dalok</string>
     <string name="downloaded_songs">Letöltött dalok</string>
-    <string name="playlist_is_empty">The playlist is empty</string>
+    <string name="playlist_is_empty">A lejátszólista üres</string>
 
     <!-- Button -->
     <string name="retry">Újra</string>
@@ -66,7 +70,7 @@
     <string name="add_to_library">Könyvtárhoz ad</string>
     <string name="remove_from_library">Eltávolít a könyvtárból</string>
     <string name="download">Letöltés</string>
-    <string name="downloading">Downloading</string>
+    <string name="downloading">Letöltés</string>
     <string name="remove_download">Letöltés eltávolítása</string>
     <string name="import_playlist">Lista importálása</string>
     <string name="add_to_playlist">Lejátszólistához ad</string>
@@ -75,9 +79,9 @@
     <string name="refetch">Újrahív</string>
     <string name="share">Megosztás</string>
     <string name="delete">Törlés</string>
-    <string name="remove_from_history">Remove from history</string>
+    <string name="remove_from_history">Előzményből eltávolít</string>
     <string name="search_online">Keresés online</string>
-    <string name="sync">Sync</string>
+    <string name="sync">Szinkron.</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Létrehozás dátuma</string>
@@ -87,7 +91,7 @@
     <string name="sort_by_song_count">Dal szám</string>
     <string name="sort_by_length">Hossz</string>
     <string name="sort_by_play_time">Lejátszási idő</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Egyéni sorrend</string>
 
     <!-- Dialog -->
     <string name="media_id">Média id</string>
@@ -138,20 +142,32 @@
         <item quantity="one">%d lejátszólista</item>
         <item quantity="other">%d lejátszólista</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Lista importálva</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="playlist_synced">Playlist synced</string>
-    <string name="undo">Undo</string>
+    <string name="removed_song_from_playlist">\"%s\" eltávolítva a lejátszólistából</string>
+    <string name="playlist_synced">Lejátszólista szinkronban</string>
+    <string name="undo">Visszavon</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">A dalszöveg nem található</string>
-    <string name="sleep_timer">Sleep timer</string>
-    <string name="end_of_song">End of song</string>
+    <string name="sleep_timer">Alvás időzítő</string>
+    <string name="end_of_song">A dal vége</string>
     <plurals name="minute">
-        <item quantity="one">1 minute</item>
-        <item quantity="other">%d minutes</item>
+        <item quantity="one">1 perc</item>
+        <item quantity="other">%d perc</item>
     </plurals>
     <string name="error_no_stream">Nincs elérhető adatfolyam</string>
     <string name="error_no_internet">Nincs hálózati kapcsolat</string>
@@ -172,12 +188,12 @@
     <!-- Settings -->
     <string name="settings">Beállítások</string>
     <string name="appearance">Megjelenés</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="enable_dynamic_theme">Dinamikus téma bekapcsolás</string>
     <string name="dark_theme">Sötét téma</string>
     <string name="dark_theme_on">Be</string>
     <string name="dark_theme_off">Ki</string>
     <string name="dark_theme_follow_system">Rendszer szerint</string>
-    <string name="pure_black">Pure black</string>
+    <string name="pure_black">Tiszta fekete</string>
     <string name="default_open_tab">Alapért. nyitott lap</string>
     <string name="customize_navigation_tabs">A navigációs lapok testreszabása</string>
     <string name="lyrics_text_position">Dalszöveg szöveg pozíció</string>
@@ -207,21 +223,21 @@
 
     <string name="storage">Tárhely</string>
     <string name="cache">Gyorsítótár</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="image_cache">Kép gyorsítótár</string>
+    <string name="song_cache">Dal gyorsítótár</string>
+    <string name="max_cache_size">Max. gyors.tár méret</string>
+    <string name="unlimited">Korlátlan</string>
+    <string name="clear_all_downloads">Minden letöltés törlése</string>
     <string name="max_image_cache_size">Max. kép gyorsítótár</string>
     <string name="clear_image_cache">Kép gyors.tár törlés</string>
     <string name="max_song_cache_size">Max. dal gyorsítótár</string>
-    <string name="clear_song_cache">Clear song cache</string>
+    <string name="clear_song_cache">Dal gyors.tár törlése</string>
     <string name="size_used">%s használva</string>
 
     <string name="privacy">Adatvédelem</string>
-    <string name="pause_listen_history">Pause listen history</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
+    <string name="pause_listen_history">A hallgatási előzmények szüneteltetése</string>
+    <string name="clear_listen_history">Hallgatási előzmény törlése</string>
+    <string name="clear_listen_history_confirm">Biztosan törli az összes hallgatási előzményt?</string>
     <string name="pause_search_history">Keresési előzmények szüneteltetése</string>
     <string name="clear_search_history">Keresési előzmények törlése</string>
     <string name="clear_search_history_confirm">Biztosan töröl minden keresési előzményt?</string>
@@ -230,16 +246,13 @@
     <string name="backup_restore">Bizt.mentés és visszaállítás</string>
     <string name="backup">Bizt.mentés</string>
     <string name="restore">Visszaállítás</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
+    <string name="imported_playlist">Importált lejátszási lista</string>
     <string name="backup_create_success">A bizt.mentés sikeresen létrehozva</string>
     <string name="backup_create_failed">Nem sikerült biztonsági mentést készíteni</string>
     <string name="restore_failed">Nem sikerült visszaállítani a biztonsági másolatot</string>
 
     <string name="about">Rólunk</string>
     <string name="app_version">App verzió</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

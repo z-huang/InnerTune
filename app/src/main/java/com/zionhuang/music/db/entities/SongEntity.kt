@@ -16,7 +16,6 @@ data class SongEntity(
     val albumName: String? = null,
     val liked: Boolean = false,
     val totalPlayTime: Long = 0, // in milliseconds
-    val downloadState: Int = STATE_NOT_DOWNLOADED,
     val inLibrary: LocalDateTime? = null,
 ) {
     fun toggleLike() = copy(
@@ -25,11 +24,4 @@ data class SongEntity(
     )
 
     fun toggleLibrary() = copy(inLibrary = if (inLibrary == null) LocalDateTime.now() else null)
-
-    companion object {
-        const val STATE_NOT_DOWNLOADED = 0
-        const val STATE_PREPARING = 1
-        const val STATE_DOWNLOADING = 2
-        const val STATE_DOWNLOADED = 3
-    }
 }

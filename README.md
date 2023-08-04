@@ -16,11 +16,13 @@ A Material 3 YouTube Music client for Android
 - Play songs from YT/YT Music without ads
 - Background playback
 - Search songs, videos, albums, and playlists from YouTube Music
+- Login support
 - Library management
 - Cache and download songs for offline playback
 - Synchronized lyrics
 - Skip silence
 - Audio normalization
+- Adjust tempo/pitch
 - Dynamic theme
 - Localization
 - Android Auto support
@@ -66,7 +68,8 @@ before you create a pull request.
 
 ## Donate
 
-If you like InnerTune, you're welcome to send a donation.
+If you like InnerTune, you're welcome to send a donation. Donations will support the development,
+including bug fixes and new features.
 
 <a href="https://liberapay.com/zionhuang"><img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/assets/liberapay.png" alt="Liberapay" height="60" ></a>
 <a href="https://www.buymeacoffee.com/zionhuang"><img src="https://raw.githubusercontent.com/z-huang/InnerTune/dev/assets/buymeacoffee.png" alt="Liberapay" height="60" ></a>

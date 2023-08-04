@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Bottom navigation -->
     <string name="home">ホーム</string>
     <string name="songs">曲</string>
@@ -12,21 +12,24 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
-    <string name="new_release_albums">New release albums</string>
+    <string name="history">履歴</string>
+    <string name="stats">統計</string>
+    <string name="mood_and_genres">ムードとジャンル</string>
+    <string name="account">アカウント</string>
+    <string name="quick_picks">おすすめ</string>
+    <string name="quick_picks_empty">何曲か再生するとおすすめを生成します</string>
+    <string name="new_release_albums">新作アルバム</string>
 
     <!-- History -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_week">This week</string>
-    <string name="last_week">Last week</string>
+    <string name="today">今日</string>
+    <string name="yesterday">昨日</string>
+    <string name="this_week">今週</string>
+    <string name="last_week">先週</string>
 
     <!-- Stats -->
-    <string name="most_played_songs">Most played songs</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_songs">最も再生された曲</string>
+    <string name="most_played_artists">最も再生されたアーティスト</string>
+    <string name="most_played_albums">最も再生されたアルバム</string>
 
     <!-- Search -->
     <string name="search">検索</string>
@@ -39,8 +42,9 @@
     <string name="filter_artists">アーティスト</string>
     <string name="filter_playlists">プレイリスト</string>
     <string name="filter_community_playlists">コミュニティのプレイリスト</string>
-    <string name="filter_featured_playlists">注目のプレイリスト</string>
-    <string name="no_results_found">No results found</string>
+    <string name="filter_featured_playlists">おすすめのプレイリスト</string>
+    <string name="filter_bookmarked">Bookmarked</string>
+    <string name="no_results_found">見つかりませんでした</string>
 
     <!-- Artist screen -->
     <string name="from_your_library">ライブラリから</string>
@@ -48,7 +52,7 @@
     <!-- Playlist -->
     <string name="liked_songs">いいねした曲</string>
     <string name="downloaded_songs">ダウンロードした曲</string>
-    <string name="playlist_is_empty">The playlist is empty</string>
+    <string name="playlist_is_empty">プレイリストが空です</string>
 
     <!-- Button -->
     <string name="retry">再試行</string>
@@ -56,7 +60,7 @@
     <string name="shuffle">シャッフル</string>
 
     <!-- Menu -->
-    <string name="details">Details</string>
+    <string name="details">詳細</string>
     <string name="edit">編集</string>
     <string name="start_radio">ラジオを再生</string>
     <string name="play">再生</string>
@@ -65,18 +69,18 @@
     <string name="add_to_library">ライブラリに追加</string>
     <string name="remove_from_library">ライブラリから削除</string>
     <string name="download">ダウンロード</string>
-    <string name="downloading">Downloading</string>
-    <string name="remove_download">ダウンロードを削除</string>
+    <string name="downloading">ダウンロード中</string>
+    <string name="remove_download">ダウンロード削除</string>
     <string name="import_playlist">プレイリストをインポート</string>
     <string name="add_to_playlist">プレイリストに追加</string>
-    <string name="view_artist">アーティストを見る</string>
-    <string name="view_album">アルバムを見る</string>
+    <string name="view_artist">アーティスト表示</string>
+    <string name="view_album">アルバムを表示</string>
     <string name="refetch">再取得</string>
     <string name="share">共有</string>
     <string name="delete">削除</string>
-    <string name="remove_from_history">Remove from history</string>
+    <string name="remove_from_history">履歴から削除</string>
     <string name="search_online">オンラインで検索</string>
-    <string name="sync">Sync</string>
+    <string name="sync">同期</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">追加日時</string>
@@ -86,7 +90,7 @@
     <string name="sort_by_song_count">曲数</string>
     <string name="sort_by_length">長さ</string>
     <string name="sort_by_play_time">再生時間</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">カスタム</string>
 
     <!-- Dialog -->
     <string name="media_id">メディアID</string>
@@ -95,7 +99,7 @@
     <string name="bitrate">ビットレート</string>
     <string name="sample_rate">サンプリングレート</string>
     <string name="loudness">ラウドネス</string>
-    <string name="volume">ボリューム</string>
+    <string name="volume">音量</string>
     <string name="file_size">ファイルサイズ</string>
     <string name="unknown">不明</string>
     <string name="copied">クリップボードにコピー</string>
@@ -106,8 +110,8 @@
     <string name="edit_song">曲を編集</string>
     <string name="song_title">曲名</string>
     <string name="song_artists">曲のアーティスト</string>
-    <string name="error_song_title_empty">曲名は空白にできません。</string>
-    <string name="error_song_artist_empty">曲のアーティストは空白にできません。</string>
+    <string name="error_song_title_empty">曲名は空にできません。</string>
+    <string name="error_song_artist_empty">曲のアーティストは空にできません。</string>
     <string name="save">保存</string>
 
     <string name="choose_playlist">プレイリストを選択</string>
@@ -133,24 +137,33 @@
     <plurals name="n_playlist">
         <item quantity="other">%d プレイリスト</item>
     </plurals>
+    <plurals name="n_week">
+        <item quantity="other">%d週間</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="other">%dか月</item>
+    </plurals>
+    <plurals name="n_year">
+        <item quantity="other">%d年</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">プレイリストをインポートしました</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="playlist_synced">Playlist synced</string>
-    <string name="undo">Undo</string>
+    <string name="removed_song_from_playlist">プレイリストから「%s」を削除しました</string>
+    <string name="playlist_synced">プレイリストが同期されました</string>
+    <string name="undo">元に戻す</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">歌詞が見つかりません</string>
-    <string name="sleep_timer">Sleep timer</string>
-    <string name="end_of_song">End of song</string>
+    <string name="sleep_timer">スリープタイマー</string>
+    <string name="end_of_song">曲の終わり</string>
     <plurals name="minute">
-        <item quantity="other">%d minutes</item>
+        <item quantity="other">%d 分</item>
     </plurals>
     <string name="error_no_stream">ストリームが利用できません</string>
     <string name="error_no_internet">ネットワーク接続がありません</string>
     <string name="error_timeout">タイムアウトしました</string>
-    <string name="error_unknown">不明なエラーです</string>
+    <string name="error_unknown">不明なエラー</string>
 
     <!-- Player action -->
     <string name="action_like">いいね</string>
@@ -166,7 +179,7 @@
     <!-- Settings -->
     <string name="settings">設定</string>
     <string name="appearance">外観</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
+    <string name="enable_dynamic_theme">動的なテーマを有効化</string>
     <string name="dark_theme">ダークテーマ</string>
     <string name="dark_theme_on">オン</string>
     <string name="dark_theme_off">オフ</string>
@@ -181,59 +194,56 @@
 
     <string name="content">コンテンツ</string>
     <string name="login">ログイン</string>
-    <string name="content_language">デフォルトのコンテンツの言語</string>
-    <string name="content_country">デフォルトのコンテンツの国</string>
+    <string name="content_language">コンテンツの既定の言語</string>
+    <string name="content_country">コンテンツの既定の国</string>
     <string name="system_default">システムに従う</string>
     <string name="enable_proxy">プロキシを有効化</string>
     <string name="proxy_type">プロキシのタイプ</string>
     <string name="proxy_url">プロキシのURL</string>
     <string name="restart_to_take_effect">再起動して反映</string>
 
-    <string name="player_and_audio">プレイヤーとオーディオ</string>
-    <string name="audio_quality">オーディオ品質</string>
+    <string name="player_and_audio">プレイヤーと音声</string>
+    <string name="audio_quality">音声品質</string>
     <string name="audio_quality_auto">自動</string>
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
     <string name="persistent_queue">再生キューを保持</string>
     <string name="skip_silence">無音部分をスキップ</string>
-    <string name="audio_normalization">オーディオノーマライゼーション</string>
+    <string name="audio_normalization">音声の正規化</string>
     <string name="equalizer">イコライザー</string>
 
     <string name="storage">ストレージ</string>
     <string name="cache">キャッシュ</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="image_cache">画像のキャッシュ</string>
+    <string name="song_cache">曲のキャッシュ</string>
+    <string name="max_cache_size">最大キャッシュサイズ</string>
+    <string name="unlimited">無制限</string>
+    <string name="clear_all_downloads">すべてのダウンロードを削除</string>
     <string name="max_image_cache_size">画像の最大キャッシュサイズ</string>
     <string name="clear_image_cache">画像のキャッシュを削除</string>
     <string name="max_song_cache_size">曲の最大キャッシュサイズ</string>
-    <string name="clear_song_cache">Clear song cache</string>
+    <string name="clear_song_cache">曲のキャッシュを削除</string>
     <string name="size_used">%s 使用中</string>
 
     <string name="privacy">プライバシー</string>
-    <string name="pause_listen_history">Pause listen history</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
-    <string name="pause_search_history">履歴の記録を一時停止</string>
-    <string name="clear_search_history">履歴を削除</string>
+    <string name="pause_listen_history">再生履歴を一時停止</string>
+    <string name="clear_listen_history">再生履歴を削除</string>
+    <string name="clear_listen_history_confirm">すべての再生履歴を削除しますか？</string>
+    <string name="pause_search_history">検索履歴の記録を一時停止</string>
+    <string name="clear_search_history">検索履歴を削除</string>
     <string name="clear_search_history_confirm">すべての検索履歴を削除しますか？</string>
-    <string name="enable_kugou">酷狗からの歌詞取得を有効化</string>
+    <string name="enable_kugou">酷狗 (Kugou) からの歌詞取得を有効化</string>
 
-    <string name="backup_restore">バックアップとリストア</string>
+    <string name="backup_restore">バックアップと復元</string>
     <string name="backup">バックアップ</string>
-    <string name="restore">リストア</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
+    <string name="restore">復元</string>
+    <string name="imported_playlist">インポートしたプレイリスト</string>
     <string name="backup_create_success">バックアップの作成に成功しました</string>
     <string name="backup_create_failed">バックアップを作成できませんでした</string>
-    <string name="restore_failed">バックアップのリストアに失敗しました</string>
+    <string name="restore_failed">バックアップの復元に失敗しました</string>
 
     <string name="about">アプリについて</string>
     <string name="app_version">アプリのバージョン</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

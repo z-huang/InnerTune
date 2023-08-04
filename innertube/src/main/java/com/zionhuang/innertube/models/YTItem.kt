@@ -49,7 +49,7 @@ data class AlbumItem(
 data class PlaylistItem(
     override val id: String,
     override val title: String,
-    val author: Artist,
+    val author: Artist?,
     val songCountText: String?,
     override val thumbnail: String,
     val playEndpoint: WatchEndpoint?,

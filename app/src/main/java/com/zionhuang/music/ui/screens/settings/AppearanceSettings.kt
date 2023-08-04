@@ -40,14 +40,14 @@ fun AppearanceSettings(
             .verticalScroll(rememberScrollState())
     ) {
         SwitchPreference(
-            title = stringResource(R.string.enable_dynamic_theme),
-            icon = R.drawable.palette,
+            title = { Text(stringResource(R.string.enable_dynamic_theme)) },
+            icon = { Icon(painterResource(R.drawable.palette), null) },
             checked = dynamicTheme,
             onCheckedChange = onDynamicThemeChange
         )
         EnumListPreference(
-            title = stringResource(R.string.dark_theme),
-            icon = R.drawable.dark_mode,
+            title = { Text(stringResource(R.string.dark_theme)) },
+            icon = { Icon(painterResource(R.drawable.dark_mode), null) },
             selectedValue = darkMode,
             onValueSelected = onDarkModeChange,
             valueText = {
@@ -59,14 +59,14 @@ fun AppearanceSettings(
             }
         )
         SwitchPreference(
-            title = stringResource(R.string.pure_black),
-            icon = R.drawable.contrast,
+            title = { Text(stringResource(R.string.pure_black)) },
+            icon = { Icon(painterResource(R.drawable.contrast), null) },
             checked = pureBlack,
             onCheckedChange = onPureBlackChange
         )
         EnumListPreference(
-            title = stringResource(R.string.default_open_tab),
-            icon = R.drawable.tab,
+            title = { Text(stringResource(R.string.default_open_tab)) },
+            icon = { Icon(painterResource(R.drawable.tab), null) },
             selectedValue = defaultOpenTab,
             onValueSelected = onDefaultOpenTabChange,
             valueText = {
@@ -80,8 +80,8 @@ fun AppearanceSettings(
             }
         )
         EnumListPreference(
-            title = stringResource(R.string.lyrics_text_position),
-            icon = R.drawable.lyrics,
+            title = { Text(stringResource(R.string.lyrics_text_position)) },
+            icon = { Icon(painterResource(R.drawable.lyrics), null) },
             selectedValue = lyricsPosition,
             onValueSelected = onLyricsPositionChange,
             valueText = {

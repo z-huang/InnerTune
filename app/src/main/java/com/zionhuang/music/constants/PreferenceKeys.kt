@@ -38,8 +38,8 @@ val SongSortTypeKey = stringPreferencesKey("songSortType")
 val SongSortDescendingKey = booleanPreferencesKey("songSortDescending")
 val DownloadedSongSortTypeKey = stringPreferencesKey("songSortType")
 val DownloadedSongSortDescendingKey = booleanPreferencesKey("songSortDescending")
-val PlaylistSongSortTypeKey = stringPreferencesKey("songSortType")
-val PlaylistSongSortDescendingKey = booleanPreferencesKey("songSortDescending")
+val PlaylistSongSortTypeKey = stringPreferencesKey("playlistSongSortType")
+val PlaylistSongSortDescendingKey = booleanPreferencesKey("playlistSongSortDescending")
 val ArtistSortTypeKey = stringPreferencesKey("artistSortType")
 val ArtistSortDescendingKey = booleanPreferencesKey("artistSortDescending")
 val AlbumSortTypeKey = stringPreferencesKey("albumSortType")
@@ -49,40 +49,44 @@ val PlaylistSortDescendingKey = booleanPreferencesKey("playlistSortDescending")
 val ArtistSongSortTypeKey = stringPreferencesKey("artistSongSortType")
 val ArtistSongSortDescendingKey = booleanPreferencesKey("artistSongSortDescending")
 
+val ArtistViewTypeKey = stringPreferencesKey("artistViewType")
+
 val PlaylistEditLockKey = booleanPreferencesKey("playlistEditLock")
 
 enum class SongSortType {
-    CREATE_DATE, NAME, ARTIST
+    CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
 enum class DownloadedSongSortType {
-    CREATE_DATE, NAME, ARTIST
+    CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
 enum class PlaylistSongSortType {
-    CUSTOM, CREATE_DATE, NAME, ARTIST
+    CUSTOM, CREATE_DATE, NAME, ARTIST, PLAY_TIME
 }
 
 enum class ArtistSortType {
-    CREATE_DATE, NAME, SONG_COUNT
+    CREATE_DATE, NAME, SONG_COUNT, PLAY_TIME
 }
 
 enum class ArtistSongSortType {
-    CREATE_DATE, NAME
+    CREATE_DATE, NAME, PLAY_TIME
 }
 
 enum class AlbumSortType {
-    CREATE_DATE, NAME, ARTIST, YEAR, SONG_COUNT, LENGTH
+    CREATE_DATE, NAME, ARTIST, YEAR, SONG_COUNT, LENGTH, PLAY_TIME
 }
 
 enum class PlaylistSortType {
     CREATE_DATE, NAME, SONG_COUNT
 }
 
+enum class ArtistViewType {
+    ALL, BOOKMARKED
+}
+
 val ShowLyricsKey = booleanPreferencesKey("showLyrics")
 val LyricsTextPositionKey = stringPreferencesKey("lyricsTextPosition")
-
-val NavTabConfigKey = stringPreferencesKey("navTabConfig")
 
 val PlayerVolumeKey = floatPreferencesKey("playerVolume")
 val RepeatModeKey = intPreferencesKey("repeatMode")

@@ -17,8 +17,10 @@
     <!-- Home -->
     <string name="history">History</string>
     <string name="stats">Stats</string>
+    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Listen to songs to generate your quick picks</string>
     <string name="new_release_albums">New release albums</string>
 
     <!-- History -->
@@ -30,6 +32,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Most played songs</string>
     <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">Vyhledávání</string>
@@ -43,6 +46,7 @@
     <string name="filter_playlists">Playlisty</string>
     <string name="filter_community_playlists">Komunitní playlisty</string>
     <string name="filter_featured_playlists">Doporučené playlisty</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->
@@ -148,6 +152,18 @@
         <item quantity="many">%d playlistů</item>
         <item quantity="other">%d playlistů</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Playlist importován</string>
@@ -163,6 +179,7 @@
         <item quantity="one">1 minute</item>
         <item quantity="few">%d minutes</item>
         <item quantity="many">%d minutes</item>
+        <item quantity="other">%d minutes</item>
     </plurals>
     <string name="error_no_stream">Není dostupný žádný stream</string>
     <string name="error_no_internet">Není dostupné připojení k internetu</string>
@@ -241,16 +258,13 @@
     <string name="backup_restore">Záloha a obnovení</string>
     <string name="backup">Zálohovat</string>
     <string name="restore">Obnovit</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
     <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">Záloha úspěšně vytvořena</string>
     <string name="backup_create_failed">Nepodařilo se vytvořit zálohu</string>
     <string name="restore_failed">Nepodařilo se obnovit zálohu</string>
 
     <string name="about">O aplikaci</string>
     <string name="app_version">Verze aplikace</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

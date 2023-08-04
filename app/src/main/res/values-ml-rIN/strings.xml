@@ -15,8 +15,10 @@
     <!-- Home -->
     <string name="history">History</string>
     <string name="stats">Stats</string>
+    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="account">Account</string>
     <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Listen to songs to generate your quick picks</string>
     <string name="new_release_albums">New release albums</string>
 
     <!-- History -->
@@ -28,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">Most played songs</string>
     <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">തിരയുക</string>
@@ -41,6 +44,7 @@
     <string name="filter_playlists">പ്ലേലിസ്റ്റുകൾ</string>
     <string name="filter_community_playlists">കമ്മ്യൂണിറ്റി പ്ലേലിസ്റ്റുകൾ</string>
     <string name="filter_featured_playlists">തിരഞ്ഞെടുത്ത പ്ലേലിസ്റ്റുകൾ</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
 
     <!-- Artist screen -->
@@ -138,6 +142,18 @@
         <item quantity="one">%d പ്ലേലിസ്റ്റ്</item>
         <item quantity="other">%d പ്ലേലിസ്റ്റുകൾ</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d week</item>
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">പ്ലേലിസ്റ്റ് ഇറക്കുമതി ചെയ്തു</string>
@@ -230,16 +246,13 @@
     <string name="backup_restore">ബാക്കപ്പും വീണ്ടെടുക്കലും</string>
     <string name="backup">ബാക്കപ്പ്</string>
     <string name="restore">വീണ്ടെടുക്കൽ</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
     <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">ബാക്കപ്പ് സൃഷ്‌ടിച്ചു</string>
     <string name="backup_create_failed">ബാക്കപ്പ് സൃഷ്ടിക്കാൻ കഴിഞ്ഞില്ല</string>
     <string name="restore_failed">ബാക്കപ്പ് പുനഃസ്ഥാപിക്കാൻ കഴിഞ്ഞില്ല</string>
 
     <string name="about">കുറിച്ച്</string>
     <string name="app_version">അപ്ലിക്കേഷൻ പതിപ്പ്</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

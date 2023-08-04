@@ -14,6 +14,8 @@
     <!-- Home -->
     <string name="history">歷史記錄</string>
     <string name="stats">統計</string>
+    <string name="mood_and_genres">情境與類型</string>
+    <string name="account">帳號</string>
     <string name="quick_picks">歌曲快選</string>
     <string name="quick_picks_empty">聽一些音樂讓我們知道您的喜好</string>
     <string name="new_release_albums">新專輯</string>
@@ -27,6 +29,7 @@
     <!-- Stats -->
     <string name="most_played_songs">最常播放的歌曲</string>
     <string name="most_played_artists">最常播放的藝人</string>
+    <string name="most_played_albums">最常播放的專輯</string>
 
     <!-- Search -->
     <string name="search">搜尋</string>
@@ -40,6 +43,7 @@
     <string name="filter_playlists">播放清單</string>
     <string name="filter_community_playlists">社群播放清單</string>
     <string name="filter_featured_playlists">精選播放清單</string>
+    <string name="filter_bookmarked">收藏</string>
     <string name="no_results_found">找不到結果</string>
 
     <!-- Artist screen -->
@@ -133,6 +137,15 @@
     <plurals name="n_playlist">
         <item quantity="other">%d 個播放清單</item>
     </plurals>
+    <plurals name="n_week">
+        <item quantity="other">%d 週</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="other">%d 個月</item>
+    </plurals>
+    <plurals name="n_year">
+        <item quantity="other">%d 年</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">已匯入此播放清單</string>
@@ -224,15 +237,13 @@
     <string name="backup_restore">備份與還原</string>
     <string name="backup">備份</string>
     <string name="restore">還原</string>
-    <string name="choose_csv_file_from_google_takeout">選擇從 Google Takeout 匯出的 csv 檔</string>
     <string name="imported_playlist">已匯入的播放清單</string>
-    <plurals name="import_success">
-        <item quantity="other">已匯入「%s」，有%d首歌曲</item>
-    </plurals>
     <string name="backup_create_success">成功建立備份</string>
     <string name="backup_create_failed">無法建立備份</string>
     <string name="restore_failed">無法還原備份</string>
 
     <string name="about">關於</string>
     <string name="app_version">應用程式版本</string>
+
+    <string name="new_version_available">發現新版本</string>
 </resources>

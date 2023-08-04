@@ -14,8 +14,10 @@
     <!-- Home -->
     <string name="history">历史记录</string>
     <string name="stats">统计</string>
+    <string name="mood_and_genres">Mood and Genres</string>
+    <string name="account">Account</string>
     <string name="quick_picks">歌曲快选</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Listen to songs to generate your quick picks</string>
     <string name="new_release_albums">新专辑</string>
 
     <!-- History -->
@@ -27,6 +29,7 @@
     <!-- Stats -->
     <string name="most_played_songs">最常播放</string>
     <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_albums">Most played albums</string>
 
     <!-- Search -->
     <string name="search">搜索</string>
@@ -40,6 +43,7 @@
     <string name="filter_playlists">播放列表</string>
     <string name="filter_community_playlists">社区播放列表</string>
     <string name="filter_featured_playlists">精选播放列表</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">找不到结果</string>
 
     <!-- Artist screen -->
@@ -133,6 +137,15 @@
     <plurals name="n_playlist">
         <item quantity="other">%d 个播放列表</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="other">%d weeks</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="other">%d months</item>
+    </plurals>
+    <plurals name="n_year">
+        <item quantity="other">%d years</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">已导入此播放列表</string>
@@ -224,16 +237,13 @@
     <string name="backup_restore">备份与还原</string>
     <string name="backup">备份</string>
     <string name="restore">还原</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
     <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">成功新建备份</string>
     <string name="backup_create_failed">无法新建备份</string>
     <string name="restore_failed">无法还原备份</string>
 
     <string name="about">关于</string>
     <string name="app_version">应用版本</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

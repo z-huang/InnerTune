@@ -143,25 +143,27 @@ fun OnlinePlaylistScreen(
                                         fontSizeRange = FontSizeRange(16.sp, 22.sp)
                                     )
 
-                                    val annotatedString = buildAnnotatedString {
-                                        withStyle(
-                                            style = MaterialTheme.typography.titleMedium.copy(
-                                                fontWeight = FontWeight.Normal,
-                                                color = MaterialTheme.colorScheme.onBackground
-                                            ).toSpanStyle()
-                                        ) {
-                                            if (playlist.author.id != null) {
-                                                pushStringAnnotation(playlist.author.id!!, playlist.author.name)
-                                                append(playlist.author.name)
-                                                pop()
-                                            } else {
-                                                append(playlist.author.name)
+                                    playlist.author?.let { artist ->
+                                        val annotatedString = buildAnnotatedString {
+                                            withStyle(
+                                                style = MaterialTheme.typography.titleMedium.copy(
+                                                    fontWeight = FontWeight.Normal,
+                                                    color = MaterialTheme.colorScheme.onBackground
+                                                ).toSpanStyle()
+                                            ) {
+                                                if (artist.id != null) {
+                                                    pushStringAnnotation(artist.id!!, artist.name)
+                                                    append(artist.name)
+                                                    pop()
+                                                } else {
+                                                    append(artist.name)
+                                                }
                                             }
                                         }
-                                    }
-                                    ClickableText(annotatedString) { offset ->
-                                        annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
-                                            navController.navigate("artist/${range.tag}")
+                                        ClickableText(annotatedString) { offset ->
+                                            annotatedString.getStringAnnotations(offset, offset).firstOrNull()?.let { range ->
+                                                navController.navigate("artist/${range.tag}")
+                                            }
                                         }
                                     }
 

@@ -1,6 +1,10 @@
 package com.zionhuang.innertube.pages
 
-import com.zionhuang.innertube.models.*
+import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.innertube.models.Artist
+import com.zionhuang.innertube.models.MusicTwoRowItemRenderer
+import com.zionhuang.innertube.models.oddElements
+import com.zionhuang.innertube.models.splitBySeparator
 
 object NewReleaseAlbumPage {
     fun fromMusicTwoRowItemRenderer(renderer: MusicTwoRowItemRenderer): AlbumItem? {
@@ -11,7 +15,7 @@ object NewReleaseAlbumPage {
                 ?.musicPlayButtonRenderer?.playNavigationEndpoint
                 ?.watchPlaylistEndpoint?.playlistId ?: return null,
             title = renderer.title.runs?.firstOrNull()?.text ?: return null,
-            artists = renderer.subtitle.runs?.splitBySeparator()?.getOrNull(1)?.oddElements()?.map {
+            artists = renderer.subtitle?.runs?.splitBySeparator()?.getOrNull(1)?.oddElements()?.map {
                 Artist(
                     name = it.text,
                     id = it.navigationEndpoint?.browseEndpoint?.browseId

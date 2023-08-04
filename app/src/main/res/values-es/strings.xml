@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Bottom navigation -->
     <string name="home">Inicio</string>
     <string name="songs">Canciones</string>
@@ -9,14 +9,17 @@
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d seleccionada</item>
+        <item quantity="many">%d seleccionadas</item>
         <item quantity="other">%d seleccionadas</item>
     </plurals>
 
     <!-- Home -->
     <string name="history">Historial</string>
     <string name="stats">Estadísticas</string>
+    <string name="mood_and_genres">Ánimo y géneros</string>
+    <string name="account">Cuenta</string>
     <string name="quick_picks">Selecciones rápidas</string>
-    <string name="quick_picks_empty">Listen some songs to generate your quick picks</string>
+    <string name="quick_picks_empty">Escucha algunas canciones para generar tus selecciones rápidas</string>
     <string name="new_release_albums">Nuevos lanzamientos</string>
 
     <!-- History -->
@@ -27,12 +30,13 @@
 
     <!-- Stats -->
     <string name="most_played_songs">Canciones más reproducidas</string>
-    <string name="most_played_artists">Most played artists</string>
+    <string name="most_played_artists">Artistas más reproducidos</string>
+    <string name="most_played_albums">Álbumes más reproducidos</string>
 
     <!-- Search -->
     <string name="search">Buscar</string>
     <string name="search_yt_music">Buscar en Youtube Music…</string>
-    <string name="search_library">Buscar en biblioteca…</string>
+    <string name="search_library">Buscar en la biblioteca…</string>
     <string name="filter_all">Todo</string>
     <string name="filter_songs">Canciones</string>
     <string name="filter_videos">Vídeos</string>
@@ -41,6 +45,7 @@
     <string name="filter_playlists">Listas de reproducción</string>
     <string name="filter_community_playlists">Listas de la comunidad</string>
     <string name="filter_featured_playlists">Listas destacadas</string>
+    <string name="filter_bookmarked">En marcadores</string>
     <string name="no_results_found">No se han encontrado resultados</string>
 
     <!-- Artist screen -->
@@ -66,7 +71,7 @@
     <string name="add_to_library">Agregar a la biblioteca</string>
     <string name="remove_from_library">Quitar de la biblioteca</string>
     <string name="download">Descargar</string>
-    <string name="downloading">Downloading</string>
+    <string name="downloading">Descargando</string>
     <string name="remove_download">Borrar descarga</string>
     <string name="import_playlist">Importar lista de reproducción</string>
     <string name="add_to_playlist">Agregar a la lista de reproducción</string>
@@ -87,7 +92,7 @@
     <string name="sort_by_song_count">Número de canciones</string>
     <string name="sort_by_length">Duración</string>
     <string name="sort_by_play_time">Tiempo de reproducción</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_custom">Orden personalizado</string>
 
     <!-- Dialog -->
     <string name="media_id">ID multimedia</string>
@@ -124,26 +129,45 @@
     <!-- Noun -->
     <plurals name="n_song">
         <item quantity="one">%d canción</item>
+        <item quantity="many">%d canciones</item>
         <item quantity="other">%d canciones</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d artista</item>
+        <item quantity="many">%d artistas</item>
         <item quantity="other">%d artistas</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d álbum</item>
+        <item quantity="many">%d álbumes</item>
         <item quantity="other">%d álbumes</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d lista de reproducción</item>
+        <item quantity="many">%d listas de reproducción</item>
         <item quantity="other">%d listas de reproducción</item>
+    </plurals>
+    <plurals name="n_week">
+        <item quantity="one">%d semana</item>
+        <item quantity="many">%d semanas</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="one">%d mes</item>
+        <item quantity="many">%d meses</item>
+        <item quantity="other">%d meses</item>
+    </plurals>
+    <plurals name="n_year">
+        <item quantity="one">%d año</item>
+        <item quantity="many">%d años</item>
+        <item quantity="other">%d años</item>
     </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Lista de reproducción importada</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="playlist_synced">Playlist synced</string>
-    <string name="undo">Undo</string>
+    <string name="removed_song_from_playlist">Eliminado \"%s\" de la lista de reproducción</string>
+    <string name="playlist_synced">Lista de reproducción sincronizada</string>
+    <string name="undo">Deshacer</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Letras no encontradas</string>
@@ -151,6 +175,7 @@
     <string name="end_of_song">Al finalizar la canción</string>
     <plurals name="minute">
         <item quantity="one">1 minuto</item>
+        <item quantity="many">%d minutos</item>
         <item quantity="other">%d minutos</item>
     </plurals>
     <string name="error_no_stream">No hay un stream disponible</string>
@@ -211,7 +236,7 @@
     <string name="song_cache">Caché de canciones</string>
     <string name="max_cache_size">Tamaño máximo de la caché</string>
     <string name="unlimited">Ilimitado</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
+    <string name="clear_all_downloads">Borrar todas las descargas</string>
     <string name="max_image_cache_size">Tamaño máximo de la caché de imágenes</string>
     <string name="clear_image_cache">Borrar la caché de imágenes</string>
     <string name="max_song_cache_size">Tamaño máximo de la caché de canciones</string>
@@ -219,9 +244,9 @@
     <string name="size_used">%s usado</string>
 
     <string name="privacy">Privacidad</string>
-    <string name="pause_listen_history">Pausar historial de escucha</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
+    <string name="pause_listen_history">Pausar historial de escuchas</string>
+    <string name="clear_listen_history">Borrar historial de escuchas</string>
+    <string name="clear_listen_history_confirm">¿Estás seguro de que quieres borrar todo el historial de escuchas?</string>
     <string name="pause_search_history">Pausar historial de búsquedas</string>
     <string name="clear_search_history">Borrar historial de búsquedas</string>
     <string name="clear_search_history_confirm">¿Estás seguro de que quieres borrar todo el historial de búsquedas?</string>
@@ -230,16 +255,13 @@
     <string name="backup_restore">Copias de seguridad y restauración</string>
     <string name="backup">Hacer copia de seguridad</string>
     <string name="restore">Restaurar</string>
-    <string name="choose_csv_file_from_google_takeout">Choose a csv file from Google Takeout</string>
-    <string name="imported_playlist">Imported playlist</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
+    <string name="imported_playlist">Lista de reproducción importada</string>
     <string name="backup_create_success">Copia de seguridad creada con éxito</string>
     <string name="backup_create_failed">No se ha podido crear la copia de seguridad</string>
     <string name="restore_failed">Error al restaurar la copia de seguridad</string>
 
     <string name="about">Acerca de</string>
     <string name="app_version">Versión de la app</string>
+
+    <string name="new_version_available">New version available</string>
 </resources>

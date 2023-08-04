@@ -6,15 +6,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.zionhuang.innertube.utils.parseCookieString
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.ui.component.EditTextPreference
 import com.zionhuang.music.ui.component.ListPreference
+import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.PreferenceGroupTitle
 import com.zionhuang.music.ui.component.SwitchPreference
 import com.zionhuang.music.utils.rememberEnumPreference
@@ -27,6 +31,12 @@ fun ContentSettings(
     navController: NavController,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
+    val accountName by rememberPreference(AccountNameKey, "")
+    val accountEmail by rememberPreference(AccountEmailKey, "")
+    val innerTubeCookie by rememberPreference(InnerTubeCookieKey, "")
+    val isLoggedIn = remember(innerTubeCookie) {
+        "SAPISID" in parseCookieString(innerTubeCookie)
+    }
     val (contentLanguage, onContentLanguageChange) = rememberPreference(key = ContentLanguageKey, defaultValue = "system")
     val (contentCountry, onContentCountryChange) = rememberPreference(key = ContentCountryKey, defaultValue = "system")
     val (proxyEnabled, onProxyEnabledChange) = rememberPreference(key = ProxyEnabledKey, defaultValue = false)
@@ -39,9 +49,15 @@ fun ContentSettings(
             .windowInsetsPadding(LocalPlayerAwareWindowInsets.current)
             .verticalScroll(rememberScrollState())
     ) {
+        PreferenceEntry(
+            title = { Text(if (isLoggedIn) accountName else stringResource(R.string.login)) },
+            description = if (isLoggedIn) accountEmail else null,
+            icon = { Icon(painterResource(R.drawable.person), null) },
+            onClick = { navController.navigate("login") }
+        )
         ListPreference(
-            title = stringResource(R.string.content_language),
-            icon = R.drawable.language,
+            title = { Text(stringResource(R.string.content_language)) },
+            icon = { Icon(painterResource(R.drawable.language), null) },
             selectedValue = contentLanguage,
             values = listOf(SYSTEM_DEFAULT) + LanguageCodeToName.keys.toList(),
             valueText = {
@@ -52,8 +68,8 @@ fun ContentSettings(
             onValueSelected = onContentLanguageChange
         )
         ListPreference(
-            title = stringResource(R.string.content_country),
-            icon = R.drawable.location_on,
+            title = { Text(stringResource(R.string.content_country)) },
+            icon = { Icon(painterResource(R.drawable.location_on), null) },
             selectedValue = contentCountry,
             values = listOf(SYSTEM_DEFAULT) + CountryCodeToName.keys.toList(),
             valueText = {
@@ -69,21 +85,21 @@ fun ContentSettings(
         )
 
         SwitchPreference(
-            title = stringResource(R.string.enable_proxy),
+            title = { Text(stringResource(R.string.enable_proxy)) },
             checked = proxyEnabled,
             onCheckedChange = onProxyEnabledChange
         )
 
         if (proxyEnabled) {
             ListPreference(
-                title = stringResource(R.string.proxy_type),
+                title = { Text(stringResource(R.string.proxy_type)) },
                 selectedValue = proxyType,
                 values = listOf(Proxy.Type.HTTP, Proxy.Type.SOCKS),
                 valueText = { it.name },
                 onValueSelected = onProxyTypeChange
             )
             EditTextPreference(
-                title = stringResource(R.string.proxy_url),
+                title = { Text(stringResource(R.string.proxy_url)) },
                 value = proxyUrl,
                 onValueChange = onProxyUrlChange
             )

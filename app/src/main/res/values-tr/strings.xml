@@ -15,6 +15,8 @@
     <!-- Home -->
     <string name="history">Geçmiş</string>
     <string name="stats">İstatistikler</string>
+    <string name="mood_and_genres">Ruh Hali ve Türler</string>
+    <string name="account">Hesap</string>
     <string name="quick_picks">Hızlı seçimler</string>
     <string name="quick_picks_empty">Hızlı seçimlerinizi oluşturmak için birkaç şarkı dinleyin</string>
     <string name="new_release_albums">Yeni çıkan albümler</string>
@@ -28,6 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">En çok dinlenen şarkılar</string>
     <string name="most_played_artists">En çok dinlenen sanatçılar</string>
+    <string name="most_played_albums">En çok dinlenen albümler</string>
 
     <!-- Search -->
     <string name="search">Arama</string>
@@ -41,6 +44,7 @@
     <string name="filter_playlists">Çalma Listeleri</string>
     <string name="filter_community_playlists">Topluluk çalma listeleri</string>
     <string name="filter_featured_playlists">Öne çıkan listeler</string>
+    <string name="filter_bookmarked">Favoriler</string>
     <string name="no_results_found">Sonuç bulunamadı</string>
 
     <!-- Artist screen -->
@@ -61,7 +65,7 @@
     <string name="edit">Düzenle</string>
     <string name="start_radio">Radyo başlat</string>
     <string name="play">Çal</string>
-    <string name="play_next">Sonraki olarak çal</string>
+    <string name="play_next">Bir sonra çal</string>
     <string name="add_to_queue">Sıraya ekle</string>
     <string name="add_to_library">Kütüphaneye ekle</string>
     <string name="remove_from_library">Kütüphaneden kaldır</string>
@@ -138,11 +142,23 @@
         <item quantity="one">%d çalma listesi</item>
         <item quantity="other">%d çalma listesi</item>
     </plurals>
+    <plurals name="n_week" tools:ignore="MissingQuantity">
+        <item quantity="one">%d hafta</item>
+        <item quantity="other">%d hafta</item>
+    </plurals>
+    <plurals name="n_month" tools:ignore="MissingQuantity">
+        <item quantity="one">%d ay</item>
+        <item quantity="other">%d ay</item>
+    </plurals>
+    <plurals name="n_year" tools:ignore="MissingQuantity">
+        <item quantity="one">%d yıl</item>
+        <item quantity="other">%d yıl</item>
+    </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Çalma listesi içe aktarıldı</string>
-    <string name="removed_song_from_playlist">Çalma listesinden \"%s\" kaldırıldı</string>
-    <string name="playlist_synced">Playlist synced</string>
+    <string name="removed_song_from_playlist">\"%s\" çalma listesinden kaldırıldı</string>
+    <string name="playlist_synced">Çalma listesi eşitlendi</string>
     <string name="undo">Geri al</string>
 
     <!-- Player -->
@@ -230,16 +246,13 @@
     <string name="backup_restore">Yedekleme ve geri yükleme</string>
     <string name="backup">Yedekle</string>
     <string name="restore">Geri yükle</string>
-    <string name="choose_csv_file_from_google_takeout">Google Takeout\'tan bir csv dosyası seçin</string>
     <string name="imported_playlist">Çalma listesi içe aktarıldı</string>
-    <plurals name="import_success" tools:ignore="MissingQuantity">
-        <item quantity="one">Imported \"%s\" with %d song</item>
-        <item quantity="other">Imported \"%s\" with %d songs</item>
-    </plurals>
     <string name="backup_create_success">Yedekleme başarıyla oluşturuldu</string>
     <string name="backup_create_failed">Yedekleme oluşturulamadı</string>
     <string name="restore_failed">Yedekleme geri yüklenemedi</string>
 
     <string name="about">Hakkında</string>
     <string name="app_version">Uygulama sürümü</string>
+
+    <string name="new_version_available">Yeni sürüm mevcut</string>
 </resources>

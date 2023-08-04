@@ -17,8 +17,10 @@ import androidx.compose.animation.core.*
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material3.*
@@ -26,6 +28,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -60,6 +64,12 @@ import androidx.navigation.navArgument
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.google.common.util.concurrent.MoreExecutors
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ConfigUpdate
+import com.google.firebase.remoteconfig.ConfigUpdateListener
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
@@ -105,7 +115,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.URLDecoder
+import java.net.URLEncoder
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.hours
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -129,6 +142,7 @@ class MainActivity : ComponentActivity() {
             playerConnection = null
         }
     }
+    private var latestVersion by mutableStateOf(BuildConfig.VERSION_CODE.toLong())
 
     override fun onStart() {
         super.onStart()
@@ -159,6 +173,7 @@ class MainActivity : ComponentActivity() {
             MoreExecutors.directExecutor()
         )
 
+        setupRemoteConfig()
 
         setContent {
             val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
@@ -220,6 +235,14 @@ class MainActivity : ComponentActivity() {
                     val defaultOpenTab = remember {
                         dataStore[DefaultOpenTabKey].toEnum(defaultValue = NavigationTab.HOME)
                     }
+                    val tabOpenedFromShortcut = remember {
+                        when (intent?.action) {
+                            ACTION_SONGS -> NavigationTab.SONG
+                            ACTION_ALBUMS -> NavigationTab.ALBUM
+                            ACTION_PLAYLISTS -> NavigationTab.PLAYLIST
+                            else -> null
+                        }
+                    }
 
                     val (query, onQueryChange) = rememberSaveable(stateSaver = TextFieldValue.Saver) {
                         mutableStateOf(TextFieldValue())
@@ -238,16 +261,22 @@ class MainActivity : ComponentActivity() {
                     }
                     var searchSource by rememberEnumPreference(SearchSourceKey, SearchSource.ONLINE)
 
+                    val searchBarFocusRequester = remember { FocusRequester() }
+
                     val onSearch: (String) -> Unit = {
                         if (it.isNotEmpty()) {
                             onActiveChange(false)
-                            navController.navigate("search/$it")
+                            navController.navigate("search/${URLEncoder.encode(it, "UTF-8")}")
                             if (dataStore[PauseSearchHistoryKey] != true) {
                                 database.query {
                                     insert(SearchHistory(query = it))
                                 }
                             }
                         }
+                    }
+
+                    var openSearchImmediately: Boolean by remember {
+                        mutableStateOf(intent?.action == ACTION_SEARCH)
                     }
 
                     val shouldShowSearchBar = remember(active, navBackStackEntry) {
@@ -288,7 +317,9 @@ class MainActivity : ComponentActivity() {
 
                     LaunchedEffect(navBackStackEntry) {
                         if (navBackStackEntry?.destination?.route?.startsWith("search/") == true) {
-                            val searchQuery = navBackStackEntry?.arguments?.getString("query")!!
+                            val searchQuery = withContext(Dispatchers.IO) {
+                                URLDecoder.decode(navBackStackEntry?.arguments?.getString("query")!!, "UTF-8")
+                            }
                             onQueryChange(TextFieldValue(searchQuery, TextRange(searchQuery.length)))
                         } else if (navigationItems.fastAny { it.route == navBackStackEntry?.destination?.route }) {
                             onQueryChange(TextFieldValue())
@@ -344,6 +375,8 @@ class MainActivity : ComponentActivity() {
                                                 songs.firstOrNull()?.album?.id?.let { browseId ->
                                                     navController.navigate("album/$browseId")
                                                 }
+                                            }.onFailure {
+                                                it.printStackTrace()
                                             }
                                         }
                                     } else {
@@ -365,6 +398,8 @@ class MainActivity : ComponentActivity() {
                                             YouTube.queue(listOf(videoId))
                                         }.onSuccess {
                                             sharedSong = it.firstOrNull()
+                                        }.onFailure {
+                                            it.printStackTrace()
                                         }
                                     }
                                 }
@@ -385,7 +420,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         NavHost(
                             navController = navController,
-                            startDestination = when (defaultOpenTab) {
+                            startDestination = when (tabOpenedFromShortcut ?: defaultOpenTab) {
                                 NavigationTab.HOME -> Screens.Home
                                 NavigationTab.SONG -> Screens.Songs
                                 NavigationTab.ARTIST -> Screens.Artists
@@ -414,6 +449,12 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("stats") {
                                 StatsScreen(navController)
+                            }
+                            composable("mood_and_genres") {
+                                MoodAndGenresScreen(navController, scrollBehavior)
+                            }
+                            composable("account") {
+                                AccountScreen(navController, scrollBehavior)
                             }
                             composable("new_release") {
                                 NewReleaseScreen(navController, scrollBehavior)
@@ -506,8 +547,23 @@ class MainActivity : ComponentActivity() {
                                     LocalPlaylistScreen(navController, scrollBehavior)
                                 }
                             }
+                            composable(
+                                route = "youtube_browse/{browseId}?params={params}",
+                                arguments = listOf(
+                                    navArgument("browseId") {
+                                        type = NavType.StringType
+                                        nullable = true
+                                    },
+                                    navArgument("params") {
+                                        type = NavType.StringType
+                                        nullable = true
+                                    }
+                                )
+                            ) {
+                                YouTubeBrowseScreen(navController, scrollBehavior)
+                            }
                             composable("settings") {
-                                SettingsScreen(navController, scrollBehavior)
+                                SettingsScreen(latestVersion, navController, scrollBehavior)
                             }
                             composable("settings/appearance") {
                                 AppearanceSettings(navController, scrollBehavior)
@@ -529,6 +585,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("settings/about") {
                                 AboutScreen(navController, scrollBehavior)
+                            }
+                            composable("login") {
+                                LoginScreen(navController)
                             }
                         }
 
@@ -605,9 +664,41 @@ class MainActivity : ComponentActivity() {
                                                 contentDescription = null
                                             )
                                         }
+                                    } else if (navBackStackEntry?.destination?.route in listOf(
+                                            Screens.Home.route,
+                                            Screens.Songs.route,
+                                            Screens.Artists.route,
+                                            Screens.Albums.route,
+                                            Screens.Playlists.route
+                                        )
+                                    ) {
+                                        Box(
+                                            contentAlignment = Alignment.Center,
+                                            modifier = Modifier
+                                                .size(48.dp)
+                                                .clip(CircleShape)
+                                                .clickable {
+                                                    navController.navigate("settings")
+                                                }
+                                        ) {
+                                            BadgedBox(
+                                                badge = {
+                                                    if (latestVersion > BuildConfig.VERSION_CODE) {
+                                                        Badge()
+                                                    }
+                                                }
+                                            ) {
+
+                                                Icon(
+                                                    painter = painterResource(R.drawable.settings),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                        }
                                     }
                                 },
-                                modifier = Modifier.align(Alignment.TopCenter)
+                                focusRequester = searchBarFocusRequester,
+                                modifier = Modifier.align(Alignment.TopCenter),
                             ) {
                                 Crossfade(
                                     targetState = searchSource,
@@ -629,7 +720,7 @@ class MainActivity : ComponentActivity() {
                                             onQueryChange = onQueryChange,
                                             navController = navController,
                                             onSearch = {
-                                                navController.navigate("search/$it")
+                                                navController.navigate("search/${URLEncoder.encode(it, "UTF-8")}")
                                                 if (dataStore[PauseSearchHistoryKey] != true) {
                                                     database.query {
                                                         insert(SearchHistory(query = it))
@@ -725,6 +816,14 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
+
+                    LaunchedEffect(shouldShowSearchBar, openSearchImmediately) {
+                        if (shouldShowSearchBar && openSearchImmediately) {
+                            onActiveChange(true)
+                            searchBarFocusRequester.requestFocus()
+                            openSearchImmediately = false
+                        }
+                    }
                 }
             }
         }
@@ -742,6 +841,34 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             window.navigationBarColor = (if (isDark) Color.Transparent else Color.Black.copy(alpha = 0.2f)).toArgb()
         }
+    }
+
+    private fun setupRemoteConfig() {
+        val remoteConfig = Firebase.remoteConfig
+        remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 12.hours.inWholeSeconds
+        })
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    latestVersion = remoteConfig.getLong("latest_version")
+                }
+            }
+        remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
+            override fun onError(error: FirebaseRemoteConfigException) {}
+            override fun onUpdate(configUpdate: ConfigUpdate) {
+                remoteConfig.activate().addOnCompleteListener {
+                    latestVersion = remoteConfig.getLong("latest_version")
+                }
+            }
+        })
+    }
+
+    companion object {
+        const val ACTION_SEARCH = "com.zionhuang.music.action.SEARCH"
+        const val ACTION_SONGS = "com.zionhuang.music.action.SONGS"
+        const val ACTION_ALBUMS = "com.zionhuang.music.action.ALBUMS"
+        const val ACTION_PLAYLISTS = "com.zionhuang.music.action.PLAYLISTS"
     }
 }
 

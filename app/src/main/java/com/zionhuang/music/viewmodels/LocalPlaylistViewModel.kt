@@ -44,6 +44,7 @@ class LocalPlaylistViewModel @Inject constructor(
             PlaylistSongSortType.ARTIST -> songs.sortedBy { song ->
                 song.song.artists.joinToString { it.name }
             }
+            PlaylistSongSortType.PLAY_TIME -> songs.sortedBy { it.song.song.totalPlayTime }
         }.reversed(sortDescending && sortType != PlaylistSongSortType.CUSTOM)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }

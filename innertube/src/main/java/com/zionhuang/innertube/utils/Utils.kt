@@ -26,10 +26,12 @@ fun ByteArray.toHex(): String = joinToString(separator = "") { eachByte -> "%02x
 fun sha1(str: String): String = MessageDigest.getInstance("SHA-1").digest(str.toByteArray()).toHex()
 
 fun parseCookieString(cookie: String): Map<String, String> =
-    cookie.split("; ").associate {
-        val (key, value) = it.split("=")
-        key to value
-    }
+    cookie.split("; ")
+        .filter { it.isNotEmpty() }
+        .associate {
+            val (key, value) = it.split("=")
+            key to value
+        }
 
 fun String.parseTime(): Int? {
     try {

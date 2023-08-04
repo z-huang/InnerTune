@@ -13,13 +13,14 @@ import com.zionhuang.music.models.ItemsPage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.net.URLDecoder
 import javax.inject.Inject
 
 @HiltViewModel
 class OnlineSearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    val query = savedStateHandle.get<String>("query")!!
+    val query = URLDecoder.decode(savedStateHandle.get<String>("query")!!, "UTF-8")!!
     val filter = MutableStateFlow<YouTube.SearchFilter?>(null)
     var summaryPage by mutableStateOf<SearchSummaryPage?>(null)
     val viewStateMap = mutableStateMapOf<String, ItemsPage?>()
@@ -33,8 +34,8 @@ class OnlineSearchViewModel @Inject constructor(
                     }
                 } else {
                     if (viewStateMap[filter.value] == null) {
-                        viewStateMap[filter.value] = YouTube.search(query, filter).getOrNull()?.let {
-                            ItemsPage(it.items, it.continuation)
+                        viewStateMap[filter.value] = YouTube.search(query, filter).getOrNull()?.let { result ->
+                            ItemsPage(result.items.distinctBy { it.id }, result.continuation)
                         }
                     }
                 }
