@@ -27,6 +27,7 @@ class CoilBitmapLoader(
             val result = context.imageLoader.execute(
                 ImageRequest.Builder(context)
                     .data(uri)
+                    .allowHardware(false)
                     .build()
             )
             (result.drawable as BitmapDrawable).bitmap
