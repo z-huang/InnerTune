@@ -58,8 +58,8 @@ fun LoginScreen(
                             innerTubeCookie = CookieManager.getInstance().getCookie(url)
                             GlobalScope.launch {
                                 YouTube.accountInfo().onSuccess {
-                                    accountName = it?.name.orEmpty()
-                                    accountEmail = it?.email.orEmpty()
+                                    accountName = it.name
+                                    accountEmail = it.email
                                 }.onFailure {
                                     it.printStackTrace()
                                 }
