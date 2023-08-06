@@ -1,4 +1,5 @@
-    <string name="edit_playlist">Tuỳ chọn danh sách phát</string>
+<resources>
+<string name="edit_playlist">Tuỳ chọn danh sách phát</string>
     <string name="create_playlist">Tạo danh sách phát</string>
     <string name="playlist_name">Tên danh sách phát</string>
     <string name="error_playlist_name_empty">Tên danh sách phát không được để trống.</string>
