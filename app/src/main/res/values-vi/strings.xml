@@ -129,31 +129,24 @@
 
     <!-- Noun -->
     <plurals name="n_song">
-        <item quantity="one">Bài hát %d </item>
         <item quantity="other">Các bài hát %d </item>
     </plurals>
     <plurals name="n_artist">
-        <item quantity="one">Tác giả %d </item>
         <item quantity="other">Các tác giả %d</item>
     </plurals>
     <plurals name="n_album">
-        <item quantity="one">%d album</item>
         <item quantity="other">%d albums</item>
     </plurals>
     <plurals name="n_playlist">
-        <item quantity="one">Danh sách phát %d </item>
         <item quantity="other">Các danh sách phát %d</item>
     </plurals>
     <plurals name="n_week">
-        <item quantity="one">%d tuần</item>
         <item quantity="other">%d tuần</item>
     </plurals>
     <plurals name="n_month">
-        <item quantity="one">%d tháng</item>
         <item quantity="other">%d tháng</item>
     </plurals>
     <plurals name="n_year">
-        <item quantity="one">%d năm</item>
         <item quantity="other">%d năm</item>
     </plurals>
 
@@ -168,7 +161,6 @@
     <string name="sleep_timer">Hẹn giờ</string>
     <string name="end_of_song">Kết thúc bài hát</string>
     <plurals name="minute">
-        <item quantity="one">1 phút</item>
         <item quantity="other">%d phút</item>
     </plurals>
     <string name="error_no_stream">Không có stream</string>
