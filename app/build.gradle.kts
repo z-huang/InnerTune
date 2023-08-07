@@ -1,11 +1,19 @@
 @file:Suppress("UnstableApiUsage")
 
+val isFullBuild: Boolean by rootProject.extra
+
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+}
+
+if (isFullBuild && System.getenv("PULL_REQUEST") == null) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
+    apply(plugin = "com.google.firebase.firebase-perf")
 }
 
 android {
@@ -36,11 +44,6 @@ android {
     productFlavors {
         create("full") {
             dimension = "version"
-            if (System.getenv("PULL_REQUEST") == null) {
-                apply(plugin = "com.google.gms.google-services")
-                apply(plugin = "com.google.firebase.crashlytics")
-                apply(plugin = "com.google.firebase.firebase-perf")
-            }
         }
         create("foss") {
             dimension = "version"
