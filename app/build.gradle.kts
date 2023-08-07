@@ -6,11 +6,6 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
-    if (System.getenv("PULL_REQUEST") == null) {
-        id("com.google.gms.google-services")
-        id("com.google.firebase.crashlytics")
-        id("com.google.firebase.firebase-perf")
-    }
 }
 
 android {
@@ -35,6 +30,20 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             resValue("string", "app_name", "InnerTune Debug")
+        }
+    }
+    flavorDimensions += "version"
+    productFlavors {
+        create("full") {
+            dimension = "version"
+            if (System.getenv("PULL_REQUEST") == null) {
+                apply(plugin = "com.google.gms.google-services")
+                apply(plugin = "com.google.firebase.crashlytics")
+                apply(plugin = "com.google.firebase.firebase-perf")
+            }
+        }
+        create("foss") {
+            dimension = "version"
         }
     }
     signingConfigs {
@@ -126,11 +135,11 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugaring)
 
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.config)
-    implementation(libs.firebase.perf)
+    "fullImplementation"(platform(libs.firebase.bom))
+    "fullImplementation"(libs.firebase.analytics)
+    "fullImplementation"(libs.firebase.crashlytics)
+    "fullImplementation"(libs.firebase.config)
+    "fullImplementation"(libs.firebase.perf)
 
     implementation(libs.timber)
 }

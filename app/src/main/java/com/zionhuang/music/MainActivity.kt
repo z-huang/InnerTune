@@ -64,12 +64,6 @@ import androidx.navigation.navArgument
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.google.common.util.concurrent.MoreExecutors
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ConfigUpdate
-import com.google.firebase.remoteconfig.ConfigUpdateListener
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
@@ -107,6 +101,7 @@ import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.get
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
+import com.zionhuang.music.utils.setupRemoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -115,7 +110,6 @@ import kotlinx.coroutines.withContext
 import java.net.URLDecoder
 import java.net.URLEncoder
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.hours
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -139,7 +133,7 @@ class MainActivity : ComponentActivity() {
             playerConnection = null
         }
     }
-    private var latestVersion by mutableStateOf(BuildConfig.VERSION_CODE.toLong())
+    var latestVersion by mutableStateOf(BuildConfig.VERSION_CODE.toLong())
 
     override fun onStart() {
         super.onStart()
@@ -833,27 +827,6 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             window.navigationBarColor = (if (isDark) Color.Transparent else Color.Black.copy(alpha = 0.2f)).toArgb()
         }
-    }
-
-    private fun setupRemoteConfig() {
-        val remoteConfig = Firebase.remoteConfig
-        remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 12.hours.inWholeSeconds
-        })
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    latestVersion = remoteConfig.getLong("latest_version")
-                }
-            }
-        remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
-            override fun onError(error: FirebaseRemoteConfigException) {}
-            override fun onUpdate(configUpdate: ConfigUpdate) {
-                remoteConfig.activate().addOnCompleteListener {
-                    latestVersion = remoteConfig.getLong("latest_version")
-                }
-            }
-        })
     }
 
     companion object {
