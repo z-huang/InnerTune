@@ -31,6 +31,9 @@
     <string name="search">Caru</string>
     <string name="search_yt_music">Cari di YouTube Music…</string>
     <string name="search_library">Cari di perpustakaan…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">Semua</string>
     <string name="filter_songs">Lagu</string>
     <string name="filter_videos">Video</string>
@@ -39,6 +42,7 @@
     <string name="filter_playlists">Daftar putar</string>
     <string name="filter_community_playlists">Daftar putar komunitas</string>
     <string name="filter_featured_playlists">Daftar putar unggulan</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
     <!-- Artist screen -->
     <string name="from_your_library">Dari perpustakaan anda</string>
@@ -50,6 +54,7 @@
     <string name="retry">Mencoba kembali</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Acak</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">Rincian</string>
     <string name="edit">Sunting</string>
@@ -72,6 +77,7 @@
     <string name="remove_from_history">Remove from history</string>
     <string name="search_online">Cari secara online</string>
     <string name="sync">Sync</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Tanggal ditambahkan</string>
     <string name="sort_by_name">Nama</string>
@@ -216,4 +222,5 @@
     <string name="restore_failed">Gagal untuk memulihkan cadangan</string>
     <string name="about">Tentang</string>
     <string name="app_version">Versi aplikasi</string>
+    <string name="new_version_available">New version available</string>
 </resources>
