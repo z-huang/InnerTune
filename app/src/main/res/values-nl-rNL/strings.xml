@@ -32,6 +32,9 @@
     <string name="search">Zoeken</string>
     <string name="search_yt_music">Zoeken via YouTube Music…</string>
     <string name="search_library">Zoeken in bibliotheek</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">Alles</string>
     <string name="filter_songs">Nummers</string>
     <string name="filter_videos">Videos</string>
@@ -40,6 +43,7 @@
     <string name="filter_playlists">Afspeellijsten</string>
     <string name="filter_community_playlists">Afspeellijsten van de community</string>
     <string name="filter_featured_playlists">Voorgestelde afspeellijsten</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">Geen resultaten gevonden</string>
     <!-- Artist screen -->
     <string name="from_your_library">Verwijderen van bibliotheek</string>
@@ -51,6 +55,7 @@
     <string name="retry">Opnieuw</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Shuffle</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">Details</string>
     <string name="edit">Bewerken</string>
@@ -73,6 +78,7 @@
     <string name="remove_from_history">Verwijder uit geschiedenis</string>
     <string name="search_online">Zoek online</string>
     <string name="sync">Synchroniseer</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Datum toegevoegd</string>
     <string name="sort_by_name">Naam</string>
@@ -225,4 +231,5 @@
     <string name="restore_failed">Fout bij terugzetten back-up.</string>
     <string name="about">Over</string>
     <string name="app_version">App versie</string>
+    <string name="new_version_available">New version available</string>
 </resources>
