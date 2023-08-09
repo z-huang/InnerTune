@@ -34,6 +34,9 @@
     <string name="search">Пошук</string>
     <string name="search_yt_music">Пошук в YouTube Music…</string>
     <string name="search_library">Пошук в бібліотеці…</string>
+    <string name="filter_library">Бібліотека</string>
+    <string name="filter_liked">Вподобані</string>
+    <string name="filter_downloaded">Завантажені</string>
     <string name="filter_all">Всі</string>
     <string name="filter_songs">Композиції</string>
     <string name="filter_videos">Відео</string>
@@ -42,6 +45,7 @@
     <string name="filter_playlists">Плейлисти</string>
     <string name="filter_community_playlists">Плейлисти спільноти</string>
     <string name="filter_featured_playlists">Обрані плейлисти</string>
+    <string name="filter_bookmarked">Додано в закладки</string>
     <string name="no_results_found">Результатів не знайдено</string>
     <!-- Artist screen -->
     <string name="from_your_library">З вашої бібліотеки</string>
@@ -53,6 +57,7 @@
     <string name="retry">Повторювати</string>
     <string name="radio">Радіо</string>
     <string name="shuffle">Перемішати</string>
+    <string name="reset">Скинути</string>
     <!-- Menu -->
     <string name="details">Детальніше</string>
     <string name="edit">Редагувати</string>
@@ -75,6 +80,7 @@
     <string name="remove_from_history">Видалити з історії</string>
     <string name="search_online">Пошук в Інтернеті</string>
     <string name="sync">Синхронізація</string>
+    <string name="playback_control">Контроль аудіо</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Нещодавно додані</string>
     <string name="sort_by_name">Назва</string>
@@ -243,4 +249,5 @@
     <string name="restore_failed">Не вдалося відновити з резервної копії</string>
     <string name="about">Про програму</string>
     <string name="app_version">Версія застосунку</string>
+    <string name="new_version_available">Доступна нова версія</string>
 </resources>
