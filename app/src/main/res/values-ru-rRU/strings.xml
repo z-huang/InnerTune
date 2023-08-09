@@ -34,6 +34,9 @@
     <string name="search">Поиск</string>
     <string name="search_yt_music">Поиск в YouTube Music…</string>
     <string name="search_library">Поиск в библиотеке…</string>
+    <string name="filter_library">Библиотека</string>
+    <string name="filter_liked">Понравившиеся</string>
+    <string name="filter_downloaded">Загруженные</string>
     <string name="filter_all">Все</string>
     <string name="filter_songs">Композиции</string>
     <string name="filter_videos">Видео</string>
@@ -42,6 +45,7 @@
     <string name="filter_playlists">Плейлисты</string>
     <string name="filter_community_playlists">Плейлисты сообщества</string>
     <string name="filter_featured_playlists">Избранные плейлисты</string>
+    <string name="filter_bookmarked">Добавлено в закладки</string>
     <string name="no_results_found">Результаты не найдены</string>
     <!-- Artist screen -->
     <string name="from_your_library">Из вашей библиотеки</string>
@@ -53,6 +57,7 @@
     <string name="retry">Повторить</string>
     <string name="radio">Радио</string>
     <string name="shuffle">Перемешать</string>
+    <string name="reset">Сбросить</string>
     <!-- Menu -->
     <string name="details">Подробнее</string>
     <string name="edit">Редактировать</string>
@@ -75,6 +80,7 @@
     <string name="remove_from_history">Удалить из истории</string>
     <string name="search_online">Поиск в Интернете</string>
     <string name="sync">Синхронизация</string>
+    <string name="playback_control">Контроль аудио</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Недавно добавленные</string>
     <string name="sort_by_name">Название</string>
@@ -243,4 +249,5 @@
     <string name="restore_failed">Не удалось восстановить резервную копию</string>
     <string name="about">О приложении</string>
     <string name="app_version">Версия приложения</string>
+    <string name="new_version_available">Доступна новая версия</string>
 </resources>
