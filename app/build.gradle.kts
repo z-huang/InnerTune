@@ -77,10 +77,13 @@ android {
         freeCompilerArgs = freeCompilerArgs + "-Xcontext-receivers"
         jvmTarget = "11"
     }
-
     testOptions {
         unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
+    }
+    lint {
+        disable += "MissingTranslation"
+        disable += "ImpliedQuantity"
     }
 }
 
