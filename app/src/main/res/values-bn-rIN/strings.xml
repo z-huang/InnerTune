@@ -32,6 +32,9 @@
     <string name="search">খুঁজুন</string>
     <string name="search_yt_music">খুঁজুন YouTube Music এ</string>
     <string name="search_library">খুঁজুন লাইব্রেরি তে</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">সব</string>
     <string name="filter_songs">সংগীত</string>
     <string name="filter_videos">ভিডিও</string>
@@ -40,6 +43,7 @@
     <string name="filter_playlists">প্লেলিস্ট</string>
     <string name="filter_community_playlists">প্লেলিস্ট ক্রম</string>
     <string name="filter_featured_playlists">বিশিষ্ট প্লেলিস্ট</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">কিছু পাওয়া যায়নি</string>
     <!-- Artist screen -->
     <string name="from_your_library">আপনার লাইব্রেরি থেকে</string>
@@ -51,6 +55,7 @@
     <string name="retry">পুনরায় চেষ্টা করুন</string>
     <string name="radio">বেতার</string>
     <string name="shuffle">এলোমেলো</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">বিস্তারিত</string>
     <string name="edit">সম্পাদনা</string>
@@ -73,6 +78,7 @@
     <string name="remove_from_history">ইতিহাস থেকে অপসারণ</string>
     <string name="search_online">অনলাইন এ খুঁজুন</string>
     <string name="sync">সুসংগত</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">সময় সম্পাদনা করা হয়েছে</string>
     <string name="sort_by_name">নাম</string>
@@ -225,4 +231,5 @@
     <string name="restore_failed">ব্যাকআপ থেকে পুনরুদ্ধার করতে অক্ষম</string>
     <string name="about">সম্পর্কিত</string>
     <string name="app_version">অ্যাপ সংস্করণ</string>
+    <string name="new_version_available">New version available</string>
 </resources>
