@@ -69,7 +69,7 @@
     <string name="view_album">Voir l\'album</string>
     <string name="refetch">Récupérer</string>
     <string name="share">Partager</string>
-    <string name="delete">Effaceur</string>
+    <string name="delete">Effacer</string>
     <string name="remove_from_history">Supprimer de l\'historique</string>
     <string name="search_online">Rechercher en ligne</string>
     <string name="sync">Synchroniser</string>
@@ -85,7 +85,7 @@
     <!-- Dialog -->
     <string name="media_id">Identifiant du média</string>
     <string name="mime_type">Type MIME</string>
-    <string name="codecs">Codecs</string>
+    <string name="codecs">Codec</string>
     <string name="bitrate">Débit</string>
     <string name="sample_rate">Taux d\'échantillonnage</string>
     <string name="loudness">Intensité</string>
@@ -115,8 +115,8 @@
         <item quantity="other">%d chansons</item>
     </plurals>
     <plurals name="n_artist">
-        <item quantity="one">%d artist</item>
-        <item quantity="other">%d artists</item>
+        <item quantity="one">%d artiste</item>
+        <item quantity="other">%d artistes</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d album</item>
@@ -156,7 +156,7 @@
     <string name="error_timeout">Temps libre</string>
     <string name="error_unknown">Erreur inconnue</string>
     <!-- Player action -->
-    <string name="action_like">Like</string>
+    <string name="action_like">J’aime</string>
     <string name="action_remove_like">Enlever le like</string>
     <!-- Queue Title -->
     <string name="queue_all_songs">Toutes les chansons</string>
