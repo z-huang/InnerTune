@@ -32,6 +32,9 @@
     <string name="search">Arama</string>
     <string name="search_yt_music">YouTube Müzik\'te Ara…</string>
     <string name="search_library">Kütüphanede ara…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">Hepsi</string>
     <string name="filter_songs">Şarkılar</string>
     <string name="filter_videos">Videolar</string>
@@ -40,6 +43,7 @@
     <string name="filter_playlists">Çalma Listeleri</string>
     <string name="filter_community_playlists">Topluluk çalma listeleri</string>
     <string name="filter_featured_playlists">Öne çıkan listeler</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">Sonuç bulunamadı</string>
     <!-- Artist screen -->
     <string name="from_your_library">Kütüphanenizden</string>
@@ -51,6 +55,7 @@
     <string name="retry">Yeniden dene</string>
     <string name="radio">Radyo</string>
     <string name="shuffle">Karıştır</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">Ayrıntılar</string>
     <string name="edit">Düzenle</string>
@@ -73,6 +78,7 @@
     <string name="remove_from_history">Geçmişten kaldır</string>
     <string name="search_online">Çevrimiçi arama</string>
     <string name="sync">Eşitle</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Eklendiği tarih</string>
     <string name="sort_by_name">Ad</string>
@@ -225,4 +231,5 @@
     <string name="restore_failed">Yedekleme geri yüklenemedi</string>
     <string name="about">Hakkında</string>
     <string name="app_version">Uygulama sürümü</string>
+    <string name="new_version_available">New version available</string>
 </resources>
