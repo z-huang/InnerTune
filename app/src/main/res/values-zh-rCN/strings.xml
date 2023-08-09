@@ -61,6 +61,7 @@
     <string name="retry">重试</string>
     <string name="radio">电台</string>
     <string name="shuffle">随机播放</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">详情</string>
@@ -84,6 +85,7 @@
     <string name="remove_from_history">从记录中移除</string>
     <string name="search_online">在线搜索</string>
     <string name="sync">同步</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">新建时间</string>

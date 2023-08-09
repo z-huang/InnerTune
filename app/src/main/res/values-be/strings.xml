@@ -64,6 +64,7 @@
     <string name="retry">Паўтарыць</string>
     <string name="radio">Радыё</string>
     <string name="shuffle">Перамяшаць</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Падрабязнасці</string>
@@ -87,6 +88,7 @@
     <string name="remove_from_history">Выдаліць з гісторыі</string>
     <string name="search_online">Шукаць у сетцы</string>
     <string name="sync">Cінхранізацыя</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Нядаўна дададзена</string>

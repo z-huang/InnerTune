@@ -61,6 +61,7 @@
     <string name="retry">Thử lại</string>
     <string name="radio">Đài</string>
     <string name="shuffle">Trộn</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Chi tiết</string>
@@ -84,6 +85,7 @@
     <string name="remove_from_history">Xoá khỏi lịch sử</string>
     <string name="search_online">Tìm kiếm trực tuyến</string>
     <string name="sync">Đồng bộ</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Ngày thêm vào</string>

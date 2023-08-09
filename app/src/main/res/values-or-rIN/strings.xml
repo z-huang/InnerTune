@@ -62,6 +62,7 @@
     <string name="retry">ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ</string>
     <string name="radio">ରେଡିଓ</string>
     <string name="shuffle">ଶଫଲ୍ କରନ୍ତୁ</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">ବିବରଣୀ</string>
@@ -85,6 +86,7 @@
     <string name="remove_from_history">Remove from history</string>
     <string name="search_online">ଅନଲାଇନ୍ ସନ୍ଧାନ କରନ୍ତୁ</string>
     <string name="sync">Sync</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">ତାରିଖ ରେ ଯୋଡା ଯାଇଛି</string>

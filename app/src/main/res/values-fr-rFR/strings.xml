@@ -63,6 +63,7 @@
     <string name="retry">Réessayer</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Lecture aléatoire</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Détails</string>
@@ -86,6 +87,7 @@
     <string name="remove_from_history">Supprimer de l\'historique</string>
     <string name="search_online">Rechercher en ligne</string>
     <string name="sync">Synchroniser</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Date d\'ajout</string>

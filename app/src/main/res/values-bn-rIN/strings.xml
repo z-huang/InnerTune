@@ -62,6 +62,7 @@
     <string name="retry">পুনরায় চেষ্টা করুন</string>
     <string name="radio">বেতার</string>
     <string name="shuffle">এলোমেলো</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">বিস্তারিত</string>
@@ -85,6 +86,7 @@
     <string name="remove_from_history">ইতিহাস থেকে অপসারণ</string>
     <string name="search_online">অনলাইন এ খুঁজুন</string>
     <string name="sync">সুসংগত</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">সময় সম্পাদনা করা হয়েছে</string>
