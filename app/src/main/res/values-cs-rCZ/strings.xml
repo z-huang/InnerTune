@@ -34,6 +34,9 @@
     <string name="search">Vyhledávání</string>
     <string name="search_yt_music">Hledat v YouTube Music…</string>
     <string name="search_library">Hledat v knihovně…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">Vše</string>
     <string name="filter_songs">Skladby</string>
     <string name="filter_videos">Videa</string>
@@ -42,6 +45,7 @@
     <string name="filter_playlists">Playlisty</string>
     <string name="filter_community_playlists">Komunitní playlisty</string>
     <string name="filter_featured_playlists">Doporučené playlisty</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
     <!-- Artist screen -->
     <string name="from_your_library">Z vaší knihovny</string>
@@ -53,6 +57,7 @@
     <string name="retry">Zkusit znovu</string>
     <string name="radio">Rádio</string>
     <string name="shuffle">Náhodně</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">Podrobnosti</string>
     <string name="edit">Upravit</string>
@@ -75,6 +80,7 @@
     <string name="remove_from_history">Remove from history</string>
     <string name="search_online">Hledat online</string>
     <string name="sync">Sync</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Datum přidání</string>
     <string name="sort_by_name">Název</string>
@@ -243,4 +249,5 @@
     <string name="restore_failed">Nepodařilo se obnovit zálohu</string>
     <string name="about">O aplikaci</string>
     <string name="app_version">Verze aplikace</string>
+    <string name="new_version_available">New version available</string>
 </resources>
