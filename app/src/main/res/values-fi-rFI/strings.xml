@@ -32,6 +32,9 @@
     <string name="search">Etsi</string>
     <string name="search_yt_music">Search YouTube Music…</string>
     <string name="search_library">Search library…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">Kaikki</string>
     <string name="filter_songs">Kappaleet</string>
     <string name="filter_videos">Videot</string>
@@ -40,6 +43,7 @@
     <string name="filter_playlists">Soittolistat</string>
     <string name="filter_community_playlists">Community playlists</string>
     <string name="filter_featured_playlists">Featured playlists</string>
+    <string name="filter_bookmarked">Bookmarked</string>
     <string name="no_results_found">No results found</string>
     <!-- Artist screen -->
     <string name="from_your_library">From your library</string>
@@ -51,6 +55,7 @@
     <string name="retry">Toisto</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Sekoita</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">Details</string>
     <string name="edit">Muokkaa</string>
@@ -73,6 +78,7 @@
     <string name="remove_from_history">Remove from history</string>
     <string name="search_online">Search online</string>
     <string name="sync">Sync</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Lisäyspäivä</string>
     <string name="sort_by_name">Nimi</string>
@@ -225,4 +231,5 @@
     <string name="restore_failed">Failed to restore backup</string>
     <string name="about">Tietoa</string>
     <string name="app_version">Sovelluksen versio</string>
+    <string name="new_version_available">New version available</string>
 </resources>
