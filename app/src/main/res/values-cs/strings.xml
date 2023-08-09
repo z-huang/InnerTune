@@ -64,6 +64,7 @@
     <string name="retry">Zkusit znovu</string>
     <string name="radio">Rádio</string>
     <string name="shuffle">Náhodně</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Podrobnosti</string>
@@ -87,6 +88,7 @@
     <string name="remove_from_history">Remove from history</string>
     <string name="search_online">Hledat online</string>
     <string name="sync">Sync</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Datum přidání</string>

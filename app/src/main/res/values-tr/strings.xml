@@ -62,6 +62,7 @@
     <string name="retry">Yeniden dene</string>
     <string name="radio">Radyo</string>
     <string name="shuffle">Karıştır</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Ayrıntılar</string>
@@ -85,6 +86,7 @@
     <string name="remove_from_history">Geçmişten kaldır</string>
     <string name="search_online">Çevrimiçi arama</string>
     <string name="sync">Eşitle</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Eklendiği tarih</string>

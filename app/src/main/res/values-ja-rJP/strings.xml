@@ -61,6 +61,7 @@
     <string name="retry">再試行</string>
     <string name="radio">ラジオ</string>
     <string name="shuffle">シャッフル</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">詳細</string>
@@ -84,6 +85,7 @@
     <string name="remove_from_history">履歴から削除</string>
     <string name="search_online">オンラインで検索</string>
     <string name="sync">同期</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">追加日時</string>

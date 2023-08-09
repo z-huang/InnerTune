@@ -64,6 +64,7 @@
     <string name="retry">Повторить</string>
     <string name="radio">Радио</string>
     <string name="shuffle">Перемешать</string>
+    <string name="reset">Сбросить</string>
 
     <!-- Menu -->
     <string name="details">Подробнее</string>
@@ -87,6 +88,7 @@
     <string name="remove_from_history">Удалить из истории</string>
     <string name="search_online">Поиск в Интернете</string>
     <string name="sync">Синхронизация</string>
+    <string name="playback_control">Контроль аудио</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Недавно добавленные</string>

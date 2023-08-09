@@ -62,6 +62,7 @@
     <string name="retry">Újra</string>
     <string name="radio">Rádió</string>
     <string name="shuffle">Keverés</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Részletek</string>
@@ -85,6 +86,7 @@
     <string name="remove_from_history">Előzményből eltávolít</string>
     <string name="search_online">Keresés online</string>
     <string name="sync">Szinkron.</string>
+    <string name="playback_control">Playback control</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Létrehozás dátuma</string>
