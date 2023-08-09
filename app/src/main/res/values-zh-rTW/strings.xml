@@ -31,6 +31,9 @@
     <string name="search">搜尋</string>
     <string name="search_yt_music">搜尋 YouTube Music…</string>
     <string name="search_library">搜尋媒體庫…</string>
+    <string name="filter_library">媒體庫</string>
+    <string name="filter_liked">已按讚</string>
+    <string name="filter_downloaded">已下載</string>
     <string name="filter_all">全部</string>
     <string name="filter_songs">歌曲</string>
     <string name="filter_videos">影片</string>
@@ -39,6 +42,7 @@
     <string name="filter_playlists">播放清單</string>
     <string name="filter_community_playlists">社群播放清單</string>
     <string name="filter_featured_playlists">精選播放清單</string>
+    <string name="filter_bookmarked">收藏</string>
     <string name="no_results_found">找不到結果</string>
     <!-- Artist screen -->
     <string name="from_your_library">來自你的媒體庫</string>
@@ -50,6 +54,7 @@
     <string name="retry">重試</string>
     <string name="radio">電台</string>
     <string name="shuffle">隨機播放</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">詳細資訊</string>
     <string name="edit">編輯</string>
@@ -72,6 +77,7 @@
     <string name="remove_from_history">從記錄中移除</string>
     <string name="search_online">線上搜尋</string>
     <string name="sync">同步</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">新增時間</string>
     <string name="sort_by_name">名稱</string>
@@ -216,4 +222,5 @@
     <string name="restore_failed">無法還原備份</string>
     <string name="about">關於</string>
     <string name="app_version">應用程式版本</string>
+    <string name="new_version_available">發現新版本</string>
 </resources>
