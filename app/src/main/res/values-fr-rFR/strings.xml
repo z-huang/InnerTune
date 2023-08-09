@@ -32,6 +32,9 @@
     <string name="search">Recherché</string>
     <string name="search_yt_music">Rechercher sur Youtube Musique…</string>
     <string name="search_library">Rechercher dans votre librairie…</string>
+    <string name="filter_library">Librairie</string>
+    <string name="filter_liked">Aimé</string>
+    <string name="filter_downloaded">Télécharger</string>
     <string name="filter_all">Tout</string>
     <string name="filter_songs">Chansons</string>
     <string name="filter_videos">Vidéos</string>
@@ -40,6 +43,7 @@
     <string name="filter_playlists">Playlist</string>
     <string name="filter_community_playlists">Playlist de la communauté</string>
     <string name="filter_featured_playlists">Playlist mise en avant</string>
+    <string name="filter_bookmarked">Favoris</string>
     <string name="no_results_found">Aucun résultat trouvé</string>
     <!-- Artist screen -->
     <string name="from_your_library">De votre bibliothèque</string>
@@ -51,6 +55,7 @@
     <string name="retry">Réessayer</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Lecture aléatoire</string>
+    <string name="reset">Reset</string>
     <!-- Menu -->
     <string name="details">Détails</string>
     <string name="edit">Modifier</string>
@@ -73,6 +78,7 @@
     <string name="remove_from_history">Supprimer de l\'historique</string>
     <string name="search_online">Rechercher en ligne</string>
     <string name="sync">Synchroniser</string>
+    <string name="playback_control">Playback control</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Date d\'ajout</string>
     <string name="sort_by_name">Nom</string>
@@ -225,4 +231,5 @@
     <string name="restore_failed">Échec de la restauration de la sauvegarde</string>
     <string name="about">À propos de</string>
     <string name="app_version">Version de l\'application</string>
+    <string name="new_version_available">Nouvelle version disponible</string>
 </resources>
