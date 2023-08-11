@@ -37,7 +37,7 @@
     <string name="search_yt_music">Zoeken via YouTube Music…</string>
     <string name="search_library">Zoeken in bibliotheek</string>
     <string name="filter_library">Library</string>
-    <string name="filter_liked">Liked</string>
+    <string name="filter_liked">Geliked</string>
     <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">Alles</string>
     <string name="filter_songs">Nummers</string>
@@ -47,7 +47,7 @@
     <string name="filter_playlists">Afspeellijsten</string>
     <string name="filter_community_playlists">Afspeellijsten van de community</string>
     <string name="filter_featured_playlists">Voorgestelde afspeellijsten</string>
-    <string name="filter_bookmarked">Bookmarked</string>
+    <string name="filter_bookmarked">Gebookmarkd</string>
     <string name="no_results_found">Geen resultaten gevonden</string>
 
     <!-- Artist screen -->
@@ -67,14 +67,14 @@
     <!-- Menu -->
     <string name="details">Details</string>
     <string name="edit">Bewerken</string>
-    <string name="start_radio">Start radio</string>
+    <string name="start_radio">Radio starten</string>
     <string name="play">Afspelen</string>
     <string name="play_next">Volgende afspelen</string>
     <string name="add_to_queue">Voeg toe aan wachtrij</string>
     <string name="add_to_library">Voeg toe aan bibliotheek</string>
     <string name="remove_from_library">Verwijderen van bibliotheek</string>
-    <string name="download">Downloaden</string>
-    <string name="downloading">Downloading</string>
+    <string name="download">Download</string>
+    <string name="downloading">Downloaden</string>
     <string name="remove_download">Verwijder download</string>
     <string name="import_playlist">Importeer afspeellijst</string>
     <string name="add_to_playlist">Voeg toe aan afspeellijst</string>
@@ -86,7 +86,7 @@
     <string name="remove_from_history">Verwijder uit geschiedenis</string>
     <string name="search_online">Zoek online</string>
     <string name="sync">Synchroniseer</string>
-    <string name="playback_control">Playback control</string>
+    <string name="playback_control">Afspeelcontrole</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Datum toegevoegd</string>
@@ -124,11 +124,11 @@
     <string name="edit_playlist">Bewerk afspeellijst</string>
     <string name="create_playlist">Afspeellijst maken</string>
     <string name="playlist_name">Playlist name</string>
-    <string name="error_playlist_name_empty">Afspeellijstnaam mag niet leeg zijn.</string>
+    <string name="error_playlist_name_empty">Afspeellijstnaam mag niet leeg zijn</string>
 
     <string name="edit_artist">Bewerk artiest</string>
     <string name="artist_name">Artiest naam</string>
-    <string name="error_artist_name_empty">Artiestennaam mag niet leeg zijn.</string>
+    <string name="error_artist_name_empty">Artiestennaam mag niet leeg zijn</string>
 
     <!-- Noun -->
     <plurals name="n_song">
@@ -149,21 +149,21 @@
     </plurals>
     <plurals name="n_week" tools:ignore="MissingQuantity">
         <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="other">%d weken</item>
     </plurals>
     <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d maand</item>
+        <item quantity="other">%d maanden</item>
     </plurals>
     <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d jaar</item>
+        <item quantity="other">%d jaren</item>
     </plurals>
 
     <!-- Snackbar -->
     <string name="playlist_imported">Afspeellijst geimporteerd</string>
     <string name="removed_song_from_playlist">\"%s\" van afspeelijst verwijderd</string>
-    <string name="playlist_synced">Playlist synced</string>
+    <string name="playlist_synced">Afspeellijst gesynchroniseerd</string>
     <string name="undo">Ongedaan maken</string>
 
     <!-- Player -->
@@ -259,5 +259,5 @@
     <string name="about">Over</string>
     <string name="app_version">App versie</string>
 
-    <string name="new_version_available">New version available</string>
+    <string name="new_version_available">Nieuwe versie beschikbaar</string>
 </resources>
