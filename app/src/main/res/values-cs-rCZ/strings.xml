@@ -143,28 +143,28 @@
         <item quantity="other">%d playlistů</item>
     </plurals>
     <plurals name="n_week">
-        <item quantity="one">%d week</item>
-        <item quantity="few">%d weeks</item>
-        <item quantity="many">%d weeks</item>
-        <item quantity="other">%d weeks</item>
+        <item quantity="one">%d týden</item>
+        <item quantity="few">%d týdny</item>
+        <item quantity="many">%d týdnů</item>
+        <item quantity="other">%d týdnů</item>
     </plurals>
     <plurals name="n_month">
-        <item quantity="one">%d month</item>
-        <item quantity="few">%d months</item>
-        <item quantity="many">%d months</item>
-        <item quantity="other">%d months</item>
+        <item quantity="one">%d měsíc</item>
+        <item quantity="few">%d měsíce</item>
+        <item quantity="many">%d měsíců</item>
+        <item quantity="other">%d měsíců</item>
     </plurals>
     <plurals name="n_year">
-        <item quantity="one">%d year</item>
-        <item quantity="few">%d years</item>
-        <item quantity="many">%d years</item>
-        <item quantity="other">%d years</item>
+        <item quantity="one">%d rok</item>
+        <item quantity="few">%d roky</item>
+        <item quantity="many">%d let</item>
+        <item quantity="other">%d let</item>
     </plurals>
     <!-- Snackbar -->
     <string name="playlist_imported">Playlist importován</string>
     <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="playlist_synced">Playlist synced</string>
-    <string name="undo">Undo</string>
+    <string name="playlist_synced">Playlist byl synchronizován</string>
+    <string name="undo">Zpět</string>
     <!-- Player -->
     <string name="lyrics_not_found">Texty nenalezeny</string>
     <string name="sleep_timer">Sleep timer</string>
