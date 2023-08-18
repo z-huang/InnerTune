@@ -63,7 +63,8 @@ recommend [Pano Scrobbler](https://play.google.com/store/apps/details?id=com.arn
 
 ## Contributing Translations
 
-Follow the [instruction](https://developer.android.com/guide/topics/resources/localization) and
+You can translate on [Crowdin](https://crowdin.com/project/innertune). Or, follow the 
+[instruction](https://developer.android.com/guide/topics/resources/localization) and
 create a pull request. If possible, please build the app beforehand and make sure there is no error
 before you create a pull request.
 
