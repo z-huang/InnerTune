@@ -209,8 +209,8 @@ interface DatabaseDao {
     fun song(songId: String?): Flow<Song?>
 
     @Transaction
-    @Query("SELECT * FROM song WHERE id IN (:songIds)")
-    fun songs(songIds: List<String>): Flow<List<Song>>
+    @Query("SELECT * FROM song")
+    fun allSongs(): Flow<List<Song>>
 
     @Query("SELECT * FROM format WHERE id = :id")
     fun format(id: String?): Flow<FormatEntity?>

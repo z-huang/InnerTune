@@ -134,6 +134,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.guava.future
 import kotlinx.coroutines.launch
@@ -831,15 +832,18 @@ class MusicService : MediaLibraryService(),
                             LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, true)
                             DOWNLOADED_PLAYLIST_ID -> {
                                 val downloads = downloadUtil.downloads.value
-                                database.songs(
-                                    downloads.filter { (_, download) ->
-                                        download.state == Download.STATE_COMPLETED
-                                    }.keys.toList()
-                                ).map { songs ->
-                                    songs.map { it to downloads[it.id] }
-                                        .sortedBy { it.second?.updateTimeMs ?: 0L }
-                                        .map { it.first }
-                                }
+                                database.allSongs()
+                                    .flowOn(Dispatchers.IO)
+                                    .map { songs ->
+                                        songs.filter {
+                                            downloads[it.id]?.state == Download.STATE_COMPLETED
+                                        }
+                                    }
+                                    .map { songs ->
+                                        songs.map { it to downloads[it.id] }
+                                            .sortedBy { it.second?.updateTimeMs ?: 0L }
+                                            .map { it.first }
+                                    }
                             }
 
                             else -> database.playlistSongs(playlistId).map { list ->
@@ -917,15 +921,18 @@ class MusicService : MediaLibraryService(),
                     LIKED_PLAYLIST_ID -> database.likedSongs(SongSortType.CREATE_DATE, descending = true)
                     DOWNLOADED_PLAYLIST_ID -> {
                         val downloads = downloadUtil.downloads.value
-                        database.songs(
-                            downloads.filter { (_, download) ->
-                                download.state == Download.STATE_COMPLETED
-                            }.keys.toList()
-                        ).map { songs ->
-                            songs.map { it to downloads[it.id] }
-                                .sortedBy { it.second?.updateTimeMs ?: 0L }
-                                .map { it.first }
-                        }
+                        database.allSongs()
+                            .flowOn(Dispatchers.IO)
+                            .map { songs ->
+                                songs.filter {
+                                    downloads[it.id]?.state == Download.STATE_COMPLETED
+                                }
+                            }
+                            .map { songs ->
+                                songs.map { it to downloads[it.id] }
+                                    .sortedBy { it.second?.updateTimeMs ?: 0L }
+                                    .map { it.first }
+                            }
                     }
 
                     else -> database.playlistSongs(playlistId).map { list ->

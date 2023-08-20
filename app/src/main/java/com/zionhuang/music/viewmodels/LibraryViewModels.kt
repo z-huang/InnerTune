@@ -6,7 +6,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
+import androidx.media3.exoplayer.offline.Download
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
@@ -44,21 +44,24 @@ class LibrarySongsViewModel @Inject constructor(
                 SongFilter.LIBRARY -> database.songs(sortType, descending)
                 SongFilter.LIKED -> database.likedSongs(sortType, descending)
                 SongFilter.DOWNLOADED -> downloadUtil.downloads.flatMapLatest { downloads ->
-                    database.songs(
-                        downloads.filter { (_, download) ->
-                            download.state == STATE_COMPLETED
-                        }.keys.toList()
-                    ).map { songs ->
-                        when (sortType) {
-                            SongSortType.CREATE_DATE -> songs.sortedBy { downloads[it.id]?.updateTimeMs ?: 0L }
-                            SongSortType.NAME -> songs.sortedBy { it.song.title }
-                            SongSortType.ARTIST -> songs.sortedBy { song ->
-                                song.artists.joinToString(separator = "") { it.name }
+                    database.allSongs()
+                        .flowOn(Dispatchers.IO)
+                        .map { songs ->
+                            songs.filter {
+                                downloads[it.id]?.state == Download.STATE_COMPLETED
                             }
+                        }
+                        .map { songs ->
+                            when (sortType) {
+                                SongSortType.CREATE_DATE -> songs.sortedBy { downloads[it.id]?.updateTimeMs ?: 0L }
+                                SongSortType.NAME -> songs.sortedBy { it.song.title }
+                                SongSortType.ARTIST -> songs.sortedBy { song ->
+                                    song.artists.joinToString(separator = "") { it.name }
+                                }
 
-                            SongSortType.PLAY_TIME -> songs.sortedBy { it.song.totalPlayTime }
-                        }.reversed(descending)
-                    }
+                                SongSortType.PLAY_TIME -> songs.sortedBy { it.song.totalPlayTime }
+                            }.reversed(descending)
+                        }
                 }
             }
         }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
