@@ -32,14 +32,14 @@ import com.zionhuang.music.constants.StatPeriod
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
+import com.zionhuang.music.ui.component.AlbumListItem
 import com.zionhuang.music.ui.component.ArtistListItem
 import com.zionhuang.music.ui.component.ChipsRow
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
-import com.zionhuang.music.ui.component.YouTubeListItem
+import com.zionhuang.music.ui.menu.AlbumMenu
 import com.zionhuang.music.ui.menu.SongMenu
-import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.viewmodels.StatsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -150,17 +150,17 @@ fun StatsScreen(
             items(
                 items = mostPlayedAlbums,
                 key = { it.id }
-            ) { item ->
-                YouTubeListItem(
-                    item = item,
-                    isActive = mediaMetadata?.album?.id == item.id,
+            ) { album ->
+                AlbumListItem(
+                    album = album,
+                    isActive = album.id == mediaMetadata?.album?.id,
                     isPlaying = isPlaying,
                     trailingContent = {
                         IconButton(
                             onClick = {
                                 menuState.show {
-                                    YouTubeAlbumMenu(
-                                        album = item,
+                                    AlbumMenu(
+                                        originalAlbum = album,
                                         navController = navController,
                                         playerConnection = playerConnection,
                                         onDismiss = menuState::dismiss
@@ -175,8 +175,9 @@ fun StatsScreen(
                         }
                     },
                     modifier = Modifier
-                        .clickable {
-                            navController.navigate("album/${item.id}")
+                        .fillMaxWidth()
+                        .combinedClickable {
+                            navController.navigate("album/${album.id}")
                         }
                         .animateItemPlacement()
                 )

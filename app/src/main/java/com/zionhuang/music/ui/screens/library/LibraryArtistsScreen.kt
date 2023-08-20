@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -26,11 +25,11 @@ import androidx.navigation.NavController
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.ArtistFilter
+import com.zionhuang.music.constants.ArtistFilterKey
 import com.zionhuang.music.constants.ArtistSortDescendingKey
 import com.zionhuang.music.constants.ArtistSortType
 import com.zionhuang.music.constants.ArtistSortTypeKey
-import com.zionhuang.music.constants.ArtistViewType
-import com.zionhuang.music.constants.ArtistViewTypeKey
 import com.zionhuang.music.constants.CONTENT_TYPE_ARTIST
 import com.zionhuang.music.ui.component.ArtistListItem
 import com.zionhuang.music.ui.component.ChipsRow
@@ -38,16 +37,15 @@ import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibraryArtistsViewModel
-import java.time.LocalDateTime
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LibraryArtistsScreen(
     navController: NavController,
     viewModel: LibraryArtistsViewModel = hiltViewModel(),
 ) {
     val database = LocalDatabase.current
-    var viewType by rememberEnumPreference(ArtistViewTypeKey, ArtistViewType.LIBRARY)
+    var filter by rememberEnumPreference(ArtistFilterKey, ArtistFilter.LIBRARY)
     val (sortType, onSortTypeChange) = rememberEnumPreference(ArtistSortTypeKey, ArtistSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(ArtistSortDescendingKey, true)
 
@@ -59,14 +57,14 @@ fun LibraryArtistsScreen(
         LazyColumn(
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
-            item(key = "viewType") {
+            item(key = "filter") {
                 ChipsRow(
                     chips = listOf(
-                        ArtistViewType.LIBRARY to stringResource(R.string.filter_library),
-                        ArtistViewType.BOOKMARKED to stringResource(R.string.filter_bookmarked)
+                        ArtistFilter.LIBRARY to stringResource(R.string.filter_library),
+                        ArtistFilter.LIKED to stringResource(R.string.filter_liked)
                     ),
-                    currentValue = viewType,
-                    onValueUpdate = { viewType = it }
+                    currentValue = filter,
+                    onValueUpdate = { filter = it }
                 )
             }
 
@@ -99,17 +97,13 @@ fun LibraryArtistsScreen(
                         IconButton(
                             onClick = {
                                 database.transaction {
-                                    update(
-                                        artist.artist.copy(
-                                            bookmarkedAt = if (artist.artist.bookmarkedAt != null) null else LocalDateTime.now()
-                                        )
-                                    )
+                                    update(artist.artist.toggleLike())
                                 }
                             }
                         ) {
                             Icon(
-                                painter = painterResource(if (artist.artist.bookmarkedAt != null) R.drawable.bookmark_filled else R.drawable.bookmark),
-                                tint = if (artist.artist.bookmarkedAt != null) MaterialTheme.colorScheme.primary else LocalContentColor.current,
+                                painter = painterResource(if (artist.artist.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
+                                tint = if (artist.artist.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
                                 contentDescription = null
                             )
                         }

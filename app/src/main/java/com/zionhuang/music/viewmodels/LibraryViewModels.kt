@@ -16,6 +16,7 @@ import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.utils.dataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -32,17 +33,17 @@ class LibrarySongsViewModel @Inject constructor(
     val allSongs = context.dataStore.data
         .map {
             Triple(
-                it[SongViewTypeKey].toEnum(SongViewType.LIBRARY),
+                it[SongFilterKey].toEnum(SongFilter.LIBRARY),
                 it[SongSortTypeKey].toEnum(SongSortType.CREATE_DATE),
                 (it[SongSortDescendingKey] ?: true)
             )
         }
         .distinctUntilChanged()
-        .flatMapLatest { (viewType, sortType, descending) ->
-            when (viewType) {
-                SongViewType.LIBRARY -> database.songs(sortType, descending)
-                SongViewType.LIKED -> database.likedSongs(sortType, descending)
-                SongViewType.DOWNLOADED -> downloadUtil.downloads.flatMapLatest { downloads ->
+        .flatMapLatest { (filter, sortType, descending) ->
+            when (filter) {
+                SongFilter.LIBRARY -> database.songs(sortType, descending)
+                SongFilter.LIKED -> database.likedSongs(sortType, descending)
+                SongFilter.DOWNLOADED -> downloadUtil.downloads.flatMapLatest { downloads ->
                     database.songs(
                         downloads.filter { (_, download) ->
                             download.state == STATE_COMPLETED
@@ -60,7 +61,6 @@ class LibrarySongsViewModel @Inject constructor(
                     }
                 }
             }
-
         }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 }
 
@@ -72,22 +72,22 @@ class LibraryArtistsViewModel @Inject constructor(
     val allArtists = context.dataStore.data
         .map {
             Triple(
-                it[ArtistViewTypeKey].toEnum(ArtistViewType.LIBRARY),
+                it[ArtistFilterKey].toEnum(ArtistFilter.LIBRARY),
                 it[ArtistSortTypeKey].toEnum(ArtistSortType.CREATE_DATE),
                 it[ArtistSortDescendingKey] ?: true
             )
         }
         .distinctUntilChanged()
-        .flatMapLatest { (viewType, sortType, descending) ->
-            when (viewType) {
-                ArtistViewType.LIBRARY -> database.artists(sortType, descending)
-                ArtistViewType.BOOKMARKED -> database.artistsBookmarked(sortType, descending)
+        .flatMapLatest { (filter, sortType, descending) ->
+            when (filter) {
+                ArtistFilter.LIBRARY -> database.artists(sortType, descending)
+                ArtistFilter.LIKED -> database.artistsBookmarked(sortType, descending)
             }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             allArtists.collect { artists ->
                 artists
                     .map { it.artist }
@@ -113,13 +113,43 @@ class LibraryAlbumsViewModel @Inject constructor(
 ) : ViewModel() {
     val allAlbums = context.dataStore.data
         .map {
-            it[AlbumSortTypeKey].toEnum(AlbumSortType.CREATE_DATE) to (it[AlbumSortDescendingKey] ?: true)
+            Triple(
+                it[AlbumFilterKey].toEnum(AlbumFilter.LIBRARY),
+                it[AlbumSortTypeKey].toEnum(AlbumSortType.CREATE_DATE),
+                it[AlbumSortDescendingKey] ?: true
+            )
         }
         .distinctUntilChanged()
-        .flatMapLatest { (sortType, descending) ->
-            database.albums(sortType, descending)
+        .flatMapLatest { (filter, sortType, descending) ->
+            when (filter) {
+                AlbumFilter.LIBRARY -> database.albums(sortType, descending)
+                AlbumFilter.LIKED -> database.albumsLiked(sortType, descending)
+            }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            allAlbums.collect { albums ->
+                albums.filter {
+                    it.album.songCount == 0
+                }.forEach { album ->
+                    YouTube.album(album.id).onSuccess { albumPage ->
+                        database.query {
+                            update(album.album, albumPage)
+                        }
+                    }.onFailure {
+                        it.printStackTrace()
+                        if (it.message?.contains("NOT_FOUND") == true) {
+                            database.query {
+                                delete(album.album)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 @HiltViewModel

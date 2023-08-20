@@ -12,8 +12,13 @@ data class AlbumEntity(
     val title: String,
     val year: Int? = null,
     val thumbnailUrl: String? = null,
+    val themeColor: Int? = null,
     val songCount: Int,
     val duration: Int,
-    val createDate: LocalDateTime = LocalDateTime.now(),
     val lastUpdateTime: LocalDateTime = LocalDateTime.now(),
-)
+    val bookmarkedAt: LocalDateTime? = null,
+) {
+    fun toggleLike() = copy(
+        bookmarkedAt = if (bookmarkedAt != null) null else LocalDateTime.now()
+    )
+}

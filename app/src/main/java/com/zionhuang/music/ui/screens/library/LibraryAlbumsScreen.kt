@@ -13,9 +13,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
@@ -23,6 +25,7 @@ import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.ui.component.AlbumListItem
+import com.zionhuang.music.ui.component.ChipsRow
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.menu.AlbumMenu
@@ -41,6 +44,7 @@ fun LibraryAlbumsScreen(
     val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
+    var filter by rememberEnumPreference(AlbumFilterKey, AlbumFilter.LIBRARY)
     val (sortType, onSortTypeChange) = rememberEnumPreference(AlbumSortTypeKey, AlbumSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(AlbumSortDescendingKey, true)
 
@@ -52,6 +56,17 @@ fun LibraryAlbumsScreen(
         LazyColumn(
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
+            item(key = "filter") {
+                ChipsRow(
+                    chips = listOf(
+                        AlbumFilter.LIBRARY to stringResource(R.string.filter_library),
+                        AlbumFilter.LIKED to stringResource(R.string.filter_liked)
+                    ),
+                    currentValue = filter,
+                    onValueUpdate = { filter = it }
+                )
+            }
+
             item(
                 key = "header",
                 contentType = CONTENT_TYPE_HEADER
@@ -90,7 +105,7 @@ fun LibraryAlbumsScreen(
                             onClick = {
                                 menuState.show {
                                     AlbumMenu(
-                                        album = album,
+                                        originalAlbum = album,
                                         navController = navController,
                                         playerConnection = playerConnection,
                                         onDismiss = menuState::dismiss

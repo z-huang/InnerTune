@@ -48,7 +48,7 @@ fun LibrarySongsScreen(
     val isPlaying by playerConnection.isPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
 
-    var viewType by rememberEnumPreference(SongViewTypeKey, SongViewType.LIBRARY)
+    var filter by rememberEnumPreference(SongFilterKey, SongFilter.LIBRARY)
     val (sortType, onSortTypeChange) = rememberEnumPreference(SongSortTypeKey, SongSortType.CREATE_DATE)
     val (sortDescending, onSortDescendingChange) = rememberPreference(SongSortDescendingKey, true)
 
@@ -63,15 +63,15 @@ fun LibrarySongsScreen(
             state = lazyListState,
             contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
         ) {
-            item(key = "viewType") {
+            item(key = "filter") {
                 ChipsRow(
                     chips = listOf(
-                        SongViewType.LIBRARY to stringResource(R.string.filter_library),
-                        SongViewType.LIKED to stringResource(R.string.filter_liked),
-                        SongViewType.DOWNLOADED to stringResource(R.string.filter_downloaded)
+                        SongFilter.LIBRARY to stringResource(R.string.filter_library),
+                        SongFilter.LIKED to stringResource(R.string.filter_liked),
+                        SongFilter.DOWNLOADED to stringResource(R.string.filter_downloaded)
                     ),
-                    currentValue = viewType,
-                    onValueUpdate = { viewType = it }
+                    currentValue = filter,
+                    onValueUpdate = { filter = it }
                 )
             }
 
