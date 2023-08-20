@@ -101,6 +101,7 @@ import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.get
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
+import com.zionhuang.music.utils.reportException
 import com.zionhuang.music.utils.setupRemoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -367,7 +368,7 @@ class MainActivity : ComponentActivity() {
                                                     navController.navigate("album/$browseId")
                                                 }
                                             }.onFailure {
-                                                it.printStackTrace()
+                                                reportException(it)
                                             }
                                         }
                                     } else {
@@ -390,7 +391,7 @@ class MainActivity : ComponentActivity() {
                                         }.onSuccess {
                                             sharedSong = it.firstOrNull()
                                         }.onFailure {
-                                            it.printStackTrace()
+                                            reportException(it)
                                         }
                                     }
                                 }

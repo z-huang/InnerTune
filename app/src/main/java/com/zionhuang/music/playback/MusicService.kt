@@ -120,6 +120,7 @@ import com.zionhuang.music.utils.CoilBitmapLoader
 import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.enumPreference
 import com.zionhuang.music.utils.get
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -712,7 +713,7 @@ class MusicService : MediaLibraryService(),
                 }
             }
         }.onFailure {
-            it.printStackTrace()
+            reportException(it)
         }
     }
 

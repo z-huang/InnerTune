@@ -54,6 +54,7 @@ import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
 import com.zionhuang.music.ui.component.YouTubeListItem
+import com.zionhuang.music.utils.reportException
 
 @Composable
 fun YouTubeAlbumMenu(
@@ -75,7 +76,7 @@ fun YouTubeAlbumMenu(
                         insert(albumPage)
                     }
                 }.onFailure {
-                    it.printStackTrace()
+                    reportException(it)
                 }
             }
         }

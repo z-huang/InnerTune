@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.PlaylistItem
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class AccountViewModel @Inject constructor() : ViewModel() {
             YouTube.likedPlaylists().onSuccess {
                 playlists.value = it
             }.onFailure {
-                it.printStackTrace()
+                reportException(it)
             }
         }
     }

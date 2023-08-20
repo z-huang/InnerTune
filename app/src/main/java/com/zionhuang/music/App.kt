@@ -15,6 +15,7 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.get
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -55,7 +56,7 @@ class App : Application(), ImageLoaderFactory {
                 )
             } catch (e: Exception) {
                 Toast.makeText(this, "Failed to parse proxy url.", LENGTH_SHORT).show()
-                e.printStackTrace()
+                reportException(e)
             }
         }
 

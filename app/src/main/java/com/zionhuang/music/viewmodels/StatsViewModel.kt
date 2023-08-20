@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.constants.StatPeriod
 import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +64,7 @@ class StatsViewModel @Inject constructor(
                             update(album.album, albumPage)
                         }
                     }.onFailure {
-                        it.printStackTrace()
+                        reportException(it)
                         if (it.message?.contains("NOT_FOUND") == true) {
                             database.query {
                                 delete(album.album)

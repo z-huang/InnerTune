@@ -18,6 +18,7 @@ import com.zionhuang.music.extensions.getQueueWindows
 import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.queues.Queue
+import com.zionhuang.music.utils.reportException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -148,6 +149,9 @@ class PlayerConnection(
     }
 
     override fun onPlayerErrorChanged(playbackError: PlaybackException?) {
+        if (playbackError != null) {
+            reportException(playbackError)
+        }
         error.value = playbackError
     }
 

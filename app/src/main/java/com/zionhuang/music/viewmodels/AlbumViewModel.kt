@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -31,7 +32,7 @@ class AlbumViewModel @Inject constructor(
                         else update(album.album, it)
                     }
                 }.onFailure {
-                    it.printStackTrace()
+                    reportException(it)
                     if (it.message?.contains("NOT_FOUND") == true) {
                         database.query {
                             album?.album?.let(::delete)

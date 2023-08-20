@@ -14,6 +14,7 @@ import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.extensions.toEnum
 import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.utils.dataStore
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -142,7 +143,7 @@ class LibraryAlbumsViewModel @Inject constructor(
                             update(album.album, albumPage)
                         }
                     }.onFailure {
-                        it.printStackTrace()
+                        reportException(it)
                         if (it.message?.contains("NOT_FOUND") == true) {
                             database.query {
                                 delete(album.album)
