@@ -77,7 +77,7 @@
     <string name="remove_from_history">履歴から削除</string>
     <string name="search_online">オンラインで検索</string>
     <string name="sync">同期</string>
-    <string name="playback_control">再生の制御</string>
+    <string name="advanced">Advanced</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">追加日時</string>
     <string name="sort_by_name">曲名</string>
@@ -223,4 +223,6 @@
     <string name="about">アプリについて</string>
     <string name="app_version">アプリのバージョン</string>
     <string name="new_version_available">最新版あり</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>
