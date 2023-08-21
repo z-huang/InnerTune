@@ -78,7 +78,7 @@
     <string name="remove_from_history">Supprimer de l\'historique</string>
     <string name="search_online">Rechercher en ligne</string>
     <string name="sync">Synchroniser</string>
-    <string name="playback_control">Playback control</string>
+    <string name="advanced">Advanced</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Date d\'ajout</string>
     <string name="sort_by_name">Nom</string>
@@ -232,4 +232,6 @@
     <string name="about">À propos de</string>
     <string name="app_version">Version de l\'application</string>
     <string name="new_version_available">Nouvelle version disponible</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>
