@@ -80,7 +80,7 @@
     <string name="remove_from_history">Remove from history</string>
     <string name="search_online">Hledat online</string>
     <string name="sync">Synchronizovat</string>
-    <string name="playback_control">Playback control</string>
+    <string name="advanced">Advanced</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Datum přidání</string>
     <string name="sort_by_name">Název</string>
@@ -250,4 +250,6 @@
     <string name="about">O aplikaci</string>
     <string name="app_version">Verze aplikace</string>
     <string name="new_version_available">Je k dispozici nová verze</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>
