@@ -77,7 +77,7 @@
     <string name="remove_from_history">从记录中移除</string>
     <string name="search_online">在线搜索</string>
     <string name="sync">同步</string>
-    <string name="playback_control">Playback control</string>
+    <string name="advanced">Advanced</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">新建时间</string>
     <string name="sort_by_name">名称</string>
@@ -223,4 +223,6 @@
     <string name="about">关于</string>
     <string name="app_version">应用版本</string>
     <string name="new_version_available">New version available</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>
