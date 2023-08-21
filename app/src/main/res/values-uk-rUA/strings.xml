@@ -88,7 +88,7 @@
     <string name="remove_from_history">Видалити з історії</string>
     <string name="search_online">Пошук в Інтернеті</string>
     <string name="sync">Синхронізація</string>
-    <string name="playback_control">Контроль аудіо</string>
+    <string name="advanced">Контроль аудіо</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Нещодавно додані</string>
@@ -278,4 +278,6 @@
     <string name="app_version">Версія застосунку</string>
 
     <string name="new_version_available">Доступна нова версія</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

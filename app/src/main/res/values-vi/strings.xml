@@ -85,7 +85,7 @@
     <string name="remove_from_history">Xoá khỏi lịch sử</string>
     <string name="search_online">Tìm kiếm trực tuyến</string>
     <string name="sync">Đồng bộ</string>
-    <string name="playback_control">Playback control</string>
+    <string name="advanced">Advanced</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Ngày thêm vào</string>
@@ -251,4 +251,6 @@
     <string name="app_version">Phiên bản ứng dụng</string>
 
     <string name="new_version_available">New version available</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

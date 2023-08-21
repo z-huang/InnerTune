@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.imageLoader
+import com.zionhuang.music.BuildConfig
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
@@ -39,6 +40,7 @@ import com.zionhuang.music.ui.component.ListPreference
 import com.zionhuang.music.ui.component.PreferenceEntry
 import com.zionhuang.music.ui.component.PreferenceGroupTitle
 import com.zionhuang.music.ui.utils.formatFileSize
+import com.zionhuang.music.utils.TranslationHelper
 import com.zionhuang.music.utils.rememberPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -195,6 +197,21 @@ fun StorageSettings(
                 }
             },
         )
+
+        if (BuildConfig.FLAVOR == "full") {
+            PreferenceGroupTitle(
+                title = stringResource(R.string.translation_models)
+            )
+
+            PreferenceEntry(
+                title = { Text(stringResource(R.string.clear_translation_models)) },
+                onClick = {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        TranslationHelper.clearModels()
+                    }
+                },
+            )
+        }
     }
 
     TopAppBar(

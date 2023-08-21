@@ -271,7 +271,6 @@ fun AlbumScreen(
                                                 originalAlbum = Album(albumWithSongs.album, albumWithSongs.artists),
                                                 navController = navController,
                                                 playerConnection = playerConnection,
-                                                showDeleteButton = false,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }

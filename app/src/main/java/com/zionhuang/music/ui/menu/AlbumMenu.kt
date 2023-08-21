@@ -67,7 +67,6 @@ fun AlbumMenu(
     originalAlbum: Album,
     navController: NavController,
     playerConnection: PlayerConnection,
-    showDeleteButton: Boolean = true,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current

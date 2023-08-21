@@ -277,7 +277,7 @@ fun PlayerMenu(
         }
         GridMenuItem(
             icon = R.drawable.tune,
-            title = R.string.playback_control
+            title = R.string.advanced
         ) {
             showPitchTempoDialog = true
         }

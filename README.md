@@ -21,6 +21,7 @@ A Material 3 YouTube Music client for Android
 - Library management
 - Cache and download songs for offline playback
 - Synchronized lyrics
+- Lyrics translator (experimental)
 - Skip silence
 - Audio normalization
 - Adjust tempo/pitch

@@ -86,7 +86,7 @@
     <string name="remove_from_history">Geçmişten kaldır</string>
     <string name="search_online">Çevrimiçi arama</string>
     <string name="sync">Eşitle</string>
-    <string name="playback_control">Playback control</string>
+    <string name="advanced">Advanced</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Eklendiği tarih</string>
@@ -260,4 +260,6 @@
     <string name="app_version">Uygulama sürümü</string>
 
     <string name="new_version_available">Yeni sürüm mevcut</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

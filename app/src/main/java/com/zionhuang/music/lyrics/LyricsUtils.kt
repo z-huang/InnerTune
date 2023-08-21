@@ -5,8 +5,8 @@ import com.zionhuang.music.ui.component.animateScrollDuration
 
 @Suppress("RegExpRedundantEscape")
 object LyricsUtils {
-    private val LINE_REGEX = "((\\[\\d\\d:\\d\\d\\.\\d{2,3}\\])+)(.+)".toRegex()
-    private val TIME_REGEX = "\\[(\\d\\d):(\\d\\d)\\.(\\d{2,3})\\]".toRegex()
+    val LINE_REGEX = "((\\[\\d\\d:\\d\\d\\.\\d{2,3}\\])+)(.+)".toRegex()
+    val TIME_REGEX = "\\[(\\d\\d):(\\d\\d)\\.(\\d{2,3})\\]".toRegex()
 
     fun parseLyrics(lyrics: String): List<LyricsEntry> =
         lyrics.lines()

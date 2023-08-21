@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             if (service is MusicBinder) {
-                playerConnection = PlayerConnection(service, database, lifecycleScope)
+                playerConnection = PlayerConnection(this@MainActivity, service, database, lifecycleScope)
             }
         }
 
