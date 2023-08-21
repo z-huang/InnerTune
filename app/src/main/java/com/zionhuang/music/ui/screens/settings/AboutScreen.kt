@@ -67,6 +67,25 @@ fun AboutScreen(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.secondary
             )
+
+            Spacer(Modifier.width(4.dp))
+
+            Text(
+                text = BuildConfig.FLAVOR.uppercase(),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.secondary,
+                        shape = CircleShape
+                    )
+                    .padding(
+                        horizontal = 6.dp,
+                        vertical = 2.dp
+                    )
+            )
+
             if (BuildConfig.DEBUG) {
                 Spacer(Modifier.width(4.dp))
 
@@ -81,7 +100,7 @@ fun AboutScreen(
                             shape = CircleShape
                         )
                         .padding(
-                            horizontal = 4.dp,
+                            horizontal = 6.dp,
                             vertical = 2.dp
                         )
                 )

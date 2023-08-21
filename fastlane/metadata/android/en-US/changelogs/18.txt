@@ -1,0 +1,3 @@
+- Improve library design
+- Lyrics translator (full version only)
+- Minor enhancement and bug fixes

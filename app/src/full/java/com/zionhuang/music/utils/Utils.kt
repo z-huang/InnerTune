@@ -13,7 +13,7 @@ import kotlin.time.Duration.Companion.hours
 fun MainActivity.setupRemoteConfig() {
     val remoteConfig = Firebase.remoteConfig
     remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
-        minimumFetchIntervalInSeconds = 12.hours.inWholeSeconds
+        minimumFetchIntervalInSeconds = 6.hours.inWholeSeconds
     })
     remoteConfig.fetchAndActivate()
         .addOnCompleteListener(this) { task ->
