@@ -2,7 +2,6 @@ package com.zionhuang.music.ui.screens.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,10 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +44,7 @@ import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AlbumListItem
 import com.zionhuang.music.ui.component.ArtistListItem
+import com.zionhuang.music.ui.component.ChipsRow
 import com.zionhuang.music.ui.component.EmptyPlaceholder
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.PlaylistListItem
@@ -90,28 +87,17 @@ fun LocalSearchScreen(
     }
 
     Column {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-                .horizontalScroll(rememberScrollState())
-        ) {
-            listOf(
-                LocalFilter.ALL to R.string.filter_all,
-                LocalFilter.SONG to R.string.filter_songs,
-                LocalFilter.ALBUM to R.string.filter_albums,
-                LocalFilter.ARTIST to R.string.filter_artists,
-                LocalFilter.PLAYLIST to R.string.filter_playlists
-            ).forEach { (filter, label) ->
-                FilterChip(
-                    label = { Text(stringResource(label)) },
-                    selected = searchFilter == filter,
-                    colors = FilterChipDefaults.filterChipColors(containerColor = MaterialTheme.colorScheme.background),
-                    onClick = { viewModel.filter.value = filter }
-                )
-            }
-        }
+        ChipsRow(
+            chips = listOf(
+                LocalFilter.ALL to stringResource(R.string.filter_all),
+                LocalFilter.SONG to stringResource(R.string.filter_songs),
+                LocalFilter.ALBUM to stringResource(R.string.filter_albums),
+                LocalFilter.ARTIST to stringResource(R.string.filter_artists),
+                LocalFilter.PLAYLIST to stringResource(R.string.filter_playlists)
+            ),
+            currentValue = searchFilter,
+            onValueUpdate = { viewModel.filter.value = it }
+        )
 
         LazyColumn(
             state = lazyListState,

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.BrowseEndpoint
 import com.zionhuang.music.models.ItemsPage
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -35,8 +36,8 @@ class ArtistItemsViewModel @Inject constructor(
                     items = artistItemsPage.items,
                     continuation = artistItemsPage.continuation
                 )
-            }.onFailure { e ->
-                e.printStackTrace()
+            }.onFailure {
+                reportException(it)
             }
         }
     }
@@ -53,8 +54,8 @@ class ArtistItemsViewModel @Inject constructor(
                             continuation = artistItemsContinuationPage.continuation
                         )
                     }
-                }.onFailure { e ->
-                    e.printStackTrace()
+                }.onFailure {
+                    reportException(it)
                 }
         }
     }

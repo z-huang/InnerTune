@@ -83,5 +83,8 @@ firebase-config = { group = "com.google.firebase", name = "firebase-config-ktx" 
 firebase-perf = { group = "com.google.firebase", name = "firebase-perf-ktx" }
 firebase-perf-plugin = { module = "com.google.firebase:perf-plugin", version = "1.4.2" }
 
+mlkit-language-id = { group = "com.google.mlkit", name = "language-id", version = "17.0.4" }
+mlkit-translate = { group = "com.google.mlkit", name = "translate", version = "17.0.1" }
+
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

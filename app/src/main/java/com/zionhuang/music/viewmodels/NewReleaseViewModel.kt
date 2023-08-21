@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.AlbumItem
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,7 +21,7 @@ class NewReleaseViewModel @Inject constructor() : ViewModel() {
             YouTube.newReleaseAlbums().onSuccess {
                 _newReleaseAlbums.value = it
             }.onFailure {
-                it.printStackTrace()
+                reportException(it)
             }
         }
     }

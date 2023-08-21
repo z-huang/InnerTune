@@ -59,7 +59,7 @@ class MusicDatabase(
         SortedSongAlbumMap::class,
         PlaylistSongMapPreview::class
     ],
-    version = 11,
+    version = 12,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(from = 2, to = 3),
@@ -70,7 +70,8 @@ class MusicDatabase(
         AutoMigration(from = 7, to = 8, spec = Migration7To8::class),
         AutoMigration(from = 8, to = 9),
         AutoMigration(from = 9, to = 10, spec = Migration9To10::class),
-        AutoMigration(from = 10, to = 11, spec = Migration10To11::class)
+        AutoMigration(from = 10, to = 11, spec = Migration10To11::class),
+        AutoMigration(from = 11, to = 12, spec = Migration11To12::class)
     ]
 )
 @TypeConverters(Converters::class)
@@ -315,3 +316,30 @@ class Migration9To10 : AutoMigrationSpec
     DeleteColumn(tableName = "artist", columnName = "createDate")
 )
 class Migration10To11 : AutoMigrationSpec
+
+@DeleteColumn.Entries(
+    DeleteColumn(tableName = "album", columnName = "createDate")
+)
+class Migration11To12 : AutoMigrationSpec {
+    override fun onPostMigrate(db: SupportSQLiteDatabase) {
+        db.execSQL("UPDATE album SET bookmarkedAt = lastUpdateTime")
+        db.query("SELECT DISTINCT albumId, albumName FROM song").use { cursor ->
+            while (cursor.moveToNext()) {
+                val albumId = cursor.getString(0)
+                val albumName = cursor.getString(1)
+                db.insert(
+                    table = "album",
+                    conflictAlgorithm = SQLiteDatabase.CONFLICT_IGNORE,
+                    values = contentValuesOf(
+                        "id" to albumId,
+                        "title" to albumName,
+                        "songCount" to 0,
+                        "duration" to 0,
+                        "lastUpdateTime" to 0
+                    )
+                )
+            }
+        }
+        db.query("CREATE INDEX IF NOT EXISTS `index_song_albumId` ON `song` (`albumId`)")
+    }
+}

@@ -36,6 +36,9 @@
     <string name="search">Arama</string>
     <string name="search_yt_music">YouTube Müzik\'te Ara…</string>
     <string name="search_library">Kütüphanede ara…</string>
+    <string name="filter_library">Kütüphane</string>
+    <string name="filter_liked">Beğenilenler</string>
+    <string name="filter_downloaded">İndirilenler</string>
     <string name="filter_all">Hepsi</string>
     <string name="filter_songs">Şarkılar</string>
     <string name="filter_videos">Videolar</string>
@@ -59,6 +62,7 @@
     <string name="retry">Yeniden dene</string>
     <string name="radio">Radyo</string>
     <string name="shuffle">Karıştır</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Ayrıntılar</string>
@@ -82,6 +86,7 @@
     <string name="remove_from_history">Geçmişten kaldır</string>
     <string name="search_online">Çevrimiçi arama</string>
     <string name="sync">Eşitle</string>
+    <string name="advanced">Advanced</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Eklendiği tarih</string>
@@ -255,4 +260,6 @@
     <string name="app_version">Uygulama sürümü</string>
 
     <string name="new_version_available">Yeni sürüm mevcut</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

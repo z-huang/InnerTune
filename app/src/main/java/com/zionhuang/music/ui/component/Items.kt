@@ -31,12 +31,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,11 +48,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
 import androidx.media3.exoplayer.offline.Download.STATE_QUEUED
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.request.ImageRequest
 import com.zionhuang.innertube.models.AlbumItem
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.innertube.models.PlaylistItem
@@ -67,8 +73,11 @@ import com.zionhuang.music.db.entities.Artist
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.ui.theme.extractThemeColor
 import com.zionhuang.music.utils.joinByBullet
 import com.zionhuang.music.utils.makeTimeString
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 inline fun ListItem(
@@ -302,17 +311,8 @@ fun ArtistListItem(
 fun AlbumListItem(
     album: Album,
     modifier: Modifier = Modifier,
-    isActive: Boolean = false,
-    isPlaying: Boolean = false,
-    trailingContent: @Composable RowScope.() -> Unit = {},
-) = ListItem(
-    title = album.album.title,
-    subtitle = joinByBullet(
-        album.artists.joinToString { it.name },
-        pluralStringResource(R.plurals.n_song, album.album.songCount, album.album.songCount),
-        album.album.year?.toString()
-    ),
-    badges = {
+    showLikedIcon: Boolean = true,
+    badges: @Composable RowScope.() -> Unit = {
         val database = LocalDatabase.current
         val downloadUtil = LocalDownloadUtil.current
         var songs by remember {
@@ -346,6 +346,17 @@ fun AlbumListItem(
             }
         }
 
+        if (showLikedIcon && album.album.bookmarkedAt != null) {
+            Icon(
+                painter = painterResource(R.drawable.favorite),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .size(18.dp)
+                    .padding(end = 2.dp)
+            )
+        }
+
         when (downloadState) {
             STATE_COMPLETED -> Icon(
                 painter = painterResource(R.drawable.offline),
@@ -365,10 +376,38 @@ fun AlbumListItem(
             else -> {}
         }
     },
+    isActive: Boolean = false,
+    isPlaying: Boolean = false,
+    trailingContent: @Composable RowScope.() -> Unit = {},
+) = ListItem(
+    title = album.album.title,
+    subtitle = joinByBullet(
+        album.artists.joinToString { it.name },
+        pluralStringResource(R.plurals.n_song, album.album.songCount, album.album.songCount),
+        album.album.year?.toString()
+    ),
+    badges = badges,
     thumbnailContent = {
+        val database = LocalDatabase.current
+        val coroutineScope = rememberCoroutineScope()
+
         AsyncImage(
-            model = album.album.thumbnailUrl,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(album.album.thumbnailUrl)
+                .allowHardware(false)
+                .build(),
             contentDescription = null,
+            onState = { state ->
+                if (album.album.themeColor == null && state is AsyncImagePainter.State.Success) {
+                    coroutineScope.launch(Dispatchers.IO) {
+                        state.result.drawable.toBitmapOrNull()?.extractThemeColor()?.toArgb()?.let { color ->
+                            database.query {
+                                update(album.album.copy(themeColor = color))
+                            }
+                        }
+                    }
+                }
+            },
             modifier = Modifier
                 .size(ListThumbnailSize)
                 .clip(RoundedCornerShape(ThumbnailCornerRadius))
@@ -487,9 +526,10 @@ fun YouTubeListItem(
         val database = LocalDatabase.current
         val song by database.song(item.id).collectAsState(initial = null)
         val album by database.album(item.id).collectAsState(initial = null)
-        val playlist by database.playlist(item.id).collectAsState(initial = null)
 
-        if (item is SongItem && song?.song?.liked == true) {
+        if (item is SongItem && song?.song?.liked == true ||
+            item is AlbumItem && album?.album?.bookmarkedAt != null
+        ) {
             Icon(
                 painter = painterResource(R.drawable.favorite),
                 contentDescription = null,
@@ -508,10 +548,7 @@ fun YouTubeListItem(
                     .padding(end = 2.dp)
             )
         }
-        if (item is SongItem && song?.song?.inLibrary != null ||
-            item is AlbumItem && album != null ||
-            item is PlaylistItem && playlist != null
-        ) {
+        if (item is SongItem && song?.song?.inLibrary != null) {
             Icon(
                 painter = painterResource(R.drawable.library_add_check),
                 contentDescription = null,
@@ -606,9 +643,10 @@ fun YouTubeGridItem(
         val database = LocalDatabase.current
         val song by database.song(item.id).collectAsState(initial = null)
         val album by database.album(item.id).collectAsState(initial = null)
-        val playlist by database.playlist(item.id).collectAsState(initial = null)
 
-        if (item is SongItem && song?.song?.liked == true) {
+        if (item is SongItem && song?.song?.liked == true ||
+            item is AlbumItem && album?.album?.bookmarkedAt != null
+        ) {
             Icon(
                 painter = painterResource(R.drawable.favorite),
                 contentDescription = null,
@@ -627,10 +665,7 @@ fun YouTubeGridItem(
                     .padding(end = 2.dp)
             )
         }
-        if (item is SongItem && song?.song?.inLibrary != null ||
-            item is AlbumItem && album != null ||
-            item is PlaylistItem && playlist != null
-        ) {
+        if (item is SongItem && song?.song?.inLibrary != null) {
             Icon(
                 painter = painterResource(R.drawable.library_add_check),
                 contentDescription = null,

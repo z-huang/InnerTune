@@ -230,7 +230,7 @@ fun HomeScreen(
                                         onLongClick = {
                                             menuState.show {
                                                 YouTubeAlbumMenu(
-                                                    album = album,
+                                                    albumItem = album,
                                                     navController = navController,
                                                     playerConnection = playerConnection,
                                                     onDismiss = menuState::dismiss

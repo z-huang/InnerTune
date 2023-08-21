@@ -35,6 +35,9 @@
     <string name="search">検索</string>
     <string name="search_yt_music">YouTube Musicを検索…</string>
     <string name="search_library">ライブラリを検索…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">すべて</string>
     <string name="filter_songs">曲</string>
     <string name="filter_videos">動画</string>
@@ -58,6 +61,7 @@
     <string name="retry">再試行</string>
     <string name="radio">ラジオ</string>
     <string name="shuffle">シャッフル</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">詳細</string>
@@ -81,6 +85,7 @@
     <string name="remove_from_history">履歴から削除</string>
     <string name="search_online">オンラインで検索</string>
     <string name="sync">同期</string>
+    <string name="advanced">Advanced</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">追加日時</string>
@@ -246,4 +251,6 @@
     <string name="app_version">アプリのバージョン</string>
 
     <string name="new_version_available">New version available</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

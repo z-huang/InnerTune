@@ -29,6 +29,7 @@ import com.zionhuang.music.constants.AccountNameKey
 import com.zionhuang.music.constants.InnerTubeCookieKey
 import com.zionhuang.music.constants.VisitorDataKey
 import com.zionhuang.music.utils.rememberPreference
+import com.zionhuang.music.utils.reportException
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -58,10 +59,10 @@ fun LoginScreen(
                             innerTubeCookie = CookieManager.getInstance().getCookie(url)
                             GlobalScope.launch {
                                 YouTube.accountInfo().onSuccess {
-                                    accountName = it?.name.orEmpty()
-                                    accountEmail = it?.email.orEmpty()
+                                    accountName = it.name
+                                    accountEmail = it.email
                                 }.onFailure {
-                                    it.printStackTrace()
+                                    reportException(it)
                                 }
                             }
                         }

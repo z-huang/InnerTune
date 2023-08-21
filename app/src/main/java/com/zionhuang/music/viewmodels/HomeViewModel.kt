@@ -6,6 +6,7 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.pages.ExplorePage
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,7 @@ class HomeViewModel @Inject constructor(
         YouTube.explore().onSuccess {
             explorePage.value = it
         }.onFailure {
-            it.printStackTrace()
+            reportException(it)
         }
     }
 

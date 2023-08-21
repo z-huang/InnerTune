@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.pages.ArtistPage
 import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -32,8 +33,8 @@ class ArtistViewModel @Inject constructor(
             YouTube.artist(artistId)
                 .onSuccess {
                     artistPage = it
-                }.onFailure { e ->
-                    e.printStackTrace()
+                }.onFailure {
+                    reportException(it)
                 }
         }
     }

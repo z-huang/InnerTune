@@ -125,7 +125,7 @@ fun YouTubePlaylistMenu(
             icon = R.drawable.queue_music,
             title = R.string.add_to_queue
         ) {
-            coroutineScope.launch(Dispatchers.IO) {
+            coroutineScope.launch {
                 songs.ifEmpty {
                     withContext(Dispatchers.IO) {
                         YouTube.playlist(playlist.id).completed().getOrNull()?.songs.orEmpty()

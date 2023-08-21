@@ -4,6 +4,10 @@ plugins {
 }
 
 buildscript {
+    val isFullBuild by extra {
+        gradle.startParameter.taskNames.none { task -> task.contains("foss", ignoreCase = true) }
+    }
+
     repositories {
         google()
         mavenCentral()
@@ -12,9 +16,11 @@ buildscript {
     dependencies {
         classpath(libs.gradle)
         classpath(kotlin("gradle-plugin", libs.versions.kotlin.get()))
-        classpath(libs.google.services)
-        classpath(libs.firebase.crashlytics.plugin)
-        classpath(libs.firebase.perf.plugin)
+        if (isFullBuild) {
+            classpath(libs.google.services)
+            classpath(libs.firebase.crashlytics.plugin)
+            classpath(libs.firebase.perf.plugin)
+        }
     }
 }
 

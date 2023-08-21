@@ -13,9 +13,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,6 +56,7 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
+import com.zionhuang.music.ui.component.AlbumListItem
 import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
@@ -56,15 +64,16 @@ import com.zionhuang.music.ui.component.ListDialog
 
 @Composable
 fun AlbumMenu(
-    album: Album,
+    originalAlbum: Album,
     navController: NavController,
     playerConnection: PlayerConnection,
-    showDeleteButton: Boolean = true,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
     val downloadUtil = LocalDownloadUtil.current
+    val libraryAlbum by database.album(originalAlbum.id).collectAsState(initial = originalAlbum)
+    val album = libraryAlbum ?: originalAlbum
     var songs by remember {
         mutableStateOf(emptyList<Song>())
     }
@@ -171,6 +180,29 @@ fun AlbumMenu(
         }
     }
 
+    AlbumListItem(
+        album = album,
+        showLikedIcon = false,
+        badges = {},
+        trailingContent = {
+            IconButton(
+                onClick = {
+                    database.query {
+                        update(album.album.toggleLike())
+                    }
+                }
+            ) {
+                Icon(
+                    painter = painterResource(if (album.album.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
+                    tint = if (album.album.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
+                    contentDescription = null
+                )
+            }
+        }
+    )
+
+    Divider()
+
     GridMenu(
         contentPadding = PaddingValues(
             start = 8.dp,
@@ -248,17 +280,6 @@ fun AlbumMenu(
                 putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/browse/${album.album.id}")
             }
             context.startActivity(Intent.createChooser(intent, null))
-        }
-        if (showDeleteButton) {
-            GridMenuItem(
-                icon = R.drawable.delete,
-                title = R.string.delete
-            ) {
-                onDismiss()
-                database.query {
-                    delete(album.album)
-                }
-            }
         }
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Slider
@@ -215,7 +216,7 @@ fun BottomSheetPlayer(
                 Box(modifier = Modifier.weight(1f)) {
                     ResizableIconButton(
                         icon = if (currentSong?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border,
-                        color = MaterialTheme.colorScheme.error,
+                        color = if (currentSong?.song?.liked == true) MaterialTheme.colorScheme.error else LocalContentColor.current,
                         modifier = Modifier
                             .size(32.dp)
                             .padding(4.dp)

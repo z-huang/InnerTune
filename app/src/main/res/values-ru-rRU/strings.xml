@@ -38,6 +38,9 @@
     <string name="search">Поиск</string>
     <string name="search_yt_music">Поиск в YouTube Music…</string>
     <string name="search_library">Поиск в библиотеке…</string>
+    <string name="filter_library">Библиотека</string>
+    <string name="filter_liked">Понравившиеся</string>
+    <string name="filter_downloaded">Загруженные</string>
     <string name="filter_all">Все</string>
     <string name="filter_songs">Композиции</string>
     <string name="filter_videos">Видео</string>
@@ -61,6 +64,7 @@
     <string name="retry">Повторить</string>
     <string name="radio">Радио</string>
     <string name="shuffle">Перемешать</string>
+    <string name="reset">Сбросить</string>
 
     <!-- Menu -->
     <string name="details">Подробнее</string>
@@ -84,6 +88,7 @@
     <string name="remove_from_history">Удалить из истории</string>
     <string name="search_online">Поиск в Интернете</string>
     <string name="sync">Синхронизация</string>
+    <string name="advanced">Контроль аудио</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Недавно добавленные</string>
@@ -273,4 +278,6 @@
     <string name="app_version">Версия приложения</string>
 
     <string name="new_version_available">Доступна новая версия</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

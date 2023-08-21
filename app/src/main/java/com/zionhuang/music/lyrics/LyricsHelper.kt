@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.LruCache
 import com.zionhuang.music.db.entities.LyricsEntity.Companion.LYRICS_NOT_FOUND
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -28,7 +29,7 @@ class LyricsHelper @Inject constructor(
                 ).onSuccess { lyrics ->
                     return lyrics
                 }.onFailure {
-                    it.printStackTrace()
+                    reportException(it)
                 }
             }
         }

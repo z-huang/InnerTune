@@ -343,7 +343,7 @@ fun ArtistScreen(
                                                             )
 
                                                             is AlbumItem -> YouTubeAlbumMenu(
-                                                                album = item,
+                                                                albumItem = item,
                                                                 navController = navController,
                                                                 playerConnection = playerConnection,
                                                                 onDismiss = menuState::dismiss
@@ -434,11 +434,7 @@ fun ArtistScreen(
                     database.transaction {
                         val artist = libraryArtist
                         if (artist != null) {
-                            update(
-                                artist.copy(
-                                    bookmarkedAt = if (artist.bookmarkedAt != null) null else LocalDateTime.now()
-                                )
-                            )
+                            update(artist.toggleLike())
                         } else {
                             artistPage?.artist?.let {
                                 insert(
@@ -455,8 +451,8 @@ fun ArtistScreen(
                 }
             ) {
                 Icon(
-                    painter = painterResource(if (libraryArtist?.bookmarkedAt != null) R.drawable.bookmark_filled else R.drawable.bookmark),
-                    tint = if (libraryArtist?.bookmarkedAt != null) MaterialTheme.colorScheme.primary else LocalContentColor.current,
+                    painter = painterResource(if (libraryArtist?.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
+                    tint = if (libraryArtist?.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
                     contentDescription = null
                 )
             }

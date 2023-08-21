@@ -108,7 +108,7 @@ fun YouTubeBrowseScreen(
                                         )
 
                                         is AlbumItem -> YouTubeAlbumMenu(
-                                            album = item,
+                                            albumItem = item,
                                             navController = navController,
                                             playerConnection = playerConnection,
                                             onDismiss = menuState::dismiss

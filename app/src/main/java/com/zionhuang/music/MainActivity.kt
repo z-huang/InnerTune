@@ -64,19 +64,11 @@ import androidx.navigation.navArgument
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.google.common.util.concurrent.MoreExecutors
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ConfigUpdate
-import com.google.firebase.remoteconfig.ConfigUpdateListener
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
-import com.zionhuang.music.db.entities.PlaylistEntity.Companion.DOWNLOADED_PLAYLIST_ID
-import com.zionhuang.music.db.entities.PlaylistEntity.Companion.LIKED_PLAYLIST_ID
 import com.zionhuang.music.db.entities.SearchHistory
 import com.zionhuang.music.extensions.*
 import com.zionhuang.music.playback.DownloadUtil
@@ -95,7 +87,6 @@ import com.zionhuang.music.ui.screens.library.LibraryAlbumsScreen
 import com.zionhuang.music.ui.screens.library.LibraryArtistsScreen
 import com.zionhuang.music.ui.screens.library.LibraryPlaylistsScreen
 import com.zionhuang.music.ui.screens.library.LibrarySongsScreen
-import com.zionhuang.music.ui.screens.playlist.BuiltInPlaylistScreen
 import com.zionhuang.music.ui.screens.playlist.LocalPlaylistScreen
 import com.zionhuang.music.ui.screens.playlist.OnlinePlaylistScreen
 import com.zionhuang.music.ui.screens.search.LocalSearchScreen
@@ -110,6 +101,8 @@ import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.get
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
+import com.zionhuang.music.utils.reportException
+import com.zionhuang.music.utils.setupRemoteConfig
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -118,7 +111,6 @@ import kotlinx.coroutines.withContext
 import java.net.URLDecoder
 import java.net.URLEncoder
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.hours
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -133,7 +125,7 @@ class MainActivity : ComponentActivity() {
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             if (service is MusicBinder) {
-                playerConnection = PlayerConnection(service, database, lifecycleScope)
+                playerConnection = PlayerConnection(this@MainActivity, service, database, lifecycleScope)
             }
         }
 
@@ -142,7 +134,7 @@ class MainActivity : ComponentActivity() {
             playerConnection = null
         }
     }
-    private var latestVersion by mutableStateOf(BuildConfig.VERSION_CODE.toLong())
+    var latestVersion by mutableStateOf(BuildConfig.VERSION_CODE.toLong())
 
     override fun onStart() {
         super.onStart()
@@ -376,7 +368,7 @@ class MainActivity : ComponentActivity() {
                                                     navController.navigate("album/$browseId")
                                                 }
                                             }.onFailure {
-                                                it.printStackTrace()
+                                                reportException(it)
                                             }
                                         }
                                     } else {
@@ -399,7 +391,7 @@ class MainActivity : ComponentActivity() {
                                         }.onSuccess {
                                             sharedSong = it.firstOrNull()
                                         }.onFailure {
-                                            it.printStackTrace()
+                                            reportException(it)
                                         }
                                     }
                                 }
@@ -539,13 +531,8 @@ class MainActivity : ComponentActivity() {
                                         type = NavType.StringType
                                     }
                                 )
-                            ) { backStackEntry ->
-                                val playlistId = backStackEntry.arguments?.getString("playlistId")!!
-                                if (playlistId == LIKED_PLAYLIST_ID || playlistId == DOWNLOADED_PLAYLIST_ID) {
-                                    BuiltInPlaylistScreen(navController, scrollBehavior)
-                                } else {
-                                    LocalPlaylistScreen(navController, scrollBehavior)
-                                }
+                            ) {
+                                LocalPlaylistScreen(navController, scrollBehavior)
                             }
                             composable(
                                 route = "youtube_browse/{browseId}?params={params}",
@@ -841,27 +828,6 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             window.navigationBarColor = (if (isDark) Color.Transparent else Color.Black.copy(alpha = 0.2f)).toArgb()
         }
-    }
-
-    private fun setupRemoteConfig() {
-        val remoteConfig = Firebase.remoteConfig
-        remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 12.hours.inWholeSeconds
-        })
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    latestVersion = remoteConfig.getLong("latest_version")
-                }
-            }
-        remoteConfig.addOnConfigUpdateListener(object : ConfigUpdateListener {
-            override fun onError(error: FirebaseRemoteConfigException) {}
-            override fun onUpdate(configUpdate: ConfigUpdate) {
-                remoteConfig.activate().addOnCompleteListener {
-                    latestVersion = remoteConfig.getLong("latest_version")
-                }
-            }
-        })
     }
 
     companion object {

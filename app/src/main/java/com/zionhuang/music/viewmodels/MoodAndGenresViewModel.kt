@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.pages.MoodAndGenres
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ class MoodAndGenresViewModel @Inject constructor() : ViewModel() {
             YouTube.moodAndGenres().onSuccess {
                 moodAndGenres.value = it
             }.onFailure {
-                it.printStackTrace()
+                reportException(it)
             }
         }
     }

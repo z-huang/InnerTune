@@ -11,6 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -34,14 +40,12 @@ import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.AlbumItem
-import com.zionhuang.innertube.pages.AlbumPage
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.extensions.toMediaItem
-import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeAlbumRadio
@@ -49,10 +53,12 @@ import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.ListDialog
+import com.zionhuang.music.ui.component.YouTubeListItem
+import com.zionhuang.music.utils.reportException
 
 @Composable
 fun YouTubeAlbumMenu(
-    album: AlbumItem,
+    albumItem: AlbumItem,
     navController: NavController,
     playerConnection: PlayerConnection,
     onDismiss: () -> Unit,
@@ -60,14 +66,19 @@ fun YouTubeAlbumMenu(
     val context = LocalContext.current
     val database = LocalDatabase.current
     val downloadUtil = LocalDownloadUtil.current
-    val libraryAlbum by database.album(album.id).collectAsState(initial = null)
-    var albumPage: AlbumPage? by remember {
-        mutableStateOf(null)
-    }
+    val album by database.albumWithSongs(albumItem.id).collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
-        YouTube.album(album.browseId).onSuccess {
-            albumPage = it
+        database.album(albumItem.id).collect { album ->
+            if (album == null) {
+                YouTube.album(albumItem.id).onSuccess { albumPage ->
+                    database.transaction {
+                        insert(albumPage)
+                    }
+                }.onFailure {
+                    reportException(it)
+                }
+            }
         }
     }
 
@@ -75,8 +86,8 @@ fun YouTubeAlbumMenu(
         mutableStateOf(Download.STATE_STOPPED)
     }
 
-    LaunchedEffect(albumPage) {
-        val songs = albumPage?.songs?.map { it.id } ?: return@LaunchedEffect
+    LaunchedEffect(album) {
+        val songs = album?.songs?.map { it.id } ?: return@LaunchedEffect
         downloadUtil.downloads.collect { downloads ->
             downloadState =
                 if (songs.all { downloads[it]?.state == Download.STATE_COMPLETED })
@@ -101,19 +112,14 @@ fun YouTubeAlbumMenu(
         onAdd = { playlist ->
             var position = playlist.songCount
             database.transaction {
-                albumPage?.let { albumPage ->
-                    albumPage.songs
-                        .map { it.toMediaMetadata() }
-                        .onEach(::insert)
-                        .forEach { song ->
-                            insert(
-                                PlaylistSongMap(
-                                    songId = song.id,
-                                    playlistId = playlist.id,
-                                    position = position++
-                                )
-                            )
-                        }
+                album?.songs?.forEach { song ->
+                    insert(
+                        PlaylistSongMap(
+                            songId = song.id,
+                            playlistId = playlist.id,
+                            position = position++
+                        )
+                    )
                 }
             }
         },
@@ -129,8 +135,8 @@ fun YouTubeAlbumMenu(
             onDismiss = { showSelectArtistDialog = false }
         ) {
             items(
-                items = album.artists.orEmpty(),
-                key = { it.id!! }
+                items = album?.artists.orEmpty(),
+                key = { it.id }
             ) { artist ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -168,6 +174,28 @@ fun YouTubeAlbumMenu(
         }
     }
 
+    YouTubeListItem(
+        item = albumItem,
+        badges = {},
+        trailingContent = {
+            IconButton(
+                onClick = {
+                    database.query {
+                        album?.album?.toggleLike()?.let(::update)
+                    }
+                }
+            ) {
+                Icon(
+                    painter = painterResource(if (album?.album?.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
+                    tint = if (album?.album?.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
+                    contentDescription = null
+                )
+            }
+        }
+    )
+
+    Divider()
+
     GridMenu(
         contentPadding = PaddingValues(
             start = 8.dp,
@@ -180,14 +208,14 @@ fun YouTubeAlbumMenu(
             icon = R.drawable.radio,
             title = R.string.start_radio
         ) {
-            playerConnection.playQueue(YouTubeAlbumRadio(album.playlistId))
+            playerConnection.playQueue(YouTubeAlbumRadio(albumItem.playlistId))
             onDismiss()
         }
         GridMenuItem(
             icon = R.drawable.playlist_play,
             title = R.string.play_next
         ) {
-            albumPage?.songs
+            album?.songs
                 ?.map { it.toMediaItem() }
                 ?.let(playerConnection::playNext)
             onDismiss()
@@ -196,31 +224,11 @@ fun YouTubeAlbumMenu(
             icon = R.drawable.queue_music,
             title = R.string.add_to_queue
         ) {
-            albumPage?.songs
+            album?.songs
                 ?.map { it.toMediaItem() }
                 ?.let(playerConnection::addToQueue)
             onDismiss()
         }
-        if (libraryAlbum != null) {
-            GridMenuItem(
-                icon = R.drawable.library_add_check,
-                title = R.string.remove_from_library
-            ) {
-                database.query {
-                    libraryAlbum?.album?.let(::delete)
-                }
-            }
-        } else {
-            GridMenuItem(
-                icon = R.drawable.library_add,
-                title = R.string.add_to_library
-            ) {
-                database.transaction {
-                    albumPage?.let(::insert)
-                }
-            }
-        }
-
         GridMenuItem(
             icon = R.drawable.playlist_add,
             title = R.string.add_to_playlist
@@ -230,10 +238,10 @@ fun YouTubeAlbumMenu(
         DownloadGridMenu(
             state = downloadState,
             onDownload = {
-                albumPage?.songs?.forEach { song ->
+                album?.songs?.forEach { song ->
                     val downloadRequest = DownloadRequest.Builder(song.id, song.id.toUri())
                         .setCustomCacheKey(song.id)
-                        .setData(song.title.toByteArray())
+                        .setData(song.song.title.toByteArray())
                         .build()
                     DownloadService.sendAddDownload(
                         context,
@@ -244,7 +252,7 @@ fun YouTubeAlbumMenu(
                 }
             },
             onRemoveDownload = {
-                albumPage?.songs?.forEach { song ->
+                album?.songs?.forEach { song ->
                     DownloadService.sendRemoveDownload(
                         context,
                         ExoDownloadService::class.java,
@@ -254,7 +262,7 @@ fun YouTubeAlbumMenu(
                 }
             }
         )
-        album.artists?.let { artists ->
+        albumItem.artists?.let { artists ->
             GridMenuItem(
                 icon = R.drawable.artist,
                 title = R.string.view_artist
@@ -274,7 +282,7 @@ fun YouTubeAlbumMenu(
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, album.shareLink)
+                putExtra(Intent.EXTRA_TEXT, albumItem.shareLink)
             }
             context.startActivity(Intent.createChooser(intent, null))
             onDismiss()

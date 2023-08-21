@@ -36,6 +36,9 @@
     <string name="search">Suche</string>
     <string name="search_yt_music">YouTube Musik durchsuchen…</string>
     <string name="search_library">Bibliothek durchsuchen…</string>
+    <string name="filter_library">Library</string>
+    <string name="filter_liked">Liked</string>
+    <string name="filter_downloaded">Downloaded</string>
     <string name="filter_all">Alles</string>
     <string name="filter_songs">Titel</string>
     <string name="filter_videos">Videos</string>
@@ -59,6 +62,7 @@
     <string name="retry">Wiederholen</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Shuffle</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
     <string name="details">Details</string>
@@ -82,6 +86,7 @@
     <string name="remove_from_history">aus dem Wiedergabeverlauf entfernen</string>
     <string name="search_online">Online-Suche</string>
     <string name="sync">Sync</string>
+    <string name="advanced">Advanced</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Datum hinzugefügt</string>
@@ -255,4 +260,6 @@
     <string name="app_version">App-Version</string>
 
     <string name="new_version_available">New version available</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

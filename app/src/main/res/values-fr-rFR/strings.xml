@@ -1,10 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Bottom navigation -->
-    <string name="home">Home</string>
+    <string name="home">Accueil</string>
     <string name="songs">Chansons</string>
     <string name="artists">Artistes</string>
     <string name="albums">Albums</string>
-    <string name="playlists">Listes de lecture</string>
+    <string name="playlists">Listes de cours</string>
 
     <!-- Top bar -->
     <plurals name="n_selected">
@@ -14,102 +14,107 @@
     </plurals>
 
     <!-- Home -->
-    <string name="history">History</string>
-    <string name="stats">Stats</string>
-    <string name="mood_and_genres">Mood and Genres</string>
-    <string name="account">Account</string>
-    <string name="quick_picks">Quick picks</string>
-    <string name="quick_picks_empty">Listen to songs to generate your quick picks</string>
-    <string name="new_release_albums">New release albums</string>
+    <string name="history">Historique</string>
+    <string name="stats">Statistiques</string>
+    <string name="mood_and_genres">Humeurs et genres</string>
+    <string name="account">Compte</string>
+    <string name="quick_picks">Sélections rapides</string>
+    <string name="quick_picks_empty">Écoutez quelques musiques pour générer vos sélections rapides</string>
+    <string name="new_release_albums">Nouveautés</string>
 
     <!-- History -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="this_week">This week</string>
-    <string name="last_week">Last week</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="yesterday">Hier</string>
+    <string name="this_week">Cette semaine</string>
+    <string name="last_week">Semaine dernière</string>
 
     <!-- Stats -->
-    <string name="most_played_songs">Most played songs</string>
-    <string name="most_played_artists">Most played artists</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_songs">Musiques les plus jouées</string>
+    <string name="most_played_artists">Artistes les plus joués</string>
+    <string name="most_played_albums">Albums les plus joués</string>
 
     <!-- Search -->
-    <string name="search">Recherche</string>
-    <string name="search_yt_music">Search YouTube Music…</string>
-    <string name="search_library">Search library…</string>
+    <string name="search">Recherché</string>
+    <string name="search_yt_music">Rechercher sur Youtube Musique…</string>
+    <string name="search_library">Rechercher dans votre librairie…</string>
+    <string name="filter_library">Librairie</string>
+    <string name="filter_liked">Aimé</string>
+    <string name="filter_downloaded">Télécharger</string>
     <string name="filter_all">Tout</string>
     <string name="filter_songs">Chansons</string>
     <string name="filter_videos">Vidéos</string>
     <string name="filter_albums">Albums</string>
     <string name="filter_artists">Artistes</string>
-    <string name="filter_playlists">Listes de lecture</string>
-    <string name="filter_community_playlists">Community playlists</string>
-    <string name="filter_featured_playlists">Featured playlists</string>
-    <string name="filter_bookmarked">Bookmarked</string>
-    <string name="no_results_found">No results found</string>
+    <string name="filter_playlists">Playlist</string>
+    <string name="filter_community_playlists">Playlist de la communauté</string>
+    <string name="filter_featured_playlists">Playlist mise en avant</string>
+    <string name="filter_bookmarked">Favoris</string>
+    <string name="no_results_found">Aucun résultat trouvé</string>
 
     <!-- Artist screen -->
-    <string name="from_your_library">From your library</string>
+    <string name="from_your_library">De votre bibliothèque</string>
 
     <!-- Playlist -->
-    <string name="liked_songs">Liked songs</string>
-    <string name="downloaded_songs">Downloaded songs</string>
-    <string name="playlist_is_empty">The playlist is empty</string>
+    <string name="liked_songs">Chansons aimées</string>
+    <string name="downloaded_songs">Musiques téléchargées</string>
+    <string name="playlist_is_empty">La playlist est vide</string>
 
     <!-- Button -->
     <string name="retry">Réessayer</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Lecture aléatoire</string>
+    <string name="reset">Reset</string>
 
     <!-- Menu -->
-    <string name="details">Details</string>
+    <string name="details">Détails</string>
     <string name="edit">Modifier</string>
-    <string name="start_radio">Start radio</string>
-    <string name="play">Play</string>
+    <string name="start_radio">Démarrer la radio</string>
+    <string name="play">Jouer</string>
     <string name="play_next">Jouer à la suite</string>
     <string name="add_to_queue">Ajouter à la file d\'attente</string>
     <string name="add_to_library">Ajouter à la bibliothèque</string>
-    <string name="remove_from_library">Remove from library</string>
+    <string name="remove_from_library">Supprimer de la bibliothèque</string>
     <string name="download">Télécharger</string>
-    <string name="downloading">Downloading</string>
+    <string name="downloading">Téléchargement</string>
     <string name="remove_download">Supprimer le téléchargement</string>
-    <string name="import_playlist">Import playlist</string>
+    <string name="import_playlist">Importer une liste de lecture</string>
     <string name="add_to_playlist">Ajouter à la liste de lecture</string>
-    <string name="view_artist">View artist</string>
-    <string name="view_album">View album</string>
-    <string name="refetch">Refetch</string>
-    <string name="share">Share</string>
-    <string name="delete">Effacer</string>
-    <string name="remove_from_history">Remove from history</string>
-    <string name="search_online">Search online</string>
-    <string name="sync">Sync</string>
+    <string name="view_artist">Voir l\'artiste</string>
+    <string name="view_album">Voir l\'album</string>
+    <string name="refetch">Récupérer</string>
+    <string name="share">Partager</string>
+    <string name="delete">Effaceur</string>
+    <string name="remove_from_history">Supprimer de l\'historique</string>
+    <string name="search_online">Rechercher en ligne</string>
+    <string name="sync">Synchroniser</string>
+    <string name="advanced">Advanced</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Date d\'ajout</string>
     <string name="sort_by_name">Nom</string>
     <string name="sort_by_artist">Artiste</string>
-    <string name="sort_by_year">Year</string>
-    <string name="sort_by_song_count">Song count</string>
-    <string name="sort_by_length">Length</string>
-    <string name="sort_by_play_time">Play time</string>
-    <string name="sort_by_custom">Custom order</string>
+    <string name="sort_by_year">Année</string>
+    <string name="sort_by_song_count">Nombre de chansons</string>
+    <string name="sort_by_length">Longueur</string>
+    <string name="sort_by_play_time">Récréation</string>
+    <string name="sort_by_custom">Commande personnalisée</string>
 
     <!-- Dialog -->
-    <string name="media_id">Media id</string>
-    <string name="mime_type">MIME type</string>
+    <string name="media_id">Identifiant du média</string>
+    <string name="mime_type">Type MIME</string>
     <string name="codecs">Codecs</string>
-    <string name="bitrate">Bitrate</string>
-    <string name="sample_rate">Sample rate</string>
-    <string name="loudness">Loudness</string>
+    <string name="bitrate">Débit</string>
+    <string name="sample_rate">Taux d\'échantillonnage</string>
+    <string name="loudness">Intensité</string>
     <string name="volume">Volume</string>
-    <string name="file_size">File size</string>
-    <string name="unknown">Unknown</string>
-    <string name="copied">Copied to clipboard</string>
+    <string name="file_size">Taille du fichier</string>
+    <string name="unknown">Inconnu</string>
+    <string name="copied">Copié dans le presse-papier</string>
 
-    <string name="edit_lyrics">Edit lyrics</string>
-    <string name="search_lyrics">Search lyrics</string>
+    <string name="edit_lyrics">Modifier les paroles</string>
+    <string name="search_lyrics">Rechercher des paroles</string>
 
-    <string name="edit_song">Editer la chanson</string>
+    <string name="edit_song">Éditer la chanson</string>
     <string name="song_title">Titre de la chanson</string>
     <string name="song_artists">Artiste de la chanson</string>
     <string name="error_song_title_empty">Le titre de la chanson ne peut pas être vide.</string>
@@ -117,12 +122,12 @@
     <string name="save">Sauvegarder</string>
 
     <string name="choose_playlist">Choisir la liste de lecture</string>
-    <string name="edit_playlist">Editer la liste de lecture</string>
+    <string name="edit_playlist">Editer la playlist</string>
     <string name="create_playlist">Créer une liste de lecture</string>
-    <string name="playlist_name">Nom de la liste de lecture</string>
-    <string name="error_playlist_name_empty">Le nom de la liste de lecture ne peut pas être vide.</string>
+    <string name="playlist_name">Nom de la playlist</string>
+    <string name="error_playlist_name_empty">Le nom de la playlist ne peut pas être vide.</string>
 
-    <string name="edit_artist">Editer l\'artiste</string>
+    <string name="edit_artist">Éditer l\'artiste</string>
     <string name="artist_name">Nom de l\'artiste</string>
     <string name="error_artist_name_empty">Le nom de l\'artiste ne peut être vide.</string>
 
@@ -145,120 +150,125 @@
     <plurals name="n_playlist">
         <item quantity="one">%d playlist</item>
         <item quantity="other">%d playlists</item>
-        <item quantity="many">%d albums</item>
+        <item quantity="many">%d playlists</item>
     </plurals>
-    <plurals name="n_week" tools:ignore="MissingQuantity">
-        <item quantity="one">%d week</item>
-        <item quantity="other">%d weeks</item>
+    <plurals name="n_week">
+        <item quantity="one">%d semaine</item>
+        <item quantity="many">%d semaines</item>
+        <item quantity="other">%d semaines</item>
     </plurals>
-    <plurals name="n_month" tools:ignore="MissingQuantity">
-        <item quantity="one">%d month</item>
-        <item quantity="other">%d months</item>
+    <plurals name="n_month">
+        <item quantity="one">%d mois</item>
+        <item quantity="many">%d mois</item>
+        <item quantity="other">%d mois</item>
     </plurals>
-    <plurals name="n_year" tools:ignore="MissingQuantity">
-        <item quantity="one">%d year</item>
-        <item quantity="other">%d years</item>
+    <plurals name="n_year">
+        <item quantity="one">%d ans</item>
+        <item quantity="many">%d ans</item>
+        <item quantity="other">%d ans</item>
     </plurals>
 
     <!-- Snackbar -->
-    <string name="playlist_imported">Playlist imported</string>
-    <string name="removed_song_from_playlist">Removed \"%s\" from playlist</string>
-    <string name="playlist_synced">Playlist synced</string>
-    <string name="undo">Undo</string>
+    <string name="playlist_imported">Liste de lecture importée</string>
+    <string name="removed_song_from_playlist">\"%s\" supprimé de la liste de lecture</string>
+    <string name="playlist_synced">Liste de lecture synchronisée</string>
+    <string name="undo">annuler</string>
 
     <!-- Player -->
-    <string name="lyrics_not_found">Lyrics not found</string>
-    <string name="sleep_timer">Sleep timer</string>
-    <string name="end_of_song">End of song</string>
+    <string name="lyrics_not_found">Paroles introuvables</string>
+    <string name="sleep_timer">Minuterie de sommeil</string>
+    <string name="end_of_song">Fin de chanson</string>
     <plurals name="minute">
-        <item quantity="one" tools:ignore="ImpliedQuantity">1 minute</item>
+        <item quantity="one">%d minute</item>
         <item quantity="many">%d minutes</item>
         <item quantity="other">%d minutes</item>
     </plurals>
-    <string name="error_no_stream">No stream available</string>
-    <string name="error_no_internet">No network connection</string>
-    <string name="error_timeout">Timeout</string>
-    <string name="error_unknown">Unknown error</string>
+    <string name="error_no_stream">Aucun flux disponible</string>
+    <string name="error_no_internet">Pas de connexion réseau</string>
+    <string name="error_timeout">Temps libre</string>
+    <string name="error_unknown">Erreur inconnue</string>
 
     <!-- Player action -->
     <string name="action_like">Like</string>
-    <string name="action_remove_like">Remove like</string>
+    <string name="action_remove_like">Enlever le like</string>
 
     <!-- Queue Title -->
-    <string name="queue_all_songs">All songs</string>
-    <string name="queue_searched_songs">Searched songs</string>
+    <string name="queue_all_songs">Toutes les chansons</string>
+    <string name="queue_searched_songs">Chansons recherchées</string>
 
     <!-- Notification name -->
     <string name="music_player">Lecteur de musique</string>
 
     <!-- Settings -->
     <string name="settings">Paramètres</string>
-    <string name="appearance">Appearance</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
-    <string name="dark_theme">Dark theme</string>
-    <string name="dark_theme_on">On</string>
-    <string name="dark_theme_off">Off</string>
-    <string name="dark_theme_follow_system">Follow system</string>
-    <string name="pure_black">Pure black</string>
-    <string name="default_open_tab">Default open tab</string>
-    <string name="customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="lyrics_text_position">Lyrics text position</string>
-    <string name="left">Left</string>
-    <string name="center">Center</string>
-    <string name="right">Right</string>
+    <string name="appearance">Apparence</string>
+    <string name="enable_dynamic_theme">Activer le thème dynamique</string>
+    <string name="dark_theme">Thème sombre</string>
+    <string name="dark_theme_on">Activé</string>
+    <string name="dark_theme_off">Désactivé</string>
+    <string name="dark_theme_follow_system">Suivre le système</string>
+    <string name="pure_black">Noir pur</string>
+    <string name="default_open_tab">Menu ouvert par défaut</string>
+    <string name="customize_navigation_tabs">Personnaliser les menus de navigation</string>
+    <string name="lyrics_text_position">Position du texte des paroles</string>
+    <string name="left">Gauche</string>
+    <string name="center">Centre</string>
+    <string name="right">Droite</string>
 
-    <string name="content">Content</string>
-    <string name="login">Login</string>
+    <string name="content">Contenu</string>
+    <string name="login">Connexion</string>
     <string name="content_language">Langue du contenu par défaut</string>
     <string name="content_country">Pays du contenu par défaut</string>
     <string name="system_default">Système par défaut</string>
-    <string name="enable_proxy">Enable proxy</string>
-    <string name="proxy_type">Proxy type</string>
-    <string name="proxy_url">Proxy URL</string>
-    <string name="restart_to_take_effect">Restart to take effect</string>
+    <string name="enable_proxy">Activer le proxy</string>
+    <string name="proxy_type">Type de proxy</string>
+    <string name="proxy_url">URL proxy</string>
+    <string name="restart_to_take_effect">Redémarrer pour prendre effet</string>
 
-    <string name="player_and_audio">Player and audio</string>
-    <string name="audio_quality">Audio quality</string>
+    <string name="player_and_audio">Lecteur et audio</string>
+    <string name="audio_quality">Qualité audio</string>
     <string name="audio_quality_auto">Auto</string>
-    <string name="audio_quality_high">High</string>
-    <string name="audio_quality_low">Low</string>
-    <string name="persistent_queue">Persistent queue</string>
-    <string name="skip_silence">Skip silence</string>
-    <string name="audio_normalization">Audio normalization</string>
-    <string name="equalizer">Equalizer</string>
+    <string name="audio_quality_high">Haut</string>
+    <string name="audio_quality_low">Faible</string>
+    <string name="persistent_queue">File d\'attente persistante</string>
+    <string name="skip_silence">Ignorer le silence</string>
+    <string name="audio_normalization">Normalisation audio</string>
+    <string name="equalizer">Égaliseur</string>
 
-    <string name="storage">Storage</string>
+    <string name="storage">Stockage</string>
     <string name="cache">Cache</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
-    <string name="max_image_cache_size">Max image cache size</string>
-    <string name="clear_image_cache">Clear image cache</string>
-    <string name="max_song_cache_size">Max song cache size</string>
-    <string name="clear_song_cache">Clear song cache</string>
-    <string name="size_used">%s used</string>
+    <string name="image_cache">Cache d\'images</string>
+    <string name="song_cache">Cache de chanson</string>
+    <string name="max_cache_size">Taille maximale du cache</string>
+    <string name="unlimited">Illimité</string>
+    <string name="clear_all_downloads">Effacer tous les téléchargements</string>
+    <string name="max_image_cache_size">Taille maximale du cache d\'images</string>
+    <string name="clear_image_cache">Effacer le cache des images</string>
+    <string name="max_song_cache_size">Taille maximale du cache de chansons</string>
+    <string name="clear_song_cache">Effacer le cache de la chanson</string>
+    <string name="size_used">%s utilisé</string>
 
-    <string name="privacy">Privacy</string>
-    <string name="pause_listen_history">Pause listen history</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
-    <string name="pause_search_history">Pause search history</string>
-    <string name="clear_search_history">Clear search history</string>
-    <string name="clear_search_history_confirm">Are you sure to clear all search history?</string>
-    <string name="enable_kugou">Enable KuGou lyrics provider</string>
+    <string name="privacy">Confidentialité</string>
+    <string name="pause_listen_history">Suspendre l\'historique d\'écoute</string>
+    <string name="clear_listen_history">Effacer l\'historique d\'écoute</string>
+    <string name="clear_listen_history_confirm">Voulez-vous vraiment effacer tout l\'historique d\'écoute?</string>
+    <string name="pause_search_history">Suspendre l\'historique des recherches</string>
+    <string name="clear_search_history">Effacer l\'historique</string>
+    <string name="clear_search_history_confirm">Voulez-vous vraiment effacer tout l\'historique de recherche?</string>
+    <string name="enable_kugou">Activer le fournisseur de paroles KuGou</string>
 
-    <string name="backup_restore">Backup and restore</string>
-    <string name="backup">Backup</string>
-    <string name="restore">Restore</string>
-    <string name="imported_playlist">Imported playlist</string>
-    <string name="backup_create_success">Backup created successfully</string>
-    <string name="backup_create_failed">Couldn\'t create backup</string>
-    <string name="restore_failed">Failed to restore backup</string>
+    <string name="backup_restore">Sauvegarde et restauration</string>
+    <string name="backup">Sauvegarde</string>
+    <string name="restore">Restaurer</string>
+    <string name="imported_playlist">Liste de lecture importée</string>
+    <string name="backup_create_success">Sauvegarde créée avec succès</string>
+    <string name="backup_create_failed">Impossible de créer la sauvegarde</string>
+    <string name="restore_failed">Échec de la restauration de la sauvegarde</string>
 
-    <string name="about">À propos</string>
+    <string name="about">À propos de</string>
     <string name="app_version">Version de l\'application</string>
 
-    <string name="new_version_available">New version available</string>
+    <string name="new_version_available">Nouvelle version disponible</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

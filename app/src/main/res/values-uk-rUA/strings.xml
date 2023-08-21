@@ -38,6 +38,9 @@
     <string name="search">Пошук</string>
     <string name="search_yt_music">Пошук в YouTube Music…</string>
     <string name="search_library">Пошук в бібліотеці…</string>
+    <string name="filter_library">Бібліотека</string>
+    <string name="filter_liked">Вподобані</string>
+    <string name="filter_downloaded">Завантажені</string>
     <string name="filter_all">Всі</string>
     <string name="filter_songs">Композиції</string>
     <string name="filter_videos">Відео</string>
@@ -61,6 +64,7 @@
     <string name="retry">Повторювати</string>
     <string name="radio">Радіо</string>
     <string name="shuffle">Перемішати</string>
+    <string name="reset">Скинути</string>
 
     <!-- Menu -->
     <string name="details">Детальніше</string>
@@ -84,6 +88,7 @@
     <string name="remove_from_history">Видалити з історії</string>
     <string name="search_online">Пошук в Інтернеті</string>
     <string name="sync">Синхронізація</string>
+    <string name="advanced">Контроль аудіо</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Нещодавно додані</string>
@@ -273,4 +278,6 @@
     <string name="app_version">Версія застосунку</string>
 
     <string name="new_version_available">Доступна нова версія</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>

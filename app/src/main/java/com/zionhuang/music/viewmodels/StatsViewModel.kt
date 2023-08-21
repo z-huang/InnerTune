@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.music.constants.StatPeriod
 import com.zionhuang.music.db.MusicDatabase
+import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -35,10 +35,6 @@ class StatsViewModel @Inject constructor(
 
     val mostPlayedAlbums = statPeriod.flatMapLatest { period ->
         database.mostPlayedAlbums(period.toTimeMillis())
-    }.map { albums ->
-        albums.mapNotNull { id ->
-            YouTube.album(id, withSongs = false).getOrNull()?.album
-        }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     init {
@@ -56,6 +52,26 @@ class StatsViewModel @Inject constructor(
                             }
                         }
                     }
+            }
+        }
+        viewModelScope.launch {
+            mostPlayedAlbums.collect { albums ->
+                albums.filter {
+                    it.album.songCount == 0
+                }.forEach { album ->
+                    YouTube.album(album.id).onSuccess { albumPage ->
+                        database.query {
+                            update(album.album, albumPage)
+                        }
+                    }.onFailure {
+                        reportException(it)
+                        if (it.message?.contains("NOT_FOUND") == true) {
+                            database.query {
+                                delete(album.album)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
