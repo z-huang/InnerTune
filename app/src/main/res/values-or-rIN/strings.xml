@@ -78,7 +78,7 @@
     <string name="remove_from_history">Remove from history</string>
     <string name="search_online">ଅନଲାଇନ୍ ସନ୍ଧାନ କରନ୍ତୁ</string>
     <string name="sync">Sync</string>
-    <string name="playback_control">Playback control</string>
+    <string name="advanced">Advanced</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">ତାରିଖ ରେ ଯୋଡା ଯାଇଛି</string>
     <string name="sort_by_name">ନାମ</string>
@@ -232,4 +232,6 @@
     <string name="about">ବିଷୟରେ</string>
     <string name="app_version">ଆପ୍ ସଂସ୍କରଣ</string>
     <string name="new_version_available">New version available</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>
