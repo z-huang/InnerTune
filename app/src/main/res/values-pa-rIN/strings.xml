@@ -78,7 +78,7 @@
     <string name="remove_from_history">ਅਤੀਤ ਵਿੱਚੋਂ ਹਟਾਓ</string>
     <string name="search_online">ਆਨਲਾਈਨ ਖੋਜ ਕਰੋ</string>
     <string name="sync">ਸਿੰਕਰੋਨਾਈਜ਼ ਕਰੋ</string>
-    <string name="playback_control">Playback control</string>
+    <string name="advanced">Advanced</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">ਮਿਤੀ</string>
     <string name="sort_by_name">ਨਾਮ</string>
@@ -232,4 +232,6 @@
     <string name="about">ਦੇ ਬਾਰੇ</string>
     <string name="app_version">ਐਪ ਸੰਸਕਰਣ</string>
     <string name="new_version_available">New version available</string>
+    <string name="translation_models">Translation Models</string>
+    <string name="clear_translation_models">Clear translation models</string>
 </resources>
