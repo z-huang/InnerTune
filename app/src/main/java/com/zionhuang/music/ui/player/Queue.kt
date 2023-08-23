@@ -24,8 +24,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -47,6 +47,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -67,6 +68,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerConnection
@@ -81,16 +83,17 @@ import com.zionhuang.music.ui.component.BottomSheetState
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.MediaMetadataListItem
 import com.zionhuang.music.ui.menu.PlayerMenu
-import com.zionhuang.music.ui.utils.reordering.ReorderingLazyColumn
-import com.zionhuang.music.ui.utils.reordering.draggedItem
-import com.zionhuang.music.ui.utils.reordering.rememberReorderingState
-import com.zionhuang.music.ui.utils.reordering.reorder
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorder
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
@@ -337,31 +340,39 @@ fun Queue(
     ) {
         val queueTitle by playerConnection.queueTitle.collectAsState()
         val queueWindows by playerConnection.queueWindows.collectAsState()
+        val mutableQueueWindows = remember { mutableStateListOf<Timeline.Window>() }
         val queueLength = remember(queueWindows) {
             queueWindows.sumOf { it.mediaItem.metadata!!.duration }
         }
 
         val coroutineScope = rememberCoroutineScope()
-        val reorderingState = rememberReorderingState(
-            lazyListState = rememberLazyListState(initialFirstVisibleItemIndex = currentWindowIndex),
-            key = queueWindows,
-            onDragEnd = { currentIndex, newIndex ->
+        val reorderableState = rememberReorderableLazyListState(
+            onMove = { from, to ->
+                mutableQueueWindows.move(from.index, to.index)
+            },
+            onDragEnd = { fromIndex, toIndex ->
                 if (!playerConnection.player.shuffleModeEnabled) {
-                    playerConnection.player.moveMediaItem(currentIndex, newIndex)
+                    playerConnection.player.moveMediaItem(fromIndex, toIndex)
                 } else {
                     playerConnection.player.setShuffleOrder(
                         DefaultShuffleOrder(
-                            queueWindows.map { it.firstPeriodIndex }.toMutableList().move(currentIndex, newIndex).toIntArray(),
+                            queueWindows.map { it.firstPeriodIndex }.toMutableList().move(fromIndex, toIndex).toIntArray(),
                             System.currentTimeMillis()
                         )
                     )
                 }
-            },
-            extraItemCount = 0
+            }
         )
 
-        ReorderingLazyColumn(
-            reorderingState = reorderingState,
+        LaunchedEffect(queueWindows) {
+            mutableQueueWindows.apply {
+                clear()
+                addAll(queueWindows)
+            }
+        }
+
+        LazyColumn(
+            state = reorderableState.listState,
             contentPadding = WindowInsets.systemBars
                 .add(
                     WindowInsets(
@@ -370,67 +381,67 @@ fun Queue(
                     )
                 )
                 .asPaddingValues(),
-            modifier = Modifier.nestedScroll(state.preUpPostDownNestedScrollConnection)
+            modifier = Modifier
+                .reorderable(reorderableState)
+                .nestedScroll(state.preUpPostDownNestedScrollConnection)
         ) {
             itemsIndexed(
-                items = queueWindows,
+                items = mutableQueueWindows,
                 key = { _, item -> item.uid.hashCode() }
             ) { index, window ->
-                val currentItem by rememberUpdatedState(window)
-                val dismissState = rememberDismissState(
-                    positionalThreshold = { totalDistance ->
-                        totalDistance
-                    },
-                    confirmValueChange = { dismissValue ->
-                        if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
-                            playerConnection.player.removeMediaItem(currentItem.firstPeriodIndex)
+                ReorderableItem(
+                    reorderableState = reorderableState,
+                    key = window.uid.hashCode()
+                ) {
+                    val currentItem by rememberUpdatedState(window)
+                    val dismissState = rememberDismissState(
+                        positionalThreshold = { totalDistance ->
+                            totalDistance
+                        },
+                        confirmValueChange = { dismissValue ->
+                            if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
+                                playerConnection.player.removeMediaItem(currentItem.firstPeriodIndex)
+                            }
+                            true
                         }
-                        true
-                    }
-                )
-                SwipeToDismiss(
-                    state = dismissState,
-                    background = {},
-                    dismissContent = {
-                        MediaMetadataListItem(
-                            mediaMetadata = window.mediaItem.metadata!!,
-                            isActive = index == currentWindowIndex,
-                            isPlaying = isPlaying,
-                            trailingContent = {
-                                Icon(
-                                    painter = painterResource(R.drawable.drag_handle),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .reorder(
-                                            reorderingState = reorderingState,
-                                            index = index
+                    )
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = {},
+                        dismissContent = {
+                            MediaMetadataListItem(
+                                mediaMetadata = window.mediaItem.metadata!!,
+                                isActive = index == currentWindowIndex,
+                                isPlaying = isPlaying,
+                                trailingContent = {
+                                    IconButton(
+                                        onClick = { },
+                                        modifier = Modifier
+                                            .detectReorder(reorderableState)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.drag_handle),
+                                            contentDescription = null
                                         )
-                                        .clickable(
-                                            enabled = false,
-                                            onClick = {}
-                                        )
-                                        .padding(8.dp)
-                                )
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    coroutineScope.launch(Dispatchers.Main) {
-                                        if (index == currentWindowIndex) {
-                                            playerConnection.player.togglePlayPause()
-                                        } else {
-                                            playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
-                                            playerConnection.player.playWhenReady = true
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        coroutineScope.launch(Dispatchers.Main) {
+                                            if (index == currentWindowIndex) {
+                                                playerConnection.player.togglePlayPause()
+                                            } else {
+                                                playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
+                                                playerConnection.player.playWhenReady = true
+                                            }
                                         }
                                     }
-                                }
-                                .draggedItem(
-                                    reorderingState = reorderingState,
-                                    index = index
-                                )
-                        )
-                    }
-                )
+                                    .detectReorderAfterLongPress(reorderableState)
+                            )
+                        }
+                    )
+                }
             }
         }
 
@@ -502,8 +513,8 @@ fun Queue(
             IconButton(
                 modifier = Modifier.align(Alignment.CenterStart),
                 onClick = {
-                    reorderingState.coroutineScope.launch {
-                        reorderingState.lazyListState.animateScrollToItem(
+                    coroutineScope.launch {
+                        reorderableState.listState.animateScrollToItem(
                             if (playerConnection.player.shuffleModeEnabled) playerConnection.player.currentMediaItemIndex else 0
                         )
                     }.invokeOnCompletion {
