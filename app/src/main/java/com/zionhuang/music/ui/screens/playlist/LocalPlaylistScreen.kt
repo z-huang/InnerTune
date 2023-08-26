@@ -444,7 +444,8 @@ fun LocalPlaylistScreen(
 
                     item {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(start = 16.dp)
                         ) {
                             SortHeader(
                                 sortType = sortType,
@@ -460,7 +461,6 @@ fun LocalPlaylistScreen(
                                         PlaylistSongSortType.PLAY_TIME -> R.string.sort_by_play_time
                                     }
                                 },
-                                trailingText = "",
                                 modifier = Modifier.weight(1f)
                             )
 

@@ -69,6 +69,7 @@ fun HomeScreen(
         "SAPISID" in parseCookieString(innerTubeCookie)
     }
 
+    val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
     SwipeRefresh(
@@ -222,6 +223,7 @@ fun HomeScreen(
                                 item = album,
                                 isActive = mediaMetadata?.album?.id == album.id,
                                 isPlaying = isPlaying,
+                                coroutineScope = coroutineScope,
                                 modifier = Modifier
                                     .combinedClickable(
                                         onClick = {

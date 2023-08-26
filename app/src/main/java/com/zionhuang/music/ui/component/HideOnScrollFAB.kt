@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -25,6 +26,36 @@ import com.zionhuang.music.ui.utils.isScrollingUp
 fun BoxScope.HideOnScrollFAB(
     visible: Boolean = true,
     lazyListState: LazyListState,
+    @DrawableRes icon: Int,
+    onClick: () -> Unit,
+) {
+    AnimatedVisibility(
+        visible = visible && lazyListState.isScrollingUp(),
+        enter = slideInVertically { it },
+        exit = slideOutVertically { it },
+        modifier = Modifier
+            .align(Alignment.BottomEnd)
+            .windowInsetsPadding(
+                LocalPlayerAwareWindowInsets.current
+                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+            )
+    ) {
+        FloatingActionButton(
+            modifier = Modifier.padding(16.dp),
+            onClick = onClick
+        ) {
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = null
+            )
+        }
+    }
+}
+
+@Composable
+fun BoxScope.HideOnScrollFAB(
+    visible: Boolean = true,
+    lazyListState: LazyGridState,
     @DrawableRes icon: Int,
     onClick: () -> Unit,
 ) {

@@ -49,9 +49,21 @@ val ArtistSongSortDescendingKey = booleanPreferencesKey("artistSongSortDescendin
 
 val SongFilterKey = stringPreferencesKey("songFilter")
 val ArtistFilterKey = stringPreferencesKey("artistFilter")
+val ArtistViewTypeKey = stringPreferencesKey("artistViewType")
 val AlbumFilterKey = stringPreferencesKey("albumFilter")
+val AlbumViewTypeKey = stringPreferencesKey("albumViewType")
+val PlaylistViewTypeKey = stringPreferencesKey("playlistViewType")
 
 val PlaylistEditLockKey = booleanPreferencesKey("playlistEditLock")
+
+enum class LibraryViewType {
+    LIST, GRID;
+
+    fun toggle() = when (this) {
+        LIST -> GRID
+        GRID -> LIST
+    }
+}
 
 enum class SongSortType {
     CREATE_DATE, NAME, ARTIST, PLAY_TIME

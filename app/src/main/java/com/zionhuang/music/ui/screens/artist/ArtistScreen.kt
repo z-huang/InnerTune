@@ -322,6 +322,7 @@ fun ArtistScreen(
                                             else -> false
                                         },
                                         isPlaying = isPlaying,
+                                        coroutineScope = coroutineScope,
                                         modifier = Modifier
                                             .combinedClickable(
                                                 onClick = {
@@ -432,7 +433,7 @@ fun ArtistScreen(
             IconButton(
                 onClick = {
                     database.transaction {
-                        val artist = libraryArtist
+                        val artist = libraryArtist?.artist
                         if (artist != null) {
                             update(artist.toggleLike())
                         } else {
@@ -451,8 +452,8 @@ fun ArtistScreen(
                 }
             ) {
                 Icon(
-                    painter = painterResource(if (libraryArtist?.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
-                    tint = if (libraryArtist?.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
+                    painter = painterResource(if (libraryArtist?.artist?.bookmarkedAt != null) R.drawable.favorite else R.drawable.favorite_border),
+                    tint = if (libraryArtist?.artist?.bookmarkedAt != null) MaterialTheme.colorScheme.error else LocalContentColor.current,
                     contentDescription = null
                 )
             }

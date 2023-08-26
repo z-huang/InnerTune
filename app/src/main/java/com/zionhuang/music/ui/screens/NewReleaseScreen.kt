@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +47,8 @@ fun NewReleaseScreen(
 
     val newReleaseAlbums by viewModel.newReleaseAlbums.collectAsState()
 
+    val coroutineScope = rememberCoroutineScope()
+
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = GridThumbnailHeight + 24.dp),
         contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
@@ -59,6 +62,7 @@ fun NewReleaseScreen(
                 isActive = mediaMetadata?.album?.id == album.id,
                 isPlaying = isPlaying,
                 fillMaxWidth = true,
+                coroutineScope = coroutineScope,
                 modifier = Modifier
                     .combinedClickable(
                         onClick = {
