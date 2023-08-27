@@ -73,42 +73,44 @@ fun ArtistMenu(
             bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
         )
     ) {
-        GridMenuItem(
-            icon = R.drawable.play,
-            title = R.string.play
-        ) {
-            coroutineScope.launch {
-                val songs = withContext(Dispatchers.IO) {
-                    database.artistSongs(artist.id, ArtistSongSortType.CREATE_DATE, true).first()
-                        .map { it.toMediaItem() }
-                }
-                playerConnection.playQueue(
-                    ListQueue(
-                        title = artist.artist.name,
-                        items = songs
+        if (artist.songCount > 0) {
+            GridMenuItem(
+                icon = R.drawable.play,
+                title = R.string.play
+            ) {
+                coroutineScope.launch {
+                    val songs = withContext(Dispatchers.IO) {
+                        database.artistSongs(artist.id, ArtistSongSortType.CREATE_DATE, true).first()
+                            .map { it.toMediaItem() }
+                    }
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = artist.artist.name,
+                            items = songs
+                        )
                     )
-                )
-            }
-            onDismiss()
-        }
-        GridMenuItem(
-            icon = R.drawable.shuffle,
-            title = R.string.shuffle
-        ) {
-            coroutineScope.launch {
-                val songs = withContext(Dispatchers.IO) {
-                    database.artistSongs(artist.id, ArtistSongSortType.CREATE_DATE, true).first()
-                        .map { it.toMediaItem() }
-                        .shuffled()
                 }
-                playerConnection.playQueue(
-                    ListQueue(
-                        title = artist.artist.name,
-                        items = songs
-                    )
-                )
+                onDismiss()
             }
-            onDismiss()
+            GridMenuItem(
+                icon = R.drawable.shuffle,
+                title = R.string.shuffle
+            ) {
+                coroutineScope.launch {
+                    val songs = withContext(Dispatchers.IO) {
+                        database.artistSongs(artist.id, ArtistSongSortType.CREATE_DATE, true).first()
+                            .map { it.toMediaItem() }
+                            .shuffled()
+                    }
+                    playerConnection.playQueue(
+                        ListQueue(
+                            title = artist.artist.name,
+                            items = songs
+                        )
+                    )
+                }
+                onDismiss()
+            }
         }
         if (artist.artist.isYouTubeArtist) {
             GridMenuItem(
