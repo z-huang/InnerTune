@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -744,7 +745,10 @@ fun PlaylistGridItem(
             0 -> Icon(
                 painter = painterResource(R.drawable.queue_music),
                 contentDescription = null,
-                modifier = Modifier.size(width)
+                tint = LocalContentColor.current.copy(alpha = 0.8f),
+                modifier = Modifier
+                    .size(width / 2)
+                    .align(Alignment.Center)
             )
 
             1 -> AsyncImage(
