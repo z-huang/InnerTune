@@ -43,19 +43,29 @@ object AppModule {
     @Singleton
     @Provides
     @PlayerCache
-    fun providePlayerCache(@ApplicationContext context: Context, databaseProvider: DatabaseProvider): SimpleCache =
-        SimpleCache(
-            context.filesDir.resolve("exoplayer"),
-            when (val cacheSize = context.dataStore[MaxSongCacheSizeKey] ?: 1024) {
-                -1 -> NoOpCacheEvictor()
-                else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
-            },
-            databaseProvider
-        )
+    fun providePlayerCache(@ApplicationContext context: Context, databaseProvider: DatabaseProvider): SimpleCache {
+        val constructor = {
+            SimpleCache(
+                context.filesDir.resolve("exoplayer"),
+                when (val cacheSize = context.dataStore[MaxSongCacheSizeKey] ?: 1024) {
+                    -1 -> NoOpCacheEvictor()
+                    else -> LeastRecentlyUsedCacheEvictor(cacheSize * 1024 * 1024L)
+                },
+                databaseProvider
+            )
+        }
+        constructor().release()
+        return constructor()
+    }
 
     @Singleton
     @Provides
     @DownloadCache
-    fun provideDownloadCache(@ApplicationContext context: Context, databaseProvider: DatabaseProvider): SimpleCache =
-        SimpleCache(context.filesDir.resolve("download"), NoOpCacheEvictor(), databaseProvider)
+    fun provideDownloadCache(@ApplicationContext context: Context, databaseProvider: DatabaseProvider): SimpleCache {
+        val constructor = {
+            SimpleCache(context.filesDir.resolve("download"), NoOpCacheEvictor(), databaseProvider)
+        }
+        constructor().release()
+        return constructor()
+    }
 }
