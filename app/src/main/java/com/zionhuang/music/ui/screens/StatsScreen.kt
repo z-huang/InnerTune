@@ -81,9 +81,13 @@ fun StatsScreen(
             )
         }
 
-        item {
-            NavigationTitle(stringResource(R.string.most_played_songs))
+        item(key = "mostPlayedSongs") {
+            NavigationTitle(
+                title = stringResource(R.string.most_played_songs),
+                modifier = Modifier.animateItemPlacement()
+            )
         }
+
         items(
             items = mostPlayedSongs,
             key = { it.id }
@@ -129,12 +133,15 @@ fun StatsScreen(
             )
         }
 
-        item {
-            NavigationTitle(stringResource(R.string.most_played_artists))
-        }
+        item(key = "mostPlayedArtists") {
+            NavigationTitle(
+                title = stringResource(R.string.most_played_artists),
+                modifier = Modifier.animateItemPlacement()
+            )
 
-        item {
-            LazyRow {
+            LazyRow(
+                modifier = Modifier.animateItemPlacement()
+            ) {
                 items(
                     items = mostPlayedArtists,
                     key = { it.id }
@@ -164,12 +171,15 @@ fun StatsScreen(
         }
 
         if (mostPlayedAlbums.isNotEmpty()) {
-            item {
-                NavigationTitle(stringResource(R.string.most_played_albums))
-            }
+            item(key = "mostPlayedAlbums") {
+                NavigationTitle(
+                    title = stringResource(R.string.most_played_albums),
+                    modifier = Modifier.animateItemPlacement()
+                )
 
-            item {
-                LazyRow {
+                LazyRow(
+                    modifier = Modifier.animateItemPlacement()
+                ) {
                     items(
                         items = mostPlayedAlbums,
                         key = { it.id }
