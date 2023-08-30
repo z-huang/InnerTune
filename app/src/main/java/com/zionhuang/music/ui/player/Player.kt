@@ -1,6 +1,9 @@
 package com.zionhuang.music.ui.player
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
@@ -126,6 +129,12 @@ fun BottomSheetPlayer(
         }
     ) {
         val controlsContent: @Composable ColumnScope.(MediaMetadata) -> Unit = { mediaMetadata ->
+            val playPauseRoundness by animateDpAsState(
+                targetValue = if (isPlaying) 24.dp else 36.dp,
+                animationSpec = tween(durationMillis = 100, easing = LinearEasing),
+                label = "playPauseRoundness"
+            )
+
             Text(
                 text = mediaMetadata.title,
                 style = MaterialTheme.typography.titleLarge,
@@ -241,7 +250,7 @@ fun BottomSheetPlayer(
                 Box(
                     modifier = Modifier
                         .size(72.dp)
-                        .clip(CircleShape)
+                        .clip(RoundedCornerShape(playPauseRoundness))
                         .background(MaterialTheme.colorScheme.secondaryContainer)
                         .clickable {
                             if (playbackState == STATE_ENDED) {
