@@ -141,7 +141,12 @@ fun BottomSheetPlayer(
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .clickable(enabled = mediaMetadata.album != null) {
+                        navController.navigate("album/${mediaMetadata.album!!.id}")
+                        state.collapseSoft()
+                    }
             )
 
             Spacer(Modifier.height(6.dp))
