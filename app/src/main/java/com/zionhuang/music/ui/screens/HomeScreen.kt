@@ -175,7 +175,6 @@ fun HomeScreen(
                                                     SongMenu(
                                                         originalSong = song!!,
                                                         navController = navController,
-                                                        playerConnection = playerConnection,
                                                         onDismiss = menuState::dismiss
                                                     )
                                                 }
@@ -234,7 +233,6 @@ fun HomeScreen(
                                                 YouTubeAlbumMenu(
                                                     albumItem = album,
                                                     navController = navController,
-                                                    playerConnection = playerConnection,
                                                     onDismiss = menuState::dismiss
                                                 )
                                             }

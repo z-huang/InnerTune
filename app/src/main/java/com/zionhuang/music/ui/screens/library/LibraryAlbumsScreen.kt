@@ -168,7 +168,6 @@ fun LibraryAlbumsScreen(
                                             AlbumMenu(
                                                 originalAlbum = album,
                                                 navController = navController,
-                                                playerConnection = playerConnection,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }
@@ -233,7 +232,6 @@ fun LibraryAlbumsScreen(
                                             AlbumMenu(
                                                 originalAlbum = album,
                                                 navController = navController,
-                                                playerConnection = playerConnection,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }

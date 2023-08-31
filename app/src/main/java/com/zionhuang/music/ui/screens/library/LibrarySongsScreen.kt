@@ -131,7 +131,6 @@ fun LibrarySongsScreen(
                                     SongMenu(
                                         originalSong = song,
                                         navController = navController,
-                                        playerConnection = playerConnection,
                                         onDismiss = menuState::dismiss
                                     )
                                 }

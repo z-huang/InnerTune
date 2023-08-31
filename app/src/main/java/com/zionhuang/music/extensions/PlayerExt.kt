@@ -9,6 +9,9 @@ import com.zionhuang.music.models.MediaMetadata
 import java.util.ArrayDeque
 
 fun Player.togglePlayPause() {
+    if (!playWhenReady && playbackState == Player.STATE_IDLE) {
+        prepare()
+    }
     playWhenReady = !playWhenReady
 }
 

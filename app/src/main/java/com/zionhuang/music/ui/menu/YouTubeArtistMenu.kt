@@ -18,9 +18,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.zionhuang.innertube.models.ArtistItem
 import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.ArtistEntity
-import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
@@ -30,11 +30,11 @@ import java.time.LocalDateTime
 @Composable
 fun YouTubeArtistMenu(
     artist: ArtistItem,
-    playerConnection: PlayerConnection,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val libraryArtist by database.artist(artist.id).collectAsState(initial = null)
 
     YouTubeListItem(

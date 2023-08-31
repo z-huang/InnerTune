@@ -44,6 +44,7 @@ import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalDownloadUtil
+import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
@@ -54,7 +55,6 @@ import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
-import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
@@ -69,11 +69,11 @@ import java.time.LocalDateTime
 fun YouTubeSongMenu(
     song: SongItem,
     navController: NavController,
-    playerConnection: PlayerConnection,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val librarySong by database.song(song.id).collectAsState(initial = null)
     val download by LocalDownloadUtil.current.getDownload(song.id).collectAsState(initial = null)
     val artists = remember {

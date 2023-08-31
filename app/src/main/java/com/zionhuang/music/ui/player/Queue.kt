@@ -119,8 +119,8 @@ fun Queue(
 
     var showLyrics by rememberPreference(ShowLyricsKey, defaultValue = false)
 
-    val sleepTimerEnabled = remember(playerConnection.service.sleepTimerTriggerTime, playerConnection.service.pauseWhenSongEnd) {
-        playerConnection.service.sleepTimerTriggerTime != -1L || playerConnection.service.pauseWhenSongEnd
+    val sleepTimerEnabled = remember(playerConnection.service.sleepTimer.triggerTime, playerConnection.service.sleepTimer.pauseWhenSongEnd) {
+        playerConnection.service.sleepTimer.isActive
     }
 
     var sleepTimerTimeLeft by remember {
@@ -130,10 +130,10 @@ fun Queue(
     LaunchedEffect(sleepTimerEnabled) {
         if (sleepTimerEnabled) {
             while (isActive) {
-                sleepTimerTimeLeft = if (playerConnection.service.pauseWhenSongEnd) {
+                sleepTimerTimeLeft = if (playerConnection.service.sleepTimer.pauseWhenSongEnd) {
                     playerConnection.player.duration - playerConnection.player.currentPosition
                 } else {
-                    playerConnection.service.sleepTimerTriggerTime - System.currentTimeMillis()
+                    playerConnection.service.sleepTimer.triggerTime - System.currentTimeMillis()
                 }
                 delay(1000L)
             }
@@ -157,7 +157,7 @@ fun Queue(
                 TextButton(
                     onClick = {
                         showSleepTimerDialog = false
-                        playerConnection.service.setSleepTimer(sleepTimerValue.roundToInt())
+                        playerConnection.service.sleepTimer.start(sleepTimerValue.roundToInt())
                     }
                 ) {
                     Text(stringResource(android.R.string.ok))
@@ -187,7 +187,7 @@ fun Queue(
                     OutlinedButton(
                         onClick = {
                             showSleepTimerDialog = false
-                            playerConnection.service.setSleepTimer(-1)
+                            playerConnection.service.sleepTimer.start(-1)
                         }
                     ) {
                         Text(stringResource(R.string.end_of_song))
@@ -290,6 +290,7 @@ fun Queue(
                     )
                 }
                 AnimatedContent(
+                    label = "sleepTimer",
                     targetState = sleepTimerEnabled
                 ) { sleepTimerEnabled ->
                     if (sleepTimerEnabled) {
@@ -298,7 +299,7 @@ fun Queue(
                             style = MaterialTheme.typography.labelLarge,
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50))
-                                .clickable(onClick = playerConnection.service::clearSleepTimer)
+                                .clickable(onClick = playerConnection.service.sleepTimer::clear)
                                 .padding(8.dp)
                         )
                     } else {
@@ -323,7 +324,6 @@ fun Queue(
                                 mediaMetadata = mediaMetadata,
                                 navController = navController,
                                 playerBottomSheetState = playerBottomSheetState,
-                                playerConnection = playerConnection,
                                 onShowDetailsDialog = { showDetailsDialog = true },
                                 onDismiss = menuState::dismiss
                             )

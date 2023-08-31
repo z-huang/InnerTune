@@ -103,7 +103,8 @@ fun AlbumScreen(
     }
 
     LaunchedEffect(albumWithSongs) {
-        val songs = albumWithSongs?.songs?.map { it.id } ?: return@LaunchedEffect
+        val songs = albumWithSongs?.songs?.map { it.id }
+        if (songs.isNullOrEmpty()) return@LaunchedEffect
         downloadUtil.downloads.collect { downloads ->
             downloadState =
                 if (songs.all { downloads[it]?.state == Download.STATE_COMPLETED })
@@ -270,7 +271,6 @@ fun AlbumScreen(
                                             AlbumMenu(
                                                 originalAlbum = Album(albumWithSongs.album, albumWithSongs.artists),
                                                 navController = navController,
-                                                playerConnection = playerConnection,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }
@@ -352,7 +352,6 @@ fun AlbumScreen(
                                     SongMenu(
                                         originalSong = song,
                                         navController = navController,
-                                        playerConnection = playerConnection,
                                         onDismiss = menuState::dismiss
                                     )
                                 }

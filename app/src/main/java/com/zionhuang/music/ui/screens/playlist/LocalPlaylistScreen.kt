@@ -529,7 +529,6 @@ fun LocalPlaylistScreen(
                                             SongMenu(
                                                 originalSong = song.song,
                                                 navController = navController,
-                                                playerConnection = playerConnection,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }

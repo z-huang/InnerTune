@@ -45,6 +45,7 @@ import coil.compose.AsyncImage
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalDownloadUtil
+import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
@@ -54,7 +55,6 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
-import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
@@ -68,11 +68,11 @@ fun SongMenu(
     originalSong: Song,
     event: Event? = null,
     navController: NavController,
-    playerConnection: PlayerConnection,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val songState = database.song(originalSong.id).collectAsState(initial = originalSong)
     val song = songState.value ?: originalSong
     val download by LocalDownloadUtil.current.getDownload(originalSong.id).collectAsState(initial = null)

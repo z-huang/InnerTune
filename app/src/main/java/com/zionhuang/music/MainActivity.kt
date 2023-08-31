@@ -52,8 +52,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.session.MediaController
-import androidx.media3.session.SessionToken
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -63,7 +61,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.imageLoader
 import coil.request.ImageRequest
-import com.google.common.util.concurrent.MoreExecutors
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
@@ -121,7 +118,6 @@ class MainActivity : ComponentActivity() {
     lateinit var downloadUtil: DownloadUtil
 
     private var playerConnection by mutableStateOf<PlayerConnection?>(null)
-    private var mediaController: MediaController? = null
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             if (service is MusicBinder) {
@@ -138,17 +134,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        startService(Intent(this, MusicService::class.java))
         bindService(Intent(this, MusicService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onStop() {
-        super.onStop()
         unbindService(serviceConnection)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaController?.release()
+        super.onStop()
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -156,14 +148,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        // Connect to service so that notification and background playing will work
-        val sessionToken = SessionToken(this, ComponentName(this, MusicService::class.java))
-        val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
-        controllerFuture.addListener(
-            { mediaController = controllerFuture.get() },
-            MoreExecutors.directExecutor()
-        )
 
         setupRemoteConfig()
 
@@ -794,7 +778,6 @@ class MainActivity : ComponentActivity() {
                                             YouTubeSongMenu(
                                                 song = song,
                                                 navController = navController,
-                                                playerConnection = playerConnection,
                                                 onDismiss = { sharedSong = null }
                                             )
                                         }

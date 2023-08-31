@@ -154,8 +154,7 @@ fun LocalSearchScreen(
                                         menuState.show {
                                             SongMenu(
                                                 originalSong = item,
-                                                navController = navController,
-                                                playerConnection = playerConnection
+                                                navController = navController
                                             ) {
                                                 onDismiss()
                                                 menuState.dismiss()

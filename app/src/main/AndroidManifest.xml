@@ -121,7 +121,6 @@
 
         <service
             android:name=".playback.MusicService"
-            android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback"
             tools:ignore="ExportedService">

@@ -113,26 +113,22 @@ fun OnlineSearchResult(
                                 is SongItem -> YouTubeSongMenu(
                                     song = item,
                                     navController = navController,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
 
                                 is AlbumItem -> YouTubeAlbumMenu(
                                     albumItem = item,
                                     navController = navController,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
 
                                 is ArtistItem -> YouTubeArtistMenu(
                                     artist = item,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
 
                                 is PlaylistItem -> YouTubePlaylistMenu(
                                     playlist = item,
-                                    playerConnection = playerConnection,
                                     coroutineScope = coroutineScope,
                                     onDismiss = menuState::dismiss
                                 )

@@ -103,7 +103,6 @@ fun StatsScreen(
                                 SongMenu(
                                     originalSong = song,
                                     navController = navController,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
                             }
@@ -200,7 +199,6 @@ fun StatsScreen(
                                             AlbumMenu(
                                                 originalAlbum = album,
                                                 navController = navController,
-                                                playerConnection = playerConnection,
                                                 onDismiss = menuState::dismiss
                                             )
                                         }

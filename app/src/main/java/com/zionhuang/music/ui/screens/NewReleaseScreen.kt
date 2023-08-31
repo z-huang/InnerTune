@@ -73,7 +73,6 @@ fun NewReleaseScreen(
                                 YouTubeAlbumMenu(
                                     albumItem = album,
                                     navController = navController,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
                             }

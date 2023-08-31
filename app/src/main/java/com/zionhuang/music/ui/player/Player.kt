@@ -60,6 +60,7 @@ import androidx.media3.common.Player.STATE_READY
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
+import com.zionhuang.music.constants.PlayerHorizontalPadding
 import com.zionhuang.music.constants.QueuePeekHeight
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.MediaMetadata
@@ -142,7 +143,7 @@ fun BottomSheetPlayer(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = PlayerHorizontalPadding)
                     .clickable(enabled = mediaMetadata.album != null) {
                         navController.navigate("album/${mediaMetadata.album!!.id}")
                         state.collapseSoft()
@@ -155,7 +156,7 @@ fun BottomSheetPlayer(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = PlayerHorizontalPadding)
             ) {
                 mediaMetadata.artists.fastForEachIndexed { index, artist ->
                     Text(
@@ -194,7 +195,7 @@ fun BottomSheetPlayer(
                     }
                     sliderPosition = null
                 },
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(horizontal = PlayerHorizontalPadding)
             )
 
             Row(
@@ -202,7 +203,7 @@ fun BottomSheetPlayer(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
+                    .padding(horizontal = PlayerHorizontalPadding + 4.dp)
             ) {
                 Text(
                     text = makeTimeString(sliderPosition ?: position),
@@ -225,7 +226,7 @@ fun BottomSheetPlayer(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = PlayerHorizontalPadding)
             ) {
                 Box(modifier = Modifier.weight(1f)) {
                     ResizableIconButton(

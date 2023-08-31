@@ -89,7 +89,6 @@ fun HistoryScreen(
                                         originalSong = event.song,
                                         event = event.event,
                                         navController = navController,
-                                        playerConnection = playerConnection,
                                         onDismiss = menuState::dismiss
                                     )
                                 }
