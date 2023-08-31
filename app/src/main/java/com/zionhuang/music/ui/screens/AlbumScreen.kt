@@ -124,7 +124,7 @@ fun AlbumScreen(
         contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
     ) {
         val albumWithSongs = albumWithSongs
-        if (albumWithSongs != null) {
+        if (albumWithSongs != null && albumWithSongs.songs.isNotEmpty()) {
             item {
                 Column(
                     modifier = Modifier.padding(12.dp)
