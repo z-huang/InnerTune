@@ -138,6 +138,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.guava.future
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
@@ -153,6 +154,7 @@ import javax.inject.Inject
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -324,6 +326,16 @@ class MusicService : MediaLibraryService(),
                     ),
                     playWhenReady = false
                 )
+            }
+        }
+
+        // Save queue periodically to prevent queue loss from crash or force kill
+        scope.launch {
+            while (isActive) {
+                delay(30.seconds)
+                if (dataStore.get(PersistentQueueKey, true)) {
+                    saveQueueToDisk()
+                }
             }
         }
     }
