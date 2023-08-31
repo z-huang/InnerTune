@@ -278,6 +278,6 @@
     <string name="app_version">Версия приложения</string>
 
     <string name="new_version_available">Доступна новая версия</string>
-    <string name="translation_models">Translation Models</string>
-    <string name="clear_translation_models">Clear translation models</string>
+    <string name="translation_models">Модели перевода</string>
+    <string name="clear_translation_models">Очистить модели перевода</string>
 </resources>
