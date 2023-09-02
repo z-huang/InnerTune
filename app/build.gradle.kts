@@ -33,11 +33,9 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            resValue("string", "app_name", "InnerTune")
         }
         debug {
             applicationIdSuffix = ".debug"
-            resValue("string", "app_name", "InnerTune Debug")
         }
     }
     flavorDimensions += "version"

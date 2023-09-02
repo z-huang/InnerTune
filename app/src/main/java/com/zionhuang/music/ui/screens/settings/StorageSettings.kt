@@ -198,7 +198,7 @@ fun StorageSettings(
             },
         )
 
-        if (BuildConfig.FLAVOR == "full") {
+        if (BuildConfig.FLAVOR != "foss") {
             PreferenceGroupTitle(
                 title = stringResource(R.string.translation_models)
             )

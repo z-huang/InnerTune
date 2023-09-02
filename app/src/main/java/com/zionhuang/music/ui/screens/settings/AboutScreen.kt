@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.zionhuang.music.BuildConfig
@@ -55,11 +56,16 @@ fun AboutScreen(
                 .clickable { }
         )
 
-        Text(
-            text = "InnerTune",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
-        )
+        Row(
+            verticalAlignment = Alignment.Top,
+        ) {
+            Text(
+                text = "InnerTune",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+            )
+        }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
