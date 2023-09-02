@@ -491,7 +491,10 @@ object YouTube {
     }
 
     suspend fun accountInfo(): Result<AccountInfo> = runCatching {
-        innerTube.accountMenu(WEB_REMIX).body<AccountMenuResponse>().actions[0].openPopupAction.popup.multiPageMenuRenderer.header?.activeAccountHeaderRenderer?.toAccountInfo()!!
+        innerTube.accountMenu(WEB_REMIX).body<AccountMenuResponse>()
+            .actions[0].openPopupAction.popup.multiPageMenuRenderer
+            .header?.activeAccountHeaderRenderer
+            ?.toAccountInfo()!!
     }
 
     @JvmInline

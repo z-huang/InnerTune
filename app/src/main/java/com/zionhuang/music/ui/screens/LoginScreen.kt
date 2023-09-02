@@ -60,7 +60,7 @@ fun LoginScreen(
                             GlobalScope.launch {
                                 YouTube.accountInfo().onSuccess {
                                     accountName = it.name
-                                    accountEmail = it.email
+                                    accountEmail = it.email.orEmpty()
                                 }.onFailure {
                                     reportException(it)
                                 }
