@@ -30,7 +30,7 @@
     <!-- Stats -->
     <string name="most_played_songs">A legtöbbet játszott dalok</string>
     <string name="most_played_artists">A legtöbbet játszott előadók</string>
-    <string name="most_played_albums">Most played albums</string>
+    <string name="most_played_albums">A legtöbbet játszott albumok</string>
 
     <!-- Search -->
     <string name="search">Keresés</string>
@@ -62,7 +62,7 @@
     <string name="retry">Újra</string>
     <string name="radio">Rádió</string>
     <string name="shuffle">Keverés</string>
-    <string name="reset">Reset</string>
+    <string name="reset">Visszaállít</string>
 
     <!-- Menu -->
     <string name="details">Részletek</string>
@@ -86,7 +86,7 @@
     <string name="remove_from_history">Előzményből eltávolít</string>
     <string name="search_online">Keresés online</string>
     <string name="sync">Szinkron.</string>
-    <string name="advanced">Advanced</string>
+    <string name="advanced">Haladó</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Létrehozás dátuma</string>
@@ -259,7 +259,7 @@
     <string name="about">Rólunk</string>
     <string name="app_version">App verzió</string>
 
-    <string name="new_version_available">New version available</string>
-    <string name="translation_models">Translation Models</string>
-    <string name="clear_translation_models">Clear translation models</string>
+    <string name="new_version_available">Új verzió érhető el</string>
+    <string name="translation_models">Fordítási modellek</string>
+    <string name="clear_translation_models">Fordítási modellek törlése</string>
 </resources>
