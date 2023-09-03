@@ -1,0 +1,3 @@
+- Better UI
+- Grid layout for albums and playlists
+- Minor enhancement and bug fixes
