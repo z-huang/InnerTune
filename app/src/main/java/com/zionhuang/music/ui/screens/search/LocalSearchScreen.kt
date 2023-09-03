@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,7 +53,7 @@ import com.zionhuang.music.viewmodels.LocalFilter
 import com.zionhuang.music.viewmodels.LocalSearchViewModel
 import kotlinx.coroutines.flow.drop
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun LocalSearchScreen(
     query: String,
@@ -155,8 +154,7 @@ fun LocalSearchScreen(
                                         menuState.show {
                                             SongMenu(
                                                 originalSong = item,
-                                                navController = navController,
-                                                playerConnection = playerConnection
+                                                navController = navController
                                             ) {
                                                 onDismiss()
                                                 menuState.dismiss()

@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -64,7 +63,7 @@ import com.zionhuang.music.ui.menu.YouTubeSongMenu
 import com.zionhuang.music.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnlineSearchResult(
     navController: NavController,
@@ -114,26 +113,22 @@ fun OnlineSearchResult(
                                 is SongItem -> YouTubeSongMenu(
                                     song = item,
                                     navController = navController,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
 
                                 is AlbumItem -> YouTubeAlbumMenu(
                                     albumItem = item,
                                     navController = navController,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
 
                                 is ArtistItem -> YouTubeArtistMenu(
                                     artist = item,
-                                    playerConnection = playerConnection,
                                     onDismiss = menuState::dismiss
                                 )
 
                                 is PlaylistItem -> YouTubePlaylistMenu(
                                     playlist = item,
-                                    playerConnection = playerConnection,
                                     coroutineScope = coroutineScope,
                                     onDismiss = menuState::dismiss
                                 )

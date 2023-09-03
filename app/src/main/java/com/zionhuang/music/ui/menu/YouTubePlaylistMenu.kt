@@ -17,11 +17,11 @@ import com.zionhuang.innertube.models.PlaylistItem
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.utils.completed
 import com.zionhuang.music.LocalDatabase
+import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.models.toMediaMetadata
-import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
@@ -34,12 +34,12 @@ import kotlinx.coroutines.withContext
 fun YouTubePlaylistMenu(
     playlist: PlaylistItem,
     songs: List<SongItem> = emptyList(),
-    playerConnection: PlayerConnection,
     coroutineScope: CoroutineScope,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val playerConnection = LocalPlayerConnection.current ?: return
 
     var showChoosePlaylistDialog by rememberSaveable {
         mutableStateOf(false)

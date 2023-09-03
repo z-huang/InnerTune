@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.zionhuang.music.LocalPlayerConnection
+import com.zionhuang.music.constants.PlayerHorizontalPadding
 import com.zionhuang.music.constants.ShowLyricsKey
 import com.zionhuang.music.constants.ThumbnailCornerRadius
 import com.zionhuang.music.ui.component.Lyrics
@@ -60,14 +61,14 @@ fun Thumbnail(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = PlayerHorizontalPadding)
             ) {
                 AsyncImage(
                     model = mediaMetadata?.thumbnailUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(ThumbnailCornerRadius))
+                        .clip(RoundedCornerShape(ThumbnailCornerRadius * 2))
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onDoubleTap = { offset ->

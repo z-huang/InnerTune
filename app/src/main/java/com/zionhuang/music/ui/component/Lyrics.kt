@@ -248,7 +248,7 @@ fun Lyrics(
                     .align(Alignment.BottomEnd)
                     .padding(end = 12.dp)
             ) {
-                if (BuildConfig.FLAVOR == "full") {
+                if (BuildConfig.FLAVOR != "foss") {
                     IconButton(
                         onClick = {
                             translationEnabled = !translationEnabled

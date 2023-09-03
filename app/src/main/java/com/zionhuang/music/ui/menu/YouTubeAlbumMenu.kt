@@ -42,12 +42,12 @@ import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.AlbumItem
 import com.zionhuang.music.LocalDatabase
 import com.zionhuang.music.LocalDownloadUtil
+import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.ExoDownloadService
-import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.playback.queues.YouTubeAlbumRadio
 import com.zionhuang.music.ui.component.DownloadGridMenu
 import com.zionhuang.music.ui.component.GridMenu
@@ -60,12 +60,12 @@ import com.zionhuang.music.utils.reportException
 fun YouTubeAlbumMenu(
     albumItem: AlbumItem,
     navController: NavController,
-    playerConnection: PlayerConnection,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
     val downloadUtil = LocalDownloadUtil.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val album by database.albumWithSongs(albumItem.id).collectAsState(initial = null)
 
     LaunchedEffect(Unit) {

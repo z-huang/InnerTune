@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.music.LocalPlayerAwareWindowInsets
-import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.GridThumbnailHeight
 import com.zionhuang.music.ui.component.LocalMenuState
@@ -41,7 +40,6 @@ fun AccountScreen(
     viewModel: AccountViewModel = hiltViewModel(),
 ) {
     val menuState = LocalMenuState.current
-    val playerConnection = LocalPlayerConnection.current ?: return
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -67,7 +65,6 @@ fun AccountScreen(
                             menuState.show {
                                 YouTubePlaylistMenu(
                                     playlist = item,
-                                    playerConnection = playerConnection,
                                     coroutineScope = coroutineScope,
                                     onDismiss = menuState::dismiss
                                 )

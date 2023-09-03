@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,6 +39,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -81,7 +82,9 @@ import com.zionhuang.music.constants.PlaylistSongSortDescendingKey
 import com.zionhuang.music.constants.PlaylistSongSortType
 import com.zionhuang.music.constants.PlaylistSongSortTypeKey
 import com.zionhuang.music.constants.ThumbnailCornerRadius
+import com.zionhuang.music.db.entities.PlaylistSong
 import com.zionhuang.music.db.entities.PlaylistSongMap
+import com.zionhuang.music.extensions.move
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
@@ -95,17 +98,17 @@ import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.ui.menu.SongMenu
-import com.zionhuang.music.ui.utils.reordering.ReorderingLazyColumn
-import com.zionhuang.music.ui.utils.reordering.animateItemPlacement
-import com.zionhuang.music.ui.utils.reordering.draggedItem
-import com.zionhuang.music.ui.utils.reordering.rememberReorderingState
-import com.zionhuang.music.ui.utils.reordering.reorder
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LocalPlaylistViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorder
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -123,6 +126,7 @@ fun LocalPlaylistScreen(
 
     val playlist by viewModel.playlist.collectAsState()
     val songs by viewModel.playlistSongs.collectAsState()
+    val mutableSongs = remember { mutableStateListOf<PlaylistSong>() }
     val playlistLength = remember(songs) {
         songs.fastSumBy { it.song.song.duration }
     }
@@ -131,14 +135,7 @@ fun LocalPlaylistScreen(
     var locked by rememberPreference(PlaylistEditLockKey, defaultValue = false)
 
     val coroutineScope = rememberCoroutineScope()
-    val lazyListState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val showTopBarTitle by remember {
-        derivedStateOf {
-            lazyListState.firstVisibleItemIndex > 0
-        }
-    }
 
     val downloadUtil = LocalDownloadUtil.current
     var downloadState by remember {
@@ -146,6 +143,10 @@ fun LocalPlaylistScreen(
     }
 
     LaunchedEffect(songs) {
+        mutableSongs.apply {
+            clear()
+            addAll(songs)
+        }
         if (songs.isEmpty()) return@LaunchedEffect
         downloadUtil.downloads.collect { downloads ->
             downloadState =
@@ -182,23 +183,35 @@ fun LocalPlaylistScreen(
         }
     }
 
-    val reorderingState = rememberReorderingState(
-        lazyListState = lazyListState,
-        key = songs,
-        onDragEnd = { fromIndex, toIndex ->
-            database.query {
-                move(viewModel.playlistId, fromIndex, toIndex)
+    val headerItems = 2
+    val reorderableState = rememberReorderableLazyListState(
+        onMove = { from, to ->
+            if (to.index >= headerItems && from.index >= headerItems) {
+                mutableSongs.move(from.index - headerItems, to.index - headerItems)
             }
         },
-        extraItemCount = 1
+        onDragEnd = { fromIndex, toIndex ->
+            database.transaction {
+                move(viewModel.playlistId, fromIndex - headerItems, toIndex - headerItems)
+            }
+        }
     )
+
+    val showTopBarTitle by remember {
+        derivedStateOf {
+            reorderableState.listState.firstVisibleItemIndex > 0
+        }
+    }
+
+    var dismissJob: Job? by remember { mutableStateOf(null) }
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        ReorderingLazyColumn(
-            reorderingState = reorderingState,
-            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues()
+        LazyColumn(
+            state = reorderableState.listState,
+            contentPadding = LocalPlayerAwareWindowInsets.current.asPaddingValues(),
+            modifier = Modifier.reorderable(reorderableState)
         ) {
             playlist?.let { playlist ->
                 if (playlist.songCount == 0) {
@@ -431,7 +444,8 @@ fun LocalPlaylistScreen(
 
                     item {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(start = 16.dp)
                         ) {
                             SortHeader(
                                 sortType = sortType,
@@ -447,7 +461,6 @@ fun LocalPlaylistScreen(
                                         PlaylistSongSortType.PLAY_TIME -> R.string.sort_by_play_time
                                     }
                                 },
-                                trailingText = "",
                                 modifier = Modifier.weight(1f)
                             )
 
@@ -466,105 +479,108 @@ fun LocalPlaylistScreen(
             }
 
             itemsIndexed(
-                items = songs,
+                items = mutableSongs,
                 key = { _, song -> song.map.id }
             ) { index, song ->
-                val currentItem by rememberUpdatedState(song)
-                val dismissState = rememberDismissState(
-                    positionalThreshold = { totalDistance ->
-                        totalDistance
-                    },
-                    confirmValueChange = { dismissValue ->
-                        if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
-                            database.transaction {
-                                move(currentItem.map.playlistId, currentItem.map.position, Int.MAX_VALUE)
-                                delete(currentItem.map.copy(position = Int.MAX_VALUE))
-                            }
-                            coroutineScope.launch {
-                                val snackbarResult = snackbarHostState.showSnackbar(
-                                    message = context.getString(R.string.removed_song_from_playlist, currentItem.song.song.title),
-                                    actionLabel = context.getString(R.string.undo),
-                                    duration = SnackbarDuration.Short
-                                )
-                                if (snackbarResult == SnackbarResult.ActionPerformed) {
-                                    database.transaction {
-                                        insert(currentItem.map.copy(position = playlistLength))
-                                        move(currentItem.map.playlistId, playlistLength, currentItem.map.position)
+                ReorderableItem(
+                    reorderableState = reorderableState,
+                    key = song.map.id
+                ) {
+                    val currentItem by rememberUpdatedState(song)
+                    val dismissState = rememberDismissState(
+                        positionalThreshold = { totalDistance ->
+                            totalDistance
+                        },
+                        confirmValueChange = { dismissValue ->
+                            if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
+                                database.transaction {
+                                    move(currentItem.map.playlistId, currentItem.map.position, Int.MAX_VALUE)
+                                    delete(currentItem.map.copy(position = Int.MAX_VALUE))
+                                }
+                                dismissJob?.cancel()
+                                dismissJob = coroutineScope.launch {
+                                    val snackbarResult = snackbarHostState.showSnackbar(
+                                        message = context.getString(R.string.removed_song_from_playlist, currentItem.song.song.title),
+                                        actionLabel = context.getString(R.string.undo),
+                                        duration = SnackbarDuration.Short
+                                    )
+                                    if (snackbarResult == SnackbarResult.ActionPerformed) {
+                                        database.transaction {
+                                            insert(currentItem.map.copy(position = playlistLength))
+                                            move(currentItem.map.playlistId, playlistLength, currentItem.map.position)
+                                        }
                                     }
                                 }
                             }
+                            true
                         }
-                        true
-                    }
-                )
+                    )
 
-                val content: @Composable () -> Unit = {
-                    SongListItem(
-                        song = song.song,
-                        isActive = song.song.id == mediaMetadata?.id,
-                        isPlaying = isPlaying,
-                        showInLibraryIcon = true,
-                        trailingContent = {
-                            IconButton(
-                                onClick = {
-                                    menuState.show {
-                                        SongMenu(
-                                            originalSong = song.song,
-                                            navController = navController,
-                                            playerConnection = playerConnection,
-                                            onDismiss = menuState::dismiss
-                                        )
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.more_vert),
-                                    contentDescription = null
-                                )
-                            }
-
-                            if (sortType == PlaylistSongSortType.CUSTOM && !locked) {
+                    val content: @Composable () -> Unit = {
+                        SongListItem(
+                            song = song.song,
+                            isActive = song.song.id == mediaMetadata?.id,
+                            isPlaying = isPlaying,
+                            showInLibraryIcon = true,
+                            trailingContent = {
                                 IconButton(
-                                    onClick = { },
-                                    modifier = Modifier.reorder(reorderingState = reorderingState, index = index)
+                                    onClick = {
+                                        menuState.show {
+                                            SongMenu(
+                                                originalSong = song.song,
+                                                navController = navController,
+                                                onDismiss = menuState::dismiss
+                                            )
+                                        }
+                                    }
                                 ) {
                                     Icon(
-                                        painter = painterResource(R.drawable.drag_handle),
+                                        painter = painterResource(R.drawable.more_vert),
                                         contentDescription = null
                                     )
                                 }
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .combinedClickable {
-                                if (song.song.id == mediaMetadata?.id) {
-                                    playerConnection.player.togglePlayPause()
-                                } else {
-                                    playerConnection.playQueue(
-                                        ListQueue(
-                                            title = playlist!!.playlist.name,
-                                            items = songs.map { it.song.toMediaItem() },
-                                            startIndex = index
-                                        )
-                                    )
-                                }
-                            }
-                            .animateItemPlacement(reorderingState = reorderingState)
-                            .draggedItem(reorderingState = reorderingState, index = index)
-                    )
-                }
 
-                if (locked) {
-                    content()
-                } else {
-                    SwipeToDismiss(
-                        state = dismissState,
-                        background = {},
-                        dismissContent = {
-                            content()
-                        }
-                    )
+                                if (sortType == PlaylistSongSortType.CUSTOM && !locked) {
+                                    IconButton(
+                                        onClick = { },
+                                        modifier = Modifier.detectReorder(reorderableState)
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.drag_handle),
+                                            contentDescription = null
+                                        )
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .combinedClickable {
+                                    if (song.song.id == mediaMetadata?.id) {
+                                        playerConnection.player.togglePlayPause()
+                                    } else {
+                                        playerConnection.playQueue(
+                                            ListQueue(
+                                                title = playlist!!.playlist.name,
+                                                items = songs.map { it.song.toMediaItem() },
+                                                startIndex = index
+                                            )
+                                        )
+                                    }
+                                }
+                        )
+                    }
+
+                    if (locked) {
+                        content()
+                    } else {
+                        SwipeToDismiss(
+                            state = dismissState,
+                            background = {},
+                            dismissContent = {
+                                content()
+                            }
+                        )
+                    }
                 }
             }
         }

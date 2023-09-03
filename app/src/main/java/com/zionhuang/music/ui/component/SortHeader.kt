@@ -3,7 +3,6 @@ package com.zionhuang.music.ui.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -35,14 +34,13 @@ inline fun <reified T : Enum<T>> SortHeader(
     crossinline onSortTypeChange: (T) -> Unit,
     crossinline onSortDescendingChange: (Boolean) -> Unit,
     crossinline sortTypeText: (T) -> Int,
-    trailingText: String,
     modifier: Modifier = Modifier,
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        modifier = modifier.padding(vertical = 8.dp)
     ) {
         Text(
             text = stringResource(sortTypeText(sortType)),
@@ -96,13 +94,5 @@ inline fun <reified T : Enum<T>> SortHeader(
                 onClick = { onSortDescendingChange(!sortDescending) }
             )
         }
-
-        Spacer(Modifier.weight(1f))
-
-        Text(
-            text = trailingText,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.secondary
-        )
     }
 }

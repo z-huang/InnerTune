@@ -310,8 +310,8 @@ interface DatabaseDao {
                 .reversed(descending)
         }
 
-    @Query("SELECT * FROM artist WHERE id = :id")
-    fun artist(id: String): Flow<ArtistEntity?>
+    @Query("SELECT *, (SELECT COUNT(1) FROM song_artist_map JOIN song ON song_artist_map.songId = song.id WHERE artistId = artist.id AND song.inLibrary IS NOT NULL) AS songCount FROM artist WHERE id = :id")
+    fun artist(id: String): Flow<Artist?>
 
     @Transaction
     @Query("SELECT * FROM album WHERE EXISTS(SELECT * FROM song WHERE song.albumId = album.id AND song.inLibrary IS NOT NULL) ORDER BY rowId")

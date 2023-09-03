@@ -24,8 +24,8 @@ android {
         applicationId = "com.zionhuang.music"
         minSdk = 24
         targetSdk = 33
-        versionCode = 18
-        versionName = "0.5.2"
+        versionCode = 19
+        versionName = "0.5.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,11 +33,9 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            resValue("string", "app_name", "InnerTune")
         }
         debug {
             applicationIdSuffix = ".debug"
-            resValue("string", "app_name", "InnerTune Debug")
         }
     }
     flavorDimensions += "version"
@@ -107,6 +105,7 @@ dependencies {
     implementation(libs.compose.ui.tooling)
     implementation(libs.compose.animation)
     implementation(libs.compose.animation.graphics)
+    implementation(libs.compose.reorderable)
 
     implementation(libs.viewmodel)
     implementation(libs.viewmodel.compose)

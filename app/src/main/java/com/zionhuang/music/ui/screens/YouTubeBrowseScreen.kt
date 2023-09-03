@@ -3,14 +3,11 @@ package com.zionhuang.music.ui.screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -20,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zionhuang.innertube.models.AlbumItem
@@ -35,6 +31,7 @@ import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.LocalMenuState
+import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.YouTubeListItem
 import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
@@ -76,13 +73,7 @@ fun YouTubeBrowseScreen(
         browseResult?.items?.forEach {
             it.title?.let { title ->
                 item {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 8.dp)
-                    )
+                    NavigationTitle(title)
                 }
             }
 
@@ -103,26 +94,22 @@ fun YouTubeBrowseScreen(
                                         is SongItem -> YouTubeSongMenu(
                                             song = item,
                                             navController = navController,
-                                            playerConnection = playerConnection,
                                             onDismiss = menuState::dismiss
                                         )
 
                                         is AlbumItem -> YouTubeAlbumMenu(
                                             albumItem = item,
                                             navController = navController,
-                                            playerConnection = playerConnection,
                                             onDismiss = menuState::dismiss
                                         )
 
                                         is ArtistItem -> YouTubeArtistMenu(
                                             artist = item,
-                                            playerConnection = playerConnection,
                                             onDismiss = menuState::dismiss
                                         )
 
                                         is PlaylistItem -> YouTubePlaylistMenu(
                                             playlist = item,
-                                            playerConnection = playerConnection,
                                             coroutineScope = coroutineScope,
                                             onDismiss = menuState::dismiss
                                         )

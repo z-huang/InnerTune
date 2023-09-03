@@ -57,7 +57,6 @@ import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
-import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.ui.component.BigSeekBar
 import com.zionhuang.music.ui.component.BottomSheetState
 import com.zionhuang.music.ui.component.DownloadGridMenu
@@ -73,13 +72,13 @@ fun PlayerMenu(
     mediaMetadata: MediaMetadata?,
     navController: NavController,
     playerBottomSheetState: BottomSheetState,
-    playerConnection: PlayerConnection,
     onShowDetailsDialog: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     mediaMetadata ?: return
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val playerConnection = LocalPlayerConnection.current ?: return
     val playerVolume = playerConnection.service.playerVolume.collectAsState()
     val activityResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
 

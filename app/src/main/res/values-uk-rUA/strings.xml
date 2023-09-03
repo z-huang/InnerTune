@@ -278,6 +278,6 @@
     <string name="app_version">Версія застосунку</string>
 
     <string name="new_version_available">Доступна нова версія</string>
-    <string name="translation_models">Translation Models</string>
-    <string name="clear_translation_models">Clear translation models</string>
+    <string name="translation_models">Моделі перекладу</string>
+    <string name="clear_translation_models">Очистити моделі перекладу</string>
 </resources>

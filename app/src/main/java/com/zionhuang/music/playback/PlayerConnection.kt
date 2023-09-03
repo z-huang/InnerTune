@@ -56,7 +56,7 @@ class PlayerConnection(
     val translating = MutableStateFlow(false)
     val currentLyrics = combine(
         context.dataStore.data.map {
-            it[TranslateLyricsKey] ?: true
+            it[TranslateLyricsKey] ?: false
         }.distinctUntilChanged(),
         mediaMetadata.flatMapLatest { mediaMetadata ->
             database.lyrics(mediaMetadata?.id)

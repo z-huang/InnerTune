@@ -69,6 +69,7 @@ fun HomeScreen(
         "SAPISID" in parseCookieString(innerTubeCookie)
     }
 
+    val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
     SwipeRefresh(
@@ -96,10 +97,10 @@ fun HomeScreen(
                 Spacer(Modifier.height(LocalPlayerAwareWindowInsets.current.asPaddingValues().calculateTopPadding()))
 
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                     modifier = Modifier
                         .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal))
                         .padding(horizontal = 12.dp, vertical = 6.dp)
+                        .fillMaxWidth()
                 ) {
                     NavigationTile(
                         title = stringResource(R.string.history),
@@ -174,7 +175,6 @@ fun HomeScreen(
                                                     SongMenu(
                                                         originalSong = song!!,
                                                         navController = navController,
-                                                        playerConnection = playerConnection,
                                                         onDismiss = menuState::dismiss
                                                     )
                                                 }
@@ -222,6 +222,7 @@ fun HomeScreen(
                                 item = album,
                                 isActive = mediaMetadata?.album?.id == album.id,
                                 isPlaying = isPlaying,
+                                coroutineScope = coroutineScope,
                                 modifier = Modifier
                                     .combinedClickable(
                                         onClick = {
@@ -232,7 +233,6 @@ fun HomeScreen(
                                                 YouTubeAlbumMenu(
                                                     albumItem = album,
                                                     navController = navController,
-                                                    playerConnection = playerConnection,
                                                     onDismiss = menuState::dismiss
                                                 )
                                             }
