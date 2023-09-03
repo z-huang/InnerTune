@@ -33,6 +33,7 @@ fun ContentSettings(
 ) {
     val accountName by rememberPreference(AccountNameKey, "")
     val accountEmail by rememberPreference(AccountEmailKey, "")
+    val accountChannelHandle by rememberPreference(AccountChannelHandleKey, "")
     val innerTubeCookie by rememberPreference(InnerTubeCookieKey, "")
     val isLoggedIn = remember(innerTubeCookie) {
         "SAPISID" in parseCookieString(innerTubeCookie)
@@ -51,7 +52,10 @@ fun ContentSettings(
     ) {
         PreferenceEntry(
             title = { Text(if (isLoggedIn) accountName else stringResource(R.string.login)) },
-            description = if (isLoggedIn) accountEmail else null,
+            description = if (isLoggedIn) {
+                accountEmail.takeIf { it.isNotEmpty() }
+                    ?: accountChannelHandle.takeIf { it.isNotEmpty() }
+            } else null,
             icon = { Icon(painterResource(R.drawable.person), null) },
             onClick = { navController.navigate("login") }
         )
