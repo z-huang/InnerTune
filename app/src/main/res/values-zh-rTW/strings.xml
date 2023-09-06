@@ -173,6 +173,11 @@
     <!-- Player action -->
     <string name="action_like">喜歡</string>
     <string name="action_remove_like">取消喜歡</string>
+    <string name="action_shuffle_on">隨機播放開啟</string>
+    <string name="action_shuffle_off">隨機播放關閉</string>
+    <string name="repeat_mode_off">重複播放關閉</string>
+    <string name="repeat_mode_one">重複播放此歌曲</string>
+    <string name="repeat_mode_all">重複播放佇列</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">全部歌曲</string>
