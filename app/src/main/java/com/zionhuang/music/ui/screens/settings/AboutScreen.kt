@@ -127,7 +127,7 @@ fun AboutScreen(
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = "by Zion Huang",
+            text = "by Sophia Marie Salcedo",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.secondary
         )
@@ -136,7 +136,7 @@ fun AboutScreen(
 
         Row {
             IconButton(
-                onClick = { uriHandler.openUri("https://github.com/z-huang/InnerTune") }
+                onClick = { uriHandler.openUri("https://github.com/sophdevso/") }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.github),
@@ -145,7 +145,7 @@ fun AboutScreen(
             }
 
             IconButton(
-                onClick = { uriHandler.openUri("https://liberapay.com/zionhuang") }
+                onClick = { uriHandler.openUri("https://m.me/sophiamarie.salcedo.3") }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.liberapay),
@@ -154,7 +154,7 @@ fun AboutScreen(
             }
 
             IconButton(
-                onClick = { uriHandler.openUri("https://www.buymeacoffee.com/zionhuang") }
+                onClick = { uriHandler.openUri("https://www.buymeacoffee.com/sophiamarie31") }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.buymeacoffee),
