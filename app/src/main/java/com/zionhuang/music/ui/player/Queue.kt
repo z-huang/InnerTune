@@ -368,6 +368,7 @@ fun Queue(
             mutableQueueWindows.apply {
                 clear()
                 addAll(queueWindows)
+                reorderableState.listState.scrollToItem(currentWindowIndex)
             }
         }
 
