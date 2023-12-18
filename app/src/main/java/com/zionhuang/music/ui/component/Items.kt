@@ -317,7 +317,7 @@ fun SongListItem(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = if (albumIndex != null) Color.Transparent else Color.Black.copy(alpha = 0.4f),
+                        color = if (albumIndex != null) Color.Transparent else Color.Black.copy(alpha = 0.6f),
                         shape = RoundedCornerShape(ThumbnailCornerRadius)
                     )
             )
@@ -507,7 +507,7 @@ fun AlbumListItem(
             modifier = Modifier
                 .size(ListThumbnailSize)
                 .background(
-                    color = Color.Black.copy(alpha = 0.4f),
+                    color = Color.Black.copy(alpha = 0.6f),
                     shape = RoundedCornerShape(ThumbnailCornerRadius)
                 )
         )
@@ -610,7 +610,7 @@ fun AlbumGridItem(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = Color.Black.copy(alpha = 0.4f),
+                        color = Color.Black.copy(alpha = 0.6f),
                         shape = RoundedCornerShape(ThumbnailCornerRadius)
                     )
             ) {
@@ -645,7 +645,7 @@ fun AlbumGridItem(
                 modifier = Modifier
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.4f))
+                    .background(Color.Black.copy(alpha = 0.6f))
                     .clickable {
                         coroutineScope.launch {
                             database
@@ -816,7 +816,7 @@ fun MediaMetadataListItem(
             modifier = Modifier
                 .size(ListThumbnailSize)
                 .background(
-                    color = Color.Black.copy(alpha = 0.4f),
+                    color = Color.Black.copy(alpha = 0.6f),
                     shape = RoundedCornerShape(ThumbnailCornerRadius)
                 )
         )
@@ -933,7 +933,7 @@ fun YouTubeListItem(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = if (albumIndex != null) Color.Transparent else Color.Black.copy(alpha = 0.4f),
+                        color = if (albumIndex != null) Color.Transparent else Color.Black.copy(alpha = 0.6f),
                         shape = thumbnailShape
                     )
             )
@@ -1049,7 +1049,7 @@ fun YouTubeGridItem(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            color = Color.Black.copy(alpha = 0.4f),
+                            color = Color.Black.copy(alpha = 0.6f),
                             shape = thumbnailShape
                         )
                 ) {
@@ -1084,7 +1084,7 @@ fun YouTubeGridItem(
                     modifier = Modifier
                         .size(36.dp)
                         .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.4f))
+                        .background(Color.Black.copy(alpha = 0.6f))
                         .clickable {
                             coroutineScope?.launch(Dispatchers.IO) {
                                 var songs = database
