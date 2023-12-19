@@ -3,19 +3,24 @@ package com.zionhuang.music.ui.menu
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.media3.exoplayer.offline.DownloadService
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.utils.completed
@@ -24,6 +29,8 @@ import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.models.toMediaMetadata
+import com.zionhuang.music.playback.ExoDownloadService
+import com.zionhuang.music.ui.component.DefaultDialog
 import com.zionhuang.music.ui.component.GridMenu
 import com.zionhuang.music.ui.component.GridMenuItem
 import com.zionhuang.music.ui.component.TextFieldDialog
@@ -53,6 +60,44 @@ fun PlaylistMenu(
                 onDismiss()
                 database.query {
                     update(playlist.playlist.copy(name = name))
+                }
+            }
+        )
+    }
+
+    var showDeletePlaylistDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showDeletePlaylistDialog) {
+        DefaultDialog(
+            onDismiss = { showDeletePlaylistDialog = false },
+            content = {
+                Text(
+                    text = stringResource(R.string.delete_playlist_confirm, playlist.playlist.name),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(horizontal = 18.dp)
+                )
+            },
+            buttons = {
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                        showDeletePlaylistDialog = false
+                    }
+                ) {
+                    Text(text = stringResource(android.R.string.cancel))
+                }
+
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                        database.query {
+                            delete(playlist.playlist)
+                        }
+                    }
+                ) {
+                    Text(text = stringResource(android.R.string.ok))
                 }
             }
         )
@@ -103,10 +148,7 @@ fun PlaylistMenu(
             icon = R.drawable.delete,
             title = R.string.delete
         ) {
-            onDismiss()
-            database.query {
-                delete(playlist.playlist)
-            }
+            showDeletePlaylistDialog = true
         }
     }
 }
