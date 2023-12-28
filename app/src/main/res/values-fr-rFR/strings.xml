@@ -9,8 +9,8 @@
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d sélectionné</item>
-        <item quantity="many">%d sélectionné</item>
-        <item quantity="other">%d sélectionné</item>
+        <item quantity="many">%d sélectionnés</item>
+        <item quantity="other">%d sélectionnés</item>
     </plurals>
 
     <!-- Home -->
@@ -35,19 +35,19 @@
 
     <!-- Search -->
     <string name="search">Recherché</string>
-    <string name="search_yt_music">Rechercher sur Youtube Musique…</string>
+    <string name="search_yt_music">Rechercher sur Youtube Music…</string>
     <string name="search_library">Rechercher dans votre librairie…</string>
     <string name="filter_library">Librairie</string>
     <string name="filter_liked">Aimé</string>
-    <string name="filter_downloaded">Télécharger</string>
+    <string name="filter_downloaded">Téléchargées</string>
     <string name="filter_all">Tout</string>
     <string name="filter_songs">Chansons</string>
     <string name="filter_videos">Vidéos</string>
     <string name="filter_albums">Albums</string>
     <string name="filter_artists">Artistes</string>
-    <string name="filter_playlists">Playlist</string>
-    <string name="filter_community_playlists">Playlist de la communauté</string>
-    <string name="filter_featured_playlists">Playlist mise en avant</string>
+    <string name="filter_playlists">Liste de lecture</string>
+    <string name="filter_community_playlists">Listes de lecture de la communauté</string>
+    <string name="filter_featured_playlists">Listes de lecture mise en avant</string>
     <string name="filter_bookmarked">Favoris</string>
     <string name="no_results_found">Aucun résultat trouvé</string>
 
@@ -57,13 +57,13 @@
     <!-- Playlist -->
     <string name="liked_songs">Chansons aimées</string>
     <string name="downloaded_songs">Musiques téléchargées</string>
-    <string name="playlist_is_empty">La playlist est vide</string>
+    <string name="playlist_is_empty">La liste de lecture est vide</string>
 
     <!-- Button -->
     <string name="retry">Réessayer</string>
     <string name="radio">Radio</string>
     <string name="shuffle">Lecture aléatoire</string>
-    <string name="reset">Reset</string>
+    <string name="reset">Réinitialiser</string>
 
     <!-- Menu -->
     <string name="details">Détails</string>
@@ -83,11 +83,11 @@
     <string name="view_album">Voir l\'album</string>
     <string name="refetch">Récupérer</string>
     <string name="share">Partager</string>
-    <string name="delete">Effaceur</string>
+    <string name="delete">Effacer</string>
     <string name="remove_from_history">Supprimer de l\'historique</string>
     <string name="search_online">Rechercher en ligne</string>
     <string name="sync">Synchroniser</string>
-    <string name="advanced">Advanced</string>
+    <string name="advanced">Avancé</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Date d\'ajout</string>
@@ -96,7 +96,7 @@
     <string name="sort_by_year">Année</string>
     <string name="sort_by_song_count">Nombre de chansons</string>
     <string name="sort_by_length">Longueur</string>
-    <string name="sort_by_play_time">Récréation</string>
+    <string name="sort_by_play_time">Temps d'écoute</string>
     <string name="sort_by_custom">Commande personnalisée</string>
 
     <!-- Dialog -->
@@ -121,11 +121,11 @@
     <string name="error_song_artist_empty">L\'artiste de la chanson ne peut pas être vide.</string>
     <string name="save">Sauvegarder</string>
 
-    <string name="choose_playlist">Choisir la liste de lecture</string>
-    <string name="edit_playlist">Editer la playlist</string>
+    <string name="choose_playlist">Choisir la playlist</string>
+    <string name="edit_playlist">Éditer la liste de lecture</string>
     <string name="create_playlist">Créer une liste de lecture</string>
-    <string name="playlist_name">Nom de la playlist</string>
-    <string name="error_playlist_name_empty">Le nom de la playlist ne peut pas être vide.</string>
+    <string name="playlist_name">Nom de la liste de lecture</string>
+    <string name="error_playlist_name_empty">Le nom de la liste de lecture ne peut pas être vide.</string>
 
     <string name="edit_artist">Éditer l\'artiste</string>
     <string name="artist_name">Nom de l\'artiste</string>
@@ -138,9 +138,9 @@
         <item quantity="many">%d chansons</item>
     </plurals>
     <plurals name="n_artist">
-        <item quantity="one">%d artist</item>
-        <item quantity="other">%d artists</item>
-        <item quantity="many">%d artists</item>
+        <item quantity="one">%d artiste</item>
+        <item quantity="other">%d artistes</item>
+        <item quantity="many">%d artistes</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d album</item>
@@ -148,9 +148,9 @@
         <item quantity="many">%d albums</item>
     </plurals>
     <plurals name="n_playlist">
-        <item quantity="one">%d playlist</item>
-        <item quantity="other">%d playlists</item>
-        <item quantity="many">%d playlists</item>
+        <item quantity="one">%d liste de lecture</item>
+        <item quantity="other">%d listes de lecture</item>
+        <item quantity="many">%d listes de lecture</item>
     </plurals>
     <plurals name="n_week">
         <item quantity="one">%d semaine</item>
@@ -163,7 +163,7 @@
         <item quantity="other">%d mois</item>
     </plurals>
     <plurals name="n_year">
-        <item quantity="one">%d ans</item>
+        <item quantity="one">%d an</item>
         <item quantity="many">%d ans</item>
         <item quantity="other">%d ans</item>
     </plurals>
@@ -172,12 +172,12 @@
     <string name="playlist_imported">Liste de lecture importée</string>
     <string name="removed_song_from_playlist">\"%s\" supprimé de la liste de lecture</string>
     <string name="playlist_synced">Liste de lecture synchronisée</string>
-    <string name="undo">annuler</string>
+    <string name="undo">Annuler</string>
 
     <!-- Player -->
     <string name="lyrics_not_found">Paroles introuvables</string>
     <string name="sleep_timer">Minuterie de sommeil</string>
-    <string name="end_of_song">Fin de chanson</string>
+    <string name="end_of_song">Fin de la chanson</string>
     <plurals name="minute">
         <item quantity="one">%d minute</item>
         <item quantity="many">%d minutes</item>
@@ -185,17 +185,17 @@
     </plurals>
     <string name="error_no_stream">Aucun flux disponible</string>
     <string name="error_no_internet">Pas de connexion réseau</string>
-    <string name="error_timeout">Temps libre</string>
+    <string name="error_timeout">Délai d'attente dépassée</string>
     <string name="error_unknown">Erreur inconnue</string>
 
     <!-- Player action -->
-    <string name="action_like">Like</string>
-    <string name="action_remove_like">Enlever le like</string>
+    <string name="action_like">J'aime</string>
+    <string name="action_remove_like">Enlever le J'aime</string>
     <string name="action_shuffle_on">Shuffle on</string>
     <string name="action_shuffle_off">Shuffle off</string>
-    <string name="repeat_mode_off">Repeat mode off</string>
-    <string name="repeat_mode_one">Repeat current song</string>
-    <string name="repeat_mode_all">Repeat queue</string>
+    <string name="repeat_mode_off">Mode de répétition désactivé</string>
+    <string name="repeat_mode_one">Répéter la chanson en cours</string>
+    <string name="repeat_mode_all">Répétition de la file d'attente</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Toutes les chansons</string>
@@ -256,10 +256,10 @@
     <string name="privacy">Confidentialité</string>
     <string name="pause_listen_history">Suspendre l\'historique d\'écoute</string>
     <string name="clear_listen_history">Effacer l\'historique d\'écoute</string>
-    <string name="clear_listen_history_confirm">Voulez-vous vraiment effacer tout l\'historique d\'écoute?</string>
+    <string name="clear_listen_history_confirm">Voulez-vous vraiment effacer tout l\'historique d\'écoute ?</string>
     <string name="pause_search_history">Suspendre l\'historique des recherches</string>
     <string name="clear_search_history">Effacer l\'historique</string>
-    <string name="clear_search_history_confirm">Voulez-vous vraiment effacer tout l\'historique de recherche?</string>
+    <string name="clear_search_history_confirm">Voulez-vous vraiment effacer tout l\'historique de recherche ?</string>
     <string name="enable_kugou">Activer le fournisseur de paroles KuGou</string>
 
     <string name="backup_restore">Sauvegarde et restauration</string>
@@ -274,6 +274,6 @@
     <string name="app_version">Version de l\'application</string>
 
     <string name="new_version_available">Nouvelle version disponible</string>
-    <string name="translation_models">Translation Models</string>
-    <string name="clear_translation_models">Clear translation models</string>
+    <string name="translation_models">Modèles de traduction</string>
+    <string name="clear_translation_models">Nettoyer les modèles de traduction</string>
 </resources>
