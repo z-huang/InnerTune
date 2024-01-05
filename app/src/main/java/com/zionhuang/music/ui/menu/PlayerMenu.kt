@@ -72,7 +72,6 @@ fun PlayerMenu(
     mediaMetadata: MediaMetadata?,
     navController: NavController,
     playerBottomSheetState: BottomSheetState,
-    isQueueTrigger: Boolean? = false,
     onShowDetailsDialog: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -151,27 +150,26 @@ fun PlayerMenu(
             onDismiss = { showPitchTempoDialog = false }
         )
     }
-    if (isQueueTrigger != true) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(top = 24.dp, bottom = 6.dp)
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.volume_up),
-                contentDescription = null,
-                modifier = Modifier.size(28.dp)
-            )
 
-            BigSeekBar(
-                progressProvider = playerVolume::value,
-                onProgressChange = { playerConnection.service.playerVolume.value = it },
-                modifier = Modifier.weight(1f)
-            )
-        }
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(top = 24.dp, bottom = 6.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.volume_up),
+            contentDescription = null,
+            modifier = Modifier.size(28.dp)
+        )
+
+        BigSeekBar(
+            progressProvider = playerVolume::value,
+            onProgressChange = { playerConnection.service.playerVolume.value = it },
+            modifier = Modifier.weight(1f)
+        )
     }
 
     GridMenu(
@@ -255,37 +253,32 @@ fun PlayerMenu(
             context.startActivity(Intent.createChooser(intent, null))
             onDismiss()
         }
-        if (isQueueTrigger != true) {
-            GridMenuItem(
-                icon = R.drawable.info,
-                title = R.string.details
-            ) {
-                onShowDetailsDialog()
-                onDismiss()
+        GridMenuItem(
+            icon = R.drawable.info,
+            title = R.string.details
+        ) {
+            onShowDetailsDialog()
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.equalizer,
+            title = R.string.equalizer
+        ) {
+            val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                putExtra(AudioEffect.EXTRA_AUDIO_SESSION, playerConnection.player.audioSessionId)
+                putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
             }
-            GridMenuItem(
-                icon = R.drawable.equalizer,
-                title = R.string.equalizer
-            ) {
-                val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                    putExtra(
-                        AudioEffect.EXTRA_AUDIO_SESSION,
-                        playerConnection.player.audioSessionId
-                    )
-                    putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-                    putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                }
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    activityResultLauncher.launch(intent)
-                }
-                onDismiss()
+            if (intent.resolveActivity(context.packageManager) != null) {
+                activityResultLauncher.launch(intent)
             }
-            GridMenuItem(
-                icon = R.drawable.tune,
-                title = R.string.advanced
-            ) {
-                showPitchTempoDialog = true
-            }
+            onDismiss()
+        }
+        GridMenuItem(
+            icon = R.drawable.tune,
+            title = R.string.advanced
+        ) {
+            showPitchTempoDialog = true
         }
     }
 }
