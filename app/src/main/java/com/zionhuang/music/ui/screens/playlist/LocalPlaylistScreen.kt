@@ -427,6 +427,19 @@ fun LocalPlaylistScreen(
                                                 }
                                             }
                                         }
+
+                                        IconButton(
+                                            onClick = {
+                                                playerConnection.addToQueue(
+                                                    items = songs.map { it.song.toMediaItem() }
+                                                )
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.queue_music),
+                                                contentDescription = null
+                                            )
+                                        }
                                     }
                                 }
                             }
