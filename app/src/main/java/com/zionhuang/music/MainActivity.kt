@@ -155,6 +155,7 @@ class MainActivity : ComponentActivity() {
             val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
             val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
             val pureBlack by rememberPreference(PureBlackKey, defaultValue = false)
+            val backgroundColorTint by rememberPreference(BackgroundColorTintKey, defaultValue = true)
             val isSystemInDarkTheme = isSystemInDarkTheme()
             val useDarkTheme = remember(darkTheme, isSystemInDarkTheme) {
                 if (darkTheme == DarkMode.AUTO) isSystemInDarkTheme else darkTheme == DarkMode.ON
@@ -190,6 +191,7 @@ class MainActivity : ComponentActivity() {
             InnerTuneTheme(
                 darkTheme = useDarkTheme,
                 pureBlack = pureBlack,
+                backgroundColorTint = backgroundColorTint,
                 themeColor = themeColor
             ) {
                 BoxWithConstraints(

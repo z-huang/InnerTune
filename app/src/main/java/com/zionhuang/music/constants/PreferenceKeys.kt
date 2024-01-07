@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 val DynamicThemeKey = booleanPreferencesKey("dynamicTheme")
 val DarkModeKey = stringPreferencesKey("darkMode")
 val PureBlackKey = booleanPreferencesKey("pureBlack")
+val BackgroundColorTintKey = booleanPreferencesKey("backgroundColorTint")
 val DefaultOpenTabKey = stringPreferencesKey("defaultOpenTab")
 
 const val SYSTEM_DEFAULT = "SYSTEM_DEFAULT"
