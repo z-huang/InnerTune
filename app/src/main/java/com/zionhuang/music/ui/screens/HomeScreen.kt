@@ -38,7 +38,7 @@ import com.zionhuang.music.ui.component.NavigationTile
 import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.YouTubeGridItem
-import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.utils.SnapLayoutInfoProvider
 import com.zionhuang.music.utils.rememberPreference
@@ -172,8 +172,8 @@ fun HomeScreen(
                                         IconButton(
                                             onClick = {
                                                 menuState.show {
-                                                    SongMenu(
-                                                        originalSong = song!!,
+                                                    GenericSongMenu(
+                                                        mediaMetadata = song!!.toMediaMetadata(),
                                                         navController = navController,
                                                         onDismiss = menuState::dismiss
                                                     )

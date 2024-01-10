@@ -29,13 +29,14 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.*
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.ChipsRow
 import com.zionhuang.music.ui.component.HideOnScrollFAB
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
-import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.LibrarySongsViewModel
@@ -128,8 +129,8 @@ fun LibrarySongsScreen(
                         IconButton(
                             onClick = {
                                 menuState.show {
-                                    SongMenu(
-                                        originalSong = song,
+                                    GenericSongMenu(
+                                        mediaMetadata = song.toMediaMetadata(),
                                         navController = navController,
                                         onDismiss = menuState::dismiss
                                     )

@@ -67,6 +67,7 @@ import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AutoResizeText
@@ -78,7 +79,7 @@ import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
 import com.zionhuang.music.ui.menu.AlbumMenu
-import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.viewmodels.AlbumViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -349,8 +350,8 @@ fun AlbumScreen(
                         IconButton(
                             onClick = {
                                 menuState.show {
-                                    SongMenu(
-                                        originalSong = song,
+                                    GenericSongMenu(
+                                        mediaMetadata = song.toMediaMetadata(),
                                         navController = navController,
                                         onDismiss = menuState::dismiss
                                     )

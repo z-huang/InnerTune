@@ -68,13 +68,14 @@ import com.zionhuang.music.constants.*
 import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.SearchHistory
 import com.zionhuang.music.extensions.*
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.DownloadUtil
 import com.zionhuang.music.playback.MusicService
 import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.component.shimmer.ShimmerTheme
-import com.zionhuang.music.ui.menu.YouTubeSongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.ui.player.BottomSheetPlayer
 import com.zionhuang.music.ui.screens.*
 import com.zionhuang.music.ui.screens.artist.ArtistItemsScreen
@@ -775,8 +776,8 @@ class MainActivity : ComponentActivity() {
                                         Column(
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            YouTubeSongMenu(
-                                                song = song,
+                                            GenericSongMenu(
+                                                mediaMetadata = song.toMediaMetadata(),
                                                 navController = navController,
                                                 onDismiss = { sharedSong = null }
                                             )
