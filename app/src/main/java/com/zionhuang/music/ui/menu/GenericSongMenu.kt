@@ -338,7 +338,6 @@ fun GenericSongMenu(
                 title = R.string.details
             ) {
                 onShowDetailsDialog()
-                onDismiss()
             }
         } else {
             if (!inPlayer) {
@@ -376,6 +375,7 @@ fun GenericSongMenu(
             ) {
                 if (artists.size == 1) {
                     navController.navigate("artist/${artists[0].id}")
+                    playerBottomSheetState?.collapseSoft()
                     onDismiss()
                 } else {
                     showSelectArtistDialog = true
@@ -388,6 +388,7 @@ fun GenericSongMenu(
                         title = R.string.view_album
                     ) {
                         navController.navigate("album/${album.id}")
+                        playerBottomSheetState?.collapseSoft()
                         onDismiss()
                     }
                 }
