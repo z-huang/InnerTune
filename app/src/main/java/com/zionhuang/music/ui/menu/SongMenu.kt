@@ -217,17 +217,24 @@ fun SongMenu(
             onDismiss()
             playerConnection.addToQueue((song.toMediaItem()))
         }
-        GridMenuItem(
-            icon = R.drawable.edit,
-            title = R.string.edit
-        ) {
-            showEditDialog = true
-        }
-        GridMenuItem(
-            icon = R.drawable.playlist_add,
-            title = R.string.add_to_playlist
-        ) {
-            showChoosePlaylistDialog = true
+        if (song.song.inLibrary == null) {
+            GridMenuItem(
+                icon = R.drawable.library_add,
+                title = R.string.add_to_library
+            ) {
+                database.query {
+                    update(song.song.toggleLibrary())
+                }
+            }
+        } else {
+            GridMenuItem(
+                icon = R.drawable.library_add_check,
+                title = R.string.remove_from_library
+            ) {
+                database.query {
+                    update(song.song.toggleLibrary())
+                }
+            }
         }
         DownloadGridMenu(
             state = download?.state,
@@ -253,6 +260,12 @@ fun SongMenu(
             }
         )
         GridMenuItem(
+            icon = R.drawable.playlist_add,
+            title = R.string.add_to_playlist
+        ) {
+            showChoosePlaylistDialog = true
+        }
+        GridMenuItem(
             icon = R.drawable.artist,
             title = R.string.view_artist
         ) {
@@ -263,14 +276,13 @@ fun SongMenu(
                 showSelectArtistDialog = true
             }
         }
-        if (song.song.albumId != null) {
-            GridMenuItem(
-                icon = R.drawable.album,
-                title = R.string.view_album
-            ) {
-                onDismiss()
-                navController.navigate("album/${song.song.albumId}")
-            }
+        GridMenuItem(
+            icon = R.drawable.album,
+            title = R.string.view_album,
+            enabled = song.song.albumId != null
+        ) {
+            onDismiss()
+            navController.navigate("album/${song.song.albumId}")
         }
         GridMenuItem(
             icon = R.drawable.share,
@@ -284,24 +296,11 @@ fun SongMenu(
             }
             context.startActivity(Intent.createChooser(intent, null))
         }
-        if (song.song.inLibrary == null) {
-            GridMenuItem(
-                icon = R.drawable.library_add,
-                title = R.string.add_to_library
-            ) {
-                database.query {
-                    update(song.song.toggleLibrary())
-                }
-            }
-        } else {
-            GridMenuItem(
-                icon = R.drawable.library_add_check,
-                title = R.string.remove_from_library
-            ) {
-                database.query {
-                    update(song.song.toggleLibrary())
-                }
-            }
+        GridMenuItem(
+            icon = R.drawable.edit,
+            title = R.string.edit
+        ) {
+            showEditDialog = true
         }
         if (event != null) {
             GridMenuItem(
