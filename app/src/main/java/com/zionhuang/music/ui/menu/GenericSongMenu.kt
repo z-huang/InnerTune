@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
@@ -40,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -116,6 +119,8 @@ fun GenericSongMenu(
         }
     }
 
+    val localDensity = LocalDensity.current
+
     var showEditDialog by rememberSaveable {
         mutableStateOf(false)
     }
@@ -125,7 +130,10 @@ fun GenericSongMenu(
             icon = { Icon(painter = painterResource(R.drawable.edit), contentDescription = null) },
             title = { Text(text = stringResource(R.string.edit_song)) },
             onDismiss = { showEditDialog = false },
-            initialTextFieldValue = TextFieldValue(mediaMetadata.title, TextRange(mediaMetadata.title.length)),
+            initialTextFieldValue = TextFieldValue(
+                mediaMetadata.title,
+                TextRange(mediaMetadata.title.length)
+            ),
             onDone = { title ->
                 onDismiss()
                 database.query {
@@ -246,6 +254,10 @@ fun GenericSongMenu(
 
     Divider()
 
+    var showPlayerItems by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     if (inPlayer) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(24.dp),
@@ -269,60 +281,19 @@ fun GenericSongMenu(
 
             IconButton(
                 onClick = {
-                    showPitchTempoDialog = true
+                    showPlayerItems = !showPlayerItems
                 }
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.tune),
+                    painter = painterResource(if(showPlayerItems) R.drawable.expand_less else R.drawable.expand_more),
                     contentDescription = null,
                     modifier = Modifier.size(28.dp)
                 )
             }
         }
-
-        GridMenu(
-            contentPadding = PaddingValues(
-                start = 8.dp,
-                top = 8.dp,
-                end = 8.dp,
-                bottom = 8.dp
-            )
-        ) {
-            GridMenuItem(
-                icon = R.drawable.info,
-                title = R.string.details
-            ) {
-                onShowDetailsDialog()
-                onDismiss()
-            }
-            GridMenuItem(
-                icon = R.drawable.equalizer,
-                title = R.string.equalizer
-            ) {
-                val intent = Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
-                    putExtra(
-                        AudioEffect.EXTRA_AUDIO_SESSION,
-                        playerConnection.player.audioSessionId
-                    )
-                    putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
-                    putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
-                }
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    activityResultLauncher.launch(intent)
-                }
-                onDismiss()
-            }
-            GridMenuItem(
-                icon = R.drawable.radio,
-                title = R.string.enqueue_radio
-            ) {
-                playerConnection.service.startRadioSeamlessly()
-                onDismiss()
-            }
-        }
-
-        Divider()
     }
+
+    var minHeightConstraint by remember { mutableStateOf(0.dp) }
 
     GridMenu(
         contentPadding = PaddingValues(
@@ -330,146 +301,193 @@ fun GenericSongMenu(
             top = 8.dp,
             end = 8.dp,
             bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
-        )
+        ),
+        modifier = Modifier
+            .onGloballyPositioned { coords ->
+                minHeightConstraint = with(localDensity) { coords.size.height.toDp() }
+            }
+            .defaultMinSize(minHeight = minHeightConstraint)
     ) {
-        if (!inPlayer) {
+        if (showPlayerItems) {
             GridMenuItem(
-                icon = R.drawable.playlist_play,
-                title = R.string.play_next
+                icon = R.drawable.equalizer,
+                title = R.string.equalizer
             ) {
-                onDismiss()
-                playerConnection.playNext(mediaMetadata.toMediaItem())
-            }
-            GridMenuItem(
-                icon = R.drawable.queue_music,
-                title = R.string.add_to_queue
-            ) {
-                onDismiss()
-                playerConnection.addToQueue((mediaMetadata.toMediaItem()))
-            }
-            GridMenuItem(
-                icon = R.drawable.radio,
-                title = R.string.start_radio
-            ) {
-                onDismiss()
-                playerConnection.playQueue(
-                    YouTubeQueue(
-                        WatchEndpoint(videoId = mediaMetadata.id),
-                        mediaMetadata
-                    )
-                )
-            }
-        }
-        if (librarySong?.song?.inLibrary != null) {
-            GridMenuItem(
-                icon = R.drawable.library_add_check,
-                title = R.string.remove_from_library
-            ) {
-                database.query {
-                    inLibrary(mediaMetadata.id, null)
+                val intent =
+                    Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL).apply {
+                        putExtra(
+                            AudioEffect.EXTRA_AUDIO_SESSION,
+                            playerConnection.player.audioSessionId
+                        )
+                        putExtra(AudioEffect.EXTRA_PACKAGE_NAME, context.packageName)
+                        putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC)
+                    }
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    activityResultLauncher.launch(intent)
                 }
+                onDismiss()
+            }
+            GridMenuItem(
+                icon = R.drawable.tune,
+                title = R.string.advanced
+            ) {
+                showPitchTempoDialog = true
+            }
+            GridMenuItem(
+                icon = R.drawable.info,
+                title = R.string.details
+            ) {
+                onShowDetailsDialog()
+                onDismiss()
             }
         } else {
+            if (!inPlayer) {
+                GridMenuItem(
+                    icon = R.drawable.playlist_play,
+                    title = R.string.play_next
+                ) {
+                    onDismiss()
+                    playerConnection.playNext(mediaMetadata.toMediaItem())
+                }
+                GridMenuItem(
+                    icon = R.drawable.queue_music,
+                    title = R.string.add_to_queue
+                ) {
+                    onDismiss()
+                    playerConnection.addToQueue((mediaMetadata.toMediaItem()))
+                }
+                GridMenuItem(
+                    icon = R.drawable.radio,
+                    title = R.string.start_radio
+                ) {
+                    onDismiss()
+                    playerConnection.playQueue(
+                        YouTubeQueue(
+                            WatchEndpoint(videoId = mediaMetadata.id),
+                            mediaMetadata
+                        )
+                    )
+                }
+            }
             GridMenuItem(
-                icon = R.drawable.library_add,
-                title = R.string.add_to_library
+                icon = R.drawable.artist,
+                title = R.string.view_artist,
+                enabled = artists.isNotEmpty()
             ) {
-                database.transaction {
-                    insert(mediaMetadata)
-                    inLibrary(mediaMetadata.id, LocalDateTime.now())
+                if (artists.size == 1) {
+                    navController.navigate("artist/${artists[0].id}")
+                    onDismiss()
+                } else {
+                    showSelectArtistDialog = true
                 }
             }
-        }
-        GridMenuItem(
-            icon = R.drawable.playlist_add,
-            title = R.string.add_to_playlist
-        ) {
-            showChoosePlaylistDialog = true
-        }
-        DownloadGridMenu(
-            state = download?.state,
-            onDownload = {
-                database.transaction {
-                    insert(mediaMetadata)
+            if (mediaMetadata.album != null) {
+                mediaMetadata.album?.let { album ->
+                    GridMenuItem(
+                        icon = R.drawable.album,
+                        title = R.string.view_album
+                    ) {
+                        navController.navigate("album/${album.id}")
+                        onDismiss()
+                    }
                 }
-                val downloadRequest =
-                    DownloadRequest.Builder(mediaMetadata.id, mediaMetadata.id.toUri())
-                        .setCustomCacheKey(mediaMetadata.id)
-                        .setData(mediaMetadata.title.toByteArray())
-                        .build()
-                DownloadService.sendAddDownload(
-                    context,
-                    ExoDownloadService::class.java,
-                    downloadRequest,
-                    false
-                )
-            },
-            onRemoveDownload = {
-                DownloadService.sendRemoveDownload(
-                    context,
-                    ExoDownloadService::class.java,
-                    mediaMetadata.id,
-                    false
-                )
-            }
-        )
-        GridMenuItem(
-            icon = R.drawable.artist,
-            title = R.string.view_artist,
-            enabled = artists.isNotEmpty()
-        ) {
-            if (artists.size == 1) {
-                navController.navigate("artist/${artists[0].id}")
-                onDismiss()
             } else {
-                showSelectArtistDialog = true
-            }
-        }
-        if(mediaMetadata.album != null) {
-            mediaMetadata.album?.let { album ->
                 GridMenuItem(
                     icon = R.drawable.album,
-                    title = R.string.view_album
-                ) {
-                    navController.navigate("album/${album.id}")
-                    onDismiss()
-                }
+                    title = R.string.view_album,
+                    enabled = false
+                ) {}
             }
-        } else {
             GridMenuItem(
-                icon = R.drawable.album,
-                title = R.string.view_album,
+                icon = R.drawable.conversion_path,
+                title = R.string.related,
                 enabled = false
             ) {}
-        }
-        GridMenuItem(
-            icon = R.drawable.share,
-            title = R.string.share
-        ) {
-            onDismiss()
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, "https://music.youtube.com/watch?v=${mediaMetadata.id}")
+            if (librarySong?.song?.inLibrary != null) {
+                GridMenuItem(
+                    icon = R.drawable.library_add_check,
+                    title = R.string.remove_from_library
+                ) {
+                    database.query {
+                        inLibrary(mediaMetadata.id, null)
+                    }
+                }
+            } else {
+                GridMenuItem(
+                    icon = R.drawable.library_add,
+                    title = R.string.add_to_library
+                ) {
+                    database.transaction {
+                        insert(mediaMetadata)
+                        inLibrary(mediaMetadata.id, LocalDateTime.now())
+                    }
+                }
             }
-            context.startActivity(Intent.createChooser(intent, null))
-        }
-        if (librarySong?.song?.inLibrary != null) {
             GridMenuItem(
-                icon = R.drawable.edit,
-                title = R.string.edit
+                icon = R.drawable.playlist_add,
+                title = R.string.add_to_playlist
             ) {
-                showEditDialog = true
+                showChoosePlaylistDialog = true
             }
-        }
-        if (librarySong != null && event != null) {
+            DownloadGridMenu(
+                state = download?.state,
+                onDownload = {
+                    database.transaction {
+                        insert(mediaMetadata)
+                    }
+                    val downloadRequest =
+                        DownloadRequest.Builder(mediaMetadata.id, mediaMetadata.id.toUri())
+                            .setCustomCacheKey(mediaMetadata.id)
+                            .setData(mediaMetadata.title.toByteArray())
+                            .build()
+                    DownloadService.sendAddDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        downloadRequest,
+                        false
+                    )
+                },
+                onRemoveDownload = {
+                    DownloadService.sendRemoveDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        mediaMetadata.id,
+                        false
+                    )
+                }
+            )
             GridMenuItem(
-                icon = R.drawable.delete,
-                title = R.string.remove_from_history
+                icon = R.drawable.share,
+                title = R.string.share
             ) {
                 onDismiss()
-                database.query {
-                    delete(event)
+                val intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+                    putExtra(
+                        Intent.EXTRA_TEXT,
+                        "https://music.youtube.com/watch?v=${mediaMetadata.id}"
+                    )
+                }
+                context.startActivity(Intent.createChooser(intent, null))
+            }
+            if (librarySong?.song?.inLibrary != null) {
+                GridMenuItem(
+                    icon = R.drawable.edit,
+                    title = R.string.edit
+                ) {
+                    showEditDialog = true
+                }
+            }
+            if (librarySong != null && event != null) {
+                GridMenuItem(
+                    icon = R.drawable.delete,
+                    title = R.string.remove_from_history
+                ) {
+                    onDismiss()
+                    database.query {
+                        delete(event)
+                    }
                 }
             }
         }
