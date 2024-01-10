@@ -203,6 +203,10 @@ fun GenericSongMenu(
     }
 
     ListItem(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .padding(start = 2.dp, end = 16.dp),
         title = mediaMetadata.title,
         subtitle = joinByBullet(
             mediaMetadata.artists.joinToString { it.name },
@@ -281,7 +285,7 @@ fun GenericSongMenu(
                 start = 8.dp,
                 top = 8.dp,
                 end = 8.dp,
-                bottom = 8.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+                bottom = 8.dp
             )
         ) {
             GridMenuItem(
@@ -376,6 +380,12 @@ fun GenericSongMenu(
                 }
             }
         }
+        GridMenuItem(
+            icon = R.drawable.playlist_add,
+            title = R.string.add_to_playlist
+        ) {
+            showChoosePlaylistDialog = true
+        }
         DownloadGridMenu(
             state = download?.state,
             onDownload = {
@@ -403,12 +413,6 @@ fun GenericSongMenu(
                 )
             }
         )
-        GridMenuItem(
-            icon = R.drawable.playlist_add,
-            title = R.string.add_to_playlist
-        ) {
-            showChoosePlaylistDialog = true
-        }
         GridMenuItem(
             icon = R.drawable.artist,
             title = R.string.view_artist,
