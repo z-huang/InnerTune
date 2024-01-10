@@ -3,6 +3,7 @@ package com.zionhuang.music.ui.component
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -80,6 +81,8 @@ fun BottomSheetMenu(
                 .padding(top = 48.dp)
                 .clip(ShapeDefaults.Large.top())
                 .background(background)
+                //  We need this elseway tapping elements other then the button grid closes the sheet
+                .clickable(enabled = false) { }
         ) {
             state.content(this)
         }
