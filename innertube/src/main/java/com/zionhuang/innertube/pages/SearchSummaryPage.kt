@@ -91,10 +91,10 @@ data class SearchSummaryPage(
             val secondaryLine = renderer.flexColumns.getOrNull(1)
                 ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.splitBySeparator()
                 ?: return null
-                val thirdLine = renderer.flexColumns.getOrNull(2)
-                    ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.splitBySeparator()
-                    ?: emptyList()
-                val listRun = (secondaryLine + thirdLine).clean()
+            val thirdLine = renderer.flexColumns.getOrNull(2)
+                ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.splitBySeparator()
+                ?: emptyList()
+            val listRun = (secondaryLine + thirdLine).clean()
             return when {
                 renderer.isSong -> {
                     SongItem(
