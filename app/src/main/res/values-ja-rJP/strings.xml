@@ -5,7 +5,7 @@
     <string name="songs">曲</string>
     <string name="artists">アーティスト</string>
     <string name="albums">アルバム</string>
-    <string name="playlists">プレイリスト</string>
+    <string name="playlists">再生リスト</string>
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="other">%dを選択済み</item>
@@ -39,9 +39,9 @@
     <string name="filter_videos">動画</string>
     <string name="filter_albums">アルバム</string>
     <string name="filter_artists">アーティスト</string>
-    <string name="filter_playlists">プレイリスト</string>
-    <string name="filter_community_playlists">コミュニティのプレイリスト</string>
-    <string name="filter_featured_playlists">おすすめのプレイリスト</string>
+    <string name="filter_playlists">再生リスト</string>
+    <string name="filter_community_playlists">コミュニティの再生リスト</string>
+    <string name="filter_featured_playlists">おすすめの再生リスト</string>
     <string name="filter_bookmarked">ブックマーク済み</string>
     <string name="no_results_found">見つかりませんでした</string>
     <!-- Artist screen -->
@@ -49,12 +49,12 @@
     <!-- Playlist -->
     <string name="liked_songs">いいねした曲</string>
     <string name="downloaded_songs">ダウンロードした曲</string>
-    <string name="playlist_is_empty">プレイリストが空です</string>
+    <string name="playlist_is_empty">再生リストが空です</string>
     <!-- Button -->
     <string name="retry">再試行</string>
     <string name="radio">ラジオ</string>
     <string name="shuffle">シャッフル</string>
-    <string name="reset">初期化</string>
+    <string name="reset">リセット</string>
     <!-- Menu -->
     <string name="details">詳細</string>
     <string name="edit">編集</string>
@@ -66,10 +66,10 @@
     <string name="remove_from_library">ライブラリから削除</string>
     <string name="download">ダウンロード</string>
     <string name="downloading">ダウンロード中</string>
-    <string name="remove_download">ダウンロード削除</string>
-    <string name="import_playlist">プレイリストをインポート</string>
-    <string name="add_to_playlist">プレイリストに追加</string>
-    <string name="view_artist">アーティスト表示</string>
+    <string name="remove_download">ダウンロードを削除</string>
+    <string name="import_playlist">再生リストをインポート</string>
+    <string name="add_to_playlist">再生リストに追加</string>
+    <string name="view_artist">アーティストを表示</string>
     <string name="view_album">アルバムを表示</string>
     <string name="refetch">再取得</string>
     <string name="share">共有</string>
@@ -77,7 +77,7 @@
     <string name="remove_from_history">履歴から削除</string>
     <string name="search_online">オンラインで検索</string>
     <string name="sync">同期</string>
-    <string name="advanced">Advanced</string>
+    <string name="advanced">高度</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">追加日時</string>
     <string name="sort_by_name">曲名</string>
@@ -86,18 +86,18 @@
     <string name="sort_by_song_count">曲数</string>
     <string name="sort_by_length">長さ</string>
     <string name="sort_by_play_time">再生時間</string>
-    <string name="sort_by_custom">カスタム</string>
+    <string name="sort_by_custom">自分で指定</string>
     <!-- Dialog -->
-    <string name="media_id">メディアID</string>
-    <string name="mime_type">MIMEタイプ</string>
+    <string name="media_id">メディア ID</string>
+    <string name="mime_type">MIME タイプ</string>
     <string name="codecs">コーデック</string>
     <string name="bitrate">ビットレート</string>
     <string name="sample_rate">サンプリングレート</string>
-    <string name="loudness">ラウドネス</string>
+    <string name="loudness">音の大きさ</string>
     <string name="volume">音量</string>
     <string name="file_size">ファイルサイズ</string>
     <string name="unknown">不明</string>
-    <string name="copied">クリップボードにコピー</string>
+    <string name="copied">クリップボードにコピーしました</string>
     <string name="edit_lyrics">歌詞を編集</string>
     <string name="search_lyrics">歌詞を検索</string>
     <string name="edit_song">曲を編集</string>
@@ -106,17 +106,17 @@
     <string name="error_song_title_empty">曲名は空にできません。</string>
     <string name="error_song_artist_empty">曲のアーティストは空にできません。</string>
     <string name="save">保存</string>
-    <string name="choose_playlist">プレイリストを選択</string>
-    <string name="edit_playlist">プレイリストを編集</string>
-    <string name="create_playlist">プレイリストを作成</string>
-    <string name="playlist_name">プレイリスト名</string>
-    <string name="error_playlist_name_empty">プレイリスト名は空白にできません。</string>
+    <string name="choose_playlist">再生リストを選択</string>
+    <string name="edit_playlist">再生リストを編集</string>
+    <string name="create_playlist">再生リストを作成</string>
+    <string name="playlist_name">再生リスト名</string>
+    <string name="error_playlist_name_empty">再生リスト名は空白にできません。</string>
     <string name="edit_artist">アーティストを編集</string>
     <string name="artist_name">アーティスト名</string>
     <string name="error_artist_name_empty">アーティスト名は空白にできません。</string>
     <!-- Noun -->
     <plurals name="n_song">
-        <item quantity="other">%d曲</item>
+        <item quantity="other">%d 曲</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="other">%d アーティスト</item>
@@ -125,21 +125,21 @@
         <item quantity="other">%d アルバム</item>
     </plurals>
     <plurals name="n_playlist">
-        <item quantity="other">%d プレイリスト</item>
+        <item quantity="other">%d 個の再生リスト</item>
     </plurals>
     <plurals name="n_week">
-        <item quantity="other">%d週間</item>
+        <item quantity="other">%d 週間</item>
     </plurals>
     <plurals name="n_month">
-        <item quantity="other">%dか月</item>
+        <item quantity="other">%d か月</item>
     </plurals>
     <plurals name="n_year">
-        <item quantity="other">%d年</item>
+        <item quantity="other">%d 年</item>
     </plurals>
     <!-- Snackbar -->
-    <string name="playlist_imported">プレイリストをインポートしました</string>
-    <string name="removed_song_from_playlist">プレイリストから「%s」を削除しました</string>
-    <string name="playlist_synced">プレイリストが同期されました</string>
+    <string name="playlist_imported">再生リストをインポートしました</string>
+    <string name="removed_song_from_playlist">再生リストから「%s」を削除しました</string>
+    <string name="playlist_synced">再生リストが同期されました</string>
     <string name="undo">元に戻す</string>
     <!-- Player -->
     <string name="lyrics_not_found">歌詞が見つかりません</string>
@@ -155,11 +155,11 @@
     <!-- Player action -->
     <string name="action_like">いいね</string>
     <string name="action_remove_like">いいねを削除</string>
-    <string name="action_shuffle_on">Shuffle on</string>
-    <string name="action_shuffle_off">Shuffle off</string>
-    <string name="repeat_mode_off">Repeat mode off</string>
-    <string name="repeat_mode_one">Repeat current song</string>
-    <string name="repeat_mode_all">Repeat queue</string>
+    <string name="action_shuffle_on">シャッフル有効</string>
+    <string name="action_shuffle_off">シャッフルなし</string>
+    <string name="repeat_mode_off">リピートなし</string>
+    <string name="repeat_mode_one">現在の曲をリピート</string>
+    <string name="repeat_mode_all">キュー全体をリピート</string>
     <!-- Queue Title -->
     <string name="queue_all_songs">すべての曲</string>
     <string name="queue_searched_songs">検索した曲</string>
@@ -190,7 +190,7 @@
     <string name="proxy_url">プロキシのURL</string>
     <string name="restart_to_take_effect">再起動して反映</string>
     <string name="player_and_audio">プレイヤーと音声</string>
-    <string name="audio_quality">音声品質</string>
+    <string name="audio_quality">音質</string>
     <string name="audio_quality_auto">自動</string>
     <string name="audio_quality_high">高</string>
     <string name="audio_quality_low">低</string>
@@ -198,7 +198,7 @@
     <string name="skip_silence">無音部分をスキップ</string>
     <string name="audio_normalization">音声の正規化</string>
     <string name="equalizer">イコライザー</string>
-    <string name="storage">ストレージ</string>
+    <string name="storage">保存データ</string>
     <string name="cache">キャッシュ</string>
     <string name="image_cache">画像のキャッシュ</string>
     <string name="song_cache">曲のキャッシュ</string>
@@ -209,7 +209,7 @@
     <string name="clear_image_cache">画像のキャッシュを削除</string>
     <string name="max_song_cache_size">曲の最大キャッシュサイズ</string>
     <string name="clear_song_cache">曲のキャッシュを削除</string>
-    <string name="size_used">%s 使用中</string>
+    <string name="size_used">%s 使用済み</string>
     <string name="privacy">プライバシー</string>
     <string name="pause_listen_history">再生履歴を一時停止</string>
     <string name="clear_listen_history">再生履歴を削除</string>
@@ -221,13 +221,13 @@
     <string name="backup_restore">バックアップと復元</string>
     <string name="backup">バックアップ</string>
     <string name="restore">復元</string>
-    <string name="imported_playlist">インポートしたプレイリスト</string>
+    <string name="imported_playlist">インポートした再生リスト</string>
     <string name="backup_create_success">バックアップの作成に成功しました</string>
     <string name="backup_create_failed">バックアップを作成できませんでした</string>
     <string name="restore_failed">バックアップの復元に失敗しました</string>
     <string name="about">アプリについて</string>
     <string name="app_version">アプリのバージョン</string>
     <string name="new_version_available">最新版あり</string>
-    <string name="translation_models">Translation Models</string>
-    <string name="clear_translation_models">Clear translation models</string>
+    <string name="translation_models">翻訳モデル</string>
+    <string name="clear_translation_models">翻訳モデルを消去</string>
 </resources>
