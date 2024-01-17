@@ -182,11 +182,11 @@
     <!-- Player action -->
     <string name="action_like">Tetszik</string>
     <string name="action_remove_like">Lájk eltávolítása</string>
-    <string name="action_shuffle_on">Shuffle on</string>
-    <string name="action_shuffle_off">Shuffle off</string>
-    <string name="repeat_mode_off">Repeat mode off</string>
-    <string name="repeat_mode_one">Repeat current song</string>
-    <string name="repeat_mode_all">Repeat queue</string>
+    <string name="action_shuffle_on">Keverés BE</string>
+    <string name="action_shuffle_off">Keverés KI</string>
+    <string name="repeat_mode_off">Ismétlő mód KI</string>
+    <string name="repeat_mode_one">Aktuális dal ismétlése</string>
+    <string name="repeat_mode_all">Várósor ismétlése</string>
 
     <!-- Queue Title -->
     <string name="queue_all_songs">Minden dal</string>
