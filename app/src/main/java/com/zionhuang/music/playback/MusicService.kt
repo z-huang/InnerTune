@@ -21,6 +21,9 @@ import androidx.media3.common.Player.EVENT_PLAYBACK_STATE_CHANGED
 import androidx.media3.common.Player.EVENT_PLAY_WHEN_READY_CHANGED
 import androidx.media3.common.Player.EVENT_POSITION_DISCONTINUITY
 import androidx.media3.common.Player.EVENT_TIMELINE_CHANGED
+import androidx.media3.common.Player.REPEAT_MODE_ALL
+import androidx.media3.common.Player.REPEAT_MODE_OFF
+import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.Player.STATE_IDLE
 import androidx.media3.common.Timeline
@@ -62,6 +65,8 @@ import com.zionhuang.music.constants.AudioQuality
 import com.zionhuang.music.constants.AudioQualityKey
 import com.zionhuang.music.constants.MediaSessionConstants.CommandToggleLibrary
 import com.zionhuang.music.constants.MediaSessionConstants.CommandToggleLike
+import com.zionhuang.music.constants.MediaSessionConstants.CommandToggleRepeatMode
+import com.zionhuang.music.constants.MediaSessionConstants.CommandToggleShuffle
 import com.zionhuang.music.constants.PauseListenHistoryKey
 import com.zionhuang.music.constants.PersistentQueueKey
 import com.zionhuang.music.constants.PlayerVolumeKey
@@ -178,6 +183,8 @@ class MusicService : MediaLibraryService(),
     lateinit var player: ExoPlayer
     private lateinit var mediaSession: MediaLibrarySession
 
+    private var isAudioEffectSessionOpened = false
+
     override fun onCreate() {
         super.onCreate()
         setMediaNotificationProvider(
@@ -205,7 +212,6 @@ class MusicService : MediaLibraryService(),
                 sleepTimer = SleepTimer(scope, this)
                 addListener(sleepTimer)
                 addAnalyticsListener(PlaybackStatsListener(false, this@MusicService))
-                repeatMode = dataStore.get(RepeatModeKey, Player.REPEAT_MODE_OFF)
             }
         mediaLibrarySessionCallback.apply {
             toggleLike = ::toggleLike
@@ -222,6 +228,8 @@ class MusicService : MediaLibraryService(),
             )
             .setBitmapLoader(CoilBitmapLoader(this, scope))
             .build()
+        player.repeatMode = dataStore.get(RepeatModeKey, REPEAT_MODE_OFF)
+
         // Keep a connected controller so that notification works
         val sessionToken = SessionToken(this, ComponentName(this, MusicService::class.java))
         val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
@@ -241,23 +249,8 @@ class MusicService : MediaLibraryService(),
             }
         }
 
-        currentSong.collect(scope) { song ->
-            mediaSession.setCustomLayout(
-                listOf(
-                    CommandButton.Builder()
-                        .setDisplayName(getString(if (song?.song?.inLibrary != null) R.string.remove_from_library else R.string.add_to_library))
-                        .setIconResId(if (song?.song?.inLibrary != null) R.drawable.library_add_check else R.drawable.library_add)
-                        .setSessionCommand(CommandToggleLibrary)
-                        .setEnabled(song != null)
-                        .build(),
-                    CommandButton.Builder()
-                        .setDisplayName(getString(if (song?.song?.liked == true) R.string.action_remove_like else R.string.action_like))
-                        .setIconResId(if (song?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border)
-                        .setSessionCommand(CommandToggleLike)
-                        .setEnabled(song != null)
-                        .build()
-                )
-            )
+        currentSong.collect(scope) {
+            updateNotification()
         }
 
         combine(
@@ -330,6 +323,51 @@ class MusicService : MediaLibraryService(),
                 }
             }
         }
+    }
+
+    private fun updateNotification() {
+        mediaSession.setCustomLayout(
+            listOf(
+                CommandButton.Builder()
+                    .setDisplayName(getString(if (currentSong.value?.song?.inLibrary != null) R.string.remove_from_library else R.string.add_to_library))
+                    .setIconResId(if (currentSong.value?.song?.inLibrary != null) R.drawable.library_add_check else R.drawable.library_add)
+                    .setSessionCommand(CommandToggleLibrary)
+                    .setEnabled(currentSong.value != null)
+                    .build(),
+                CommandButton.Builder()
+                    .setDisplayName(getString(if (currentSong.value?.song?.liked == true) R.string.action_remove_like else R.string.action_like))
+                    .setIconResId(if (currentSong.value?.song?.liked == true) R.drawable.favorite else R.drawable.favorite_border)
+                    .setSessionCommand(CommandToggleLike)
+                    .setEnabled(currentSong.value != null)
+                    .build(),
+                CommandButton.Builder()
+                    .setDisplayName(getString(if (player.shuffleModeEnabled) R.string.action_shuffle_off else R.string.action_shuffle_on))
+                    .setIconResId(if (player.shuffleModeEnabled) R.drawable.shuffle_on else R.drawable.shuffle)
+                    .setSessionCommand(CommandToggleShuffle)
+                    .build(),
+                CommandButton.Builder()
+                    .setDisplayName(
+                        getString(
+                            when (player.repeatMode) {
+                                REPEAT_MODE_OFF -> R.string.repeat_mode_off
+                                REPEAT_MODE_ONE -> R.string.repeat_mode_one
+                                REPEAT_MODE_ALL -> R.string.repeat_mode_all
+                                else -> throw IllegalStateException()
+                            }
+                        )
+                    )
+                    .setIconResId(
+                        when (player.repeatMode) {
+                            REPEAT_MODE_OFF -> R.drawable.repeat
+                            REPEAT_MODE_ONE -> R.drawable.repeat_one_on
+                            REPEAT_MODE_ALL -> R.drawable.repeat_on
+                            else -> throw IllegalStateException()
+                        }
+                    )
+                    .setSessionCommand(CommandToggleRepeatMode)
+                    .build()
+            )
+        )
     }
 
     private suspend fun recoverSong(mediaId: String, playerResponse: PlayerResponse? = null) {
@@ -433,6 +471,8 @@ class MusicService : MediaLibraryService(),
     }
 
     private fun openAudioEffectSession() {
+        if (isAudioEffectSessionOpened) return
+        isAudioEffectSessionOpened = true
         sendBroadcast(
             Intent(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION).apply {
                 putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
@@ -443,9 +483,12 @@ class MusicService : MediaLibraryService(),
     }
 
     private fun closeAudioEffectSession() {
+        if (!isAudioEffectSessionOpened) return
+        isAudioEffectSessionOpened = false
         sendBroadcast(
             Intent(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION).apply {
                 putExtra(AudioEffect.EXTRA_AUDIO_SESSION, player.audioSessionId)
+                putExtra(AudioEffect.EXTRA_PACKAGE_NAME, packageName)
             }
         )
     }
@@ -475,8 +518,9 @@ class MusicService : MediaLibraryService(),
     }
 
     override fun onEvents(player: Player, events: Player.Events) {
-        if (events.containsAny(EVENT_PLAYBACK_STATE_CHANGED, EVENT_PLAY_WHEN_READY_CHANGED, EVENT_IS_PLAYING_CHANGED, EVENT_POSITION_DISCONTINUITY)) {
-            if (player.playbackState != STATE_ENDED && player.playWhenReady) {
+        if (events.containsAny(Player.EVENT_PLAYBACK_STATE_CHANGED, Player.EVENT_PLAY_WHEN_READY_CHANGED)) {
+            val isBufferingOrReady = player.playbackState == Player.STATE_BUFFERING || player.playbackState == Player.STATE_READY
+            if (isBufferingOrReady && player.playWhenReady) {
                 openAudioEffectSession()
             } else {
                 closeAudioEffectSession()
@@ -489,6 +533,7 @@ class MusicService : MediaLibraryService(),
 
 
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
+        updateNotification()
         if (shuffleModeEnabled) {
             // Always put current playing item at first
             val shuffledIndices = IntArray(player.mediaItemCount) { it }
@@ -500,6 +545,7 @@ class MusicService : MediaLibraryService(),
     }
 
     override fun onRepeatModeChanged(repeatMode: Int) {
+        updateNotification()
         scope.launch {
             dataStore.edit { settings ->
                 settings[RepeatModeKey] = repeatMode

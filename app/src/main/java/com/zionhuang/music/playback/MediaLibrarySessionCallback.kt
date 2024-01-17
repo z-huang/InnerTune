@@ -25,6 +25,7 @@ import com.zionhuang.music.db.MusicDatabase
 import com.zionhuang.music.db.entities.PlaylistEntity
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
+import com.zionhuang.music.extensions.toggleRepeatMode
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +51,10 @@ class MediaLibrarySessionCallback @Inject constructor(
         return MediaSession.ConnectionResult.accept(
             connectionResult.availableSessionCommands.buildUpon()
                 .add(MediaSessionConstants.CommandToggleLibrary)
-                .add(MediaSessionConstants.CommandToggleLike).build(),
+                .add(MediaSessionConstants.CommandToggleLike)
+                .add(MediaSessionConstants.CommandToggleShuffle)
+                .add(MediaSessionConstants.CommandToggleRepeatMode)
+                .build(),
             connectionResult.availablePlayerCommands
         )
     }
@@ -64,6 +68,8 @@ class MediaLibrarySessionCallback @Inject constructor(
         when (customCommand.customAction) {
             MediaSessionConstants.ACTION_TOGGLE_LIKE -> toggleLike()
             MediaSessionConstants.ACTION_TOGGLE_LIBRARY -> toggleLibrary()
+            MediaSessionConstants.ACTION_TOGGLE_SHUFFLE -> session.player.shuffleModeEnabled = !session.player.shuffleModeEnabled
+            MediaSessionConstants.ACTION_TOGGLE_REPEAT_MODE -> session.player.toggleRepeatMode()
         }
         return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
     }

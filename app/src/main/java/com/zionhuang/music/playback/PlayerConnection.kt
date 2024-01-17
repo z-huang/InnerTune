@@ -7,9 +7,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.Player.COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM
 import androidx.media3.common.Player.COMMAND_SEEK_TO_NEXT_MEDIA_ITEM
 import androidx.media3.common.Player.COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM
-import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.REPEAT_MODE_OFF
-import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.common.Player.STATE_ENDED
 import androidx.media3.common.Timeline
 import com.zionhuang.music.constants.TranslateLyricsKey
@@ -116,17 +114,6 @@ class PlayerConnection(
     fun addToQueue(item: MediaItem) = addToQueue(listOf(item))
     fun addToQueue(items: List<MediaItem>) {
         service.addToQueue(items)
-    }
-
-    fun toggleRepeatMode() {
-        player.let {
-            it.repeatMode = when (it.repeatMode) {
-                REPEAT_MODE_OFF -> REPEAT_MODE_ALL
-                REPEAT_MODE_ALL -> REPEAT_MODE_ONE
-                REPEAT_MODE_ONE -> REPEAT_MODE_OFF
-                else -> throw IllegalStateException()
-            }
-        }
     }
 
     fun toggleLike() {

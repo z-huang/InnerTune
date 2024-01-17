@@ -63,6 +63,7 @@ import com.zionhuang.music.R
 import com.zionhuang.music.constants.PlayerHorizontalPadding
 import com.zionhuang.music.constants.QueuePeekHeight
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.extensions.toggleRepeatMode
 import com.zionhuang.music.models.MediaMetadata
 import com.zionhuang.music.ui.component.BottomSheet
 import com.zionhuang.music.ui.component.BottomSheetState
@@ -302,7 +303,7 @@ fun BottomSheetPlayer(
                             .padding(4.dp)
                             .align(Alignment.Center)
                             .alpha(if (repeatMode == REPEAT_MODE_OFF) 0.5f else 1f),
-                        onClick = playerConnection::toggleRepeatMode
+                        onClick = playerConnection.player::toggleRepeatMode
                     )
                 }
             }
