@@ -39,7 +39,7 @@
     <string name="search_library">Rechercher dans votre bibliothèque…</string>
     <string name="filter_library">Bibliothèque</string>
     <string name="filter_liked">Aimé</string>
-    <string name="filter_downloaded">Télécharger</string>
+    <string name="filter_downloaded">Téléchargé</string>
     <string name="filter_all">Tout</string>
     <string name="filter_songs">Chansons</string>
     <string name="filter_videos">Vidéos</string>
@@ -97,7 +97,7 @@
     <string name="sort_by_song_count">Nombre de chansons</string>
     <string name="sort_by_length">Longueur</string>
     <string name="sort_by_play_time">Temps d’écoute</string>
-    <string name="sort_by_custom">Commande personnalisée</string>
+    <string name="sort_by_custom">Personnalisé</string>
 
     <!-- Dialog -->
     <string name="media_id">Identifiant du média</string>
@@ -112,11 +112,11 @@
     <string name="copied">Copié dans le presse-papiers</string>
 
     <string name="edit_lyrics">Modifier les paroles</string>
-    <string name="search_lyrics">Rechercher des paroles</string>
+    <string name="search_lyrics">Rechercher les paroles</string>
 
     <string name="edit_song">Éditer la chanson</string>
-    <string name="song_title">Titre de la chanson</string>
-    <string name="song_artists">Artiste de la chanson</string>
+    <string name="song_title">Titre</string>
+    <string name="song_artists">Artiste</string>
     <string name="error_song_title_empty">Le titre de la chanson ne peut pas être vide.</string>
     <string name="error_song_artist_empty">L\’artiste de la chanson ne peut pas être vide.</string>
     <string name="save">Sauvegarder</string>
@@ -126,7 +126,7 @@
     <string name="create_playlist">Créer une liste de lecture</string>
     <string name="playlist_name">Nom de la liste de lecture</string>
     <string name="error_playlist_name_empty">Le nom de la liste de lecture ne peut être vide.</string>
-
+  
     <string name="edit_artist">Éditer l\’artiste</string>
     <string name="artist_name">Nom de l\’artiste</string>
     <string name="error_artist_name_empty">Le nom de l\’artiste ne peut être vide.</string>
@@ -169,9 +169,9 @@
     </plurals>
 
     <!-- Snackbar -->
-    <string name="playlist_imported">Liste de lecture importée</string>
-    <string name="removed_song_from_playlist">\"%s\" supprimé de la liste de lecture</string>
-    <string name="playlist_synced">Liste de lecture synchronisée</string>
+    <string name="playlist_imported">Playlist importée</string>
+    <string name="removed_song_from_playlist">\"%s\" supprimé de la playlist</string>
+    <string name="playlist_synced">Playlist synchronisée</string>
     <string name="undo">annuler</string>
 
     <!-- Player -->
@@ -212,7 +212,7 @@
     <string name="dark_theme_on">Activé</string>
     <string name="dark_theme_off">Désactivé</string>
     <string name="dark_theme_follow_system">Suivre le système</string>
-    <string name="pure_black">Noir pur</string>
+    <string name="pure_black">Noir profond</string>
     <string name="default_open_tab">Menu ouvert par défaut</string>
     <string name="customize_navigation_tabs">Personnaliser les menus de navigation</string>
     <string name="lyrics_text_position">Position du texte des paroles</string>
@@ -225,7 +225,7 @@
     <string name="content_language">Langue du contenu par défaut</string>
     <string name="content_country">Pays du contenu par défaut</string>
     <string name="system_default">Système par défaut</string>
-    <string name="enable_proxy">Activer le proxy</string>
+    <string name="enable_proxy">Activer un proxy</string>
     <string name="proxy_type">Type de proxy</string>
     <string name="proxy_url">URL proxy</string>
     <string name="restart_to_take_effect">Redémarrer pour prendre effet</string>
@@ -265,7 +265,7 @@
     <string name="backup_restore">Sauvegarde et restauration</string>
     <string name="backup">Sauvegarder</string>
     <string name="restore">Restaurer</string>
-    <string name="imported_playlist">Liste de lecture importée</string>
+    <string name="imported_playlist">Playlist importée</string>
     <string name="backup_create_success">Sauvegarde créée avec succès</string>
     <string name="backup_create_failed">Impossible de créer la sauvegarde</string>
     <string name="restore_failed">Échec de la restauration de la sauvegarde</string>
