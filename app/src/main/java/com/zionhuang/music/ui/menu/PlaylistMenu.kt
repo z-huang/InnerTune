@@ -39,6 +39,7 @@ import com.zionhuang.music.LocalDownloadUtil
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.db.entities.Playlist
+import com.zionhuang.music.db.entities.PlaylistSong
 import com.zionhuang.music.db.entities.PlaylistSongMap
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
@@ -74,8 +75,8 @@ fun PlaylistMenu(
     }
 
     LaunchedEffect(Unit) {
-        database.playlistSongsList(playlist.id).collect {
-            songs = it
+        database.playlistSongs(playlist.id).collect {
+            songs = it.map(PlaylistSong::song)
         }
     }
 
