@@ -164,11 +164,11 @@
     <!-- Player action -->
     <string name="action_like">J’aime</string>
     <string name="action_remove_like">Enlever le like</string>
-    <string name="action_shuffle_on">Shuffle activé</string>
-    <string name="action_shuffle_off">Shuffle désactivé</string>
-    <string name="repeat_mode_off">Répétition désactivé</string>
-    <string name="repeat_mode_one">Répéter la musique actuelle</string>
-    <string name="repeat_mode_all">Répeter la queue</string>
+    <string name="action_shuffle_on">Lecture aléatoire</string>
+    <string name="action_shuffle_off">Pas de lecture aléatoire</string>
+    <string name="repeat_mode_off">Répétition désactivée</string>
+    <string name="repeat_mode_one">Répéter la chanson actuelle</string>
+    <string name="repeat_mode_all">Répéter la liste d’attente</string>
     <!-- Queue Title -->
     <string name="queue_all_songs">Toutes les chansons</string>
     <string name="queue_searched_songs">Chansons recherchées</string>
