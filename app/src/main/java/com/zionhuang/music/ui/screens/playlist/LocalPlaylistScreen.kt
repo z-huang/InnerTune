@@ -68,6 +68,8 @@ import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
+import co.softov.morestuff.android.ui.compose.NoFlingSwipeToDismiss
+import co.softov.morestuff.android.ui.compose.rememberNoFlingDismissState
 import coil.compose.AsyncImage
 import com.zionhuang.innertube.YouTube
 import com.zionhuang.innertube.models.SongItem
@@ -537,10 +539,8 @@ fun LocalPlaylistScreen(
                     key = song.map.id
                 ) {
                     val currentItem by rememberUpdatedState(song)
-                    val dismissState = rememberDismissState(
-                        positionalThreshold = { totalDistance ->
-                            totalDistance
-                        },
+                    val noFlingDismissState = rememberNoFlingDismissState(
+                        positionalThreshold = { 90.dp.toPx() },
                         confirmValueChange = { dismissValue ->
                             if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
                                 database.transaction {
@@ -623,8 +623,8 @@ fun LocalPlaylistScreen(
                     if (locked) {
                         content()
                     } else {
-                        SwipeToDismiss(
-                            state = dismissState,
+                        NoFlingSwipeToDismiss(
+                            state = noFlingDismissState,
                             background = {},
                             dismissContent = {
                                 content()

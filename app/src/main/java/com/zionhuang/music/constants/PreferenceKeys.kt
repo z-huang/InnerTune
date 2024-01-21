@@ -55,6 +55,7 @@ val AlbumViewTypeKey = stringPreferencesKey("albumViewType")
 val PlaylistViewTypeKey = stringPreferencesKey("playlistViewType")
 
 val PlaylistEditLockKey = booleanPreferencesKey("playlistEditLock")
+val QueueEditLockKey = booleanPreferencesKey("queueEditLock")
 
 enum class LibraryViewType {
     LIST, GRID;

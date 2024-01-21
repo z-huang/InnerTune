@@ -4,8 +4,10 @@ import android.text.format.Formatter
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,10 +40,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDismissState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -71,9 +71,12 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.media3.common.Timeline
 import androidx.media3.exoplayer.source.ShuffleOrder.DefaultShuffleOrder
 import androidx.navigation.NavController
+import co.softov.morestuff.android.ui.compose.NoFlingSwipeToDismiss
+import co.softov.morestuff.android.ui.compose.rememberNoFlingDismissState
 import com.zionhuang.music.LocalPlayerConnection
 import com.zionhuang.music.R
 import com.zionhuang.music.constants.ListItemHeight
+import com.zionhuang.music.constants.QueueEditLockKey
 import com.zionhuang.music.constants.ShowLyricsKey
 import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.extensions.move
@@ -83,20 +86,19 @@ import com.zionhuang.music.ui.component.BottomSheetState
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.MediaMetadataListItem
 import com.zionhuang.music.ui.menu.PlayerMenu
+import com.zionhuang.music.ui.menu.QueueListPlayerMenu
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberPreference
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.burnoutcrew.reorderable.ReorderableItem
 import org.burnoutcrew.reorderable.detectReorder
-import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Queue(
     state: BottomSheetState,
@@ -118,6 +120,8 @@ fun Queue(
     val currentFormat by playerConnection.currentFormat.collectAsState(initial = null)
 
     var showLyrics by rememberPreference(ShowLyricsKey, defaultValue = false)
+
+    var queueOrderLocked by rememberPreference(QueueEditLockKey, defaultValue = false)
 
     val sleepTimerEnabled = remember(playerConnection.service.sleepTimer.triggerTime, playerConnection.service.sleepTimer.pauseWhenSongEnd) {
         playerConnection.service.sleepTimer.isActive
@@ -371,6 +375,10 @@ fun Queue(
             }
         }
 
+        LaunchedEffect(mutableQueueWindows) {
+            reorderableState.listState.scrollToItem(currentWindowIndex)
+        }
+
         LazyColumn(
             state = reorderableState.listState,
             contentPadding = WindowInsets.systemBars
@@ -394,10 +402,8 @@ fun Queue(
                     key = window.uid.hashCode()
                 ) {
                     val currentItem by rememberUpdatedState(window)
-                    val dismissState = rememberDismissState(
-                        positionalThreshold = { totalDistance ->
-                            totalDistance
-                        },
+                    val noFlingDismissState = rememberNoFlingDismissState(
+                        positionalThreshold = { 90.dp.toPx() },
                         confirmValueChange = { dismissValue ->
                             if (dismissValue == DismissValue.DismissedToEnd || dismissValue == DismissValue.DismissedToStart) {
                                 playerConnection.player.removeMediaItem(currentItem.firstPeriodIndex)
@@ -405,42 +411,86 @@ fun Queue(
                             true
                         }
                     )
-                    SwipeToDismiss(
-                        state = dismissState,
-                        background = {},
-                        dismissContent = {
-                            MediaMetadataListItem(
-                                mediaMetadata = window.mediaItem.metadata!!,
-                                isActive = index == currentWindowIndex,
-                                isPlaying = isPlaying,
-                                trailingContent = {
-                                    IconButton(
-                                        onClick = { },
-                                        modifier = Modifier
-                                            .detectReorder(reorderableState)
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.drag_handle),
-                                            contentDescription = null
-                                        )
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        coroutineScope.launch(Dispatchers.Main) {
-                                            if (index == currentWindowIndex) {
-                                                playerConnection.player.togglePlayPause()
-                                            } else {
-                                                playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
-                                                playerConnection.player.playWhenReady = true
+                    if (!queueOrderLocked) {
+                        NoFlingSwipeToDismiss(
+                            state = noFlingDismissState,
+                            background = {},
+                            dismissContent = {
+                                MediaMetadataListItem(
+                                    mediaMetadata = window.mediaItem.metadata!!,
+                                    isActive = index == currentWindowIndex,
+                                    isPlaying = isPlaying,
+                                    trailingContent = {
+                                        IconButton(
+                                            onClick = { },
+                                            modifier = Modifier
+                                                .detectReorder(reorderableState)
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.drag_handle),
+                                                contentDescription = null
+                                            )
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .combinedClickable(
+                                            onClick = {
+                                                if (index == currentWindowIndex) {
+                                                    playerConnection.player.togglePlayPause()
+                                                } else {
+                                                    playerConnection.player.seekToDefaultPosition(
+                                                        window.firstPeriodIndex
+                                                    )
+                                                    playerConnection.player.playWhenReady = true
+                                                }
+                                            },
+                                            onLongClick = {
+                                                menuState.show {
+                                                    QueueListPlayerMenu(
+                                                        mediaMetadata = window.mediaItem.metadata!!,
+                                                        navController = navController,
+                                                        playerBottomSheetState = playerBottomSheetState,
+                                                        onDismiss = menuState::dismiss
+                                                    )
+                                                }
                                             }
+                                        )
+                                    //.detectReorderAfterLongPress(reorderableState)
+                                )
+                            }
+                        )
+                    } else {
+                        MediaMetadataListItem(
+                            mediaMetadata = window.mediaItem.metadata!!,
+                            isActive = index == currentWindowIndex,
+                            isPlaying = isPlaying,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .combinedClickable(
+                                    onClick = {
+                                        if (index == currentWindowIndex) {
+                                            playerConnection.player.togglePlayPause()
+                                        } else {
+                                            playerConnection.player.seekToDefaultPosition(
+                                                window.firstPeriodIndex
+                                            )
+                                            playerConnection.player.playWhenReady = true
+                                        }
+                                    },
+                                    onLongClick = {
+                                        menuState.show {
+                                            QueueListPlayerMenu(
+                                                mediaMetadata = window.mediaItem.metadata!!,
+                                                navController = navController,
+                                                playerBottomSheetState = playerBottomSheetState,
+                                                onDismiss = menuState::dismiss
+                                            )
                                         }
                                     }
-                                    .detectReorderAfterLongPress(reorderableState)
-                            )
-                        }
-                    )
+                                )
+                        )
+                    }
                 }
             }
         }
@@ -526,6 +576,17 @@ fun Queue(
                     painter = painterResource(R.drawable.shuffle),
                     contentDescription = null,
                     modifier = Modifier.alpha(if (shuffleModeEnabled) 1f else 0.5f)
+                )
+            }
+
+            IconButton(
+                onClick = { queueOrderLocked = !queueOrderLocked },
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ) {
+                Icon(
+                    painter = painterResource(if (queueOrderLocked) R.drawable.lock else R.drawable.lock_open),
+                    contentDescription = null,
+                    modifier = Modifier.alpha(if (queueOrderLocked) 1f else 0.5f)
                 )
             }
 
