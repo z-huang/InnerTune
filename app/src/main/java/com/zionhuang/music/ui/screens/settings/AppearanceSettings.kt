@@ -21,6 +21,7 @@ import com.zionhuang.music.constants.DefaultOpenTabKey
 import com.zionhuang.music.constants.DynamicThemeKey
 import com.zionhuang.music.constants.LyricsTextPositionKey
 import com.zionhuang.music.constants.PureBlackKey
+import com.zionhuang.music.constants.BackgroundColorTintKey
 import com.zionhuang.music.ui.component.EnumListPreference
 import com.zionhuang.music.ui.component.IconButton
 import com.zionhuang.music.ui.component.SwitchPreference
@@ -37,6 +38,7 @@ fun AppearanceSettings(
     val (dynamicTheme, onDynamicThemeChange) = rememberPreference(DynamicThemeKey, defaultValue = true)
     val (darkMode, onDarkModeChange) = rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
     val (pureBlack, onPureBlackChange) = rememberPreference(PureBlackKey, defaultValue = false)
+    val (backgroundColorTint, onBackgroundColorTintChange) = rememberPreference(BackgroundColorTintKey, defaultValue = false)
     val (defaultOpenTab, onDefaultOpenTabChange) = rememberEnumPreference(DefaultOpenTabKey, defaultValue = NavigationTab.HOME)
     val (lyricsPosition, onLyricsPositionChange) = rememberEnumPreference(LyricsTextPositionKey, defaultValue = LyricsPosition.CENTER)
 
@@ -64,12 +66,22 @@ fun AppearanceSettings(
                 }
             }
         )
-        SwitchPreference(
-            title = { Text(stringResource(R.string.pure_black)) },
-            icon = { Icon(painterResource(R.drawable.contrast), null) },
-            checked = pureBlack,
-            onCheckedChange = onPureBlackChange
-        )
+        if (darkMode !== DarkMode.OFF) {
+            SwitchPreference(
+                title = { Text(stringResource(R.string.pure_black)) },
+                icon = { Icon(painterResource(R.drawable.contrast), null) },
+                checked = pureBlack,
+                onCheckedChange = onPureBlackChange
+            )
+        }
+        if (darkMode !== DarkMode.OFF && pureBlack) {
+            SwitchPreference(
+                title = { Text(stringResource(R.string.background_tint)) },
+                icon = { Icon(painterResource(R.drawable.more_vert), null) },
+                checked = backgroundColorTint,
+                onCheckedChange = onBackgroundColorTintChange
+            )
+        }
         EnumListPreference(
             title = { Text(stringResource(R.string.default_open_tab)) },
             icon = { Icon(painterResource(R.drawable.tab), null) },
