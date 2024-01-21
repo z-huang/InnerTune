@@ -60,12 +60,14 @@ fun AppearanceSettings(
                 }
             }
         )
-        SwitchPreference(
-            title = { Text(stringResource(R.string.pure_black)) },
-            icon = { Icon(painterResource(R.drawable.contrast), null) },
-            checked = pureBlack,
-            onCheckedChange = onPureBlackChange
-        )
+        if (darkMode !== DarkMode.OFF) {
+            SwitchPreference(
+                title = { Text(stringResource(R.string.pure_black)) },
+                icon = { Icon(painterResource(R.drawable.contrast), null) },
+                checked = pureBlack,
+                onCheckedChange = onPureBlackChange
+            )
+        }
         if (darkMode !== DarkMode.OFF && pureBlack) {
             SwitchPreference(
                 title = { Text(stringResource(R.string.background_tint)) },
