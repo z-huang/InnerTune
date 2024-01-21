@@ -95,11 +95,13 @@ import com.zionhuang.music.ui.component.AutoResizeText
 import com.zionhuang.music.ui.component.DefaultDialog
 import com.zionhuang.music.ui.component.EmptyPlaceholder
 import com.zionhuang.music.ui.component.FontSizeRange
+import com.zionhuang.music.ui.component.IconButton
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.component.TextFieldDialog
 import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.utils.backToMain
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
@@ -636,7 +638,10 @@ fun LocalPlaylistScreen(
         TopAppBar(
             title = { if (showTopBarTitle) Text(playlist?.playlist?.name.orEmpty()) },
             navigationIcon = {
-                IconButton(onClick = navController::navigateUp) {
+                IconButton(
+                    onClick = navController::navigateUp,
+                    onLongClick = navController::backToMain
+                ) {
                     Icon(
                         painterResource(R.drawable.arrow_back),
                         contentDescription = null
