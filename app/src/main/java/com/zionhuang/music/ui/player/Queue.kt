@@ -65,6 +65,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
@@ -95,6 +96,9 @@ import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
 import org.burnoutcrew.reorderable.reorderable
 import kotlin.math.roundToInt
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -144,6 +148,14 @@ fun Queue(
         mutableStateOf(false)
     }
 
+    fun calculateSleepTime(minutes: Float): String {
+        val pattern = if (android.text.format.DateFormat.is24HourFormat(context))
+            "HH:mm" else "hh:mm aa"
+
+        return SimpleDateFormat(pattern, Locale.getDefault())
+            .format(Date(System.currentTimeMillis() + (minutes * 60 * 1000).toLong()))
+    }
+
     var sleepTimerValue by remember {
         mutableStateOf(30f)
     }
@@ -172,16 +184,20 @@ fun Queue(
             },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    val pluralString = pluralStringResource(R.plurals.minute, sleepTimerValue.roundToInt(), sleepTimerValue.roundToInt())
+                    val calculatedTimeString = calculateSleepTime(sleepTimerValue)
                     Text(
-                        text = pluralStringResource(R.plurals.minute, sleepTimerValue.roundToInt(), sleepTimerValue.roundToInt()),
-                        style = MaterialTheme.typography.bodyLarge
+                        text = "$pluralString\n$calculatedTimeString",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
 
                     Slider(
                         value = sleepTimerValue,
                         onValueChange = { sleepTimerValue = it },
                         valueRange = 5f..120f,
-                        steps = (120 - 5) / 5 - 1,
+                        steps = 120 - 5 - 1,
                     )
 
                     OutlinedButton(
