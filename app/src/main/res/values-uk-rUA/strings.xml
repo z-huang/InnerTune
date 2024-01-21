@@ -59,6 +59,8 @@
     <string name="liked_songs">Улюблені треки</string>
     <string name="downloaded_songs">Завантажена музика</string>
     <string name="playlist_is_empty">Плейлист порожній</string>
+    <string name="remove_download_playlist_confirm">Ви впевнені, що хочете видалити всі пісні з плейлиста «%s» зі сховища завантаженої музики?</string>
+    <string name="delete_playlist_confirm">Ви впевнені, що хочете видалити плейлист «%s»?</string>
 
     <!-- Button -->
     <string name="retry">Повторювати</string>
@@ -87,7 +89,7 @@
     <string name="delete">Видалити</string>
     <string name="remove_from_history">Видалити з історії</string>
     <string name="search_online">Пошук в Інтернеті</string>
-    <string name="sync">Синхронізація</string>
+    <string name="sync">Синхронізувати</string>
     <string name="advanced">Контроль аудіо</string>
 
     <!-- Sort menu -->
@@ -178,7 +180,7 @@
 
     <!-- Snackbar -->
     <string name="playlist_imported">Плейлист імпортовано</string>
-    <string name="removed_song_from_playlist">«%s» видалено зі списку відтворення</string>
+    <string name="removed_song_from_playlist">«%s» видалена з плейлиста</string>
     <string name="playlist_synced">Плейлист синхронізовано</string>
     <string name="undo">Скасувати</string>
 
