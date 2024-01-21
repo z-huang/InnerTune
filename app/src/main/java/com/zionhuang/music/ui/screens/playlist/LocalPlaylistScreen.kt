@@ -31,6 +31,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDismissState
@@ -91,6 +92,7 @@ import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AutoResizeText
+import com.zionhuang.music.ui.component.DefaultDialog
 import com.zionhuang.music.ui.component.EmptyPlaceholder
 import com.zionhuang.music.ui.component.FontSizeRange
 import com.zionhuang.music.ui.component.LocalMenuState
@@ -181,6 +183,46 @@ fun LocalPlaylistScreen(
                 }
             )
         }
+    }
+
+    var showRemoveDownloadDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showRemoveDownloadDialog) {
+        DefaultDialog(
+            onDismiss = { showRemoveDownloadDialog = false },
+            content = {
+                Text(
+                    text = stringResource(R.string.remove_download_playlist_confirm, playlist?.playlist!!.name),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(horizontal = 18.dp)
+                )
+            },
+            buttons = {
+                TextButton(
+                    onClick = { showRemoveDownloadDialog = false }
+                ) {
+                    Text(text = stringResource(android.R.string.cancel))
+                }
+
+                TextButton(
+                    onClick = {
+                        showRemoveDownloadDialog = false
+                        songs.forEach { song ->
+                            DownloadService.sendRemoveDownload(
+                                context,
+                                ExoDownloadService::class.java,
+                                song.song.id,
+                                false
+                            )
+                        }
+                    }
+                ) {
+                    Text(text = stringResource(android.R.string.ok))
+                }
+            }
+        )
     }
 
     val headerItems = 2
@@ -331,14 +373,7 @@ fun LocalPlaylistScreen(
                                             Download.STATE_COMPLETED -> {
                                                 IconButton(
                                                     onClick = {
-                                                        songs.forEach { song ->
-                                                            DownloadService.sendRemoveDownload(
-                                                                context,
-                                                                ExoDownloadService::class.java,
-                                                                song.song.id,
-                                                                false
-                                                            )
-                                                        }
+                                                        showRemoveDownloadDialog = true
                                                     }
                                                 ) {
                                                     Icon(
@@ -391,6 +426,19 @@ fun LocalPlaylistScreen(
                                                     )
                                                 }
                                             }
+                                        }
+
+                                        IconButton(
+                                            onClick = {
+                                                playerConnection.addToQueue(
+                                                    items = songs.map { it.song.toMediaItem() }
+                                                )
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.queue_music),
+                                                contentDescription = null
+                                            )
                                         }
                                     }
                                 }
