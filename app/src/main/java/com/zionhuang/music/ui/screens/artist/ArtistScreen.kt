@@ -82,11 +82,11 @@ import com.zionhuang.music.ui.component.shimmer.ButtonPlaceholder
 import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
-import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeArtistMenu
 import com.zionhuang.music.ui.menu.YouTubePlaylistMenu
-import com.zionhuang.music.ui.menu.YouTubeSongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.ui.utils.fadingEdge
 import com.zionhuang.music.ui.utils.resize
 import com.zionhuang.music.viewmodels.ArtistViewModel
@@ -227,8 +227,8 @@ fun ArtistScreen(
                                 IconButton(
                                     onClick = {
                                         menuState.show {
-                                            SongMenu(
-                                                originalSong = song,
+                                            GenericSongMenu(
+                                                mediaMetadata = song.toMediaMetadata(),
                                                 navController = navController,
                                                 onDismiss = menuState::dismiss
                                             )
@@ -280,8 +280,8 @@ fun ArtistScreen(
                                     IconButton(
                                         onClick = {
                                             menuState.show {
-                                                YouTubeSongMenu(
-                                                    song = song,
+                                                GenericSongMenu(
+                                                    mediaMetadata = song.toMediaMetadata(),
                                                     navController = navController,
                                                     onDismiss = menuState::dismiss
                                                 )
@@ -334,8 +334,8 @@ fun ArtistScreen(
                                                 onLongClick = {
                                                     menuState.show {
                                                         when (item) {
-                                                            is SongItem -> YouTubeSongMenu(
-                                                                song = item,
+                                                            is SongItem -> GenericSongMenu(
+                                                                mediaMetadata = item.toMediaMetadata(),
                                                                 navController = navController,
                                                                 onDismiss = menuState::dismiss
                                                             )

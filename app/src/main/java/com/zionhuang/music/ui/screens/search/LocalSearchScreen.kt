@@ -40,6 +40,7 @@ import com.zionhuang.music.db.entities.Playlist
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.extensions.togglePlayPause
+import com.zionhuang.music.models.toMediaMetadata
 import com.zionhuang.music.playback.queues.ListQueue
 import com.zionhuang.music.ui.component.AlbumListItem
 import com.zionhuang.music.ui.component.ArtistListItem
@@ -48,7 +49,7 @@ import com.zionhuang.music.ui.component.EmptyPlaceholder
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.PlaylistListItem
 import com.zionhuang.music.ui.component.SongListItem
-import com.zionhuang.music.ui.menu.SongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.viewmodels.LocalFilter
 import com.zionhuang.music.viewmodels.LocalSearchViewModel
 import kotlinx.coroutines.flow.drop
@@ -152,8 +153,8 @@ fun LocalSearchScreen(
                                 IconButton(
                                     onClick = {
                                         menuState.show {
-                                            SongMenu(
-                                                originalSong = item,
+                                            GenericSongMenu(
+                                                mediaMetadata = item.toMediaMetadata(),
                                                 navController = navController
                                             ) {
                                                 onDismiss()

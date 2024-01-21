@@ -82,7 +82,7 @@ import com.zionhuang.music.ui.component.BottomSheet
 import com.zionhuang.music.ui.component.BottomSheetState
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.MediaMetadataListItem
-import com.zionhuang.music.ui.menu.PlayerMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberPreference
 import kotlinx.coroutines.Dispatchers
@@ -320,11 +320,12 @@ fun Queue(
                 IconButton(
                     onClick = {
                         menuState.show {
-                            PlayerMenu(
+                            GenericSongMenu(
                                 mediaMetadata = mediaMetadata,
                                 navController = navController,
                                 playerBottomSheetState = playerBottomSheetState,
                                 onShowDetailsDialog = { showDetailsDialog = true },
+                                inPlayer = true,
                                 onDismiss = menuState::dismiss
                             )
                         }

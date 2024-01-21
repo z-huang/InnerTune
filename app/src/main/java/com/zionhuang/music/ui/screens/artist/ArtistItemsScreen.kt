@@ -48,7 +48,7 @@ import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeArtistMenu
 import com.zionhuang.music.ui.menu.YouTubePlaylistMenu
-import com.zionhuang.music.ui.menu.YouTubeSongMenu
+import com.zionhuang.music.ui.menu.GenericSongMenu
 import com.zionhuang.music.viewmodels.ArtistItemsViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -110,8 +110,8 @@ fun ArtistItemsScreen(
                             onClick = {
                                 menuState.show {
                                     when (item) {
-                                        is SongItem -> YouTubeSongMenu(
-                                            song = item,
+                                        is SongItem -> GenericSongMenu(
+                                            mediaMetadata = item.toMediaMetadata(),
                                             navController = navController,
                                             onDismiss = menuState::dismiss
                                         )
@@ -203,8 +203,8 @@ fun ArtistItemsScreen(
                             onLongClick = {
                                 menuState.show {
                                     when (item) {
-                                        is SongItem -> YouTubeSongMenu(
-                                            song = item,
+                                        is SongItem -> GenericSongMenu(
+                                            mediaMetadata = item.toMediaMetadata(),
                                             navController = navController,
                                             onDismiss = menuState::dismiss
                                         )
