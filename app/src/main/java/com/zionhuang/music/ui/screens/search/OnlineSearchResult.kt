@@ -59,7 +59,7 @@ import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.menu.YouTubeAlbumMenu
 import com.zionhuang.music.ui.menu.YouTubeArtistMenu
 import com.zionhuang.music.ui.menu.YouTubePlaylistMenu
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.viewmodels.OnlineSearchViewModel
 import kotlinx.coroutines.launch
 
@@ -110,7 +110,7 @@ fun OnlineSearchResult(
                     onClick = {
                         menuState.show {
                             when (item) {
-                                is SongItem -> GenericSongMenu(
+                                is SongItem -> LibrarySongMenu(
                                     mediaMetadata = item.toMediaMetadata(),
                                     navController = navController,
                                     onDismiss = menuState::dismiss

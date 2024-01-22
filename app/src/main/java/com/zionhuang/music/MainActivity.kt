@@ -75,7 +75,7 @@ import com.zionhuang.music.playback.MusicService.MusicBinder
 import com.zionhuang.music.playback.PlayerConnection
 import com.zionhuang.music.ui.component.*
 import com.zionhuang.music.ui.component.shimmer.ShimmerTheme
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.ui.player.BottomSheetPlayer
 import com.zionhuang.music.ui.screens.*
 import com.zionhuang.music.ui.screens.artist.ArtistItemsScreen
@@ -776,7 +776,7 @@ class MainActivity : ComponentActivity() {
                                         Column(
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            GenericSongMenu(
+                                            LibrarySongMenu(
                                                 mediaMetadata = song.toMediaMetadata(),
                                                 navController = navController,
                                                 onDismiss = { sharedSong = null }

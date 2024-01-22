@@ -34,7 +34,7 @@ import com.zionhuang.music.playback.queues.YouTubeQueue
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.viewmodels.DateAgo
 import com.zionhuang.music.viewmodels.HistoryViewModel
 import java.time.format.DateTimeFormatter
@@ -85,7 +85,7 @@ fun HistoryScreen(
                         IconButton(
                             onClick = {
                                 menuState.show {
-                                    GenericSongMenu(
+                                    LibrarySongMenu(
                                         mediaMetadata = event.song.toMediaMetadata(),
                                         event = event.event,
                                         navController = navController,

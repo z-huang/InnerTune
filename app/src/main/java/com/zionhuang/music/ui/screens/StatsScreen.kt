@@ -41,7 +41,7 @@ import com.zionhuang.music.ui.component.NavigationTitle
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.menu.AlbumMenu
 import com.zionhuang.music.ui.menu.ArtistMenu
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.viewmodels.StatsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -100,7 +100,7 @@ fun StatsScreen(
                     IconButton(
                         onClick = {
                             menuState.show {
-                                GenericSongMenu(
+                                LibrarySongMenu(
                                     mediaMetadata = song.toMediaMetadata(),
                                     navController = navController,
                                     onDismiss = menuState::dismiss

@@ -75,7 +75,7 @@ import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
 import com.zionhuang.music.ui.menu.YouTubePlaylistMenu
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.viewmodels.OnlinePlaylistViewModel
 import kotlinx.coroutines.launch
 
@@ -276,7 +276,7 @@ fun OnlinePlaylistScreen(
                                 IconButton(
                                     onClick = {
                                         menuState.show {
-                                            GenericSongMenu(
+                                            LibrarySongMenu(
                                                 mediaMetadata = song.toMediaMetadata(),
                                                 navController = navController,
                                                 onDismiss = menuState::dismiss

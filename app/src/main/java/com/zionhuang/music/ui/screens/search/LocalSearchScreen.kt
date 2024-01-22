@@ -49,7 +49,7 @@ import com.zionhuang.music.ui.component.EmptyPlaceholder
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.PlaylistListItem
 import com.zionhuang.music.ui.component.SongListItem
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.viewmodels.LocalFilter
 import com.zionhuang.music.viewmodels.LocalSearchViewModel
 import kotlinx.coroutines.flow.drop
@@ -153,7 +153,7 @@ fun LocalSearchScreen(
                                 IconButton(
                                     onClick = {
                                         menuState.show {
-                                            GenericSongMenu(
+                                            LibrarySongMenu(
                                                 mediaMetadata = item.toMediaMetadata(),
                                                 navController = navController
                                             ) {

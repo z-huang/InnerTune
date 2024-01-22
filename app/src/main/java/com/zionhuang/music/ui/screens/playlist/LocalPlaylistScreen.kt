@@ -97,7 +97,7 @@ import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
 import com.zionhuang.music.ui.component.TextFieldDialog
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.utils.makeTimeString
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
@@ -526,7 +526,7 @@ fun LocalPlaylistScreen(
                                 IconButton(
                                     onClick = {
                                         menuState.show {
-                                            GenericSongMenu(
+                                            LibrarySongMenu(
                                                 mediaMetadata = song.song.toMediaMetadata(),
                                                 navController = navController,
                                                 onDismiss = menuState::dismiss

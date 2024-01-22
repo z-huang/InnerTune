@@ -79,7 +79,7 @@ import com.zionhuang.music.ui.component.shimmer.ListItemPlaceHolder
 import com.zionhuang.music.ui.component.shimmer.ShimmerHost
 import com.zionhuang.music.ui.component.shimmer.TextPlaceholder
 import com.zionhuang.music.ui.menu.AlbumMenu
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.viewmodels.AlbumViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -350,7 +350,7 @@ fun AlbumScreen(
                         IconButton(
                             onClick = {
                                 menuState.show {
-                                    GenericSongMenu(
+                                    LibrarySongMenu(
                                         mediaMetadata = song.toMediaMetadata(),
                                         navController = navController,
                                         onDismiss = menuState::dismiss

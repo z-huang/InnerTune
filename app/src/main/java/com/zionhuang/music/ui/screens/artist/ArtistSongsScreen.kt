@@ -45,7 +45,7 @@ import com.zionhuang.music.ui.component.HideOnScrollFAB
 import com.zionhuang.music.ui.component.LocalMenuState
 import com.zionhuang.music.ui.component.SongListItem
 import com.zionhuang.music.ui.component.SortHeader
-import com.zionhuang.music.ui.menu.GenericSongMenu
+import com.zionhuang.music.ui.menu.LibrarySongMenu
 import com.zionhuang.music.utils.rememberEnumPreference
 import com.zionhuang.music.utils.rememberPreference
 import com.zionhuang.music.viewmodels.ArtistSongsViewModel
@@ -122,7 +122,7 @@ fun ArtistSongsScreen(
                         IconButton(
                             onClick = {
                                 menuState.show {
-                                    GenericSongMenu(
+                                    LibrarySongMenu(
                                         mediaMetadata = song.toMediaMetadata(),
                                         navController = navController,
                                         onDismiss = menuState::dismiss
