@@ -22,7 +22,7 @@ android {
     buildToolsVersion = "30.0.3"
     defaultConfig {
         applicationId = "com.zionhuang.music"
-        minSdk = 24
+        minSdk = 21
         targetSdk = 33
         versionCode = 19
         versionName = "0.5.3"
@@ -149,4 +149,6 @@ dependencies {
     "fullImplementation"(libs.opencc4j)
 
     implementation(libs.timber)
+
+
 }
