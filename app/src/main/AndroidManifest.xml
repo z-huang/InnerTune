@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
 
     <queries>
         <intent>
@@ -133,7 +135,8 @@
 
         <service
             android:name=".playback.ExoDownloadService"
-            android:exported="false">
+            android:exported="false"
+            android:foregroundServiceType="dataSync">
             <intent-filter>
                 <action android:name="androidx.media3.exoplayer.downloadService.action.RESTART" />
                 <category android:name="android.intent.category.DEFAULT" />

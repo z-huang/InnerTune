@@ -2,6 +2,7 @@ package com.zionhuang.music
 
 import android.app.Application
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.datastore.preferences.core.edit
@@ -44,9 +45,12 @@ class App : Application(), ImageLoaderFactory {
                 ?: languageTag.takeIf { it in LanguageCodeToName }
                 ?: "en"
         )
-        if (languageTag == "zh-TW") {
+        if (languageTag == "zh-TW" ) {
             KuGou.useTraditionalChinese = true
         }
+
+
+        KuGou.APILEVEL = Build.VERSION.SDK_INT.also { Log.d("KuGou", "APILEVEL: $it") }
 
         if (dataStore[ProxyEnabledKey] == true) {
             try {

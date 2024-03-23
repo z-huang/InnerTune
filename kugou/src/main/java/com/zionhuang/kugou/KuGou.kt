@@ -1,5 +1,6 @@
 package com.zionhuang.kugou
 
+import androidx.annotation.RequiresApi
 import com.github.houbb.opencc4j.util.ZhConverterUtil
 import com.zionhuang.kugou.models.DownloadLyricsResponse
 import com.zionhuang.kugou.models.SearchLyricsResponse
@@ -16,9 +17,12 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.util.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import org.apiguardian.api.API
 import java.lang.Character.UnicodeScript
+import java.lang.Character.UnicodeScript.of
 import java.lang.Integer.min
 import kotlin.math.abs
+import kotlin.properties.Delegates
 
 /**
  * KuGou Lyrics Library
@@ -26,6 +30,9 @@ import kotlin.math.abs
  */
 object KuGou {
     var useTraditionalChinese: Boolean = false
+    var APILEVEL: Int = 21
+
+
 
     @OptIn(ExperimentalSerializationApi::class)
     private val client = HttpClient {
@@ -193,10 +200,11 @@ object KuGou {
     private val ACCEPTED_REGEX = "\\[(\\d\\d):(\\d\\d)\\.(\\d{2,3})\\].*".toRegex()
     private val BANNED_REGEX = ".+].+[:：].+".toRegex()
 
-    private val JapaneseUnicodeScript = hashSetOf(
+    private val JapaneseUnicodeScript =
+        if (APILEVEL >= 24) {hashSetOf(
         UnicodeScript.HIRAGANA,
         UnicodeScript.KATAKANA,
-    )
+    )} else hashSetOf()
 
     private const val DURATION_TOLERANCE = 8
 }
