@@ -18,12 +18,12 @@ if (isFullBuild && System.getenv("PULL_REQUEST") == null) {
 
 android {
     namespace = "com.zionhuang.music"
-    compileSdk = 33
+    compileSdk = 34
     buildToolsVersion = "30.0.3"
     defaultConfig {
         applicationId = "com.zionhuang.music"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 19
         versionName = "0.5.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -65,15 +65,15 @@ android {
     }
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(17)
     }
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + "-Xcontext-receivers"
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     testOptions {
         unitTests.isIncludeAndroidResources = true

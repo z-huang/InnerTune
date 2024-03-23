@@ -1,6 +1,6 @@
 plugins {
-    id("com.google.dagger.hilt.android").version("2.44").apply(false)
-    id("com.google.devtools.ksp").version("1.8.0-1.0.9").apply(false)
+    id("com.google.dagger.hilt.android").version("2.51").apply(false)
+    id("com.google.devtools.ksp").version("1.9.23-1.0.19").apply(false)
 }
 
 buildscript {
