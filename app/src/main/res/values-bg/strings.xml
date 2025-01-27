@@ -20,7 +20,7 @@
     <string name="stats">Статистика</string>
     <string name="quick_picks">Бърз избор</string>
     <string name="keep_listening">Продължи да слушаш</string>
-    <string name="account">Акаунт</string>
+    <string name="account">Профил</string>
     <string name="quick_picks_empty">Слушай песни, за да генерираш своя бърз избор</string>
     <string name="forgotten_favorites">Забравени любими</string>
     <string name="your_youtube_playlists">Вашите плейлисти в YouTube</string>
@@ -176,9 +176,7 @@
     <string name="repeat_mode_off">Режим на повторение е изключен</string>
     <string name="repeat_mode_one">Повтори текущата песен</string>
     <string name="repeat_mode_all">Повтори опашката</string>
-    <string name="discord_information">InnerTune използва библиотеката KizzyRPC, за да зададе състоянието на акаунта ви в Discord. Това включва използването на връзката Discord Gateway, което може да се счита за нарушение на TOS на Discord. Въпреки това няма известни случаи на спиране на потребителски акаунти поради тази причина. Използвайте на свой собствен риск.
-\n
-\nInnerTune ще извлече само вашия токен, а всичко останало се съхранява локално.</string>
+    <string name="discord_information">InnerTune използва библиотеката KizzyRPC, за да зададе състоянието на профила ви в Discord. Това включва използването на връзката Discord Gateway, което може да се счита за нарушение на TOS на Discord. Въпреки това няма известни случаи на спиране на потребителски профили поради тази причина. Използвайте на свой собствен риск. \n \nInnerTune ще извлече само вашия токен, а всичко останало се съхранява локално.</string>
     <string name="backup">Архивиране</string>
     <string name="translation_models">Модели за превод</string>
     <string name="clear_image_cache">Изчисти кеша на изображение</string>
@@ -279,5 +277,5 @@
     <string name="enable_discord_rpc">Активирай Rich Presence</string>
     <string name="new_version_available">Налична е нова версия</string>
     <string name="use_login_for_browse">Използвай вход за разглеждане на съдържание</string>
-    <string name="use_login_for_browse_desc">Това може да повлияе какво съдържание виждате и например показва само премиум албуми, ако сте влезли с Премиум акаунт</string>
+    <string name="use_login_for_browse_desc">Това може да повлияе какво съдържание виждате и например показва само премиум албуми, ако сте влезли с Премиум профил</string>
 </resources>
