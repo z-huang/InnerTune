@@ -6,12 +6,12 @@ Klien Material 3 YouTube Music untuk Android
 - Pemutaran latar belakang
 - Cari lagu, video, album, dan playlist dari YouTube Music
 - Manajemen perpustakaan
-- Cache dan unduh lagu untuk pemutaran offline
+- Tembolok dan unduh lagu untuk pemutaran offline
 - Lirik yang disinkronkan
 - Lewati keheningan
 - Normalisasi audio
 - Tema dinamis
-- Lokalisasi
-- Dukungan Android Otomatis
+- Penerjemahan lokal
+- Dukungan Android Auto
 - Pilihan cepat yang dipersonalisasi
-- Bahan 3
+- Material 3
