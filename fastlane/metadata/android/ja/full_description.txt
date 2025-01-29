@@ -12,6 +12,6 @@ Material 3 を使った Android 用 YouTube Music クライアント
 - 音声を正規化
 - 動的なテーマ
 - 多言語対応
-- Android Auto  に対応
+- Android Auto に対応
 - あなたにおすすめの曲を提案
 - Material 3
