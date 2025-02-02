@@ -9,7 +9,7 @@
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d selecionado</item>
-        <item quantity="many">%dM selecionados</item>
+        <item quantity="many">%d selecionados</item>
         <item quantity="other">%d selecionados</item>
     </plurals>
     <!-- Home -->
@@ -119,37 +119,37 @@
     <!-- Noun -->
     <plurals name="n_song">
         <item quantity="one">%d música</item>
-        <item quantity="many">%dM músicas</item>
+        <item quantity="many">%d de músicas</item>
         <item quantity="other">%d músicas</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d artista</item>
-        <item quantity="many">%dM artistas</item>
+        <item quantity="many">%d de artistas</item>
         <item quantity="other">%d artistas</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d álbum</item>
-        <item quantity="many">%dM álbuns</item>
+        <item quantity="many">%d de álbuns</item>
         <item quantity="other">%d álbuns</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d playlist</item>
-        <item quantity="many">%dM playlists</item>
+        <item quantity="many">%d de playlists</item>
         <item quantity="other">%d playlists</item>
     </plurals>
     <plurals name="n_week">
         <item quantity="one">%d semana</item>
-        <item quantity="many">%dM semanas</item>
+        <item quantity="many">%d de semanas</item>
         <item quantity="other">%d semanas</item>
     </plurals>
     <plurals name="n_month">
         <item quantity="one">%d mês</item>
-        <item quantity="many">%dM meses</item>
+        <item quantity="many">%d de meses</item>
         <item quantity="other">%d meses</item>
     </plurals>
     <plurals name="n_year">
         <item quantity="one">%d ano</item>
-        <item quantity="many">%dM anos</item>
+        <item quantity="many">%d de anos</item>
         <item quantity="other">%d anos</item>
     </plurals>
     <!-- Snackbar -->
@@ -163,7 +163,7 @@
     <string name="end_of_song">Fim da música</string>
     <plurals name="minute">
         <item quantity="one">%d minuto</item>
-        <item quantity="many">%dM minutos</item>
+        <item quantity="many">%d de minutos</item>
         <item quantity="other">%d minutos</item>
     </plurals>
     <string name="error_no_stream">Nenhum canal de reprodução disponível</string>
