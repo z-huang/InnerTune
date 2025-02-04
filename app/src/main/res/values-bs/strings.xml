@@ -285,4 +285,6 @@
     <string name="clear_translation_models">Rasčisti modele prevođenja</string>
     <string name="new_version_available">Dostupna je nova verzija</string>
     <string name="translation_models">Modeli prevođenja</string>
+    <string name="use_login_for_browse_desc">Ovo može utjecati na sadržaj koji vidite i, na primjer, prikazivati albume koji su dostupni samo za Premium korisnike ako ste prijavljeni sa Premium računom ili nalogom</string>
+    <string name="use_login_for_browse">Koristite prijavu za pregledavanje sadržaja</string>
 </resources>
