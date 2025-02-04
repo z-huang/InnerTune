@@ -1,0 +1,17 @@
+Materijal 3 YouTube Music klijent za Android
+
+<br><b>Karakteristike:</b>
+
+- Slušajte pjesme s YT/YT Music bez reklama
+- Slušajte u pozadini
+- Pretraživanje pjesama, videozapisa, albuma i popisa na YouTube Music-u
+- Upravljanje bibliotekom
+- Predmemorija i preuzimanje pjesama za izvanmrežno slušanje
+- Sinkronizirani tekstovi
+- Preskočite tišinu
+- Normalizacija zvuka
+- Dinamična tema
+-Lokalizacija
+- Podrška za Android Auto
+- Personalizirani brzi odabiri
+- Materijal 3
