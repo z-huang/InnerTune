@@ -71,19 +71,28 @@ object NewPipeUtils {
         YoutubeJavaScriptPlayerManager.getSignatureTimestamp(videoId)
     }
 
-    fun getStreamUrl(format: PlayerResponse.StreamingData.Format, videoId: String) = runCatching {
-        format.url?.let {
-            return@runCatching it
+    fun getStreamUrl(format: PlayerResponse.StreamingData.Format, videoId: String): Result<String> =
+        runCatching {
+            val url = format.url ?: format.signatureCipher?.let { signatureCipher ->
+                val params = parseQueryString(signatureCipher)
+                val obfuscatedSignature = params["s"]
+                    ?: throw ParsingException("Could not parse cipher signature")
+                val signatureParam = params["sp"]
+                    ?: throw ParsingException("Could not parse cipher signature parameter")
+                val url = params["url"]?.let { URLBuilder(it) }
+                    ?: throw ParsingException("Could not parse cipher url")
+                url.parameters[signatureParam] =
+                    YoutubeJavaScriptPlayerManager.deobfuscateSignature(
+                        videoId,
+                        obfuscatedSignature
+                    )
+                url.toString()
+            } ?: throw ParsingException("Could not find format url")
+
+            return@runCatching YoutubeJavaScriptPlayerManager.getUrlWithThrottlingParameterDeobfuscated(
+                videoId,
+                url
+            )
         }
-        format.signatureCipher?.let { signatureCipher ->
-            val params = parseQueryString(signatureCipher)
-            val obfuscatedSignature = params["s"] ?: throw ParsingException("Could not parse cipher signature")
-            val signatureParam = params["sp"] ?: throw ParsingException("Could not parse cipher signature parameter")
-            val url = params["url"]?.let { URLBuilder(it) } ?: throw ParsingException("Could not parse cipher url")
-            url.parameters[signatureParam] = YoutubeJavaScriptPlayerManager.deobfuscateSignature(videoId, obfuscatedSignature)
-            return@runCatching YoutubeJavaScriptPlayerManager.getUrlWithThrottlingParameterDeobfuscated(videoId, url.toString())
-        }
-        throw ParsingException("Could not find format url")
-    }
 
 }
