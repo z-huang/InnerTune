@@ -14,6 +14,7 @@ import com.zionhuang.innertube.models.SectionListRenderer
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.YTItem
 import com.zionhuang.innertube.models.filterExplicit
+import com.zionhuang.innertube.models.getItems
 import com.zionhuang.innertube.models.oddElements
 
 data class ArtistSection(
@@ -52,8 +53,8 @@ data class ArtistPage(
         private fun fromMusicShelfRenderer(renderer: MusicShelfRenderer): ArtistSection? {
             return ArtistSection(
                 title = renderer.title?.runs?.firstOrNull()?.text ?: return null,
-                items = renderer.contents?.mapNotNull {
-                    fromMusicResponsiveListItemRenderer(it.musicResponsiveListItemRenderer)
+                items = renderer.contents?.getItems()?.mapNotNull {
+                    fromMusicResponsiveListItemRenderer(it)
                 }?.ifEmpty { null } ?: return null,
                 moreEndpoint = renderer.title.runs.firstOrNull()?.navigationEndpoint?.browseEndpoint
             )
