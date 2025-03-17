@@ -30,7 +30,7 @@
     <!-- Search -->
     <string name="search">Mencari</string>
     <string name="search_yt_music">Cari di YouTube Music…</string>
-    <string name="search_library">Cari di perpustakaan…</string>
+    <string name="search_library">Cari di pustaka…</string>
     <string name="filter_library">Pustaka</string>
     <string name="filter_liked">Disukai</string>
     <string name="filter_downloaded">Diunduh</string>
