@@ -8,12 +8,12 @@
     <string name="playlists">播放列表</string>
     <!-- Top bar -->
     <plurals name="n_selected">
-        <item quantity="other">已选择 %d 个项目</item>
+        <item quantity="other">已选择 %d 项</item>
     </plurals>
     <!-- Home -->
     <string name="history">历史</string>
     <string name="stats">统计</string>
-    <string name="mood_and_genres">情绪和流派</string>
+    <string name="mood_and_genres">曲调和流派</string>
     <string name="account">账号</string>
     <string name="quick_picks">歌曲快选</string>
     <string name="quick_picks_empty">听一些歌曲来生成歌曲快选</string>
@@ -21,12 +21,12 @@
     <!-- History -->
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>
-    <string name="this_week">这周</string>
+    <string name="this_week">本周</string>
     <string name="last_week">上周</string>
     <!-- Stats -->
-    <string name="most_played_songs">最常播放</string>
-    <string name="most_played_artists">最受欢迎的音乐人</string>
-    <string name="most_played_albums">播放次数最多的专辑</string>
+    <string name="most_played_songs">最常播放的歌曲</string>
+    <string name="most_played_artists">最常播放的音乐人</string>
+    <string name="most_played_albums">最常播放的专辑</string>
     <!-- Search -->
     <string name="search">搜索</string>
     <string name="search_yt_music">搜索 YouTube Music…</string>
@@ -42,8 +42,8 @@
     <string name="filter_playlists">播放列表</string>
     <string name="filter_community_playlists">社区播放列表</string>
     <string name="filter_featured_playlists">精选播放列表</string>
-    <string name="filter_bookmarked">已加书签</string>
-    <string name="no_results_found">找不到结果</string>
+    <string name="filter_bookmarked">收藏</string>
+    <string name="no_results_found">未找到结果</string>
     <!-- Artist screen -->
     <string name="from_your_library">来自您的媒体库</string>
     <!-- Playlist -->
@@ -142,7 +142,7 @@
     <string name="playlist_synced">播放列表已同步</string>
     <string name="undo">撤销</string>
     <!-- Player -->
-    <string name="lyrics_not_found">没有歌词</string>
+    <string name="lyrics_not_found">未找到歌词</string>
     <string name="sleep_timer">睡眠定时器</string>
     <string name="end_of_song">这首歌曲播放完毕</string>
     <plurals name="minute">
@@ -174,8 +174,8 @@
     <string name="dark_theme_off">关</string>
     <string name="dark_theme_follow_system">跟随系统</string>
     <string name="pure_black">纯黑</string>
-    <string name="default_open_tab">默认启动选项卡</string>
-    <string name="customize_navigation_tabs">自定义导航选项卡</string>
+    <string name="default_open_tab">默认启动标签页</string>
+    <string name="customize_navigation_tabs">自定义导航标签页</string>
     <string name="lyrics_text_position">歌词文本位置</string>
     <string name="left">靠左</string>
     <string name="center">居中</string>
