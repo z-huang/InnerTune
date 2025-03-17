@@ -94,7 +94,6 @@
     <string name="mime_type">MIME-tyyppi</string>
     <string name="codecs">Koodekit</string>
     <string name="bitrate">Bittinopeus</string>
-    <string name="sample_rate">Sample rate</string>
     <string name="loudness">Äänekkyys</string>
     <string name="volume">Voimakkuus</string>
     <string name="file_size">Tiedoston koko</string>
@@ -176,7 +175,6 @@
     <string name="repeat_mode_all">Toista jono</string>
     <!-- Queue Title -->
     <string name="queue_all_songs">Kaikki laulut</string>
-    <string name="queue_searched_songs">Searched songs</string>
 
     <!-- Notification name -->
     <string name="music_player">Soitin</string>
@@ -184,75 +182,18 @@
     <!-- Settings -->
     <string name="settings">Asetukset</string>
     <string name="appearance">Ulkoasu</string>
-    <string name="enable_dynamic_theme">Enable dynamic theme</string>
     <string name="dark_theme">Tumma teema</string>
     <string name="dark_theme_on">Käytössä</string>
     <string name="dark_theme_off">Pois käytöstä</string>
     <string name="dark_theme_follow_system">Järjestelmän teeman mukainen</string>
-    <string name="pure_black">Pure black</string>
-    <string name="default_open_tab">Default open tab</string>
-    <string name="customize_navigation_tabs">Customize navigation tabs</string>
-    <string name="lyrics_text_position">Lyrics text position</string>
-    <string name="left">Left</string>
-    <string name="center">Center</string>
-    <string name="right">Right</string>
 
     <string name="content">Sisältö</string>
-    <string name="login">Login</string>
     <string name="content_language">Sisällön oletuskieli</string>
     <string name="content_country">Sisällön oletusmaa</string>
     <string name="system_default">Järjestelmän oletus</string>
-    <string name="enable_proxy">Enable proxy</string>
-    <string name="proxy_type">Proxy type</string>
-    <string name="proxy_url">Proxy URL</string>
-    <string name="restart_to_take_effect">Restart to take effect</string>
-
-    <string name="player_and_audio">Player and audio</string>
-    <string name="audio_quality">Audio quality</string>
-    <string name="audio_quality_auto">Auto</string>
-    <string name="audio_quality_high">High</string>
-    <string name="audio_quality_low">Low</string>
-    <string name="persistent_queue">Persistent queue</string>
-    <string name="skip_silence">Skip silence</string>
-    <string name="audio_normalization">Audio normalization</string>
-    <string name="equalizer">Equalizer</string>
-
-    <string name="storage">Storage</string>
-    <string name="cache">Cache</string>
-    <string name="image_cache">Image Cache</string>
-    <string name="song_cache">Song Cache</string>
-    <string name="max_cache_size">Max cache size</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="clear_all_downloads">Clear all downloads</string>
-    <string name="max_image_cache_size">Max image cache size</string>
-    <string name="clear_image_cache">Clear image cache</string>
-    <string name="max_song_cache_size">Max song cache size</string>
-    <string name="clear_song_cache">Clear song cache</string>
-    <string name="size_used">%s used</string>
-
-    <string name="privacy">Privacy</string>
-    <string name="pause_listen_history">Pause listen history</string>
-    <string name="clear_listen_history">Clear listen history</string>
-    <string name="clear_listen_history_confirm">Are you sure to clear all listen history?</string>
-    <string name="pause_search_history">Pause search history</string>
-    <string name="clear_search_history">Clear search history</string>
-    <string name="clear_search_history_confirm">Are you sure to clear all search history?</string>
-    <string name="enable_kugou">Enable KuGou lyrics provider</string>
-
-    <string name="backup_restore">Backup and restore</string>
-    <string name="backup">Backup</string>
-    <string name="restore">Restore</string>
-    <string name="imported_playlist">Imported playlist</string>
-    <string name="backup_create_success">Backup created successfully</string>
-    <string name="backup_create_failed">Couldn\'t create backup</string>
-    <string name="restore_failed">Failed to restore backup</string>
-
     <string name="about">Tietoa</string>
     <string name="app_version">Sovelluksen versio</string>
 
-    <string name="new_version_available">New version available</string>
-    <string name="translation_models">Translation Models</string>
-    <string name="clear_translation_models">Clear translation models</string>
     <string name="add_all_to_library">Lisää kaikki kirjastoon</string>
     <string name="remove_all_from_library">Poista kaikki kirjastosta</string>
     <string name="remove_from_queue">Poista jonosta</string>
