@@ -80,7 +80,7 @@
     <string name="downloading">Descargando</string>
     <string name="remove_download">Eliminar descarga</string>
     <string name="import_playlist">Importar lista de reproducción</string>
-    <string name="add_to_playlist">Añadir a la lista de reproducción</string>
+    <string name="add_to_playlist">Añadir a la playlist</string>
     <string name="view_artist">Ver artista</string>
     <string name="view_album">Ver álbum</string>
     <string name="refetch">Cargar de nuevo</string>
