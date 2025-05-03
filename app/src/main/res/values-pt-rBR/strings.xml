@@ -75,7 +75,7 @@
     <string name="view_album">Ver álbum</string>
     <string name="refetch">Recarregar</string>
     <string name="share">Compartilhar</string>
-    <string name="delete">Excluir</string>
+    <string name="delete">Apagar</string>
     <string name="remove_from_history">Remover do histórico</string>
     <string name="search_online">Pesquisar online</string>
     <string name="action_sync">Sincronizar</string>
@@ -249,7 +249,7 @@
     <string name="translation_models">Modelos de Tradução</string>
     <string name="clear_translation_models">Limpar os modelos de tradução</string>
     <string name="remove_download_playlist_confirm">Você tem certeza que deseja remover todas as músicas da playlist \"%s\" do armazenamento de Músicas Baixadas?</string>
-    <string name="delete_playlist_confirm">Você tem certeza que deseja excluir a playlist \"%s\"?</string>
+    <string name="delete_playlist_confirm">Você tem certeza que deseja apagar a playlist \"%s\"?</string>
     <string name="remove_from_playlist">Remover da playlist</string>
     <string name="skip_duplicates">Pular duplicados</string>
     <string name="enable_lrclib">Ativar o fornecedor de letras LrcLib</string>
