@@ -28,6 +28,49 @@ android {
         versionCode = 26
         versionName = "0.5.10"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        resConfigs { // Do not include languages less than 80% translated, last check 2025/05/06
+            "en-rUS",
+            "ar",
+            "b+sr+Latn",
+            // "be",
+            "bg",
+            // "bn",
+            // "bn-rIN",
+            "bs",
+            "cs",
+            "de",
+            "el",
+            "es",
+            "et",
+            // "fa",
+            // "fi",
+            "fr",
+            // "hi",
+            "hr",
+            // "hu",
+            "in",
+            "it",
+            "ja",
+            "ko",
+            // "ml",
+            "nb-rNO",
+            // "ne",
+            "nl",
+            // "or",
+            // "pa",
+            "pl",
+            "pt",
+            "pt-rBR",
+            "ru",
+            // "sv",
+            "ta",
+            "tr",
+            "uk",
+            "vi",
+            "zh-rCN",
+            "zh-rTW"
+        }
     }
     buildTypes {
         release {
