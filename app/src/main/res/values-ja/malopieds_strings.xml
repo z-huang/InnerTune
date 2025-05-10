@@ -1,0 +1,35 @@
+<resources>
+    <string name="explore">探す</string>
+    <string name="liked">いいね</string>
+    <string name="offline">ダウンロード</string>
+    <string name="my_top">My Top</string>
+    <string name="select">全て選択</string>
+    <string name="like_all">全てにいいねする</string>
+    <string name="sort_by_last_updated">アップロード日時</string>
+    <string name="sort_by_name">曲名</string>
+    <string name="already_in_playlist">プレイリストに追加済み:</string>
+    <plurals name="n_element">
+        <item quantity="other">%d 要素</item>
+    </plurals>
+    <string name="player_background_style">プレーヤーの背景</string>
+    <string name="follow_theme">テーマに従う</string>
+    <string name="gradient">グラデーション</string>
+    <string name="enable_squiggly_slider">波状のスライダーの有効化</string>
+    <string name="enable_swipe_thumbnail">サムネイルをスワイプして曲を変更する</string>
+    <string name="pure_black">真っ黒</string>
+    <string name="lyrics_click_change">歌詞を選択して再生位置を変更する</string>
+    <string name="grid_cell_size">グリッド表示のサイズ</string>
+    <string name="proxy">プロキシ</string>
+    <string name="enable_proxy">プロキシを有効化</string>
+    <string name="default_lib_chips">ライブラリで最初に開くページ</string>
+    <string name="set_quick_picks">選択する</string>
+    <string name="last_song_listened">最後に聴いた曲に基づく</string>
+    <string name="restart_to_take_effect">再起動して反映</string>
+    <string name="set_first_lyrics_provider">優先される歌詞の取得元</string>
+    <string name="all_time">全て</string>
+    <string name="past_24_hours">過去24時間</string>
+    <string name="past_week">過去1週間</string>
+    <string name="past_month">過去1ヵ月</string>
+    <string name="past_year">過去1年</string>
+    <string name="top_length">My Top の長さ</string>
+</resources>

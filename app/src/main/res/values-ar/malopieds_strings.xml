@@ -1,0 +1,32 @@
+<resources>
+    <string name="explore">الإستكشاف</string>
+    <!-- Top bar -->
+    <string name="liked">الأغاني المفضلة</string>
+    <string name="offline">التحميلات</string>
+    <string name="my_top">الأعلي إستماع : </string>
+    <!-- Playlist -->
+    <string name="select">تحديد الكل</string>
+    <string name="like_all">الإعجاب بالكل</string>
+    <!-- Sort menu -->
+    <string name="sort_by_last_updated">تاريخ التحديث</string>
+    <string name="sort_by_name">الاسم</string>
+    <string name="already_in_playlist">موجود بالفعل في قائمة التشغيل:</string>
+    <string name="edit_artist">تعديل الفنان</string>
+    <string name="player_background_style">نمط خلفية المشغل</string>
+    <string name="gradient">ألوان متدرجة</string>
+    <string name="follow_theme">اتباع السيم</string>
+    <string name="enable_squiggly_slider">تمكين الشريط المتعرج</string>
+    <string name="dark_theme">السمة الداكنة</string>
+    <string name="proxy">الوكيل</string>
+    <string name="enable_proxy">تفعيل الوكيل</string>
+    <string name="default_lib_chips">تغيير الشريحة الافتراضية للمكتبة</string>
+    <string name="set_quick_picks">ضبط الاختيارات السريعة</string>
+    <string name="last_song_listened">بناءً على آخر أغنية تم الاستماع إليها</string>
+    <string name="restart_to_take_effect">أعد التشغيل لتفعيل التغييرات</string>
+    <string name="all_time">طوال الوقت</string>
+    <string name="past_24_hours">آخر 24 ساعة</string>
+    <string name="past_week">الأسبوع الماضي</string>
+    <string name="past_month">الشهر الماضي</string>
+    <string name="past_year">السنة الماضية</string>
+    <string name="top_length">طول قائمة الأغاني المفضلة الخاصة بي</string>
+</resources>

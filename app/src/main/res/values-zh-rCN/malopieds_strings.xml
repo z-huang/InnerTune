@@ -1,0 +1,33 @@
+<resources>
+    <string name="explore">探索</string>
+    <string name="liked">喜欢</string>
+    <string name="offline">下载</string>
+    <string name="my_top">我的 Top</string>
+    <string name="select">选择全部</string>
+    <string name="like_all">喜欢全部</string>
+
+    <string name="sort_by_last_updated">更新时间</string>
+    <string name="sort_by_name">名称</string>
+    <string name="already_in_playlist">已添加到播放列表:</string>
+    <string name="player_background_style">播放背景风格</string>
+    <string name="follow_theme">跟随主题</string>
+    <string name="gradient">渐变</string>
+    <string name="enable_squiggly_slider">启用波浪滑块</string>
+    <string name="enable_swipe_thumbnail">启用轻扫缩略图更换歌曲</string>
+    <string name="pure_black">纯黑</string>
+    <string name="lyrics_click_change">点击修改歌词</string>
+    <string name="grid_cell_size">网格单元大小</string>
+    <string name="proxy">代理</string>
+    <string name="enable_proxy">启用代理</string>
+    <string name="default_lib_chips">更改默认媒体库首页</string>
+    <string name="set_quick_picks">设置快速选择</string>
+    <string name="last_song_listened">根据上次播放的歌曲</string>
+    <string name="restart_to_take_effect">重启以应用变更</string>
+    <string name="set_first_lyrics_provider">设置首选的歌词提供服务商</string>
+    <string name="all_time">全部时间</string>
+    <string name="past_24_hours">过去 24 小时</string>
+    <string name="past_week">过去 1 周</string>
+    <string name="past_month">过去 1 月</string>
+    <string name="past_year">过去 1 年</string>
+    <string name="top_length">My Top 的长度</string>
+</resources>

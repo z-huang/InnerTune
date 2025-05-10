@@ -5,7 +5,6 @@
     <string name="artists">Artistas</string>
     <string name="albums">Álbumes</string>
     <string name="playlists">Listas de reproducción</string>
-    <string name="explore">Descubrir</string>
 
     <!-- Top bar -->
     <plurals name="n_selected">

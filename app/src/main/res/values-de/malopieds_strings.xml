@@ -1,0 +1,32 @@
+<resources>
+    <string name="explore">Entdecken</string>
+    <string name="liked">Favoriten</string>
+    <string name="offline">Heruntergeladen</string>
+    <string name="my_top">Meine Top</string>
+    <string name="select">Alles auswählen</string>
+    <string name="like_all">Alles favorisieren</string>
+    <string name="sort_by_last_updated">Datum aktualisiert</string>
+    <string name="sort_by_name">Name</string>
+    <string name="already_in_playlist">Bereits in Wiedergabeliste:</string>
+    <plurals name="n_element">
+        <item quantity="one">%d Element</item>
+        <item quantity="other">%d Elemente</item>
+    </plurals>
+    <string name="player_background_style">Player Hintergrund Stil</string>
+    <string name="follow_theme">Thema folgen</string>
+    <string name="gradient">Farbverlauf</string>
+    <string name="enable_squiggly_slider">Welliger Schieberegler</string>
+    <string name="pure_black">Reines Schwarz</string>
+    <string name="proxy">Proxy</string>
+    <string name="enable_proxy">Proxy einschalten</string>
+    <string name="default_lib_chips">Ändere Standard-Bibliothekschip</string>
+    <string name="set_quick_picks">Setze Quick Picks</string>
+    <string name="last_song_listened">Basierend auf zuletzt gehörtes Lied</string>
+    <string name="restart_to_take_effect">Neustart, damit Änderungen wirksam werden</string>
+    <string name="all_time">Gesamte Zeit</string>
+    <string name="past_24_hours">Letzte 24 Stunden</string>
+    <string name="past_week">Letzte Woche</string>
+    <string name="past_month">Letzter Monat</string>
+    <string name="past_year">Letztes Jahr</string>
+    <string name="top_length">Meine Top-Liste Länge</string>
+</resources>

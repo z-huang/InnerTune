@@ -1,0 +1,29 @@
+<resources>
+    <string name="explore">Esplora</string>
+
+    <string name="liked">Piaciuti</string>
+    <string name="offline">Scaricati</string>
+    <string name="my_top">I miei migliori</string>
+    <string name="select">Seleziona tutto</string>
+    <string name="like_all">Mi piace tutto</string>
+    <string name="sort_by_last_updated">Data di aggiornamento</string>
+    <string name="sort_by_name">Nome</string>
+    <string name="already_in_playlist">Già nella playlist:</string>
+    <string name="player_background_style">Stile dello sfondo del lettore</string>
+    <string name="follow_theme">Segui tema</string>
+    <string name="gradient">Gradiente</string>
+    <string name="enable_squiggly_slider">Abilita cursore ondulato</string>
+    <string name="pure_black">Nero</string>
+    <string name="proxy">Proxy</string>
+    <string name="enable_proxy">Attiva proxy</string>
+    <string name="default_lib_chips">Cambia linguetta predefinita della libreria</string>
+    <string name="set_quick_picks">Imposta le scelte rapide</string>
+    <string name="last_song_listened">Basate sugli ultimi brani ascoltati</string>
+    <string name="restart_to_take_effect">Riavvia l\'app per applicare le modifiche</string>
+    <string name="all_time">Da sempre</string>
+    <string name="past_24_hours">Ultime 24 ore</string>
+    <string name="past_week">Ultima settimana</string>
+    <string name="past_month">Ultimo mese</string>
+    <string name="past_year">Ultimo anno</string>
+    <string name="top_length">Lunghezza della lista dei miei migliori</string>
+</resources>

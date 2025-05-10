@@ -5,7 +5,6 @@
     <string name="artists">Artisti</string>
     <string name="albums">Album</string>
     <string name="playlists">Playlist</string>
-    <string name="explore">Esplora</string>
     
     <!-- Top bar -->
     <plurals name="n_selected">
@@ -63,9 +62,6 @@
     <string name="other_versions">Altre versioni</string>
     
     <!-- Library -->
-    <string name="liked">Piaciuti</string>
-    <string name="offline">Scaricati</string>
-    <string name="my_top">I miei migliori</string>
 
     <!-- Playlist -->
     <string name="liked_songs">Brani piaciuti</string>
@@ -103,12 +99,9 @@
     <string name="search_online">Cerca online</string>
     <string name="sync">Sincronizza</string>
     <string name="advanced">Advanzato</string>
-    <string name="select">Seleziona tutto</string>
-    <string name="like_all">Mi piace tutto</string>
     
     <!-- Sort menu -->
     <string name="sort_by_create_date">Data di aggiunta</string>
-    <string name="sort_by_last_updated">Data di aggiornamento</string>
     <string name="sort_by_name">Nome</string>
     <string name="sort_by_artist">Artista</string>
     <string name="sort_by_year">Anno</string>
@@ -144,7 +137,6 @@
     <string name="create_playlist">Crea playlist</string>
     <string name="playlist_name">Nome della playlist</string>
     <string name="error_playlist_name_empty">Il nome della playlist non può essere vuoto.</string>
-    <string name="already_in_playlist">Già nella playlist:</string>
     
     <string name="edit_artist">Modifica artista</string>
     <string name="artist_name">Nome dell\'artista</string>
@@ -230,10 +222,6 @@
     <string name="dark_theme_on">Attivato</string>
     <string name="dark_theme_off">Disattivato</string>
     <string name="dark_theme_follow_system">Segui sistema</string>
-    <string name="player_background_style">Stile dello sfondo del lettore</string>
-    <string name="follow_theme">Segui tema</string>
-    <string name="gradient">Gradiente</string>
-    <string name="enable_squiggly_slider">Abilita cursore ondulato</string>
     <string name="pure_black">Nero</string>
     <string name="default_open_tab">Scheda principale predefinita</string>
     <string name="customize_navigation_tabs">Personalizza le schede di navigazione</string>
@@ -247,13 +235,9 @@
     <string name="content_language">Lingua predefinita dei contenuti</string>
     <string name="content_country">Paese predefinito dei contenuti</string>
     <string name="system_default">Predefinito di sistema</string>
-    <string name="proxy">Proxy</string>
     <string name="enable_proxy">Attiva proxy</string>
     <string name="proxy_type">Tipologia del proxy</string>
     <string name="proxy_url">URL proxy</string>
-    <string name="default_lib_chips">Cambia linguetta predefinita della libreria</string>
-    <string name="set_quick_picks">Imposta le scelte rapide</string>
-    <string name="last_song_listened">Basate sugli ultimi brani ascoltati</string>
     <string name="restart_to_take_effect">Riavvia l\'app per applicare le modifiche</string>
 
     <string name="player_and_audio">Riproduttore e audio</string>
@@ -304,10 +288,4 @@
     <string name="translation_models">Modelli di traduzione</string>
     <string name="clear_translation_models">Cancella modelli di traduzione</string>
     
-    <string name="all_time">Da sempre</string>
-    <string name="past_24_hours">Ultime 24 ore</string>
-    <string name="past_week">Ultima settimana</string>
-    <string name="past_month">Ultimo mese</string>
-    <string name="past_year">Ultimo anno</string>
-    <string name="top_length">Lunghezza della lista dei miei migliori</string>
 </resources>

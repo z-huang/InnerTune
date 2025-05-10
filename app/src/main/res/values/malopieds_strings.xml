@@ -1,0 +1,70 @@
+<resources>
+    <!-- Bottom navigation -->
+    <string name="explore">Explore</string>
+
+    <!-- Stats -->
+    <string name="weeks">Weeks</string>
+    <string name="months">Months</string>
+    <string name="years">Years</string>
+    <string name="continuous">Continuous</string>
+
+    <!-- Library -->
+    <string name="liked">Liked</string>
+    <string name="offline">Downloaded</string>
+    <string name="my_top">My Top</string>
+
+    <!-- Menu -->
+    <string name="select">Select all</string>
+    <string name="like_all">Like all</string>
+
+    <!-- Sort menu -->
+    <string name="sort_by_last_updated">Date updated</string>
+
+    <!-- Dialog -->
+    <string name="already_in_playlist">Already in playlist:</string>
+
+    <!-- Noun -->
+    <plurals name="n_element">
+        <item quantity="one">%d element</item>
+        <item quantity="other">%d elements</item>
+    </plurals>
+    <plurals name="n_time">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d times</item>
+    </plurals>
+    <plurals name="seconds">
+        <item quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+
+    <!-- Queue title -->
+    <string name="similar_content">Similar content</string>
+
+    <!-- Settings -->
+    <string name="player_background_style">Player background style</string>
+    <string name="follow_theme">Follow theme</string>
+    <string name="gradient">Gradient</string>
+    <string name="enable_squiggly_slider">Enable squiggly slider</string>
+    <string name="enable_swipe_thumbnail">Enable swipe on thumbnail to change song</string>
+    <string name="lyrics_click_change">Change lyrics on click</string>
+    <string name="proxy">Proxy</string>
+    <string name="default_lib_chips">Change default library chip</string>
+    <string name="set_quick_picks">Set Quick Picks</string>
+    <string name="last_song_listened">Based on last song listened</string>
+    <string name="app_language">App language</string>
+    <string name="configure_app_language">Configure app languages</string>
+    <string name="intent_app_language_not_found">Couldn\'t find app language settings, please configure them manually</string>
+    <string name="open_supported_links">Open supported link by default</string>
+    <string name="configure_supported_links">Configure supported links</string>
+    <string name="intent_supported_links_not_found">Couldn\'t find supported links settings, please configure them manually</string>
+    <string name="enable_similar_content">Enable Similar Content</string>
+    <string name="set_first_lyrics_provider">Set the first lyrics provider</string>
+
+    <string name="all_time">All time</string>
+    <string name="past_24_hours">Past 24 hours</string>
+    <string name="past_week">Past week</string>
+    <string name="past_month">Past month</string>
+    <string name="past_year">Past year</string>
+    <string name="top_length">My Top list length</string>
+    <string name="history_duration">History duration</string>
+</resources>

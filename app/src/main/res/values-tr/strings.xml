@@ -6,7 +6,6 @@
     <string name="artists">Sanatçılar</string>
     <string name="albums">Albümler</string>
     <string name="playlists">Çalma Listeleri</string>
-    <string name="explore">Keşfet</string>
 
     <!-- Üst çubuk -->
     <plurals name="n_selected">
@@ -63,9 +62,6 @@
     <string name="other_versions">Diğer Versiyonlar</string>
 
     <!-- Kütüphane -->
-    <string name="liked">Beğenilenler</string>
-    <string name="offline">İndirilenler</string>
-    <string name="my_top">En İyilerim</string>
 
     <!-- Çalma Listesi -->
     <string name="liked_songs">Beğenilen şarkılar</string>
@@ -103,12 +99,9 @@
     <string name="search_online">Çevrimiçi ara</string>
     <string name="sync">Senkronize et</string>
     <string name="advanced">Gelişmiş</string>
-    <string name="select">Tümünü seç</string>
-    <string name="like_all">Tümünü beğen</string>
 
     <!-- Sıralama menüsü -->
     <string name="sort_by_create_date">Eklenme tarihi</string>
-    <string name="sort_by_last_updated">Güncellenme tarihi</string>
     <string name="sort_by_name">İsim</string>
     <string name="sort_by_artist">Sanatçı</string>
     <string name="sort_by_year">Yıl</string>
@@ -144,7 +137,6 @@
     <string name="create_playlist">Çalma listesi oluştur</string>
     <string name="playlist_name">Çalma listesi adı</string>
     <string name="error_playlist_name_empty">Çalma listesi adı boş olamaz.</string>
-    <string name="already_in_playlist">Zaten çalma listesinde:</string>
 
     <string name="edit_artist">Sanatçıyı düzenle</string>
     <string name="artist_name">Sanatçı adı</string>
@@ -178,10 +170,6 @@
     <plurals name="n_year" tools:ignore="MissingQuantity">
         <item quantity="one">%d yıl</item>
         <item quantity="other">%d yıl</item>
-    </plurals>
-    <plurals name="n_element">
-        <item quantity="one">%d öğe</item>
-        <item quantity="other">%d öğe</item>
     </plurals>
 
     <!-- Snackbar -->
@@ -227,10 +215,6 @@
     <string name="dark_theme_on">Açık</string>
     <string name="dark_theme_off">Kapalı</string>
     <string name="dark_theme_follow_system">Sistemi takip et</string>
-    <string name="player_background_style">Oynatıcı arka plan stili</string>
-    <string name="follow_theme">Temayı takip et</string>
-    <string name="gradient">Gradyan</string>
-    <string name="enable_squiggly_slider">Dalgalı kaydırıcıyı etkinleştir</string>
     <string name="pure_black">Saf siyah</string>
     <string name="default_open_tab">Varsayılan açılış sekmesi</string>
     <string name="customize_navigation_tabs">Gezinme sekmelerini özelleştir</string>
@@ -244,13 +228,9 @@
     <string name="content_language">Varsayılan içerik dili</string>
     <string name="content_country">Varsayılan içerik ülkesi</string>
     <string name="system_default">Sistem varsayılanı</string>
-    <string name="proxy">Proxy</string>
     <string name="enable_proxy">Proxy\'i etkinleştir</string>
     <string name="proxy_type">Proxy türü</string>
     <string name="proxy_url">Proxy URL\'si</string>
-    <string name="default_lib_chips">Varsayılan kütüphane çipi değiştir</string>
-    <string name="set_quick_picks">Hızlı Seçimleri Ayarla</string>
-    <string name="last_song_listened">Son dinlenen şarkıya göre</string>
     <string name="restart_to_take_effect">Etkili olması için yeniden başlatın</string>
     
     <string name="player_and_audio">Oynatıcı ve ses</string>
@@ -301,11 +281,5 @@
     <string name="translation_models">Çeviri Modelleri</string>
     <string name="clear_translation_models">Çeviri modellerini temizle</string>
     
-    <string name="all_time">Tüm zamanlar</string>
-    <string name="past_24_hours">Son 24 saat</string>
-    <string name="past_week">Son hafta</string>
-    <string name="past_month">Son ay</string>
-    <string name="past_year">Son yıl</string>
-    <string name="top_length">En İyi listem uzunluğu</string>
      
 </resources>

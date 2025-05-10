@@ -5,7 +5,6 @@
     <string name="artists">Καλλιτέχνες</string>
     <string name="albums">Άλμπουμ</string>
     <string name="playlists">Playlists</string>
-    <string name="explore">Εξερεύνηση</string>
 
     <!-- Top bar -->
     <plurals name="n_selected">
@@ -62,9 +61,6 @@
     <string name="other_versions">Άλλες Εκδόσεις</string>
 
     <!-- Library -->
-    <string name="liked">Αγαπημένα</string>
-    <string name="offline">Κατεβασμένα</string>
-    <string name="my_top">Τα Top μου</string>
 
 
     <!-- Playlist -->
@@ -103,12 +99,9 @@
     <string name="search_online">Αναζήτηση</string>
     <string name="sync">Συγχρονισμό</string>
     <string name="advanced">Προχωρημένο</string>
-    <string name="select">επιλογή όλων</string>
-    <string name="like_all">Αγαπημένα όλα</string>
 
     <!-- Sort menu -->
     <string name="sort_by_create_date">Ημερομηνία προσθήκης</string>
-    <string name="sort_by_last_updated">Ημερομηνία ενημέρωσης</string>
     <string name="sort_by_name">Όνομα</string>
     <string name="sort_by_artist">Καλλιτέχνες</string>
     <string name="sort_by_year">Χρόνος</string>
@@ -144,7 +137,6 @@
     <string name="create_playlist">Δημιουργία playlist</string>
     <string name="playlist_name">Όνομα playlist</string>
     <string name="error_playlist_name_empty">Το όνομα του playlist δεν μπορεί να είναι άδειο.</string>
-    <string name="already_in_playlist">Ήδη στο playlist:</string>
 
     <string name="edit_artist">Επεξεργασία καλλιτέχνη</string>
     <string name="artist_name">Όνομα καλλιτέχνη</string>
@@ -223,10 +215,6 @@
     <string name="dark_theme_on">Ενεργό</string>
     <string name="dark_theme_off">Ανενεργό</string>
     <string name="dark_theme_follow_system">Συστήματος</string>
-    <string name="player_background_style">Στυλ φόντου αναπαραγωγητή</string>
-    <string name="follow_theme">Συστήματος</string>
-    <string name="gradient">Βαθμίδα</string>
-    <string name="enable_squiggly_slider">Ενεργοποίηση κυματιστών γραμμών</string>
     <string name="pure_black">Καθαρό μαύρο</string>
     <string name="default_open_tab">Προεπιλεγμένη ανοιχτή ταμπέλα</string>
     <string name="customize_navigation_tabs">Προσαρμογή καρτέλας εξερεύνησης</string>
@@ -240,13 +228,9 @@
     <string name="content_language">Προεπιλεγμένη γλώσσα περιεχομένου</string>
     <string name="content_country">Προεπιλεγμένη χώρα περιεχομένου</string>
     <string name="system_default">Συστήματος</string>
-    <string name="proxy">Proxy</string>
     <string name="enable_proxy">Ενεργοποίηση proxy</string>
     <string name="proxy_type">Τύπος proxy</string>
     <string name="proxy_url">Σύνδεσμος Proxy</string>
-    <string name="default_lib_chips">Αλλαγή προεπιλεγμένων τσιπ βιβλιοθήκης</string>
-    <string name="set_quick_picks">Ορισμό Γρήγορων Επιλογών</string>
-    <string name="last_song_listened">Βασισμένο στο τελευταίο τραγούδι που ακούσατε</string>
     <string name="restart_to_take_effect">Επανεκκίνηση για εφαρμογή αλλαγών</string>
 
     <string name="player_and_audio">Αναπαραγωγητής και ήχος</string>
@@ -297,12 +281,6 @@
     <string name="translation_models">Μοντέλα Μετάφρασης</string>
     <string name="clear_translation_models">Εκκαθάριση μοντέλων μετάφρασης</string>
 
-    <string name="all_time">Συνεχώς</string>
-    <string name="past_24_hours">Τελευταίες 24 ώρες</string>
-    <string name="past_week">Τελευταία εβδομάδα</string>
-    <string name="past_month">Τελευταίο μήνα</string>
-    <string name="past_year">Τελευταίο χρόνο</string>
-    <string name="top_length">Το μήκος της Top λίστας μου</string>
 </resources>
 
       
