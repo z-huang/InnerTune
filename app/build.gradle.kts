@@ -89,15 +89,15 @@ android {
         unitTests.isIncludeAndroidResources = true
         unitTests.isReturnDefaultValues = true
     }
-    lint {
-        disable += "MissingTranslation"
-    }
     // avoid DEPENDENCY_INFO_BLOCK for IzzyOnDroid
     dependenciesInfo {
         // Disables dependency metadata when building APKs.
         includeInApk = false
         // Disables dependency metadata when building Android App Bundles.
         includeInBundle = false
+    }
+    lint {
+        lintConfig = file("app/lint.xml")
     }
 }
 
