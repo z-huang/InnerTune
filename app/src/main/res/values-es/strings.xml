@@ -34,7 +34,7 @@
     <string name="most_played_albums">Álbumes más reproducidos</string>
     <!-- Search -->
     <string name="search">Buscar</string>
-    <string name="search_yt_music">Buscar en Youtube Music…</string>
+    <string name="search_yt_music">Buscar en YouTube Music…</string>
     <string name="search_library">Buscar en la biblioteca…</string>
     <string name="filter_library">Biblioteca</string>
     <string name="filter_liked">Me gusta</string>
