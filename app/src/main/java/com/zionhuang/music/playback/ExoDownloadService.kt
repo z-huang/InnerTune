@@ -23,7 +23,7 @@ class ExoDownloadService : DownloadService(
     NOTIFICATION_ID,
     1000L,
     CHANNEL_ID,
-    R.string.download,
+    R.string.action_download,
     0
 ) {
     @Inject
