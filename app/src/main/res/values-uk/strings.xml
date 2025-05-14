@@ -82,7 +82,7 @@
     <string name="add_all_to_library">Додати все до бібліотеки</string>
     <string name="remove_from_library">Видалити з бібліотеки</string>
     <string name="remove_all_from_library">Видалити все з бібліотеки</string>
-    <string name="download">Завантажити</string>
+    <string name="action_download">Завантажити</string>
     <string name="downloading">Завантаження</string>
     <string name="remove_download">Видалити із завантажених</string>
     <string name="import_playlist">Імпортувати плейлист</string>
@@ -96,7 +96,7 @@
     <string name="remove_from_playlist">Видалити з плейлиста</string>
     <string name="remove_from_queue">Видалити з черги</string>
     <string name="search_online">Пошук в Інтернеті</string>
-    <string name="sync">Синхронізувати</string>
+    <string name="action_sync">Синхронізувати</string>
     <string name="advanced">Контроль аудіо</string>
     <string name="tempo_and_pitch">Темп і висота тону</string>
     <!-- Sort menu -->
@@ -296,8 +296,8 @@
     <string name="enable_kugou">Увімкнути провайдера текстів KuGou</string>
     <string name="hide_explicit">Приховувати контент із нецензурною лексикою</string>
     <string name="backup_restore">Резервне копіювання</string>
-    <string name="backup">Створити резервну копію</string>
-    <string name="restore">Відновити з резервної копії</string>
+    <string name="action_backup">Створити резервну копію</string>
+    <string name="action_restore">Відновити з резервної копії</string>
     <string name="imported_playlist">Імпортований плейлист</string>
     <string name="backup_create_success">Резервну копію створено успішно</string>
     <string name="backup_create_failed">Не вдалося створити резервну копію</string>
@@ -308,7 +308,7 @@
     <string name="options">Налаштування</string>
     <string name="preview">Попередній перегляд</string>
     <string name="login_failed">Помилка входу</string>
-    <string name="logout">Вийти</string>
+    <string name="action_logout">Вийти</string>
     <string name="enable_discord_rpc">Увімкнути Rich Presenсe</string>
     <string name="about">Про програму</string>
     <string name="app_version">Версія застосунку</string>
