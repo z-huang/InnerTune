@@ -235,7 +235,7 @@
     <string name="pause_search_history">Pausar o histórico de pesquisa</string>
     <string name="clear_search_history">Limpar o histórico de pesquisa</string>
     <string name="clear_search_history_confirm">Você tem certeza que deseja limpar todo o histórico de pesquisa?</string>
-    <string name="enable_kugou">Ativar o fornecedor de letras KuGou</string>
+    <string name="enable_kugou">Ativar o provedor de letras KuGou</string>
     <string name="backup_restore">Backup e restauração</string>
     <string name="action_backup">Fazer backup</string>
     <string name="action_restore">Restaurar</string>
@@ -252,7 +252,7 @@
     <string name="delete_playlist_confirm">Você tem certeza que deseja apagar a playlist \"%s\"?</string>
     <string name="remove_from_playlist">Remover da playlist</string>
     <string name="skip_duplicates">Pular duplicados</string>
-    <string name="enable_lrclib">Ativar o fornecedor de letras LrcLib</string>
+    <string name="enable_lrclib">Ativar o provedor de letras LrcLib</string>
     <string name="duplicates">Duplicados</string>
     <string name="add_anyway">Adicionar mesmo assim</string>
     <string name="duplicates_description_single">Esta música já está na sua playlist</string>
