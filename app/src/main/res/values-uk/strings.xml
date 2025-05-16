@@ -9,9 +9,9 @@
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d вибрано</item>
-        <item quantity="few">%d вибрано</item>
-        <item quantity="many">%d вибрано</item>
-        <item quantity="other">%d вибрано</item>
+        <item quantity="few">%d вибране</item>
+        <item quantity="many">%d вибрані</item>
+        <item quantity="other">%d вибрані</item>
     </plurals>
     <!-- Home -->
     <string name="history">Історія</string>
@@ -124,17 +124,17 @@
     <string name="edit_song">Редагувати композицію</string>
     <string name="song_title">Назва композиції</string>
     <string name="song_artists">Виконавці композиції</string>
-    <string name="error_song_title_empty">Вкажіть назву композиції</string>
-    <string name="error_song_artist_empty">Вкажіть виконавців композиції</string>
+    <string name="error_song_title_empty">Назва пісні не може бути порожньою.</string>
+    <string name="error_song_artist_empty">Поле \"Виконавець пісні\" не може бути порожнім.</string>
     <string name="save">Зберегти</string>
     <string name="choose_playlist">Вибрати плейлист</string>
     <string name="edit_playlist">Редагувати плейлист</string>
     <string name="create_playlist">Створити плейлист</string>
     <string name="playlist_name">Назва плейлиста</string>
-    <string name="error_playlist_name_empty">Вкажіть назву плейлиста</string>
+    <string name="error_playlist_name_empty">Назва списку відтворення не може бути порожньою.</string>
     <string name="edit_artist">Редагувати виконавця</string>
     <string name="artist_name">Ім\'я виконавця</string>
-    <string name="error_artist_name_empty">Вкажіть ім\'я виконавця</string>
+    <string name="error_artist_name_empty">Ім\'я виконавця не може бути порожнім.</string>
     <string name="duplicates">Дублікати</string>
     <string name="skip_duplicates">Пропустити дублікати</string>
     <string name="add_anyway">Додати в будь-якому разі</string>
