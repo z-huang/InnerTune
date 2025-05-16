@@ -175,7 +175,7 @@
     <string name="action_remove_like">Odebrat z oblíbených</string>
     <string name="action_shuffle_on">Náhodně zapnuto</string>
     <string name="action_shuffle_off">Náhodně vypnuto</string>
-    <string name="repeat_mode_off">Režim opakování zapnut</string>
+    <string name="repeat_mode_off">Režim opakování vypnut</string>
     <string name="repeat_mode_one">Opakovat aktuální skladbu</string>
     <string name="repeat_mode_all">Opakovat frontu</string>
     <!-- Queue Title -->
@@ -209,7 +209,7 @@
     <string name="restart_to_take_effect">Restartujte pro uplatnění změn</string>
     <string name="player_and_audio">Přehrávač a zvuk</string>
     <string name="audio_quality">Kvalita zvuku</string>
-    <string name="audio_quality_auto">Automaticky</string>
+    <string name="audio_quality_auto">Automatická</string>
     <string name="audio_quality_high">Vysoká</string>
     <string name="audio_quality_low">Nízká</string>
     <string name="persistent_queue">Ukládat frontu</string>
