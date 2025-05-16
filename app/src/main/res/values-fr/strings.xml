@@ -263,7 +263,7 @@
     <string name="dismiss">Abandonner</string>
     <string name="options">Options</string>
     <string name="preview">Prévisualisation</string>
-    <string name="action_logout">Déconnexion</string>
+    <string name="action_logout">Se déconnecter</string>
     <string name="enable_discord_rpc">Activer la présence riche</string>
     <string name="login_failed">Échec de la connexion</string>
     <string name="delete_playlist_confirm">Souhaitez-vous vraiment supprimer la playlist « %s » ?</string>
@@ -306,4 +306,5 @@
     <string name="discord_information">InnerTune utilise la bibliothèque KizzyRPC pour définir le statut de votre compte Discord. Cela implique l\'utilisation de la connexion Discord Gateway, ce qui peut être considéré comme une violation des conditions d\'utilisation de Discord. Cependant, il n\'existe aucun cas connu de comptes d\'utilisateurs suspendus pour cette raison. Utilisez-le à vos propres risques. \n \nInnerTune extraira uniquement votre jeton, et tout le reste sera stocké localement.</string>
     <string name="use_login_for_browse">Utiliser le compte connecté pour parcourir le contenu</string>
     <string name="use_login_for_browse_desc">Ceci peut influencer le contenu que vous voyez et affiche par exemple les albums Premium si vous êtes connecté avec un compte Premium</string>
+    <string name="action_login">Se connecter</string>
 </resources>
