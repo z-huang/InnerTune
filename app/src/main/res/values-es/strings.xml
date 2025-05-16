@@ -307,4 +307,5 @@
     <string name="add_all_to_library">Añadir todo a la biblioteca</string>
     <string name="use_login_for_browse">Utilice el inicio de sesión para ver el contenido</string>
     <string name="use_login_for_browse_desc">Esto puede influir en el contenido que ve y, por ejemplo, muestra álbumes exclusivos si ha iniciado sesión con una cuenta Premium</string>
+    <string name="action_login">Iniciar Sesión</string>
 </resources>
