@@ -306,4 +306,5 @@
     <string name="remove_all_from_library">Remover tudo da biblioteca</string>
     <string name="use_login_for_browse">Usar o login para a navegação de conteúdo</string>
     <string name="use_login_for_browse_desc">Isto pode influenciar em que conteúdo você vê, e se você tiver Premium por exemplo, verá álbuns que só estão disponíveis com Premium</string>
+    <string name="action_login">Entrar</string>
 </resources>
