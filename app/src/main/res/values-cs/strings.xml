@@ -306,4 +306,5 @@
     <string name="action_logout">Odhlásit se</string>
     <string name="use_login_for_browse">Použít účet pro procházení obsahu</string>
     <string name="use_login_for_browse_desc">Může ovlivnit obsah, který se vám zobrazí – při přihlášení například mohou být zobrazena například alba, která jsou dostupná pouze s Premium účtem</string>
+    <string name="action_login">Přihlásit se</string>
 </resources>
