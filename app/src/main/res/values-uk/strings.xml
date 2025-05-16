@@ -82,7 +82,7 @@
     <string name="add_all_to_library">Додати все до бібліотеки</string>
     <string name="remove_from_library">Видалити з бібліотеки</string>
     <string name="remove_all_from_library">Видалити все з бібліотеки</string>
-    <string name="action_download">Завантажити</string>
+    <string name="action_download">Завантаження</string>
     <string name="downloading">Завантаження</string>
     <string name="remove_download">Видалити із завантажених</string>
     <string name="import_playlist">Імпортувати плейлист</string>
@@ -96,7 +96,7 @@
     <string name="remove_from_playlist">Видалити з плейлиста</string>
     <string name="remove_from_queue">Видалити з черги</string>
     <string name="search_online">Пошук в Інтернеті</string>
-    <string name="action_sync">Синхронізувати</string>
+    <string name="action_sync">Синхронізація</string>
     <string name="advanced">Контроль аудіо</string>
     <string name="tempo_and_pitch">Темп і висота тону</string>
     <!-- Sort menu -->
@@ -296,8 +296,8 @@
     <string name="enable_kugou">Увімкнути провайдера текстів KuGou</string>
     <string name="hide_explicit">Приховувати контент із нецензурною лексикою</string>
     <string name="backup_restore">Резервне копіювання</string>
-    <string name="action_backup">Створити резервну копію</string>
-    <string name="action_restore">Відновити з резервної копії</string>
+    <string name="action_backup">Резервне копіювання</string>
+    <string name="action_restore">Відновити</string>
     <string name="imported_playlist">Імпортований плейлист</string>
     <string name="backup_create_success">Резервну копію створено успішно</string>
     <string name="backup_create_failed">Не вдалося створити резервну копію</string>
@@ -317,4 +317,5 @@
     <string name="clear_translation_models">Очистити моделі перекладу</string>
     <string name="use_login_for_browse_desc">Це може вплинути на те, який вміст ви бачите, і, наприклад, показує лише платні альбоми, якщо ви ввійшли в обліковий запис Premium</string>
     <string name="use_login_for_browse">Використовуйте логін для перегляду вмісту</string>
+    <string name="action_login">Увійти</string>
 </resources>
