@@ -91,7 +91,7 @@
     <string name="remove_download">Премахни изтегляне</string>
     <string name="view_artist">Вижте изпълнител</string>
     <string name="remove_from_library">Премахни от библиотеката</string>
-    <string name="action_download">Изтегли</string>
+    <string name="action_download">Изтегляне</string>
     <string name="downloading">Изтегля се</string>
     <string name="import_playlist">Внасяне на плейлист</string>
     <string name="refetch">Повторно извличане</string>
@@ -278,4 +278,5 @@
     <string name="new_version_available">Налична е нова версия</string>
     <string name="use_login_for_browse">Използвай вход за разглеждане на съдържание</string>
     <string name="use_login_for_browse_desc">Това може да повлияе какво съдържание виждате и например показва само премиум албуми, ако сте влезли с Премиум профил</string>
+    <string name="action_login">Вход</string>
 </resources>
