@@ -17,8 +17,8 @@
     <string name="playlists">Listas de reproducción</string>
     <plurals name="n_selected">
         <item quantity="one">%d seleccionada</item>
-        <item quantity="many">%d seleccionadas</item>
-        <item quantity="other"></item>
+        <item quantity="many">%d de seleccionadas</item>
+        <item quantity="other">%d seleccionadas</item>
     </plurals>
     <string name="history">Historial</string>
     <string name="stats">Estadísticas</string>
