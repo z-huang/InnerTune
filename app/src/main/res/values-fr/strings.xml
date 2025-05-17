@@ -236,9 +236,9 @@
     <string name="clear_search_history">Effacer l\'historique de recherche</string>
     <string name="clear_search_history_confirm">Voulez-vous vraiment effacer tout l’historique des recherches ?</string>
     <string name="enable_kugou">Activer le fournisseur de paroles KuGou</string>
-    <string name="backup_restore">Sauvegarde et Restauration</string>
-    <string name="action_backup">Sauvegarde</string>
-    <string name="action_restore">Restauration</string>
+    <string name="backup_restore">Sauvegarder et Restaurer</string>
+    <string name="action_backup">Sauvegarder</string>
+    <string name="action_restore">Restaurer</string>
     <string name="imported_playlist">Playlist importée</string>
     <string name="backup_create_success">Sauvegarde créée avec succès</string>
     <string name="backup_create_failed">Impossible de créer la sauvegarde</string>
