@@ -100,8 +100,8 @@
     <string name="file_size">Tamanho do arquivo</string>
     <string name="unknown">Desconhecido</string>
     <string name="copied">Copiado para a área de transferência</string>
-    <string name="edit_lyrics">Editar letras</string>
-    <string name="search_lyrics">Pesquisar letras</string>
+    <string name="edit_lyrics">Editar letra</string>
+    <string name="search_lyrics">Pesquisar letra</string>
     <string name="edit_song">Editar música</string>
     <string name="song_title">Nome da música</string>
     <string name="song_artists">Artistas da música</string>
@@ -158,7 +158,7 @@
     <string name="playlist_synced">A playlist foi sincronizada</string>
     <string name="undo">Desfazer</string>
     <!-- Player -->
-    <string name="lyrics_not_found">As letras não foram encontradas</string>
+    <string name="lyrics_not_found">A letra não foi encontrada</string>
     <string name="sleep_timer">Timer para dormir</string>
     <string name="end_of_song">Fim da música</string>
     <plurals name="minute">
@@ -194,7 +194,7 @@
     <string name="pure_black">Preto profundo</string>
     <string name="default_open_tab">Aba padrão ao abrir o app</string>
     <string name="customize_navigation_tabs">Customizar abas de navegação</string>
-    <string name="lyrics_text_position">Posição do texto das letras</string>
+    <string name="lyrics_text_position">Posição do texto da letra</string>
     <string name="left">Esquerda</string>
     <string name="center">Centro</string>
     <string name="right">Direita</string>
