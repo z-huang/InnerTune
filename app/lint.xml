@@ -10,7 +10,6 @@
     <!-- Weblate doesn't handle these yet: https://github.com/WeblateOrg/weblate/issues/7520 -->
     <issue id="MissingQuantity" severity="error">
         <ignore path="src/main/res/values-cs" />
-        <ignore path="src/main/res/values-fr" />
         <ignore path="src/main/res/values-lt" />
         <ignore path="src/main/res/values-sk" />
     </issue>
