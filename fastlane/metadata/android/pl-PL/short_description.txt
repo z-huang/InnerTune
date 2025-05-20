@@ -1,1 +1,1 @@
-Aplikacja YouTube Music wykorzystująca Material 3
+Klient YouTube Music oparty o Material 3 dla systemu Android
