@@ -110,39 +110,39 @@
     <string name="add_anyway">Afegeix igualment</string>
     <plurals name="n_song">
         <item quantity="one">%d cançó</item>
-        <item quantity="many">%d cançons</item>
+        <item quantity="many">%d de cançons</item>
         <item quantity="other">%d cançons</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d artista</item>
-        <item quantity="many">%d artistes</item>
+        <item quantity="many">%d d’artistes</item>
         <item quantity="other">%d artistes</item>
     </plurals>
     <string name="skip_duplicates">Omet les duplicacions</string>
     <string name="duplicates_description_single">La cançó ja és a la vostra llista</string>
     <plurals name="n_month">
         <item quantity="one">%d mes</item>
-        <item quantity="many">%d mesos</item>
+        <item quantity="many">%d de mesos</item>
         <item quantity="other">%d mesos</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d àlbum</item>
-        <item quantity="many">%d àlbums</item>
+        <item quantity="many">%d d’àlbums</item>
         <item quantity="other">%d àlbums</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d llista</item>
-        <item quantity="many">%d llistes</item>
+        <item quantity="many">%d de llistes</item>
         <item quantity="other">%d llistes</item>
     </plurals>
     <plurals name="n_week">
         <item quantity="one">%d setmana</item>
-        <item quantity="many">%d setmanes</item>
+        <item quantity="many">%d de setmanes</item>
         <item quantity="other">%d setmanes</item>
     </plurals>
     <plurals name="n_year">
         <item quantity="one">%d any</item>
-        <item quantity="many">%d anys</item>
+        <item quantity="many">%d d’anys</item>
         <item quantity="other">%d anys</item>
     </plurals>
     <plurals name="minute">
@@ -238,4 +238,16 @@
     <string name="sort_by_year">Any</string>
     <string name="proxy_url">URL del servidor intermediari</string>
     <string name="audio_quality_high">Alta</string>
+    <plurals name="n_selected">
+        <item quantity="one">%d seleccionada</item>
+        <item quantity="many">%d de seleccionades</item>
+        <item quantity="other">%d seleccionades</item>
+    </plurals>
+    <string name="remove_download_playlist_confirm">Realment voleu eliminar totes les cançons de la llista «%s» de l’emmagatzematge de cançons baixades?</string>
+    <string name="playlist_imported">S’ha importat la llista</string>
+    <string name="playlist_synced">S’ha sincronitzat la llista</string>
+    <string name="end_of_song">Fi de la cançó</string>
+    <string name="action_like_all">M’agrada tot</string>
+    <string name="action_remove_like">Ja no m’agrada</string>
+    <string name="action_remove_like_all">Ja no m’agrada res</string>
 </resources>
