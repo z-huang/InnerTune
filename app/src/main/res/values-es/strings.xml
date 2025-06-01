@@ -9,7 +9,7 @@
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d seleccionada</item>
-        <item quantity="many">%d seleccionadas</item>
+        <item quantity="many">%d de seleccionadas</item>
         <item quantity="other">%d seleccionadas</item>
     </plurals>
     <!-- Home -->
@@ -18,11 +18,11 @@
     <string name="mood_and_genres">Estado de ánimo y géneros</string>
     <string name="account">Cuenta</string>
     <string name="quick_picks">Selecciones rápidas</string>
-    <string name="quick_picks_empty">Escucha canciones para generar tus selecciones rápidas</string>
+    <string name="quick_picks_empty">Escuche canciones para generar sus selecciones rápidas</string>
     <string name="forgotten_favorites">Favoritos olvidados</string>
     <string name="keep_listening">Seguir escuchando</string>
     <string name="similar_to">Similar a</string>
-    <string name="new_release_albums">Nuevos lanzamientos</string>
+    <string name="new_release_albums">Álbumes recién lanzados</string>
     <!-- History -->
     <string name="today">Hoy</string>
     <string name="yesterday">Ayer</string>
@@ -132,42 +132,42 @@
     <string name="duplicates">Duplicados</string>
     <string name="skip_duplicates">Saltar duplicados</string>
     <string name="add_anyway">Añadir de todas formas</string>
-    <string name="duplicates_description_single">Esta canción ya está en tu lista de reproducción</string>
-    <string name="duplicates_description_multiple">%d canciones ya están en tu lista de reproducción</string>
+    <string name="duplicates_description_single">Esta canción ya está en su lista de reproducción</string>
+    <string name="duplicates_description_multiple">%d canciones ya están en su lista de reproducción</string>
     <!-- Noun -->
     <plurals name="n_song">
         <item quantity="one">%d canción</item>
-        <item quantity="many">%d canciones</item>
+        <item quantity="many">%d de canciones</item>
         <item quantity="other">%d canciones</item>
     </plurals>
     <plurals name="n_artist">
         <item quantity="one">%d artista</item>
-        <item quantity="many">%d artistas</item>
+        <item quantity="many">%d de artistas</item>
         <item quantity="other">%d artistas</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d álbum</item>
-        <item quantity="many">%d álbumes</item>
+        <item quantity="many">%d de álbumes</item>
         <item quantity="other">%d álbumes</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d lista de reproducción</item>
-        <item quantity="many">%d listas de reproducción</item>
+        <item quantity="many">%d de listas de reproducción</item>
         <item quantity="other">%d listas de reproducción</item>
     </plurals>
     <plurals name="n_week">
         <item quantity="one">%d semana</item>
-        <item quantity="many">%d semanas</item>
+        <item quantity="many">%d de semanas</item>
         <item quantity="other">%d semanas</item>
     </plurals>
     <plurals name="n_month">
         <item quantity="one">%d mes</item>
-        <item quantity="many">%d meses</item>
+        <item quantity="many">%d de meses</item>
         <item quantity="other">%d meses</item>
     </plurals>
     <plurals name="n_year">
         <item quantity="one">%d año</item>
-        <item quantity="many">%d años</item>
+        <item quantity="many">%d de años</item>
         <item quantity="other">%d años</item>
     </plurals>
     <!-- Snackbar -->
@@ -181,7 +181,7 @@
     <string name="end_of_song">Al finalizar la canción</string>
     <plurals name="minute">
         <item quantity="one">1 minuto</item>
-        <item quantity="many">%d minutos</item>
+        <item quantity="many">%d de minutos</item>
         <item quantity="other">%d minutos</item>
     </plurals>
     <string name="error_no_stream">No hay un stream disponible</string>
@@ -268,10 +268,10 @@
     <string name="privacy">Privacidad</string>
     <string name="pause_listen_history">Pausar historial de reproducciones</string>
     <string name="clear_listen_history">Borrar historial de reproducciones</string>
-    <string name="clear_listen_history_confirm">¿Estás seguro de que quieres borrar todo el historial de reproducciones?</string>
+    <string name="clear_listen_history_confirm">¿Confirma que quiere borrar todo el historial de reproducciones?</string>
     <string name="pause_search_history">Pausar historial de búsquedas</string>
     <string name="clear_search_history">Borrar historial de búsquedas</string>
-    <string name="clear_search_history_confirm">¿Estás seguro de que quieres borrar todo el historial de búsquedas?</string>
+    <string name="clear_search_history_confirm">¿Confirma que quiere borrar todo el historial de búsquedas?</string>
     <string name="enable_lrclib">Activar proveedor de letras LrcLib</string>
     <string name="enable_kugou">Activar proveedor de letras KuGou</string>
     <string name="hide_explicit">Ocultar contenido explícito</string>
@@ -296,7 +296,7 @@
     <string name="translation_models">Modelos de traducción</string>
     <string name="clear_translation_models">Borrar modelos de traducción</string>
     <string name="listen_history">Historial de reproducciones</string>
-    <string name="your_youtube_playlists">Tus listas de reproducción de YouTube</string>
+    <string name="your_youtube_playlists">Sus listas de reproducción de YouTube</string>
     <string name="remove_all_from_library">Quitar todo de la fonoteca</string>
     <string name="search_history">Historial de búsqueda</string>
     <string name="disable_screenshot">Desactivar captura de pantalla</string>
