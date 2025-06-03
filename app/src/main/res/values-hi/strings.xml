@@ -168,7 +168,7 @@
     <string name="sleep_timer">स्लीप टाइमर</string>
     <string name="end_of_song">गाने का अंत</string>
     <plurals name="minute">
-        <item quantity="one">1 मिनट</item>
+        <item quantity="one">%d मिनट</item>
         <item quantity="other">%d मिनट</item>
     </plurals>
     <string name="error_timeout">समय सीमा</string>
