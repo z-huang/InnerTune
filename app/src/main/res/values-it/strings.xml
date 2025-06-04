@@ -55,7 +55,7 @@
     <!-- Button -->
     <string name="retry">Riprova</string>
     <string name="radio">Radio</string>
-    <string name="shuffle">Mischia</string>
+    <string name="shuffle">Casuale</string>
     <string name="reset">Ricomincia</string>
     <!-- Menu -->
     <string name="details">Dettagli</string>
