@@ -157,17 +157,17 @@
     </plurals>
     <plurals name="n_week">
         <item quantity="one">%d semana</item>
-        <item quantity="many">%d semanas</item>
+        <item quantity="many">%d de semanas</item>
         <item quantity="other">%d semanas</item>
     </plurals>
     <plurals name="n_month">
         <item quantity="one">%d mes</item>
-        <item quantity="many">%d meses</item>
+        <item quantity="many">%d de meses</item>
         <item quantity="other">%d meses</item>
     </plurals>
     <plurals name="n_year">
         <item quantity="one">%d año</item>
-        <item quantity="many">%d años</item>
+        <item quantity="many">%d de años</item>
         <item quantity="other">%d años</item>
     </plurals>
     <!-- Snackbar -->
@@ -181,7 +181,7 @@
     <string name="end_of_song">Al finalizar la canción</string>
     <plurals name="minute">
         <item quantity="one">1 minuto</item>
-        <item quantity="many">%d minutos</item>
+        <item quantity="many">%d de minutos</item>
         <item quantity="other">%d minutos</item>
     </plurals>
     <string name="error_no_stream">No hay un stream disponible</string>
