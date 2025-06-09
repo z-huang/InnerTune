@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
+import android.util.Log
 
 @Immutable
 @Entity(
@@ -26,10 +27,14 @@ data class SongEntity(
     val totalPlayTime: Long = 0, // in milliseconds
     val inLibrary: LocalDateTime? = null,
 ) {
-    fun toggleLike() = copy(
-        liked = !liked,
-        inLibrary = if (!liked) inLibrary ?: LocalDateTime.now() else inLibrary
-    )
+    fun toggleLike(): SongEntity {
+        val newLikedStatus = !liked
+        Log.d("SongEntity", "SongEntity.toggleLike for id: $id. New liked status: $newLikedStatus. Old liked status: $liked")
+        return copy(
+            liked = newLikedStatus,
+            inLibrary = if (newLikedStatus) inLibrary ?: LocalDateTime.now() else inLibrary
+        )
+    }
 
     fun toggleLibrary() = copy(inLibrary = if (inLibrary == null) LocalDateTime.now() else null)
 }

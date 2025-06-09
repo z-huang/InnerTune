@@ -1,6 +1,7 @@
 package com.zionhuang.music.utils
 
 import android.content.Context
+import android.util.Log
 import com.my.kizzy.rpc.KizzyRPC
 import com.my.kizzy.rpc.RpcImage
 import com.zionhuang.music.R
@@ -27,6 +28,8 @@ class DiscordRPC(
             since = System.currentTimeMillis(),
             applicationId = APPLICATION_ID
         )
+    }.onFailure { exception ->
+        Log.e("AppDiscordRPC", "Error in updateSong (calling super.setActivity)", exception)
     }
 
     companion object {

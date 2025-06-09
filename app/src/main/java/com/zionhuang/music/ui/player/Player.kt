@@ -104,7 +104,9 @@ fun BottomSheetPlayer(
         useDarkTheme && pureBlack
     }
     val backgroundColor = if (useBlackBackground && state.value > state.collapsedBound) {
-        lerp(MaterialTheme.colorScheme.surfaceContainer, Color.Black, state.progress)
+        // Use a very dark grey as the starting point for the lerp when pureBlack is active
+        // to ensure a visible gradient effect during sheet expansion.
+        lerp(Color(0xFF1F1F1F), Color.Black, state.progress)
     } else {
         MaterialTheme.colorScheme.surfaceContainer
     }

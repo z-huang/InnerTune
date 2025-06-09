@@ -12,6 +12,7 @@
 
 package com.my.kizzy.rpc
 
+import android.util.Log
 import com.my.kizzy.gateway.DiscordWebSocket
 import com.my.kizzy.gateway.entities.presence.Activity
 import com.my.kizzy.gateway.entities.presence.Assets
@@ -57,9 +58,21 @@ open class KizzyRPC(token: String) {
         status: String? = "online",
         since: Long? = null,
     ) {
-        if (!isRpcRunning()) {
-            discordWebSocket.connect()
+        try {
+            if (!isRpcRunning()) {
+                try {
+                    discordWebSocket.connect()
+                } catch (e: Exception) {
+                    Log.e("KizzyRPC", "Error connecting to Discord WebSocket", e)
+                    return // Cannot proceed if connection fails
+                }
+            }
+        } catch (e: Exception) {
+            // Catching potential errors from isRpcRunning() itself, though less likely
+            Log.e("KizzyRPC", "Error checking RPC status or connecting", e)
+            return
         }
+
         val presence = Presence(
             activities = listOf(
                 Activity(
@@ -84,7 +97,11 @@ open class KizzyRPC(token: String) {
             since = since,
             status = status ?: "online"
         )
-        discordWebSocket.sendActivity(presence)
+        try {
+            discordWebSocket.sendActivity(presence)
+        } catch (e: Exception) {
+            Log.e("KizzyRPC", "Error sending Discord activity", e)
+        }
     }
 
     enum class Type(val value: Int) {
