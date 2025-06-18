@@ -53,7 +53,7 @@
     <!-- Button -->
     <string name="retry">Erneut versuchen</string>
     <string name="radio">Radio</string>
-    <string name="shuffle">Zufallswiedergabe</string>
+    <string name="shuffle">Shuffle</string>
     <string name="reset">Zurücksetzen</string>
     <!-- Menu -->
     <string name="details">Details</string>
@@ -163,8 +163,8 @@
     <!-- Player action -->
     <string name="action_like">Mag ich</string>
     <string name="action_remove_like">„Mag ich“ entfernen</string>
-    <string name="action_shuffle_on">Zufallswiedergabe an</string>
-    <string name="action_shuffle_off">Zufallswiedergabe aus</string>
+    <string name="action_shuffle_on">Shuffle an</string>
+    <string name="action_shuffle_off">Shuffle aus</string>
     <string name="repeat_mode_off">Wiederholungsmodus aus</string>
     <string name="repeat_mode_one">Aktuellen Song wiederholen</string>
     <string name="repeat_mode_all">Warteschlange wiederholen</string>
