@@ -239,4 +239,10 @@
     <string name="new_version_available">نسخه‌ی جدید دردسترس‌است</string>
     <string name="translation_models">نمونه‌های ترجمه</string>
     <string name="clear_translation_models">پاک‌کردن نمونه‌های ترجمه</string>
+    <string name="forgotten_favorites">موارد دلخواه فراموش شده</string>
+    <string name="keep_listening">به گوش دادن ادامه بده</string>
+    <string name="your_youtube_playlists">لیست های پخش یوتیوب شما</string>
+    <string name="similar_to">شبیه به</string>
+    <string name="library_song_empty">آهنگ‌ های کتابخانه اینجا نمایش داده می‌ شوند</string>
+    <string name="library_artist_empty">هنرمندان کتابخانه اینجا نمایش داده میشود</string>
 </resources>
