@@ -229,5 +229,23 @@
     <string name="player_and_audio">נגן ושמע</string>
     <string name="audio_quality">איכות שמע</string>
     <string name="audio_quality_auto">אוטומטי</string>
-    <string name="audio_quality_high">גבוהה</string>
+    <string name="audio_quality_high">גבוה</string>
+    <string name="audio_quality_low">נמוך</string>
+    <string name="queue">תור</string>
+    <string name="persistent_queue">תור קבוע</string>
+    <string name="persistent_queue_desc">שחזר את התור האחרון שלך כאשר האפליקציה נדלקת</string>
+    <string name="auto_load_more">טעינה אוטומטית של שירים נוספים</string>
+    <string name="auto_load_more_desc">הוסף אוטומטית שירים נוספים כאשר מגיעים לסוף התור, אם אפשר</string>
+    <string name="skip_silence">דילוג על שקט</string>
+    <string name="audio_normalization">נרמול שמע</string>
+    <string name="auto_skip_next_on_error">דילוג אוטומטי לשיר הבא כאשר מתרחשת שגיאה</string>
+    <string name="auto_skip_next_on_error_desc">הבטיחו את חוויית ההשמעה הרציפה שלכם</string>
+    <string name="stop_music_on_task_clear">עצירת מוזיקה בעת ניקוי המשימה</string>
+    <string name="equalizer">אקלוייזר</string>
+    <string name="storage">אחסון</string>
+    <string name="cache">מטמון</string>
+    <string name="image_cache">מטמון תמונה</string>
+    <string name="song_cache">מטמון שירים</string>
+    <string name="max_cache_size">גודל מטמון מקסימלי</string>
+    <string name="unlimited">לא מוגבל</string>
 </resources>
