@@ -34,5 +34,21 @@
     <string name="filter_library">ספרייה</string>
     <string name="filter_liked">אהבתי</string>
     <string name="filter_downloaded">ירדו</string>
-    <string name="filter_all">ההל</string>
+    <string name="filter_all">הכל</string>
+    <string name="filter_songs">שירים</string>
+    <string name="filter_videos">סרטונים</string>
+    <string name="filter_albums">אלבומים</string>
+    <string name="filter_artists">אמנים</string>
+    <string name="filter_playlists">פלייליסטים</string>
+    <string name="filter_community_playlists">פלייליסטים קהילתיים</string>
+    <string name="filter_featured_playlists">פלייליסטים נבחרים</string>
+    <string name="filter_bookmarked">סומן כמועדף</string>
+    <string name="no_results_found">לא נמצאו תוצאות</string>
+    <string name="library_song_empty">שירי הספרייה יופיעו כאן</string>
+    <string name="library_artist_empty">אמני הספרייה יופיעו כאן</string>
+    <string name="library_album_empty">אלבומי הספרייה יופיעו כאן</string>
+    <string name="library_playlist_empty">הפלייליסטים שלך יופיעו כאן</string>
+    <string name="from_your_library">מהספרייה שלך</string>
+    <string name="other_versions">גירסאות אחרות</string>
+    <string name="liked_songs">שירים שהאבתי</string>
 </resources>
