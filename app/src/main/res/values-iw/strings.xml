@@ -109,6 +109,12 @@
     <string name="edit_song">ערוך שיר</string>
     <string name="song_title">כותרת שיר</string>
     <string name="song_artists">אמני שיר</string>
-    <string name="error_song_title_empty">כותרת השיר לא יכולה להיות ריקה.</string>
+    <string name="error_song_title_empty">שם השיר לא יכול להיות ריק.</string>
     <string name="error_song_artist_empty">לא ניתן להשאיר את שדה אמן השיר ריק.</string>
+    <string name="save">שמור</string>
+    <string name="choose_playlist">בחר פלייליסט</string>
+    <string name="edit_playlist">ערוך פלייליסט</string>
+    <string name="create_playlist">צור פלייליסט</string>
+    <string name="playlist_name">שם פלייליסט</string>
+    <string name="error_playlist_name_empty">שם רשימת ההשמעה לא יכול להיות ריק.</string>
 </resources>
