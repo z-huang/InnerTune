@@ -108,5 +108,7 @@
     <string name="search_lyrics">חיפוש מילות שיר</string>
     <string name="edit_song">ערוך שיר</string>
     <string name="song_title">כותרת שיר</string>
-    <string name="song_artists">אמני שירים</string>
+    <string name="song_artists">אמני שיר</string>
+    <string name="error_song_title_empty">כותרת השיר לא יכולה להיות ריקה.</string>
+    <string name="error_song_artist_empty">לא ניתן להשאיר את שדה אמן השיר ריק.</string>
 </resources>
