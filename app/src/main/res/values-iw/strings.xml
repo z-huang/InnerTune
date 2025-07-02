@@ -116,5 +116,89 @@
     <string name="edit_playlist">ערוך פלייליסט</string>
     <string name="create_playlist">צור פלייליסט</string>
     <string name="playlist_name">שם פלייליסט</string>
-    <string name="error_playlist_name_empty">שם רשימת ההשמעה לא יכול להיות ריק.</string>
+    <string name="error_playlist_name_empty">שם הפלייליסט לא יכול להיות ריק.</string>
+    <string name="edit_artist">ערוך אמן</string>
+    <string name="artist_name">שם אמן</string>
+    <string name="error_artist_name_empty">שם האמן לא יכול להיות ריק.</string>
+    <string name="duplicates">כפילויות</string>
+    <string name="skip_duplicates">דילוג על כפילויות</string>
+    <string name="add_anyway">הוסף בכל זאת</string>
+    <string name="duplicates_description_single">השיר כבר נמצא ברשימת ההשמעה שלך</string>
+    <string name="duplicates_description_multiple">%d שירים כבר נמצאים ברשימת ההשמעה שלך</string>
+    <plurals name="n_song">
+        <item quantity="one">שיר %d</item>
+        <item quantity="two">%d שירים</item>
+        <item quantity="other">%d שירים</item>
+    </plurals>
+    <plurals name="n_artist">
+        <item quantity="one">אמן %d</item>
+        <item quantity="two">%d אמנים</item>
+        <item quantity="other">%d אמנים</item>
+    </plurals>
+    <plurals name="n_album">
+        <item quantity="one">אלבום %d</item>
+        <item quantity="two">%d אלבומים</item>
+        <item quantity="other">%d אלבומים</item>
+    </plurals>
+    <plurals name="n_playlist">
+        <item quantity="one">פלייליסט %d</item>
+        <item quantity="two">%d פלייליסטים</item>
+        <item quantity="other">%d פלייליסטים</item>
+    </plurals>
+    <plurals name="n_week">
+        <item quantity="one">שבוע %d</item>
+        <item quantity="two">%d שבועות</item>
+        <item quantity="other">%d שבועות</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="one">חודש %d</item>
+        <item quantity="two">%d חודשים</item>
+        <item quantity="other">%d חודשים</item>
+    </plurals>
+    <string name="end_of_song">סוף השיר</string>
+    <string name="action_like_all">‌</string>
+    <string name="queue_all_songs">כל השירים</string>
+    <string name="music_player">‪שירים שחיפשת</string>
+    <string name="pure_black">שחור</string>
+    <plurals name="n_year">
+        <item quantity="one">שנה %d</item>
+        <item quantity="two">%d שנים</item>
+        <item quantity="other">%d שנים</item>
+    </plurals>
+    <string name="playlist_imported">פלייליסט יובא</string>
+    <string name="removed_song_from_playlist">\"%s\" הוסר מרשימת ההשמעה</string>
+    <string name="playlist_synced">פלייסליט סונכרן</string>
+    <string name="undo">בטל</string>
+    <string name="lyrics_not_found">מילות השיר לא נמצאו</string>
+    <string name="sleep_timer">טיימר שינה</string>
+    <plurals name="minute">
+        <item quantity="one">דקה 1</item>
+        <item quantity="two">%d דקות</item>
+        <item quantity="other">%d דקות</item>
+    </plurals>
+    <string name="error_no_stream">אין סטרים זמין</string>
+    <string name="error_no_internet">אין חיבור אינטרנט</string>
+    <string name="error_timeout">פסק זמן</string>
+    <string name="error_unknown">שגיאה לא ידועה</string>
+    <string name="action_like">לייק</string>
+    <string name="action_remove_like">הסר לייק</string>
+    <string name="action_remove_like_all">הסר את כל הלייקים</string>
+    <string name="action_shuffle_on">ערבוב מופעל</string>
+    <string name="action_shuffle_off">ערבוב כבוי</string>
+    <string name="repeat_mode_off">מצב חזרה כבוי</string>
+    <string name="repeat_mode_one">חזרה על השיר הנוכחי</string>
+    <string name="repeat_mode_all">חזרה על התור</string>
+    <string name="queue_searched_songs">שירים שחיפשת</string>
+    <string name="settings">הגדרות</string>
+    <string name="appearance">נראות</string>
+    <string name="theme">עיצוב</string>
+    <string name="enable_dynamic_theme">הפעלת עיצוב דינמית</string>
+    <string name="dark_theme">עיצוב כהה</string>
+    <string name="dark_theme_on">פועל</string>
+    <string name="dark_theme_off">כבוי</string>
+    <string name="dark_theme_follow_system">כמו המערכת</string>
+    <string name="customize_navigation_tabs">התאמה אישית של כרטיסיות ניווט</string>
+    <string name="player">נגן</string>
+    <string name="sided">צדדי</string>
+    <string name="left">ימין</string>
 </resources>
