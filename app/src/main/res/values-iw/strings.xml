@@ -247,5 +247,22 @@
     <string name="image_cache">מטמון תמונה</string>
     <string name="song_cache">מטמון שירים</string>
     <string name="max_cache_size">גודל מטמון מקסימלי</string>
-    <string name="unlimited">לא מוגבל</string>
+    <string name="unlimited">ללא הגבלה</string>
+    <string name="clear_all_downloads">נקה את כל ההורדות</string>
+    <string name="max_image_cache_size">גודל מטמון מקסימלי של תמונה</string>
+    <string name="clear_image_cache">נקה את מטמון התמונה</string>
+    <string name="max_song_cache_size">גודל מטמון מקסימלי של שירים</string>
+    <string name="clear_song_cache">נקה את מטמון השירים</string>
+    <string name="size_used">%s בשימוש</string>
+    <string name="privacy">פרטיות</string>
+    <string name="listen_history">היסטוריית האזנה</string>
+    <string name="pause_listen_history">השהיית היסטוריית ההאזנה</string>
+    <string name="clear_listen_history">נקה את היסטוריית ההאזנה</string>
+    <string name="clear_listen_history_confirm">האם אתה בטוח שברצונך לנקות את כל היסטוריית ההאזנה?</string>
+    <string name="search_history">היסטוריית חיפוש</string>
+    <string name="pause_search_history">השהיית היסטוריית החיפוש</string>
+    <string name="clear_search_history">…נקה את היסטוריית החיפוש</string>
+    <string name="clear_search_history_confirm">האם אתה בטוח שברצונך למחוק את כל היסטוריית החיפוש?</string>
+    <string name="use_login_for_browse">השתמש בכניסה כדי לגלוש בתוכן</string>
+    <string name="use_login_for_browse_desc">זה יכול להשפיע על התוכן שתראו, לדוגמה, יציג אלבומים למשתמשי פרימיום בלבד אם אתם מחוברים לחשבון פרימיום.</string>
 </resources>
