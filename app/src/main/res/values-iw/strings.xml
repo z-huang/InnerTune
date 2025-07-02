@@ -16,4 +16,23 @@
     <string name="account">חשבון</string>
     <string name="quick_picks">בחירות מהירות</string>
     <string name="quick_picks_empty">האזינו לשירים כדי ליצור את הבחירות המהירות שלכם</string>
+    <string name="forgotten_favorites">מועדפים שנשכחו</string>
+    <string name="keep_listening">המשך האזנה</string>
+    <string name="your_youtube_playlists">פלייליסטים ביוטיוב שלך</string>
+    <string name="similar_to">דומה ל</string>
+    <string name="new_release_albums">אלבומים חדשים</string>
+    <string name="today">היום</string>
+    <string name="yesterday">אתמול</string>
+    <string name="this_week">השבוע</string>
+    <string name="last_week">בשבוע האחרון</string>
+    <string name="most_played_songs">השירים הכי מושמעים</string>
+    <string name="most_played_artists">האמנים הכי מושמעים</string>
+    <string name="most_played_albums">אלבומים הכי מושמעים</string>
+    <string name="search">חיפוש</string>
+    <string name="search_yt_music">חפש ביוטיוב מוזיקה…</string>
+    <string name="search_library">חפש בספרייה…</string>
+    <string name="filter_library">ספרייה</string>
+    <string name="filter_liked">אהבתי</string>
+    <string name="filter_downloaded">ירדו</string>
+    <string name="filter_all">ההל</string>
 </resources>
