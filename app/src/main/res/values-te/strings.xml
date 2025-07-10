@@ -92,4 +92,10 @@
     <string name="queue">వరుస</string>
     <string name="audio_quality_high">ఎక్కువ</string>
     <string name="listen_history">పాటలు వినిన చరిత్ర</string>
+    <string name="albums">ఆల్బమ్‌లు</string>
+    <string name="playlists">ప్లేలిస్ట్‌లు</string>
+    <plurals name="n_selected">
+        <item quantity="one">ఎంచుకోబడింది</item>
+        <item quantity="other">ఎంచుకోబడినవి</item>
+    </plurals>
 </resources>
