@@ -36,7 +36,7 @@
     <string name="search_yt_music">YouTube Music を検索…</string>
     <string name="search_library">ライブラリを検索…</string>
     <string name="filter_library">ライブラリ</string>
-    <string name="filter_liked">高評価済み</string>
+    <string name="filter_liked">いいね済み</string>
     <string name="filter_downloaded">ダウンロード済み</string>
     <string name="filter_all">すべて</string>
     <string name="filter_songs">曲</string>
@@ -58,7 +58,7 @@
     <!-- Album screen -->
     <string name="other_versions">別のバージョン</string>
     <!-- Playlist -->
-    <string name="liked_songs">高評価した曲</string>
+    <string name="liked_songs">いいねした曲</string>
     <string name="downloaded_songs">ダウンロードした曲</string>
     <string name="playlist_is_empty">再生リストが空です</string>
     <string name="remove_download_playlist_confirm">｢%s｣の再生リスト上の全曲をダウンロード済みから削除しますか？</string>
@@ -176,10 +176,10 @@
     <string name="error_timeout">タイムアウトしました</string>
     <string name="error_unknown">不明なエラー</string>
     <!-- Player action -->
-    <string name="action_like">高評価</string>
-    <string name="action_like_all">すべて高評価</string>
-    <string name="action_remove_like">高評価を削除</string>
-    <string name="action_remove_like_all">すべて高評価を削除</string>
+    <string name="action_like">いいね</string>
+    <string name="action_like_all">すべていいね</string>
+    <string name="action_remove_like">いいねを削除</string>
+    <string name="action_remove_like_all">すべてのいいねを削除</string>
     <string name="action_shuffle_on">シャッフル ON</string>
     <string name="action_shuffle_off">シャッフル OFF</string>
     <string name="repeat_mode_off">リピートモード OFF</string>
@@ -242,7 +242,7 @@
     <string name="auto_skip_next_on_error_desc">継続的な再生体験を維持します</string>
     <string name="stop_music_on_task_clear">タスクを削除したら音楽を停止</string>
     <string name="equalizer">イコライザー</string>
-    <string name="storage">ストレージ</string>
+    <string name="storage">保存領域</string>
     <string name="cache">キャッシュ</string>
     <string name="image_cache">画像のキャッシュ</string>
     <string name="song_cache">曲のキャッシュ</string>
@@ -265,8 +265,8 @@
     <string name="clear_search_history_confirm">すべての検索履歴を消去しますか？</string>
     <string name="disable_screenshot">スクリーンショットを無効にする</string>
     <string name="disable_screenshot_desc">スクリーンショットと最近使用したアプリの表示を無効にします。</string>
-    <string name="enable_lrclib">歌詞の提供元 LrcLib を有効化</string>
-    <string name="enable_kugou">歌詞の提供元 KuGou を有効化</string>
+    <string name="enable_lrclib">歌詞の提供元 LrcLib を使用</string>
+    <string name="enable_kugou">歌詞の提供元 KuGou を使用</string>
     <string name="hide_explicit">露骨な内容のコンテンツを非表示</string>
     <string name="backup_restore">バックアップと復元</string>
     <string name="action_backup">バックアップ</string>
@@ -285,7 +285,7 @@
     <string name="enable_discord_rpc">リッチプレゼンスを使用</string>
     <string name="about">アプリについて</string>
     <string name="app_version">アプリのバージョン</string>
-    <string name="new_version_available">新しいバージョンがあります</string>
+    <string name="new_version_available">最新版あり</string>
     <string name="translation_models">翻訳モデル</string>
     <string name="clear_translation_models">翻訳モデルを消去</string>
     <string name="use_login_for_browse_desc">例えば、Premiumのアカウントでログインした時に、Premium限定のアルバムが表示されるようになります</string>
