@@ -44,15 +44,15 @@
     <string name="edit_artist">గాయకులని మార్చు</string>
     <string name="artist_name">గాయకుల పేర్లు</string>
     <plurals name="n_year">
-        <item quantity="one">సంవత్సరం</item>
-        <item quantity="other">సంవత్సరాలు</item>
+        <item quantity="one">%d సంవత్సరం</item>
+        <item quantity="other">%d సంవత్సరాలు</item>
     </plurals>
     <string name="end_of_song">పాట ముగిసింది</string>
     <string name="error_timeout">సమయం ముగిసింది</string>
     <string name="error_unknown">తేలియని లోపం</string>
     <plurals name="n_song">
-        <item quantity="one">పాట</item>
-        <item quantity="other">పాటలు</item>
+        <item quantity="one">%d పాట</item>
+        <item quantity="other">%dపాటలు</item>
     </plurals>
     <string name="action_like">ఇష్టం</string>
     <string name="action_like_all">అన్ని ఇష్టం</string>
@@ -140,5 +140,25 @@
     <string name="skip_duplicates">నకిలీలను డేటివేయాండి</string>
     <string name="add_anyway">ఏదేమైనా జోడించు</string>
     <string name="duplicates_description_single">మీ ప్లేలిస్ట్‌లో పాట ఇప్పటికే ఉంది</string>
-    <string name="duplicates_description_multiple">%d పాటలు ఇప్పటికే మీ ప్లేజాబితాలో ఉన్నాయి.</string>
+    <string name="duplicates_description_multiple">%d పాటలు ఇప్పటికే మీ ప్లేజాబితాలో ఉన్నాయి</string>
+    <plurals name="n_artist">
+        <item quantity="one">%d కళాకారుడు</item>
+        <item quantity="other">%d కళాకారులు</item>
+    </plurals>
+    <plurals name="n_album">
+        <item quantity="one">%d సంకలనం</item>
+        <item quantity="other">%d సంకలనాలు</item>
+    </plurals>
+    <plurals name="n_playlist">
+        <item quantity="one">%d ప్లేలిస్ట్</item>
+        <item quantity="other">%d ప్లేలిస్ట్‌లు</item>
+    </plurals>
+    <plurals name="n_week">
+        <item quantity="one">%d వారం</item>
+        <item quantity="other">%d వారాలు</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="one">%d నెల</item>
+        <item quantity="other">%d నెలలు</item>
+    </plurals>
 </resources>
