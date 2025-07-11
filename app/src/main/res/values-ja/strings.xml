@@ -238,8 +238,8 @@
     <string name="auto_load_more_desc">キューの最後まで再生した時、可能なら自動で曲を追加</string>
     <string name="skip_silence">無音部分をスキップ</string>
     <string name="audio_normalization">音声の正規化</string>
-    <string name="auto_skip_next_on_error">エラー発生時に自動で次の曲に進む</string>
-    <string name="auto_skip_next_on_error_desc">音楽視聴体験を確かにします</string>
+    <string name="auto_skip_next_on_error">エラー発生時に自動で次の曲を再生</string>
+    <string name="auto_skip_next_on_error_desc">継続的な再生体験を維持します</string>
     <string name="stop_music_on_task_clear">タスクを削除したら音楽を停止</string>
     <string name="equalizer">イコライザー</string>
     <string name="storage">ストレージ</string>
@@ -265,8 +265,8 @@
     <string name="clear_search_history_confirm">すべての検索履歴を消去しますか？</string>
     <string name="disable_screenshot">スクリーンショットを無効にする</string>
     <string name="disable_screenshot_desc">スクリーンショットと最近使用したアプリの表示を無効にします。</string>
-    <string name="enable_lrclib">LrcLib での歌詞の取得を有効化</string>
-    <string name="enable_kugou">KuGou での歌詞の取得を有効化</string>
+    <string name="enable_lrclib">歌詞の提供元 LrcLib を有効化</string>
+    <string name="enable_kugou">歌詞の提供元 KuGou を有効化</string>
     <string name="hide_explicit">露骨な内容のコンテンツを非表示</string>
     <string name="backup_restore">バックアップと復元</string>
     <string name="action_backup">バックアップ</string>
