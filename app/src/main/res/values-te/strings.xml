@@ -95,7 +95,25 @@
     <string name="albums">ఆల్బమ్‌లు</string>
     <string name="playlists">ప్లేలిస్ట్‌లు</string>
     <plurals name="n_selected">
-        <item quantity="one">ఎంచుకోబడింది</item>
-        <item quantity="other">ఎంచుకోబడినవి</item>
+        <item quantity="one">%d ఎంచుకోబడింది</item>
+        <item quantity="other">%d ఎంచుకోబడినవి</item>
     </plurals>
+    <string name="mood_and_genres">మూడ్ మరియు కళా ప్రక్రియలు</string>
+    <string name="quick_picks">త్వరిత ఎంపికలు</string>
+    <string name="quick_picks_empty">మీ త్వరిత ఎంపికలను రూపొందించడానికి పాటలను వినండి</string>
+    <string name="your_youtube_playlists">మీ యూట్యూబ్ప్లేజాబితాలు</string>
+    <string name="similar_to">దీనికి సమానమైనది</string>
+    <string name="search_yt_music">యూట్యూబ్ మ్యూజిక్‌లో వెతకండి…</string>
+    <string name="search_library">లైబ్రరీలో వెతకండి…</string>
+    <string name="filter_library">లైబ్రరీ</string>
+    <string name="filter_downloaded">డౌన్‌లోడ్ చేయబడింది</string>
+    <string name="filter_playlists">ప్లేలిస్ట్‌లు</string>
+    <string name="filter_community_playlists">కమ్యూనిటీ ప్లేలిస్ట్‌లు</string>
+    <string name="filter_featured_playlists">ఫీచర్ చేసిన ప్లేలిస్ట్‌లు</string>
+    <string name="action_download">డౌన్లోడ్</string>
+    <string name="downloading">డౌన్‌లోడ్ అవుతోంది</string>
+    <string name="remove_download">డౌన్‌లోడ్ ని తొలగించు</string>
+    <string name="import_playlist">ప్లేజాబితా దిగుమతి చేయండి</string>
+    <string name="add_to_playlist">ప్లేజాబితాకు జోడించు</string>
+    <string name="remove_from_playlist">ప్లేలిస్ట్ నుండి తీసివేయండి</string>
 </resources>
