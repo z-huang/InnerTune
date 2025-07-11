@@ -168,5 +168,14 @@
     <string name="lyrics_not_found">సాహిత్యం కనుగొనబడలేదు</string>
     <string name="sleep_timer">నిద్ర టైమర్</string>
     <string name="error_no_internet">నెట్వర్క్ కనెక్షన్ లేదు</string>
-    <string name="action_shuffle_on">షఫుల్ ఆన్</string>
+    <string name="action_shuffle_on">కలాపటం ఆన్ చేయబడిండి</string>
+    <string name="action_shuffle_off">కలాపటం ఆఫ్ చేయబడిండి</string>
+    <string name="repeat_mode_off">పునరావృత విధానం ఆఫ్ చేయబడిండి</string>
+    <string name="repeat_mode_all">పునరావృత వరుస</string>
+    <string name="music_player">సంగీత ప్లేయర్</string>
+    <string name="settings">సెట్టింగ్‌లు</string>
+    <string name="appearance">ప్రదర్శన</string>
+    <string name="theme">థీమ్</string>
+    <string name="filter_bookmarked">బుక్‌మార్క్ చేయబడింది</string>
+    <string name="library_song_empty">లైబ్రరీ పాటలు ఇక్కడ కనిపిస్తాయి.</string>
 </resources>
