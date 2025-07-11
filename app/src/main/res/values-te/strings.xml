@@ -29,7 +29,7 @@
     <string name="add_to_queue">వరుసలోకి జోడించు</string>
     <string name="view_artist">కళాకారుల వివరాలు చూడు</string>
     <string name="view_album">చిత్రాల వివరాలు చూడు</string>
-    <string name="share">పంచు</string>
+    <string name="share">షేర్</string>
     <string name="delete">తోలగించు</string>
     <string name="remove_from_history">చరిత్ర నుంచి తొలగించు</string>
     <string name="sort_by_name">పేరు</string>
@@ -40,7 +40,7 @@
     <string name="unknown">తెలియనిది</string>
     <string name="edit_song">పాటని సవరించండి</string>
     <string name="song_artists">పాట పాడినవారు</string>
-    <string name="error_song_artist_empty">పాట గాయకులు కాళీ గా ఉండకూడదు</string>
+    <string name="error_song_artist_empty">పాట గాయకులు కాళీ గా ఉండకూడదు.</string>
     <string name="edit_artist">గాయకులని మార్చు</string>
     <string name="artist_name">గాయకుల పేర్లు</string>
     <plurals name="n_year">
@@ -86,8 +86,8 @@
         <item quantity="one">ఒక నిమిషం</item>
         <item quantity="other">నిమిషాలు</item>
     </plurals>
-    <string name="error_song_title_empty">పాట పేరు కాళీ గా ఉండకూడదు</string>
-    <string name="error_artist_name_empty">గాయకుల పేర్లు కాళీగా ఉంచకూడదు</string>
+    <string name="error_song_title_empty">పాట పేరు కాళీ గా ఉండకూడదు.</string>
+    <string name="error_artist_name_empty">గాయకుల పేర్లు కాళీగా ఉంచకూడదు.</string>
     <string name="repeat_mode_one">ఈ పాటని మళ్ళీ వినిపించు</string>
     <string name="queue">వరుస</string>
     <string name="audio_quality_high">ఎక్కువ</string>
@@ -114,6 +114,31 @@
     <string name="downloading">డౌన్‌లోడ్ అవుతోంది</string>
     <string name="remove_download">డౌన్‌లోడ్ ని తొలగించు</string>
     <string name="import_playlist">ప్లేజాబితా దిగుమతి చేయండి</string>
-    <string name="add_to_playlist">ప్లేజాబితాకు జోడించు</string>
+    <string name="add_to_playlist">ప్లేలిస్ట్ లో వేసుకోండి</string>
     <string name="remove_from_playlist">ప్లేలిస్ట్ నుండి తీసివేయండి</string>
+    <string name="remove_all_from_library">లైబ్రరీ నుండి అన్నీ తీసివేయి</string>
+    <string name="search_online">ఆన్‌లైన్‌లో శోధించండి</string>
+    <string name="action_sync">సమకాలీకరించు</string>
+    <string name="advanced">ముందుకు</string>
+    <string name="tempo_and_pitch">టెంపో మరియు పిచ్</string>
+    <string name="sort_by_custom">అనుకూల క్రమం</string>
+    <string name="media_id">మీడియా ఐడి</string>
+    <string name="mime_type">మైమ్ రకం</string>
+    <string name="codecs">కోడెక్‌లు</string>
+    <string name="sample_rate">మాదిరి రేటు</string>
+    <string name="loudness">శబ్ద తీవ్రత</string>
+    <string name="copied">క్లిప్బోర్డ్కు కాపీ చేయబడింది</string>
+    <string name="edit_lyrics">సాహిత్యాన్ని సవరించండి</string>
+    <string name="search_lyrics">సాహిత్యాన్ని వెతకండి</string>
+    <string name="save">భద్రపరుచుకోండి</string>
+    <string name="choose_playlist">ప్లేలిస్ట్‌ని ఎంచుకోండి</string>
+    <string name="edit_playlist">ప్లేలిస్ట్ను సవరించండి</string>
+    <string name="create_playlist">ప్లేలిస్ట్ను సృష్టించుకోండి</string>
+    <string name="playlist_name">ప్లేలిస్ట్ను పేరు</string>
+    <string name="error_playlist_name_empty">ప్లేలిస్ట్ను పేరు ఖాళీగా ఉండకూడదు.</string>
+    <string name="duplicates">నకిలీలు</string>
+    <string name="skip_duplicates">నకిలీలను డేటివేయాండి</string>
+    <string name="add_anyway">ఏదేమైనా జోడించు</string>
+    <string name="duplicates_description_single">మీ ప్లేలిస్ట్‌లో పాట ఇప్పటికే ఉంది</string>
+    <string name="duplicates_description_multiple">%d పాటలు ఇప్పటికే మీ ప్లేజాబితాలో ఉన్నాయి.</string>
 </resources>
