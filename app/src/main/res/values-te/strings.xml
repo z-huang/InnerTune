@@ -45,7 +45,7 @@
     <string name="artist_name">గాయకుల పేర్లు</string>
     <plurals name="n_year">
         <item quantity="one">%d సంవత్సరం</item>
-        <item quantity="other">%d సంవత్సరాలు</item>
+        <item quantity="other">%d ఏళ్లు</item>
     </plurals>
     <string name="end_of_song">పాట ముగిసింది</string>
     <string name="error_timeout">సమయం ముగిసింది</string>
@@ -84,7 +84,7 @@
     <string name="sort_by_song_count">పాటల లెక్క</string>
     <plurals name="minute">
         <item quantity="one">ఒక నిమిషం</item>
-        <item quantity="other">నిమిషాలు</item>
+        <item quantity="other">%d నిమిషాలు</item>
     </plurals>
     <string name="error_song_title_empty">పాట పేరు కాళీ గా ఉండకూడదు.</string>
     <string name="error_artist_name_empty">గాయకుల పేర్లు కాళీగా ఉంచకూడదు.</string>
@@ -161,4 +161,12 @@
         <item quantity="one">%d నెల</item>
         <item quantity="other">%d నెలలు</item>
     </plurals>
+    <string name="playlist_imported">ప్లేలిస్ట్ దిగుమతి చేయబడింది</string>
+    <string name="removed_song_from_playlist">ప్లేలిస్ట్‌ నుండి \"%s\" తీసివేయబడింది</string>
+    <string name="playlist_synced">ప్లేలిస్ట్‌లు సమకాలీకరించబడింది</string>
+    <string name="undo">అన్డు</string>
+    <string name="lyrics_not_found">సాహిత్యం కనుగొనబడలేదు</string>
+    <string name="sleep_timer">నిద్ర టైమర్</string>
+    <string name="error_no_internet">నెట్వర్క్ కనెక్షన్ లేదు</string>
+    <string name="action_shuffle_on">షఫుల్ ఆన్</string>
 </resources>
