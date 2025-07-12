@@ -102,5 +102,12 @@
     <string name="edit_song">Editează cântecul</string>
     <string name="song_title">Titlul cântecului</string>
     <string name="song_artists">Artiștii cântecului</string>
-    <string name="error_song_title_empty">Numele cântecului nu poate fi gol</string>
+    <string name="error_song_title_empty">Numele cântecului nu poate fi gol.</string>
+    <string name="error_song_artist_empty">Artistul cântecului nu poate fi gol.</string>
+    <string name="save">Salvează</string>
+    <string name="choose_playlist">Alege playlist-ul</string>
+    <string name="edit_playlist">Editează playlist-ul</string>
+    <string name="create_playlist">Creează playlist-ul</string>
+    <string name="playlist_name">Numele playlist-ului</string>
+    <string name="error_playlist_name_empty">Numele playlist-ului nu poate fi gol</string>
 </resources>
