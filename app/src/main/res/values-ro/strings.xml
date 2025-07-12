@@ -109,5 +109,72 @@
     <string name="edit_playlist">Editează playlist-ul</string>
     <string name="create_playlist">Creează playlist-ul</string>
     <string name="playlist_name">Numele playlist-ului</string>
-    <string name="error_playlist_name_empty">Numele playlist-ului nu poate fi gol</string>
+    <string name="error_playlist_name_empty">Numele playlist-ului nu poate fi gol.</string>
+    <string name="edit_artist">Editează artistul</string>
+    <string name="artist_name">Numele artistului</string>
+    <string name="error_artist_name_empty">Numele artistului nu poate fi gol.</string>
+    <string name="duplicates">Duplicate</string>
+    <string name="skip_duplicates">Omite duplicatele</string>
+    <string name="add_anyway">Adaugă oricum</string>
+    <string name="duplicates_description_single">Cântecul este deja în playlist-ul tău</string>
+    <string name="duplicates_description_multiple">%d (de) cântece sunt deja în playlist-ul tău</string>
+    <plurals name="n_song">
+        <item quantity="one">%d cântec</item>
+        <item quantity="few">%d cântece</item>
+        <item quantity="other">%d de cântece</item>
+    </plurals>
+    <plurals name="n_artist">
+        <item quantity="one">%d artist</item>
+        <item quantity="few">%d artiști</item>
+        <item quantity="other">%d de artiști</item>
+    </plurals>
+    <plurals name="n_album">
+        <item quantity="one">%d album</item>
+        <item quantity="few">%d albume</item>
+        <item quantity="other">%d de albume</item>
+    </plurals>
+    <plurals name="n_playlist">
+        <item quantity="one">%d playlist</item>
+        <item quantity="few">%d playlist-uri</item>
+        <item quantity="other">%d de playlist-uri</item>
+    </plurals>
+    <plurals name="n_week">
+        <item quantity="one">%d săptămână</item>
+        <item quantity="few">%d săptămâni</item>
+        <item quantity="other">%d de săptămâni</item>
+    </plurals>
+    <plurals name="n_month">
+        <item quantity="one">%d lună</item>
+        <item quantity="few">%d luni</item>
+        <item quantity="other">%d de luni</item>
+    </plurals>
+    <plurals name="n_year">
+        <item quantity="one">%d an</item>
+        <item quantity="few">%d ani</item>
+        <item quantity="other">%d de ani</item>
+    </plurals>
+    <string name="playlist_imported">Playlist importat</string>
+    <string name="removed_song_from_playlist">S-a eliminat \"%s\" din playlist</string>
+    <string name="playlist_synced">Playlist sincronizat</string>
+    <string name="undo">Anulează</string>
+    <string name="lyrics_not_found">Nu s-au găsit versuri</string>
+    <string name="sleep_timer">Temporizator de somn</string>
+    <string name="end_of_song">Sfârșitul cântecului</string>
+    <plurals name="minute">
+        <item quantity="one">Un minut</item>
+        <item quantity="few">%d minute</item>
+        <item quantity="other">%d de minute</item>
+    </plurals>
+    <string name="error_no_stream">Niciun stream disponibil</string>
+    <string name="error_no_internet">Fără conexiune la rețea</string>
+    <string name="error_timeout">Timeout</string>
+    <string name="error_unknown">Eroare necunoscută</string>
+    <string name="action_like">Apreciază</string>
+    <string name="action_like_all">Apreciază tot</string>
+    <string name="action_remove_like">Elimină aprecierea</string>
+    <string name="action_remove_like_all">Elimină toate aprecierile</string>
+    <string name="action_shuffle_on">Amestecare pornită</string>
+    <string name="action_shuffle_off">Amestecare oprită</string>
+    <string name="repeat_mode_off">Mod repetare oprit</string>
+    <string name="repeat_mode_one">Repetă melodia curent</string>
 </resources>
