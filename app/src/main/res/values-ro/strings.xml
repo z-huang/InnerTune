@@ -206,5 +206,13 @@
     <string name="default_">Implicit</string>
     <string name="misc">Diverse</string>
     <string name="default_open_tab">Fila implicită deschisă</string>
-    <string name="grid_cell_size">Mărimea celulei</string>
+    <string name="grid_cell_size">Mărimea celulelor grilei</string>
+    <string name="small">Mică</string>
+    <string name="big">Mare</string>
+    <string name="content">Conținut</string>
+    <string name="action_logout">Devonectează-te</string>
+    <string name="action_login">Autentifică-te</string>
+    <string name="login">Conectare</string>
+    <string name="not_logged_in">Nu ești autentificat</string>
+    <string name="login_failed">Autentificare eșuată</string>
 </resources>
