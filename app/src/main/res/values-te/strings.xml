@@ -195,7 +195,7 @@
     <string name="remove_from_library">లైబ్రరీకి అన్నీ జోడించండి</string>
     <string name="remove_from_queue">క్యూ నుండి తొలగించండి</string>
     <string name="bitrate">బిట్రేట్</string>
-    <string name="file_size">ఫైల్ సైజు</string>
+    <string name="file_size">ఫైల్ పరిమాణం</string>
     <string name="error_no_stream">సంగీతం దొరకలేదు</string>
     <string name="enable_dynamic_theme">డైనమిక్ థీమ్‌ని ఎనేబుల్ చేయండి</string>
     <string name="dark_theme">డార్క్ థీమ్</string>
