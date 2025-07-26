@@ -35,4 +35,10 @@
     <string name="filter_liked">Všečkano</string>
     <string name="filter_downloaded">Preneseno</string>
     <string name="filter_all">Vse</string>
+    <string name="keep_listening">Nadaljuj z poslušanjem</string>
+    <string name="filter_songs">Glasbe</string>
+    <string name="filter_videos">Video</string>
+    <string name="filter_albums">Albumi</string>
+    <string name="filter_artists">Izvajalci</string>
+    <string name="filter_playlists">Seznami predvajanja</string>
 </resources>
