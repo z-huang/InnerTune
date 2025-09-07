@@ -130,4 +130,24 @@
         <item quantity="many">%d canciones</item>
         <item quantity="other">%d canciones</item>
     </plurals>
+    <plurals name="n_artist">
+        <item quantity="one">%d artista</item>
+        <item quantity="many">%d de artistas</item>
+        <item quantity="other">%d artistas</item>
+    </plurals>
+    <plurals name="n_album">
+        <item quantity="one">%d álbum</item>
+        <item quantity="many">%d de álbumes</item>
+        <item quantity="other">%d álbumes</item>
+    </plurals>
+    <plurals name="n_playlist">
+        <item quantity="one">%d lista de reproducción</item>
+        <item quantity="many">%d de listas de reproducción</item>
+        <item quantity="other">%d listas de reproducción</item>
+    </plurals>
+    <plurals name="n_week">
+        <item quantity="one">%d semana</item>
+        <item quantity="many">%d de semanas</item>
+        <item quantity="other">%d semanas</item>
+    </plurals>
 </resources>
