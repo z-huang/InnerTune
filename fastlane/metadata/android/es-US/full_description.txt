@@ -1,4 +1,4 @@
-A Material 3 YouTube Music client for Android
+Un cliente de YouTube Music de Material 3 para Android
 
 <br><b>Características:</b>
 

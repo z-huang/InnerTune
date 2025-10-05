@@ -1,0 +1,17 @@
+Un client Material 3 de YouTube Music pentru Android
+
+<br><b>Caracteristici:</b>
+
+- Redă melodii de pe YT/YT Music fără reclame
+- Redare în fundal
+- Caută melodii, videoclipuri, albume, și playlisturi de pe YouTube Music
+- Gestionarea bibliotecii
+- Pune în cache și descarcă melodii pentru redare offline
+- Versuri sincronizate
+- Omite momentele de liniște
+- Normalizare audio
+- Temă dinamică
+- Localizare
+- Suport pentru Android Auto
+- Alegeri rapide personalizate
+- Material 3

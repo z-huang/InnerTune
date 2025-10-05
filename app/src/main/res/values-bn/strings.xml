@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Bottom navigation -->
     <string name="home">হোম</string>
@@ -5,13 +6,11 @@
     <string name="artists">আর্টিস্ট</string>
     <string name="albums">অ্যালবাম</string>
     <string name="playlists">প্লেলিস্ট</string>
-
     <!-- Top bar -->
     <plurals name="n_selected">
         <item quantity="one">%d সিলেক্টেড</item>
         <item quantity="other">%d সিলেক্টেড</item>
     </plurals>
-
     <!-- Home -->
     <string name="history">হিস্ট্রি</string>
     <string name="stats">স্টাটস</string>
@@ -20,18 +19,15 @@
     <string name="quick_picks">কুইক পিকস্</string>
     <string name="quick_picks_empty">কুইক পিক তৈরি করতে আগে কিছু গান শুনুন</string>
     <string name="new_release_albums">নতুন অ্যালবাম ও সিঙ্গেল</string>
-
     <!-- History -->
     <string name="today">আজ</string>
     <string name="yesterday">গতকাল</string>
     <string name="this_week">এই সপ্তাহ</string>
     <string name="last_week">গত সপ্তাহ</string>
-
     <!-- Stats -->
     <string name="most_played_songs">সর্বাধিক শোনা গানগুলি</string>
     <string name="most_played_artists">সর্বাধিক শোনা আর্টিস্ট</string>
     <string name="most_played_albums">সর্বাধিক শোনা অ্যালবাম</string>
-
     <!-- Search -->
     <string name="search">সার্চ</string>
     <string name="search_yt_music">YouTube Music এ সার্চ করুন</string>
@@ -49,21 +45,17 @@
     <string name="filter_featured_playlists">ফিচার্ড প্লেলিস্ট</string>
     <string name="filter_bookmarked">বুকমার্কর্ড</string>
     <string name="no_results_found">কিছু পাওয়া যায়নি</string>
-
     <!-- Artist screen -->
     <string name="from_your_library">আপনার লাইব্রেরি থেকে</string>
-
     <!-- Playlist -->
     <string name="liked_songs">আপনার লাইক করা গান</string>
     <string name="downloaded_songs">ডাউনলোড করা গান</string>
     <string name="playlist_is_empty">প্লেলিস্ট খালি</string>
-
     <!-- Button -->
     <string name="retry">আবার চেষ্টা করুন</string>
     <string name="radio">রেডিও</string>
     <string name="shuffle">শাফেল</string>
     <string name="reset">রিসেট</string>
-
     <!-- Menu -->
     <string name="details">বিস্তারিত</string>
     <string name="edit">এডিট</string>
@@ -73,7 +65,7 @@
     <string name="add_to_queue">কিউতে অ্যাড করুন</string>
     <string name="add_to_library">লাইব্রেরি তে অ্যাড করুন</string>
     <string name="remove_from_library">লাইব্রেরি থেকে সরান</string>
-    <string name="download">ডাউনলোড</string>
+    <string name="action_download">ডাউনলোড</string>
     <string name="downloading">ডাউনলোড হচ্ছে</string>
     <string name="remove_download">ডাউনলোড থেকে সরান</string>
     <string name="import_playlist">প্লেলিস্ট ইমপোর্ট করুন</string>
@@ -85,9 +77,8 @@
     <string name="delete">ডিলিট</string>
     <string name="remove_from_history">হিস্ট্রি থেকে সরান</string>
     <string name="search_online">অনলাইন এ খুঁজুন</string>
-    <string name="sync">সিঙ্ক্রোনাইজ</string>
+    <string name="action_sync">সিঙ্ক্রোনাইজ</string>
     <string name="advanced">অ্যাডভান্স</string>
-
     <!-- Sort menu -->
     <string name="sort_by_create_date">দিন</string>
     <string name="sort_by_name">নাম</string>
@@ -97,7 +88,6 @@
     <string name="sort_by_length">গানের লেন্থ</string>
     <string name="sort_by_play_time">প্লে টাইম</string>
     <string name="sort_by_custom">কাস্টম</string>
-
     <!-- Dialog -->
     <string name="media_id">মিডিয়া আইডি</string>
     <string name="mime_type">মাইম টাইপ</string>
@@ -109,27 +99,22 @@
     <string name="file_size">ফাইল সাইজ</string>
     <string name="unknown">আননোন</string>
     <string name="copied">ক্লিপবোর্ডে কপি করা হয়েছে</string>
-
     <string name="edit_lyrics">গানের লিরিক এডিট</string>
     <string name="search_lyrics">গানের লিরিক সার্চ</string>
-
     <string name="edit_song">গান এডিট করুন</string>
     <string name="song_title">টাইটেল</string>
     <string name="song_artists">আর্টিস্ট</string>
     <string name="error_song_title_empty">গানের টাইটেল খালি হতে পারে না।</string>
     <string name="error_song_artist_empty">গানের আর্টিস্ট খালি থাকতে পারে না।</string>
     <string name="save">সেভ</string>
-
     <string name="choose_playlist">একটি প্লেলিস্ট সিলেক্টে করুন</string>
     <string name="edit_playlist">প্লেলিস্ট এডিট করুন</string>
     <string name="create_playlist">প্লেলিস্ট তৈরি করুন</string>
     <string name="playlist_name">প্লেলিস্টের নাম</string>
     <string name="error_playlist_name_empty">প্লেলিস্টের নাম ফাকা রাখা যাবে না।</string>
-
     <string name="edit_artist">আর্টিস্ট এডিট করুন</string>
     <string name="artist_name">আর্টিস্টের নাম</string>
     <string name="error_artist_name_empty">আর্টিস্টের নাম খালি রাখা যাবে না।</string>
-
     <!-- Noun -->
     <plurals name="n_song">
         <item quantity="one">%d গান</item>
@@ -159,13 +144,11 @@
         <item quantity="one">%d বছর</item>
         <item quantity="other">%d বছর</item>
     </plurals>
-
     <!-- Snackbar -->
     <string name="playlist_imported">ইমপোর্ট করা প্লেলিস্ট</string>
     <string name="removed_song_from_playlist">প্লেলিস্ট থেকে \"%s\" সরানো হয়েছে</string>
     <string name="playlist_synced">সিঙ্ক্রোনাইজ করা প্লেলিস্ট</string>
     <string name="undo">বাতিল করুন</string>
-
     <!-- Player -->
     <string name="lyrics_not_found">গানের লিরিক পাওয়া যায়নি</string>
     <string name="sleep_timer">স্লীপ টাইমার</string>
@@ -178,7 +161,6 @@
     <string name="error_no_internet">নেটওয়ার্ক কানেকশন নেই</string>
     <string name="error_timeout">ইরর টাইমআউট</string>
     <string name="error_unknown">আননোন ইরর</string>
-
     <!-- Player action -->
     <string name="action_like">লাইক</string>
     <string name="action_remove_like">অলাইক</string>
@@ -187,14 +169,11 @@
     <string name="repeat_mode_off">রিপিট অফ</string>
     <string name="repeat_mode_one">একটা গান রিপিট</string>
     <string name="repeat_mode_all">রিপিট কিউ</string>
-
     <!-- Queue Title -->
     <string name="queue_all_songs">সব গান কিউ</string>
     <string name="queue_searched_songs">সার্চ করা গান কিউ</string>
-
     <!-- Notification name -->
     <string name="music_player">প্লেয়ার</string>
-
     <!-- Settings -->
     <string name="settings">সেটিংস</string>
     <string name="appearance">স্টাইল</string>
@@ -210,7 +189,6 @@
     <string name="left">বামে</string>
     <string name="center">মাঝে</string>
     <string name="right">ডানে</string>
-
     <string name="content">কনটেন্ট</string>
     <string name="login">লগ ইন</string>
     <string name="content_language">ডিফল্ট কন্টেন্টের ভাষা</string>
@@ -220,7 +198,6 @@
     <string name="proxy_type">প্রক্সির ধরণ</string>
     <string name="proxy_url">প্রক্সি URL</string>
     <string name="restart_to_take_effect">পরিবর্তনগুলি আপ্লাই করতে অ্যাপটি আবার চালু করুন</string>
-
     <string name="player_and_audio">প্লেয়ার ও অডিও</string>
     <string name="audio_quality">অডিও কোয়ালিটি</string>
     <string name="audio_quality_auto">অটো</string>
@@ -230,7 +207,6 @@
     <string name="skip_silence">নীরব সময়টুকু স্কিপ করুন</string>
     <string name="audio_normalization">অডিও নরমালাইজেশন</string>
     <string name="equalizer">অডিও টিউনার</string>
-
     <string name="storage">স্টোরেজ</string>
     <string name="cache">ক্যাশ</string>
     <string name="image_cache">ইমেজ ক্যাশ</string>
@@ -243,7 +219,6 @@
     <string name="max_song_cache_size">অডিও ক্যাশ সাইজ</string>
     <string name="clear_song_cache">অডিও ক্যাশে ক্লিয়ার করুন</string>
     <string name="size_used">%s ব্যবহৃত</string>
-
     <string name="privacy">গোপনীয়তা</string>
     <string name="pause_listen_history">প্লেব্যাক হিস্ট্রি বন্ধ করুন</string>
     <string name="clear_listen_history">প্লেব্যাক হিস্ট্রি ক্লিয়ার করুন</string>
@@ -252,18 +227,15 @@
     <string name="clear_search_history">সার্চ হিস্ট্রি ক্লিয়ার করুন</string>
     <string name="clear_search_history_confirm">সার্চ হিস্ট্রি মুছে ফেলবেন?</string>
     <string name="enable_kugou">KuGou থেকে লিরিক নিন</string>
-
     <string name="backup_restore">ব্যাকআপ এবং রিস্টোর</string>
-    <string name="backup">ব্যাকআপ</string>
-    <string name="restore">রিস্টোর</string>
+    <string name="action_backup">ব্যাকআপ</string>
+    <string name="action_restore">রিস্টোর</string>
     <string name="imported_playlist">ইমপোর্টেড করা প্লেলিস্ট</string>
     <string name="backup_create_success">ব্যাকআপ তৈরি করা হয়েছে</string>
     <string name="backup_create_failed">ব্যাকআপ করতে বার্থ</string>
     <string name="restore_failed">ব্যাকআপ থেকে রিস্টোর করতে অক্ষম</string>
-
     <string name="about">অ্যাপ সম্পর্কে</string>
     <string name="app_version">অ্যাপ ভার্সন</string>
-
     <string name="new_version_available">নতুন ভার্সন এসেছে</string>
     <string name="translation_models">ট্রান্সলেশন মডেল</string>
     <string name="clear_translation_models">ট্রান্সলেশন মডেল ক্লিয়ার করুন</string>

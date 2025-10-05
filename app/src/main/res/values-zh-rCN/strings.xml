@@ -8,12 +8,12 @@
     <string name="playlists">播放列表</string>
     <!-- Top bar -->
     <plurals name="n_selected">
-        <item quantity="other">已选择 %d 个项目</item>
+        <item quantity="other">已选择 %d 项</item>
     </plurals>
     <!-- Home -->
     <string name="history">历史</string>
     <string name="stats">统计</string>
-    <string name="mood_and_genres">情绪和流派</string>
+    <string name="mood_and_genres">曲调和流派</string>
     <string name="account">账号</string>
     <string name="quick_picks">歌曲快选</string>
     <string name="quick_picks_empty">听一些歌曲来生成歌曲快选</string>
@@ -21,12 +21,12 @@
     <!-- History -->
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>
-    <string name="this_week">这周</string>
+    <string name="this_week">本周</string>
     <string name="last_week">上周</string>
     <!-- Stats -->
-    <string name="most_played_songs">最常播放</string>
-    <string name="most_played_artists">最受欢迎的音乐人</string>
-    <string name="most_played_albums">播放次数最多的专辑</string>
+    <string name="most_played_songs">最常播放的歌曲</string>
+    <string name="most_played_artists">最常播放的音乐人</string>
+    <string name="most_played_albums">最常播放的专辑</string>
     <!-- Search -->
     <string name="search">搜索</string>
     <string name="search_yt_music">搜索 YouTube Music…</string>
@@ -42,8 +42,8 @@
     <string name="filter_playlists">播放列表</string>
     <string name="filter_community_playlists">社区播放列表</string>
     <string name="filter_featured_playlists">精选播放列表</string>
-    <string name="filter_bookmarked">已加书签</string>
-    <string name="no_results_found">找不到结果</string>
+    <string name="filter_bookmarked">收藏</string>
+    <string name="no_results_found">未找到结果</string>
     <!-- Artist screen -->
     <string name="from_your_library">来自您的媒体库</string>
     <!-- Playlist -->
@@ -64,7 +64,7 @@
     <string name="add_to_queue">加入播放队列</string>
     <string name="add_to_library">加入媒体库</string>
     <string name="remove_from_library">从媒体库中移除</string>
-    <string name="download">下载</string>
+    <string name="action_download">下载</string>
     <string name="downloading">正在下载</string>
     <string name="remove_download">移除下载</string>
     <string name="import_playlist">导入播放列表</string>
@@ -76,7 +76,7 @@
     <string name="delete">删除</string>
     <string name="remove_from_history">从历史中移除</string>
     <string name="search_online">在线搜索</string>
-    <string name="sync">同步</string>
+    <string name="action_sync">同步</string>
     <string name="advanced">高级</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">添加日期</string>
@@ -127,7 +127,7 @@
     <plurals name="n_playlist">
         <item quantity="other">%d 个播放列表</item>
     </plurals>
-    <plurals name="n_week" tools:ignore="MissingQuantity">
+    <plurals name="n_week">
         <item quantity="other">%d 周</item>
     </plurals>
     <plurals name="n_month">
@@ -142,7 +142,7 @@
     <string name="playlist_synced">播放列表已同步</string>
     <string name="undo">撤销</string>
     <!-- Player -->
-    <string name="lyrics_not_found">没有歌词</string>
+    <string name="lyrics_not_found">未找到歌词</string>
     <string name="sleep_timer">睡眠定时器</string>
     <string name="end_of_song">这首歌曲播放完毕</string>
     <plurals name="minute">
@@ -174,8 +174,8 @@
     <string name="dark_theme_off">关</string>
     <string name="dark_theme_follow_system">跟随系统</string>
     <string name="pure_black">纯黑</string>
-    <string name="default_open_tab">默认启动选项卡</string>
-    <string name="customize_navigation_tabs">自定义导航选项卡</string>
+    <string name="default_open_tab">默认启动标签页</string>
+    <string name="customize_navigation_tabs">自定义导航标签页</string>
     <string name="lyrics_text_position">歌词文本位置</string>
     <string name="left">靠左</string>
     <string name="center">居中</string>
@@ -219,8 +219,8 @@
     <string name="clear_search_history_confirm">是否确定要清除所有搜索历史？</string>
     <string name="enable_kugou">使用酷狗音乐提供歌词</string>
     <string name="backup_restore">备份与还原</string>
-    <string name="backup">备份</string>
-    <string name="restore">还原</string>
+    <string name="action_backup">备份</string>
+    <string name="action_restore">还原</string>
     <string name="imported_playlist">已导入的播放列表</string>
     <string name="backup_create_success">成功新建备份</string>
     <string name="backup_create_failed">无法新建备份</string>
@@ -255,7 +255,7 @@
     <string name="options">选项</string>
     <string name="preview">预览</string>
     <string name="login_failed">登录失败</string>
-    <string name="logout">登出</string>
+    <string name="action_logout">登出</string>
     <string name="discord_integration">Discord 集成</string>
     <string name="enable_discord_rpc">启用 Rich Presence</string>
     <string name="action_like_all">喜欢全部</string>
@@ -285,7 +285,8 @@
     <string name="auto_load_more_desc">如果可能，在播放队列快结束时自动添加更多歌曲</string>
     <string name="auto_skip_next_on_error">发生错误时自动跳到下一首歌曲</string>
     <string name="stop_music_on_task_clear">任务清除时停止音乐</string>
-    <string name="discord_information">InnerTune 使用 KizzyRPC 库来设置您的 Discord 账号的状态。这会用到 Discord 网关连接，可能会违反 Discord 的服务条款。不过，目前还没有因此原因暂停用户账号的情况。使用风险自负。
-\n
-\nInnerTune 只提取您的令牌，其他内容都存储在本地。</string>
+    <string name="discord_information">InnerTune 使用 KizzyRPC 库来设置您的 Discord 账号的状态。这会用到 Discord 网关连接，可能会违反 Discord 的服务条款。不过，目前还没有因此原因暂停用户账号的情况。使用风险自负。 \n \nInnerTune 只提取您的令牌，其他内容都存储在本地。</string>
+    <string name="use_login_for_browse_desc">这可能会影响您看到的内容，例如，如果您使用会员账号登录，则会显示仅会员专辑</string>
+    <string name="use_login_for_browse">登录账号浏览内容</string>
+    <string name="action_login">登录</string>
 </resources>

@@ -64,7 +64,7 @@
     <string name="add_to_queue">Thêm vào hàng chờ</string>
     <string name="add_to_library">Thêm vào thư viện</string>
     <string name="remove_from_library">Xoá khỏi thư viện</string>
-    <string name="download">Tải xuống</string>
+    <string name="action_download">Tải xuống</string>
     <string name="downloading">Đang tải xuống</string>
     <string name="remove_download">Xoá mục đã tải xuống</string>
     <string name="import_playlist">Nhập danh sách phát</string>
@@ -76,7 +76,7 @@
     <string name="delete">Xoá</string>
     <string name="remove_from_history">Xoá khỏi lịch sử</string>
     <string name="search_online">Tìm kiếm trực tuyến</string>
-    <string name="sync">Đồng bộ</string>
+    <string name="action_sync">Đồng bộ</string>
     <string name="advanced">Nâng cao</string>
     <!-- Sort menu -->
     <string name="sort_by_create_date">Ngày thêm vào</string>
@@ -181,7 +181,7 @@
     <string name="center">Giữa</string>
     <string name="right">Phải</string>
     <string name="content">Nội dung</string>
-    <string name="login">Đăng nhập</string>
+    <string name="login">Sự đăng nhập</string>
     <string name="content_language">Nội dung ngôn ngữ mặc định</string>
     <string name="content_country">Nội dung quốc gia mặc định</string>
     <string name="system_default">Mặc định hệ thống</string>
@@ -194,7 +194,7 @@
     <string name="audio_quality_auto">Tự động</string>
     <string name="audio_quality_high">Cao</string>
     <string name="audio_quality_low">Thấp</string>
-    <string name="persistent_queue">Hàng đợi liên tục</string>
+    <string name="persistent_queue">Cố định hàng đợi</string>
     <string name="skip_silence">Bỏ qua khoảng lặng</string>
     <string name="audio_normalization">Chuẩn hoá âm lượng</string>
     <string name="equalizer">Bộ chỉnh âm</string>
@@ -210,7 +210,7 @@
     <string name="max_song_cache_size">Kích thước bộ nhớ đệm bài hát tối đa</string>
     <string name="clear_song_cache">Xóa bộ nhớ đệm bài hát</string>
     <string name="size_used">Đã sử dụng %s</string>
-    <string name="privacy">Riêng tư</string>
+    <string name="privacy">Quyền riêng tư</string>
     <string name="pause_listen_history">Tạm dừng lịch sử nghe</string>
     <string name="clear_listen_history">Xóa lịch sử nghe</string>
     <string name="clear_listen_history_confirm">Bạn có chắc muốn xoá tất cả lịch sử nghe không?</string>
@@ -219,8 +219,8 @@
     <string name="clear_search_history_confirm">Bạn có chắc muốn xoá tất cả lịch sử tìm kiếm?</string>
     <string name="enable_kugou">Bật nhà cung cấp lời bài hát KuGou</string>
     <string name="backup_restore">Sao lưu và khôi phục</string>
-    <string name="backup">Sao lưu</string>
-    <string name="restore">Khôi phục</string>
+    <string name="action_backup">Sao lưu</string>
+    <string name="action_restore">Khôi phục</string>
     <string name="imported_playlist">Đã nhập danh sách phát</string>
     <string name="backup_create_success">Đã tạo bản sao lưu thành công</string>
     <string name="backup_create_failed">Không thể tạo bản sao lưu</string>
@@ -245,7 +245,7 @@
     <string name="options">Tùy chọn</string>
     <string name="preview">Xem trước</string>
     <string name="login_failed">Đăng nhập không thành công</string>
-    <string name="logout">Đăng xuất</string>
+    <string name="action_logout">Đăng xuất</string>
     <string name="enable_discord_rpc">Kích hoạt Rich Presence</string>
     <string name="sided">Cạnh bên</string>
     <string name="player_text_alignment">Căn chỉnh văn bản của trình phát</string>
@@ -261,7 +261,7 @@
     <string name="player">Trình phát</string>
     <string name="player_slider_style">Kiểu thanh trượt của trình phát</string>
     <string name="default_">Mặc định</string>
-    <string name="squiggly">Nghẽo ngoằn</string>
+    <string name="squiggly">Lượn sóng</string>
     <string name="grid_cell_size">Kích thước ô lưới</string>
     <string name="small">Nhỏ</string>
     <string name="misc">Khác</string>
@@ -269,7 +269,7 @@
     <string name="persistent_queue_desc">Khôi phục hàng đợi cuối cùng của bạn khi ứng dụng bắt đầu</string>
     <string name="queue">Hàng đợi</string>
     <string name="auto_load_more">Tự động tải thêm bài hát</string>
-    <string name="stop_music_on_task_clear">Dừng nhạc khi hoàn thành tác vụ</string>
+    <string name="stop_music_on_task_clear">Dừng nhạc khi đóng ứng dụng</string>
     <string name="disable_screenshot">Vô hiệu ảnh chụp màn hình</string>
     <string name="auto_skip_next_on_error">Tự động chuyển sang bài hát tiếp theo khi xảy ra lỗi</string>
     <string name="your_youtube_playlists">Danh sách phát YouTube của bạn</string>
@@ -285,7 +285,8 @@
     <string name="auto_skip_next_on_error_desc">Đảm bảo trải nghiệm phát lại liên tục của bạn</string>
     <string name="search_history">Lịch sử tìm kiếm</string>
     <string name="disable_screenshot_desc">Khi tùy chọn này được bật, ảnh chụp màn hình và chế độ xem ứng dụng trong mục Gần đây sẽ bị vô hiệu hóa.</string>
-    <string name="discord_information">InnerTune sử dụng thư viện KizzyRPC để thiết lập trạng thái tài khoản Discord của bạn. Điều này liên quan đến việc sử dụng kết nối Discord Gateway, có thể được coi là vi phạm TOS của Discord. Tuy nhiên, không có trường hợp nào được biết đến về việc tài khoản người dùng bị đình chỉ vì lý do này. Sử dụng theo rủi ro của riêng bạn.
-\n
-\nInnerTune sẽ chỉ trích xuất mã thông báo của bạn và mọi thứ khác được lưu trữ cục bộ.</string>
+    <string name="discord_information">InnerTune sử dụng thư viện KizzyRPC để thiết lập trạng thái tài khoản Discord của bạn. Điều này liên quan đến việc sử dụng kết nối Discord Gateway, có thể được coi là vi phạm TOS của Discord. Tuy nhiên, không có trường hợp nào được biết đến về việc tài khoản người dùng bị đình chỉ vì lý do này. Sử dụng theo rủi ro của riêng bạn. \n \nInnerTune sẽ chỉ trích xuất mã thông báo của bạn và mọi thứ khác được lưu trữ cục bộ.</string>
+    <string name="use_login_for_browse">Đăng nhập để xem nội dung</string>
+    <string name="use_login_for_browse_desc">Điều này có thể ảnh hưởng đến nội dung bạn nhìn thấy, ví dụ như hiện những album dành riêng cho premium nếu bạn đăng nhập với tài khoản Premium</string>
+    <string name="action_login">Đăng nhập</string>
 </resources>

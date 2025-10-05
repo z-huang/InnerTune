@@ -294,7 +294,7 @@ fun PlaylistMenu(
         if (playlist.playlist.browseId != null) {
             GridMenuItem(
                 icon = R.drawable.sync,
-                title = R.string.sync
+                title = R.string.action_sync
             ) {
                 onDismiss()
                 coroutineScope.launch(Dispatchers.IO) {
