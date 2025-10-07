@@ -2,16 +2,16 @@ Materijal 3 YouTube Music klijent za Android
 
 <br><b>Značajke:</b>
 
-- Reproducirajte pjesme s YT/YT glazbe bez oglasa
+- Reprodukcija pjesama s YT/YT Music bez oglasa
 - Reprodukcija u pozadini
-- Pretraživanje pjesama, videozapisa, albuma i popisa na YouTube Musicu
-- Upravljanje knjižnicom
+- Pretraživanje pjesama, videa, albuma i popisa na stranici YouTube Music
+- Upravljanje zbirkom
 - Predmemorija i preuzimanje pjesama za izvanmrežnu reprodukciju
 - Sinkronizirani tekstovi
-- Preskoči tišinu
+- Preskakanje tišine
 - Normalizacija zvuka
 - Dinamička tema
--Lokalizacija
+- Lokalizacija
 - Podrška za Android Auto
 - Personalizirani brzi odabiri
 - Materijal 3
