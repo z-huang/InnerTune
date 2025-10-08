@@ -274,7 +274,7 @@
     <string name="enable_lrclib">Увімкнути провайдера текстів LrcLib</string>
     <string name="enable_kugou">Увімкнути провайдера текстів KuGou</string>
     <string name="hide_explicit">Приховувати контент із нецензурною лексикою</string>
-    <string name="backup_restore">Резервне копіювання</string>
+    <string name="backup_restore">Резервне Копіювання</string>
     <string name="action_backup">Резервне копіювання</string>
     <string name="action_restore">Відновити</string>
     <string name="imported_playlist">Імпортований плейлист</string>
