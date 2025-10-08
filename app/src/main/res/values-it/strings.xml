@@ -116,7 +116,7 @@
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d album</item>
-        <item quantity="many">%d album</item>
+        <item quantity="many">%d albums</item>
         <item quantity="other">%d album</item>
     </plurals>
     <plurals name="n_playlist">
