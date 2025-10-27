@@ -1,0 +1,17 @@
+Klient Material 3 YouTube Music pre Android
+
+<br><b>Funkcie:</b>
+
+- Prehrávanie skladieb z YT/YT Music bez reklám
+- Prehrávanie na pozadí
+- Vyhľadávanie skladieb, videí, albumov a zoznamov skladieb z YouTube Music
+- Správa knižnice
+- Ukladanie skladieb do vyrovnávacej pamäte a sťahovanie skladieb na prehrávanie offline
+- Synchronizované texty skladieb
+- Preskočenie ticha
+- Normalizácia zvuku
+- Dynamická téma
+- Lokalizácia
+- Podpora pre Android Auto
+- Prispôsobené rýchle výbery
+- Material 3
