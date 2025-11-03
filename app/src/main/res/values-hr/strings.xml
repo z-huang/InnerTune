@@ -100,7 +100,7 @@
     <string name="media_id">ID medija</string>
     <string name="mime_type">MIME vrsta</string>
     <string name="bitrate">Brzina prijenosa</string>
-    <string name="loudness">Bučnost</string>
+    <string name="loudness">Glasnoća</string>
     <string name="volume">Glasnoća</string>
     <string name="file_size">Veličina datoteke</string>
     <string name="copied">Kopirano u međuspremnik</string>
