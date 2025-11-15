@@ -1,5 +1,6 @@
 package com.zionhuang.innertube
 
+import android.util.Log
 import com.zionhuang.innertube.encoder.brotli
 import com.zionhuang.innertube.models.Context
 import com.zionhuang.innertube.models.YouTubeClient
@@ -79,6 +80,8 @@ class InnerTube {
     }
 
     private fun HttpRequestBuilder.ytClient(client: YouTubeClient, setLogin: Boolean = false) {
+        Log.d("InnerTubeAuth", "ytClient called. Passed setLogin: $setLogin, Class_cookie_is_present: ${this@InnerTube.cookie != null}, Class_useLoginForBrowse: ${this@InnerTube.useLoginForBrowse}")
+
         contentType(ContentType.Application.Json)
         headers {
             append("X-Goog-Api-Format-Version", "1")

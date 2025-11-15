@@ -38,6 +38,7 @@ import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.db.entities.SongAlbumMap
 import com.zionhuang.music.db.entities.SongArtistMap
 import com.zionhuang.music.db.entities.SongEntity
+import android.util.Log
 import com.zionhuang.music.extensions.reversed
 import com.zionhuang.music.extensions.toSQLiteQuery
 import com.zionhuang.music.models.MediaMetadata
@@ -600,18 +601,31 @@ interface DatabaseDao {
     )
     fun relatedSongs(songId: String): List<Song>
 
-    @Query(
-        """
-        UPDATE playlist_song_map SET position = 
-            CASE 
-                WHEN position < :fromPosition THEN position + 1
-                WHEN position > :fromPosition THEN position - 1
-                ELSE :toPosition
-            END 
-        WHERE playlistId = :playlistId AND position BETWEEN MIN(:fromPosition, :toPosition) AND MAX(:fromPosition, :toPosition)
-    """
-    )
-    fun move(playlistId: String, fromPosition: Int, toPosition: Int)
+    @Query("SELECT * FROM playlist_song_map WHERE playlistId = :playlistId ORDER BY position ASC")
+    fun getPlaylistSongMapsOrderedByPosition(playlistId: String): MutableList<PlaylistSongMap>
+
+    @Transaction
+    fun moveItemInPlaylist(playlistId: String, fromPosition: Int, toPosition: Int) {
+        if (fromPosition == toPosition) return
+
+        val items = getPlaylistSongMapsOrderedByPosition(playlistId)
+
+        if (fromPosition < 0 || fromPosition >= items.size) {
+            Log.e("DatabaseDao", "Invalid fromPosition for move: $fromPosition, current items size: ${items.size}, for playlistId: $playlistId")
+            return
+        }
+
+        val movedItem = items.removeAt(fromPosition)
+
+        val actualToPosition = if (toPosition < 0) 0 else if (toPosition > items.size) items.size else toPosition
+        items.add(actualToPosition, movedItem)
+
+        items.forEachIndexed { index, map ->
+            if (map.position != index) {
+                update(map.copy(position = index))
+            }
+        }
+    }
 
     @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId")
     fun clearPlaylist(playlistId: String)

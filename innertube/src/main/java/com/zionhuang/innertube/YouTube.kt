@@ -430,33 +430,40 @@ object YouTube {
     }
 
     suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
-        var playerResponse: PlayerResponse
-        if (this.cookie != null) { // if logged in: try ANDROID_MUSIC client first because IOS client does not play age restricted songs
-            playerResponse = innerTube.player(ANDROID_MUSIC, videoId, playlistId).body<PlayerResponse>()
-            if (playerResponse.playabilityStatus.status == "OK") {
-                return@runCatching playerResponse
+        var responseToReturnOnError: PlayerResponse? = null
+
+        if (this.cookie != null) { // if logged in: try ANDROID_MUSIC client first
+            val androidResponse = innerTube.player(ANDROID_MUSIC, videoId, playlistId).body<PlayerResponse>()
+            if (androidResponse.playabilityStatus.status == "OK") {
+                return@runCatching androidResponse
             }
+            responseToReturnOnError = androidResponse // Store failure
         }
-        playerResponse = innerTube.player(IOS, videoId, playlistId).body<PlayerResponse>()
-        if (playerResponse.playabilityStatus.status == "OK") {
-            return@runCatching playerResponse
+
+        val iosResponse = innerTube.player(IOS, videoId, playlistId).body<PlayerResponse>()
+        if (iosResponse.playabilityStatus.status == "OK") {
+            return@runCatching iosResponse
         }
-        val safePlayerResponse = innerTube.player(TVHTML5, videoId, playlistId).body<PlayerResponse>()
-        if (safePlayerResponse.playabilityStatus.status != "OK") {
-            return@runCatching playerResponse
+        responseToReturnOnError = iosResponse // Store failure (overwrites previous if any)
+
+        val tvHtml5Response = innerTube.player(TVHTML5, videoId, playlistId).body<PlayerResponse>()
+        if (tvHtml5Response.playabilityStatus.status != "OK") {
+            // If TVHTML5 also fails, its response is the most relevant to return.
+            return@runCatching tvHtml5Response
         }
+
+        // If TVHTML5 is "OK", proceed with Piped streams logic
         val audioStreams = innerTube.pipedStreams(videoId).body<PipedResponse>().audioStreams
-        safePlayerResponse.copy(
-            streamingData = safePlayerResponse.streamingData?.copy(
-                adaptiveFormats = safePlayerResponse.streamingData.adaptiveFormats.mapNotNull { adaptiveFormat ->
-                    audioStreams.find { it.bitrate == adaptiveFormat.bitrate }?.let {
-                        adaptiveFormat.copy(
-                            url = it.url
-                        )
+        tvHtml5Response.copy(
+            streamingData = tvHtml5Response.streamingData?.copy(
+                adaptiveFormats = tvHtml5Response.streamingData.adaptiveFormats.mapNotNull { adaptiveFormat ->
+                    audioStreams.find { it.bitrate == adaptiveFormat.bitrate }?.let { pipedStream ->
+                        adaptiveFormat.copy(url = pipedStream.url)
                     }
                 }
             )
         )
+        // Implicitly returns the modified tvHtml5Response
     }
 
     suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): Result<NextResult> = runCatching {

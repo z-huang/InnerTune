@@ -48,6 +48,7 @@ import androidx.media3.session.DefaultMediaNotificationProvider
 import androidx.media3.session.MediaController
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
+import android.util.Log
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
 import com.zionhuang.innertube.YouTube
@@ -654,7 +655,15 @@ class MusicService : MediaLibraryService(),
                 }
             }
             if (playerResponse.playabilityStatus.status != "OK") {
-                throw PlaybackException(playerResponse.playabilityStatus.reason, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
+                val reason = playerResponse.playabilityStatus.reason
+                // Log the detailed status and reason for better debugging
+                Log.w("MusicService", "Playback failed for mediaId: $mediaId. Status: ${playerResponse.playabilityStatus.status}, Reason: $reason")
+                val messageToUser = if (reason.isNullOrBlank()) {
+                    getString(R.string.error_no_stream)
+                } else {
+                    reason
+                }
+                throw PlaybackException(messageToUser, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
             }
 
             val format =
@@ -665,7 +674,7 @@ class MusicService : MediaLibraryService(),
                     }
                 } else {
                     playerResponse.streamingData?.adaptiveFormats
-                        ?.filter { it.isAudio }
+                        ?.filter { it.isAudio && !it.url.isNullOrBlank() && it.mimeType.isNotBlank() } // Added checks
                         ?.maxByOrNull {
                             it.bitrate * when (audioQuality) {
                                 AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1

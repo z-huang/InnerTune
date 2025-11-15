@@ -236,10 +236,8 @@ fun LocalPlaylistScreen(
 
     LaunchedEffect(reorderableState.isAnyItemDragging) {
         if (!reorderableState.isAnyItemDragging) {
-            dragInfo?.let { (from, to) ->
-                database.transaction {
-                    move(viewModel.playlistId, from, to)
-                }
+            dragInfo?.let { (fromValue, toValue) ->
+                database.moveItemInPlaylist(viewModel.playlistId, fromValue, toValue)
                 dragInfo = null
             }
         }

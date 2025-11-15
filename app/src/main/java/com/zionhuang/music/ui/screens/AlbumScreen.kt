@@ -65,6 +65,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEachIndexed
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.exoplayer.offline.Download
@@ -233,6 +234,9 @@ fun AlbumScreen(
                             Row {
                                 IconButton(
                                     onClick = {
+                                        val albumId = albumWithSongs.album.id // Assuming albumWithSongs is not null here
+                                        val currentBookmarkStatus = albumWithSongs.album.bookmarkedAt
+                                        Log.d("AlbumScreen", "Album like toggled for albumId: $albumId. Current bookmarkedAt: $currentBookmarkStatus. New bookmarkedAt will be: ${if (currentBookmarkStatus != null) null else "not null"}")
                                         database.query {
                                             update(albumWithSongs.album.toggleLike())
                                         }

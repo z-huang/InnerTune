@@ -22,6 +22,7 @@ import com.zionhuang.music.di.DownloadCache
 import com.zionhuang.music.di.PlayerCache
 import com.zionhuang.music.utils.enumPreference
 import dagger.hilt.android.qualifiers.ApplicationContext
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +64,7 @@ class DownloadUtil @Inject constructor(
             return@Factory dataSpec
         }
 
-        songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
+        songUrlCache[mediaId]?.takeIf { it.second > System.currentTimeMillis() }?.let {
             return@Factory dataSpec.withUri(it.first.toUri())
         }
 
@@ -72,26 +73,36 @@ class DownloadUtil @Inject constructor(
             YouTube.player(mediaId)
         }.getOrThrow()
         if (playerResponse.playabilityStatus.status != "OK") {
-            throw PlaybackException(playerResponse.playabilityStatus.reason, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
+            val status = playerResponse.playabilityStatus.status
+            val reason = playerResponse.playabilityStatus.reason
+            Log.w("DownloadUtil", "Download failed for mediaId: $mediaId. PlayabilityStatus: $status, Reason: $reason")
+
+            // Potentially map specific statuses to more user-friendly messages or specific exception types in the future.
+            // For now, use the reason provided by YouTube, or a generic message if reason is blank.
+            val messageToThrow = if (reason.isNullOrBlank()) {
+                "Download unavailable: $status" // Or a generic R.string.error_download_unavailable
+            } else {
+                reason
+            }
+            throw PlaybackException(messageToThrow, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
         }
 
-        val format =
-            if (playedFormat != null) {
-                playerResponse.streamingData?.adaptiveFormats?.find { it.itag == playedFormat.itag }
-            } else {
-                playerResponse.streamingData?.adaptiveFormats
-                    ?.filter { it.isAudio }
-                    ?.maxByOrNull {
-                        it.bitrate * when (audioQuality) {
-                            AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
-                            AudioQuality.HIGH -> 1
-                            AudioQuality.LOW -> -1
-                        } + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) // prefer opus stream
-                    }
-            }!!.let {
-                // Specify range to avoid YouTube's throttling
-                it.copy(url = "${it.url}&range=0-${it.contentLength ?: 10000000}")
-            }
+        val format = (if (playedFormat != null) {
+            playerResponse.streamingData?.adaptiveFormats?.find { it.itag == playedFormat.itag }
+        } else {
+            playerResponse.streamingData?.adaptiveFormats
+                ?.filter { it.isAudio && !it.url.isNullOrBlank() && it.mimeType.isNotBlank() } // Added checks
+                ?.maxByOrNull {
+                    it.bitrate * when (audioQuality) {
+                        AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
+                        AudioQuality.HIGH -> 1
+                        AudioQuality.LOW -> -1
+                    } + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) // prefer opus stream
+                }
+        })?.let { // Note: changed from !! to ?.let to handle potential null from find or maxByOrNull
+            // Specify range to avoid YouTube's throttling
+            it.copy(url = "${it.url}&range=0-${it.contentLength ?: 10000000}")
+        } ?: throw PlaybackException("No suitable download format found or format missing URL/MimeType.", null, PlaybackException.ERROR_CODE_IO_UNSPECIFIED) // Or a more specific error
 
         database.query {
             upsert(
