@@ -99,6 +99,10 @@ android {
     lint {
         lintConfig = file("app/lint.xml")
     }
+    androidResources {
+        // Gives users the option to change the app language in the app info page
+        generateLocaleConfig = true
+    }
 }
 
 ksp {
