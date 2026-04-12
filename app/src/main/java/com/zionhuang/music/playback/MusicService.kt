@@ -679,19 +679,22 @@ class MusicService : MediaLibraryService(),
                 ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
             if (format.contentLength != null) {
-                database.query {
-                    upsert(
-                        FormatEntity(
-                            id = mediaId,
-                            itag = format.itag,
-                            mimeType = format.mimeType.split(";")[0],
-                            codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
-                            bitrate = format.bitrate,
-                            sampleRate = format.audioSampleRate,
-                            contentLength = format.contentLength,
-                            loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                val codecs = format.mimeType.split("codecs=").getOrNull(1)?.removeSurrounding("\"")
+                if (codecs != null) {
+                    database.query {
+                        upsert(
+                            FormatEntity(
+                                id = mediaId,
+                                itag = format.itag,
+                                mimeType = format.mimeType.split(";")[0],
+                                codecs = codecs,
+                                bitrate = format.bitrate,
+                                sampleRate = format.audioSampleRate,
+                                contentLength = format.contentLength,
+                                loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                            )
                         )
-                    )
+                    }
                 }
             }
             scope.launch(Dispatchers.IO) { recoverSong(mediaId, playerResponse) }
