@@ -196,7 +196,6 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         if (dataStore.get(StopMusicOnTaskClearKey, false) && playerConnection?.isPlaying?.value == true && isFinishing) {
             stopService(Intent(this, MusicService::class.java))
-            unbindService(serviceConnection)
             playerConnection = null
         }
     }

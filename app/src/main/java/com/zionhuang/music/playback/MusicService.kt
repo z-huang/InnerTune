@@ -630,7 +630,7 @@ class MusicService : MediaLibraryService(),
                 return@Factory dataSpec
             }
 
-            songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
+            songUrlCache[mediaId]?.takeIf { it.second > System.currentTimeMillis() }?.let {
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
                 return@Factory dataSpec.withUri(it.first.toUri())
             }
@@ -675,24 +675,32 @@ class MusicService : MediaLibraryService(),
                         }
                 } ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
-            database.query {
-                upsert(
-                    FormatEntity(
-                        id = mediaId,
-                        itag = format.itag,
-                        mimeType = format.mimeType.split(";")[0],
-                        codecs = format.mimeType.split("codecs=")[1].removeSurrounding("\""),
-                        bitrate = format.bitrate,
-                        sampleRate = format.audioSampleRate,
-                        contentLength = format.contentLength!!,
-                        loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
-                    )
-                )
+            val streamUrl = format.url
+                ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
+
+            if (format.contentLength != null) {
+                val codecs = format.mimeType.split("codecs=").getOrNull(1)?.removeSurrounding("\"")
+                if (codecs != null) {
+                    database.query {
+                        upsert(
+                            FormatEntity(
+                                id = mediaId,
+                                itag = format.itag,
+                                mimeType = format.mimeType.split(";")[0],
+                                codecs = codecs,
+                                bitrate = format.bitrate,
+                                sampleRate = format.audioSampleRate,
+                                contentLength = format.contentLength,
+                                loudnessDb = playerResponse.playerConfig?.audioConfig?.loudnessDb
+                            )
+                        )
+                    }
+                }
             }
             scope.launch(Dispatchers.IO) { recoverSong(mediaId, playerResponse) }
 
-            songUrlCache[mediaId] = format.url!! to playerResponse.streamingData!!.expiresInSeconds * 1000L
-            dataSpec.withUri(format.url!!.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
+            songUrlCache[mediaId] = streamUrl to System.currentTimeMillis() + playerResponse.streamingData!!.expiresInSeconds * 1000L
+            dataSpec.withUri(streamUrl.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     }
 
