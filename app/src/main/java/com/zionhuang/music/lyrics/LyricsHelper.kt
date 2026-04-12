@@ -27,6 +27,7 @@ class LyricsHelper @Inject constructor(
                     mediaMetadata.artists.joinToString { it.name },
                     mediaMetadata.duration
                 ).onSuccess { lyrics ->
+                    cache.put(mediaMetadata.id, listOf(LyricsResult(provider.name, lyrics)))
                     return lyrics
                 }.onFailure {
                     reportException(it)
@@ -43,8 +44,7 @@ class LyricsHelper @Inject constructor(
         duration: Int,
         callback: (LyricsResult) -> Unit,
     ) {
-        val cacheKey = "$songArtists-$songTitle".replace(" ", "")
-        cache.get(cacheKey)?.let { results ->
+        cache.get(mediaId)?.let { results ->
             results.forEach {
                 callback(it)
             }
@@ -60,7 +60,7 @@ class LyricsHelper @Inject constructor(
                 }
             }
         }
-        cache.put(cacheKey, allResult)
+        cache.put(mediaId, allResult)
     }
 
     companion object {
