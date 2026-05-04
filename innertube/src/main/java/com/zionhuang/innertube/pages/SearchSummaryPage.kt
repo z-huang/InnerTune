@@ -208,16 +208,16 @@ data class SearchSummaryPage(
                         } ?: return null,
                         songCountText = renderer.flexColumns.getOrNull(1)
                             ?.musicResponsiveListItemFlexColumnRenderer?.text?.runs
-                            ?.lastOrNull()?.text ?: return null,
+                            ?.lastOrNull()?.text,
                         thumbnail = renderer.thumbnail?.musicThumbnailRenderer?.getThumbnailUrl() ?: return null,
                         playEndpoint = renderer.overlay?.musicItemThumbnailOverlayRenderer?.content
                             ?.musicPlayButtonRenderer?.playNavigationEndpoint?.watchPlaylistEndpoint ?: return null,
                         shuffleEndpoint = renderer.menu?.menuRenderer?.items
                             ?.find { it.menuNavigationItemRenderer?.icon?.iconType == "MUSIC_SHUFFLE" }
                             ?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null,
-                        radioEndpoint = renderer.menu.menuRenderer.items
-                            .find { it.menuNavigationItemRenderer?.icon?.iconType == "MIX" }
-                            ?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint ?: return null
+                        radioEndpoint = renderer.menu?.menuRenderer?.items
+                            ?.find { it.menuNavigationItemRenderer?.icon?.iconType == "MIX" }
+                            ?.menuNavigationItemRenderer?.navigationEndpoint?.watchPlaylistEndpoint
                     )
                 }
 
