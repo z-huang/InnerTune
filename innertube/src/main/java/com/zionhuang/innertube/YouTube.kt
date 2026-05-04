@@ -105,32 +105,47 @@ object YouTube {
 
     suspend fun searchSummary(query: String): Result<SearchSummaryPage> = runCatching {
         val response = innerTube.search(WEB_REMIX, query).body<SearchResponse>()
+        val sections = response.contents
+            ?.tabbedSearchResultsRenderer
+            ?.tabs?.firstOrNull()
+            ?.tabRenderer?.content
+            ?.sectionListRenderer?.contents
+            .orEmpty()
         SearchSummaryPage(
-            summaries = response.contents?.tabbedSearchResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents?.mapNotNull { it ->
-                if (it.musicCardShelfRenderer != null)
-                    SearchSummary(
-                        title = it.musicCardShelfRenderer.header.musicCardShelfHeaderBasicRenderer.title.runs?.firstOrNull()?.text ?: return@mapNotNull null,
-                        items = listOfNotNull(SearchSummaryPage.fromMusicCardShelfRenderer(it.musicCardShelfRenderer))
-                            .plus(
-                                it.musicCardShelfRenderer.contents
-                                    ?.mapNotNull { it.musicResponsiveListItemRenderer }
-                                    ?.mapNotNull(SearchSummaryPage.Companion::fromMusicResponsiveListItemRenderer)
-                                    .orEmpty()
-                            )
-                            .distinctBy { it.id }
-                            .ifEmpty { null } ?: return@mapNotNull null
-                    )
-                else
-                    SearchSummary(
-                        title = it.musicShelfRenderer?.title?.runs?.firstOrNull()?.text ?: return@mapNotNull null,
-                        items = it.musicShelfRenderer.contents
-                            ?.mapNotNull {
-                                SearchSummaryPage.fromMusicResponsiveListItemRenderer(it.musicResponsiveListItemRenderer)
-                            }
-                            ?.distinctBy { it.id }
-                            ?.ifEmpty { null } ?: return@mapNotNull null
-                    )
-            }!!
+            summaries = sections.mapNotNull { section ->
+                when {
+                    section.musicCardShelfRenderer != null -> {
+                        val shelf = section.musicCardShelfRenderer
+                        SearchSummary(
+                            title = shelf.header.musicCardShelfHeaderBasicRenderer.title.runs
+                                ?.firstOrNull()?.text ?: return@mapNotNull null,
+                            items = listOfNotNull(SearchSummaryPage.fromMusicCardShelfRenderer(shelf))
+                                .plus(
+                                    shelf.contents
+                                        ?.mapNotNull { it.musicResponsiveListItemRenderer }
+                                        ?.mapNotNull(SearchSummaryPage.Companion::fromMusicResponsiveListItemRenderer)
+                                        .orEmpty()
+                                )
+                                .distinctBy { it.id }
+                                .ifEmpty { return@mapNotNull null }
+                        )
+                    }
+                    section.musicShelfRenderer != null -> {
+                        val shelf = section.musicShelfRenderer
+                        SearchSummary(
+                            title = shelf.title?.runs?.firstOrNull()?.text ?: return@mapNotNull null,
+                            items = shelf.contents
+                                ?.mapNotNull { it.musicResponsiveListItemRenderer?.let { r ->
+                                    SearchSummaryPage.fromMusicResponsiveListItemRenderer(r)
+                                }}
+                                ?.distinctBy { it.id }
+                                ?.ifEmpty { return@mapNotNull null }
+                                ?: return@mapNotNull null
+                        )
+                    }
+                    else -> null
+                }
+            }
         )
     }
 
