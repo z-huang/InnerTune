@@ -7,7 +7,7 @@ import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.get
 
 /**
- * Source: https://github.com/Malopieds/InnerTune
+ * Source: https://github.com/Malopieds/Spidey
  */
 object LrcLibLyricsProvider : LyricsProvider {
     override val name = "LrcLib"

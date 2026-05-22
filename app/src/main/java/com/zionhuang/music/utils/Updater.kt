@@ -11,7 +11,7 @@ object Updater {
         private set
 
     suspend fun getLatestVersionName(): Result<String> = runCatching {
-        val response = client.get("https://api.github.com/repos/z-huang/InnerTune/releases/latest").bodyAsText()
+        val response = client.get("https://api.github.com/repos/Spideyofficial777/Spidey/releases/latest").bodyAsText()
         val json = JSONObject(response)
         val versionName = json.getString("name")
         lastCheckTime = System.currentTimeMillis()
