@@ -263,7 +263,7 @@
     <string name="backup_create_failed">No se ha podido crear la copia de seguridad</string>
     <string name="restore_failed">Error al restaurar la copia de seguridad</string>
     <string name="discord_integration">Integración con Discord</string>
-    <string name="discord_information">InnerTune utiliza la biblioteca KizzyRPC para establecer el estado de su cuenta de Discord. Esto implica el uso de la conexión Discord Gateway, lo que podría considerarse una violación de las condiciones del servicio de Discord. Sin embargo, no se conocen casos de cuentas de usuario suspendidas por este motivo. Úselo bajo su propio riesgo.\n\nInnerTune solo extraerá su ficha; todo lo demás se almacena localmente.</string>
+    <string name="discord_information">Spidey utiliza la biblioteca KizzyRPC para establecer el estado de su cuenta de Discord. Esto implica el uso de la conexión Discord Gateway, lo que podría considerarse una violación de las condiciones del servicio de Discord. Sin embargo, no se conocen casos de cuentas de usuario suspendidas por este motivo. Úselo bajo su propio riesgo.\n\nSpidey solo extraerá su ficha; todo lo demás se almacena localmente.</string>
     <string name="dismiss">Descartar</string>
     <string name="options">Opciones</string>
     <string name="preview">Vista previa</string>

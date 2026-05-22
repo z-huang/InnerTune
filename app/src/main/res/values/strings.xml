@@ -203,6 +203,11 @@
     <string name="error_no_internet">No network connection</string>
     <string name="error_timeout">Timeout</string>
     <string name="error_unknown">Unknown error</string>
+    <string name="error_invalid_media_source">Invalid media source. Try reloading the track.</string>
+    <string name="error_stream_fetch_failed">Couldn't load audio stream.</string>
+    <string name="error_unplayable_track">This track is currently unavailable.</string>
+    <string name="error_unsupported_format">This audio format is not supported on your device.</string>
+    <string name="error_decoder_failed">Audio decoder failed to start.</string>
 
     <!-- Player action -->
     <string name="action_like">Like</string>
@@ -320,7 +325,7 @@
     <string name="restore_failed">Failed to restore backup</string>
 
     <string name="discord_integration">Discord Integration</string>
-    <string name="discord_information">InnerTune uses the KizzyRPC library to set your Discord account\'s status. This involves using the Discord Gateway connection, which may be considered a violation of Discord\'s TOS. However, there are no known cases of user accounts being suspended for this reason. Use at your own risk.\n\nInnerTune will only extract your token, and everything else is stored locally.</string>
+    <string name="discord_information">Spidey uses the KizzyRPC library to set your Discord account\'s status. This involves using the Discord Gateway connection, which may be considered a violation of Discord\'s TOS. However, there are no known cases of user accounts being suspended for this reason. Use at your own risk.\n\nSpidey will only extract your token, and everything else is stored locally.</string>
     <string name="dismiss">Dismiss</string>
     <string name="options">Options</string>
     <string name="preview">Preview</string>
@@ -332,4 +337,22 @@
     <string name="new_version_available">New version available</string>
     <string name="translation_models">Translation Models</string>
     <string name="clear_translation_models">Clear translation models</string>
+    <string name="spidey_app_name">Spidey</string>
+    <string name="spidey_developer_name">by Spideyofficial777</string>
+    <string name="developer_info">Developer Info</string>
+    <string name="spidey_developer_label">Spideyofficial777</string>
+    <string name="features">Features</string>
+    <string name="social_links">Telegram / Social Links</string>
+    <string name="feedback">Feedback</string>
+    <string name="credits">Credits</string>
+    <string name="device_app_info">Device / App Info</string>
+    <string name="feature_streaming">High-quality streaming</string>
+    <string name="feature_material_you">Material You dynamic theme</string>
+    <string name="feature_offline_cache">Smart offline cache support</string>
+    <string name="feature_background_playback">Stable background playback</string>
+    <string name="feedback_message">Share bugs, ideas, or feature requests via Telegram.</string>
+    <string name="spidey_credits_message">Crafted for the Spidey community with a premium listening experience.</string>
+    <string name="device_name">Device: %1$s</string>
+    <string name="android_version">Android: %1$s</string>
+    <string name="package_name">Package: %1$s</string>
 </resources>

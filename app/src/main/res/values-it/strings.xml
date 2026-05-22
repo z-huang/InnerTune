@@ -278,7 +278,7 @@
     <string name="disable_screenshot_desc">Quando questa opzione è attiva, gli screenshot e la visualizzazione dell\'app nei Recenti sono disabilitati.</string>
     <string name="hide_explicit">Nascondi contenuti espliciti</string>
     <string name="discord_integration">Integrazione Discord</string>
-    <string name="discord_information">InnerTune usa la libreria KizzyRPC per impostare lo stato del tuo account Discord. Ciò comporta l\'uso della connessione Discord Gateway, che può essere considerata una violazione dei TOS di Discord. Tuttavia, non ci sono casi noti di account utente sospesi per questo motivo. Usalo a tuo rischio e pericolo.\n\nInnerTune estrarrà solo il tuo token e tutto il resto verrà archiviato localmente.</string>
+    <string name="discord_information">Spidey usa la libreria KizzyRPC per impostare lo stato del tuo account Discord. Ciò comporta l\'uso della connessione Discord Gateway, che può essere considerata una violazione dei TOS di Discord. Tuttavia, non ci sono casi noti di account utente sospesi per questo motivo. Usalo a tuo rischio e pericolo.\n\nSpidey estrarrà solo il tuo token e tutto il resto verrà archiviato localmente.</string>
     <string name="options">Opzioni</string>
     <string name="use_login_for_browse">Usa il login per navigare nei contenuti</string>
     <string name="preview">Anteprima</string>

@@ -279,7 +279,7 @@
         <item quantity="other">%d godina</item>
     </plurals>
     <string name="playlist_imported">Playlista je uvezena</string>
-    <string name="discord_information">InnerTune koristi KizzyRPC biblioteku za postavljanje vašeg Discord status. Ovo uključuje korištenje Discord Gateway spajanja, što bi se moglo smatrati prekršajem Discord-ovog TOS-a. Međutim nema poznatih slučajeva gdje su korisnički računi zbog toga bili suspendirani. Korisite na vlastiti rizik.\n\nInnerTune će izdvojiti samo vaš žeton, sve drugo se sprema lokalno.</string>
+    <string name="discord_information">Spidey koristi KizzyRPC biblioteku za postavljanje vašeg Discord status. Ovo uključuje korištenje Discord Gateway spajanja, što bi se moglo smatrati prekršajem Discord-ovog TOS-a. Međutim nema poznatih slučajeva gdje su korisnički računi zbog toga bili suspendirani. Korisite na vlastiti rizik.\n\nSpidey će izdvojiti samo vaš žeton, sve drugo se sprema lokalno.</string>
     <string name="options">Opcije</string>
     <string name="preview">Pregled</string>
     <string name="login_failed">Prijava nije uspjela</string>
