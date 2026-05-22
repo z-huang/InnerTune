@@ -16,6 +16,7 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.util.Log
 import androidx.media3.common.Player.EVENT_POSITION_DISCONTINUITY
 import androidx.media3.common.Player.EVENT_TIMELINE_CHANGED
 import androidx.media3.common.Player.REPEAT_MODE_ALL
@@ -588,6 +589,7 @@ class MusicService : MediaLibraryService(),
     }
 
     override fun onPlayerError(error: PlaybackException) {
+        Log.e("MusicService", "Player error code=${error.errorCode} name=${error.errorCodeName} message=${error.message}", error)
         if (dataStore.get(AutoSkipNextOnErrorKey, false) &&
             isInternetAvailable(this) &&
             player.hasNextMediaItem()
@@ -621,7 +623,7 @@ class MusicService : MediaLibraryService(),
     private fun createDataSourceFactory(): DataSource.Factory {
         val songUrlCache = HashMap<String, Pair<String, Long>>()
         return ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
-            val mediaId = dataSpec.key ?: error("No media id")
+            val mediaId = dataSpec.key ?: throw PlaybackException(getString(R.string.error_invalid_media_source), null, PlaybackException.ERROR_CODE_BAD_VALUE)
 
             if (downloadCache.isCached(mediaId, dataSpec.position, if (dataSpec.length >= 0) dataSpec.length else 1) ||
                 playerCache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)
@@ -630,14 +632,15 @@ class MusicService : MediaLibraryService(),
                 return@Factory dataSpec
             }
 
-            songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
+            songUrlCache[mediaId]?.takeIf { it.second > System.currentTimeMillis() }?.let {
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
-                return@Factory dataSpec.withUri(it.first.toUri())
+                return@Factory dataSpec.withUri(it.first.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
             }
 
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
             val playedFormat = runBlocking(Dispatchers.IO) { database.format(mediaId).first() }
+            Log.d("MusicService", "Resolving media source mediaId=$mediaId position=${dataSpec.position} length=${dataSpec.length}")
             val playerResponse = runBlocking(Dispatchers.IO) {
                 YouTube.player(mediaId)
             }.getOrElse { throwable ->
@@ -650,11 +653,15 @@ class MusicService : MediaLibraryService(),
                         throw PlaybackException(getString(R.string.error_timeout), throwable, PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
                     }
 
-                    else -> throw PlaybackException(getString(R.string.error_unknown), throwable, PlaybackException.ERROR_CODE_REMOTE_ERROR)
+                    else -> {
+                        Log.e("MusicService", "Failed to fetch player response for mediaId=$mediaId", throwable)
+                        throw PlaybackException(getString(R.string.error_stream_fetch_failed), throwable, PlaybackException.ERROR_CODE_REMOTE_ERROR)
+                    }
                 }
             }
             if (playerResponse.playabilityStatus.status != "OK") {
-                throw PlaybackException(playerResponse.playabilityStatus.reason, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
+                Log.w("MusicService", "Unplayable stream mediaId=$mediaId status=${playerResponse.playabilityStatus.status} reason=${playerResponse.playabilityStatus.reason}")
+                throw PlaybackException(playerResponse.playabilityStatus.reason ?: getString(R.string.error_unplayable_track), null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
             }
 
             val format =
@@ -675,6 +682,11 @@ class MusicService : MediaLibraryService(),
                         }
                 } ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
+            if (format.url.isNullOrBlank()) {
+                Log.e("MusicService", "Missing stream url for mediaId=$mediaId itag=${format.itag} mimeType=${format.mimeType}")
+                throw PlaybackException(getString(R.string.error_invalid_media_source), null, PlaybackException.ERROR_CODE_IO_UNSPECIFIED)
+            }
+
             database.query {
                 upsert(
                     FormatEntity(
@@ -691,7 +703,7 @@ class MusicService : MediaLibraryService(),
             }
             scope.launch(Dispatchers.IO) { recoverSong(mediaId, playerResponse) }
 
-            songUrlCache[mediaId] = format.url!! to playerResponse.streamingData!!.expiresInSeconds * 1000L
+            songUrlCache[mediaId] = format.url!! to (System.currentTimeMillis() + playerResponse.streamingData!!.expiresInSeconds * 1000L)
             dataSpec.withUri(format.url!!.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     }

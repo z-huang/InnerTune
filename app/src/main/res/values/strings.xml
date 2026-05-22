@@ -203,6 +203,11 @@
     <string name="error_no_internet">No network connection</string>
     <string name="error_timeout">Timeout</string>
     <string name="error_unknown">Unknown error</string>
+    <string name="error_invalid_media_source">Invalid media source. Try reloading the track.</string>
+    <string name="error_stream_fetch_failed">Couldn't load audio stream.</string>
+    <string name="error_unplayable_track">This track is currently unavailable.</string>
+    <string name="error_unsupported_format">This audio format is not supported on your device.</string>
+    <string name="error_decoder_failed">Audio decoder failed to start.</string>
 
     <!-- Player action -->
     <string name="action_like">Like</string>
