@@ -134,7 +134,7 @@ import com.zionhuang.music.ui.screens.settings.DarkMode
 import com.zionhuang.music.ui.screens.settings.NavigationTab
 import com.zionhuang.music.ui.theme.ColorSaver
 import com.zionhuang.music.ui.theme.DefaultThemeColor
-import com.zionhuang.music.ui.theme.InnerTuneTheme
+import com.zionhuang.music.ui.theme.SpideyTheme
 import com.zionhuang.music.ui.theme.extractThemeColor
 import com.zionhuang.music.ui.utils.appBarScrollBehavior
 import com.zionhuang.music.ui.utils.backToMain
@@ -267,7 +267,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            InnerTuneTheme(
+            SpideyTheme(
                 darkTheme = useDarkTheme,
                 pureBlack = pureBlack,
                 themeColor = themeColor
