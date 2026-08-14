@@ -5,6 +5,7 @@ import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.ui.utils.resize
 import java.io.Serializable
+import java.util.UUID
 
 @Immutable
 data class MediaMetadata(
@@ -95,3 +96,23 @@ fun SongItem.toMediaMetadata() = MediaMetadata(
     },
     explicit = explicit
 )
+
+/**
+ * Marks every item in this list as belonging to one freshly-generated queue group (see
+ * [MediaMetadata.queueGroupId]), preserving list order. Each call generates a new, unique
+ * group id, so queueing the same songs twice produces two independent groups. Returns the
+ * list unchanged (no id generated, no group produced) when empty.
+ */
+fun List<MediaMetadata>.stampQueueGroup(title: String): List<MediaMetadata> {
+    if (isEmpty()) return this
+    val groupId = UUID.randomUUID().toString()
+    val groupSize = size
+    return mapIndexed { index, metadata ->
+        metadata.copy(
+            queueGroupId = groupId,
+            queueGroupTitle = title,
+            queueGroupIndex = index,
+            queueGroupSize = groupSize
+        )
+    }
+}
