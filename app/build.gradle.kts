@@ -168,4 +168,6 @@ dependencies {
     "fullImplementation"(libs.opencc4j)
 
     implementation(libs.timber)
+
+    testImplementation(libs.junit)
 }

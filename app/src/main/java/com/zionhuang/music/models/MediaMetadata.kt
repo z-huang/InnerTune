@@ -15,7 +15,23 @@ data class MediaMetadata(
     val thumbnailUrl: String? = null,
     val album: Album? = null,
     val explicit: Boolean = false,
+    // Queue Groups: identifies the queue-group instance this item belongs to.
+    // null means this is a standalone queue item, not part of any group.
+    val queueGroupId: String? = null,
+    val queueGroupTitle: String? = null,
+    val queueGroupIndex: Int? = null,
+    val queueGroupSize: Int? = null,
 ) : Serializable {
+    companion object {
+        // Pinned explicitly so that future additions of nullable fields (as done here for
+        // Queue Groups) don't silently change the default computed serialVersionUID and
+        // break deserialization of previously-persisted queues (see PersistQueue / MusicService
+        // saveQueueToDisk/restore). No serialVersionUID existed on this class before this
+        // change, so this does not, by itself, restore compatibility with files persisted
+        // by app versions prior to this one -- see the Stage 1 report for details.
+        private const val serialVersionUID: Long = 1L
+    }
+
     data class Artist(
         val id: String?,
         val name: String,
