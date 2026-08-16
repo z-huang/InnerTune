@@ -57,6 +57,55 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import java.net.Proxy
 
+// A Piped audio stream only reports itag/url/bitrate (see PipedResponse.AudioStream), not
+// mimeType -- but downstream code (MusicService's FormatEntity storage, itag-based replay
+// matching) needs one. These are YouTube's own itag -> container/codec assignments, stable and
+// publicly documented for as long as these itags have existed; not a guess. Falls back to the
+// current most common opus/webm mapping for any itag not listed here.
+internal val PIPED_AUDIO_ITAG_MIME_TYPES: Map<Int, String> = mapOf(
+    139 to "audio/mp4; codecs=\"mp4a.40.5\"",
+    140 to "audio/mp4; codecs=\"mp4a.40.2\"",
+    141 to "audio/mp4; codecs=\"mp4a.40.2\"",
+    171 to "audio/webm; codecs=\"vorbis\"",
+    172 to "audio/webm; codecs=\"vorbis\"",
+    249 to "audio/webm; codecs=\"opus\"",
+    250 to "audio/webm; codecs=\"opus\"",
+    251 to "audio/webm; codecs=\"opus\"",
+)
+
+// Piped doesn't report an expiry for its stream URLs. This is a conservative, fixed assumption
+// (matching the ~6-hour expiry YouTube's own streamingData.expiresInSeconds typically reports)
+// used only for MusicService's local songUrlCache housekeeping -- an underestimate just causes
+// an extra, harmless re-resolve; it doesn't affect whether the stream itself is playable.
+internal const val PIPED_STREAM_ASSUMED_EXPIRY_SECONDS = 21_600
+
+/**
+ * Packages a Piped audio stream as a [PlayerResponse.StreamingData.Format] so it can flow through
+ * the same MusicService code path as a normal YouTube-sourced format. Fields YouTube's response
+ * would normally carry but Piped doesn't report (dimensions, duration, sample rate, etc.) are left
+ * null; only [PlayerResponse.StreamingData.Format.itag]/[url]/[mimeType]/[bitrate] are ever read
+ * by MusicService.
+ */
+internal fun PipedResponse.AudioStream.toFormat() = PlayerResponse.StreamingData.Format(
+    itag = itag,
+    url = url,
+    mimeType = PIPED_AUDIO_ITAG_MIME_TYPES[itag] ?: "audio/webm; codecs=\"opus\"",
+    bitrate = bitrate,
+    width = null,
+    height = null,
+    contentLength = null,
+    quality = "medium",
+    fps = null,
+    qualityLabel = null,
+    averageBitrate = bitrate,
+    audioQuality = null,
+    approxDurationMs = null,
+    audioSampleRate = null,
+    audioChannels = null,
+    loudnessDb = null,
+    lastModified = null,
+)
+
 /**
  * Parse useful data with [InnerTube] sending requests.
  * Modified from [ViMusic](https://github.com/vfsfitvnm/ViMusic)
@@ -489,21 +538,44 @@ object YouTube {
         }
         val safePlayerResponse = innerTube.player(TVHTML5, videoId, playlistId).body<PlayerResponse>()
         logPlayerAttempt("TVHTML5", videoId, safePlayerResponse)
-        if (safePlayerResponse.playabilityStatus.status != "OK") {
-            return@runCatching playerResponse ?: safePlayerResponse
-        }
-        val audioStreams = innerTube.pipedStreams(videoId).body<PipedResponse>().audioStreams
-        safePlayerResponse.copy(
-            streamingData = safePlayerResponse.streamingData?.copy(
-                adaptiveFormats = safePlayerResponse.streamingData.adaptiveFormats.mapNotNull { adaptiveFormat ->
-                    audioStreams.find { it.bitrate == adaptiveFormat.bitrate }?.let {
-                        adaptiveFormat.copy(
-                            url = it.url
-                        )
+        if (safePlayerResponse.playabilityStatus.status == "OK") {
+            val audioStreams = innerTube.pipedStreams(videoId).body<PipedResponse>().audioStreams
+            return@runCatching safePlayerResponse.copy(
+                streamingData = safePlayerResponse.streamingData?.copy(
+                    adaptiveFormats = safePlayerResponse.streamingData.adaptiveFormats.mapNotNull { adaptiveFormat ->
+                        audioStreams.find { it.bitrate == adaptiveFormat.bitrate }?.let {
+                            adaptiveFormat.copy(
+                                url = it.url
+                            )
+                        }
                     }
-                }
+                )
             )
-        )
+        }
+        // TVHTML5 itself was rejected (confirmed on a real device: playabilityStatus.reason ==
+        // "YouTube is no longer supported in this application or device", a rejection message
+        // YouTube's own API returns for this client -- not something InnerTune produces). Piped
+        // is a genuinely independent proxy: it resolves and serves YouTube's own audio stream
+        // URLs itself and has no playability gate of its own tied to TVHTML5's request, so it
+        // doesn't need TVHTML5 to have succeeded -- only the already-known videoId. Previously
+        // this fallback was only ever used to patch URLs onto TVHTML5's own adaptiveFormats,
+        // which don't exist here (YouTube omits streamingData for a rejected client), so a
+        // rejected TVHTML5 silently skipped Piped entirely. Build formats directly from Piped's
+        // own streams instead.
+        val pipedAudioStreams = runCatching {
+            innerTube.pipedStreams(videoId).body<PipedResponse>().audioStreams
+        }.onFailure { logPlayerFailure(videoId, it) }.getOrNull().orEmpty()
+        if (pipedAudioStreams.isNotEmpty()) {
+            return@runCatching safePlayerResponse.copy(
+                playabilityStatus = safePlayerResponse.playabilityStatus.copy(status = "OK", reason = null),
+                streamingData = PlayerResponse.StreamingData(
+                    formats = null,
+                    adaptiveFormats = pipedAudioStreams.map { it.toFormat() },
+                    expiresInSeconds = PIPED_STREAM_ASSUMED_EXPIRY_SECONDS
+                )
+            )
+        }
+        playerResponse ?: safePlayerResponse
     }.onFailure { throwable ->
         logPlayerFailure(videoId, throwable)
     }
