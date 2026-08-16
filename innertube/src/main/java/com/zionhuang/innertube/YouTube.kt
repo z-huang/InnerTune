@@ -456,23 +456,41 @@ object YouTube {
     }
 
     suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
-        var playerResponse: PlayerResponse
+        // ANDROID_MUSIC and IOS are each wrapped in their own runCatching: a hard failure (an
+        // HTTP error or deserialization exception, not just a non-OK playabilityStatus) on one
+        // client must fall through to the next client exactly like a non-OK status already did
+        // -- otherwise a single client rejecting the request aborts the whole function via the
+        // outer runCatching and skips the TVHTML5+piped fallback entirely, even though that
+        // fallback exists specifically to recover from this kind of total failure. Confirmed via
+        // the diagnostic logging below: IOS returning a hard HTTP 400 ("Precondition check
+        // failed") was surfacing as "Unknown error" for every song, without TVHTML5 ever being
+        // attempted.
+        var playerResponse: PlayerResponse? = null
         if (this.cookie != null) { // if logged in: try ANDROID_MUSIC client first because IOS client does not play age restricted songs
-            playerResponse = innerTube.player(ANDROID_MUSIC, videoId, playlistId).body<PlayerResponse>()
-            logPlayerAttempt("ANDROID_MUSIC", videoId, playerResponse)
-            if (playerResponse.playabilityStatus.status == "OK") {
+            playerResponse = runCatching {
+                innerTube.player(ANDROID_MUSIC, videoId, playlistId).body<PlayerResponse>()
+            }.onSuccess { logPlayerAttempt("ANDROID_MUSIC", videoId, it) }
+                .onFailure { logPlayerFailure(videoId, it) }
+                .getOrNull()
+            if (playerResponse?.playabilityStatus?.status == "OK") {
                 return@runCatching playerResponse
             }
         }
-        playerResponse = innerTube.player(IOS, videoId, playlistId).body<PlayerResponse>()
-        logPlayerAttempt("IOS", videoId, playerResponse)
-        if (playerResponse.playabilityStatus.status == "OK") {
-            return@runCatching playerResponse
+        val iosResponse = runCatching {
+            innerTube.player(IOS, videoId, playlistId).body<PlayerResponse>()
+        }.onSuccess { logPlayerAttempt("IOS", videoId, it) }
+            .onFailure { logPlayerFailure(videoId, it) }
+            .getOrNull()
+        if (iosResponse != null) {
+            playerResponse = iosResponse
+            if (iosResponse.playabilityStatus.status == "OK") {
+                return@runCatching iosResponse
+            }
         }
         val safePlayerResponse = innerTube.player(TVHTML5, videoId, playlistId).body<PlayerResponse>()
         logPlayerAttempt("TVHTML5", videoId, safePlayerResponse)
         if (safePlayerResponse.playabilityStatus.status != "OK") {
-            return@runCatching playerResponse
+            return@runCatching playerResponse ?: safePlayerResponse
         }
         val audioStreams = innerTube.pipedStreams(videoId).body<PipedResponse>().audioStreams
         safePlayerResponse.copy(
