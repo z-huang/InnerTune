@@ -428,7 +428,13 @@ class PoTokenWebView private constructor(
 
     companion object {
         private const val TAG = "PoTokenWebView"
-        private const val GOOGLE_API_KEY = "AIzaSyDyT5W0Jh49F30Pqqtyfdf7pDLFKLJoAnw"
+
+        // Public key youtube.com's own web client ships to every browser for its BotGuard/WAA
+        // (Web Anti-Abuse) attestation endpoints below -- not a per-app or per-account credential.
+        // The same literal value is hardcoded the same way by the reference BotGuard/PoToken
+        // implementations this port is based on (LuanRT/BgUtils, bgutil-ytdlp-pot-provider,
+        // NewPipeExtractor, Metrolist). Intentionally present; not a leaked secret.
+        private const val GOOGLE_API_KEY = "AIzaSyDyT5W0Jh49F30Pqqtyfdf7pDLFKLJoAnw" // ggignore
         private const val REQUEST_KEY = "O43z0dpjhgX20SCx4KAo"
         private const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
             "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.3"
