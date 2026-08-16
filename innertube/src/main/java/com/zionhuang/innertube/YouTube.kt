@@ -448,7 +448,7 @@ object YouTube {
     // a logged-in request, would otherwise risk exposing query parameters) and never headers.
     private fun logPlayerFailure(videoId: String, throwable: Throwable) {
         val summary = if (throwable is ResponseException) {
-            "${throwable::class.simpleName} status=${throwable.response.status.value} host=${throwable.response.request.url.host}"
+            "${throwable::class.simpleName} status=${throwable.response.status.value} host=${throwable.response.call.request.url.host}"
         } else {
             "${throwable::class.simpleName}: ${throwable.message?.take(200)}"
         }
