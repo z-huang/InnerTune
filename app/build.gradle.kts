@@ -171,13 +171,3 @@ dependencies {
 
     testImplementation(libs.junit)
 }
-
-// TEMPORARY: surface PipedInstanceProbe's full assertion message (Gradle's default test
-// logging suppresses captured stdout/stderr and truncates failure messages), so its Piped
-// instance reachability results are visible in the CI job log. Removed together with the probe.
-tasks.withType<Test> {
-    testLogging {
-        showStandardStreams = true
-        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-    }
-}

@@ -57,6 +57,48 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import java.net.Proxy
 
+// Piped API instances to try, in order, when resolving a fallback audio stream. Deliberately not
+// every officially-listed instance (github.com/TeamPiped/documentation .../public-instances) --
+// most of the full list, verified from GitHub Actions' real network on 2026-08-16, don't even
+// resolve in DNS or fail TLS entirely (dead domains/certs, not transient outages -- retrying
+// those adds guaranteed-failure latency with no realistic chance of success). pipedapi.kavin.rocks
+// is kept first regardless of its state at verification time (HTTP 526 that day) since it's the
+// official flagship instance; pipedapi.orangenet.cc was the only instance that returned a working
+// response; pipedapi.adminforge.de responded (403, not a network/DNS/TLS failure) so is kept as a
+// further fallback in case that was specific to one request/video rather than the whole instance
+// being down.
+internal val PIPED_INSTANCES = listOf(
+    "https://pipedapi.kavin.rocks",
+    "https://pipedapi.orangenet.cc",
+    "https://pipedapi.adminforge.de",
+)
+
+/**
+ * Pure retry/selection algorithm, independent of Ktor/networking so it's directly testable with a
+ * fake [fetch]: tries [instances] in order (deduplicated, so an accidental repeat in the list is
+ * never attempted twice), calling [fetch] for each. A thrown exception from [fetch] or an
+ * empty/null result moves on to the next instance rather than stopping the whole lookup -- neither
+ * is treated as fatal, since a different instance may still have a working answer. Returns the
+ * first non-empty result; returns an empty list (never throws) once every instance has been tried
+ * without one. [onResult] is called once per instance actually attempted (in order, before
+ * short-circuiting) so a caller can log outcomes without affecting the selection itself.
+ */
+internal suspend fun <T> selectFirstNonEmpty(
+    instances: List<String>,
+    fetch: suspend (String) -> List<T>,
+    onResult: (instance: String, result: Result<List<T>>) -> Unit = { _, _ -> },
+): List<T> {
+    for (instance in instances.distinct()) {
+        val result = runCatching { fetch(instance) }
+        onResult(instance, result)
+        val value = result.getOrNull()
+        if (!value.isNullOrEmpty()) {
+            return value
+        }
+    }
+    return emptyList()
+}
+
 // A Piped audio stream only reports itag/url/bitrate (see PipedResponse.AudioStream), not
 // mimeType -- but downstream code (MusicService's FormatEntity storage, itag-based replay
 // matching) needs one. These are YouTube's own itag -> container/codec assignments, stable and
@@ -504,6 +546,19 @@ object YouTube {
         System.err.println("[InnerTube.player] videoId=$videoId FAILED -- $summary")
     }
 
+    // Resolves a Piped audio stream list for videoId by trying each of PIPED_INSTANCES via the
+    // pure selectFirstNonEmpty algorithm (see its own doc), wiring in the real network call and
+    // this class's existing diagnostic logging (piped instance/result line, plus logPlayerFailure
+    // for an exception -- same sanitized host+status-only summary already used elsewhere here).
+    private suspend fun fetchPipedAudioStreams(videoId: String): List<PipedResponse.AudioStream> =
+        selectFirstNonEmpty(
+            instances = PIPED_INSTANCES,
+            fetch = { instance -> innerTube.pipedStreams(instance, videoId).body<PipedResponse>().audioStreams },
+        ) { instance, result ->
+            result.onFailure { logPlayerFailure(videoId, it) }
+            System.err.println("[InnerTube.player] piped instance=$instance videoId=$videoId streams=${result.getOrNull()?.size ?: 0}")
+        }
+
     suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
         // ANDROID_MUSIC and IOS are each wrapped in their own runCatching: a hard failure (an
         // HTTP error or deserialization exception, not just a non-OK playabilityStatus) on one
@@ -539,7 +594,7 @@ object YouTube {
         val safePlayerResponse = innerTube.player(TVHTML5, videoId, playlistId).body<PlayerResponse>()
         logPlayerAttempt("TVHTML5", videoId, safePlayerResponse)
         if (safePlayerResponse.playabilityStatus.status == "OK") {
-            val audioStreams = innerTube.pipedStreams(videoId).body<PipedResponse>().audioStreams
+            val audioStreams = fetchPipedAudioStreams(videoId)
             return@runCatching safePlayerResponse.copy(
                 streamingData = safePlayerResponse.streamingData?.copy(
                     adaptiveFormats = safePlayerResponse.streamingData.adaptiveFormats.mapNotNull { adaptiveFormat ->
@@ -562,9 +617,7 @@ object YouTube {
         // which don't exist here (YouTube omits streamingData for a rejected client), so a
         // rejected TVHTML5 silently skipped Piped entirely. Build formats directly from Piped's
         // own streams instead.
-        val pipedAudioStreams = runCatching {
-            innerTube.pipedStreams(videoId).body<PipedResponse>().audioStreams
-        }.onFailure { logPlayerFailure(videoId, it) }.getOrNull().orEmpty()
+        val pipedAudioStreams = fetchPipedAudioStreams(videoId)
         if (pipedAudioStreams.isNotEmpty()) {
             return@runCatching safePlayerResponse.copy(
                 playabilityStatus = safePlayerResponse.playabilityStatus.copy(status = "OK", reason = null),
