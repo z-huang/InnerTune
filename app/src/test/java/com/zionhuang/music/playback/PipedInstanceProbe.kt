@@ -1,7 +1,6 @@
 package com.zionhuang.music.playback
 
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.request.get
 import kotlinx.coroutines.runBlocking
@@ -41,7 +40,7 @@ class PipedInstanceProbe {
         // removed, small enough for a fast response either way.
         val testVideoId = "jNQXAC9IVRw"
 
-        val client = HttpClient(OkHttp) {
+        val client = HttpClient {
             install(HttpTimeout) {
                 requestTimeoutMillis = 8000
                 connectTimeoutMillis = 8000
