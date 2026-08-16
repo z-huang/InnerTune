@@ -187,6 +187,10 @@ class MusicService : MediaLibraryService(),
     lateinit var player: ExoPlayer
     private lateinit var mediaSession: MediaLibrarySession
 
+    // The self-bound controller created in onCreate() to keep notifications working; stored here
+    // solely so onDestroy() can release it and its underlying ServiceConnection (see there).
+    private var notificationController: MediaController? = null
+
     private var isAudioEffectSessionOpened = false
 
     private var discordRpc: DiscordRPC? = null
@@ -239,7 +243,7 @@ class MusicService : MediaLibraryService(),
         // Keep a connected controller so that notification works
         val sessionToken = SessionToken(this, ComponentName(this, MusicService::class.java))
         val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
-        controllerFuture.addListener({ controllerFuture.get() }, MoreExecutors.directExecutor())
+        controllerFuture.addListener({ notificationController = controllerFuture.get() }, MoreExecutors.directExecutor())
 
         connectivityManager = getSystemService()!!
 
@@ -595,6 +599,12 @@ class MusicService : MediaLibraryService(),
     }
 
     override fun onPlayerError(error: PlaybackException) {
+        // The failed item is still player.currentMediaItem at this point (playback hasn't
+        // advanced yet), so drop its cached stream URL: if it was stale, this lets the next
+        // play attempt fetch a fresh one instead of repeating the same failure forever.
+        player.currentMediaItem?.mediaId?.let { mediaId ->
+            songUrlCache.remove(mediaId)
+        }
         if (dataStore.get(AutoSkipNextOnErrorKey, false) &&
             isInternetAvailable(this) &&
             player.hasNextMediaItem()
@@ -625,8 +635,12 @@ class MusicService : MediaLibraryService(),
             .setCacheWriteDataSinkFactory(null)
             .setFlags(FLAG_IGNORE_CACHE_ON_ERROR)
 
+    // Maps a song id to its resolved stream URL and that URL's absolute expiry (epoch millis).
+    // Field-scoped (not local to createDataSourceFactory(), which only runs once anyway) so
+    // onPlayerError() can invalidate an entry when its URL turns out to be stale/rejected.
+    private val songUrlCache = HashMap<String, Pair<String, Long>>()
+
     private fun createDataSourceFactory(): DataSource.Factory {
-        val songUrlCache = HashMap<String, Pair<String, Long>>()
         return ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
             val mediaId = dataSpec.key ?: error("No media id")
 
@@ -637,7 +651,7 @@ class MusicService : MediaLibraryService(),
                 return@Factory dataSpec
             }
 
-            songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
+            songUrlCache[mediaId]?.takeIf { it.second > System.currentTimeMillis() }?.let {
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
                 return@Factory dataSpec.withUri(it.first.toUri())
             }
@@ -698,7 +712,7 @@ class MusicService : MediaLibraryService(),
             }
             scope.launch(Dispatchers.IO) { recoverSong(mediaId, playerResponse) }
 
-            songUrlCache[mediaId] = format.url!! to playerResponse.streamingData!!.expiresInSeconds * 1000L
+            songUrlCache[mediaId] = format.url!! to (System.currentTimeMillis() + playerResponse.streamingData!!.expiresInSeconds * 1000L)
             dataSpec.withUri(format.url!!.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     }
@@ -779,6 +793,8 @@ class MusicService : MediaLibraryService(),
             discordRpc?.closeRPC()
         }
         discordRpc = null
+        notificationController?.release()
+        notificationController = null
         mediaSession.release()
         player.removeListener(this)
         player.removeListener(sleepTimer)
