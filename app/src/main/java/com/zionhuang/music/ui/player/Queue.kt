@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -49,6 +50,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -89,6 +91,8 @@ import com.zionhuang.music.extensions.metadata
 import com.zionhuang.music.extensions.move
 import com.zionhuang.music.extensions.togglePlayPause
 import com.zionhuang.music.playback.QueueEntry
+import com.zionhuang.music.playback.computeMoveSequence
+import com.zionhuang.music.playback.moveQueueEntry
 import com.zionhuang.music.ui.component.BottomSheet
 import com.zionhuang.music.ui.component.BottomSheetState
 import com.zionhuang.music.ui.component.LocalMenuState
@@ -111,22 +115,25 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 /**
- * A flattened row in the queue list, joining [QueueEntry] (the logical grouping structure)
- * back with the actual [Timeline.Window] data needed to render it. Purely a per-composition
- * derived view -- not a new source of truth -- recomputed from [QueueEntry] and queueWindows.
+ * A single LazyColumn item in the queue list, joining [QueueEntry] (the logical grouping
+ * structure) back with the actual [Timeline.Window] data needed to render it. Purely a
+ * per-composition derived view -- not a new source of truth -- recomputed from [QueueEntry]
+ * and queueWindows. A [Group] holds ALL of its member windows so the whole group renders (and
+ * is dragged) as one atomic LazyColumn item -- there are no separate top-level rows for
+ * individual group members.
  */
 private sealed interface QueueRow {
-    data class Song(val window: Timeline.Window, val groupId: String?) : QueueRow
-    data class GroupHeader(val groupId: String, val title: String, val songCount: Int, val firstFlatIndex: Int) : QueueRow
+    data class Song(val window: Timeline.Window) : QueueRow
+    data class Group(val groupId: String, val title: String, val windows: List<Timeline.Window>) : QueueRow
 }
 
-// GroupHeader keys include firstFlatIndex, not just groupId: the same groupId can legitimately
-// appear as two separate QueueEntry.Group instances (an interrupted/repeated group id, see
-// QueueEntry's grouping rules), which would otherwise produce two headers with an identical
-// "groupId"-only key and crash LazyColumn's duplicate-key check.
+// Group keys include the first member's flat index, not just groupId: the same groupId can
+// legitimately appear as two separate QueueEntry.Group instances (an interrupted/repeated
+// group id, see QueueEntry's grouping rules), which would otherwise produce two rows with an
+// identical "groupId"-only key and crash LazyColumn's duplicate-key check.
 private fun QueueRow.key(): Any = when (this) {
-    is QueueRow.GroupHeader -> "$groupId:header:$firstFlatIndex"
-    is QueueRow.Song -> if (groupId != null) "$groupId:${window.firstPeriodIndex}" else window.firstPeriodIndex
+    is QueueRow.Song -> window.firstPeriodIndex
+    is QueueRow.Group -> "$groupId:${windows.first().firstPeriodIndex}"
 }
 
 @Composable
@@ -134,6 +141,7 @@ private fun QueueGroupHeader(
     title: String,
     songCount: Int,
     modifier: Modifier = Modifier,
+    trailingContent: @Composable RowScope.() -> Unit = {},
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -169,6 +177,7 @@ private fun QueueGroupHeader(
                 overflow = TextOverflow.Ellipsis
             )
         }
+        trailingContent()
     }
 }
 
@@ -331,33 +340,25 @@ fun Queue(
             queueWindows.sumOf { it.mediaItem.metadata!!.duration }
         }
 
-        // Derived rows: QueueEntry (Stage 4's single source of truth for grouping) joined
-        // back with the actual Timeline.Window data, keyed by flat index (firstPeriodIndex)
-        // -- never by position in queueWindows, which is display/shuffle ordered. A group
-        // whose flatIndex briefly has no matching window (e.g. mid-update) is dropped rather
+        // Derived rows: exactly one QueueRow per QueueEntry (Stage 4's single source of truth
+        // for grouping), joined back with the actual Timeline.Window data, keyed by flat index
+        // (firstPeriodIndex) -- never by position in queueWindows, which is display/shuffle
+        // ordered. A Group holds ALL of its member windows so it renders -- and, via the
+        // reorderable library, drags -- as one atomic LazyColumn item (Stage 7). An entry whose
+        // flat index(es) briefly have no matching window (e.g. mid-update) is dropped rather
         // than crashing; it reappears once queueWindows/queueEntries settle back in sync.
         val rows = remember(queueEntries, queueWindows) {
             val windowByFlatIndex = queueWindows.associateBy { it.firstPeriodIndex }
-            queueEntries.flatMap { entry ->
+            queueEntries.mapNotNull { entry ->
                 when (entry) {
-                    is QueueEntry.SingleSong -> windowByFlatIndex[entry.flatIndex]
-                        ?.let { window -> listOf(QueueRow.Song(window, groupId = null)) }
-                        ?: emptyList()
-
-                    is QueueEntry.Group -> listOf(
-                        QueueRow.GroupHeader(entry.groupId, entry.title, entry.flatIndices.size, entry.flatIndices.first())
-                    ) + entry.flatIndices.mapNotNull { flatIndex ->
-                        windowByFlatIndex[flatIndex]?.let { window -> QueueRow.Song(window, groupId = entry.groupId) }
+                    is QueueEntry.SingleSong -> windowByFlatIndex[entry.flatIndex]?.let { QueueRow.Song(it) }
+                    is QueueEntry.Group -> {
+                        val windows = entry.flatIndices.mapNotNull { windowByFlatIndex[it] }
+                        windows.takeIf { it.isNotEmpty() }?.let { QueueRow.Group(entry.groupId, entry.title, it) }
                     }
                 }
             }
         }
-        // Drag-reordering is not group-aware yet (Stage 7): disable it entirely whenever the
-        // queue contains any group, rather than allow a standalone song to be dropped into the
-        // middle of a group's rows. When there are no groups, mutableRows is content-and-order
-        // identical to the old flat window list, so the existing drag/commit math below (which
-        // still operates on queueWindows positions) remains valid unchanged.
-        val handlesEnabled = remember(queueEntries) { queueEntries.none { it is QueueEntry.Group } }
 
         val coroutineScope = rememberCoroutineScope()
         val lazyListState = rememberLazyListState()
@@ -383,18 +384,42 @@ fun Queue(
             mutableRows.move(from.index, to.index)
         }
 
+        // Entry-level move commit. For a queue with no groups at all, this is byte-identical to
+        // the pre-Stage-7 algorithm: row position == entry index == flat index, so from/to are
+        // used directly, unchanged. Once any group exists anywhere in the queue, an entry-index
+        // position no longer equals a flat index (a group "eats" several flat-index slots for
+        // one entry position), so the move is computed at the QueueEntry level (moveQueueEntry,
+        // which moves whichever entry from/to refer to as one block, preserving every group's
+        // internal order) and only then translated into real flat-index operations: either a
+        // physical moveMediaItem sequence (unshuffled -- computeMoveSequence derives it so only
+        // the already-relied-on single-item Player.moveMediaItem API is used, not the less
+        // certain range-based moveMediaItems) or a rebuilt DefaultShuffleOrder (shuffled),
+        // exactly mirroring the two mechanisms the flat algorithm already used.
         LaunchedEffect(reorderableState.isAnyItemDragging) {
             if (!reorderableState.isAnyItemDragging) {
                 dragInfo?.let { (from, to) ->
-                    if (!playerConnection.player.shuffleModeEnabled) {
-                        playerConnection.player.moveMediaItem(from, to)
-                    } else {
-                        playerConnection.player.setShuffleOrder(
-                            DefaultShuffleOrder(
-                                queueWindows.map { it.firstPeriodIndex }.toMutableList().move(from, to).toIntArray(),
-                                System.currentTimeMillis()
+                    if (queueEntries.none { it is QueueEntry.Group }) {
+                        if (!playerConnection.player.shuffleModeEnabled) {
+                            playerConnection.player.moveMediaItem(from, to)
+                        } else {
+                            playerConnection.player.setShuffleOrder(
+                                DefaultShuffleOrder(
+                                    queueWindows.map { it.firstPeriodIndex }.toMutableList().move(from, to).toIntArray(),
+                                    System.currentTimeMillis()
+                                )
                             )
-                        )
+                        }
+                    } else {
+                        val newFlatOrder = moveQueueEntry(queueEntries, from, to)
+                        if (!playerConnection.player.shuffleModeEnabled) {
+                            computeMoveSequence(newFlatOrder).forEach { (moveFrom, moveTo) ->
+                                playerConnection.player.moveMediaItem(moveFrom, moveTo)
+                            }
+                        } else {
+                            playerConnection.player.setShuffleOrder(
+                                DefaultShuffleOrder(newFlatOrder, System.currentTimeMillis())
+                            )
+                        }
                     }
                     dragInfo = null
                 }
@@ -414,9 +439,123 @@ fun Queue(
         }
 
         LaunchedEffect(mutableRows) {
-            val targetIndex = mutableRows.indexOfFirst { it is QueueRow.Song && it.window.firstPeriodIndex == currentMediaItemIndex }
+            val targetIndex = mutableRows.indexOfFirst { row ->
+                when (row) {
+                    is QueueRow.Song -> row.window.firstPeriodIndex == currentMediaItemIndex
+                    is QueueRow.Group -> row.windows.any { it.firstPeriodIndex == currentMediaItemIndex }
+                }
+            }
             if (targetIndex != -1) {
                 lazyListState.scrollToItem(targetIndex)
+            }
+        }
+
+        // Shared song-row content, used both for a standalone QueueRow.Song and for each member
+        // window inside a QueueRow.Group's Column -- identical tap/highlight/swipe/menu behavior
+        // either way. showDragHandle is false for group members: only the group's own header
+        // (rendered separately, see below) is draggable, so a member's internal position within
+        // its group can never change via drag.
+        @Composable
+        fun SongRow(window: Timeline.Window, showDragHandle: Boolean) {
+            val isActive = window.firstPeriodIndex == currentMediaItemIndex
+            val currentItem by rememberUpdatedState(window)
+            val dismissState = rememberSwipeToDismissBoxState(
+                positionalThreshold = { totalDistance -> totalDistance },
+                confirmValueChange = { dismissValue ->
+                    if (dismissValue == SwipeToDismissBoxValue.StartToEnd || dismissValue == SwipeToDismissBoxValue.EndToStart) {
+                        playerConnection.player.removeMediaItem(currentItem.firstPeriodIndex)
+                    }
+                    true
+                }
+            )
+
+            val onCheckedChange: (Boolean) -> Unit = {
+                if (it) {
+                    selection.add(window.uid.hashCode())
+                } else {
+                    selection.remove(window.uid.hashCode())
+                }
+            }
+
+            val content = @Composable {
+                MediaMetadataListItem(
+                    mediaMetadata = window.mediaItem.metadata!!,
+                    isActive = isActive,
+                    isPlaying = isPlaying,
+                    trailingContent = {
+                        if (inSelectMode) {
+                            Checkbox(
+                                checked = window.uid.hashCode() in selection,
+                                onCheckedChange = onCheckedChange
+                            )
+                        } else {
+                            IconButton(
+                                onClick = {
+                                    menuState.show {
+                                        MediaMetadataMenu(
+                                            mediaMetadata = window.mediaItem.metadata!!,
+                                            navController = navController,
+                                            bottomSheetState = state,
+                                            onDismiss = menuState::dismiss,
+                                        )
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.more_vert),
+                                    contentDescription = null
+                                )
+                            }
+
+                            if (!lockQueue && showDragHandle) {
+                                IconButton(
+                                    onClick = { },
+                                    modifier = Modifier.draggableHandle()
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.drag_handle),
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .combinedClickable(
+                            onClick = {
+                                if (inSelectMode) {
+                                    onCheckedChange(window.uid.hashCode() !in selection)
+                                } else {
+                                    coroutineScope.launch(Dispatchers.Main) {
+                                        if (isActive) {
+                                            playerConnection.player.togglePlayPause()
+                                        } else {
+                                            playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
+                                            playerConnection.player.playWhenReady = true
+                                        }
+                                    }
+                                }
+                            },
+                            onLongClick = {
+                                if (!inSelectMode) {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    inSelectMode = true
+                                    onCheckedChange(true)
+                                }
+                            }
+                        )
+                )
+            }
+
+            if (!lockQueue && !inSelectMode) {
+                SwipeToDismissBox(
+                    state = dismissState,
+                    backgroundContent = {},
+                    content = { content() }
+                )
+            } else {
+                content()
             }
         }
 
@@ -441,114 +580,32 @@ fun Queue(
                     key = row.key()
                 ) {
                     when (row) {
-                        is QueueRow.GroupHeader -> {
-                            QueueGroupHeader(
-                                title = row.title,
-                                songCount = row.songCount
-                            )
-                        }
+                        is QueueRow.Song -> SongRow(window = row.window, showDragHandle = true)
 
-                        is QueueRow.Song -> {
-                            val window = row.window
-                            val isActive = window.firstPeriodIndex == currentMediaItemIndex
-                            val currentItem by rememberUpdatedState(window)
-                            val dismissState = rememberSwipeToDismissBoxState(
-                                positionalThreshold = { totalDistance -> totalDistance },
-                                confirmValueChange = { dismissValue ->
-                                    if (dismissValue == SwipeToDismissBoxValue.StartToEnd || dismissValue == SwipeToDismissBoxValue.EndToStart) {
-                                        playerConnection.player.removeMediaItem(currentItem.firstPeriodIndex)
-                                    }
-                                    true
-                                }
-                            )
-
-                            val onCheckedChange: (Boolean) -> Unit = {
-                                if (it) {
-                                    selection.add(window.uid.hashCode())
-                                } else {
-                                    selection.remove(window.uid.hashCode())
-                                }
-                            }
-
-                            val content = @Composable {
-                                MediaMetadataListItem(
-                                    mediaMetadata = window.mediaItem.metadata!!,
-                                    isActive = isActive,
-                                    isPlaying = isPlaying,
+                        is QueueRow.Group -> {
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                QueueGroupHeader(
+                                    title = row.title,
+                                    songCount = row.windows.size,
                                     trailingContent = {
-                                        if (inSelectMode) {
-                                            Checkbox(
-                                                checked = window.uid.hashCode() in selection,
-                                                onCheckedChange = onCheckedChange
-                                            )
-                                        } else {
+                                        if (!lockQueue && !inSelectMode) {
                                             IconButton(
-                                                onClick = {
-                                                    menuState.show {
-                                                        MediaMetadataMenu(
-                                                            mediaMetadata = window.mediaItem.metadata!!,
-                                                            navController = navController,
-                                                            bottomSheetState = state,
-                                                            onDismiss = menuState::dismiss,
-                                                        )
-                                                    }
-                                                }
+                                                onClick = { },
+                                                modifier = Modifier.draggableHandle()
                                             ) {
                                                 Icon(
-                                                    painter = painterResource(R.drawable.more_vert),
+                                                    painter = painterResource(R.drawable.drag_handle),
                                                     contentDescription = null
                                                 )
                                             }
-
-                                            if (!lockQueue && handlesEnabled) {
-                                                IconButton(
-                                                    onClick = { },
-                                                    modifier = Modifier.draggableHandle()
-                                                ) {
-                                                    Icon(
-                                                        painter = painterResource(R.drawable.drag_handle),
-                                                        contentDescription = null
-                                                    )
-                                                }
-                                            }
                                         }
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .combinedClickable(
-                                            onClick = {
-                                                if (inSelectMode) {
-                                                    onCheckedChange(window.uid.hashCode() !in selection)
-                                                } else {
-                                                    coroutineScope.launch(Dispatchers.Main) {
-                                                        if (isActive) {
-                                                            playerConnection.player.togglePlayPause()
-                                                        } else {
-                                                            playerConnection.player.seekToDefaultPosition(window.firstPeriodIndex)
-                                                            playerConnection.player.playWhenReady = true
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            onLongClick = {
-                                                if (!inSelectMode) {
-                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                    inSelectMode = true
-                                                    onCheckedChange(true)
-                                                }
-                                            }
-                                        )
+                                    }
                                 )
-                            }
-
-                            if (!lockQueue && !inSelectMode) {
-                                SwipeToDismissBox(
-                                    state = dismissState,
-                                    backgroundContent = {},
-                                    content = { content() }
-                                )
-                            } else {
-                                content()
+                                row.windows.forEach { window ->
+                                    key(window.uid.hashCode()) {
+                                        SongRow(window = window, showDragHandle = false)
+                                    }
+                                }
                             }
                         }
                     }
@@ -683,9 +740,12 @@ fun Queue(
                         menuState.show {
                             QueueSelectionMenu(
                                 selection = selection.mapNotNull { uidHash ->
-                                    mutableRows.filterIsInstance<QueueRow.Song>()
-                                        .firstOrNull { it.window.uid.hashCode() == uidHash }
-                                        ?.window
+                                    mutableRows.firstNotNullOfOrNull { row ->
+                                        when (row) {
+                                            is QueueRow.Song -> row.window.takeIf { it.uid.hashCode() == uidHash }
+                                            is QueueRow.Group -> row.windows.firstOrNull { it.uid.hashCode() == uidHash }
+                                        }
+                                    }
                                 },
                                 onExitSelectionMode = onExitSelectionMode,
                                 onDismiss = menuState::dismiss,
