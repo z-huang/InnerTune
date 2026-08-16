@@ -569,11 +569,18 @@ class MusicService : MediaLibraryService(),
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         updateNotification()
         if (shuffleModeEnabled) {
-            // Always put current playing item at first
-            val shuffledIndices = IntArray(player.mediaItemCount) { it }
-            shuffledIndices.shuffle()
-            shuffledIndices[shuffledIndices.indexOf(player.currentMediaItemIndex)] = shuffledIndices[0]
-            shuffledIndices[0] = player.currentMediaItemIndex
+            // Build QueueEntry from the ORIGINAL/unshuffled flat order (direct indexed access
+            // via player.mediaItems, not player.currentTimeline/getQueueWindows(), which would
+            // already reflect whatever shuffle order -- possibly stale -- is currently installed)
+            // so groups are identified correctly before shuffling, then shuffle whole entries
+            // (never individual group members) and pin the current item's entire entry first.
+            val entries = buildQueueEntriesIndexed(
+                player.mediaItems.mapIndexedNotNull { flatIndex, mediaItem -> mediaItem.metadata?.let { flatIndex to it } }
+            )
+            val shuffledIndices = buildGroupAwareShuffleOrder(
+                entries = entries,
+                currentFlatIndex = player.currentMediaItemIndex,
+            )
             player.setShuffleOrder(DefaultShuffleOrder(shuffledIndices, System.currentTimeMillis()))
         }
     }
