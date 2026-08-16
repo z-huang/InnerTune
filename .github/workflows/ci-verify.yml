@@ -1,0 +1,62 @@
+name: CI Verify
+
+# Minimal, dedicated real-build/real-test verification workflow. Distinct from build.yml
+# (signed release-style builds on push, needs secrets) and build_pr.yml (PR gate with lint):
+# this one exists so any branch always has a secret-free way to run the actual Android unit
+# test suite and produce a debug APK on GitHub's real, unrestricted network -- the environment
+# standalone Kotlin-compiler-based verification (used when this can't run) cannot replace.
+
+on:
+  push:
+    branches:
+      - '**'
+    paths-ignore:
+      - '**/*.md'
+      - 'fastlane/**'
+      - 'assets/**'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # JDK 17: matches app/build.gradle.kts's compileOptions (source/targetCompatibility =
+      # VERSION_17) and kotlin { jvmToolchain(17) } -- do not change without changing those.
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      # Caches Gradle dependencies/wrapper across runs. Does not install or substitute any
+      # Gradle version itself -- ./gradlew (the wrapper already committed to the repo, currently
+      # pinned to 8.7 in gradle/wrapper/gradle-wrapper.properties) still does that.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # PULL_REQUEST=true makes the root build.gradle.kts skip applying the google-services /
+      # firebase-crashlytics / firebase-perf plugins (see the `isFullBuild && PULL_REQUEST ==
+      # null` check there), so this job needs no google-services.json or signing secrets --
+      # matching how build_pr.yml already works secret-free. The "full" flavor's debug signing
+      # config also falls back to Android's default debug keystore when the
+      # MUSIC_DEBUG_SIGNING_* env vars are unset, so assembling still succeeds unsigned-secret-free.
+      - name: Run unit tests
+        run: ./gradlew :app:testFullDebugUnitTest --stacktrace
+        env:
+          PULL_REQUEST: 'true'
+
+      - name: Build debug APK
+        run: ./gradlew :app:assembleFullDebug --stacktrace
+        env:
+          PULL_REQUEST: 'true'
+
+      - name: Upload debug APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: innertune-full-debug-apk
+          path: app/build/outputs/apk/full/debug/*.apk
+          if-no-files-found: error
