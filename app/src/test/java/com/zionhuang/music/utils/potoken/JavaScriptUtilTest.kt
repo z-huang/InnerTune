@@ -1,11 +1,7 @@
 package com.zionhuang.music.utils.potoken
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNull
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.io.encoding.Base64
@@ -16,6 +12,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  * the only parts of the PoToken subsystem testable without a real WebView + a real BotGuard
  * exchange with Google -- [PoTokenWebView]/[PoTokenGenerator] themselves require both and are not
  * unit-tested here; that gap is closed by manual WSA verification instead of a fake stand-in.
+ *
+ * Uses the real org.json:json library (see app/build.gradle.kts testImplementation) rather than
+ * Android's stub-bodied org.json in android.jar, so these assertions exercise real JSON parsing.
  */
 class JavaScriptUtilTest {
     @Test
@@ -69,35 +68,32 @@ class JavaScriptUtilTest {
     fun `parseChallengeData extracts messageId, interpreterHash, program, globalName and blob`() {
         val raw = """[["msg-id-1", null, null, "hash123", "prog code", "globalVar", null, "blob123"]]"""
 
-        val parsed = Json.parseToJsonElement(parseChallengeData(raw)).jsonObject
+        val parsed = JSONObject(parseChallengeData(raw))
 
-        assertEquals("msg-id-1", parsed["messageId"]?.jsonPrimitive?.content)
-        assertEquals("hash123", parsed["interpreterHash"]?.jsonPrimitive?.content)
-        assertEquals("prog code", parsed["program"]?.jsonPrimitive?.content)
-        assertEquals("globalVar", parsed["globalName"]?.jsonPrimitive?.content)
-        assertEquals("blob123", parsed["clientExperimentsStateBlob"]?.jsonPrimitive?.content)
+        assertEquals("msg-id-1", parsed.getString("messageId"))
+        assertEquals("hash123", parsed.getString("interpreterHash"))
+        assertEquals("prog code", parsed.getString("program"))
+        assertEquals("globalVar", parsed.getString("globalName"))
+        assertEquals("blob123", parsed.getString("clientExperimentsStateBlob"))
     }
 
     @Test
     fun `parseChallengeData leaves interpreterJavascript wrapped values null when the source is null`() {
         val raw = """[["msg-id-1", null, null, "hash123", "prog code", "globalVar", null, "blob123"]]"""
 
-        val interpreterJs = Json.parseToJsonElement(parseChallengeData(raw)).jsonObject["interpreterJavascript"]!!.jsonObject
+        val interpreterJs = JSONObject(parseChallengeData(raw)).getJSONObject("interpreterJavascript")
 
-        assertEquals(JsonNull, interpreterJs["privateDoNotAccessOrElseSafeScriptWrappedValue"])
-        assertEquals(JsonNull, interpreterJs["privateDoNotAccessOrElseTrustedResourceUrlWrappedValue"])
+        assertTrue(interpreterJs.isNull("privateDoNotAccessOrElseSafeScriptWrappedValue"))
+        assertTrue(interpreterJs.isNull("privateDoNotAccessOrElseTrustedResourceUrlWrappedValue"))
     }
 
     @Test
     fun `parseChallengeData finds the first string element inside a wrapped-value array`() {
         val raw = """[["msg-id-1", [123, "the-actual-js-code", 456], null, "hash123", "prog code", "globalVar", null, "blob123"]]"""
 
-        val interpreterJs = Json.parseToJsonElement(parseChallengeData(raw)).jsonObject["interpreterJavascript"]!!.jsonObject
+        val interpreterJs = JSONObject(parseChallengeData(raw)).getJSONObject("interpreterJavascript")
 
-        assertEquals(
-            "the-actual-js-code",
-            interpreterJs["privateDoNotAccessOrElseSafeScriptWrappedValue"]?.jsonPrimitive?.content
-        )
+        assertEquals("the-actual-js-code", interpreterJs.getString("privateDoNotAccessOrElseSafeScriptWrappedValue"))
     }
 
     @OptIn(ExperimentalEncodingApi::class)

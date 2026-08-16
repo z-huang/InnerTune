@@ -1,63 +1,60 @@
 package com.zionhuang.music.utils.potoken
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNull
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.long
+import org.json.JSONArray
+import org.json.JSONObject
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Parses the raw challenge data obtained from the Create endpoint and returns an object that can be
  * embedded in a JavaScript snippet.
+ *
+ * Uses org.json (part of the Android SDK, always present -- no new dependency) rather than
+ * kotlinx.serialization, which is only an `implementation`-scoped dependency of the innertube
+ * module and isn't visible from here.
  */
 fun parseChallengeData(rawChallengeData: String): String {
-    val scrambled = Json.parseToJsonElement(rawChallengeData).jsonArray
+    val scrambled = JSONArray(rawChallengeData)
 
-    val challengeData = if (scrambled.size > 1 && scrambled[1].jsonPrimitive.isString) {
-        val descrambled = descramble(scrambled[1].jsonPrimitive.content)
-        Json.parseToJsonElement(descrambled).jsonArray
+    val challengeData: JSONArray = if (scrambled.length() > 1 && scrambled.opt(1) is String) {
+        val descrambled = descramble(scrambled.getString(1))
+        JSONArray(descrambled)
     } else {
-        scrambled[0].jsonArray
+        scrambled.getJSONArray(0)
     }
 
-    val messageId = challengeData[0].jsonPrimitive.content
-    val interpreterHash = challengeData[3].jsonPrimitive.content
-    val program = challengeData[4].jsonPrimitive.content
-    val globalName = challengeData[5].jsonPrimitive.content
-    val clientExperimentsStateBlob = challengeData[7].jsonPrimitive.content
+    val messageId = challengeData.getString(0)
+    val interpreterHash = challengeData.getString(3)
+    val program = challengeData.getString(4)
+    val globalName = challengeData.getString(5)
+    val clientExperimentsStateBlob = challengeData.getString(7)
 
-    val privateDoNotAccessOrElseSafeScriptWrappedValue = challengeData[1]
-        .takeIf { it !is JsonNull }
-        ?.jsonArray
-        ?.find { it.jsonPrimitive.isString }
-    val privateDoNotAccessOrElseTrustedResourceUrlWrappedValue = challengeData[2]
-        .takeIf { it !is JsonNull }
-        ?.jsonArray
-        ?.find { it.jsonPrimitive.isString }
+    val privateDoNotAccessOrElseSafeScriptWrappedValue = findFirstStringElement(challengeData, 1)
+    val privateDoNotAccessOrElseTrustedResourceUrlWrappedValue = findFirstStringElement(challengeData, 2)
 
-    return Json.encodeToString(
-        JsonObject.serializer(), JsonObject(
-            mapOf(
-                "messageId" to JsonPrimitive(messageId),
-                "interpreterJavascript" to JsonObject(
-                    mapOf(
-                        "privateDoNotAccessOrElseSafeScriptWrappedValue" to (privateDoNotAccessOrElseSafeScriptWrappedValue
-                            ?: JsonNull),
-                        "privateDoNotAccessOrElseTrustedResourceUrlWrappedValue" to (privateDoNotAccessOrElseTrustedResourceUrlWrappedValue
-                            ?: JsonNull)
-                    )
-                ),
-                "interpreterHash" to JsonPrimitive(interpreterHash),
-                "program" to JsonPrimitive(program),
-                "globalName" to JsonPrimitive(globalName),
-                "clientExperimentsStateBlob" to JsonPrimitive(clientExperimentsStateBlob)
-            )
-        )
-    )
+    val interpreterJavascript = JSONObject()
+        .put("privateDoNotAccessOrElseSafeScriptWrappedValue", privateDoNotAccessOrElseSafeScriptWrappedValue ?: JSONObject.NULL)
+        .put("privateDoNotAccessOrElseTrustedResourceUrlWrappedValue", privateDoNotAccessOrElseTrustedResourceUrlWrappedValue ?: JSONObject.NULL)
+
+    return JSONObject()
+        .put("messageId", messageId)
+        .put("interpreterJavascript", interpreterJavascript)
+        .put("interpreterHash", interpreterHash)
+        .put("program", program)
+        .put("globalName", globalName)
+        .put("clientExperimentsStateBlob", clientExperimentsStateBlob)
+        .toString()
+}
+
+/** Finds the first string element inside the array at [index], or null if that's not possible. */
+private fun findFirstStringElement(challengeData: JSONArray, index: Int): String? {
+    if (challengeData.isNull(index)) return null
+    val wrapped = challengeData.optJSONArray(index) ?: return null
+    for (i in 0 until wrapped.length()) {
+        val value = wrapped.opt(i)
+        if (value is String) return value
+    }
+    return null
 }
 
 /**
@@ -66,8 +63,8 @@ fun parseChallengeData(rawChallengeData: String): String {
  * duration of this token in seconds.
  */
 fun parseIntegrityTokenData(rawIntegrityTokenData: String): Pair<String, Long> {
-    val integrityTokenData = Json.parseToJsonElement(rawIntegrityTokenData).jsonArray
-    return base64ToU8(integrityTokenData[0].jsonPrimitive.content) to integrityTokenData[1].jsonPrimitive.long
+    val integrityTokenData = JSONArray(rawIntegrityTokenData)
+    return base64ToU8(integrityTokenData.getString(0)) to integrityTokenData.getLong(1)
 }
 
 /**
