@@ -452,11 +452,15 @@ fun Queue(
 
         // Shared song-row content, used both for a standalone QueueRow.Song and for each member
         // window inside a QueueRow.Group's Column -- identical tap/highlight/swipe/menu behavior
-        // either way. showDragHandle is false for group members: only the group's own header
+        // either way. dragHandle defaults to none for group members: only the group's own header
         // (rendered separately, see below) is draggable, so a member's internal position within
-        // its group can never change via drag.
+        // its group can never change via drag. dragHandle is a lambda parameter (not a Boolean
+        // gating an internal Modifier.draggableHandle() call) because draggableHandle() requires
+        // the ReorderableCollectionItemScope implicit receiver from the enclosing ReorderableItem
+        // block; SongRow is a plain local function and doesn't have it, but a lambda literal
+        // supplied by each call site -- still lexically inside that block -- does.
         @Composable
-        fun SongRow(window: Timeline.Window, showDragHandle: Boolean) {
+        fun SongRow(window: Timeline.Window, dragHandle: @Composable () -> Unit = {}) {
             val isActive = window.firstPeriodIndex == currentMediaItemIndex
             val currentItem by rememberUpdatedState(window)
             val dismissState = rememberSwipeToDismissBoxState(
@@ -507,16 +511,8 @@ fun Queue(
                                 )
                             }
 
-                            if (!lockQueue && showDragHandle) {
-                                IconButton(
-                                    onClick = { },
-                                    modifier = Modifier.draggableHandle()
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.drag_handle),
-                                        contentDescription = null
-                                    )
-                                }
+                            if (!lockQueue) {
+                                dragHandle()
                             }
                         }
                     },
@@ -580,7 +576,20 @@ fun Queue(
                     key = row.key()
                 ) {
                     when (row) {
-                        is QueueRow.Song -> SongRow(window = row.window, showDragHandle = true)
+                        is QueueRow.Song -> SongRow(
+                            window = row.window,
+                            dragHandle = {
+                                IconButton(
+                                    onClick = { },
+                                    modifier = Modifier.draggableHandle()
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.drag_handle),
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        )
 
                         is QueueRow.Group -> {
                             Column(modifier = Modifier.fillMaxWidth()) {
@@ -603,7 +612,7 @@ fun Queue(
                                 )
                                 row.windows.forEach { window ->
                                     key(window.uid.hashCode()) {
-                                        SongRow(window = window, showDragHandle = false)
+                                        SongRow(window = window)
                                     }
                                 }
                             }
