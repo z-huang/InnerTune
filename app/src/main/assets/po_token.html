@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><title></title><script>
+    // Minimal glue implementing Google's BotGuard integration contract for InnerTube PoToken
+    // generation: load the challenge program, execute it, derive the poToken minter, then mint
+    // tokens on demand. The actual BotGuard VM/interpreter program is fetched at runtime from
+    // Google's own Create/GenerateIT endpoints (see PoTokenWebView.kt) -- nothing proprietary is
+    // embedded here.
+
+    var bgVmFunctions = null;
+    var bgVm = null;
+    var bgProgram = null;
+    var poTokenMinter = null; // created once during init, reused for every generatePoToken() call
+
+    function loadBotGuard(challengeData) {
+      bgVm = window[challengeData.globalName];
+      bgProgram = challengeData.program;
+      bgVmFunctions = null;
+
+      if (!bgVm) {
+        throw new Error('[BotGuardClient]: VM not found in the global object');
+      }
+      if (!bgVm.a) {
+        throw new Error('[BotGuardClient]: Could not load program');
+      }
+
+      var vmFunctionsCallback = function (asyncSnapshotFunction, shutdownFunction, passEventFunction, checkCameraFunction) {
+        bgVmFunctions = {
+          asyncSnapshotFunction: asyncSnapshotFunction,
+          shutdownFunction: shutdownFunction,
+          passEventFunction: passEventFunction,
+          checkCameraFunction: checkCameraFunction
+        };
+      };
+
+      try {
+        bgVm.a(bgProgram, vmFunctionsCallback, true, undefined, function () {/* no-op */ }, [[], []]);
+      } catch (e) {
+        throw new Error('[BotGuardClient]: Failed to execute program: ' + e.message);
+      }
+
+      return new Promise(function (resolve, reject) {
+        var attempts = 0;
+        var maxAttempts = 10000;
+        var checkInterval = setInterval(function () {
+          if (bgVmFunctions && bgVmFunctions.asyncSnapshotFunction) {
+            clearInterval(checkInterval);
+            resolve({ vmFunctions: bgVmFunctions, vm: bgVm, program: bgProgram });
+          } else if (attempts >= maxAttempts) {
+            clearInterval(checkInterval);
+            reject(new Error('[BotGuardClient]: Timeout waiting for asyncSnapshotFunction'));
+          }
+          attempts++;
+        }, 1);
+      });
+    }
+
+    function snapshot(botguard, args) {
+      return new Promise(function (resolve, reject) {
+        if (!botguard.vmFunctions || !botguard.vmFunctions.asyncSnapshotFunction) {
+          return reject(new Error('[BotGuardClient]: Async snapshot function not found'));
+        }
+        try {
+          botguard.vmFunctions.asyncSnapshotFunction(
+            function (response) { resolve(response); },
+            [args.contentBinding, args.signedTimestamp, args.webPoSignalOutput, args.skipPrivacyBuffer]
+          );
+        } catch (e) {
+          reject(new Error('[BotGuardClient]: Snapshot failed: ' + e.message));
+        }
+      });
+    }
+
+    function runBotGuard(challengeData) {
+      var interpreterJavascript = challengeData.interpreterJavascript.privateDoNotAccessOrElseSafeScriptWrappedValue;
+      if (interpreterJavascript) {
+        new Function(interpreterJavascript)();
+      } else {
+        throw new Error('[BotGuardClient]: Could not load VM - no interpreter JavaScript');
+      }
+
+      var webPoSignalOutput = [];
+      return loadBotGuard({ globalName: challengeData.globalName, program: challengeData.program })
+        .then(function (botguard) {
+          return snapshot(botguard, { webPoSignalOutput: webPoSignalOutput });
+        })
+        .then(function (botguardResponse) {
+          return { webPoSignalOutput: webPoSignalOutput, botguardResponse: botguardResponse };
+        });
+    }
+
+    async function createPoTokenMinter(webPoSignalOutput, integrityToken) {
+      var getMinter = webPoSignalOutput[0];
+      if (!getMinter) {
+        throw new Error('PMD:Undefined - webPoSignalOutput[0] is not defined');
+      }
+      if (typeof getMinter !== 'function') {
+        throw new Error('PMD:NotFunction - webPoSignalOutput[0] is not a function, got: ' + typeof getMinter);
+      }
+
+      var mintCallback;
+      try {
+        var minterResult = getMinter(integrityToken);
+        mintCallback = (minterResult && typeof minterResult.then === 'function') ? await minterResult : minterResult;
+      } catch (e) {
+        throw new Error('GMC:Failed - getMinter() threw: ' + e.message);
+      }
+
+      if (!mintCallback) {
+        throw new Error('APF:Undefined - mintCallback is undefined');
+      }
+      if (typeof mintCallback !== 'function') {
+        throw new Error('APF:NotFunction - mintCallback is not a function, got: ' + typeof mintCallback);
+      }
+
+      poTokenMinter = mintCallback;
+    }
+
+    async function obtainPoToken(identifier) {
+      if (!poTokenMinter) {
+        throw new Error('MNT:NotInit - poTokenMinter was not initialized. Call createPoTokenMinter first.');
+      }
+
+      var result;
+      try {
+        var mintResult = poTokenMinter(identifier);
+        result = (mintResult && typeof mintResult.then === 'function') ? await mintResult : mintResult;
+      } catch (e) {
+        throw new Error('MNT:Failed - mintCallback() threw: ' + e.message);
+      }
+
+      if (!result) {
+        throw new Error('YNJ:Undefined - mint result is undefined');
+      }
+      if (!(result instanceof Uint8Array)) {
+        throw new Error('ODM:Invalid - result is not Uint8Array, got: ' + Object.prototype.toString.call(result));
+      }
+
+      return result;
+    }
+</script></head><body></body></html>

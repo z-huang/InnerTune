@@ -155,8 +155,9 @@ internal fun PipedResponse.AudioStream.toFormat() = PlayerResponse.StreamingData
 // [PlayerResponse.StreamingData.Format] model doesn't parse, or a PoToken-gated format) rather
 // than the format being genuinely unusable -- either way, "OK" alone is not sufficient evidence
 // that this response is actually playable. Used to decide whether a client's "OK" response should
-// short-circuit the ANDROID_MUSIC -> IOS -> TVHTML5/Piped fallback chain below.
-internal fun PlayerResponse.hasPlayableAudioFormat(): Boolean =
+// short-circuit the ANDROID_MUSIC -> IOS -> TVHTML5/Piped fallback chain below. Public (not
+// internal) so the app module can reuse the same check for its WEB_REMIX+PoToken attempt.
+fun PlayerResponse.hasPlayableAudioFormat(): Boolean =
     streamingData?.adaptiveFormats?.any { it.isAudio && it.url != null } == true
 
 /**
@@ -569,6 +570,17 @@ object YouTube {
             result.onFailure { logPlayerFailure(videoId, it) }
             System.err.println("[InnerTube.player] piped instance=$instance videoId=$videoId streams=${result.getOrNull()?.size ?: 0}")
         }
+
+    // WEB_REMIX request carrying a WebView-generated BotGuard PoToken (see the app module's
+    // PoTokenGenerator, which is where the actual token generation happens -- this module stays
+    // pure JVM/no-Android, so it only knows how to send a token it's handed, not how to make one).
+    // Callers should try this before [player] and fall back to it on failure/an unplayable result,
+    // exactly like the app module's MusicService does.
+    suspend fun playerWithPoToken(videoId: String, playlistId: String? = null, poToken: String): Result<PlayerResponse> = runCatching {
+        val response = innerTube.player(WEB_REMIX, videoId, playlistId, poToken).body<PlayerResponse>()
+        logPlayerAttempt("WEB_REMIX", videoId, response)
+        response
+    }.onFailure { logPlayerFailure(videoId, it) }
 
     suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
         // ANDROID_MUSIC and IOS are each wrapped in their own runCatching: a hard failure (an

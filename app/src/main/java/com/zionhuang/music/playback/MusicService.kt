@@ -52,6 +52,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.hasPlayableAudioFormat
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.models.response.PlayerResponse
@@ -104,6 +105,7 @@ import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.enumPreference
 import com.zionhuang.music.utils.get
 import com.zionhuang.music.utils.isInternetAvailable
+import com.zionhuang.music.utils.potoken.PoTokenGenerator
 import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -663,6 +665,13 @@ class MusicService : MediaLibraryService(),
     // onPlayerError() can invalidate an entry when its URL turns out to be stale/rejected.
     private val songUrlCache = HashMap<String, Pair<String, Long>>()
 
+    // WEB_REMIX is the only client that reliably returns a usable (non-PoToken-gated) stream url
+    // right now (confirmed on a real device: ANDROID/IOS return playabilityStatus=OK but every
+    // format's url is null; TVHTML5 is hard-rejected outright). Tried first in
+    // createDataSourceFactory() below; falls back to the existing YouTube.player() chain
+    // (ANDROID_MUSIC -> IOS -> TVHTML5 -> Piped) on any failure, exactly as before this was added.
+    private val poTokenGenerator by lazy { PoTokenGenerator(this) }
+
     private fun createDataSourceFactory(): DataSource.Factory {
         return ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
             val mediaId = dataSpec.key ?: error("No media id")
@@ -687,7 +696,19 @@ class MusicService : MediaLibraryService(),
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
             val playedFormat = runBlocking(Dispatchers.IO) { database.format(mediaId).first() }
             val playerResponse = runBlocking(Dispatchers.IO) {
-                YouTube.player(mediaId)
+                val sessionId = YouTube.visitorData
+                val poTokenResult = if (sessionId.isNotEmpty()) {
+                    poTokenGenerator.getWebClientPoToken(mediaId, sessionId)
+                } else null
+                val webRemixResponse = poTokenResult?.let { poToken ->
+                    YouTube.playerWithPoToken(mediaId, poToken = poToken.playerRequestPoToken).getOrNull()
+                }
+                if (webRemixResponse != null && webRemixResponse.playabilityStatus.status == "OK" && webRemixResponse.hasPlayableAudioFormat()) {
+                    Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=WEB_REMIX+PoToken")
+                    Result.success(webRemixResponse)
+                } else {
+                    YouTube.player(mediaId)
+                }
             }.getOrElse { throwable ->
                 // The specific client attempts, their playability statuses, and (on failure) a
                 // sanitized summary of this exact throwable are already logged inside

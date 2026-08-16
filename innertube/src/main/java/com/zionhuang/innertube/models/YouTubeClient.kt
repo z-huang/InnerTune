@@ -17,6 +17,11 @@ data class YouTubeClient(
     val userAgent: String,
     val osVersion: String? = null,
     val referer: String? = null,
+    // Whether this client's player() request should carry a WebView-generated BotGuard PoToken
+    // (see app-module PoTokenGenerator) in serviceIntegrityDimensions. Confirmed necessary on a
+    // real device: only WEB_REMIX among our clients needs it -- IOS/ANDROID/TVHTML5 don't set
+    // this and are unaffected by its absence.
+    val useWebPoTokens: Boolean = false,
 ) {
     fun toContext(locale: YouTubeLocale, visitorData: String?) = Context(
         client = Context.Client(
@@ -73,7 +78,8 @@ data class YouTubeClient(
             clientId = "67",
             api_key = "AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30",
             userAgent = USER_AGENT_WEB,
-            referer = REFERER_YOUTUBE_MUSIC
+            referer = REFERER_YOUTUBE_MUSIC,
+            useWebPoTokens = true,
         )
 
         // TVHTML5_SIMPLY_EMBEDDED_PLAYER (clientId 85): the embedded-player variant used together

@@ -119,6 +119,7 @@ class InnerTube {
         client: YouTubeClient,
         videoId: String,
         playlistId: String?,
+        poToken: String? = null,
     ) = httpClient.post("player") {
         ytClient(client, setLogin = true)
         setBody(
@@ -133,7 +134,8 @@ class InnerTube {
                     } else it
                 },
                 videoId = videoId,
-                playlistId = playlistId
+                playlistId = playlistId,
+                serviceIntegrityDimensions = buildServiceIntegrityDimensions(client, poToken),
             )
         )
     }
@@ -258,4 +260,19 @@ internal fun buildYtClientHeaders(client: YouTubeClient, visitorData: String?): 
         if (visitorData != null) {
             add("X-Goog-Visitor-Id" to visitorData)
         }
+    }
+
+/**
+ * Pure logic for whether/how a player() request should carry a PoToken, extracted for the same
+ * reason as [buildYtClientHeaders]. Only clients with [YouTubeClient.useWebPoTokens] set (WEB_REMIX)
+ * get one, and only when a token was actually supplied -- a client that doesn't understand PoTokens
+ * must never receive serviceIntegrityDimensions, and a client that needs one but wasn't given one
+ * (e.g. WebView generation failed/timed out) must fall back to a plain request rather than send a
+ * malformed empty token.
+ */
+internal fun buildServiceIntegrityDimensions(client: YouTubeClient, poToken: String?): PlayerBody.ServiceIntegrityDimensions? =
+    if (client.useWebPoTokens && poToken != null) {
+        PlayerBody.ServiceIntegrityDimensions(poToken)
+    } else {
+        null
     }
