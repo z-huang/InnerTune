@@ -719,15 +719,23 @@ class MusicService : MediaLibraryService(),
                 throw PlaybackException(playerResponse.playabilityStatus.reason, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
             }
 
+            // A format can be present in adaptiveFormats with a null url -- observed on a real
+            // device for the IOS client immediately after fixing the X-YouTube-Client-Name header:
+            // playabilityStatus.status == "OK" with 23 formats, but the highest-bitrate opus
+            // format's url was null (most likely a signatureCipher-only or PoToken-gated format
+            // our PlayerResponse.Format model doesn't resolve a url for). Selecting such a format
+            // used to force-unwrap format.url!! below and crash with an NPE instead of falling
+            // back to a different, actually-playable format. Only consider formats with a
+            // non-null url here so a crash can't happen regardless of the reason the url is null.
             val format =
                 if (playedFormat != null) {
                     playerResponse.streamingData?.adaptiveFormats?.find {
                         // Use itag to identify previously played format
-                        it.itag == playedFormat.itag
+                        it.itag == playedFormat.itag && it.url != null
                     }
                 } else {
                     playerResponse.streamingData?.adaptiveFormats
-                        ?.filter { it.isAudio }
+                        ?.filter { it.isAudio && it.url != null }
                         ?.maxByOrNull {
                             it.bitrate * when (audioQuality) {
                                 AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
@@ -737,8 +745,10 @@ class MusicService : MediaLibraryService(),
                         }
                 } ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
             Timber.tag(PLAYBACK_LOG_TAG).d(
-                "resolve mediaId=$mediaId selected format itag=${format.itag} mimeType=${format.mimeType} bitrate=${format.bitrate} hasUrl=${format.url != null}"
+                "resolve mediaId=$mediaId selected format itag=${format.itag} mimeType=${format.mimeType} bitrate=${format.bitrate} hasUrl=${format.url != null} " +
+                    "(of ${playerResponse.streamingData?.adaptiveFormats?.size ?: 0} formats, ${playerResponse.streamingData?.adaptiveFormats?.count { it.url != null } ?: 0} had a url)"
             )
+            val formatUrl = format.url ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
             database.query {
                 upsert(
@@ -756,8 +766,8 @@ class MusicService : MediaLibraryService(),
             }
             scope.launch(Dispatchers.IO) { recoverSong(mediaId, playerResponse) }
 
-            songUrlCache[mediaId] = format.url!! to (System.currentTimeMillis() + playerResponse.streamingData!!.expiresInSeconds * 1000L)
-            dataSpec.withUri(format.url!!.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
+            songUrlCache[mediaId] = formatUrl to (System.currentTimeMillis() + playerResponse.streamingData!!.expiresInSeconds * 1000L)
+            dataSpec.withUri(formatUrl.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     }
 

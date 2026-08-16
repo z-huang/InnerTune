@@ -148,6 +148,17 @@ internal fun PipedResponse.AudioStream.toFormat() = PlayerResponse.StreamingData
     lastModified = null,
 )
 
+// A client can report playabilityStatus.status == "OK" while every one of its adaptiveFormats
+// still has a null url (observed on a real device for IOS immediately after the clientId header
+// fix: status=OK, 23 formats, but the selected format's url was null). This most likely means
+// YouTube omitted the direct url for that client/request (e.g. a signatureCipher-only format our
+// [PlayerResponse.StreamingData.Format] model doesn't parse, or a PoToken-gated format) rather
+// than the format being genuinely unusable -- either way, "OK" alone is not sufficient evidence
+// that this response is actually playable. Used to decide whether a client's "OK" response should
+// short-circuit the ANDROID_MUSIC -> IOS -> TVHTML5/Piped fallback chain below.
+internal fun PlayerResponse.hasPlayableAudioFormat(): Boolean =
+    streamingData?.adaptiveFormats?.any { it.isAudio && it.url != null } == true
+
 /**
  * Parse useful data with [InnerTube] sending requests.
  * Modified from [ViMusic](https://github.com/vfsfitvnm/ViMusic)
@@ -576,7 +587,7 @@ object YouTube {
             }.onSuccess { logPlayerAttempt("ANDROID_MUSIC", videoId, it) }
                 .onFailure { logPlayerFailure(videoId, it) }
                 .getOrNull()
-            if (playerResponse?.playabilityStatus?.status == "OK") {
+            if (playerResponse?.playabilityStatus?.status == "OK" && playerResponse.hasPlayableAudioFormat()) {
                 return@runCatching playerResponse
             }
         }
@@ -587,7 +598,7 @@ object YouTube {
             .getOrNull()
         if (iosResponse != null) {
             playerResponse = iosResponse
-            if (iosResponse.playabilityStatus.status == "OK") {
+            if (iosResponse.playabilityStatus.status == "OK" && iosResponse.hasPlayableAudioFormat()) {
                 return@runCatching iosResponse
             }
         }
