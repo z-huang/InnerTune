@@ -49,6 +49,7 @@ import com.zionhuang.innertube.pages.SearchSuggestionPage
 import com.zionhuang.innertube.pages.SearchSummary
 import com.zionhuang.innertube.pages.SearchSummaryPage
 import io.ktor.client.call.body
+import io.ktor.client.plugins.ResponseException
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonPrimitive
@@ -429,19 +430,47 @@ object YouTube {
             }
     }
 
+    // Diagnostic-only: which client(s) player() tried, whether each returned a playable status,
+    // and how many adaptive formats it offered. Never logs a URL, cookie, or auth header -- only
+    // client name, video id, playability status/reason, and a format count. System.err is used
+    // (rather than an Android logger) because this module is a plain Kotlin/JVM library with no
+    // Android dependency; System.err/out from the app process is still captured by logcat.
+    private fun logPlayerAttempt(client: String, videoId: String, response: PlayerResponse) {
+        System.err.println(
+            "[InnerTube.player] client=$client videoId=$videoId status=${response.playabilityStatus.status} " +
+                "reason=${response.playabilityStatus.reason} formats=${response.streamingData?.adaptiveFormats?.size ?: 0}"
+        )
+    }
+
+    // Diagnostic-only summary of a player() failure. For an HTTP-shaped failure (a non-2xx
+    // response from any of the client attempts), logs only the response's status code and the
+    // request's host -- never the full request/response URL (which carries the API key and, for
+    // a logged-in request, would otherwise risk exposing query parameters) and never headers.
+    private fun logPlayerFailure(videoId: String, throwable: Throwable) {
+        val summary = if (throwable is ResponseException) {
+            "${throwable::class.simpleName} status=${throwable.response.status.value} host=${throwable.response.request.url.host}"
+        } else {
+            "${throwable::class.simpleName}: ${throwable.message?.take(200)}"
+        }
+        System.err.println("[InnerTube.player] videoId=$videoId FAILED -- $summary")
+    }
+
     suspend fun player(videoId: String, playlistId: String? = null): Result<PlayerResponse> = runCatching {
         var playerResponse: PlayerResponse
         if (this.cookie != null) { // if logged in: try ANDROID_MUSIC client first because IOS client does not play age restricted songs
             playerResponse = innerTube.player(ANDROID_MUSIC, videoId, playlistId).body<PlayerResponse>()
+            logPlayerAttempt("ANDROID_MUSIC", videoId, playerResponse)
             if (playerResponse.playabilityStatus.status == "OK") {
                 return@runCatching playerResponse
             }
         }
         playerResponse = innerTube.player(IOS, videoId, playlistId).body<PlayerResponse>()
+        logPlayerAttempt("IOS", videoId, playerResponse)
         if (playerResponse.playabilityStatus.status == "OK") {
             return@runCatching playerResponse
         }
         val safePlayerResponse = innerTube.player(TVHTML5, videoId, playlistId).body<PlayerResponse>()
+        logPlayerAttempt("TVHTML5", videoId, safePlayerResponse)
         if (safePlayerResponse.playabilityStatus.status != "OK") {
             return@runCatching playerResponse
         }
@@ -457,6 +486,8 @@ object YouTube {
                 }
             )
         )
+    }.onFailure { throwable ->
+        logPlayerFailure(videoId, throwable)
     }
 
     suspend fun next(endpoint: WatchEndpoint, continuation: String? = null): Result<NextResult> = runCatching {

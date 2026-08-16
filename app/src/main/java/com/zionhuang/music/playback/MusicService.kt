@@ -26,6 +26,7 @@ import androidx.media3.common.Timeline
 import androidx.media3.common.audio.SonicAudioProcessor
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.HttpDataSource
 import androidx.media3.datasource.ResolvingDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
@@ -127,6 +128,7 @@ import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import timber.log.Timber
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.ConnectException
@@ -599,12 +601,12 @@ class MusicService : MediaLibraryService(),
     }
 
     override fun onPlayerError(error: PlaybackException) {
+        val mediaId = player.currentMediaItem?.mediaId
+        logPlaybackErrorCauseChain(mediaId, error)
         // The failed item is still player.currentMediaItem at this point (playback hasn't
         // advanced yet), so drop its cached stream URL: if it was stale, this lets the next
         // play attempt fetch a fresh one instead of repeating the same failure forever.
-        player.currentMediaItem?.mediaId?.let { mediaId ->
-            songUrlCache.remove(mediaId)
-        }
+        mediaId?.let { songUrlCache.remove(it) }
         if (dataStore.get(AutoSkipNextOnErrorKey, false) &&
             isInternetAvailable(this) &&
             player.hasNextMediaItem()
@@ -612,6 +614,27 @@ class MusicService : MediaLibraryService(),
             player.seekToNext()
             player.prepare()
             player.playWhenReady = true
+        }
+    }
+
+    // Diagnostic-only: logs every level of a PlaybackException's cause chain so logcat shows why
+    // playback actually failed, not just the generic message shown to the user (see
+    // createDataSourceFactory()'s error_unknown branch below). Never logs a full URI -- an
+    // HttpDataSource.InvalidResponseCodeException's dataSpec.uri is the actual signed CDN URL, so
+    // only its host and the HTTP response code are logged.
+    private fun logPlaybackErrorCauseChain(mediaId: String?, error: PlaybackException) {
+        Timber.tag(PLAYBACK_LOG_TAG).e("onPlayerError mediaId=$mediaId errorCode=${error.errorCode} (${error.errorCodeName})")
+        var cause: Throwable? = error
+        var depth = 0
+        while (cause != null && depth < 10) {
+            val summary = when (cause) {
+                is HttpDataSource.InvalidResponseCodeException ->
+                    "HttpDataSource.InvalidResponseCodeException responseCode=${cause.responseCode} host=${cause.dataSpec.uri.host}"
+                else -> "${cause::class.simpleName}: ${cause.message?.take(200)}"
+            }
+            Timber.tag(PLAYBACK_LOG_TAG).e("  caused by: $summary")
+            cause = cause.cause
+            depth++
         }
     }
 
@@ -643,18 +666,22 @@ class MusicService : MediaLibraryService(),
     private fun createDataSourceFactory(): DataSource.Factory {
         return ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
             val mediaId = dataSpec.key ?: error("No media id")
+            Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId")
 
             if (downloadCache.isCached(mediaId, dataSpec.position, if (dataSpec.length >= 0) dataSpec.length else 1) ||
                 playerCache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)
             ) {
+                Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=local-file-cache")
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
                 return@Factory dataSpec
             }
 
             songUrlCache[mediaId]?.takeIf { it.second > System.currentTimeMillis() }?.let {
+                Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=songUrlCache expiresInMs=${it.second - System.currentTimeMillis()}")
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
                 return@Factory dataSpec.withUri(it.first.toUri())
             }
+            Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=fresh (calling YouTube.player)")
 
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
@@ -662,6 +689,19 @@ class MusicService : MediaLibraryService(),
             val playerResponse = runBlocking(Dispatchers.IO) {
                 YouTube.player(mediaId)
             }.getOrElse { throwable ->
+                // The specific client attempts, their playability statuses, and (on failure) a
+                // sanitized summary of this exact throwable are already logged inside
+                // YouTube.player() itself (innertube module) -- this line ties that failure back
+                // to the mediaId and shows the full cause chain, since the PlaybackException
+                // thrown below only ever surfaces a generic message ("Unknown error" for
+                // anything that isn't a plain connect/timeout failure) to the user.
+                var cause: Throwable? = throwable
+                var depth = 0
+                while (cause != null && depth < 10) {
+                    Timber.tag(PLAYBACK_LOG_TAG).e("resolve mediaId=$mediaId YouTube.player FAILED (depth=$depth): ${cause::class.simpleName}: ${cause.message?.take(200)}")
+                    cause = cause.cause
+                    depth++
+                }
                 when (throwable) {
                     is ConnectException, is UnknownHostException -> {
                         throw PlaybackException(getString(R.string.error_no_internet), throwable, PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
@@ -675,6 +715,7 @@ class MusicService : MediaLibraryService(),
                 }
             }
             if (playerResponse.playabilityStatus.status != "OK") {
+                Timber.tag(PLAYBACK_LOG_TAG).e("resolve mediaId=$mediaId playabilityStatus=${playerResponse.playabilityStatus.status} reason=${playerResponse.playabilityStatus.reason}")
                 throw PlaybackException(playerResponse.playabilityStatus.reason, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
             }
 
@@ -695,6 +736,9 @@ class MusicService : MediaLibraryService(),
                             } + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) // prefer opus stream
                         }
                 } ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
+            Timber.tag(PLAYBACK_LOG_TAG).d(
+                "resolve mediaId=$mediaId selected format itag=${format.itag} mimeType=${format.mimeType} bitrate=${format.bitrate} hasUrl=${format.url != null}"
+            )
 
             database.query {
                 upsert(
@@ -828,5 +872,6 @@ class MusicService : MediaLibraryService(),
         const val ERROR_CODE_NO_STREAM = 1000001
         const val CHUNK_LENGTH = 512 * 1024L
         const val PERSISTENT_QUEUE_FILE = "persistent_queue.data"
+        const val PLAYBACK_LOG_TAG = "PlaybackDiag"
     }
 }
