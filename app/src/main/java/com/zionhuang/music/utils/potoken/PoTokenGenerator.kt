@@ -19,7 +19,11 @@ import timber.log.Timber
 class PoTokenGenerator(private val appContext: Context) {
     private val TAG = "PoTokenGenerator"
 
-    private val webViewSupported by lazy { runCatching { CookieManager.getInstance() }.isSuccess }
+    private val webViewSupported by lazy {
+        runCatching { CookieManager.getInstance() }
+            .onFailure { Timber.tag(TAG).w(it, "PoToken WebView unsupported: CookieManager.getInstance() failed") }
+            .isSuccess
+    }
     private var webViewBadImpl = false // whether the system has a bad WebView implementation
 
     private val webPoTokenGenLock = Mutex()
@@ -29,6 +33,11 @@ class PoTokenGenerator(private val appContext: Context) {
 
     fun getWebClientPoToken(videoId: String, sessionId: String): PoTokenResult? {
         if (!webViewSupported || webViewBadImpl) {
+            // Previously a silent bail-out -- on a real WSA test this made it impossible to tell
+            // from logs alone whether PoToken generation was skipped (this branch) or attempted
+            // and failed (which logs elsewhere in this class). Log so the next device test is
+            // conclusive either way.
+            Timber.tag(TAG).w("poToken generation skipped (webViewSupported=$webViewSupported, webViewBadImpl=$webViewBadImpl); falling back to non-PoToken clients")
             return null
         }
 
