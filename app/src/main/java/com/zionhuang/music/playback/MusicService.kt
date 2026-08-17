@@ -26,6 +26,7 @@ import androidx.media3.common.Timeline
 import androidx.media3.common.audio.SonicAudioProcessor
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.HttpDataSource
 import androidx.media3.datasource.ResolvingDataSource
 import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.datasource.cache.CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
@@ -51,6 +52,7 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.MoreExecutors
 import com.zionhuang.innertube.YouTube
+import com.zionhuang.innertube.hasPlayableAudioFormat
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.innertube.models.WatchEndpoint
 import com.zionhuang.innertube.models.response.PlayerResponse
@@ -103,6 +105,7 @@ import com.zionhuang.music.utils.dataStore
 import com.zionhuang.music.utils.enumPreference
 import com.zionhuang.music.utils.get
 import com.zionhuang.music.utils.isInternetAvailable
+import com.zionhuang.music.utils.potoken.PoTokenGenerator
 import com.zionhuang.music.utils.reportException
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -127,6 +130,7 @@ import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import timber.log.Timber
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.ConnectException
@@ -187,6 +191,10 @@ class MusicService : MediaLibraryService(),
     lateinit var player: ExoPlayer
     private lateinit var mediaSession: MediaLibrarySession
 
+    // The self-bound controller created in onCreate() to keep notifications working; stored here
+    // solely so onDestroy() can release it and its underlying ServiceConnection (see there).
+    private var notificationController: MediaController? = null
+
     private var isAudioEffectSessionOpened = false
 
     private var discordRpc: DiscordRPC? = null
@@ -239,7 +247,7 @@ class MusicService : MediaLibraryService(),
         // Keep a connected controller so that notification works
         val sessionToken = SessionToken(this, ComponentName(this, MusicService::class.java))
         val controllerFuture = MediaController.Builder(this, sessionToken).buildAsync()
-        controllerFuture.addListener({ controllerFuture.get() }, MoreExecutors.directExecutor())
+        controllerFuture.addListener({ notificationController = controllerFuture.get() }, MoreExecutors.directExecutor())
 
         connectivityManager = getSystemService()!!
 
@@ -569,11 +577,18 @@ class MusicService : MediaLibraryService(),
     override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         updateNotification()
         if (shuffleModeEnabled) {
-            // Always put current playing item at first
-            val shuffledIndices = IntArray(player.mediaItemCount) { it }
-            shuffledIndices.shuffle()
-            shuffledIndices[shuffledIndices.indexOf(player.currentMediaItemIndex)] = shuffledIndices[0]
-            shuffledIndices[0] = player.currentMediaItemIndex
+            // Build QueueEntry from the ORIGINAL/unshuffled flat order (direct indexed access
+            // via player.mediaItems, not player.currentTimeline/getQueueWindows(), which would
+            // already reflect whatever shuffle order -- possibly stale -- is currently installed)
+            // so groups are identified correctly before shuffling, then shuffle whole entries
+            // (never individual group members) and pin the current item's entire entry first.
+            val entries = buildQueueEntriesIndexed(
+                player.mediaItems.mapIndexedNotNull { flatIndex, mediaItem -> mediaItem.metadata?.let { flatIndex to it } }
+            )
+            val shuffledIndices = buildGroupAwareShuffleOrder(
+                entries = entries,
+                currentFlatIndex = player.currentMediaItemIndex,
+            )
             player.setShuffleOrder(DefaultShuffleOrder(shuffledIndices, System.currentTimeMillis()))
         }
     }
@@ -588,6 +603,12 @@ class MusicService : MediaLibraryService(),
     }
 
     override fun onPlayerError(error: PlaybackException) {
+        val mediaId = player.currentMediaItem?.mediaId
+        logPlaybackErrorCauseChain(mediaId, error)
+        // The failed item is still player.currentMediaItem at this point (playback hasn't
+        // advanced yet), so drop its cached stream URL: if it was stale, this lets the next
+        // play attempt fetch a fresh one instead of repeating the same failure forever.
+        mediaId?.let { songUrlCache.remove(it) }
         if (dataStore.get(AutoSkipNextOnErrorKey, false) &&
             isInternetAvailable(this) &&
             player.hasNextMediaItem()
@@ -595,6 +616,27 @@ class MusicService : MediaLibraryService(),
             player.seekToNext()
             player.prepare()
             player.playWhenReady = true
+        }
+    }
+
+    // Diagnostic-only: logs every level of a PlaybackException's cause chain so logcat shows why
+    // playback actually failed, not just the generic message shown to the user (see
+    // createDataSourceFactory()'s error_unknown branch below). Never logs a full URI -- an
+    // HttpDataSource.InvalidResponseCodeException's dataSpec.uri is the actual signed CDN URL, so
+    // only its host and the HTTP response code are logged.
+    private fun logPlaybackErrorCauseChain(mediaId: String?, error: PlaybackException) {
+        Timber.tag(PLAYBACK_LOG_TAG).e("onPlayerError mediaId=$mediaId errorCode=${error.errorCode} (${error.errorCodeName})")
+        var cause: Throwable? = error
+        var depth = 0
+        while (cause != null && depth < 10) {
+            val summary = when (cause) {
+                is HttpDataSource.InvalidResponseCodeException ->
+                    "HttpDataSource.InvalidResponseCodeException responseCode=${cause.responseCode} host=${cause.dataSpec.uri.host}"
+                else -> "${cause::class.simpleName}: ${cause.message?.take(200)}"
+            }
+            Timber.tag(PLAYBACK_LOG_TAG).e("  caused by: $summary")
+            cause = cause.cause
+            depth++
         }
     }
 
@@ -618,29 +660,69 @@ class MusicService : MediaLibraryService(),
             .setCacheWriteDataSinkFactory(null)
             .setFlags(FLAG_IGNORE_CACHE_ON_ERROR)
 
+    // Maps a song id to its resolved stream URL and that URL's absolute expiry (epoch millis).
+    // Field-scoped (not local to createDataSourceFactory(), which only runs once anyway) so
+    // onPlayerError() can invalidate an entry when its URL turns out to be stale/rejected.
+    private val songUrlCache = HashMap<String, Pair<String, Long>>()
+
+    // WEB_REMIX is the only client that reliably returns a usable (non-PoToken-gated) stream url
+    // right now (confirmed on a real device: ANDROID/IOS return playabilityStatus=OK but every
+    // format's url is null; TVHTML5 is hard-rejected outright). Tried first in
+    // createDataSourceFactory() below; falls back to the existing YouTube.player() chain
+    // (ANDROID_MUSIC -> IOS -> TVHTML5 -> Piped) on any failure, exactly as before this was added.
+    private val poTokenGenerator by lazy { PoTokenGenerator(this) }
+
     private fun createDataSourceFactory(): DataSource.Factory {
-        val songUrlCache = HashMap<String, Pair<String, Long>>()
         return ResolvingDataSource.Factory(createCacheDataSource()) { dataSpec ->
             val mediaId = dataSpec.key ?: error("No media id")
+            Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId")
 
             if (downloadCache.isCached(mediaId, dataSpec.position, if (dataSpec.length >= 0) dataSpec.length else 1) ||
                 playerCache.isCached(mediaId, dataSpec.position, CHUNK_LENGTH)
             ) {
+                Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=local-file-cache")
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
                 return@Factory dataSpec
             }
 
-            songUrlCache[mediaId]?.takeIf { it.second < System.currentTimeMillis() }?.let {
+            songUrlCache[mediaId]?.takeIf { it.second > System.currentTimeMillis() }?.let {
+                Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=songUrlCache expiresInMs=${it.second - System.currentTimeMillis()}")
                 scope.launch(Dispatchers.IO) { recoverSong(mediaId) }
                 return@Factory dataSpec.withUri(it.first.toUri())
             }
+            Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=fresh (calling YouTube.player)")
 
             // Check whether format exists so that users from older version can view format details
             // There may be inconsistent between the downloaded file and the displayed info if user change audio quality frequently
             val playedFormat = runBlocking(Dispatchers.IO) { database.format(mediaId).first() }
             val playerResponse = runBlocking(Dispatchers.IO) {
-                YouTube.player(mediaId)
+                val sessionId = YouTube.visitorData
+                val poTokenResult = if (sessionId.isNotEmpty()) {
+                    poTokenGenerator.getWebClientPoToken(mediaId, sessionId)
+                } else null
+                val webRemixResponse = poTokenResult?.let { poToken ->
+                    YouTube.playerWithPoToken(mediaId, poToken = poToken.playerRequestPoToken).getOrNull()
+                }
+                if (webRemixResponse != null && webRemixResponse.playabilityStatus.status == "OK" && webRemixResponse.hasPlayableAudioFormat()) {
+                    Timber.tag(PLAYBACK_LOG_TAG).d("resolve mediaId=$mediaId source=WEB_REMIX+PoToken")
+                    Result.success(webRemixResponse)
+                } else {
+                    YouTube.player(mediaId)
+                }
             }.getOrElse { throwable ->
+                // The specific client attempts, their playability statuses, and (on failure) a
+                // sanitized summary of this exact throwable are already logged inside
+                // YouTube.player() itself (innertube module) -- this line ties that failure back
+                // to the mediaId and shows the full cause chain, since the PlaybackException
+                // thrown below only ever surfaces a generic message ("Unknown error" for
+                // anything that isn't a plain connect/timeout failure) to the user.
+                var cause: Throwable? = throwable
+                var depth = 0
+                while (cause != null && depth < 10) {
+                    Timber.tag(PLAYBACK_LOG_TAG).e("resolve mediaId=$mediaId YouTube.player FAILED (depth=$depth): ${cause::class.simpleName}: ${cause.message?.take(200)}")
+                    cause = cause.cause
+                    depth++
+                }
                 when (throwable) {
                     is ConnectException, is UnknownHostException -> {
                         throw PlaybackException(getString(R.string.error_no_internet), throwable, PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED)
@@ -654,18 +736,27 @@ class MusicService : MediaLibraryService(),
                 }
             }
             if (playerResponse.playabilityStatus.status != "OK") {
+                Timber.tag(PLAYBACK_LOG_TAG).e("resolve mediaId=$mediaId playabilityStatus=${playerResponse.playabilityStatus.status} reason=${playerResponse.playabilityStatus.reason}")
                 throw PlaybackException(playerResponse.playabilityStatus.reason, null, PlaybackException.ERROR_CODE_REMOTE_ERROR)
             }
 
+            // A format can be present in adaptiveFormats with a null url -- observed on a real
+            // device for the IOS client immediately after fixing the X-YouTube-Client-Name header:
+            // playabilityStatus.status == "OK" with 23 formats, but the highest-bitrate opus
+            // format's url was null (most likely a signatureCipher-only or PoToken-gated format
+            // our PlayerResponse.Format model doesn't resolve a url for). Selecting such a format
+            // used to force-unwrap format.url!! below and crash with an NPE instead of falling
+            // back to a different, actually-playable format. Only consider formats with a
+            // non-null url here so a crash can't happen regardless of the reason the url is null.
             val format =
                 if (playedFormat != null) {
                     playerResponse.streamingData?.adaptiveFormats?.find {
                         // Use itag to identify previously played format
-                        it.itag == playedFormat.itag
+                        it.itag == playedFormat.itag && it.url != null
                     }
                 } else {
                     playerResponse.streamingData?.adaptiveFormats
-                        ?.filter { it.isAudio }
+                        ?.filter { it.isAudio && it.url != null }
                         ?.maxByOrNull {
                             it.bitrate * when (audioQuality) {
                                 AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
@@ -674,6 +765,11 @@ class MusicService : MediaLibraryService(),
                             } + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) // prefer opus stream
                         }
                 } ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
+            Timber.tag(PLAYBACK_LOG_TAG).d(
+                "resolve mediaId=$mediaId selected format itag=${format.itag} mimeType=${format.mimeType} bitrate=${format.bitrate} hasUrl=${format.url != null} " +
+                    "(of ${playerResponse.streamingData?.adaptiveFormats?.size ?: 0} formats, ${playerResponse.streamingData?.adaptiveFormats?.count { it.url != null } ?: 0} had a url)"
+            )
+            val formatUrl = format.url ?: throw PlaybackException(getString(R.string.error_no_stream), null, ERROR_CODE_NO_STREAM)
 
             database.query {
                 upsert(
@@ -691,8 +787,8 @@ class MusicService : MediaLibraryService(),
             }
             scope.launch(Dispatchers.IO) { recoverSong(mediaId, playerResponse) }
 
-            songUrlCache[mediaId] = format.url!! to playerResponse.streamingData!!.expiresInSeconds * 1000L
-            dataSpec.withUri(format.url!!.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
+            songUrlCache[mediaId] = formatUrl to (System.currentTimeMillis() + playerResponse.streamingData!!.expiresInSeconds * 1000L)
+            dataSpec.withUri(formatUrl.toUri()).subrange(dataSpec.uriPositionOffset, CHUNK_LENGTH)
         }
     }
 
@@ -772,6 +868,8 @@ class MusicService : MediaLibraryService(),
             discordRpc?.closeRPC()
         }
         discordRpc = null
+        notificationController?.release()
+        notificationController = null
         mediaSession.release()
         player.removeListener(this)
         player.removeListener(sleepTimer)
@@ -805,5 +903,6 @@ class MusicService : MediaLibraryService(),
         const val ERROR_CODE_NO_STREAM = 1000001
         const val CHUNK_LENGTH = 512 * 1024L
         const val PERSISTENT_QUEUE_FILE = "persistent_queue.data"
+        const val PLAYBACK_LOG_TAG = "PlaybackDiag"
     }
 }

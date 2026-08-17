@@ -81,13 +81,7 @@ class InnerTube {
     private fun HttpRequestBuilder.ytClient(client: YouTubeClient, setLogin: Boolean = false) {
         contentType(ContentType.Application.Json)
         headers {
-            append("X-Goog-Api-Format-Version", "1")
-            append("X-YouTube-Client-Name", client.clientName)
-            append("X-YouTube-Client-Version", client.clientVersion)
-            append("x-origin", "https://music.youtube.com")
-            if (client.referer != null) {
-                append("Referer", client.referer)
-            }
+            buildYtClientHeaders(client, visitorData).forEach { (name, value) -> append(name, value) }
             if (setLogin) {
                 cookie?.let { cookie ->
                     append("cookie", cookie)
@@ -125,6 +119,7 @@ class InnerTube {
         client: YouTubeClient,
         videoId: String,
         playlistId: String?,
+        poToken: String? = null,
     ) = httpClient.post("player") {
         ytClient(client, setLogin = true)
         setBody(
@@ -139,13 +134,14 @@ class InnerTube {
                     } else it
                 },
                 videoId = videoId,
-                playlistId = playlistId
+                playlistId = playlistId,
+                serviceIntegrityDimensions = buildServiceIntegrityDimensions(client, poToken),
             )
         )
     }
 
-    suspend fun pipedStreams(videoId: String) =
-        httpClient.get("https://pipedapi.kavin.rocks/streams/${videoId}") {
+    suspend fun pipedStreams(instance: String, videoId: String) =
+        httpClient.get("$instance/streams/${videoId}") {
             contentType(ContentType.Application.Json)
         }
 
@@ -245,3 +241,38 @@ class InnerTube {
         setBody(AccountMenuBody(client.toContext(locale, visitorData)))
     }
 }
+
+/**
+ * Pure header-construction logic for [InnerTube.ytClient], extracted so the header set for a
+ * given client/visitorData combination is unit-testable without building a real HTTP request.
+ * Order matters for [X-YouTube-Client-Name]: it must carry [YouTubeClient.clientId] (the numeric
+ * InnerTube client ID), not [YouTubeClient.clientName] -- see the comment on [YouTubeClient.clientId].
+ */
+internal fun buildYtClientHeaders(client: YouTubeClient, visitorData: String?): List<Pair<String, String>> =
+    buildList {
+        add("X-Goog-Api-Format-Version" to "1")
+        add("X-YouTube-Client-Name" to client.clientId)
+        add("X-YouTube-Client-Version" to client.clientVersion)
+        add("x-origin" to "https://music.youtube.com")
+        if (client.referer != null) {
+            add("Referer" to client.referer)
+        }
+        if (visitorData != null) {
+            add("X-Goog-Visitor-Id" to visitorData)
+        }
+    }
+
+/**
+ * Pure logic for whether/how a player() request should carry a PoToken, extracted for the same
+ * reason as [buildYtClientHeaders]. Only clients with [YouTubeClient.useWebPoTokens] set (WEB_REMIX)
+ * get one, and only when a token was actually supplied -- a client that doesn't understand PoTokens
+ * must never receive serviceIntegrityDimensions, and a client that needs one but wasn't given one
+ * (e.g. WebView generation failed/timed out) must fall back to a plain request rather than send a
+ * malformed empty token.
+ */
+internal fun buildServiceIntegrityDimensions(client: YouTubeClient, poToken: String?): PlayerBody.ServiceIntegrityDimensions? =
+    if (client.useWebPoTokens && poToken != null) {
+        PlayerBody.ServiceIntegrityDimensions(poToken)
+    } else {
+        null
+    }

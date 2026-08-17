@@ -1,0 +1,162 @@
+package com.zionhuang.music.utils.potoken
+
+import android.content.Context
+import android.webkit.CookieManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
+import timber.log.Timber
+
+/**
+ * Public entry point for WEB_REMIX PoToken generation. Owns a single lazily-created
+ * [PoTokenWebView], recreating it when the session id changes, the token expires, or the
+ * renderer died. See [PoTokenWebView] for the actual BotGuard exchange.
+ */
+class PoTokenGenerator(private val appContext: Context) {
+    private val TAG = "PoTokenGenerator"
+
+    private val webViewSupported by lazy {
+        runCatching { CookieManager.getInstance() }
+            .onFailure { Timber.tag(TAG).w(it, "PoToken WebView unsupported: CookieManager.getInstance() failed") }
+            .isSuccess
+    }
+    private var webViewBadImpl = false // whether the system has a bad WebView implementation
+
+    private val webPoTokenGenLock = Mutex()
+    private var webPoTokenSessionId: String? = null
+    private var webPoTokenStreamingPot: String? = null
+    private var webPoTokenGenerator: PoTokenWebView? = null
+
+    fun getWebClientPoToken(videoId: String, sessionId: String): PoTokenResult? {
+        if (!webViewSupported || webViewBadImpl) {
+            // Previously a silent bail-out -- on a real WSA test this made it impossible to tell
+            // from logs alone whether PoToken generation was skipped (this branch) or attempted
+            // and failed (which logs elsewhere in this class). Log so the next device test is
+            // conclusive either way.
+            Timber.tag(TAG).w("poToken generation skipped (webViewSupported=$webViewSupported, webViewBadImpl=$webViewBadImpl); falling back to non-PoToken clients")
+            return null
+        }
+
+        return try {
+            runBlocking {
+                withTimeout(POTOKEN_TIMEOUT_MS) {
+                    getWebClientPoToken(videoId, sessionId, forceRecreate = false)
+                }
+            }
+        } catch (e: TimeoutCancellationException) {
+            // The WebView's sandboxed process can be culled by the OS (storage pressure, low
+            // memory, etc.) which leaves the PoToken WebView call hung indefinitely. Cap it so
+            // callers can fall through to non-PoToken fallback clients instead of blocking the
+            // entire playback path.
+            Timber.tag(TAG).w("poToken generation timed out after ${POTOKEN_TIMEOUT_MS}ms; proceeding without PoToken")
+            runBlocking {
+                webPoTokenGenLock.withLock {
+                    try {
+                        withContext(Dispatchers.Main) {
+                            webPoTokenGenerator?.close()
+                        }
+                    } catch (closeEx: Exception) {
+                        Timber.tag(TAG).e(closeEx, "Exception closing PoTokenWebView during timeout cleanup")
+                    }
+                    webPoTokenGenerator = null
+                    webPoTokenStreamingPot = null
+                    webPoTokenSessionId = null
+                }
+            }
+            null
+        } catch (e: Exception) {
+            when (e) {
+                is BadWebViewException -> {
+                    Timber.tag(TAG).e(e, "Could not obtain poToken because WebView is broken")
+                    webViewBadImpl = true
+                    null
+                }
+                else -> {
+                    Timber.tag(TAG).e(e, "poToken generation exception: ${e.javaClass.simpleName}: ${e.message}")
+                    null
+                }
+            }
+        }
+    }
+
+    private companion object {
+        // Healthy cold-start (WebView spin-up + botguard JS + token gen) is ~2-5s in practice;
+        // 8s leaves slack for a slow device without making the user wait too long before the
+        // fallback chain (IOS, TVHTML5, Piped) takes over when the WebView hangs.
+        const val POTOKEN_TIMEOUT_MS = 8_000L
+    }
+
+    /**
+     * @param forceRecreate whether to force the recreation of [webPoTokenGenerator], to be used in
+     * case the current [webPoTokenGenerator] threw an error last time
+     * [PoTokenWebView.generatePoToken] was called
+     */
+    private suspend fun getWebClientPoToken(videoId: String, sessionId: String, forceRecreate: Boolean): PoTokenResult {
+        val (poTokenGenerator, streamingPot, hasBeenRecreated) =
+            webPoTokenGenLock.withLock {
+                val shouldRecreate =
+                    forceRecreate || webPoTokenGenerator == null || webPoTokenGenerator!!.isExpired ||
+                        // Renderer died (OOM kill) -- recreate proactively instead of letting the
+                        // first post-crash generatePoToken() fail against the dead instance.
+                        webPoTokenGenerator!!.isDead ||
+                        webPoTokenSessionId != sessionId
+
+                if (shouldRecreate) {
+                    withContext(Dispatchers.Main) {
+                        webPoTokenGenerator?.close()
+                    }
+
+                    // Clear the committed state BEFORE the fallible steps below: if creation or
+                    // the streaming-pot mint throws, the next call must compute
+                    // shouldRecreate=true instead of pairing the already-updated sessionId with
+                    // a null/stale streaming pot at the Triple below.
+                    webPoTokenGenerator = null
+                    webPoTokenStreamingPot = null
+                    webPoTokenSessionId = null
+
+                    val newGenerator = PoTokenWebView.getNewPoTokenGenerator(appContext)
+
+                    // The streaming poToken needs to be generated exactly once before generating
+                    // any other (player) tokens.
+                    val newStreamingPot = try {
+                        newGenerator.generatePoToken(sessionId)
+                    } catch (t: Throwable) {
+                        // Don't leak the freshly created WebView (close() hops to Main itself).
+                        runCatching { newGenerator.close() }
+                        throw t
+                    }
+
+                    webPoTokenGenerator = newGenerator
+                    webPoTokenStreamingPot = newStreamingPot
+                    webPoTokenSessionId = sessionId
+                }
+
+                Triple(webPoTokenGenerator!!, webPoTokenStreamingPot!!, shouldRecreate)
+            }
+
+        val playerPot = try {
+            poTokenGenerator.generatePoToken(videoId)
+        } catch (throwable: Throwable) {
+            if (hasBeenRecreated) {
+                // the poTokenGenerator has just been recreated (and possibly this is already the
+                // second time we try), so there is likely nothing we can do
+                throw throwable
+            } else {
+                // retry, this time recreating the [webPoTokenGenerator] from scratch; this might
+                // happen for example if the app goes in the background and the WebView content is
+                // lost
+                Timber.tag(TAG).e(throwable, "Failed to obtain poToken, retrying")
+                return getWebClientPoToken(videoId = videoId, sessionId = sessionId, forceRecreate = true)
+            }
+        }
+
+        return PoTokenResult(
+            playerRequestPoToken = streamingPot,
+            streamingDataPoToken = playerPot,
+        )
+    }
+}

@@ -168,4 +168,10 @@ dependencies {
     "fullImplementation"(libs.opencc4j)
 
     implementation(libs.timber)
+
+    testImplementation(libs.junit)
+    // Real org.json implementation (not Android's stub-bodied version in android.jar) so
+    // JavaScriptUtilTest exercises real JSON parsing instead of getting default/stub return
+    // values back. Already used the same way by the kizzy module.
+    testImplementation(libs.json)
 }

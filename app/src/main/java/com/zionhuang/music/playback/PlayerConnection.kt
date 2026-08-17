@@ -26,6 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -77,6 +78,23 @@ class PlayerConnection(
 
     val queueTitle = MutableStateFlow<String?>(null)
     val queueWindows = MutableStateFlow<List<Timeline.Window>>(emptyList())
+
+    // Derived, read-only view of queueWindows grouped into QueueEntry runs. Not a second
+    // source of truth: it re-derives from queueWindows on every emission and carries no
+    // state of its own beyond the cached StateFlow value. flatIndex/flatIndices refer to
+    // each window's underlying Media3 timeline index (firstPeriodIndex), not its position
+    // in queueWindows, so they stay meaningful regardless of shuffle order.
+    // Uses Eagerly (unlike isPlaying/currentLyrics above) because this stage deliberately
+    // has no UI consumer yet -- Lazily would only start deriving once something first
+    // collects it, which would leave .value stuck at the initial empty list until then.
+    val queueEntries: StateFlow<List<QueueEntry>> = queueWindows
+        .map { windows ->
+            buildQueueEntriesIndexed(
+                windows.mapNotNull { window -> window.mediaItem.metadata?.let { window.firstPeriodIndex to it } }
+            )
+        }
+        .stateIn(scope, SharingStarted.Eagerly, emptyList())
+
     val currentMediaItemIndex = MutableStateFlow(-1)
     val currentWindowIndex = MutableStateFlow(-1)
 

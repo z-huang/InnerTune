@@ -60,6 +60,7 @@ import com.zionhuang.music.constants.ListItemHeight
 import com.zionhuang.music.constants.ListThumbnailSize
 import com.zionhuang.music.db.entities.Album
 import com.zionhuang.music.db.entities.Song
+import com.zionhuang.music.extensions.stampQueueGroup
 import com.zionhuang.music.extensions.toMediaItem
 import com.zionhuang.music.playback.ExoDownloadService
 import com.zionhuang.music.ui.component.AlbumListItem
@@ -224,7 +225,7 @@ fun AlbumMenu(
             title = R.string.play_next
         ) {
             onDismiss()
-            playerConnection.playNext(songs.map { it.toMediaItem() })
+            playerConnection.playNext(songs.map { it.toMediaItem() }.stampQueueGroup(album.album.title))
         }
 
         GridMenuItem(
@@ -232,7 +233,7 @@ fun AlbumMenu(
             title = R.string.add_to_queue
         ) {
             onDismiss()
-            playerConnection.addToQueue(songs.map { it.toMediaItem() })
+            playerConnection.addToQueue(songs.map { it.toMediaItem() }.stampQueueGroup(album.album.title))
         }
 
         GridMenuItem(

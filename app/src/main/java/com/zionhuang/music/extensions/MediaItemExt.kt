@@ -6,6 +6,7 @@ import androidx.media3.common.MediaMetadata.MEDIA_TYPE_MUSIC
 import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.Song
 import com.zionhuang.music.models.MediaMetadata
+import com.zionhuang.music.models.stampQueueGroup
 import com.zionhuang.music.models.toMediaMetadata
 
 val MediaItem.metadata: MediaMetadata?
@@ -61,3 +62,16 @@ fun MediaMetadata.toMediaItem() = MediaItem.Builder()
             .build()
     )
     .build()
+
+/**
+ * Rebuilds each item's tag with fresh queue-group metadata (see
+ * [com.zionhuang.music.models.stampQueueGroup]). Every other MediaItem field --
+ * including its own androidx.media3.common.MediaMetadata (title, artwork, album, etc.)
+ * used for playback/notifications -- is left untouched.
+ */
+fun List<MediaItem>.stampQueueGroup(title: String): List<MediaItem> {
+    val stamped = map { it.metadata!! }.stampQueueGroup(title)
+    return zip(stamped) { mediaItem, metadata ->
+        mediaItem.buildUpon().setTag(metadata).build()
+    }
+}

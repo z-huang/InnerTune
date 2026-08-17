@@ -5,6 +5,7 @@ import com.zionhuang.innertube.models.SongItem
 import com.zionhuang.music.db.entities.*
 import com.zionhuang.music.ui.utils.resize
 import java.io.Serializable
+import java.util.UUID
 
 @Immutable
 data class MediaMetadata(
@@ -15,7 +16,23 @@ data class MediaMetadata(
     val thumbnailUrl: String? = null,
     val album: Album? = null,
     val explicit: Boolean = false,
+    // Queue Groups: identifies the queue-group instance this item belongs to.
+    // null means this is a standalone queue item, not part of any group.
+    val queueGroupId: String? = null,
+    val queueGroupTitle: String? = null,
+    val queueGroupIndex: Int? = null,
+    val queueGroupSize: Int? = null,
 ) : Serializable {
+    companion object {
+        // Pinned explicitly so that future additions of nullable fields (as done here for
+        // Queue Groups) don't silently change the default computed serialVersionUID and
+        // break deserialization of previously-persisted queues (see PersistQueue / MusicService
+        // saveQueueToDisk/restore). No serialVersionUID existed on this class before this
+        // change, so this does not, by itself, restore compatibility with files persisted
+        // by app versions prior to this one -- see the Stage 1 report for details.
+        private const val serialVersionUID: Long = 1L
+    }
+
     data class Artist(
         val id: String?,
         val name: String,
@@ -79,3 +96,23 @@ fun SongItem.toMediaMetadata() = MediaMetadata(
     },
     explicit = explicit
 )
+
+/**
+ * Marks every item in this list as belonging to one freshly-generated queue group (see
+ * [MediaMetadata.queueGroupId]), preserving list order. Each call generates a new, unique
+ * group id, so queueing the same songs twice produces two independent groups. Returns the
+ * list unchanged (no id generated, no group produced) when empty.
+ */
+fun List<MediaMetadata>.stampQueueGroup(title: String): List<MediaMetadata> {
+    if (isEmpty()) return this
+    val groupId = UUID.randomUUID().toString()
+    val groupSize = size
+    return mapIndexed { index, metadata ->
+        metadata.copy(
+            queueGroupId = groupId,
+            queueGroupTitle = title,
+            queueGroupIndex = index,
+            queueGroupSize = groupSize
+        )
+    }
+}
