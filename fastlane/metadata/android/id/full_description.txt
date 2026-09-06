@@ -1,17 +1,17 @@
-Klien Material 3 YouTube Music untuk Android
+Klien YouTube Music Material 3 untuk Android
 
- Fitur: 
+<br><b>Fitur:</b>
 
-- Memutar lagu dari YT/YT Music tanpa iklan
+- Putar lagu dari YT/YT Music tanpa iklan
 - Pemutaran di latar belakang
 - Cari lagu, video, album, dan playlist dari YouTube Music
-- Pengelolaan pustaka lagu
-- Tembolok dan unduh lagu untuk pemutaran offline
-- Lirik yang disinkronkan
+- Pengelolaan pustaka
+- Cache dan unduh lagu untuk pemutaran offline
+- Lirik tersinkronisasi
 - Lewati keheningan
 - Normalisasi audio
 - Tema dinamis
-- Penerjemahan lokal
+- Lokalisasi
 - Dukungan Android Auto
 - Pilihan cepat yang dipersonalisasi
 - Material 3

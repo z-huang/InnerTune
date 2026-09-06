@@ -105,19 +105,19 @@
     <string name="error_artist_name_empty">Az előadó neve nem lehet üres.</string>
     <plurals name="n_song">
         <item quantity="one">%d dal</item>
-        <item quantity="other">%d dal</item>
+        <item quantity="other">%d dalok</item>
     </plurals>
     <plurals name="n_artist">
-        <item quantity="one">%d előadó</item>
-        <item quantity="other">%d előadó</item>
+        <item quantity="one">%d művész</item>
+        <item quantity="other">%d művészek</item>
     </plurals>
     <plurals name="n_album">
         <item quantity="one">%d album</item>
-        <item quantity="other">%d album</item>
+        <item quantity="other">%d albumok</item>
     </plurals>
     <plurals name="n_playlist">
         <item quantity="one">%d lejátszási lista</item>
-        <item quantity="other">%d lejátszási lista</item>
+        <item quantity="other">%d lejátszások</item>
     </plurals>
     <plurals name="n_week">
         <item quantity="one">%d hét</item>
@@ -125,11 +125,11 @@
     </plurals>
     <plurals name="n_month">
         <item quantity="one">%d hónap</item>
-        <item quantity="other">%d hónap</item>
+        <item quantity="other">%d hónapok</item>
     </plurals>
     <plurals name="n_year">
         <item quantity="one">%d év</item>
-        <item quantity="other">%d év</item>
+        <item quantity="other">%d évek</item>
     </plurals>
     <string name="playlist_imported">Lejátszási lista importálva</string>
     <string name="removed_song_from_playlist">\"%s\" eltávolítva a lejátszási listából</string>

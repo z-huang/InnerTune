@@ -1,0 +1,16 @@
+Isang Material 3 YouTube Music client para sa Android 
+
+<br><b>Mga Tampok:</b> 
+- Magpatugtog ng mga kanta mula sa YT/YT Music nang walang mga ad 
+- Pag-playback sa background 
+- Maghanap ng mga kanta, video, album, at playlist mula sa YouTube Music 
+- Pamamahala ng aklatan 
+- I-cache at i-download ang mga kanta para sa offline na pag-playback 
+- Naka-synchronize na lyrics 
+- Laktawan ang katahimikan 
+- Pag-normalize ng audio 
+- Dinamikang tema 
+- Lokalisasyon 
+- Suporta sa Android Auto 
+- Mga pansarili na mabilisang pagpili 
+- Material 3
