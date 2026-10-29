@@ -268,7 +268,7 @@
     <string name="not_logged_in">Nejste přihlášeni</string>
     <string name="persistent_queue_desc">Obnovit poslední frontu po spuštění aplikace</string>
     <string name="auto_load_more_desc">Automaticky přidat více skladeb po dosažení konce fronty, pokud je to možné</string>
-    <string name="auto_skip_next_on_error">Automaticky přejít na další sklabdu při výskytu chyby</string>
+    <string name="auto_skip_next_on_error">Automaticky přejít na další skladbu při výskytu chyby</string>
     <string name="auto_skip_next_on_error_desc">Zajistěte si nepřetržité přehrávání</string>
     <string name="stop_music_on_task_clear">Zastavit hudbu po vymazání úlohy</string>
     <string name="listen_history">Historie poslechu</string>
